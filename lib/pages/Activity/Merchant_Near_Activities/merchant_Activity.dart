@@ -1,0 +1,374 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../../utils/constants.dart';
+import '../../../utils/styles.dart';
+import '../../../widgets/global/appBar.dart';
+import '../../../widgets/global/proceedButtons.dart';
+import '../../../widgets/global/textFormFields.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'FilterScreen_Merchant.dart';
+
+class MerchantActvity extends StatefulWidget {
+  const MerchantActvity({Key? key}) : super(key: key);
+
+  @override
+  State<MerchantActvity> createState() => _MerchantActvityState();
+}
+
+class _MerchantActvityState extends State<MerchantActvity> {
+  GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
+  double height = 0.0;
+  double width = 0.0;
+  bool isGridView = false;
+
+  late GoogleMapController mapController; //contrller for Google map
+  final Set<Marker> markers = new Set(); //markers for google map
+  static const LatLng showLocation =
+      const LatLng(27.7089427, 85.3086209); //location to show in map
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getmarkers();
+  }
+
+  Set<Marker> getmarkers() {
+    //markers to place on map
+    setState(() {
+      markers.add(Marker(
+        //add first marker
+        markerId: MarkerId(showLocation.toString()),
+        position: showLocation, //position of marker
+        infoWindow: InfoWindow(
+          //popup info
+          title: 'Marker Title First ',
+          snippet: 'My Custom Subtitle',
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      ));
+
+      markers.add(Marker(
+        //add second marker
+        markerId: MarkerId(showLocation.toString()),
+        position: LatLng(27.7099116, 85.3132343), //position of marker
+        infoWindow: InfoWindow(
+          //popup info
+          title: 'Marker Title Second ',
+          snippet: 'My Custom Subtitle',
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      ));
+
+      markers.add(Marker(
+        //add third marker
+        markerId: MarkerId(showLocation.toString()),
+        position: LatLng(27.7137735, 85.315626), //position of marker
+        infoWindow: InfoWindow(
+          //popup info
+          title: 'Marker Title Third ',
+          snippet: 'My Custom Subtitle',
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      ));
+
+      //add more markers here
+    });
+
+    return markers;
+  }
+
+  Future<List<OfferBannerModel>> getOfferImages() async {
+    String response = '['
+        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Quality Clothing","serviceDescription":"Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Starting from 14,232"},'
+        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Croma Electronics","serviceDescription":"Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Starting 5,232"},'
+        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"IFB Appliances","serviceDescription":"One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Under 11,232"},'
+        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Shree Retailer","serviceDescription":"IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Min 43% Off"},'
+        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Abhiruchi Electronics","serviceDescription":"IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Min 43% Off"},'
+        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Shree Retailer","serviceDescription":"IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Min 43% Off"}]';
+    var serviceList = bannerServiceFromJson(response);
+    return serviceList;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    return Scaffold(
+      backgroundColor: ThemeApp.backgroundColor,
+      key: scaffoldGlobalKey,
+      appBar: PreferredSize(
+    preferredSize: Size.fromHeight(height * .19),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        appBarWidget(context, searchBar(context), addressWidget(context,StringConstant.placesFromCurrentLocation),
+            setState(() {})),
+        Container(
+          color: ThemeApp.whiteColor,
+          width: width,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      child: TextFieldUtils().titleTextFields(
+                          AppLocalizations.of(context).gridView, context),
+                    ),
+                    Transform.scale(
+                      scale: 1.3,
+                      child: Switch(
+                        // This bool value toggles the switch.
+                        value: isGridView,
+                        activeColor: ThemeApp.darkGreyTab,
+                        inactiveTrackColor: ThemeApp.textFieldBorderColor,
+                        inactiveThumbColor: ThemeApp.darkGreyTab,
+                        onChanged: (bool value) {
+                          // This is called when the user toggles the switch.
+                          setState(() {
+                            isGridView = value;
+                          });
+                        },
+                      ),
+                    ),
+                    Container(
+                      child: TextFieldUtils().titleTextFields(
+                          AppLocalizations.of(context).mapView, context),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: height * .07,
+                child: IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      VerticalDivider(
+                        color: ThemeApp.textFieldBorderColor,
+                        thickness: 1,
+                      ),
+                      InkWell(
+                        onTap: (){
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Merchant_FilterScreen(),
+                            ),
+                          );
+
+                        },
+                        child: Container(
+                            padding: const EdgeInsets.only(
+                              left: 20,
+                              right: 20,
+                            ),
+                            child: Icon(Icons.filter_alt_outlined, size: 30)),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        )
+      ],
+    ),
+      ),
+      body: SafeArea(
+        child: Container(
+        height: MediaQuery.of(context).size.height,
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+        child: Stack(
+          children: [
+            !isGridView ? budgetBuyList() : mapView(),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .02,
+            ),
+          ],
+        )),
+      ),
+    );
+  }
+
+  Widget budgetBuyList() {
+    var orientation =
+        (MediaQuery.of(context).orientation == Orientation.landscape);
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFieldUtils().listHeadingTextField(
+              AppLocalizations.of(context).merchantNearYou, context),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .02,
+          ),
+          FutureBuilder<List<OfferBannerModel>>(
+              future: getOfferImages(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) print(snapshot.error);
+                return snapshot.hasData
+                    ? Container(
+                        height: MediaQuery.of(context).size.height,
+                        // padding: EdgeInsets.all(12.0),
+                        child: GridView.builder(
+                          itemCount: snapshot.data!.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  // childAspectRatio: 3 / 3.1,
+                                  childAspectRatio: orientation
+                                      ? width * 3.2 / height * 0.5
+                                      : width * 2 / height * 1,
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10),
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                                height:
+                                    orientation ? height * 26 : height * .17,
+                                // MediaQuery.of(context).size.height * .26,
+                                width: MediaQuery.of(context).size.width * .45,
+                                decoration: BoxDecoration(
+                                    color: ThemeApp.darkGreyTab,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Stack(
+                                      alignment: Alignment.topRight,
+                                      children: [
+                                        Container(
+                                          height: orientation
+                                              ? height * .25
+                                              : MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .17,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              )),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
+                                            ),
+                                            child: Image.network(
+                                              // width: double.infinity,
+                                              snapshot
+                                                  .data![index].serviceImage,
+                                              fit: BoxFit.fill,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .07,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 7, right: 7),
+                                          child: kmAwayOnMerchantImage(
+                                            '1.2 km away',
+                                            context,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(7),
+                                      child: TextFieldUtils()
+                                          .homePageTitlesTextFieldsWHITE(
+                                              snapshot.data![index].serviceName,
+                                              context),
+                                    ),
+                                  ],
+                                ));
+                          },
+                        ))
+                    : const Center(child: CircularProgressIndicator());
+              }),
+        ],
+      ),
+    );
+  }
+
+  Widget mapView() {
+    return GoogleMap(
+      zoomGesturesEnabled: true,
+      //enable Zoom in, out on map
+      initialCameraPosition: CameraPosition(
+        //innital position in map
+        target: showLocation, //initial position
+        zoom: 15.0, //initial zoom level
+      ),
+      markers: getmarkers(),
+      //markers to show on map
+      mapType: MapType.normal,
+      //map type
+      onMapCreated: (controller) {
+        //method called when map is created
+        setState(() {
+          mapController = controller;
+        });
+      },
+    );
+  }
+}
+
+List<OfferBannerModel> bannerServiceFromJson(String str) =>
+    List<OfferBannerModel>.from(
+        json.decode(str).map((x) => OfferBannerModel.fromJson(x)));
+
+String bookServiceToJson(List<OfferBannerModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class OfferBannerModel {
+  String serviceImage;
+  String serviceName;
+  String serviceDescription;
+  String price;
+
+  OfferBannerModel({
+    required this.serviceImage,
+    required this.serviceName,
+    required this.serviceDescription,
+    required this.price,
+  });
+
+  factory OfferBannerModel.fromJson(Map<String, dynamic> json) =>
+      OfferBannerModel(
+        serviceImage: json["serviceImage"],
+        serviceName: json["serviceName"],
+        serviceDescription: json["serviceDescription"],
+        price: json["price"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "serviceImage": serviceImage,
+        "serviceName": serviceName,
+        "price": price,
+      };
+}

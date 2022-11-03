@@ -1,0 +1,159 @@
+{
+"@@locale": "en",
+"languages" : "Languages",
+"login": "Login",
+"shopByCategories": "Shop by Categories",
+"bookOurServices": "Book our Services",
+"recommendedForYou":"Recommended for you",
+"merchantNearYou":"Merchant near you",
+"viewAll":"View All",
+"bestDeal":"Best Deal",
+"budgetBuys":"Budget Buys",
+
+
+"signin" :"Sign In",
+"signinSubTitle" : "Provide below details to continue your shopping",
+"usingPass" : "Using Password",
+"usingOTP" : "Using OTP",
+"emailORMobile" : "Email Address / Mobile Number",
+"email" : "Email",
+"password" : "Password",
+
+"emailError" : "please enter email",
+"passwordError" : "please enter password",
+"validEmailError" : "Please enter a valid email or phone number.",
+"validPasswordError" : "Please enter a valid password.",
+"forgotPassword" : "Forgot Password?",
+"sendOtp" : "Send OTP",
+
+"verification" : "Verification",
+"verificationSubHeading" :"Enter OTP sent to david@gmail.com",
+"verificationError" : "Enter verification code",
+"verifyOTP" : "Verify OTP",
+"resendOTP" : "Resend OTP",
+
+"forgotPassword" : "Forgot Password?",
+"forgotPasswordSubHeading" : "Don't worry we are here to help you",
+"registeredEmailAddress" : "Registered email address",
+"validateRegisteredEmail" : "Please Enter registered email address",
+"resetPassword" : "Reset Password",
+
+"changePassword" : "Change Password",
+"currentPassword" : "Current Password *",
+"newPassword" : "New Password *",
+"confirmPassword" : "Change Password",
+"newPasswordError" : "please enter new password",
+
+"lowerPriceOfTheDay":"Lower price of the day",
+"appliances":"Appliances",
+"electronics":"Electronics",
+"fashion":"Fashion",
+
+"sortByPrice":"Short By Price",
+"lowToHigh":"Low to High",
+"highToLow":"High to Low",
+"filter":"Filter",
+
+"clearFilter":"Clear Filter",
+"merchantsFilter":"Merchants",
+"categoriesFilter":"Categories",
+"pricingFilter":"Pricing",
+"availabilityFilter":"Availability",
+"brandFilter":"Brand",
+
+"gridView":"Grid View",
+"mapView":"Map View",
+
+"orderCheckOut":"Order Checkour",
+"cardPayment":"Card Payment",
+"allOtherOptions":"All Other Options",
+"viewPriceDetails":"View Price Details",
+"cardHolderName":"Cardholder's Name",
+"cardNumber":"Card Number",
+"expiryDate":"Expiry Date",
+"cvv":"CVV",
+"orderPlacedSuccessfully":"Order Placed Successfully",
+"thankyouForOrderingWithUs":"Thank you for ordering with us.",
+"orderId":"Order Id",
+"continueShopping":"Continue Shopping",
+"addNewCard":"Add New Card",
+"upi":"UPI",
+"googlePay":"Google Pay",
+"phonePay":"Phone Pay",
+"payTm":"PayTM",
+"deletePaymentMethod":"Delete Payment Method",
+"yes":"Yes",
+"no":"No",
+
+"orderDetails":"Order Details",
+"downloadInvoice":"Download Invoice",
+"deliveryDetail":"Delivery Details",
+"invoice":"Invoice",
+"proofOfDelivery":"Proof of Delivery",
+"returnItems":"Return Item(s)",
+"cancelOrder":"Cancel Order",
+"chooseItemYouWantToCancel":"Choose Item you want to cancel",
+"whyYouWantToCancel":"Why you want to cancel?",
+"returnOrder":"Return Order",
+"chooseItemYouWantToReturn":"Choose Item you want to return",
+"whyYouWantToReturn":"Why you want to return?",
+"returnnn":"Return",
+"customerSupport":"Customer Support",
+"customerCareNumber":"Customer care number",
+"writeYourQueryAt":"Write your query at",
+"accountSettings":"Account Settings",
+"pushNotifications":"Push Notifications",
+"notifications":"Notifications",
+"offersOnly":"Offers only",
+
+
+"fullName":"Full Name",
+"mobileNumber":"Mobile Number",
+"emailAddress":"Email Address",
+"enterFullName":"Please enter Full Name.",
+"enterEmailAddress":"Please enter Email Address.",
+"enterMobileNumber":"Please enter Mobile Number.",
+
+
+"addressDetails":"Address Details",
+"useMyLocation":"Use my Location",
+"houseBuildingNo":"House No., Building Name",
+"areaColonyName":"Area, Colony Name",
+"state":"State",
+"city":"City",
+"typeOfAddress":"Type of Address",
+"home":"Home",
+"office":"Office",
+"addDeliveryAddress":"Add Delivery Address",
+
+
+"update":"Update",
+"otpSentTo":"OTP Sent to",
+"resend":"Resend",
+"cancel":"Cancel",
+
+"deliveryDetails":"Delivery Details",
+"changeAddress":"Change Address",
+"contactNumber":"Contact Number",
+"orderSummary":"Order Summary",
+"applyPromoCode":"Apply Promo Code",
+"apply":"Apply",
+
+"deliveryAddress":"Delivery Address",
+"addNewAddress":"Add New Address",
+"edit":"Edit",
+"deliverHere":"Deliver Here",
+
+
+
+
+
+
+
+
+
+"@helloWorld": {
+"description": "The conventional newborn programmer greeting"
+}
+
+}
