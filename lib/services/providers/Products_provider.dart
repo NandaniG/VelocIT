@@ -10,7 +10,9 @@ import '../models/AddressListModel.dart';
 import '../models/CartModel.dart';
 import '../models/CreditCardModel.dart';
 import '../models/MyOrdersModel.dart';
+import '../models/NotificationsModel.dart';
 import '../models/ProductDetailModel.dart';
+import '../models/userAccountDetailModel.dart';
 
 class ProductProvider with ChangeNotifier {
   final String? productId;
@@ -422,6 +424,7 @@ class ProductProvider with ChangeNotifier {
   deleteAddress(int index) {
     addressList.removeAt(index);
   }
+
 //------------------------#<- add Credit / debit card in list in checkOut screen->#-------------------
 
   List<CreditCardListModel> creditCardList = <CreditCardListModel>[];
@@ -517,11 +520,13 @@ class ProductProvider with ChangeNotifier {
             isCancelProductFor: false),
         MyOrdersCancelModel(
             id: 4,
-           whyCancelProduct: "I have changed my mind",
-           isCancelProductFor: false),  MyOrdersCancelModel(
+            whyCancelProduct: "I have changed my mind",
+            isCancelProductFor: false),
+        MyOrdersCancelModel(
             id: 5,
             whyCancelProduct: "I want to change address for my address",
-            isCancelProductFor: false),  MyOrdersCancelModel(
+            isCancelProductFor: false),
+        MyOrdersCancelModel(
             id: 6,
             whyCancelProduct: "Added to order by mistakenly",
             isCancelProductFor: false),
@@ -579,6 +584,7 @@ class ProductProvider with ChangeNotifier {
             price: "5731",
             venderDetails: "Tata Motors"),
       ],
+
       ///canceled
       orderCancelList: [
         MyOrdersCancelModel(
@@ -595,11 +601,13 @@ class ProductProvider with ChangeNotifier {
             isCancelProductFor: false),
         MyOrdersCancelModel(
             id: 4,
-           whyCancelProduct: "I have changed my mind",
-           isCancelProductFor: false),  MyOrdersCancelModel(
+            whyCancelProduct: "I have changed my mind",
+            isCancelProductFor: false),
+        MyOrdersCancelModel(
             id: 5,
             whyCancelProduct: "I want to change address for my address",
-            isCancelProductFor: false),  MyOrdersCancelModel(
+            isCancelProductFor: false),
+        MyOrdersCancelModel(
             id: 6,
             whyCancelProduct: "Added to order by mistakenly",
             isCancelProductFor: false),
@@ -628,4 +636,46 @@ class ProductProvider with ChangeNotifier {
       ],
     ),
   ];
+
+//---------------------------------<- Notifications Provider ->--------------------------
+
+  List<NotificationsModel> notificationsList = <NotificationsModel>[];
+  List<NotificationsModel> notificationsIsOffer = <NotificationsModel>[];
+
+  List<NotificationsModel> notificationDataList = [
+    NotificationsModel(id: 1,
+        typeOfNotification: true,
+        newNotificationCounter: 2,
+        notificationImage: 'assets/images/androidImage.jpg',
+        notificationTitle: 'MEGA Deal on Superstar Brands',
+        notificationDetails:
+        'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
+        notificationTime: '1 day ago'),
+
+    NotificationsModel(id: 1,
+        typeOfNotification: true,
+        newNotificationCounter: 2,
+        notificationImage: 'assets/images/iphones_Image.jpg',
+        notificationTitle: 'Bathroom accessories upto 70% Off',
+        notificationDetails:
+        'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
+        notificationTime: '1 day ago'),
+
+    NotificationsModel(id: 1,
+        typeOfNotification: false,
+        newNotificationCounter: 2,
+        notificationImage: 'assets/images/androidImage.jpg',
+        notificationTitle: 'MEGA Deal on Superstar Brands',
+        notificationDetails:
+        'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
+        notificationTime: '1 day ago'),
+  ];
+
+//---------------------------------<- Notifications Provider ->--------------------------
+  List<UserAccountDetailModel> userAccountDetailList =
+      <UserAccountDetailModel>[];
+
+  TextEditingController userNameController = new TextEditingController();
+  TextEditingController userMobileController = new TextEditingController();
+  TextEditingController userEmailController = new TextEditingController();
 }

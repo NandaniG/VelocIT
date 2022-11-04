@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/AccountSettingScreen.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/CustomerSupport/CustomerSupportActivity.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
@@ -23,6 +26,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
   await Prefs().getToken(StringConstant.pinCodePref);
+
+  StringConstant.userAccountName = (await Prefs().getToken(StringConstant.userAccountNamePref))!;
+  StringConstant.userAccountEmail = (await Prefs().getToken(StringConstant.userAccountEmailPref))!;
+  StringConstant.userAccountMobile = (await Prefs().getToken(StringConstant.userAccountMobilePref))!;
+  StringConstant.userAccountPass = (await Prefs().getToken(StringConstant.userAccountPassPref))!;
 
 
   StringConstant.placesFromCurrentLocation =
@@ -81,3 +89,31 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 3),
+            ()=>Navigator.pushReplacement(context,
+            MaterialPageRoute(builder:
+                (context) =>
+                Home()
+            )
+        )
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 500,
+        color: Colors.white,
+        child:Image.asset(
+          'assets/images/VelocIT_Icon_512.png',
+          height: 120,
+        ),
+    );
+  }
+}

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
+import '../../../../services/models/userAccountDetailModel.dart';
+import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/styles.dart';
+import '../../../../utils/utils.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
 
@@ -43,159 +48,188 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
               ),
             ],
           ),
-          child: Container(
-            padding: EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 15),
-            child: ListView(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: TextFieldUtils().dynamicText(
-                      "OTP Verification",
+          child: Consumer<ProductProvider>(builder: (context, value, child) {
+            return Container(
+              padding:
+                  EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 15),
+              child: ListView(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: TextFieldUtils().dynamicText(
+                        "OTP Verification",
+                        context,
+                        TextStyle(
+                            color: ThemeApp.blackColor,
+                            fontSize: height * .025,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                  SizedBox(
+                    height: height * .02,
+                  ),
+                  TextFieldUtils().dynamicText(
+                      "${AppLocalizations.of(context).otpSentTo} david@gmail.com",
                       context,
                       TextStyle(
                           color: ThemeApp.blackColor,
-                          fontSize: height * .025,
-                          fontWeight: FontWeight.bold)),
-                ),
-                SizedBox(
-                  height: height * .02,
-                ),
-                TextFieldUtils().dynamicText(
-                    "${AppLocalizations.of(context).otpSentTo} david@gmail.com",
-                    context,
-                    TextStyle(
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .02,
-                        fontWeight: FontWeight.w600)),
-                TextFormFieldsWidget(
-                    errorText: AppLocalizations.of(context).otpSentTo,
-                    textInputType: TextInputType.text,
-                    controller: emailOTPController,
-                    autoValidation: AutovalidateMode.onUserInteraction,
-                    hintText: 'Enter OTP',
-                    suffixText: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        alignment: Alignment.centerRight,
-                        width: width * .1,
-                        padding: EdgeInsets.only(right: 10),
-                        child: Text("Resend",
-                            style: TextStyle(
-                                color: ThemeApp.blackColor,
-                                fontSize: height * .016,
-                                fontWeight: FontWeight.w600)),
+                          fontSize: height * .02,
+                          fontWeight: FontWeight.w600)),
+                  TextFormFieldsWidget(
+                      errorText: AppLocalizations.of(context).otpSentTo,
+                      textInputType: TextInputType.text,
+                      controller: emailOTPController,
+                      autoValidation: AutovalidateMode.onUserInteraction,
+                      hintText: 'Enter OTP',
+                      suffixText: InkWell(
+                        onTap: () {},
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          width: width * .1,
+                          padding: EdgeInsets.only(right: 10),
+                          child: Text("Resend",
+                              style: TextStyle(
+                                  color: ThemeApp.blackColor,
+                                  fontSize: height * .016,
+                                  fontWeight: FontWeight.w600)),
+                        ),
                       ),
-                    ),
-                    onChange: (val) {},
-                    validator: (value) {
-                      return null;
-                    }),
-                SizedBox(
-                  height: height * .01,
-                ),
-                TextFieldUtils().dynamicText(
-                    "${AppLocalizations.of(context).otpSentTo} +91 5252634825",
-                    context,
-                    TextStyle(
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .02,
-                        fontWeight: FontWeight.w600)),
-                TextFormFieldsWidget(
-                    errorText: AppLocalizations.of(context).otpSentTo,
-                    textInputType: TextInputType.text,
-                    controller: mobileOTPController,
-                    autoValidation: AutovalidateMode.onUserInteraction,
-                    hintText: 'Enter OTP',
-                    suffixText: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        alignment: Alignment.centerRight,
-                        width: width * .1,
-                        padding: EdgeInsets.only(right: 10),
-                        child: Text("Resend",
-                            style: TextStyle(
-                                color: ThemeApp.blackColor,
-                                fontSize: height * .016,
-                                fontWeight: FontWeight.w600)),
+                      onChange: (val) {},
+                      validator: (value) {
+                        return null;
+                      }),
+                  SizedBox(
+                    height: height * .01,
+                  ),
+                  TextFieldUtils().dynamicText(
+                      "${AppLocalizations.of(context).otpSentTo} +91 5252634825",
+                      context,
+                      TextStyle(
+                          color: ThemeApp.blackColor,
+                          fontSize: height * .02,
+                          fontWeight: FontWeight.w600)),
+                  TextFormFieldsWidget(
+                      errorText: AppLocalizations.of(context).otpSentTo,
+                      textInputType: TextInputType.text,
+                      controller: mobileOTPController,
+                      autoValidation: AutovalidateMode.onUserInteraction,
+                      hintText: 'Enter OTP',
+                      suffixText: InkWell(
+                        onTap: () {},
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          width: width * .1,
+                          padding: EdgeInsets.only(right: 10),
+                          child: Text("Resend",
+                              style: TextStyle(
+                                  color: ThemeApp.blackColor,
+                                  fontSize: height * .016,
+                                  fontWeight: FontWeight.w600)),
+                        ),
                       ),
-                    ),
-                    onChange: (val) {},
-                    validator: (value) {
-                      return null;
-                    }),
-                SizedBox(
-                  height: height * .01,
-                ),
-                TextFieldUtils().dynamicText(
-                    "${AppLocalizations.of(context).password} *",
-                    context,
-                    TextStyle(
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .02,
-                        fontWeight: FontWeight.w600)),
-                PasswordTextFormFieldsWidget(
-                    errorText: AppLocalizations.of(context).passwordError,
-                    textInputType: TextInputType.text,
-                    controller: passwordController,
-                    autoValidation: AutovalidateMode.onUserInteraction,
-                    hintText: AppLocalizations.of(context).password,
-                    onChange: (val) {
-                      setState(() {
-                        if (val.isEmpty && passwordController.text.isEmpty) {
+                      onChange: (val) {},
+                      validator: (value) {
+                        return null;
+                      }),
+                  SizedBox(
+                    height: height * .01,
+                  ),
+                  TextFieldUtils().dynamicText(
+                      "${AppLocalizations.of(context).password} *",
+                      context,
+                      TextStyle(
+                          color: ThemeApp.blackColor,
+                          fontSize: height * .02,
+                          fontWeight: FontWeight.w600)),
+                  PasswordTextFormFieldsWidget(
+                      errorText: AppLocalizations.of(context).passwordError,
+                      textInputType: TextInputType.text,
+                      controller: passwordController,
+                      autoValidation: AutovalidateMode.onUserInteraction,
+                      hintText: AppLocalizations.of(context).password,
+                      onChange: (val) {
+                        setState(() {
+                          if (val.isEmpty && passwordController.text.isEmpty) {
+                            _validatePassword = true;
+                          } else if (!StringConstant().isPass(val)) {
+                            _validatePassword = true;
+                          } else {
+                            _validatePassword = false;
+                          }
+                        });
+                      },
+                      validator: (value) {
+                        if (value.isEmpty && passwordController.text.isEmpty) {
                           _validatePassword = true;
-                        } else if (!StringConstant().isPass(val)) {
+                          return AppLocalizations.of(context).passwordError;
+                        } else if (!StringConstant().isPass(value)) {
                           _validatePassword = true;
+                          return AppLocalizations.of(context)
+                              .validPasswordError;
                         } else {
                           _validatePassword = false;
                         }
-                      });
-                    },
-                    validator: (value) {
-                      if (value.isEmpty && passwordController.text.isEmpty) {
-                        _validatePassword = true;
-                        return AppLocalizations.of(context).passwordError;
-                      } else if (!StringConstant().isPass(value)) {
-                        _validatePassword = true;
-                        return AppLocalizations.of(context).validPasswordError;
-                      } else {
-                        _validatePassword = false;
-                      }
-                      return null;
-                    }),
-                SizedBox(
-                  height: height * .02,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: whiteProceedButton(
-                          AppLocalizations.of(context).cancel, context, () {
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AddNewCardActivity(),
-                        //   ),
-                        // );
-                        Navigator.pop(context);
+                        return null;
+                      }),
+                  SizedBox(
+                    height: height * .02,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: whiteProceedButton(
+                            AppLocalizations.of(context).cancel, context, () {
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => AddNewCardActivity(),
+                          //   ),
+                          // );
+                          Navigator.pop(context);
+                        }),
+                      ),
+                      SizedBox(
+                        width: width * .02,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: proceedButton(
+                            AppLocalizations.of(context).update,
+                            ThemeApp.blackColor,
+                            context, () {
+                          value.userAccountDetailList.add(
+                              UserAccountDetailModel(
+                                  userId: 1,
+                                  userName: value.userNameController.text,
+                                  usetEmail: value.userEmailController.text,
+                                  userMobile: value.userMobileController.text,
+                                  userPassword: passwordController.text));
 
-                      }),
-                    ),
-                    SizedBox(
-                      width: width * .02,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: proceedButton(AppLocalizations.of(context).update,
-                          ThemeApp.blackColor, context, () {
-                        Navigator.pop(context);
-                      }),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
+                          Prefs().setToken(StringConstant.userAccountNamePref,
+                              value.userNameController.text);
+                          Prefs().setToken(StringConstant.userAccountEmailPref,
+                              value.userEmailController.text);
+                          Prefs().setToken(StringConstant.userAccountMobilePref,
+                              value.userMobileController.text);
+                          Prefs().setToken(StringConstant.userAccountPassPref,
+                              passwordController.text);
+
+                          print("value.creditCardList__________" +
+                              value.userAccountDetailList[1].userPassword
+                                  .toString());
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const MyAccountActivity(),
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          }),
         ),
       );
     }

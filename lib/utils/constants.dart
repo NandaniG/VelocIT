@@ -12,6 +12,17 @@ class StringConstant {
   static var getCartList_FromPref;
 
   // static String speechToText='';
+//user account pref
+
+  static String userAccountNamePref = 'userAccountNamePref';
+  static String userAccountEmailPref = 'userAccountEmailPref';
+  static String userAccountMobilePref = 'userAccountMobilePref';
+  static String userAccountPassPref = 'userAccountPassPref';
+
+  static String userAccountName = 'use name';
+  static String userAccountEmail = 'test@gmail.com';
+  static String userAccountMobile = '5248632252';
+  static String userAccountPass = '';
 
   //shared preferences
   static String emailPref = 'emailPref';

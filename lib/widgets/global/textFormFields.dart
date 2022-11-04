@@ -362,6 +362,7 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: IntlPhoneField(
+
         controller: widget.controller,
         dropdownDecoration: BoxDecoration(
             border: Border(
@@ -837,7 +838,7 @@ class TextFieldUtils {
   }
 
   Widget dynamicText(String text, BuildContext context, TextStyle style) {
-    return Text(text, style: style);
+    return Text(text, style: style,maxLines: 2,);
   }
 }
 
