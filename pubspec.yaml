@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.17.0
   shared_preferences: ^2.0.15
   carousel_pro: ^1.0.0
+  carousel_slider: ^4.1.1
   flutter_barcode_scanner: ^2.0.0
   provider: ^6.0.3
   uuid: ^3.0.6
@@ -102,6 +103,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/jsonData.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

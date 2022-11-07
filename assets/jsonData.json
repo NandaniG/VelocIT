@@ -1,0 +1,272 @@
+
+{
+
+"homeImageSlider":[
+    {
+        "homeSliderImage" : "assets/images/laptopImage.jpg"
+    },
+    {
+        "homeSliderImage" : "assets/images/iphones_Image.jpg"
+    },
+    {
+        "homeSliderImage" : "assets/images/laptopImage2.jpg"
+    }
+
+],
+
+"shopByCategoryList": [
+    {
+        "id": "p1",
+        "shopCategoryName": "Appliances",
+        "shopCategoryImage": "assets/images/laptopImage.jpg",
+        "shopCategoryDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"
+    },
+    {
+        "id": "p2",
+        "shopCategoryName": "Electronics",
+        "shopCategoryImage": "assets/images/iphones_Image.jpg",
+        "shopCategoryDescription": "Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"
+    },
+    {
+        "id": "p3",
+        "shopCategoryName": "Fashion",
+        "shopCategoryImage": "assets/images/laptopImage2.jpg",
+        "shopCategoryDescription": "One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"
+    },
+    {
+        "id": "p4",
+        "shopCategoryName": "Home",
+        "shopCategoryImage": "assets/images/laptopImage3.jpg",
+        "shopCategoryDescription": "IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"
+    },
+    {
+        "id": "p5",
+        "shopCategoryName": "Fashion",
+        "shopCategoryImage": "assets/images/IPhoneImage.jpg",
+        "shopCategoryDescription": "Lenovo ZX3 108CM (46 inch) ultra HD(4k) "
+    }
+],
+
+"bookOurServicesList": [
+    {
+        "id": "p1",
+        "bookOurServicesName": "Appliances",
+        "bookOurServicesImage": "assets/images/laptopImage.jpg",
+        "bookOurServicesDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"
+    },
+    {
+        "id": "p2",
+        "bookOurServicesName": "Electronics",
+        "bookOurServicesImage": "assets/images/iphones_Image.jpg",
+        "bookOurServicesDescription": "Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"
+    },
+    {
+        "id": "p3",
+        "bookOurServicesName": "Fashion",
+        "bookOurServicesImage": "assets/images/laptopImage2.jpg",
+        "bookOurServicesDescription": "One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"
+    },
+    {
+        "id": "p4",
+        "bookOurServicesName": "Home",
+        "bookOurServicesImage": "assets/images/laptopImage3.jpg",
+        "bookOurServicesDescription": "IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"
+    },
+    {
+        "id": "p5",
+        "bookOurServicesName": "Fashion",
+        "bookOurServicesImage": "assets/images/IPhoneImage.jpg",
+        "bookOurServicesDescription": "Lenovo ZX3 108CM (46 inch) ultra HD(4k) "
+    }
+],
+
+"recommendedForYouList": [
+      {
+          "id": "p1",
+          "recommendedForYouName": "Appliances",
+          "recommendedForYouImage": "assets/images/laptopImage.jpg",
+          "recommendedForYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "recommendedForYouPrice":"87324",
+          "recommendedForYouDiscountPrice":"77324"
+      },
+      {
+          "id": "p2",
+          "recommendedForYouName": "Electronics",
+          "recommendedForYouImage": "assets/images/iphones_Image.jpg",
+          "recommendedForYouDescription": "Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "recommendedForYouPrice":"87324",
+          "recommendedForYouDiscountPrice":"86524"
+      },
+      {
+          "id": "p3",
+          "recommendedForYouName": "Fashion",
+          "recommendedForYouImage": "assets/images/laptopImage2.jpg",
+          "recommendedForYouDescription": "One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "recommendedForYouPrice":"6724",
+          "recommendedForYouDiscountPrice":"5724"
+
+      },
+      {
+          "id": "p4",
+          "recommendedForYouName": "Home",
+          "recommendedForYouImage": "assets/images/laptopImage3.jpg",
+          "recommendedForYouDescription": "IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "recommendedForYouPrice":"5324",
+          "recommendedForYouDiscountPrice":"4324"
+
+      },
+      {
+          "id": "p5",
+          "recommendedForYouName": "Fashion",
+          "recommendedForYouImage": "assets/images/IPhoneImage.jpg",
+          "recommendedForYouDescription": "Lenovo ZX3 108CM (46 inch) ultra HD(4k) ",
+          "recommendedForYouPrice":"7324",
+          "recommendedForYouDiscountPrice":"6324"
+
+      }
+      ],
+
+"merchantNearYouList": [
+      {
+          "id": "p1",
+          "merchantNearYouName": "Appliances",
+          "merchantNearYouImage": "assets/images/laptopImage.jpg",
+          "merchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "merchantNearYouPrice":"87324",          "kmAWAY":"1.2 KM away",
+
+          "merchantNearYouDiscountPrice":"77324"
+      },
+      {
+          "id": "p2",
+          "merchantNearYouName": "Electronics",
+          "merchantNearYouImage": "assets/images/iphones_Image.jpg",
+          "merchantNearYouDescription": "Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "merchantNearYouPrice":"87324","kmAWAY":"1.2 KM away",
+          "merchantNearYouDiscountPrice":"86524"
+      },
+      {
+          "id": "p3",
+          "merchantNearYouName": "Fashion",
+          "merchantNearYouImage": "assets/images/laptopImage2.jpg",
+          "merchantNearYouDescription": "One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "merchantNearYouPrice":"6724","kmAWAY":"1.2 KM away",
+          "merchantNearYouDiscountPrice":"5724"
+
+      },
+      {
+          "id": "p4",
+          "merchantNearYouName": "Home",
+          "merchantNearYouImage": "assets/images/laptopImage3.jpg",
+          "merchantNearYouDescription": "IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "merchantNearYouPrice":"5324","kmAWAY":"1.2 KM away",
+          "merchantNearYouDiscountPrice":"4324"
+
+      },
+      {
+          "id": "p5",
+          "merchantNearYouName": "Fashion",
+          "merchantNearYouImage": "assets/images/IPhoneImage.jpg",
+          "merchantNearYouDescription": "Lenovo ZX3 108CM (46 inch) ultra HD(4k) ",
+          "merchantNearYouPrice":"7324","kmAWAY":"1.2 KM away",
+          "merchantNearYouDiscountPrice":"6324"
+
+      }
+      ],
+"bestDealList": [
+      {
+          "id": "p1",
+          "bestDealName": "Appliances",
+          "bestDealImage": "assets/images/laptopImage.jpg",
+          "bestDealDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "bestDealPrice":"87324",
+          "bestDealDiscountPrice":"77324"
+      },
+      {
+          "id": "p2",
+          "bestDealName": "Electronics",
+          "bestDealImage": "assets/images/iphones_Image.jpg",
+          "bestDealDescription": "Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "bestDealPrice":"87324",
+          "bestDealDiscountPrice":"86524"
+      },
+      {
+          "id": "p3",
+          "bestDealName": "Fashion",
+          "bestDealImage": "assets/images/laptopImage2.jpg",
+          "bestDealDescription": "One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "bestDealPrice":"6724",
+          "bestDealDiscountPrice":"5724"
+
+      },
+      {
+          "id": "p4",
+          "bestDealName": "Home",
+          "bestDealImage": "assets/images/laptopImage3.jpg",
+          "bestDealDescription": "IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "bestDealPrice":"5324",
+          "bestDealDiscountPrice":"4324"
+
+      },
+      {
+          "id": "p5",
+          "bestDealName": "Fashion",
+          "bestDealImage": "assets/images/IPhoneImage.jpg",
+          "bestDealDescription": "Lenovo ZX3 108CM (46 inch) ultra HD(4k) ",
+          "bestDealPrice":"7324",
+          "bestDealDiscountPrice":"6324"
+
+      }
+      ],
+"budgetBuyList": [
+      {
+          "id": "p1",
+          "budgetBuyName": "Appliances",
+          "budgetBuyImage": "assets/images/laptopImage.jpg",
+          "budgetBuyDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "budgetBuyPrice":"87324",
+          "budgetBuyDiscountPrice":"77324",
+          "kmAWAY":"1.2 KM away"
+      },
+      {
+          "id": "p2",
+          "budgetBuyName": "Electronics",
+          "budgetBuyImage": "assets/images/iphones_Image.jpg",
+          "budgetBuyDescription": "Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "budgetBuyPrice":"87324",
+          "budgetBuyDiscountPrice":"86524",
+          "kmAWAY":"2.2 KM away"
+
+
+      },
+      {
+          "id": "p3",
+          "budgetBuyName": "Fashion",
+          "budgetBuyImage": "assets/images/laptopImage2.jpg",
+          "budgetBuyDescription": "One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "budgetBuyPrice":"6724",
+          "budgetBuyDiscountPrice":"5724",
+          "kmAWAY":"1.1 KM away"
+
+      },
+      {
+          "id": "p4",
+          "budgetBuyName": "Home",
+          "budgetBuyImage": "assets/images/laptopImage3.jpg",
+          "budgetBuyDescription": "IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+          "budgetBuyPrice":"5324",
+          "budgetBuyDiscountPrice":"4324",
+          "kmAWAY":"2.2 KM away"
+                },
+      {
+          "id": "p5",
+          "budgetBuyName": "Fashion",
+          "budgetBuyImage": "assets/images/IPhoneImage.jpg",
+          "budgetBuyDescription": "Lenovo ZX3 108CM (46 inch) ultra HD(4k) ",
+          "budgetBuyPrice":"7324",
+          "budgetBuyDiscountPrice":"6324",
+                    "kmAWAY":"3.2 KM away"
+
+
+      }
+      ]
+}

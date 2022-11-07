@@ -408,6 +408,13 @@ class ProductProvider with ChangeNotifier {
         '{"serviceImage":"assets/images/laptopImage3.jpg","serviceName":"Fashion", "sellerName":"sellerName","ratting":2.8,"discountPrice":"14500", "originalPrice":"16400","offerPercent":"20% OFF","availableVariants":"3","cartProductsLength":"13","serviceDescription":"Lenovo ZX3 108CM (46 inch) ultra HD(4k) LED Smart Android ","maxCounter":"8","deliveredBy":"Delivered by oct 01"},'
         '{"serviceImage":"assets/images/IPhoneImage.jpg","serviceName":"Home", "sellerName":"sellerName","ratting":4.8,"discountPrice":"65200", "originalPrice":"68300","offerPercent":"20% OFF","availableVariants":"3","cartProductsLength":"13","serviceDescription":"IPhone 13 108CM (47 inch) ultra HD(4k) LED Smart Android TV","maxCounter":"10","deliveredBy":"Delivered by dec 31"}]';
     var serviceList = productDetailsFromJson(response);
+
+    // copyCartList = cartList.map((v) => v).toList();
+    // String encodedMap = json.encode(copyCartList);
+    print('___________ SET getProductsLists____________');
+    StringConstant.prettyPrintJson(response);
+
+
     return serviceList;
   }
 

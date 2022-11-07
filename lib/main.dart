@@ -11,6 +11,7 @@ import 'package:velocit/pages/Activity/My_Account_Activities/CustomerSupport/Cus
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
 import 'package:velocit/pages/homePage.dart';
+import 'package:velocit/services/providers/Home_Provider.dart';
 import 'package:velocit/services/providers/cart_Provider.dart';
 import 'package:velocit/utils/constants.dart';
 import 'package:velocit/utils/styles.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LocaleProvider(),),
+        ChangeNotifierProvider(create: (_) => HomeProvider(),),
         ChangeNotifierProvider(create: (_) => CartProvider(),),
         ChangeNotifierProvider(create: (_) => ProductProvider(),),
         // ChangeNotifierProvider(create: (_) => ProductsVM(),),
