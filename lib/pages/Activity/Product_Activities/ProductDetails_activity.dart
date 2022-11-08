@@ -19,10 +19,12 @@ import '../../screens/dashBoard.dart';
 import '../../screens/cartDetail_Activity.dart';
 
 class ProductDetailsActivity extends StatefulWidget {
+  final dynamic productList;
+
   ProductDetailsModel model;
   ProductProvider value;
 
-  ProductDetailsActivity({Key? key, required this.model, required this.value})
+  ProductDetailsActivity({Key? key, required this.model, required this.value, this.productList})
       : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   @override
   void initState() {
     // TODO: implement initState
+    print("widget.productList[]"+widget.productList.toString());
     super.initState();
     remainingCounters();
   }
@@ -47,7 +50,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       StringConstant.availableCounterValues =
-          (int.parse(widget.model.maxCounter) - counterPrice);
+          (int.parse(widget.productList["productCartMaxCounter"]) - counterPrice);
       print("totalCounterValues${StringConstant.availableCounterValues}");
       print("totalCounterValues${counterPrice}");
     });
@@ -55,22 +58,6 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     prefs.setInt(StringConstant.availableCounter, 1);
   }
 
-  // late List<ProductDetailsModel> productList;
-  //
-  // void addDataCart() {
-  //   Provider.of<ProductProvider>(context, listen: false).addCardManager(
-  //       widget.model.serviceImage,
-  //       widget.model.serviceName,
-  //       widget.model.sellerName,
-  //       widget.model.ratting,
-  //       widget.model.discountPrice,
-  //       widget.model.originalPrice,
-  //       widget.model.offerPercent,
-  //       widget.model.availableVariants,
-  //       widget.model.cartProductsLength,
-  //       widget.model.serviceDescription,
-  //       widget.model.conterProducts);
-  // }
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
     locale: 'en_IN',
@@ -112,7 +99,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   right: 20,
                 ),
                 child: TextFieldUtils().homePageheadingTextField(
-                    widget.model.serviceDescription, context),
+                    widget.productList["productsListDescription"], context),
               ),
               SizedBox(
                 height: height * .01,
@@ -123,7 +110,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   right: 20,
                 ),
                 child: TextFieldUtils().homePageTitlesTextFields(
-                    widget.model.sellerName, context),
+                    widget.productList["productSellerName"], context),
               ),
               SizedBox(
                 height: height * .01,
@@ -182,7 +169,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               child: Image.asset(
                 // width: double.infinity,
-                widget.model.serviceImage,
+                widget.productList["productsListImage"],
                 fit: BoxFit.fill,
                 width: width,
                 height: height * .28,
@@ -206,7 +193,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         children: [
           RatingBar.builder(
             itemSize: height * .03,
-            initialRating: widget.model.ratting,
+            initialRating: double.parse(widget.productList["productRatting"]),
             minRating: 1,
             direction: Axis.horizontal,
             allowHalfRating: true,
@@ -221,7 +208,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             },
           ),
           TextFieldUtils()
-              .subHeadingTextFields('${widget.model.ratting} Reviews', context),
+              .subHeadingTextFields('${widget.productList["productRatting"]} Reviews', context),
         ],
       ),
     );
@@ -237,19 +224,19 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextFieldUtils().textFieldHeightFour(
-              "${indianRupeesFormat.format(int.parse(widget.model.discountPrice.toString()))}",
+              "${indianRupeesFormat.format(int.parse(widget.productList["productDiscountPrice"].toString()))}",
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().pricesLineThrough(
-              indianRupeesFormat.format(int.parse(widget.model.originalPrice)),
+              indianRupeesFormat.format(int.parse(widget.productList["productOriginalPrice"])),
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils()
-              .textFieldTwoFiveGrey(widget.model.offerPercent, context),
+              .textFieldTwoFiveGrey(widget.productList["productOfferPercent"], context),
         ],
       ),
     );
@@ -332,8 +319,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   Widget addToCart() {
     return Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-        child: /*counterPrice < int.parse(widget.model.maxCounter)
-          ?*/
+        child:
             Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -415,7 +401,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               onTap: () {
                                 setState(() {
                                   if (counterPrice <
-                                      int.parse(widget.model.maxCounter)) {
+                                      int.parse(widget.productList["productCartMaxCounter"])) {
                                     counterPrice++;
                                     remainingCounters();
                                   }
@@ -450,9 +436,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                 flex: 1,
                 child: InkWell(
                   onTap: () async {
-                    widget.model.tempCounter = counterPrice;
-                    print("_________widget.model.tempCounter_" +
-                        widget.model.tempCounter.toString());
+                    widget.productList["productTempCounter"] = counterPrice;
+                    print("_________widget.productListtempCounter_" +
+                        widget.productList["productTempCounter"].toString());
                     final navigator = Navigator.of(context); // <- Add this
 
                     SharedPreferences prefs =
@@ -460,50 +446,50 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
                     var contain = value.cartList.where((element) =>
                         element.serviceDescription ==
-                        widget.model.serviceDescription);
+                            widget.productList["productsListDescription"]);
                     if (value.cartList.length >= 0) {
                       if (contain.isNotEmpty) {
                         print("-------------I got Values_________" +
-                            widget.model.serviceDescription.toString());
+                            widget.productList["productsListDescription"].toString());
                         navigator
                             .push(MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    CartDetailsActivity(widget.model,
+                                    CartDetailsActivity(
+                                      productList:   widget.productList,
                                         value: value)))
                             .then((value) => setState(() {}));
-                        print("_________widget.model.tempCounter_1111111" +
-                            widget.model.tempCounter.toString());
+                        print("_________widget.productList" +
+                            widget.productList["productTempCounter"].toString());
                       } else {
                         print("-------------I do not have any Values_________");
 
                         navigator
                             .push(MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    CartDetailsActivity(widget.model,
+                                    CartDetailsActivity(productList:  widget.productList,
                                         value: value)))
                             .then((value) => setState(() {}));
                         print(
                             "-------------Cart Length before ADD in product details_________${value.cartList.length}");
 
                         value.add(
-                          widget.model.serviceImage,
-                          widget.model.serviceName,
-                          widget.model.sellerName,
-                          widget.model.ratting,
-                          widget.model.discountPrice,
-                          widget.model.originalPrice,
-                          widget.model.offerPercent,
-                          widget.model.availableVariants,
-                          widget.model.cartProductsLength,
-                          widget.model.serviceDescription,
-                          widget.model.maxCounter,
-                          widget.model.deliveredBy,
-                          widget.model.tempCounter == 0
-                              ? widget.model.tempCounter = 1
-                              : widget.model.tempCounter,
+                          widget.productList["productsListImage"],
+                       widget.productList["productsListName"],
+                       widget.productList["productSellerName"],
+                          double.parse(widget.productList["productRatting"].toString()),
+                       widget.productList["productDiscountPrice"],
+                       widget.productList["productOriginalPrice"],
+                       widget.productList["productOfferPercent"],
+                       widget.productList["productAvailableVariants"],
+                       widget.productList["productCartProductsLength"],
+                       widget.productList["productsListDescription"],
+                       widget.productList["productCartMaxCounter"],
+                       widget.productList["productDeliveredBy"],
+                       widget.productList["productTempCounter"] == 0
+                              ? widget.productList["productTempCounter"] = 1
+                              : widget.productList["productTempCounter"],
                         );
-                        print("_________widget.model.tempCounter_22222222222" +
-                            widget.model.tempCounter.toString());
+
                         print(
                             "-------------Cart Length after ADD in product details_________${value.cartList.length}");
                       }
@@ -513,21 +499,21 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           "-------------Cart Length before ADD in product details_________${value.cartList.length}");
 
                       value.add(
-                        widget.model.serviceImage,
-                        widget.model.serviceName,
-                        widget.model.sellerName,
-                        widget.model.ratting,
-                        widget.model.discountPrice,
-                        widget.model.originalPrice,
-                        widget.model.offerPercent,
-                        widget.model.availableVariants,
-                        widget.model.cartProductsLength,
-                        widget.model.serviceDescription,
-                        widget.model.maxCounter,
-                        widget.model.deliveredBy,
-                        widget.model.tempCounter == 0
-                            ? widget.model.tempCounter = 1
-                            : widget.model.tempCounter,
+                        widget.productList["productsListImage"],
+                        widget.productList["productsListName"],
+                        widget.productList["productSellerName"],
+                       double.parse(widget.productList["productRatting"].toString()),
+                        widget.productList["productDiscountPrice"],
+                        widget.productList["productOriginalPrice"],
+                        widget.productList["productOfferPercent"],
+                        widget.productList["productAvailableVariants"],
+                        widget.productList["productCartProductsLength"],
+                        widget.productList["productsListDescription"],
+                        widget.productList["productCartMaxCounter"],
+                        widget.productList["productDeliveredBy"],
+                        widget.productList["productTempCounter"] == 0
+                            ? widget.productList["productTempCounter"] = 1
+                            : widget.productList["productTempCounter"],
                       );
                       print("_________widget.model.tempCounter_333333333" +
                           widget.model.tempCounter.toString());
@@ -538,7 +524,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       navigator
                           .push(MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  CartDetailsActivity(widget.model,
+                                  CartDetailsActivity(productList:  widget.productList,
                                       value: value)))
                           .then((value) => setState(() {}));
                       // }

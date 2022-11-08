@@ -18,10 +18,12 @@ import '../Activity/Payment_Activities/payments_Activity.dart';
 import 'dashBoard.dart';
 
 class CartDetailsActivity extends StatefulWidget {
-  ProductDetailsModel model;
+  final dynamic productList;
+
+  // ProductDetailsModel model;
   ProductProvider value;
 
-  CartDetailsActivity(this.model, {Key? key, required this.value})
+  CartDetailsActivity( {Key? key, required this.value, this.productList})
       : super(key: key);
 
   @override
@@ -51,8 +53,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     // TODO: implement initState
     super.initState();
     // getListFromPref();
+    print("widget.cartDetailScreen[]"+widget.productList.toString());
+
     getListFromPref();
-    widget.model.maxCounter = '1';
+    widget.productList["productCartMaxCounter"] = '1';
     finalOriginalPrice = 0.0;
     finalDiscountPrice = 0.0;
     finalDiffrenceDiscountPrice = 0.0;
@@ -154,7 +158,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     onTap: () async {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => Payment_Creditcard_debitcardScreen(),
+                          builder: (context) => Payment_Creditcard_debitcardScreen(productList: widget.productList),
                         ),
                       );
                       // Prefs().clear();
@@ -313,7 +317,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         ),
                         padding: const EdgeInsets.only(
                             top: 10, left: 15, right: 15, bottom: 10),
-                        child: cadToCartCounter(value, index),
+                        child: aadToCartCounter(value, index),
                       ),
                       SizedBox(
                         height: height * .02,
@@ -451,7 +455,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     );
   }
 
-  Widget cadToCartCounter(ProductProvider value, int index) {
+  Widget aadToCartCounter(ProductProvider value, int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

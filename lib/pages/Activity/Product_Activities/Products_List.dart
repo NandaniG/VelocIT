@@ -18,14 +18,16 @@ import 'FilterScreen_Products.dart';
 import 'ProductDetails_activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class MobileListActivity extends StatefulWidget {
-  const MobileListActivity({Key? key}) : super(key: key);
+class ProductListByCategoryActivity extends StatefulWidget {
+  final dynamic productList;
+
+  const ProductListByCategoryActivity({Key? key,required this.productList}) : super(key: key);
 
   @override
-  State<MobileListActivity> createState() => _MobileListActivityState();
+  State<ProductListByCategoryActivity> createState() => _ProductListByCategoryActivityState();
 }
 
-class _MobileListActivityState extends State<MobileListActivity> {
+class _ProductListByCategoryActivityState extends State<ProductListByCategoryActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
@@ -39,7 +41,11 @@ class _MobileListActivityState extends State<MobileListActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getListFromPref();
+    print("shopByCategoryList-------");
+        print(widget.productList.length.toString());
+        print(widget.productList["productsList"].length.toString());
+
+        getListFromPref();
   }
 
   final indianRupeesFormat = NumberFormat.currency(
@@ -68,6 +74,7 @@ class _MobileListActivityState extends State<MobileListActivity> {
     StringConstant.prettyPrintJson(
         StringConstant.getCartList_FromPref.toString());
   }
+  String sortedBy = "Low to High";
 
   @override
   Widget build(BuildContext context) {
@@ -121,8 +128,9 @@ class _MobileListActivityState extends State<MobileListActivity> {
       child: ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: product.length,
+          itemCount: widget.productList["productsList"].length,
           itemBuilder: (BuildContext context, int index) {
+            print("widget.productList.length");
             return InkWell(
               onTap: () {},
               child: Row(
@@ -150,18 +158,18 @@ class _MobileListActivityState extends State<MobileListActivity> {
                           Container(
                               width: 60.0,
                               height: 60.0,
-                              decoration: new BoxDecoration(
+                              decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  image: new DecorationImage(
+                                  image: DecorationImage(
                                       fit: BoxFit.fill,
-                                      image: new AssetImage(
-                                        product[index].serviceImage,
+                                      image: AssetImage(
+                                        widget.productList["productsList"][index]["productsListImage"],
                                       )))),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * .01,
                           ),
                           TextFieldUtils().appliancesTitleTextFields(
-                              product[index].serviceName, context)
+                              widget.productList["productsList"][index]["productsListName"], context)
                         ],
                       )),
                   SizedBox(
@@ -250,11 +258,11 @@ class _MobileListActivityState extends State<MobileListActivity> {
                   showModalBottomSheet(
                       context: context,
                       builder: (context) {
-                        return SortByPriceBottomSheet();
+                        return SortByPriceBottomSheet(sortedBy:  sortedBy);
                       });
                 },
                 child: TextFieldUtils()
-                    .titleTextFields("Sort By: Price Low to High", context)),
+                    .titleTextFields("Sort By: ${sortedBy}", context)),
             Icon(Icons.keyboard_arrow_down)
           ]),
           InkWell(
@@ -287,7 +295,7 @@ class _MobileListActivityState extends State<MobileListActivity> {
           // padding: EdgeInsets.all(12.0),
 
           child: GridView.builder(
-            itemCount: product.length,
+            itemCount: widget.productList["productsList"].length,
             physics: const BouncingScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 // childAspectRatio: 4 / 4.8,
@@ -299,12 +307,15 @@ class _MobileListActivityState extends State<MobileListActivity> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10),
             itemBuilder: (BuildContext context, int index) {
+              print(" widget.productList['productsList']");
+              print( widget.productList["productsList"]);
               return InkWell(
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ProductDetailsActivity(
-                        model: product[index],
+                        productList: widget.productList["productsList"][index],
+                        model:product[index],
                         value: value,
                       ),
                     ),
@@ -345,7 +356,7 @@ class _MobileListActivityState extends State<MobileListActivity> {
                             ),
                             child: Image.asset(
                               // width: double.infinity,
-                              product[index].serviceImage,
+                              widget.productList["productsList"][index]["productsListImage"],
                               fit: BoxFit.fill,
                               height: (MediaQuery.of(context).orientation ==
                                       Orientation.landscape)
@@ -360,7 +371,7 @@ class _MobileListActivityState extends State<MobileListActivity> {
                         Padding(
                           padding: const EdgeInsets.only(left: 18),
                           child: TextFieldUtils().homePageTitlesTextFieldsWHITE(
-                              product[index].serviceDescription, context),
+                              widget.productList["productsList"][index]["productsListDescription"], context),
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .01,
@@ -368,7 +379,7 @@ class _MobileListActivityState extends State<MobileListActivity> {
                         Padding(
                             padding: const EdgeInsets.only(left: 18),
                             child: TextFieldUtils().homePageheadingTextFieldWHITE(
-                                "${indianRupeesFormat.format(int.parse(product[index].originalPrice.toString()))}",
+                                "${indianRupeesFormat.format(int.parse(widget.productList["productsList"][index]["productDiscountPrice"].toString()))}",
                                 context)),
                       ],
                     )),
@@ -380,6 +391,9 @@ class _MobileListActivityState extends State<MobileListActivity> {
 }
 
 class SortByPriceBottomSheet extends StatefulWidget {
+  String sortedBy;
+  SortByPriceBottomSheet({required this.sortedBy});
+
   @override
   _SortByPriceBottomSheetState createState() => _SortByPriceBottomSheetState();
 }
@@ -429,6 +443,9 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
                     onChanged: (value) {
                       setState(() {
                         _radioValue = value;
+                        _radioValue ==0? widget.sortedBy="Low to High":'';
+                        print(widget.sortedBy);
+
                       });
                       print("radiofirst" +
                           value.toString() +
@@ -454,6 +471,9 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
                     onChanged: (value) {
                       setState(() {
                         _radioValue = value;
+                        _radioValue ==1? widget.sortedBy="High to Low":'';
+                        print(widget.sortedBy);
+
                       });
                       print("radiofirst" +
                           value.toString() +

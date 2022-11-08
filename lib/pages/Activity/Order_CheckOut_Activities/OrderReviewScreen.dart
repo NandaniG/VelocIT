@@ -16,7 +16,9 @@ import '../Payment_Activities/payments_Activity.dart';
 import 'AddNewDeliveryAddress.dart';
 
 class OrderReviewSubActivity extends StatefulWidget {
-  const OrderReviewSubActivity({Key? key}) : super(key: key);
+  final dynamic productList;
+
+  const OrderReviewSubActivity({Key? key, this.productList}) : super(key: key);
 
   @override
   State<OrderReviewSubActivity> createState() => _OrderReviewSubActivityState();
@@ -419,134 +421,131 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
   }
 
   Widget cartProductList(ProductProvider value) {
-    return Container(
-      // height: MediaQuery.of(context).size.height * .46,
-      child: value.cartList.length >= 0
-          ? ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: value.cartList.length,
-              itemBuilder: (BuildContext context, int index) {
-                if (value.cartList.length < 0) {
-                  return Center(
-                      child: CircularProgressIndicator(
-                    color: ThemeApp.darkGreyColor,
-                  ));
-                } else {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: height * 0.15,
-                        width: width,
-                        decoration: BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15, bottom: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  child: Image.asset(
-                                    // width: double.infinity,
-                                    // snapshot.data![index].serviceImage,
-                                    value.cartList[index].serviceImage
-                                        .toString(),
-                                    fit: BoxFit.fill,
-                                    // width: width*.18,
-                                    height: height * .1,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 15,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextFieldUtils().dynamicText(
-                                          value.cartList[index]
-                                              .serviceDescription
-                                              .toString(),
-                                          context,
-                                          TextStyle(
-                                              color: ThemeApp.blackColor,
-                                              fontSize: height * .023,
-                                              overflow: TextOverflow.ellipsis,
-                                              fontWeight: FontWeight.w500)),
-                                      SizedBox(
-                                        height: height * .01,
-                                      ),
-                                      SizedBox(
-                                        height: height * .01,
-                                      ),
-                                      prices(value, index),
-                                      SizedBox(
-                                        height: height * .01,
-                                      ),
-                                      TextFieldUtils().dynamicText(
-                                          value.cartList[index].deliveredBy
-                                              .toString(),
-                                          context,
-                                          TextStyle(
-                                            color: ThemeApp.darkGreyTab,
-                                            fontSize: height * .016,
-                                            fontWeight: FontWeight.w400,
-                                            overflow: TextOverflow.ellipsis,
-                                          )),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+    return value.cartList.length >= 0
+        ? ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: value.cartList.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (value.cartList.length < 0) {
+                return Center(
+                    child: CircularProgressIndicator(
+                  color: ThemeApp.darkGreyColor,
+                ));
+              } else {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      // height: height * 0.15,
+                      width: width,
+                      decoration: BoxDecoration(
+                        color: ThemeApp.whiteColor,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10)),
                       ),
-                      Container(
-                        width: width,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: Colors.grey,
-                              width: 0.5,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 15, bottom: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                child: Image.asset(
+                                  // width: double.infinity,
+                                  // snapshot.data![index].serviceImage,
+                                  value.cartList[index].serviceImage
+                                      .toString(),
+                                  fit: BoxFit.fill,
+                                  // width: width*.18,
+                                  height: height * .1,
+                                ),
+                              ),
                             ),
-                            bottom: BorderSide(color: Colors.grey, width: 0.5),
+                            Expanded(
+                              flex: 3,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 15,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    TextFieldUtils().dynamicText(
+                                        value.cartList[index]
+                                            .serviceDescription
+                                            .toString(),
+                                        context,
+                                        TextStyle(
+                                            color: ThemeApp.blackColor,
+                                            fontSize: height * .023,
+                                            overflow: TextOverflow.ellipsis,
+                                            fontWeight: FontWeight.w500)),
+                                    SizedBox(
+                                      height: height * .01,
+                                    ),
+                                    SizedBox(
+                                      height: height * .01,
+                                    ),
+                                    prices(value, index),
+                                    SizedBox(
+                                      height: height * .01,
+                                    ),
+                                    TextFieldUtils().dynamicText(
+                                        value.cartList[index].deliveredBy
+                                            .toString(),
+                                        context,
+                                        TextStyle(
+                                          color: ThemeApp.darkGreyTab,
+                                          fontSize: height * .016,
+                                          fontWeight: FontWeight.w400,
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: width,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: Colors.grey,
+                            width: 0.5,
                           ),
+                          bottom: BorderSide(color: Colors.grey, width: 0.5),
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10)),
-                        ),
-                        padding: const EdgeInsets.only(
-                            top: 10, left: 15, right: 15, bottom: 10),
-                        child: aadToCartCounter(value, index),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: ThemeApp.whiteColor,
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10)),
                       ),
-                    ],
-                  );
-                }
-              })
-          : CircularProgressIndicator(),
-    );
+                      padding: const EdgeInsets.only(
+                          top: 10, left: 15, right: 15, bottom: 10),
+                      child: aadToCartCounter(value, index),
+                    ),
+                  ],
+                );
+              }
+            })
+        : CircularProgressIndicator();
   }
 
   Widget prices(ProductProvider value, int index) {

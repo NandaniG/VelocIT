@@ -17,7 +17,10 @@ import '../../screens/dashBoard.dart';
 import '../Product_Activities/Products_List.dart';
 
 class ShopByCategoryActivity extends StatefulWidget {
-  const ShopByCategoryActivity({Key? key}) : super(key: key);
+
+  final dynamic shopByCategoryList;
+
+  const ShopByCategoryActivity( {Key? key,required this.shopByCategoryList}) : super(key: key);
 
   @override
   State<ShopByCategoryActivity> createState() => _ShopByCategoryActivityState();
@@ -37,6 +40,8 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
         '{"sponsorlogo":"assets/images/iphones_Image.jpg"},'
         '{"sponsorlogo":"assets/images/laptopImage2.jpg"}]';
     var payloadList = payloadFromJson(response);
+    print("widget.shopByCategoryList");
+    // print(widget.shopByCategoryList["shopCategoryImage"]);
     return payloadList;
   }
 
@@ -86,7 +91,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                       // padding: EdgeInsets.only(left: 13.0, right: 13.0, bottom: 25.0),
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: productsList.length,
+                      itemCount:  widget.shopByCategoryList.length,
                       itemBuilder: (context, index) {
                         return Card(
                           shape: RoundedRectangleBorder(
@@ -130,23 +135,22 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                       Container(
                                           width: 60.0,
                                           height: 60.0,
-                                          decoration: new BoxDecoration(
+                                          decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              image: new DecorationImage(
+                                              image: DecorationImage(
                                                   fit: BoxFit.fill,
-                                                  image: new AssetImage(
-                                                    productsList[index]
-                                                        .serviceImage,
+                                                  image: AssetImage(
+                                                    widget.shopByCategoryList[index]["shopCategoryImage"],
                                                   )))),
                                       SizedBox(
                                         width: width * .03,
                                       ),
                                       TextFieldUtils().homePageheadingTextField(
-                                          productsList[index].serviceName,
+                                          widget.shopByCategoryList[index]["shopCategoryName"],
                                           context)
                                     ],
                                   ),
-                                  children: [builderList(productsList)],
+                                  children: [builderList( widget.shopByCategoryList[index])],
                                   onExpansionChanged: ((newState) {
                                     if (newState) {
                                       setState(() {
@@ -212,11 +216,11 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                     boxFit: BoxFit.cover,
                     dotPosition: DotPosition.bottomCenter,
                   ))
-              : new Center(child: new CircularProgressIndicator());
+              : Center(child: CircularProgressIndicator());
         });
   }
 
-  Widget builderList(List<ProductDetailsModel> productsList) {
+  Widget builderList(shopByCategoryList) {
     var orientation =
         (MediaQuery.of(context).orientation == Orientation.landscape);
     return Container(
@@ -225,7 +229,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
         // padding: EdgeInsets.all(12.0),
         alignment: Alignment.center,
         child: GridView.builder(
-          itemCount: productsList.length,
+          itemCount: shopByCategoryList["subShopByCategoryList"].length,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               // childAspectRatio: 2 / 3,
@@ -246,7 +250,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const MobileListActivity(),
+                    builder: (context) =>  ProductListByCategoryActivity(productList: shopByCategoryList["subShopByCategoryList"][index]),
                   ),
                 );
               },
@@ -272,15 +276,16 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                       Container(
                           width: 60.0,
                           height: 60.0,
-                          decoration: new BoxDecoration(
+                          decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              image: new DecorationImage(
+                              image: DecorationImage(
                                   fit: BoxFit.fill,
-                                  image: new AssetImage(
-                                    productsList[index].serviceImage,
+                                  image: AssetImage(
+                                    shopByCategoryList["subShopByCategoryList"][index]["subShopCategoryImage"],
                                   )))),
+                      SizedBox(height: height*.01),
                       TextFieldUtils().appliancesTitleTextFields(
-                          productsList[index].serviceName, context)
+                          shopByCategoryList["subShopByCategoryList"][index]["subShopCategoryName"], context)
                     ],
                   )),
             );

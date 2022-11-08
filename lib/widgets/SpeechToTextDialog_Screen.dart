@@ -45,7 +45,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) =>
-              const MobileListActivity(),
+              const ProductListByCategoryActivity(productList: ''),
             ),
           );
 

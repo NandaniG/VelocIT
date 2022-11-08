@@ -53,7 +53,7 @@ class _HomeState extends State<Home> {
     OfferActivity(),
     Container(),
     Container(),
-    MobileListActivity(),
+    ProductListByCategoryActivity(productList: ''),
   ]);
 
   void onTabChanged(int index) {

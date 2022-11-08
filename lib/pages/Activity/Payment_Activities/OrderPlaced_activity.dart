@@ -9,7 +9,9 @@ import '../../homePage.dart';
 import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
 
 class OrderPlaceActivity extends StatefulWidget {
-  const OrderPlaceActivity({Key? key}) : super(key: key);
+  final dynamic productList;
+
+  const OrderPlaceActivity({Key? key, this.productList,}) : super(key: key);
 
   @override
   State<OrderPlaceActivity> createState() => _OrderPlaceActivityState();
@@ -205,7 +207,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => OrderReviewSubActivity(),
+                  builder: (context) => OrderReviewSubActivity(productList: widget.productList),
                 ),
               );
             },

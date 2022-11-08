@@ -28,7 +28,9 @@ enum CardType {
 enum DropSelections { upi, Wallets, creditCard, cashOnDelivery }
 
 class Payment_Creditcard_debitcardScreen extends StatefulWidget {
-  const Payment_Creditcard_debitcardScreen({Key? key}) : super(key: key);
+  final dynamic productList;
+
+  const Payment_Creditcard_debitcardScreen({Key? key, this.productList}) : super(key: key);
 
   @override
   State<Payment_Creditcard_debitcardScreen> createState() => _Payment_Creditcard_debitcardScreenState();
@@ -113,7 +115,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => OrderPlaceActivity(),
+                          builder: (context) => OrderPlaceActivity(productList: widget.productList),
                         ),
                       );
                     },
