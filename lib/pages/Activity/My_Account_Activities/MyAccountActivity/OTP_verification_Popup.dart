@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
+import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/models/userAccountDetailModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/constants.dart';
@@ -24,7 +25,26 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
   bool _validatePassword = false;
   double height = 0.0;
   double width = 0.0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPreference();
+  }
 
+
+  getPreference() async {
+
+    setState(() {
+
+    });
+    StringConstant.userAccountName = (await Prefs().getToken(StringConstant.userAccountNamePref))!;
+    StringConstant.userAccountEmail = (await Prefs().getToken(StringConstant.userAccountEmailPref))!;
+    StringConstant.userAccountMobile = (await Prefs().getToken(StringConstant.userAccountMobilePref))!;
+    StringConstant.userAccountPass = (await Prefs().getToken(StringConstant.userAccountPassPref))!;
+    print(StringConstant.userAccountName);
+
+  }
   dialogContent(BuildContext context) {
     {
       return ConstrainedBox(
@@ -197,26 +217,20 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                             AppLocalizations.of(context).update,
                             ThemeApp.blackColor,
                             context, () {
-                          value.userAccountDetailList.add(
-                              UserAccountDetailModel(
-                                  userId: 1,
-                                  userName: value.userNameController.text,
-                                  usetEmail: value.userEmailController.text,
-                                  userMobile: value.userMobileController.text,
-                                  userPassword: passwordController.text));
+                          setState(() {
+                            value.userAccountDetailList.add(UserAccountList(
+                                userId: 1,
+                                userName: value.userNameController.text,
+                                userEmail: value.userEmailController.text,
+                                userMobile: value.userMobileController.text,
+                                userPassword: passwordController.text));
 
-                          Prefs().setToken(StringConstant.userAccountNamePref,
-                              value.userNameController.text);
-                          Prefs().setToken(StringConstant.userAccountEmailPref,
-                              value.userEmailController.text);
-                          Prefs().setToken(StringConstant.userAccountMobilePref,
-                              value.userMobileController.text);
-                          Prefs().setToken(StringConstant.userAccountPassPref,
-                              passwordController.text);
 
+                            Prefs().setToken(StringConstant.userAccountPassPref,
+                                passwordController.text);
+                            getPreference();                          });
                           print("value.creditCardList__________" +
-                              value.userAccountDetailList[1].userPassword
-                                  .toString());
+                              value.userNameController.text.toString());
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const MyAccountActivity(),

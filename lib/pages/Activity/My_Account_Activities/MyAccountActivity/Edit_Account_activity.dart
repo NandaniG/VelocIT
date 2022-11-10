@@ -3,9 +3,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/services/models/userAccountDetailModel.dart';
 
+import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/styles.dart';
+import '../../../../utils/utils.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
@@ -183,16 +185,30 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                           ),
                           proceedButton(AppLocalizations.of(context).update,
                               ThemeApp.blackColor, context, () {
-                            value.userAccountDetailList.add(
-                                UserAccountDetailModel(
-                                    userId: 1,
-                                    userName: value.userNameController.text,
-                                    usetEmail: value.userEmailController.text,
-                                    userMobile: value.userMobileController.text,
-                                    userPassword: 'userPassword'));
+
 
                             print("value.creditCardList__________" +
                                 value.userAccountDetailList.length.toString());
+                            setState(() {
+                              value.userAccountDetailList.add(
+                                  UserAccountList(
+                                      userId: 1,
+                                      userName: value.userNameController.text,
+                                      userEmail: value.userEmailController.text,
+                                      userMobile: value.userMobileController.text,
+                                      userPassword: 'userPassword'));
+
+                              Prefs().setToken(StringConstant.userAccountNamePref,
+                                  value.userNameController.text);
+                              Prefs().setToken(
+                                  StringConstant.userAccountEmailPref,
+                                  value.userEmailController.text);
+                              Prefs().setToken(
+                                  StringConstant.userAccountMobilePref,
+                                  value.userMobileController.text);
+
+
+                                });
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {

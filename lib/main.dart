@@ -44,6 +44,9 @@ Future<void> main() async {
 
  await Prefs().getToken(StringConstant.cartListForPreferenceKey);
  await Prefs().getToken('copyCartList');
+
+
+
   //
   // final box = GetStorage();
   // List storageList = [];
@@ -84,7 +87,10 @@ class MyApp extends StatelessWidget {
           ),
           debugShowCheckedModeBanner: false,
           // home: SignIn_Screen(),
-          home: Home(),
+          home: Consumer<HomeProvider>(builder: (context, provider, child){
+              return SplashScreen();
+            }
+          ),
         );
       }),
     );
@@ -99,11 +105,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<HomeProvider>(context, listen: false).loadJson();
+    });
     Timer(Duration(seconds: 3),
             ()=>Navigator.pushReplacement(context,
             MaterialPageRoute(builder:
                 (context) =>
-                Home()
+                Home(homeDataJson: '',)
             )
         )
     );

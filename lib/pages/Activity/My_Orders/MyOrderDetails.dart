@@ -10,7 +10,7 @@ import '../../../widgets/global/textFormFields.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyOrderDetails extends StatefulWidget {
-  final MyOrdersModel values;
+  final dynamic values;
 
   MyOrderDetails({Key? key, required this.values}) : super(key: key);
 
@@ -28,9 +28,9 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
   totalAmount;
   super.initState();
   totalAmount = 0;
-  for (int i = 0; i < widget.values.orderDetailList.length; i++) {
+  for (int i = 0; i < widget.values["myOrderDetailList"].length; i++) {
     totalAmount = int.parse(
-        widget.values.orderDetailList[i].price.toString()) +
+        widget.values["myOrderDetailList"][i]["price"].toString()) +
         totalAmount;
     print(totalAmount);
   }
@@ -70,7 +70,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       TextFieldUtils().dynamicText(
-                          widget.values.orderId,
+                          widget.values["myOrderId"],
                           context,
                           TextStyle(
                               color: ThemeApp.blackColor,
@@ -89,7 +89,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                           color: ThemeApp.whiteColor,
                         ),
                         child: TextFieldUtils().dynamicText(
-                            widget.values.orderStatus,
+                            widget.values["myOrderStatus"],
                             context,
                             TextStyle(
                                 color: ThemeApp.blackColor,
@@ -185,7 +185,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
       child: ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: widget.values.orderDetailList.length,
+          itemCount: widget.values["myOrderDetailList"].length,
           itemBuilder: (BuildContext context, int index) {
             return Row(
               children: [
@@ -202,11 +202,13 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                           children: [
                             Flexible(
                               child: TextFieldUtils().dynamicText(
-                                  widget.values.orderDetailList[index]
-                                      .productDetails,
+                                  widget.values["myOrderDetailList"][index]
+                                      ["productDetails"],
                                   context,
                                   TextStyle(
                                       color: ThemeApp.blackColor,
@@ -225,13 +227,14 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                                     image: new DecorationImage(
                                         fit: BoxFit.fill,
                                         image: new AssetImage(
-                                          widget.values.orderDetailList[index]
-                                              .ProductImage,
+                                          widget.values["myOrderDetailList"][index]
+                                          ["productImage"],
                                         )))),
                           ],
                         ),
                         TextFieldUtils().dynamicText(
-                            widget.values.orderDetailList[index].venderDetails,
+                            widget.values["myOrderDetailList"][index]
+                            ["vendorDetails"],
                             context,
                             TextStyle(
                                 color: ThemeApp.darkGreyTab,
@@ -277,7 +280,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
             height: height * .02,
           ),
           TextFieldUtils().dynamicText(
-              widget.values.orderPerson,
+              widget.values["myOrderPerson"],
               context,
               TextStyle(
                   color: ThemeApp.blackColor,
@@ -287,7 +290,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
             height: height * .02,
           ),
           TextFieldUtils().dynamicText(
-              widget.values.orderDeliveryAddress,
+              widget.values["myOrderDeliveryAddress"],
               context,
               TextStyle(
                   color: ThemeApp.darkGreyColor,
@@ -327,14 +330,14 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           ),
           ListView.builder(
               shrinkWrap: true,
-              itemCount: widget.values.orderDetailList.length,
+              itemCount: widget.values["myOrderDetailList"].length,
               itemBuilder: (BuildContext context, int index) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
                       child: TextFieldUtils().dynamicText(
-                          widget.values.orderDetailList[index].productDetails,
+                          widget.values["myOrderDetailList"][index]["productDetails"],
                           context,
                           TextStyle(
                               color: ThemeApp.darkGreyColor,
@@ -347,7 +350,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                     ),
                     TextFieldUtils().dynamicText(
                         indianRupeesFormat.format(int.parse(
-                            widget.values.orderDetailList[index].price)),
+                            widget.values["myOrderDetailList"][index]["price"])),
                         context,
                         TextStyle(
                             color: ThemeApp.darkGreyColor,
@@ -469,7 +472,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
 }
 
 class CancelOrderBottomSheet extends StatefulWidget {
-  final MyOrdersModel values;
+  final dynamic values;
 
   const CancelOrderBottomSheet({Key? key, required this.values})
       : super(key: key);
@@ -562,7 +565,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
         color: ThemeApp.whiteColor,
         child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.values.orderDetailList.length,
+            itemCount: widget.values["myOrderCancelList"].length,
             itemBuilder: (context, index) {
               return SizedBox(
                 height: height * .035,
@@ -572,17 +575,17 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
                   children: [
                     Checkbox(
                       value:
-                          widget.values.orderDetailList[index].isOrderCanceled,
+                      widget.values["myOrderCancelList"][index]["isCancelProductFor"],
                       onChanged: (values) {
                         setState(() {
-                          widget.values.orderDetailList[index].isOrderCanceled =
+                          widget.values["myOrderCancelList"][index]["isCancelProductFor"] =
                               values!;
                         });
                       },
                     ),
                     Flexible(
                       child: TextFieldUtils().dynamicText(
-                          widget.values.orderDetailList[index].productDetails,
+                          widget.values["myOrderCancelList"][index]["whyCancelProduct"],
                           context,
                           TextStyle(
                               color: ThemeApp.darkGreyColor,
@@ -625,7 +628,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
         color: ThemeApp.whiteColor,
         child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.values.orderCancelList.length,
+            itemCount: widget.values["myOrderCancelList"].length,
             itemBuilder: (context, index) {
               return SizedBox(
                 height: height * .035,
@@ -635,22 +638,20 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
                   children: [
                     Radio(
                       value:
-                          widget.values.orderCancelList[index].whyCancelProduct,
+                      widget.values["myOrderCancelList"][index]["whyCancelProduct"],
                       groupValue: valuesGroup,
                       onChanged: (d) {
                         setState(() {
-                          valuesGroup = widget
-                              .values.orderCancelList[index].whyCancelProduct;
+                          valuesGroup = widget.values["myOrderCancelList"][index]["whyCancelProduct"];
                         });
                         print("-----tapped canceled reason-----------" +
-                            widget.values.orderCancelList[index]
-                                .whyCancelProduct);
+                            widget.values["myOrderCancelList"][index]["whyCancelProduct"]);
                       },
                       toggleable: true,
                     ),
                     Flexible(
                       child: TextFieldUtils().dynamicText(
-                          widget.values.orderCancelList[index].whyCancelProduct,
+                          widget.values["myOrderCancelList"][index]["whyCancelProduct"],
                           context,
                           TextStyle(
                               color: ThemeApp.darkGreyColor,
@@ -721,7 +722,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
 }
 
 class ReturnOrderBottomSheet extends StatefulWidget {
-  final MyOrdersModel values;
+  final dynamic values;
 
   const ReturnOrderBottomSheet({Key? key, required this.values})
       : super(key: key);
@@ -813,7 +814,7 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
         color: ThemeApp.whiteColor,
         child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.values.orderDetailList.length,
+            itemCount: widget.values["myOrderReturnList"].length,
             itemBuilder: (context, index) {
               return SizedBox(
                 height: height * .035,
@@ -823,17 +824,17 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
                   children: [
                     Checkbox(
                       value:
-                          widget.values.orderDetailList[index].isOrderReturned,
+                      widget.values["myOrderReturnList"][index]["isReturnProductFor"],
                       onChanged: (values) {
                         setState(() {
-                          widget.values.orderDetailList[index].isOrderReturned =
+                          widget.values["myOrderReturnList"][index]["isReturnProductFor"] =
                               values!;
                         });
                       },
                     ),
                     Flexible(
                       child: TextFieldUtils().dynamicText(
-                          widget.values.orderDetailList[index].productDetails,
+                          widget.values["myOrderReturnList"][index]["whyReturnProduct"],
                           context,
                           TextStyle(
                               color: ThemeApp.darkGreyColor,
@@ -867,7 +868,7 @@ var valuesGroup='';
         color: ThemeApp.whiteColor,
         child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.values.orderReturnList.length,
+            itemCount: widget.values["myOrderReturnList"].length,
             itemBuilder: (context, index) {
               return SizedBox(
                 height: height * .035,
@@ -877,22 +878,20 @@ var valuesGroup='';
                   children: [
                     Radio(
                       value:
-                      widget.values.orderReturnList[index].whyReturnProduct,
+                      widget.values["myOrderReturnList"][index]["whyReturnProduct"],
                       groupValue: valuesGroup,
                       onChanged: (d) {
                         setState(() {
-                          valuesGroup = widget
-                              .values.orderReturnList[index].whyReturnProduct;
+                          valuesGroup = widget.values["myOrderReturnList"][index]["whyReturnProduct"];
                         });
                         print("-----tapped canceled reason-----------" +
-                            widget.values.orderReturnList[index]
-                                .whyReturnProduct);
+                            widget.values["myOrderReturnList"][index]["whyReturnProduct"]);
                       },
                       toggleable: true,
                     ),
                     Flexible(
                       child: TextFieldUtils().dynamicText(
-                          widget.values.orderReturnList[index].whyReturnProduct,
+                          widget.values["myOrderReturnList"][index]["whyReturnProduct"],
                           context,
                           TextStyle(
                               color: ThemeApp.darkGreyColor,

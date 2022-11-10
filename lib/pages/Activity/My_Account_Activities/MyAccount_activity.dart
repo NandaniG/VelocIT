@@ -35,11 +35,15 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
   }
 
   getPreference() async {
+
+  setState(() {
+
+  });
     StringConstant.userAccountName = (await Prefs().getToken(StringConstant.userAccountNamePref))!;
     StringConstant.userAccountEmail = (await Prefs().getToken(StringConstant.userAccountEmailPref))!;
     StringConstant.userAccountMobile = (await Prefs().getToken(StringConstant.userAccountMobilePref))!;
     StringConstant.userAccountPass = (await Prefs().getToken(StringConstant.userAccountPassPref))!;
-
+    print(StringConstant.userAccountName);
 
     }
 

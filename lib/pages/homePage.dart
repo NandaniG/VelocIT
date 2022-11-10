@@ -5,12 +5,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/Product_Activities/Products_List.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/pages/screens/offers_Activity.dart';
 import 'package:velocit/pages/tabs/tabs.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
+import 'package:velocit/services/providers/Home_Provider.dart';
 
 import '../services/models/ProductDetailModel.dart';
 import '../services/providers/Products_provider.dart';
@@ -23,6 +25,10 @@ import '../widgets/global/textFormFields.dart';
 import '../widgets/scannerWithGallery.dart';
 
 class Home extends StatefulWidget {
+   final dynamic homeDataJson;
+
+  const Home({super.key, required this.homeDataJson});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -31,11 +37,17 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
   var userName = '';
   var getResult = 'QR Code Result';
-
+  Future<void> fetch() async {
+    await Provider.of<HomeProvider>(context, listen: false);
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+
+    fetch();
+    print("Fetch____________");
   }
 
   final List _tabIcons = List.unmodifiable([
@@ -45,17 +57,21 @@ class _HomeState extends State<Home> {
     {'icon': 'assets/icons/shop.png'},
     {'icon': 'assets/icons/shopping-cart.png'},
   ]);
- late ProductDetailsModel model;
- late ProductProvider value;
+
+
   final List<Widget> _tabs = List.unmodifiable([
     // SearchList(),
     DashboardScreen(),
     OfferActivity(),
     Container(),
     Container(),
-    ProductListByCategoryActivity(productList: ''),
+    Container(),
   ]);
 
+
+  Widget cartDetails(){
+    return Container();
+  }
   void onTabChanged(int index) {
     setState(() => currentIndex = index);
   }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 
 import '../../../../services/models/AddressListModel.dart';
+import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/proceedButtons.dart';
@@ -11,7 +12,7 @@ import '../../../../widgets/global/textFormFields.dart';
 
 class DeleteAddressDialog extends StatefulWidget {
   final int index;
-  List<AddressListModel> addressList;
+  List<MyAddressList> addressList;
 
   DeleteAddressDialog({required this.index, required this.addressList});
 

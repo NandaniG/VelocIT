@@ -104,13 +104,13 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                           itemCount: value.addressList.length,
                           itemBuilder: (_, index) {
                             var fullAddress =
-                                value.addressList[index].houseNoBuildingName +
+                                value.addressList[index].myAddressHouseNoBuildingName! +
                                     ", " +
-                                    value.addressList[index].areaColony +
+                                    value.addressList[index].myAddressAreaColony! +
                                     ", " +
-                                    value.addressList[index].city +
+                                    value.addressList[index].myAddressCity! +
                                     ",\n" +
-                                    value.addressList[index].state;
+                                    value.addressList[index].myAddressState!;
                             return Padding(
                               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                               child: Container(
@@ -143,7 +143,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                 children: [
                                                   TextFieldUtils().dynamicText(
                                                       value.addressList[index]
-                                                          .fullName,
+                                                          .myAddressFullName!,
                                                       context,
                                                       TextStyle(
                                                           color: ThemeApp
@@ -178,7 +178,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                             value
                                                                 .addressList[
                                                                     index]
-                                                                .typeOfAddress,
+                                                                .myAddressTypeOfAddress!,
                                                             context,
                                                             TextStyle(
                                                                 color: ThemeApp
@@ -258,7 +258,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                         height: height * .02,
                                       ),
                                       TextFieldUtils().dynamicText(
-                                          "${AppLocalizations.of(context).contactNumber + ' : ' + value.addressList[index].phoneNumber}",
+                                          "${AppLocalizations.of(context).contactNumber + ' : ' + value.addressList[index].myAddressPhoneNumber!}",
                                           context,
                                           TextStyle(
                                               color: ThemeApp.blackColor,

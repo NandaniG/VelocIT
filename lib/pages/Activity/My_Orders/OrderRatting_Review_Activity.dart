@@ -11,8 +11,8 @@ import '../../../widgets/global/textFormFields.dart';
 import 'MyOrderDetails.dart';
 
 class OrderRatingReviewActivity extends StatefulWidget {
- final MyOrdersModel values;
-
+ // final MyOrdersModel values;
+  final dynamic values;
   OrderRatingReviewActivity({Key? key, required this.values}) : super(key: key);
 
   @override
@@ -95,7 +95,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: TextFieldUtils().dynamicText(
-                  widget.values.orderId,
+                  widget.values["myOrderId"],
                   context,
                   TextStyle(
                     color: ThemeApp.blackColor,
@@ -109,7 +109,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: TextFieldUtils().dynamicText(
-                  widget.values.orderDate,
+                  widget.values["myOrderDate"],
                   context,
                   TextStyle(
                     color: ThemeApp.darkGreyTab,
@@ -128,7 +128,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
               child: ListView.builder(
                   // physics: NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemCount: widget.values.orderDetailList.length,
+                  itemCount: widget.values["myOrderDetailList"].length,
                   itemBuilder: (_, index) {
                     return SingleChildScrollView(
                       child: Container(
@@ -143,8 +143,8 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                   width: width * .3,
                                   child: Image(
                                     image: AssetImage(
-                                      widget.values.orderDetailList[index]
-                                          .ProductImage,
+                                      widget.values["myOrderDetailList"][index]
+                                          ["productImage"],
                                     ),
                                     fit: BoxFit.fill,
                                   ),
@@ -157,8 +157,8 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                 padding:
                                     const EdgeInsets.only(left: 30, right: 30),
                                 child: TextFieldUtils().dynamicText(
-                                    widget.values.orderDetailList[index]
-                                        .productDetails,
+                                    widget.values["myOrderDetailList"][index]
+                                    ["productDetails"],
                                     context,
                                     TextStyle(
                                       color: ThemeApp.darkGreyColor,

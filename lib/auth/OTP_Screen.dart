@@ -139,7 +139,7 @@ class _OTPScreenState extends State<OTPScreen> {
            if(controller.text.length >= 6){
              Navigator.of(context).push(
                MaterialPageRoute(
-                 builder: (context) => Home(),
+                 builder: (context) => Home(homeDataJson: ''),
                ),
              );
            }else{

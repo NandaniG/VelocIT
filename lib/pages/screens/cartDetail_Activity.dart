@@ -14,6 +14,7 @@ import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/appBar.dart';
 import '../../widgets/global/textFormFields.dart';
+import '../Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import '../Activity/Payment_Activities/payments_Activity.dart';
 import 'dashBoard.dart';
 
@@ -23,7 +24,7 @@ class CartDetailsActivity extends StatefulWidget {
   // ProductDetailsModel model;
   ProductProvider value;
 
-  CartDetailsActivity( {Key? key, required this.value, this.productList})
+  CartDetailsActivity( {Key? key, required this.value, required this.productList})
       : super(key: key);
 
   @override
@@ -64,16 +65,16 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
     for (int i = 0; i < widget.value.cartList.length; i++) {
       finalOriginalPrice = finalOriginalPrice +
-          (int.parse(widget.value.cartList[i].tempCounter.toString()) *
-              double.parse(widget.value.cartList[i].originalPrice.toString()));
+          (int.parse(widget.value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(widget.value.cartList[i].cartProductsOriginalPrice.toString()));
 
       Prefs().setDoubleToken(StringConstant.totalOriginalPricePref,finalOriginalPrice);
 
       print("________finalOriginalPrice add: $i $finalOriginalPrice");
 
       finalDiscountPrice = finalDiscountPrice +
-          (int.parse(widget.value.cartList[i].tempCounter.toString()) *
-              double.parse(widget.value.cartList[i].discountPrice.toString()));
+          (int.parse(widget.value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(widget.value.cartList[i].cartProductsDiscountPrice.toString()));
 
       print("________finalDiscountPrice add: $i $finalDiscountPrice");
 
@@ -156,9 +157,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     ]),
                 InkWell(
                     onTap: () async {
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => Payment_Creditcard_debitcardScreen(productList: widget.productList),
+                      //   ),
+                      // );
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => Payment_Creditcard_debitcardScreen(productList: widget.productList),
+                          builder: (context) => OrderReviewSubActivity(value:value),
                         ),
                       );
                       // Prefs().clear();
@@ -251,7 +257,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                   child: Image.asset(
                                     // width: double.infinity,
                                     // snapshot.data![index].serviceImage,
-                                    value.cartList[index].serviceImage.toString(),
+                                    value.cartList[index].cartProductsImage.toString(),
                                     fit: BoxFit.fill,
                                     // width: width*.18,
                                     height: height * .18,
@@ -270,7 +276,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       TextFieldUtils().appBarTextField(
-                                          value.cartList[index].serviceDescription
+                                          value.cartList[index].cartProductsDescription
                                               .toString(),
                                           context),
                                       SizedBox(
@@ -285,7 +291,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                         height: height * .01,
                                       ),
                                       TextFieldUtils().subHeadingTextFields(
-                                          value.cartList[index].deliveredBy
+                                          value.cartList[index].cartProductsDeliveredBy
                                               .toString(),
                                           context),
                                     ],
@@ -333,13 +339,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   var originialAmount;
 
   void addQuantity(ProductProvider value, int index) {
-    print("maxCounter counter ${value.cartList[index].maxCounter}");
-    print("temp counter 1 ${value.cartList[index].tempCounter}");
-    if (int.parse(value.cartList[index].tempCounter.toString()) <
-        int.parse(value.cartList[index].maxCounter.toString())) {
-      value.cartList[index].tempCounter =
-          int.parse(value.cartList[index].tempCounter.toString()) + 1;
-      print("temp counter 2 ${value.cartList[index].tempCounter}");
+    print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
+    print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
+    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) <
+        int.parse(value.cartList[index].cartProductsMaxCounter.toString())) {
+      value.cartList[index].cartProductsTempCounter =
+          int.parse(value.cartList[index].cartProductsTempCounter.toString()) + 1;
+      print("temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
 
       finalPrices(value, index);
     }
@@ -353,16 +359,16 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
     for (int i = 0; i < value.cartList.length; i++) {
       finalOriginalPrice = finalOriginalPrice +
-          (int.parse(value.cartList[i].tempCounter.toString()) *
-              double.parse(value.cartList[i].originalPrice.toString()));
+          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(value.cartList[i].cartProductsOriginalPrice.toString()));
 
       Prefs().setDoubleToken(StringConstant.totalOriginalPricePref,finalOriginalPrice);
 
       print("______finaloriginalPrice______" + finalOriginalPrice.toString());
 
       finalDiscountPrice = finalDiscountPrice +
-          (int.parse(value.cartList[i].tempCounter.toString()) *
-              double.parse(value.cartList[i].discountPrice.toString()));
+          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(value.cartList[i].cartProductsDiscountPrice .toString()));
       print("______finalDiscountPrice______" + finalDiscountPrice.toString());
 
 
@@ -381,17 +387,17 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   }
 
   Future<void> minusQuantity(ProductProvider value, int index) async {
-    print("maxCounter counter ${value.cartList[index].maxCounter}");
-    print("temp counter 1 minus ${value.cartList[index].tempCounter}");
+    print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
+    print("temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
 
-    if (int.parse(value.cartList[index].tempCounter.toString()) > 0) {
-      value.cartList[index].tempCounter =
-          int.parse(value.cartList[index].tempCounter.toString()) - 1;
-      print("temp counter 2 minus  ${value.cartList[index].tempCounter}");
-      value.cartList[index].totalOriginalPrice = ((value.cartList[index].tempCounter)! *
-          double.parse(value.cartList[index].originalPrice.toString()));
+    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) > 0) {
+      value.cartList[index].cartProductsTempCounter =
+          int.parse(value.cartList[index].cartProductsTempCounter.toString()) - 1;
+      print("temp counter 2 minus  ${value.cartList[index].cartProductsTempCounter}");
+      value.cartList[index].cartProductsTotalOriginalPrice = ((value.cartList[index].cartProductsTempCounter)! *
+          double.parse(value.cartList[index].cartProductsOriginalPrice.toString())) as int?;
       print(
-          "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].totalOriginalPrice}");
+          "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
 
 ////PRICE CODE AFTER ADDING COUNT
       finalPrices(value, index);
@@ -408,7 +414,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           children: [
             RatingBar.builder(
               itemSize: height * .022,
-              initialRating: value.cartList[index].ratting!.toDouble(),
+              initialRating: value.cartList[index].cartProductsRatting!,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
@@ -423,7 +429,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               },
             ),
             TextFieldUtils().subHeadingTextFields(
-                '${value.cartList[index].ratting} Reviews', context),
+                '${value.cartList[index].cartProductsRatting} Reviews', context),
           ],
         ),
       ),
@@ -436,20 +442,20 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextFieldUtils().homePageheadingTextField(
-              "${indianRupeesFormat.format(int.parse(value.cartList[index].discountPrice.toString()))}",
+              "${indianRupeesFormat.format(int.parse(value.cartList[index].cartProductsDiscountPrice.toString()))}",
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().homePageheadingTextFieldLineThrough(
               indianRupeesFormat
-                  .format(int.parse(value.cartList[index].originalPrice.toString())),
+                  .format(int.parse(value.cartList[index].cartProductsOriginalPrice.toString())),
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().homePageTitlesTextFields(
-              value.cartList[index].offerPercent.toString(), context),
+              value.cartList[index].cartProductsOfferPercent.toString(), context),
         ],
       ),
     );
@@ -498,7 +504,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     padding: const EdgeInsets.only(
                         left: 8.0, right: 8, top: 0, bottom: 0),
                     child: Text(
-                      value.cartList[index].tempCounter.toString(),
+                      value.cartList[index].cartProductsTempCounter.toString(),
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.height * .016,
                           fontWeight: FontWeight.w400,

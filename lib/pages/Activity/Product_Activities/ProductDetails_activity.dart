@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/models/CartModel.dart';
+import '../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../services/models/ProductDetailModel.dart';
 import '../../../services/models/demoModel.dart';
 import '../../../services/providers/Products_provider.dart';
@@ -36,7 +37,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   double height = 0.0;
   double width = 0.0;
 
-  late List<CartModel> cartList;
+  late List<CartProductList> cartList;
 
   @override
   void initState() {
@@ -445,7 +446,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         await SharedPreferences.getInstance();
 
                     var contain = value.cartList.where((element) =>
-                        element.serviceDescription ==
+                        element.cartProductsDescription ==
                             widget.productList["productsListDescription"]);
                     if (value.cartList.length >= 0) {
                       if (contain.isNotEmpty) {

@@ -15,7 +15,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'FilterScreen_Merchant.dart';
 
 class MerchantActvity extends StatefulWidget {
-  const MerchantActvity({Key? key}) : super(key: key);
+  final dynamic merchantList;
+
+  const MerchantActvity({Key? key, this.merchantList}) : super(key: key);
 
   @override
   State<MerchantActvity> createState() => _MerchantActvityState();
@@ -25,7 +27,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
-  bool isGridView = false;
+  // bool isGridView = false;
 
   late GoogleMapController mapController; //contrller for Google map
   final Set<Marker> markers = new Set(); //markers for google map
@@ -131,14 +133,14 @@ class _MerchantActvityState extends State<MerchantActvity> {
                       scale: 1.3,
                       child: Switch(
                         // This bool value toggles the switch.
-                        value: isGridView,
+                        value: widget.merchantList["merchantNearYouIsGridView"],
                         activeColor: ThemeApp.darkGreyTab,
                         inactiveTrackColor: ThemeApp.textFieldBorderColor,
                         inactiveThumbColor: ThemeApp.darkGreyTab,
                         onChanged: (bool value) {
                           // This is called when the user toggles the switch.
                           setState(() {
-                            isGridView = value;
+                            widget.merchantList["merchantNearYouIsGridView"] = value;
                           });
                         },
                       ),
@@ -193,7 +195,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
         child: Stack(
           children: [
-            !isGridView ? budgetBuyList() : mapView(),
+            !widget.merchantList["merchantNearYouIsGridView"] ? budgetBuyList() : mapView(),
             SizedBox(
               height: MediaQuery.of(context).size.height * .02,
             ),
@@ -216,16 +218,12 @@ class _MerchantActvityState extends State<MerchantActvity> {
           SizedBox(
             height: MediaQuery.of(context).size.height * .02,
           ),
-          FutureBuilder<List<OfferBannerModel>>(
-              future: getOfferImages(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) print(snapshot.error);
-                return snapshot.hasData
-                    ? Container(
+
+                Container(
                         height: MediaQuery.of(context).size.height,
                         // padding: EdgeInsets.all(12.0),
                         child: GridView.builder(
-                          itemCount: snapshot.data!.length,
+                          itemCount: widget.merchantList["subMerchantList"].length,
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
@@ -275,10 +273,9 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                               topRight: Radius.circular(10),
                                               topLeft: Radius.circular(10),
                                             ),
-                                            child: Image.network(
+                                            child: Image.asset(
                                               // width: double.infinity,
-                                              snapshot
-                                                  .data![index].serviceImage,
+                                              widget.merchantList["subMerchantList"][index]["subMerchantNearYouImage"],
                                               fit: BoxFit.fill,
                                               height: MediaQuery.of(context)
                                                       .size
@@ -291,7 +288,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                           padding: const EdgeInsets.only(
                                               top: 7, right: 7),
                                           child: kmAwayOnMerchantImage(
-                                            '1.2 km away',
+                                            widget.merchantList["subMerchantList"][index]["subMerchantNearYoukmAWAY"],
                                             context,
                                           ),
                                         )
@@ -301,15 +298,14 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                       padding: const EdgeInsets.all(7),
                                       child: TextFieldUtils()
                                           .homePageTitlesTextFieldsWHITE(
-                                              snapshot.data![index].serviceName,
+                                          widget.merchantList["subMerchantList"][index]["subMerchantNearYouName"],
                                               context),
                                     ),
                                   ],
                                 ));
                           },
                         ))
-                    : const Center(child: CircularProgressIndicator());
-              }),
+
         ],
       ),
     );

@@ -198,7 +198,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
                       Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => Home(),
+                              builder: (context) => Home(homeDataJson: ''),
                             ),
                           );
                         } else {

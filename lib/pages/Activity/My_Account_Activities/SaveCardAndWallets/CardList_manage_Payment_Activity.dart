@@ -87,7 +87,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                               children: [
                                                 TextFieldUtils().dynamicText(
                                                     value.creditCardList[index]
-                                                        .cardName,
+                                                        .myCardFullName!,
                                                     context,
                                                     TextStyle(
                                                       color:
@@ -101,7 +101,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                                 ),
                                                 TextFieldUtils().dynamicText(
                                                     value.creditCardList[index]
-                                                        .cardType,
+                                                        .myCardType!,
                                                     context,
                                                     TextStyle(
                                                       color:
@@ -113,7 +113,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                                 ),
                                                 TextFieldUtils().dynamicText(
                                                     value.creditCardList[index]
-                                                        .cardNumber,
+                                                        .myCardNumber!,
                                                     context,
                                                     TextStyle(
                                                       color:

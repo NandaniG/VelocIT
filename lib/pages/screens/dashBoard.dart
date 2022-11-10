@@ -44,9 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     getPincode();
     StringConstant.controllerSpeechToText.clear();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      homeData = Provider.of<HomeProvider>(context, listen: false);
-    });
+
   }
 
   getPincode() async {
@@ -97,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print('object-------------' + provider.jsonData.toString());
         return
         SafeArea(
-            child: provider.jsonData.length<0? CircularProgressIndicator():Container(
+            child: provider.jsonData.length>0?Container(
                 // height: MediaQuery.of(context).size.height,
                 padding: const EdgeInsets.only(
                   left: 20,
@@ -186,7 +184,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => MerchantActvity(),
+                                builder: (context) => MerchantActvity(merchantList: provider.merchantNearYouList),
                               ),
                             );
                           })
@@ -216,7 +214,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       budgetBuyList(provider),
                     ],
                   ),
-                )));
+                )): Center(child: CircularProgressIndicator(color: ThemeApp.blackColor,)));
       }),
     );
   }
@@ -651,8 +649,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return FutureBuilder(
         future: provider.merchantNearYouListService(),
         builder: (context, snapshot) {
-          print("provider.merchantNearYouListService" +
-              provider.merchantNearYouList.toString());
+          // print("provider.merchantNearYouListService" +
+          //     provider.merchantNearYouList.toString());
 
           if (snapshot.hasError) print(snapshot.error);
         return Container(
@@ -666,7 +664,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => MerchantActvity(),
+                        builder: (context) => MerchantActvity(merchantList: provider.merchantNearYouList[index]),
                       ),
                     );
                   },
@@ -715,7 +713,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         const EdgeInsets.only(top: 10, right: 10),
                                     child: kmAwayOnMerchantImage(
                                       provider.merchantNearYouList
-                                          [index]["kmAWAY"],
+                                          [index]["merchantNearYoukmAWAY"],
                                       context,
                                     ),
                                   )

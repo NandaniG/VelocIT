@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/services/providers/Home_Provider.dart';
 
-import '../../../services/models/MyOrdersModel.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
@@ -56,19 +55,19 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
   }
 
   Widget mainUI() {
-    return Consumer<ProductProvider>(builder: (context, value, child) {
+    return Consumer<HomeProvider>(builder: (context, value, child) {
       return Column(
         children: [
-          value.myOrderList.length > 0
+          value.myOrdersList.length > 0
               ? Expanded(
                   child: ListView.builder(
-                      itemCount: value.myOrderList.length,
+                      itemCount: value.myOrdersList.length,
                       itemBuilder: (_, index) {
                         return InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => OrderRatingReviewActivity(
-                                    values: value.myOrderList[index])));
+                                    values: value.myOrdersList[index])));
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 20),
@@ -106,8 +105,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextFieldUtils().dynamicText(
-                                                  value.myOrderList[index]
-                                                      .orderId,
+                                                  value.myOrdersList[index]["myOrderId"],
                                                   context,
                                                   TextStyle(
                                                     color: ThemeApp.blackColor,
@@ -118,8 +116,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                               //   height: height * .01,
                                               // ),
                                               TextFieldUtils().dynamicText(
-                                                  value.myOrderList[index]
-                                                      .orderDate,
+                                                  value.myOrdersList[index]["myOrderDate"],
                                                   context,
                                                   TextStyle(
                                                     color: ThemeApp.darkGreyTab,
@@ -147,10 +144,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                   ),
                                                   child: TextFieldUtils()
                                                       .dynamicText(
-                                                          value
-                                                              .myOrderList[
-                                                                  index]
-                                                              .orderStatus,
+                                                      value.myOrdersList[index]["myOrderStatus"],
                                                           context,
                                                           TextStyle(
                                                               color: ThemeApp
@@ -167,8 +161,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                 TextFieldUtils().dynamicText(
                                                     indianRupeesFormat.format(
                                                         int.parse(value
-                                                            .myOrderList[index]
-                                                            .orderPrice)),
+                                                            .myOrdersList[index]["myOrderPrice"])),
                                                     context,
                                                     TextStyle(
                                                         color:
@@ -207,8 +200,8 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                 // childAspectRatio: 4/7
                                               ),
                                               itemCount: value
-                                                  .myOrderList[index]
-                                                  .orderDetailList
+                                                  .myOrdersList[index]
+                                                  ["myOrderDetailList"]
                                                   .length,
                                               itemBuilder:
                                                   (context, indexOrderList) {
@@ -228,11 +221,10 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                         child: Image(
                                                           image: AssetImage(
                                                             value
-                                                                .myOrderList[
+                                                                .myOrdersList[
                                                                     index]
-                                                                .orderDetailList[
-                                                                    indexOrderList]
-                                                                .ProductImage,
+                                                                ["myOrderDetailList"][
+                                                                    indexOrderList]["productImage"],
                                                           ),
                                                           fit: BoxFit.fill,
                                                         ),
@@ -251,31 +243,31 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                               width: width * .63,
                                               child: ListView.builder(
                                                 itemCount: value
-                                                            .myOrderList[index]
-                                                            .orderDetailList
+                                                            .myOrdersList[index]
+                                                            ["myOrderDetailList"]
                                                             .length >
                                                         4
                                                     ? !viewMore
                                                         ? 4
                                                         : value
-                                                            .myOrderList[index]
-                                                            .orderDetailList
+                                                            .myOrdersList[index]
+                                                            ["myOrderDetailList"]
                                                             .length
-                                                    : value.myOrderList[index]
-                                                        .orderDetailList.length,
+                                                    : value.myOrdersList[index]
+                                                        ["myOrderDetailList"].length,
                                                 itemBuilder: (context,
                                                     indexOrderDetails) {
                                                   return (value
-                                                              .myOrderList[
+                                                              .myOrdersList[
                                                                   index]
-                                                              .orderDetailList
+                                                              ["myOrderDetailList"]
                                                               .length >=
                                                           4)
                                                       ? !viewMore
                                                           ? Container(
                                                               child: InkWell(
                                                               child: TextFieldUtils().dynamicText(
-                                                                  "- ${value.myOrderList[index].orderDetailList[indexOrderDetails].productDetails}",
+                                                                  "- ${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
                                                                   context,
                                                                   TextStyle(
                                                                       color: ThemeApp
@@ -294,7 +286,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                           : Container(
                                                               child: InkWell(
                                                               child: TextFieldUtils().dynamicText(
-                                                                  "- ${value.myOrderList[index].orderDetailList[indexOrderDetails].productDetails}",
+                                                                  "- ${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
                                                                   context,
                                                                   TextStyle(
                                                                       color: ThemeApp
@@ -313,7 +305,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                       : Container(
                                                           child: InkWell(
                                                           child: TextFieldUtils().dynamicText(
-                                                              "- ${value.myOrderList[index].orderDetailList[indexOrderDetails].productDetails}",
+                                                              "- ${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
                                                               context,
                                                               TextStyle(
                                                                   color: ThemeApp
@@ -345,8 +337,8 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           SizedBox(
                                             width: width * .03,
                                           ),
-                                          value.myOrderList[index]
-                                                      .orderDetailList.length >
+                                          value.myOrdersList[index]
+                                                      ["myOrderDetailList"].length >
                                                   4
                                               ? !viewMore
                                                   ? InkWell(
@@ -452,16 +444,16 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             TextFieldUtils().dynamicText(
-                                                value.myOrderList[index]
-                                                    .orderProgress,
+                                                value.myOrdersList[index]
+                                                    ["myOrderProgress"],
                                                 context,
                                                 TextStyle(
                                                     color: ThemeApp.darkGreyTab,
                                                     fontSize: height * .02,
                                                     fontWeight:
                                                         FontWeight.w400)),
-                                            value.myOrderList[index]
-                                                        .orderStatus ==
+                                            value.myOrdersList[index]
+                                                        ["myOrderStatus"] ==
                                                     'Delivered'
                                                 ? InkWell(
                                                     onTap: () {
@@ -469,8 +461,8 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                     },
                                                     child: rattingBar())
                                                 : SizedBox(),
-                                            value.myOrderList[index]
-                                                        .orderStatus ==
+                                            value.myOrdersList[index]
+                                                        ["myOrderStatus"] ==
                                                     'Delivered'
                                                 ? Container(
                                                     padding: const EdgeInsets

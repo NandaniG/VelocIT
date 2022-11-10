@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../services/providers/Home_Provider.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/textFormFields.dart';
@@ -9,9 +11,9 @@ import '../../homePage.dart';
 import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
 
 class OrderPlaceActivity extends StatefulWidget {
-  final dynamic productList;
+  final dynamic orderReview;
 
-  const OrderPlaceActivity({Key? key, this.productList,}) : super(key: key);
+  const OrderPlaceActivity({Key? key, this.orderReview, }) : super(key: key);
 
   @override
   State<OrderPlaceActivity> createState() => _OrderPlaceActivityState();
@@ -35,58 +37,61 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
         context, appTitle(context, "Order Checkout"), SizedBox()),
       ),
       body: SafeArea(
-        child: Container(
+        child:Consumer<HomeProvider>(builder: (context, value, child) {
+            return Container(
     color: ThemeApp.whiteColor,
     width: width,
     child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            stepperWidget(),
-            Icon(
-              Icons.check_circle_outlined,
-              size: 100,
-            ),
-            SizedBox(
-              height: height * 0.02,
-            ),
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                stepperWidget(),
+                Icon(
+                  Icons.check_circle_outlined,
+                  size: 100,
+                ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
 
-            TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).orderPlacedSuccessfully,
-                context,
-                TextStyle(
-                    color: Colors.grey.shade700,
-                    fontSize: height * .035,
-                    fontWeight: FontWeight.w500)),
-            TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).thankyouForOrderingWithUs,
-                context,
-                TextStyle(
-                    color: ThemeApp.darkGreyTab,
-                    fontSize: height * .025,
-                    fontWeight: FontWeight.w500)),
-            SizedBox(
-              height: height * 0.04,
-            ),
+                TextFieldUtils().dynamicText(
+                    AppLocalizations.of(context).orderPlacedSuccessfully,
+                    context,
+                    TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: height * .035,
+                        fontWeight: FontWeight.w500)),
+                TextFieldUtils().dynamicText(
+                    AppLocalizations.of(context).thankyouForOrderingWithUs,
+                    context,
+                    TextStyle(
+                        color: ThemeApp.darkGreyTab,
+                        fontSize: height * .025,
+                        fontWeight: FontWeight.w500)),
+                SizedBox(
+                  height: height * 0.04,
+                ),
 
-            TextFieldUtils().dynamicText(
-                '${AppLocalizations.of(context).orderId + ": OID907987"}',
-                context,
-                TextStyle(
-                    color: Colors.grey.shade700,
-                    fontSize: height * .025,
-                    fontWeight: FontWeight.w500)),
-            // SizedBox(height: height*0.01,),
-            Image.asset(
-              'assets/images/qr_test_image.png',
-              scale: 1.5,
-            ),
-            SizedBox(
-              height: height * 0.02,
-            ),
+                TextFieldUtils().dynamicText(
+                    '${AppLocalizations.of(context).orderId + ": ${value.orderCheckOutList[0]['orderCheckOutOrderID']}"}',
+                    context,
+                    TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: height * .025,
+                        fontWeight: FontWeight.w500)),
+                // SizedBox(height: height*0.01,),
+                Image.asset(
+                  value.orderCheckOutList[0]["orderCheckOutQRCode"],
+                  scale: 1.5,
+                ),
+                SizedBox(
+                  height: height * 0.02,
+                ),
 
-            buttonsForOrderAndShippin(),
-          ]),
+                buttonsForOrderAndShippin(),
+              ]),
+            );
+          }
         ),
       ),
     );
@@ -205,11 +210,11 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
           flex: 1,
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => OrderReviewSubActivity(productList: widget.productList),
-                ),
-              );
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (context) => OrderReviewSubActivity(productList: widget.productList),
+              //   ),
+              // );
             },
             child: Container(
                 padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
@@ -232,7 +237,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => Home(),
+                  builder: (context) => Home(homeDataJson: ''),
                 ),
               );
             },

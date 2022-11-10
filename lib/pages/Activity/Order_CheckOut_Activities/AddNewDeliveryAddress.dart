@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 
 import '../../../services/models/AddressListModel.dart';
+import '../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
@@ -257,14 +258,14 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
             ),
             proceedButton(AppLocalizations.of(context).addDeliveryAddress,
                 ThemeApp.blackColor, context, () {
-              value.addressList.add(AddressListModel(
-                  fullName: value.fullNameController.text,
-                  phoneNumber: value.mobileController.text,
-                  houseNoBuildingName: value.houseBuildingController.text,
-                  areaColony: value.areaColonyController.text,
-                  state: value.stateController.text,
-                  city: value.cityController.text,
-                  typeOfAddress: selectedAddressIs));
+              value.addressList.add(MyAddressList(
+                  myAddressFullName: value.fullNameController.text,
+                  myAddressPhoneNumber: value.mobileController.text,
+                  myAddressHouseNoBuildingName: value.houseBuildingController.text,
+                  myAddressAreaColony: value.areaColonyController.text,
+                  myAddressState: value.stateController.text,
+                  myAddressCity: value.cityController.text,
+                  myAddressTypeOfAddress: selectedAddressIs));
               print("value.addressList" + value.addressList.length.toString());
 
              value.fullNameController.clear();
@@ -286,7 +287,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               }else {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => OrderReviewSubActivity(),
+                    builder: (context) => OrderReviewSubActivity(value: value,),
                   ),
                 );
               }
@@ -298,7 +299,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
   }
 
   bool isHome = false;
-  var selectedAddressIs = '';
+  var selectedAddressIs = 'Home';
 
   Widget typeOfAddress() {
     return Container(
@@ -375,7 +376,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
 
 class EditDeliveryAddress extends StatefulWidget {
   final bool isSavedAddress;
-   AddressListModel model;
+  MyAddressList model;
 
    EditDeliveryAddress({Key? key, required this.isSavedAddress,required this.model})
       : super(key: key);
@@ -414,12 +415,12 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
 
   @override
   void didChangeDependencies() {
-    fullNameController.text = widget.model.fullName;
-    mobileController.text = widget.model.phoneNumber;
-    houseBuildingController.text = widget.model.houseNoBuildingName;
-    areaColonyController.text = widget.model.areaColony;
-    stateController.text = widget.model.state;
-    cityController.text = widget.model.city;
+    fullNameController.text = widget.model.myAddressFullName!;
+    mobileController.text = widget.model.myAddressPhoneNumber!;
+    houseBuildingController.text = widget.model.myAddressHouseNoBuildingName!;
+    areaColonyController.text = widget.model.myAddressAreaColony!;
+    stateController.text = widget.model.myAddressState!;
+    cityController.text = widget.model.myAddressCity!;
     super.didChangeDependencies();
   }
 
@@ -642,12 +643,12 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                 ThemeApp.blackColor, context, () {
 
 
-                  widget.model.fullName = fullNameController.text.toString();
-                  widget.model.phoneNumber = mobileController.text.toString();
-                  widget.model.houseNoBuildingName = houseBuildingController.text.toString();
-                  widget.model.areaColony = areaColonyController.text.toString();
-                  widget.model.state = stateController.text.toString();
-                  widget.model.city = cityController.text.toString();
+                  widget.model.myAddressFullName = fullNameController.text.toString();
+                  widget.model.myAddressPhoneNumber = mobileController.text.toString();
+                  widget.model.myAddressHouseNoBuildingName = houseBuildingController.text.toString();
+                  widget.model.myAddressAreaColony = areaColonyController.text.toString();
+                  widget.model.myAddressState = stateController.text.toString();
+                  widget.model.myAddressCity = cityController.text.toString();
                   print( fullNameController.text);
                   print(  value.fullNameController.text);
 
@@ -673,7 +674,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   }else {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => OrderReviewSubActivity(),
+                        builder: (context) => OrderReviewSubActivity(value: value),
                       ),
                     );
                   }

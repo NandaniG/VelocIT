@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../services/providers/Home_Provider.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/textFormFields.dart';
@@ -9,7 +12,8 @@ class CustomerSupportActivity extends StatefulWidget {
   const CustomerSupportActivity({Key? key}) : super(key: key);
 
   @override
-  State<CustomerSupportActivity> createState() => _CustomerSupportActivityState();
+  State<CustomerSupportActivity> createState() =>
+      _CustomerSupportActivityState();
 }
 
 class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
@@ -26,118 +30,127 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
         backgroundColor: ThemeApp.backgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .09),
-    child: appBar_backWidget(
-    context, appTitle(context, "Customer Support"), SizedBox()),
-    ),body: SafeArea(child: Container(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            InkWell(
-            onTap: (){
+          preferredSize: Size.fromHeight(height * .09),
+          child: appBar_backWidget(
+              context, appTitle(context, "Customer Support"), SizedBox()),
+        ),
+        body: SafeArea(
+          child:Consumer<HomeProvider>(builder: (context, value, child) {
 
-            },
-            child: Container(
-              decoration: BoxDecoration(color: ThemeApp.whiteColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Row(
-                  children: [
-                    Container(
-                        width: 70.0,
-                        height: 70.0,
-                        decoration: new BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: new DecorationImage(
-                                fit: BoxFit.fill,
-                                image: new AssetImage(
-                                  'assets/images/laptopImage.jpg',
-                                )))),
-                    SizedBox(
-                      width: width * .04,
-                    ),
-                    Column(crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextFieldUtils().dynamicText(
-                            AppLocalizations.of(context).customerCareNumber,
-                            context,
-                            TextStyle(
-                              color: ThemeApp.darkGreyTab,
-                              fontWeight: FontWeight.w500,
-                              fontSize: height * .022,
-                            )),
-                        TextFieldUtils().dynamicText(
-                            '1899 0000 8443',
-                            context,
-                            TextStyle(
-                              color: ThemeApp.blackColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: height * .025,
-                            )),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),SizedBox(height: height* .02),
-            InkWell(
-              onTap: (){
-
-              },
-              child: Container(
-                decoration: BoxDecoration(color: ThemeApp.whiteColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+            return Container(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Row(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
                     children: [
-                      Container(
-                          width: 70.0,
-                          height: 70.0,
-                          decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: new DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: new AssetImage(
-                                    'assets/images/laptopImage.jpg',
-                                  )))),
-                      SizedBox(
-                        width: width * .04,
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: 70.0,
+                                    height: 70.0,
+                                    decoration: new BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: new DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: new AssetImage(
+                                              value.customerSupportList["queryImage"],
+                                            )))),
+                                SizedBox(
+                                  width: width * .04,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextFieldUtils().dynamicText(
+                                        AppLocalizations.of(context)
+                                            .customerCareNumber,
+                                        context,
+                                        TextStyle(
+                                          color: ThemeApp.darkGreyTab,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: height * .022,
+                                        )),
+                                    TextFieldUtils().dynamicText(
+                                        value.customerSupportList["customerCareNumber"],
+                                        context,
+                                        TextStyle(
+                                          color: ThemeApp.blackColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: height * .025,
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextFieldUtils().dynamicText(
-                              AppLocalizations.of(context).writeYourQueryAt,
-                              context,
-                              TextStyle(
-                                color: ThemeApp.darkGreyTab,
-                                fontWeight: FontWeight.w500,
-                                fontSize: height * .022,
-                              )),
-                          TextFieldUtils().dynamicText(
-                              'Support@nexgen.com',
-                              context,
-                              TextStyle(
-                                color: ThemeApp.blackColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: height * .025,
-                              )),
-                        ],
+                      SizedBox(height: height * .02),
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: 70.0,
+                                    height: 70.0,
+                                    decoration: new BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: new DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: new AssetImage(
+                                              value.customerSupportList["queryImage"],
+                                            )))),
+                                SizedBox(
+                                  width: width * .04,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextFieldUtils().dynamicText(
+                                        AppLocalizations.of(context)
+                                            .writeYourQueryAt,
+                                        context,
+                                        TextStyle(
+                                          color: ThemeApp.darkGreyTab,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: height * .022,
+                                        )),
+                                    TextFieldUtils().dynamicText(
+                                        value.customerSupportList["emailForQuery"],
+                                        context,
+                                        TextStyle(
+                                          color: ThemeApp.blackColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: height * .025,
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-
-    ),));
+              );
+            }
+          ),
+        ));
   }
 }

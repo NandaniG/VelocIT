@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../services/models/CreditCardModel.dart';
+import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/styles.dart';
@@ -196,11 +197,14 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                   height: height * .04,
                 ),
                 proceedButton("Save", ThemeApp.blackColor, context, () {
-                  value.creditCardList.add(CreditCardListModel(
-                      cardName: value.cardHolderNameController.text,
-                      cardType: 'Credit Card',
-                      cardNumber: value.cardNumberController.text,
-                      expiryDate: value.ExpiryDateController.text));
+                  value.creditCardList.add(MyCardList(
+                      myCardBankName: 'Kotak Mahindra',
+                      myCardType: 'Credit Card',
+                      myCardFullName: value.cardHolderNameController.text,
+                      myCardNumber: value.cardNumberController.text,
+                      myCardExpiryDate: value.ExpiryDateController.text,
+
+                  ));
 
                   print("value.creditCardList__________" +
                       value.creditCardList.length.toString());
@@ -239,7 +243,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
 
 
 class EditCardListScreen extends StatefulWidget {
-  CreditCardListModel cardList;
+  MyCardList cardList;
    EditCardListScreen({Key? key,required this.cardList}) : super(key: key);
 
   @override
@@ -269,9 +273,9 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
 
   @override
   void didChangeDependencies() {
-    cardHolderNameController.text = widget.cardList.cardName;
-    cardNumberController.text = widget.cardList.cardNumber;
-    ExpiryDateController.text = widget.cardList.expiryDate;
+    cardHolderNameController.text = widget.cardList.myCardFullName!;
+    cardNumberController.text = widget.cardList.myCardNumber!;
+    ExpiryDateController.text = widget.cardList.myCardExpiryDate!;
     super.didChangeDependencies();
   }
 
@@ -452,9 +456,9 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                 ),
                 proceedButton("Save", ThemeApp.blackColor, context, () {
 
-                    widget.cardList.cardName = cardHolderNameController.text.toString();
-                    widget.cardList.cardNumber = cardNumberController.text.toString();
-                    widget.cardList.expiryDate = ExpiryDateController.text.toString();
+                    widget.cardList.myCardFullName = cardHolderNameController.text.toString();
+                    widget.cardList.myCardNumber = cardNumberController.text.toString();
+                    widget.cardList.myCardExpiryDate = ExpiryDateController.text.toString();
 
                     print( cardHolderNameController.text);
                     print(  value.cardHolderNameController.text);

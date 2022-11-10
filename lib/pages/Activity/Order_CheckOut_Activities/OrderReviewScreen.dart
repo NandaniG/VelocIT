@@ -2,6 +2,8 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/pages/homePage.dart';
+import 'package:velocit/services/providers/Home_Provider.dart';
 
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/constants.dart';
@@ -12,13 +14,14 @@ import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../Payment_Activities/OrderPlaced_activity.dart';
 import '../Payment_Activities/payments_Activity.dart';
 import 'AddNewDeliveryAddress.dart';
 
 class OrderReviewSubActivity extends StatefulWidget {
-  final dynamic productList;
+  ProductProvider value;
 
-  const OrderReviewSubActivity({Key? key, this.productList}) : super(key: key);
+   OrderReviewSubActivity({Key? key, required this.value}) : super(key: key);
 
   @override
   State<OrderReviewSubActivity> createState() => _OrderReviewSubActivityState();
@@ -44,6 +47,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
     StringConstant.addressFromCurrentLocation =
         'Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India';
     getPreferences();
+    print("widget.productList");
   }
 
   var address =
@@ -54,20 +58,17 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
 
     StringConstant.addressFromCurrentLocation =
         (await Prefs().getToken(StringConstant.addressPref))!;
-    print('StringConstant.addressFromCurrentLocation' +
-        StringConstant.addressFromCurrentLocation.toString());
+    print('StringConstant.addressFromCurrentLocation${StringConstant.addressFromCurrentLocation}');
     //
     StringConstant.totalOriginalPrice =
         (await Prefs().getDoubleToken(StringConstant.totalOriginalPricePref))!;
 
-    print('StringConstant.totalOriginalPrice' +
-        StringConstant.totalOriginalPrice.toString());
+    print('StringConstant.totalOriginalPrice${StringConstant.totalOriginalPrice}');
 
     StringConstant.totalFinalPrice =
         (await Prefs().getDoubleToken(StringConstant.totalFinalPricePref))!;
 
-    print('StringConstant.totalFinalPrice' +
-        StringConstant.totalFinalPrice.toString());
+    print('StringConstant.totalFinalPrice${StringConstant.totalFinalPrice}');
   }
 
   @override
@@ -85,7 +86,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
       bottomNavigationBar: BottomAppBar(
     color: ThemeApp.backgroundColor,
     elevation: 0,
-    child: Consumer<ProductProvider>(builder: (context, value, child) {
+    child: Consumer<HomeProvider>(builder: (context, value, child) {
       return Container(
         height: height * .08,
         width: width,
@@ -115,7 +116,18 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                   ),
                 ]),
             InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Payment_Creditcard_debitcardScreen(orderReview:  value.orderCheckOutDetails),
+                    ),
+                  );
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
+                  //   ),
+                  // );
+                },
                 child: Container(
                     height: height * 0.05,
                     alignment: Alignment.center,
@@ -134,7 +146,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
     }),
       ),
       body: SafeArea(
-        child: Consumer<ProductProvider>(builder: (context, value, child) {
+        child: Consumer<HomeProvider>(builder: (context, provider, child) {
     return Container(
         color: ThemeApp.backgroundColor,
         width: width,
@@ -215,7 +227,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                           Row(
                             children: [
                               TextFieldUtils().dynamicText(
-                                  'Abhilash Patil',
+                                  provider.orderCheckOutDetails[0]["orderCheckOutFullName"],
                                   context,
                                   TextStyle(
                                       color: ThemeApp.blackColor,
@@ -236,7 +248,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                 padding: const EdgeInsets.only(
                                     left: 10, right: 10, top: 5, bottom: 5),
                                 child: TextFieldUtils().dynamicText(
-                                    'Home',
+                                    provider.orderCheckOutDetails[0]["orderCheckOutTypeOfAddress"],
                                     context,
                                     TextStyle(
                                         color: ThemeApp.whiteColor,
@@ -248,21 +260,13 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                           SizedBox(
                             height: height * .01,
                           ),
-                          StringConstant.addressFromCurrentLocation.isNotEmpty
-                              ? TextFieldUtils().dynamicText(
-                                  StringConstant.addressFromCurrentLocation,
-                                  context,
-                                  TextStyle(
-                                      color: ThemeApp.darkGreyTab,
-                                      fontSize: height * .021,
-                                      fontWeight: FontWeight.w400))
-                              : TextFieldUtils().dynamicText(
-                                  address,
-                                  context,
-                                  TextStyle(
-                                      color: ThemeApp.darkGreyTab,
-                                      fontSize: height * .021,
-                                      fontWeight: FontWeight.w400)),
+                          TextFieldUtils().dynamicText(
+                              provider.orderCheckOutDetails[0]["orderCheckOutDeliveryAddress"],
+                              context,
+                              TextStyle(
+                                  color: ThemeApp.darkGreyTab,
+                                  fontSize: height * .021,
+                                  fontWeight: FontWeight.w400)),
                           SizedBox(
                             height: height * .02,
                           ),
@@ -285,15 +289,14 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                           Row(
                             children: [
                               TextFieldUtils().dynamicText(
-                                  AppLocalizations.of(context).contactNumber +
-                                      ' : ',
+                                  '${AppLocalizations.of(context).contactNumber} : ',
                                   context,
                                   TextStyle(
                                       color: Colors.grey.shade700,
                                       fontSize: height * .022,
                                       fontWeight: FontWeight.w500)),
                               TextFieldUtils().dynamicText(
-                                  '8585961785',
+                                  provider.orderCheckOutDetails[0]["orderCheckOutContactNumber"],
                                   context,
                                   TextStyle(
                                       color: Colors.grey.shade700,
@@ -325,7 +328,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                     color: Colors.grey.shade700,
                                     fontSize: height * .023,
                                     fontWeight: FontWeight.bold)),
-                            cartProductList(value),
+                            cartProductList(widget.value),
                           ],
                         )),
                     SizedBox(
@@ -409,7 +412,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                     SizedBox(
                       height: height * .02,
                     ),
-                    priceDetails(value),
+                    priceDetails(widget.value),
                   ],
                 ),
               ),
@@ -461,7 +464,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                 child: Image.asset(
                                   // width: double.infinity,
                                   // snapshot.data![index].serviceImage,
-                                  value.cartList[index].serviceImage
+                                  value.cartList[index].cartProductsImage
                                       .toString(),
                                   fit: BoxFit.fill,
                                   // width: width*.18,
@@ -482,7 +485,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                   children: [
                                     TextFieldUtils().dynamicText(
                                         value.cartList[index]
-                                            .serviceDescription
+                                            .cartProductsDescription
                                             .toString(),
                                         context,
                                         TextStyle(
@@ -501,7 +504,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                       height: height * .01,
                                     ),
                                     TextFieldUtils().dynamicText(
-                                        value.cartList[index].deliveredBy
+                                        value.cartList[index].cartProductsDeliveredBy
                                             .toString(),
                                         context,
                                         TextStyle(
@@ -554,7 +557,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextFieldUtils().dynamicText(
-              "${indianRupeesFormat.format(int.parse(value.cartList[index].discountPrice.toString()))}",
+              "${indianRupeesFormat.format(int.parse(value.cartList[index].cartProductsDiscountPrice.toString()))}",
               context,
               TextStyle(
                 color: ThemeApp.blackColor,
@@ -567,7 +570,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
           ),
           TextFieldUtils().dynamicText(
               indianRupeesFormat.format(
-                  int.parse(value.cartList[index].originalPrice.toString())),
+                  int.parse(value.cartList[index].cartProductsOriginalPrice.toString())),
               context,
               TextStyle(
                 fontSize: height * .023,
@@ -581,7 +584,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
             width: width * .01,
           ),
           TextFieldUtils().dynamicText(
-              value.cartList[index].offerPercent.toString(),
+              value.cartList[index].cartProductsOfferPercent.toString(),
               context,
               TextStyle(
                 fontSize: height * .02,
@@ -637,7 +640,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                     padding: const EdgeInsets.only(
                         left: 8.0, right: 8, top: 0, bottom: 0),
                     child: Text(
-                      value.cartList[index].tempCounter.toString(),
+                      value.cartList[index].cartProductsTempCounter.toString(),
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.height * .016,
                           fontWeight: FontWeight.w400,
@@ -671,6 +674,9 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
           flex: 1,
           child: InkWell(
             onTap: () {
+              setState(() {
+
+              });
               value.del(index);
               finalPrices(value, index);
             },
@@ -689,13 +695,13 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
   }
 
   void addQuantity(ProductProvider value, int index) {
-    print("maxCounter counter ${value.cartList[index].maxCounter}");
-    print("temp counter 1 ${value.cartList[index].tempCounter}");
-    if (int.parse(value.cartList[index].tempCounter.toString()) <
-        int.parse(value.cartList[index].maxCounter.toString())) {
-      value.cartList[index].tempCounter =
-          int.parse(value.cartList[index].tempCounter.toString()) + 1;
-      print("temp counter 2 ${value.cartList[index].tempCounter}");
+    print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
+    print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
+    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) <
+        int.parse(value.cartList[index].cartProductsMaxCounter.toString())) {
+      value.cartList[index].cartProductsTempCounter =
+          int.parse(value.cartList[index].cartProductsTempCounter.toString()) + 1;
+      print("temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
 
       finalPrices(value, index);
     }
@@ -714,18 +720,18 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
 
     for (int i = 0; i < value.cartList.length; i++) {
       finalOriginalPrice = finalOriginalPrice +
-          (int.parse(value.cartList[i].tempCounter.toString()) *
-              double.parse(value.cartList[i].originalPrice.toString()));
+          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(value.cartList[i].cartProductsOriginalPrice.toString()));
 
       Prefs().setDoubleToken(
           StringConstant.totalOriginalPricePref, finalOriginalPrice);
 
-      print("______finaloriginalPrice______" + finalOriginalPrice.toString());
+      print("______finaloriginalPrice______$finalOriginalPrice");
 
       finalDiscountPrice = finalDiscountPrice +
-          (int.parse(value.cartList[i].tempCounter.toString()) *
-              double.parse(value.cartList[i].discountPrice.toString()));
-      print("______finalDiscountPrice______" + finalDiscountPrice.toString());
+          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(value.cartList[i].cartProductsDiscountPrice.toString()));
+      print("______finalDiscountPrice______$finalDiscountPrice");
 
       finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
       print(
@@ -741,18 +747,13 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
   }
 
   Future<void> minusQuantity(ProductProvider value, int index) async {
-    print("maxCounter counter ${value.cartList[index].maxCounter}");
-    print("temp counter 1 minus ${value.cartList[index].tempCounter}");
+    print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
+    print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
+    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) > 0){
+      value.cartList[index].cartProductsTempCounter =
+          int.parse(value.cartList[index].cartProductsTempCounter.toString()) - 1;
+      print("temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
 
-    if (int.parse(value.cartList[index].tempCounter.toString()) > 0) {
-      value.cartList[index].tempCounter =
-          int.parse(value.cartList[index].tempCounter.toString()) - 1;
-      print("temp counter 2 minus  ${value.cartList[index].tempCounter}");
-      value.cartList[index].totalOriginalPrice =
-          ((value.cartList[index].tempCounter)! *
-              double.parse(value.cartList[index].originalPrice.toString()));
-      print(
-          "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].totalOriginalPrice}");
 
 ////PRICE CODE AFTER ADDING COUNT
       finalPrices(value, index);
@@ -1077,13 +1078,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                           itemCount: value.addressList.length,
                           itemBuilder: (_, index) {
                             var fullAddress =
-                                value.addressList[index].houseNoBuildingName +
-                                    ", " +
-                                    value.addressList[index].areaColony +
-                                    ", " +
-                                    value.addressList[index].city +
-                                    ",\n " +
-                                    value.addressList[index].state;
+                                "${value.addressList[index].myAddressHouseNoBuildingName!}, ${value.addressList[index].myAddressAreaColony}, ${value.addressList[index].myAddressCity},\n ${value.addressList[index].myAddressState}";
                             return InkWell(
                               onLongPress: () {
                                 setState(() {
@@ -1118,7 +1113,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                           Row(
                                             children: [
                                               TextFieldUtils().dynamicText(
-                                                  value.addressList[index].fullName,
+                                                  value.addressList[index].myAddressFullName!,
                                                   context,
                                                   TextStyle(
                                                       color: ThemeApp.blackColor,
@@ -1143,7 +1138,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                     bottom: 5),
                                                 child: TextFieldUtils().dynamicText(
                                                     value.addressList[index]
-                                                        .typeOfAddress,
+                                                        .myAddressTypeOfAddress!,
                                                     context,
                                                     TextStyle(
                                                         color: ThemeApp.whiteColor,
@@ -1172,7 +1167,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                     padding: const EdgeInsets.only(
                                         left: 70, right: 20, top: 10),
                                     child: TextFieldUtils().dynamicText(
-                                        "${AppLocalizations.of(context).contactNumber + ' : ' + value.addressList[index].phoneNumber}",
+                                        "${'${AppLocalizations.of(context).contactNumber} : ' + value.addressList[index].myAddressPhoneNumber!}",
                                         context,
                                         TextStyle(
                                             color: ThemeApp.blackColor,
@@ -1258,7 +1253,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                           padding:
                               const EdgeInsets.only(left: 70, right: 20, top: 10),
                           child: TextFieldUtils().dynamicText(
-                              "${AppLocalizations.of(context).contactNumber + ' : '}9857436255",
+                              "${'${AppLocalizations.of(context).contactNumber} : '}9857436255",
                               context,
                               TextStyle(
                                   color: ThemeApp.blackColor,

@@ -9,6 +9,7 @@ import '../../utils/utils.dart';
 import '../models/AddressListModel.dart';
 import '../models/CartModel.dart';
 import '../models/CreditCardModel.dart';
+import '../models/JsonModelForApp/HomeModel.dart';
 import '../models/MyOrdersModel.dart';
 import '../models/NotificationsModel.dart';
 import '../models/ProductDetailModel.dart';
@@ -48,7 +49,7 @@ class ProductProvider with ChangeNotifier {
       this.deliveredBy,
       this.tempCounter});
 
-  List<CartModel> cartList = <CartModel>[];
+  List<CartProductList> cartList = <CartProductList>[];
   double originialAmount = 0.0;
   double discountAmount = 0.0;
   double totalAmount = 0.0;
@@ -76,20 +77,21 @@ class ProductProvider with ChangeNotifier {
       tempCounter) async {
     final prefs = await SharedPreferences.getInstance();
     print("-------------Cart Length Before ADD_________${cartList.length}");
-    cartList.add(CartModel(
-        serviceImage: serviceImage,
-        serviceName: serviceName,
-        sellerName: sellerName,
-        ratting: ratting,
-        discountPrice: discountPrice,
-        originalPrice: originalPrice,
-        offerPercent: offerPercent,
-        availableVariants: availableVariants,
-        cartProductsLength: cartProductsLength,
-        serviceDescription: serviceDescription,
-        maxCounter: conterProducts.toString(),
-        deliveredBy: deliveredBy,
-        tempCounter: tempCounter));
+    cartList;
+    cartList.add(CartProductList(
+   cartProductsImage     : serviceImage,
+   cartProductsName     : serviceName,
+   cartProductsSellerName     : sellerName,
+   cartProductsRatting     : ratting,
+   cartProductsDiscountPrice     : discountPrice,
+   cartProductsOriginalPrice     : originalPrice,
+   cartProductsOfferPercent     : offerPercent,
+   cartProductsAvailableVariants     : availableVariants,
+   cartProductsLength     : cartProductsLength,
+   cartProductsDescription     : serviceDescription,
+   cartProductsMaxCounter     : conterProducts.toString(),
+   cartProductsDeliveredBy     : deliveredBy,
+   cartProductsTempCounter     : tempCounter));
 
     print("-------------Cart Length After ADD_________${cartList.length}");
 
@@ -112,11 +114,11 @@ class ProductProvider with ChangeNotifier {
 
     for (int i = 0; i < cartList.length; i++) {
       originialAmount = (originialAmount +
-          double.parse(cartList[i].originalPrice.toString()));
+          double.parse(cartList[i].cartProductsOriginalPrice.toString()));
       print("originialAmount inside add: $i $originialAmount");
 
       discountAmount =
-          discountAmount + double.parse(cartList[i].discountPrice.toString());
+          discountAmount + double.parse(cartList[i].cartProductsDiscountPrice.toString());
       print("discountAmount inside add: $i $discountAmount");
 
       totalAmount = originialAmount - discountAmount;
@@ -138,7 +140,7 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addToSP(List<CartModel> tList) async {
+  Future<void> addToSP(List<CartProductList> tList) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(StringConstant.serviceName, serviceName.toString());
     prefs.setString(StringConstant.sellerName, sellerName.toString());
@@ -169,11 +171,11 @@ class ProductProvider with ChangeNotifier {
 
     for (int i = 0; i < cartList.length; i++) {
       if (cartList.length > 0) {
-        originialAmount = double.parse(cartList[i].originalPrice.toString()) -
+        originialAmount = double.parse(cartList[i].cartProductsOriginalPrice.toString()) -
             originialAmount;
         print("originialAmount inside add: $i $originialAmount");
         discountAmount =
-            double.parse(cartList[i].discountPrice.toString()) - discountAmount;
+            double.parse(cartList[i].cartProductsDiscountPrice.toString()) - discountAmount;
         print("discountAmount inside add: $i $discountAmount");
 
         totalAmount = originialAmount - discountAmount;
@@ -420,7 +422,7 @@ class ProductProvider with ChangeNotifier {
 
 //------------------------#<- add address in list in checkOut screen->#-------------------
 
-  List<AddressListModel> addressList = <AddressListModel>[];
+  List<MyAddressList> addressList = <MyAddressList>[];
   TextEditingController fullNameController = new TextEditingController();
   TextEditingController mobileController = new TextEditingController();
   TextEditingController houseBuildingController = new TextEditingController();
@@ -434,7 +436,7 @@ class ProductProvider with ChangeNotifier {
 
 //------------------------#<- add Credit / debit card in list in checkOut screen->#-------------------
 
-  List<CreditCardListModel> creditCardList = <CreditCardListModel>[];
+  List<MyCardList> creditCardList = <MyCardList>[];
 
   TextEditingController cardHolderNameController = new TextEditingController();
   TextEditingController cardNumberController = new TextEditingController();
@@ -646,41 +648,41 @@ class ProductProvider with ChangeNotifier {
 
 //---------------------------------<- Notifications Provider ->--------------------------
 
-  List<NotificationsModel> notificationsList = <NotificationsModel>[];
-  List<NotificationsModel> notificationsIsOffer = <NotificationsModel>[];
+  // List<NotificationsList> notificationsList = <NotificationsList>[];
+  // List<NotificationsList> notificationsIsOffer = <NotificationsList>[];
 
-  List<NotificationsModel> notificationDataList = [
-    NotificationsModel(id: 1,
-        typeOfNotification: true,
-        newNotificationCounter: 2,
-        notificationImage: 'assets/images/androidImage.jpg',
-        notificationTitle: 'MEGA Deal on Superstar Brands',
-        notificationDetails:
-        'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
-        notificationTime: '1 day ago'),
-
-    NotificationsModel(id: 1,
-        typeOfNotification: true,
-        newNotificationCounter: 2,
-        notificationImage: 'assets/images/iphones_Image.jpg',
-        notificationTitle: 'Bathroom accessories upto 70% Off',
-        notificationDetails:
-        'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
-        notificationTime: '1 day ago'),
-
-    NotificationsModel(id: 1,
-        typeOfNotification: false,
-        newNotificationCounter: 2,
-        notificationImage: 'assets/images/androidImage.jpg',
-        notificationTitle: 'MEGA Deal on Superstar Brands',
-        notificationDetails:
-        'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
-        notificationTime: '1 day ago'),
-  ];
+  // List<NotificationsList> notificationDataList = [
+  //   NotificationsModel(id: 1,
+  //       typeOfNotification: true,
+  //       newNotificationCounter: 2,
+  //       notificationImage: 'assets/images/androidImage.jpg',
+  //       notificationTitle: 'MEGA Deal on Superstar Brands',
+  //       notificationDetails:
+  //       'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
+  //       notificationTime: '1 day ago'),
+  //
+  //   NotificationsModel(id: 1,
+  //       typeOfNotification: true,
+  //       newNotificationCounter: 2,
+  //       notificationImage: 'assets/images/iphones_Image.jpg',
+  //       notificationTitle: 'Bathroom accessories upto 70% Off',
+  //       notificationDetails:
+  //       'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
+  //       notificationTime: '1 day ago'),
+  //
+  //   NotificationsModel(id: 1,
+  //       typeOfNotification: false,
+  //       newNotificationCounter: 2,
+  //       notificationImage: 'assets/images/androidImage.jpg',
+  //       notificationTitle: 'MEGA Deal on Superstar Brands',
+  //       notificationDetails:
+  //       'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
+  //       notificationTime: '1 day ago'),
+  // ];
 
 //---------------------------------<- Notifications Provider ->--------------------------
-  List<UserAccountDetailModel> userAccountDetailList =
-      <UserAccountDetailModel>[];
+  List<UserAccountList> userAccountDetailList =
+      <UserAccountList>[];
 
   TextEditingController userNameController = new TextEditingController();
   TextEditingController userMobileController = new TextEditingController();

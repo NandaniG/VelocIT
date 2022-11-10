@@ -1,4 +1,4 @@
-{"isBool":false,
+{
    "homeImageSlider": [
      {
        "homeSliderImage": "assets/images/laptopImage.jpg"
@@ -37,10 +37,8 @@
                "productCartProductsLength": "13",
                "productCartMaxCounter": "13",
                "productDeliveredBy": "Delivered by sep 22",
-               "productTempCounter": "",
-               "productOrderCheckOut":[{
-                    "orderStatus":"Order Place Successfully"
-               }]
+               "productTempCounter": ""
+
              },
              {
               "id": 2,
@@ -1970,8 +1968,33 @@
        "merchantNearYouImage": "assets/images/laptopImage.jpg",
        "merchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
        "merchantNearYouPrice": "87324",
-       "kmAWAY": "1.2 KM away",
-       "merchantNearYouDiscountPrice": "77324"
+       "merchantNearYoukmAWAY": "1.2 KM away",
+       "merchantNearYouDiscountPrice": "77324",
+       "merchantNearYouIsGridView": false,
+       "merchantNearYouFilterList": [{"id" :1 }],
+       "merchantNearYouMapViewMarkers": [{"id":1, "merchantNearmarker" : ""},{"id":2, "merchantNearmarker":""}],
+       "subMerchantList":[
+       {
+                "id": 1,
+              "subMerchantNearYouName": "Appliances",
+              "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+              "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+              "subMerchantNearYouPrice": "87324",
+              "subMerchantNearYoukmAWAY": "1.2 KM away",
+              "subMerchantNearYouDiscountPrice": "77324"
+
+       },
+            {
+                       "id": 2,
+                     "subMerchantNearYouName": "Appliances",
+                     "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+                     "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                     "subMerchantNearYouPrice": "87324",
+                     "subMerchantNearYoukmAWAY": "1.2 KM away",
+                     "subMerchantNearYouDiscountPrice": "77324"
+
+              }
+       ]
      },
      {
       "id": 2,
@@ -1979,8 +2002,33 @@
        "merchantNearYouImage": "assets/images/iphones_Image.jpg",
        "merchantNearYouDescription": "Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
        "merchantNearYouPrice": "87324",
-       "kmAWAY": "1.2 KM away",
-       "merchantNearYouDiscountPrice": "86524"
+       "merchantNearYoukmAWAY": "1.2 KM away",
+       "merchantNearYouDiscountPrice": "86524",
+       "merchantNearYouIsGridView": false,
+       "merchantNearYouFilterList": [{"id" :1 }],
+       "merchantNearYouMapViewMarkers": [{"id":1, "merchantNearmarker" : ""},{"id":2, "merchantNearmarker":""}],
+         "subMerchantList":[
+              {
+                       "id": 1,
+                     "subMerchantNearYouName": "Appliances",
+                     "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+                     "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                     "subMerchantNearYouPrice": "87324",
+                     "subMerchantNearYoukmAWAY": "1.2 KM away",
+                     "subMerchantNearYouDiscountPrice": "77324"
+
+              },
+                   {
+                              "id": 2,
+                            "subMerchantNearYouName": "Appliances",
+                            "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+                            "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                            "subMerchantNearYouPrice": "87324",
+                            "subMerchantNearYoukmAWAY": "1.2 KM away",
+                            "subMerchantNearYouDiscountPrice": "77324"
+
+                     }
+              ]
      },
      {
        "id": 3,
@@ -1988,8 +2036,33 @@
        "merchantNearYouImage": "assets/images/laptopImage2.jpg",
        "merchantNearYouDescription": "One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
        "merchantNearYouPrice": "6724",
-       "kmAWAY": "1.2 KM away",
-       "merchantNearYouDiscountPrice": "5724"
+       "merchantNearYoukmAWAY": "1.2 KM away",
+       "merchantNearYouDiscountPrice": "5724",
+        "merchantNearYouIsGridView": false,
+       "merchantNearYouFilterList": [{"id" :1 }],
+       "merchantNearYouMapViewMarkers": [{"id":1, "merchantNearmarker" : ""},{"id":2, "merchantNearmarker":""}],
+         "subMerchantList":[
+              {
+                       "id": 1,
+                     "subMerchantNearYouName": "Appliances",
+                     "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+                     "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                     "subMerchantNearYouPrice": "87324",
+                     "subMerchantNearYoukmAWAY": "1.2 KM away",
+                     "subMerchantNearYouDiscountPrice": "77324"
+
+              },
+                   {
+                              "id": 2,
+                            "subMerchantNearYouName": "Appliances",
+                            "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+                            "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                            "subMerchantNearYouPrice": "87324",
+                            "subMerchantNearYoukmAWAY": "1.2 KM away",
+                            "subMerchantNearYouDiscountPrice": "77324"
+
+                     }
+              ]
      },
      {
       "id": 4,
@@ -1997,8 +2070,32 @@
        "merchantNearYouImage": "assets/images/laptopImage3.jpg",
        "merchantNearYouDescription": "IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
        "merchantNearYouPrice": "5324",
-       "kmAWAY": "1.2 KM away",
-       "merchantNearYouDiscountPrice": "4324"
+       "merchantNearYoukmAWAY": "1.2 KM away",
+       "merchantNearYouDiscountPrice": "4324",
+       "merchantNearYouFilterList": [{"id" :1 }],
+       "merchantNearYouMapViewMarkers": [{"id":1, "merchantNearmarker" : ""},{"id":2, "merchantNearmarker":""}],
+         "subMerchantList":[
+              {
+                       "id": 1,
+                     "subMerchantNearYouName": "Appliances",
+                     "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+                     "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                     "subMerchantNearYouPrice": "87324",
+                     "subMerchantNearYoukmAWAY": "1.2 KM away",
+                     "subMerchantNearYouDiscountPrice": "77324"
+
+              },
+                   {
+                              "id": 2,
+                            "subMerchantNearYouName": "Appliances",
+                            "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+                            "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                            "subMerchantNearYouPrice": "87324",
+                            "subMerchantNearYoukmAWAY": "1.2 KM away",
+                            "subMerchantNearYouDiscountPrice": "77324"
+
+                     }
+              ]
      },
      {
       "id": 5,
@@ -2006,8 +2103,32 @@
       "merchantNearYouImage": "assets/images/IPhoneImage.jpg",
       "merchantNearYouDescription": "Lenovo ZX3 108CM (46 inch) ultra HD(4k) ",
       "merchantNearYouPrice": "7324",
-      "kmAWAY": "1.2 KM away",
-      "merchantNearYouDiscountPrice": "6324"
+      "merchantNearYoukmAWAY": "1.2 KM away",
+      "merchantNearYouDiscountPrice": "6324",
+       "merchantNearYouFilterList": [{"id" :1 }],
+       "merchantNearYouMapViewMarkers": [{"id":1, "merchantNearmarker" : ""},{"id":2, "merchantNearmarker":""}],
+        "subMerchantList":[
+             {
+                      "id": 1,
+                    "subMerchantNearYouName": "Appliances",
+                    "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+                    "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                    "subMerchantNearYouPrice": "87324",
+                    "subMerchantNearYoukmAWAY": "1.2 KM away",
+                    "subMerchantNearYouDiscountPrice": "77324"
+
+             },
+                  {
+                             "id": 2,
+                           "subMerchantNearYouName": "Appliances",
+                           "subMerchantNearYouImage": "assets/images/laptopImage.jpg",
+                           "subMerchantNearYouDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                           "subMerchantNearYouPrice": "87324",
+                           "subMerchantNearYoukmAWAY": "1.2 KM away",
+                           "subMerchantNearYouDiscountPrice": "77324"
+
+                    }
+             ]
     }
   ],
   "bestDealList": [
@@ -2052,6 +2173,100 @@
       "bestDealDiscountPrice": "6324"
     }
   ],
+  "offersData":{
+          "topBanner" : "assets/images/laptopImage.jpg",
+          "bottomBanner1": "assets/images/iphones_Image.jpg",
+          "bottomBanner2":"assets/images/laptopImage2.jpg",
+
+            "offerList":
+            [
+            {
+                "id": 1,
+                "offerName": "Appliances",
+                "offerImage": "assets/images/laptopImage.jpg",
+                "offerDescription": "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                "offerPrice": "87324",
+                "offerDiscountPrice": "77324"
+              },
+               {
+                   "id": 2,
+                    "offerName": "Electronics",
+                    "offerImage": "assets/images/iphones_Image.jpg",
+                    "offerDescription": "Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                    "offerPrice": "87324",
+                    "offerDiscountPrice": "86524"
+                  },
+                  {
+                    "id": 3,
+                    "offerName": "Fashion",
+                    "offerImage": "assets/images/laptopImage2.jpg",
+                    "offerDescription": "One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                    "offerPrice": "6724",
+                    "offerDiscountPrice": "5724"
+                  },
+                  {
+                   "id": 4,
+                    "offerName": "Home",
+                    "offerImage": "assets/images/laptopImage3.jpg",
+                    "offerDescription": "IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                    "offerPrice": "5324",
+                    "offerDiscountPrice": "4324"
+                  },
+                  {
+                    "id": 5,
+                    "offerName": "Fashion",
+                    "offerImage": "assets/images/IPhoneImage.jpg",
+                    "offerDescription": "Lenovo ZX3 108CM (46 inch) ultra HD(4k) ",
+                    "offerPrice": "7324",
+                    "offerDiscountPrice": "6324"
+                  }
+        ],
+
+        "offerByType":[
+        {
+        "offerTypes" : "Appliances",
+        "offerImages" : [
+
+        {
+            "imagesForOffer":"assets/images/IPhoneImage.jpg"
+        },{
+            "imagesForOffer":"assets/images/laptopImage3.jpg"
+        },{
+            "imagesForOffer":"assets/images/iphones_Image.jpg"
+        }
+        ]
+        },
+         {
+       "offerTypes" : "Electronics",
+       "offerImages" : [{
+           "imagesForOffer":"assets/images/laptopImage2.jpg"
+       },{
+           "imagesForOffer":"assets/images/laptopImage3.jpg"
+       },{
+           "imagesForOffer":"assets/images/IPhoneImage.jpg"
+       }]
+       },
+                  {
+             "offerTypes" : "Fashion",
+             "offerImages" : [{
+                 "imagesForOffer":"assets/images/IPhoneImage.jpg"
+             },
+             {
+                 "imagesForOffer":"assets/images/laptopImage3.jpg"
+             },
+             {
+                 "imagesForOffer":"assets/images/IPhoneImage.jpg"
+             }]
+             }
+
+
+        ]
+
+
+},
+
+"scannerImage" : "assets/images/laptopImage.jpg",
+"filterForSortByPrice" : "Low to High",
   "budgetBuyList": [
     {
       "id": 1,
@@ -2098,5 +2313,397 @@
       "budgetBuyDiscountPrice": "6324",
       "kmAWAY": "3.2 KM away"
     }
-  ]
+  ],
+  "cartProductList":[
+  {
+        "cartProductsImage" : "assets/images/laptopImage.jpg",
+        "cartProductsName" : "TV",
+        "cartProductsSellerName" : "Croma",
+        "cartProductsRatting" : 0.2,
+        "cartProductsDiscountPrice" : "47700",
+        "cartProductsOriginalPrice" : "50600",
+        "cartProductsOfferPercent" : "20% OFF",
+        "cartProductsAvailableVariants" : "3",
+        "cartProductsLength" : "13",
+        "cartProductsDescription" : "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+        "cartProductsMaxCounter" : "13",
+        "cartProductsDeliveredBy" : "Delivered by sep 22",
+        "cartProductsTempCounter" : 1,
+        "cartProductsTotalOriginalPrice": 0.0,
+        "cartProductsTotalDiscountPrice": 0.0,
+        "cartProductsTotalDeliveryChargePrice": 0.0,
+        "cartProductsTotalGrandAmount": 0.0
+  }
+  ],
+  "orderCheckOut":[
+  {
+    "orderCheckOutStatus":"Order Place Successfully",
+    "orderCheckOutResponse":"Thank you for orderning with us.",
+    "orderCheckOutOrderID" : "OID907987",
+    "orderCheckOutQRCode":"assets/images/qr_test_image.png",
+           "orderCheckOutDetails":[
+           {
+                  "orderCheckOutFullName" : "David Wong",
+                 "orderCheckOutDeliveryAddress":"C-304, Wing C, Vyankatesh Greffitte, Near Siddhivinayak temple, Manajari road, Keshav Nagar, Pune - 412307",
+                 "orderCheckOutTypeOfAddress" : "Home",
+                 "orderCheckOutContactNumber" : "7854269318",
+                 "orderCheckOutCartImage" : "assets/images/laptopImage.jpg",
+                 "orderCheckOutCartName" : "TV",
+                 "orderCheckOutCartSellerName" : "Croma",
+                 "orderCheckOutCartRatting" : 0.2,
+                 "orderCheckOutCartDiscountPrice" : "47700",
+                 "orderCheckOutCartOriginalPrice" : "50600",
+                 "orderCheckOutCartOfferPercent" : "20% OFF",
+                 "orderCheckOutCartAvailableVariants" : "3",
+                 "orderCheckOutCartLength" : "13",
+                 "orderCheckOutCartDescription" : "Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV",
+                 "orderCheckOutCartMaxCounter" : "13",
+                 "orderCheckOutCartDeliveredBy" : "Delivered by sep 22",
+                 "orderCheckOutCartTempCounter" : 1,
+                 "orderCheckOutCartTotalOriginalPrice": 0.0,
+                 "orderCheckOutCartTotalDiscountPrice": 0.0,
+                 "orderCheckOutCartTotalDeliveryChargePrice": 0.0,
+                 "orderCheckOutCartTotalGrandAmount": 0.0,
+                 "orderCheckOutPromoCode": "ACS2521",
+                 "orderCheckOutChangeAddressList" : [{
+                    "subOrderCheckOutFullName" : "David Wong",
+                    "subOrderCheckOutAddress":"C-304, Wing C, Vyankatesh Greffitte, Near Siddhivinayak temple, Manajari road, Keshav Nagar, Pune - 412307",
+                    "subOrderCheckOutTypeOfAddress" : "Home",
+                    "subOrderCheckOutContactNumber" : "7854269318"
+                 },
+                 {
+                  "subOrderCheckOutFullName" : "David John",
+                  "subOrderCheckOutAddress":"W-304, Wing C, Vyankatesh Greffitte, Near Siddhivinayak temple, Manajari road, Keshav Nagar, Pune - 412307",
+                  "subOrderCheckOutTypeOfAddress" : "Office",
+                  "subOrderCheckOutContactNumber" : "9898584318"
+              }
+              ]
+           }
+            ]
+
+  }],
+  "myOrders":[
+  {
+       "myOrdersMainID": 1,
+       "myOrderId": "OID12067800",
+       "myOrderDate": "8 Sep 2022 at 2:00 PM",
+       "myOrderPerson": "Vishal Taneja",
+       "myOrderDeliveryAddress":"W-304, Wing C, Vyankatesh Greffitte, Near Siddhivinayak temple, Manajari road, Keshav Nagar, Pune - 412307",
+       "myOrderStatus": "Active",
+       "myOrderPrice": "102030",
+       "myOrderProgress": "1 item Return in progress",
+       "myOrderDetailList":[{
+                   "productId": 1,
+                   "productImage": "assets/images/androidImage.jpg",
+                   "productDetails":"Galaxy S22 Ultra 5G (12GB, 256GB Storage) Without Offer, Dark Red",
+                   "productReview": "Good product",
+                   "productRatting": 3.4,
+                   "price": "5308",
+                   "vendorDetails": "Vendor : Samyara Freezer Door",
+                   "isOrderCanceled": false,
+                   "isOrderReturned": false
+                  },
+                 {  "productId": 2,
+                   "productImage": "assets/images/IPhoneImage.jpg",
+                   "productDetails": "Apple iPhone 14 Pro Max",
+                   "productReview": "Good product",
+                   "productRatting": 3.4,
+                   "price": "3308",
+                   "vendorDetails": "Vender : Croma Electronics",
+                   "isOrderCanceled": false,
+                   "isOrderReturned": false},
+
+                   {
+                    "productId": 3,
+                    "productImage": "assets/images/iphones_Image.jpg",
+                    "productDetails": "Apple iPhone 13",
+                     "productReview": "Good product",
+                     "productRatting": 3.4,
+                    "price": "2128",
+                    "vendorDetails": "Vender : Vijay Sales",
+                    "isOrderCanceled": false,
+                    "isOrderReturned": false
+                   }
+       ],
+       "myOrderCancelList" :[
+       {
+               "cancelId": 1,
+               "productIdForCancel":1,
+             "whyCancelProduct": "I have purchased a product elsewhere",
+             "isCancelProductFor": false
+       },
+        {
+               "cancelId": 1,
+               "productIdForCancel":1,
+               "whyCancelProduct": "Price for the product has decreased",
+               "isCancelProductFor": false
+        },
+        {
+               "cancelId": 1,
+               "productIdForCancel":1,
+               "whyCancelProduct": "Expected delivery time is very long",
+              "isCancelProductFor": false
+        },{
+               "cancelId": 1,
+               "productIdForCancel":1,
+                  "whyCancelProduct": "I have changed my mind",
+                  "isCancelProductFor": false
+        },
+        {
+               "cancelId": 1,
+               "productIdForCancel":1,
+                    "whyCancelProduct": "I want to change address for my address",
+                    "isCancelProductFor": false
+        },
+        {                    "cancelId": 1,
+                             "productIdForCancel":1,
+                    "whyCancelProduct": "Added to order by mistakenly",
+                    "isCancelProductFor": false}
+       ],
+       "myOrderReturnList":[{
+            "returnId": 1,
+            "productIDForReturn": 1,
+            "whyReturnProduct": "Added to order by mistacally",
+            "isReturnProductFor": false
+       },
+       {
+
+            "returnId": 1,
+            "productIDForReturn": 1,
+                        "whyReturnProduct": "Product variant is not as chosen",
+            "isReturnProductFor": false
+       },
+       {
+
+            "returnId": 1,
+            "productIDForReturn": 1,
+            "whyReturnProduct": "Received wrong item",
+            "isReturnProductFor": false
+       },
+       {
+
+            "returnId": 1,
+            "productIDForReturn": 1,
+       "whyReturnProduct": "Faulty item",
+       "isReturnProductFor": false
+       },
+       {
+
+            "returnId": 1,
+            "productIDForReturn": 1,
+       "whyReturnProduct": "Quality is not as per expectation",
+       "isReturnProductFor": false
+       }
+       ]
+  },
+
+  {
+         "myOrdersMainID": 1,
+         "myOrderId": "OID12067832",
+         "myOrderDate": "8 Sep 2022 at 2:00 PM",
+         "myOrderPerson": "Vishal Taneja",
+         "myOrderDeliveryAddress":"W-304, Wing C, Vyankatesh Greffitte, Near Siddhivinayak temple, Manajari road, Keshav Nagar, Pune - 412307",
+         "myOrderStatus": "Active",
+         "myOrderPrice": "102030",
+         "myOrderProgress": "1 item Return in progress",
+         "myOrderDetailList":[{
+                     "productId": 1,
+                     "productImage": "assets/images/androidImage.jpg",
+                     "productDetails":"Galaxy S22 Ultra 5G (12GB, 256GB Storage) Without Offer, Dark Red",
+                     "productReview": "Good product",
+                     "productRatting": 3.4,
+                     "price": "5308",
+                     "vendorDetails": "Vendor : Samyara Freezer Door",
+                     "isOrderCanceled": false,
+                     "isOrderReturned": false
+                    },
+                   {  "productId": 2,
+                     "productImage": "assets/images/IPhoneImage.jpg",
+                     "productDetails": "Apple iPhone 14 Pro Max",
+                     "productReview": "Good product",
+                     "productRatting": 3.4,
+                     "price": "3308",
+                     "vendorDetails": "Vender : Croma Electronics",
+                     "isOrderCanceled": false,
+                     "isOrderReturned": false},
+
+                     {
+                      "productId": 3,
+                      "productImage": "assets/images/iphones_Image.jpg",
+                      "productDetails": "Apple iPhone 13",
+                     "productReview": "Good product",
+                     "productRatting": 3.4,
+                      "price": "2128",
+                      "vendorDetails": "Vender : Vijay Sales",
+                      "isOrderCanceled": false,
+                      "isOrderReturned": false
+                     }
+         ],
+         "myOrderCancelList" :[
+         {
+               "cancelId": 1,
+               "productIdForCancel":1,
+               "whyCancelProduct": "I have purchased a product elsewhere",
+               "isCancelProductFor": false
+         },
+          {
+               "cancelId": 1,
+               "productIdForCancel":1,
+                 "whyCancelProduct": "Price for the product has decreased",
+                 "isCancelProductFor": false
+          },
+          {
+               "cancelId": 1,
+               "productIdForCancel":1,
+                "whyCancelProduct": "Expected delivery time is very long",
+                "isCancelProductFor": false
+          },{
+               "cancelId": 1,
+               "productIdForCancel":1,
+                    "whyCancelProduct": "I have changed my mind",
+                    "isCancelProductFor": false
+          },
+          {
+               "cancelId": 1,
+               "productIdForCancel":1,
+                      "whyCancelProduct": "I want to change address for my address",
+                      "isCancelProductFor": false
+          },
+          {
+                        "cancelId": 1,
+                      "productIdForCancel":1,
+                      "whyCancelProduct": "Added to order by mistakenly",
+                      "isCancelProductFor": false}
+         ],
+         "myOrderReturnList":[{
+
+            "returnId": 1,
+            "productIDForReturn": 1,
+            "whyReturnProduct": "Added to order by mistacally",
+              "isReturnProductFor": false
+         },
+         {
+
+            "returnId": 1,
+            "productIDForReturn": 1,
+            "whyReturnProduct": "Product variant is not as chosen",
+              "isReturnProductFor": false
+         },
+         {
+
+            "returnId": 1,
+            "productIDForReturn": 1,
+            "whyReturnProduct": "Received wrong item",
+              "isReturnProductFor": false
+         },
+         {
+
+            "returnId": 1,
+            "productIDForReturn": 1,
+            "whyReturnProduct": "Faulty item",
+         "isReturnProductFor": false
+         },
+         {
+
+            "returnId": 1,
+            "productIDForReturn": 1,
+            "whyReturnProduct": "Quality is not as per expectation",
+         "isReturnProductFor": false
+         }
+         ]
+    }
+  ],
+  "myAddressList" : [
+             {
+
+               "myAddressFullName":"David Wong",
+               "myAddressPhoneNumber":"7854269318",
+               "myAddressHouseNoBuildingName":"C-304, Wing C, ",
+               "myAddressAreaColony":"Vyankatesh Greffitte, Near Siddhivinayak temple, Manajari road, Keshav Nagar, ",
+               "myAddressState":"Maharastra",
+               "myAddressCity":"Pune - 412307",
+               "myAddressTypeOfAddress":"Home"
+           },
+           {
+                   "myAddressFullName":"John Wong",
+                   "myAddressPhoneNumber":"994869318",
+                   "myAddressHouseNoBuildingName":"G-304, Wing W, ",
+                   "myAddressAreaColony":"Vyankatesh Greffitte, Near Siddhivinayak temple, Manajari road, Keshav Nagar, ",
+                   "myAddressState":"Maharashtra",
+                   "myAddressCity":"Mumbai - 443307",
+                   "myAddressTypeOfAddress":"Office"
+        }
+        ],
+ "customerSupport":{
+        "customerCareNumber" : "9875 6325 0202",
+        "ccNumbImage": "assets/images/androidImage.jpg",
+        "emailForQuery": "support@nexgen.com",
+        "queryImage": "assets/images/androidImage.jpg"
+ },
+
+ "accountSettings":{
+    "isPushNotifications" : false
+ },
+
+ "notificationsList" : [
+ {
+   "id" :1,
+   "isOffersOnlyNotification" :false,
+   "newNotificationCounter" :2,
+   "notificationImage" :"assets/images/androidImage.jpg",
+   "notificationTitle" :"MEGA Deal on Superstar Brands",
+   "notificationDetails" :"Big Price drops, Crzy discounts and prices on the hottest brands! Find them here",
+   "notificationTime" :"1 day ago"
+   },{
+        "id" :1,
+        "isOffersOnlyNotification" :true,
+        "newNotificationCounter" :2,
+        "notificationImage" :"assets/images/androidImage.jpg",
+        "notificationTitle" :"MEGA Deal on Superstar Brands",
+        "notificationDetails" :"Big Price drops, Crzy discounts and prices on the hottest brands! Find them here",
+        "notificationTime" :"1 day ago"
+        },
+   {
+        "id" :2,
+        "isOffersOnlyNotification" :true,
+        "newNotificationCounter" :2,
+        "notificationImage" :"assets/images/androidImage.jpg",
+        "notificationTitle" :"MEGA Deal on Superstar Brands",
+        "notificationDetails" :"Big Price drops, Crzy discounts and prices on the hottest brands! Find them here",
+        "notificationTime" :"1 day ago"
+        }
+   ],
+   "myCardList" : [
+          {
+
+            "myCardBankName":"Kotak Mahindra Bank",
+            "myCardType":"Credit Card",
+            "myCardFullName":"David Wong",
+            "myCardNumber":"5724 5552 5268 8892",
+            "myCardExpiryDate":"Expires Aug 2024"
+        },
+         {
+
+             "myCardBankName":"Kotak Mahindra Bank",
+             "myCardType":"Credit Card",
+             "myCardFullName":"David Wong",
+             "myCardNumber":"5724 5552 5268 8892",
+             "myCardExpiryDate":"Expires Aug 2024"
+         }
+     ],
+"userAccountList" :
+    {
+    "userId":1,
+    "userName":"David Wong",
+    "userEmail":"david@gmail.com",
+    "userMobile":"8596258633",
+    "userPassword":""
+    },
+
+"changePassword":{
+    "currentPassword" : "123",
+    "newPassword":""
+
+}
+
 }

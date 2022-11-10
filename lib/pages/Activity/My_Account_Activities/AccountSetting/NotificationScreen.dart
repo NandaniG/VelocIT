@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/services/providers/Home_Provider.dart';
 import 'package:velocit/utils/styles.dart';
+import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/models/NotificationsModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../widgets/global/appBar.dart';
@@ -47,7 +49,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget mainUI() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-      child: Consumer<ProductProvider>(builder: (context, value, child) {
+      child: Consumer<HomeProvider>(builder: (context, value, child) {
         return Column(
           children: [
             Row(
@@ -66,32 +68,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       setState(() {
                         isGridView = val;
                       });
-                      if (isGridView == true) {
-                        value.notificationsIsOffer = <NotificationsModel>[];
-                        for (int i = 0;
-                            i < value.notificationDataList.length;
-                            i++) {
-                          if (value
-                                  .notificationDataList[i].typeOfNotification ==
-                              true) {
-                            value.notificationsIsOffer
-                                .add(value.notificationDataList[i]);
-
-                            print(
-                                "value.notificationDataList[i].typeOfNotification" +
-                                    value.notificationDataList[i]
-                                        .notificationTitle);
-                          } else {
-                            print("false________");
-                          }
-                        }
-
-                        print("isGridView is selected:   " +
-                            isGridView.toString());
-                      } else {
-                        print("isGridView is not selected:   " +
-                            isGridView.toString());
-                      }
                     },
                   ),
                 ),
@@ -146,159 +122,160 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
             isGridView == true
                 ? Expanded(
-                    child: ListView.builder(
-                        itemCount: value.notificationsIsOffer.length,
-                        itemBuilder: (_, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: ThemeApp.whiteColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                          width: 60.0,
-                                          height: 60.0,
-                                          decoration: new BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: new DecorationImage(
-                                                  fit: BoxFit.fill,
-                                                  image: new AssetImage(
-                                                    'assets/images/laptopImage.jpg',
-                                                  )))),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextFieldUtils().dynamicText(
-                                              value.notificationsIsOffer[index]
-                                                  .notificationTitle,
-                                              context,
-                                              TextStyle(
-                                                  color: ThemeApp.blackColor,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: height * .023,
-                                                  overflow:
-                                                      TextOverflow.ellipsis)),
-                                          TextFieldUtils().dynamicText(
-                                              value.notificationsIsOffer[index]
-                                                  .notificationDetails,
-                                              context,
-                                              TextStyle(
-                                                  color: ThemeApp.darkGreyTab,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: height * .02,
-                                                  overflow:
-                                                      TextOverflow.ellipsis)),
-                                          SizedBox(
-                                            height: height * .02,
-                                          ),
-                                          TextFieldUtils().dynamicText(
-                                              value.notificationsIsOffer[index]
-                                                  .notificationTime,
-                                              context,
-                                              TextStyle(
-                                                color: ThemeApp
-                                                    .textFieldBorderColor,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: height * .02,
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                child: ListView.builder(
+                    itemCount: value.notificationDataList.length,
+                    itemBuilder: (_, index) {
+                      return value.notificationDataList[index]
+                      ["isOffersOnlyNotification"]==true? Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                      width: 60.0,
+                                      height: 60.0,
+                                      decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: new DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: new AssetImage(
+                                                'assets/images/laptopImage.jpg',
+                                              )))),
                                 ),
-                              ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      TextFieldUtils().dynamicText(
+                                          value.notificationDataList[index]
+                                          ["notificationTitle"]!,
+                                          context,
+                                          TextStyle(
+                                              color: ThemeApp.blackColor,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: height * .023,
+                                              overflow:
+                                              TextOverflow.ellipsis)),
+                                      TextFieldUtils().dynamicText(
+                                          value.notificationDataList[index]
+                                          ["notificationDetails"]!,
+                                          context,
+                                          TextStyle(
+                                              color: ThemeApp.darkGreyTab,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: height * .02,
+                                              overflow:
+                                              TextOverflow.ellipsis)),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      TextFieldUtils().dynamicText(
+                                          value.notificationDataList[index]
+                                          ["notificationTime"]!,
+                                          context,
+                                          TextStyle(
+                                            color: ThemeApp
+                                                .textFieldBorderColor,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: height * .02,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          );
-                        }))
+                          ),
+                        ),
+                      ):SizedBox();
+                    }))
                 : Expanded(
-                    child: ListView.builder(
-                        itemCount: value.notificationDataList.length,
-                        itemBuilder: (_, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: ThemeApp.whiteColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                          width: 60.0,
-                                          height: 60.0,
-                                          decoration: new BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: new DecorationImage(
-                                                  fit: BoxFit.fill,
-                                                  image: new AssetImage(
-                                                    'assets/images/laptopImage.jpg',
-                                                  )))),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextFieldUtils().dynamicText(
-                                              value.notificationDataList[index]
-                                                  .notificationTitle,
-                                              context,
-                                              TextStyle(
-                                                  color: ThemeApp.blackColor,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: height * .023,
-                                                  overflow:
-                                                      TextOverflow.ellipsis)),
-                                          TextFieldUtils().dynamicText(
-                                              value.notificationDataList[index]
-                                                  .notificationDetails,
-                                              context,
-                                              TextStyle(
-                                                  color: ThemeApp.darkGreyTab,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: height * .02,
-                                                  overflow:
-                                                      TextOverflow.ellipsis)),
-                                          SizedBox(
-                                            height: height * .02,
-                                          ),
-                                          TextFieldUtils().dynamicText(
-                                              value.notificationDataList[index]
-                                                  .notificationTime,
-                                              context,
-                                              TextStyle(
-                                                color: ThemeApp
-                                                    .textFieldBorderColor,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: height * .02,
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                child: ListView.builder(
+                    itemCount: value.notificationDataList.length,
+                    itemBuilder: (_, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                      width: 60.0,
+                                      height: 60.0,
+                                      decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: new DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: new AssetImage(
+                                                'assets/images/laptopImage.jpg',
+                                              )))),
                                 ),
-                              ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      TextFieldUtils().dynamicText(
+                                          value.notificationDataList[index]
+                                              ["notificationTitle"]!,
+                                          context,
+                                          TextStyle(
+                                              color: ThemeApp.blackColor,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: height * .023,
+                                              overflow:
+                                              TextOverflow.ellipsis)),
+                                      TextFieldUtils().dynamicText(
+                                          value.notificationDataList[index]
+                                              ["notificationDetails"]!,
+                                          context,
+                                          TextStyle(
+                                              color: ThemeApp.darkGreyTab,
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: height * .02,
+                                              overflow:
+                                              TextOverflow.ellipsis)),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      TextFieldUtils().dynamicText(
+                                          value.notificationDataList[index]
+                                              ["notificationTime"]!,
+                                          context,
+                                          TextStyle(
+                                            color: ThemeApp
+                                                .textFieldBorderColor,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: height * .02,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          );
-                        }))
+                          ),
+                        ),
+                      );
+                    }))
           ],
         );
       }),

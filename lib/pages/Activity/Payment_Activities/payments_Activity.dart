@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/services/providers/Home_Provider.dart';
 
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/constants.dart';
@@ -11,6 +12,7 @@ import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
 import 'OrderPlaced_activity.dart';
 
 enum CardType {
@@ -28,9 +30,9 @@ enum CardType {
 enum DropSelections { upi, Wallets, creditCard, cashOnDelivery }
 
 class Payment_Creditcard_debitcardScreen extends StatefulWidget {
-  final dynamic productList;
+  final dynamic orderReview;
 
-  const Payment_Creditcard_debitcardScreen({Key? key, this.productList}) : super(key: key);
+  const Payment_Creditcard_debitcardScreen( {Key? key, this.orderReview, }) : super(key: key);
 
   @override
   State<Payment_Creditcard_debitcardScreen> createState() => _Payment_Creditcard_debitcardScreenState();
@@ -77,7 +79,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
       bottomNavigationBar: BottomAppBar(
         color: ThemeApp.backgroundColor,
         elevation: 0,
-        child: Consumer<ProductProvider>(builder: (context, value, child) {
+        child: Consumer<HomeProvider>(builder: (context, value, child) {
           return Container(
             height: height * .09,
             width: width,
@@ -113,9 +115,14 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                     ]),
                 InkWell(
                     onTap: () {
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
+                      //   ),
+                      // );
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => OrderPlaceActivity(productList: widget.productList),
+                          builder: (context) => OrderPlaceActivity(orderReview:  value.orderCheckOutDetails),
                         ),
                       );
                     },

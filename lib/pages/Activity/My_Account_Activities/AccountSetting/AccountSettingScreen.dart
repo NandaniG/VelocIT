@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../services/providers/Home_Provider.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/textFormFields.dart';
@@ -32,52 +34,56 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
               context, appTitle(context, "Account Setting"), SizedBox()),
         ),
         body: SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Container(
+            child: Consumer<HomeProvider>(builder: (context, value, child) {
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Container(
           decoration: BoxDecoration(
-                  color: ThemeApp.whiteColor,
-                  borderRadius: BorderRadius.circular(10),
+                      color: ThemeApp.whiteColor,
+                      borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextFieldUtils().dynamicText(
-                          AppLocalizations.of(context).pushNotifications,
-                          context,
-                          TextStyle(
-                            color: ThemeApp.blackColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: height * .025,
-                          )),
-                      SizedBox(
-                        width: width * .04,
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextFieldUtils().dynamicText(
+                              AppLocalizations.of(context).pushNotifications,
+                              context,
+                              TextStyle(
+                                color: ThemeApp.blackColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: height * .025,
+                              )),
+                          SizedBox(
+                            width: width * .04,
+                          ),
+                          Transform.scale(
+                            scale: 1.3,
+                            child: Switch(
+                              // This bool value toggles the switch.
+                              value: value.accountSettings["isPushNotifications"],
+                              activeColor: ThemeApp.darkGreyTab,
+                              inactiveTrackColor: ThemeApp.textFieldBorderColor,
+                              inactiveThumbColor: ThemeApp.darkGreyTab,
+                              onChanged: (bool val) {
+                                // This is called when the user toggles the switch.
+                                setState(() {
+                                  value.accountSettings["isPushNotifications"] = val;
+                                  print(value.accountSettings["isPushNotifications"].toString());
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      Transform.scale(
-                        scale: 1.3,
-                        child: Switch(
-                          // This bool value toggles the switch.
-                          value: isGridView,
-                          activeColor: ThemeApp.darkGreyTab,
-                          inactiveTrackColor: ThemeApp.textFieldBorderColor,
-                          inactiveThumbColor: ThemeApp.darkGreyTab,
-                          onChanged: (bool value) {
-                            // This is called when the user toggles the switch.
-                            setState(() {
-                              isGridView = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
           ),
         ),
-                ),
-              ],
+                    ),
+                  ],
+                );
+              }
             )));
   }
 }

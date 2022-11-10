@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../services/models/CreditCardModel.dart';
+import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/proceedButtons.dart';
@@ -11,7 +12,7 @@ import 'CardList_manage_Payment_Activity.dart';
 
 class DeletePaymentMethodDialog extends StatefulWidget {
   final int index;
-  List<CreditCardListModel> cardList;
+  List<MyCardList> cardList;
 
   DeletePaymentMethodDialog({required this.index, required this.cardList});
 
