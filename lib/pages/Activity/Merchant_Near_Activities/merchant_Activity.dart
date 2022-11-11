@@ -189,6 +189,9 @@ class _MerchantActvityState extends State<MerchantActvity> {
       ],
     ),
       ),
+      bottomNavigationBar: bottomNavigationBarWidget(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       body: SafeArea(
         child: Container(
         height: MediaQuery.of(context).size.height,

@@ -69,12 +69,23 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          AddNewDeliveryAddress(isSavedAddress: isSavedAddress),
-                    ),
-                  );
+                  if(value.addressList.length<=4){
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AddNewDeliveryAddress(isSavedAddress: isSavedAddress),
+                      ),
+                    );
+                  }else{
+                    final snackBar = SnackBar(
+                      content: Text('You can add only 5 addresse'),
+                      clipBehavior: Clip.antiAlias,
+                      backgroundColor: ThemeApp.innerTextFieldErrorColor,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                  }
+
                 },
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),

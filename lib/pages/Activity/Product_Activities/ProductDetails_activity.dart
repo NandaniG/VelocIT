@@ -83,7 +83,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           context,
           appTitle(context, "My Product"),SizedBox(),
         ),
-      ),
+      ), bottomNavigationBar: bottomNavigationBarWidget(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       body: SafeArea(
         child: Container(
         height: MediaQuery.of(context).size.height,

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:velocit/pages/screens/dashBoard.dart';
 
 import '../pages/homePage.dart';
 import '../utils/constants.dart';
@@ -139,7 +140,7 @@ class _OTPScreenState extends State<OTPScreen> {
            if(controller.text.length >= 6){
              Navigator.of(context).push(
                MaterialPageRoute(
-                 builder: (context) => Home(homeDataJson: ''),
+                 builder: (context) => DashboardScreen(),
                ),
              );
            }else{

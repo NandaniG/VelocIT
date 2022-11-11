@@ -11,6 +11,7 @@ import 'package:velocit/pages/Activity/My_Account_Activities/CustomerSupport/Cus
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
 import 'package:velocit/pages/homePage.dart';
+import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 import 'package:velocit/services/providers/cart_Provider.dart';
 import 'package:velocit/utils/constants.dart';
@@ -112,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ()=>Navigator.pushReplacement(context,
             MaterialPageRoute(builder:
                 (context) =>
-                Home(homeDataJson: '',)
+                DashboardScreen()
             )
         )
     );
@@ -123,7 +124,7 @@ class _SplashScreenState extends State<SplashScreen> {
         color: Colors.white,
         child:Image.asset(
           'assets/images/VelocIT_Icon_512.png',
-          height: 120,
+          height: 120,width: 100,
         ),
     );
   }

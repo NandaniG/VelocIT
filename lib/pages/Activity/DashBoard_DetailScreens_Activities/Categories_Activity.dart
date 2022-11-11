@@ -66,6 +66,9 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
             addressWidget(context, StringConstant.placesFromCurrentLocation),
             setState(() {})),
       ),
+      bottomNavigationBar: bottomNavigationBarWidget(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Consumer<ProductProvider>(builder: (context, product, _) {
@@ -224,7 +227,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
     var orientation =
         (MediaQuery.of(context).orientation == Orientation.landscape);
     return Container(
-        height: orientation ? height * .5 : height * .28,
+        height: orientation ? height * .5 : height * .3,
 
         // padding: EdgeInsets.all(12.0),
         alignment: Alignment.center,
@@ -241,7 +244,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                   : MediaQuery.of(context).size.width /
                       2.3 /
                       MediaQuery.of(context).size.height /
-                      0.2,
+                      0.23,
               crossAxisCount: 3,
               crossAxisSpacing: 5.7,
               mainAxisSpacing: 6.9),

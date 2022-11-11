@@ -1,16 +1,31 @@
+import 'dart:io';
+
+import 'package:barcode_finder/barcode_finder.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
+import 'package:velocit/pages/screens/cartDetail_Activity.dart';
+import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 
 import '../../auth/change_password.dart';
 import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
+import '../../pages/homePage.dart';
+import '../../pages/screens/dashBoard.dart';
+import '../../pages/screens/offers_Activity.dart';
+import '../../pages/tabs/tabs.dart';
+import '../../services/providers/Home_Provider.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../SpeechToTextDialog_Screen.dart';
 import '../features/addressScreen.dart';
 import '../features/switchLanguages.dart';
+import '../scannerWithGallery.dart';
 import 'autoSearchLocation_popup.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:highlight_text/highlight_text.dart';
@@ -46,7 +61,7 @@ Widget appBarWidget(
             flexibleSpace: Container(
               height: height * .08,
               width: width,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: ThemeApp.whiteColor,
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(15),
@@ -63,7 +78,7 @@ Widget appBarWidget(
 
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => MyAccountActivity(),
+                    builder: (context) => const MyAccountActivity(),
                   ),
                 );
               },
@@ -73,13 +88,13 @@ Widget appBarWidget(
                   borderRadius: const BorderRadius.all(
                     Radius.circular(100),
                   ),
-                  child: Container(
+                  child:Icon(Icons.account_circle_rounded) /*Container(
                       alignment: Alignment.center,
-                      child: Image(
+                      child: const Image(
                         image: NetworkImage(
                             'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
                         fit: BoxFit.fill,
-                      )),
+                      ))*/,
                 ),
               ),
             ),
@@ -89,8 +104,8 @@ Widget appBarWidget(
             actions: [
               Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.only(right: 10),
-                child: Icon(
+                margin: const EdgeInsets.only(right: 10),
+                child: const Icon(
                   Icons.notifications_none_outlined,
                   color: ThemeApp.darkGreyTab,
                   size: 35,
@@ -116,7 +131,8 @@ Widget appBar_backWidget(
   width = MediaQuery.of(context).size.width;
   final GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey();
 
-  return SafeArea(child: Column(
+  return SafeArea(
+      child: Column(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -130,13 +146,14 @@ Widget appBar_backWidget(
           flexibleSpace: Container(
             height: height * .08,
             width: width,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: ThemeApp.whiteColor,
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(15),
                   bottomRight: Radius.circular(15)),
             ),
-          ),titleSpacing: 0,
+          ),
+          titleSpacing: 0,
           leading: InkWell(
             onTap: () {
               Navigator.of(context).pop();
@@ -145,14 +162,13 @@ Widget appBar_backWidget(
             child: Transform.scale(
                 scale: 1.3,
                 child: IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.black),
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
                     onPressed: () {
                       Navigator.pop(context);
-                    }
-                )
-            ),),
+                    })),
+          ),
 
-            // leadingWidth: width * .06,
+          // leadingWidth: width * .06,
           title: titleWidget,
           // Row
         ),
@@ -163,8 +179,11 @@ Widget appBar_backWidget(
 }
 
 Widget appTitle(BuildContext context, String text) {
-  return Container(alignment: Alignment.centerLeft, child: TextFieldUtils().textFieldHeightThree(text, context));
+  return Container(
+      alignment: Alignment.centerLeft,
+      child: TextFieldUtils().textFieldHeightThree(text, context));
 }
+
 //codeElan.velocIT
 Widget searchBar(BuildContext context) {
   double height = 0.0;
@@ -175,7 +194,7 @@ Widget searchBar(BuildContext context) {
     width: width,
     height: height * .1,
     // color: ThemeApp.innerTextFieldErrorColor,
-    padding: EdgeInsets.only(top: 10,left: 0),
+    padding: const EdgeInsets.only(top: 10, left: 0),
     alignment: Alignment.center,
     child: TextFormField(
       textInputAction: TextInputAction.search,
@@ -204,10 +223,11 @@ Widget searchBar(BuildContext context) {
         filled: true,
         fillColor: ThemeApp.backgroundColor,
         isDense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
         /* -- Text and Icon -- */
         hintText: "Search for Products...",
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
           fontSize: 18,
           color: ThemeApp.darkGreyTab,
         ),
@@ -232,18 +252,18 @@ Widget searchBar(BuildContext context) {
         ),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
                 color: ThemeApp.innerTextFieldErrorColor, width: 1)),
         // OutlineInputBorder
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide:
-                BorderSide(color: ThemeApp.backgroundColor, width: 1)),
+                const BorderSide(color: ThemeApp.backgroundColor, width: 1)),
         // OutlineInputBorder
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide:
-                BorderSide(color: ThemeApp.backgroundColor, width: 1)),
+                const BorderSide(color: ThemeApp.backgroundColor, width: 1)),
       ), // InputDecoration
     ),
   );
@@ -273,7 +293,7 @@ Widget addressWidget(BuildContext context, String addressString) {
         height: height * .036,
         color: ThemeApp.darkGreyTab,
         width: width,
-        padding: EdgeInsets.all(2),
+        padding: const EdgeInsets.all(2),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -308,4 +328,321 @@ Widget addressWidget(BuildContext context, String addressString) {
       ),
     ),
   );
+}
+
+final List _tabIcons = List.unmodifiable([
+  {'icon': 'assets/icons/home.png'},
+  {'icon': 'assets/icons/percentage.png'},
+  {'icon': 'assets/icons/percentage.png'},
+  {'icon': 'assets/icons/shop.png'},
+  {'icon': 'assets/icons/shopping-cart.png'},
+]);
+
+final List<Widget> _tabs = List.unmodifiable([
+  // SearchList(),
+  const DashboardScreen(),
+  const OfferActivity(),
+  Container(),
+  Container(),
+  Container(),
+]);
+
+Widget bottomNavBarItems(BuildContext context) {
+  int _currentIndex = 0;
+  return Consumer<HomeProvider>(builder: (context, provider, child) {
+    return  Consumer<ProductProvider>(builder: (context, value, child) {
+        return BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          onTap: (int index) {
+            if (index == 0) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const DashboardScreen(),
+                ),
+              );
+            }
+            if (index == 1) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const OfferActivity(),
+                ),
+              );
+            }
+            if (index == 3) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ShopByCategoryActivity(
+                      shopByCategoryList: provider.jsonData["shopByCategoryList"]),
+                ),
+              );
+            }
+            if (index == 4) {
+              print("provider.cartProductList");
+              print(provider.cartProductList);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CartDetailsActivity(value: value, productList: provider.cartProductList)
+                ),
+              );
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 0
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/home.png', height: 30),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/home.png', height: 30),
+                      ),
+                label: ''),
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 1
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child:
+                            Image.asset('assets/icons/percentage.png', height: 30),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child:
+                            Image.asset('assets/icons/percentage.png', height: 30),
+                      ),
+                label: ''),
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 2
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Icon(Icons.add, color: Colors.transparent),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Icon(Icons.add, color: Colors.transparent),
+                      ),
+                label: ''),
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 3
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/shop.png', height: 30),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/shop.png', height: 30),
+                      ),
+                label: ''),
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 4
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/shopping-cart.png',
+                            height: 30),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/shopping-cart.png',
+                            height: 30),
+                      ),
+                label: ''),
+          ],
+        );
+      }
+    );
+  });
+}
+
+Widget bottomNavigationBarWidget(BuildContext context) {
+  final controller = BarcodeFinderController();
+  return Stack(
+    alignment: FractionalOffset(.5, 1.0),
+    children: [
+      bottomNavBarItems(context),
+      Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Container(
+          height: 70,
+          width: 70,
+          child: FloatingActionButton(
+            backgroundColor: ThemeApp.darkGreyTab,
+            onPressed: () {
+              // scanQRCode();
+              // scanFile();
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (context) => StepperScreen(),
+              //   ),
+              // );
+              showModalBottomSheet(
+                  isDismissible: true,
+                  context: context,
+                  builder: (context) {
+                    return ScannerWidget(state: controller.state);
+                  });
+            },
+            child: const Icon(Icons.document_scanner_outlined,
+                color: ThemeApp.whiteColor),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+class ScannerWidget extends StatefulWidget {
+  BarcodeFinderState state;
+
+  ScannerWidget({Key? key, required this.state}) : super(key: key);
+
+  @override
+  State<ScannerWidget> createState() => _ScannerWidgetState();
+}
+
+class _ScannerWidgetState extends State<ScannerWidget> {
+  var getResult = 'QR Code Result';
+  final controller = BarcodeFinderController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _scanBarcode = 'Unknown';
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * .25,
+      color: Colors.cyan,
+      margin: EdgeInsets.all(10.0),
+      child: Scaffold(
+          key: _scaffoldKey,
+          body: Center(
+            child: Wrap(
+              children: [
+                AnimatedBuilder(
+                  animation: controller,
+                  builder: (_, __) {
+                    final state = controller.state;
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        proceedButton(
+                            "Scan with Camera", ThemeApp.darkGreyColor, context,
+                            () {
+                          // Navigator.of(context).pop();
+
+                          scanQR();
+                        }),
+                        SizedBox(height: MediaQuery.of(context).size.height*.01 ,),
+                        _startScanFileButton(state),
+                        Text(
+                          'Code:',
+                          textAlign: TextAlign.center,
+                        ),
+                        if (state is BarcodeFinderLoading)
+                          _loading()
+                        else if (state is BarcodeFinderError)
+                          _text(
+                            '${state.message}',
+                          )
+                        else if (state is BarcodeFinderSuccess)
+                          _text(
+                            '${state.code}',
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          )),
+    );
+  }
+
+  Widget _loading() => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+            child: CircularProgressIndicator(
+          color: ThemeApp.darkGreyColor,
+        )),
+      );
+
+  Future<void> scanQR() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+      _scanBarcode = barcodeScanRes;
+      print('_scanBarcode : ' + barcodeScanRes);
+      print('_scanBarcode : ' + _scanBarcode);
+      if (!mounted) return;
+      Navigator.of(context).pop();
+
+      final snackBar = SnackBar(
+        content: Text(_scanBarcode),
+        backgroundColor: ThemeApp.greenappcolor,
+        clipBehavior: Clip.antiAlias,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+//barcode scanner flutter ant
+  }
+
+  Widget _startScanFileButton(BarcodeFinderState state) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(10),
+        ),
+        color: ThemeApp.darkGreyColor,
+      ),
+      child: InkWell(
+          onTap: state is! BarcodeFinderLoading
+              ? () async {
+                  FilePickerResult? pickedFile =
+                      await FilePicker.platform.pickFiles();
+                  if (pickedFile != null) {
+                    String? filePath = pickedFile.files.single.path;
+                    if (filePath != null) {
+                      final file = File(filePath);
+                      controller.scanFile(file);
+                    }
+                  }
+                  final snackBar = SnackBar(
+                    content: Text(_scanBarcode),
+                    backgroundColor: ThemeApp.greenappcolor,
+                    clipBehavior: Clip.antiAlias,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
+              : null,
+          child: TextFieldUtils().usingPassTextFields(
+              "Open Gallery", ThemeApp.whiteColor, context)),
+    );
+  }
+
+  Future<String?> scanFile() async {
+    // Used to pick a file from device storage
+    final pickedFile = await FilePicker.platform.pickFiles();
+    if (pickedFile != null) {
+      final filePath = pickedFile.files.single.path;
+      if (filePath != null) {
+        return await BarcodeFinder.scanFile(path: filePath);
+      }
+    }
+  }
+
+  Text _text(String text) {
+    return Text(
+      text,
+      textAlign: TextAlign.center,
+    );
+  }
 }

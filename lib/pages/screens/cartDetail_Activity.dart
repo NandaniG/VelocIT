@@ -55,9 +55,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     super.initState();
     // getListFromPref();
     print("widget.cartDetailScreen[]"+widget.productList.toString());
-
+    print("value.cartList.length");
+    print(widget.value.cartList.length);
     getListFromPref();
-    widget.productList["productCartMaxCounter"] = '1';
+   // widget.productList[0]["productCartMaxCounter"] = '1';
     finalOriginalPrice = 0.0;
     finalDiscountPrice = 0.0;
     finalDiffrenceDiscountPrice = 0.0;
@@ -95,6 +96,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+
   }
 
   var listFromPref;
@@ -129,73 +131,84 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         elevation: 0,
         child: Consumer<ProductProvider>(builder: (context, value, child) {
           return Container(
-            height: height * .08,
+            height: height * .2,
             width: width,
             decoration: BoxDecoration(
-              color: ThemeApp.darkGreyTab,
+              color: ThemeApp.darkGreyColor,
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(15),
                   topLeft: Radius.circular(15)),
             ),
-            padding: const EdgeInsets.only(left: 15, right: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Column(
               children: [
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15,top: 10,),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      TextFieldUtils().pricesLineThroughWhite(
-                        " ${indianRupeesFormat.format(finalOriginalPrice)}",
-                        context,
-                        MediaQuery.of(context).size.height * .021,
-                      ),
-                      TextFieldUtils().homePageheadingTextFieldWHITE(
-                        "${indianRupeesFormat.format(finalTotalPrice)}",
-                        context,
-                      ),
-                    ]),
-                InkWell(
-                    onTap: () async {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => Payment_Creditcard_debitcardScreen(productList: widget.productList),
-                      //   ),
-                      // );
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => OrderReviewSubActivity(value:value),
-                        ),
-                      );
-                      // Prefs().clear();
-                        StringConstant.totalOriginalPrice =
-                        (await Prefs().getDoubleToken(StringConstant.totalOriginalPricePref))!;
-                        print('StringConstant.totalOriginalPrice' +
-                            StringConstant.totalOriginalPrice.toString());
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFieldUtils().pricesLineThroughWhite(
+                              " ${indianRupeesFormat.format(finalOriginalPrice)}",
+                              context,
+                              MediaQuery.of(context).size.height * .021,
+                            ),
+                            TextFieldUtils().homePageheadingTextFieldWHITE(
+                              "${indianRupeesFormat.format(finalTotalPrice)}",
+                              context,
+                            ),
+                          ]),
+                      InkWell(
+                          onTap: () async {
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (context) => Payment_Creditcard_debitcardScreen(productList: widget.productList),
+                            //   ),
+                            // );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => OrderReviewSubActivity(value:value),
+                              ),
+                            );
+                            // Prefs().clear();
+                              StringConstant.totalOriginalPrice =
+                              (await Prefs().getDoubleToken(StringConstant.totalOriginalPricePref))!;
+                              print('StringConstant.totalOriginalPrice' +
+                                  StringConstant.totalOriginalPrice.toString());
 
-                        StringConstant.totalFinalPrice =
-                        (await Prefs().getDoubleToken(StringConstant.totalFinalPricePref))!;
-                        print('StringConstant.totalFinalPrice' +
-                            StringConstant.totalFinalPrice.toString());
+                              StringConstant.totalFinalPrice =
+                              (await Prefs().getDoubleToken(StringConstant.totalFinalPricePref))!;
+                              print('StringConstant.totalFinalPrice' +
+                                  StringConstant.totalFinalPrice.toString());
 
-                    },
-                    child: Container(
-                        height: height * 0.05,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          color: ThemeApp.whiteColor,
-                        ),
-                        padding: const EdgeInsets.only(left: 15, right: 15),
-                        child: TextFieldUtils().usingPassTextFields(
-                            "Place Order", ThemeApp.blackColor, context))),
+                          },
+                          child: Container(
+                              height: height * 0.05,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                                color: ThemeApp.whiteColor,
+                              ),
+                              padding: const EdgeInsets.only(left: 15, right: 15),
+                              child: TextFieldUtils().usingPassTextFields(
+                                  "Place Order", ThemeApp.blackColor, context))),
+                    ],
+                  ),
+                ),
+                bottomNavigationBarWidget(context),
               ],
             ),
+
+
           );
         }),
       ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       body: SafeArea(
         child: Consumer<ProductProvider>(builder: (context, value, child) {
           return Container(
@@ -206,7 +219,15 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    cartProductList(value),
+                  widget.value.cartList.isEmpty?Container(height: height*.5,alignment: Alignment.center, child:  TextFieldUtils().dynamicText(
+                      "Cart is Empty",
+                      context,
+                      TextStyle(
+                          color: ThemeApp.blackColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: height * .03,
+                          overflow:
+                          TextOverflow.ellipsis)),) : cartProductList(value),
                     priceDetails(value),
                   ],
                 ),
@@ -219,16 +240,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   Widget cartProductList(ProductProvider value) {
     return Container(
       height: MediaQuery.of(context).size.height * .6,
-      child: value.cartList.length >= 0
-          ? ListView.builder(
+      child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemCount: value.cartList.length,
               itemBuilder: (BuildContext context, int index) {
-                if (value.cartList.length < 0) {
-                  return CircularProgressIndicator();
-                } else {
-                  return Column(
+
+                  return value.cartList.isEmpty? Center(child: Text("Hiiii",)):Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -330,9 +348,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       )
                     ],
                   );
-                }
+
               })
-          : CircularProgressIndicator(),
+
     );
   }
 

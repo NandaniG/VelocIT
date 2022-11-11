@@ -90,6 +90,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             addressWidget(context, StringConstant.placesFromCurrentLocation),
             setState(() {})),
       ),
+      bottomNavigationBar: bottomNavigationBarWidget(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       body: Consumer<HomeProvider>(builder: (context, provider, child) {
         var data = provider.loadJson();
         print('object-------------' + provider.jsonData.toString());

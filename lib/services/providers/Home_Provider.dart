@@ -18,7 +18,7 @@ class HomeProvider with ChangeNotifier {
       jsonData = json.decode(jsonContent);
       print("____________loadJson______________________");
       print(jsonData["stepperOfDeliveryList"]);
-      StringConstant.printObject(jsonData);
+      // StringConstant.printObject(jsonData);
 
       homeImageSliderService();
       shopByCategoryService();
@@ -49,8 +49,8 @@ class HomeProvider with ChangeNotifier {
     homeSliderList = json.decode(jsondata);
     print("-------------homeImageSliderService Data-------------");
     // homeSliderList = homeImageSliderFromJson(homeSliderList);
-    print(homeSliderList["homeImageSlider"]);
-    return homeSliderList.map((e) => HomeImageSlider.fromJson(e)).toList();
+    // print(homeSliderList["homeImageSlider"]);
+    return homeSliderList;
   }
 
   //---------------------------------------------------------
@@ -69,10 +69,8 @@ class HomeProvider with ChangeNotifier {
           shopByCategoryList["shopByCategoryList"][i]["subShopByCategoryList"];
     }
     print("-------------shopByCategoryList Data-------------");
-    print(shopByCategoryList.toString());
-    return shopByCategoryList
-        .map((e) => ShopByCategoryList.fromJson(e))
-        .toList();
+    // print(shopByCategoryList.toString());
+    return shopByCategoryList;
   }
 
   //---------------------------------------------------------
@@ -85,7 +83,7 @@ class HomeProvider with ChangeNotifier {
     bookOurServicesList = json.decode(jsondata);
     bookOurServicesList = bookOurServicesList["bookOurServicesList"];
     print("-------------bookOurServicesList Data-------------");
-    print(bookOurServicesList.toString());
+    // print(bookOurServicesList.toString());
     return bookOurServicesList
         .map((e) => BookOurServicesList.fromJson(e))
         .toList();
@@ -101,7 +99,7 @@ class HomeProvider with ChangeNotifier {
     recommendedList = json.decode(jsondata);
     recommendedList = recommendedList["recommendedForYouList"];
     print("-------------recommendedForYouList Data-------------");
-    print(recommendedList.toString());
+    // print(recommendedList.toString());
     return recommendedList
         .map((e) => RecommendedForYouList.fromJson(e))
         .toList();
@@ -117,7 +115,7 @@ class HomeProvider with ChangeNotifier {
     merchantNearYouList = json.decode(jsondata);
     merchantNearYouList = merchantNearYouList["merchantNearYouList"];
     print("-------------MerchantNearYouList Data-------------");
-    print(merchantNearYouList.toString());
+    // print(merchantNearYouList.toString());
     return merchantNearYouList
         .map((e) => MerchantNearYouList.fromJson(e))
         .toList();
@@ -133,7 +131,7 @@ class HomeProvider with ChangeNotifier {
     bestDealList = json.decode(jsondata);
     bestDealList = bestDealList["bestDealList"];
     print("-------------BestDealList Data-------------");
-    print(bestDealList.toString());
+    // print(bestDealList.toString());
     return bestDealList.map((e) => BestDealList.fromJson(e)).toList();
   }
 
@@ -147,7 +145,7 @@ class HomeProvider with ChangeNotifier {
     budgetBuyList = json.decode(jsondata);
     budgetBuyList = budgetBuyList["budgetBuyList"];
     print("-------------cartProductList Data-------------");
-    print(budgetBuyList.toString());
+    // print(budgetBuyList.toString());
     return budgetBuyList.map((e) => BudgetBuyList.fromJson(e)).toList();
   }
 
@@ -161,7 +159,7 @@ class HomeProvider with ChangeNotifier {
     cartProductList = json.decode(jsondata);
     cartProductList = cartProductList["cartProductList"];
     print("-------------BestDealList Data-------------");
-    print(budgetBuyList.toString());
+    // print(budgetBuyList.toString());
     return budgetBuyList.map((e) => CartProductList.fromJson(e)).toList();
   }
 
@@ -176,13 +174,13 @@ class HomeProvider with ChangeNotifier {
     orderCheckOutList = orderCheckOutList["orderCheckOut"];
 
     print("-------------orderCheckOutDetails Data-------------");
-    print(orderCheckOutList.toString());
+    // print(orderCheckOutList.toString());
 
     for (int i = 0; i <= orderCheckOutList.length; i++) {
       orderCheckOutDetails = orderCheckOutList[i]["orderCheckOutDetails"];
-      print("-------------orderCheckOutDetails Dataaaaaaaa$orderCheckOutDetails");
+      // print("-------------orderCheckOutDetails Dataaaaaaaa$orderCheckOutDetails");
     }
-    print(orderCheckOutList.toString());
+    // print(orderCheckOutList.toString());
     return orderCheckOutList.map((e) => OrderCheckOut.fromJson(e)).toList();
   }
 
@@ -196,13 +194,13 @@ class HomeProvider with ChangeNotifier {
     myOrdersList = json.decode(jsondata);
     myOrdersList = myOrdersList["myOrders"];
     print("-------------myOrderDetailList Data-------------");
-    print(myOrdersList.toString());
+    // print(myOrdersList.toString());
 
     for (int i = 0; i <= myOrdersList.length; i++) {
       myOrdersDetails = myOrdersList[i]["myOrderDetailList"];
       print("-------------myOrderDetailList Dataaaaaaaa$myOrdersDetails");
     }
-    print(myOrdersDetails.toString());
+    // print(myOrdersDetails.toString());
     return myOrdersList.map((e) => MyOrders.fromJson(e)).toList();
   }
 
@@ -216,13 +214,13 @@ class HomeProvider with ChangeNotifier {
     myAddressList = json.decode(jsondata);
     myAddressList = myAddressList["myAddressList"];
     print("-------------myAddressList Data-------------");
-    print(myAddressList.toString());
+    // print(myAddressList.toString());
 
     for (int i = 0; i <= myOrdersList.length; i++) {
       myOrdersDetails = myOrdersList[i]["myOrderDetailList"];
       print("-------------myOrderDetailList Dataaaaaaaa$myOrdersDetails");
     }
-    print(myAddressList.toString());
+    // print(myAddressList.toString());
     return myAddressList.map((e) => MyAddressList.fromJson(e)).toList();
   }
 
@@ -235,7 +233,7 @@ var customerSupportList;
     customerSupportList = customerSupportList["customerSupport"];
 
     print("-------------customerSupportList Data-------------");
-    print(customerSupportList.toString());
+    // print(customerSupportList.toString());
 
     return customerSupportList;
   }
@@ -248,7 +246,7 @@ var customerSupportList;
     accountSettings = accountSettings["accountSettings"];
 
     print("-------------accountSettings Data-------------");
-    print(accountSettings.toString());
+    // print(accountSettings.toString());
 
     return accountSettings;
   }
@@ -261,7 +259,7 @@ var customerSupportList;
     notificationDataList = notificationDataList["notificationsList"];
 
     print("-------------notificationsList Data-------------");
-    print(notificationDataList.toString());
+    // print(notificationDataList.toString());
 
     return notificationDataList.map((e) => NotificationsList.fromJson(e)).toList();
   }
@@ -275,13 +273,13 @@ var customerSupportList;
     mycardsList = json.decode(jsondata);
     mycardsList = mycardsList["myAddressList"];
     print("-------------mycardsList Data-------------");
-    print(mycardsList.toString());
+    // print(mycardsList.toString());
 
     for (int i = 0; i <= mycardsList.length; i++) {
       mycardsListDetails = mycardsList[i]["myOrderDetailList"];
       print("-------------mycardsListDetails Dataaaaaaaa$mycardsListDetails");
     }
-    print(mycardsList.toString());
+    // print(mycardsList.toString());
     return mycardsList.map((e) => MyAddressList.fromJson(e)).toList();
   }
 
@@ -297,7 +295,7 @@ var customerSupportList;
     final jsondata = await rootBundle.loadString('assets/jsonData.json');
     offerList = json.decode(jsondata);
     offerList = offerList["offersData"];
-    print(offerList.toString());
+    // print(offerList.toString());
 
       offerListDetails = offerList["offerList"];
     offerByType = offerList["offerByType"];
@@ -306,12 +304,12 @@ var customerSupportList;
 
     for (int i = 0; i <= offerByType.length; i++) {
       offerByTypeImagesList = offerByType[i]["offerImages"];
-      print("-------------offerImages Dataaaaaaaa$offerByTypeImagesList");
+      // print("-------------offerImages Dataaaaaaaa$offerByTypeImagesList");
     }
 
 
 
-    print(offerByType.toString());
+    // print(offerByType.toString());
     return offerList.map((e) => OffersData.fromJson(e)).toList();
   }
 }

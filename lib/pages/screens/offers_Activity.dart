@@ -41,6 +41,9 @@ class _OfferActivityState extends State<OfferActivity> {
                 addressWidget(
                     context, StringConstant.placesFromCurrentLocation),
                 setState(() {}))),
+        bottomNavigationBar: bottomNavigationBarWidget(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
         body: SafeArea(
           child: SingleChildScrollView(
             child: Consumer<HomeProvider>(builder: (context, provider, child) {

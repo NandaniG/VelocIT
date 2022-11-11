@@ -95,7 +95,9 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
         searchBar(context),
         addressWidget(context, StringConstant.placesFromCurrentLocation),
         setState(() {})),
-      ),
+      ), bottomNavigationBar: bottomNavigationBarWidget(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       body: SafeArea(
         child: Consumer<ProductProvider>(builder: (context, product, _) {
     return Container(

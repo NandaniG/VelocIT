@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/pages/screens/dashBoard.dart';
 
 import '../../../services/providers/Home_Provider.dart';
 import '../../../utils/styles.dart';
@@ -237,7 +238,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => Home(homeDataJson: ''),
+                  builder: (context) => DashboardScreen(),
                 ),
               );
             },

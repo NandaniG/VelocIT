@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:velocit/pages/screens/dashBoard.dart';
 import '../pages/homePage.dart';
 import '../utils/styles.dart';
 import '../widgets/global/okPopUp.dart';
@@ -198,7 +199,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
                       Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => Home(homeDataJson: ''),
+                              builder: (context) => DashboardScreen(),
                             ),
                           );
                         } else {
