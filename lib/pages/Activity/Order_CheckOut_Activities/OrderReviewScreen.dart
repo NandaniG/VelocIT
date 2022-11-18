@@ -81,7 +81,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
       appBar: PreferredSize(
     preferredSize: Size.fromHeight(height * .09),
     child: appBar_backWidget(
-        context, appTitle(context, "Order Checkout"), const SizedBox()),
+        context, appTitle(context, "Order Checkout"),'/cartScreen', const SizedBox()),
       ),
       bottomNavigationBar: BottomAppBar(
     color: ThemeApp.backgroundColor,

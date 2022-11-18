@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class StringConstant {
   static TextEditingController controllerSpeechToText =
@@ -186,3 +187,29 @@ class SizeConfig {
     }
   }
 }
+class ManagePermissions {
+  static Future<void> askCameraPermission() async {
+    if (await Permission.camera.isDenied) {
+      await Permission.camera.request();
+    }
+    if (await Permission.camera.isPermanentlyDenied) {
+      await openAppSettings();
+    }
+    if (await Permission.camera.isRestricted) {
+      await Permission.camera.request();
+    }
+  }
+
+  static Future<void> askStoragePermission() async {
+    if (await Permission.storage.isDenied) {
+      await Permission.storage.request();
+    }
+    if (await Permission.storage.isPermanentlyDenied) {
+      await openAppSettings();
+    }
+    if (await Permission.storage.isRestricted) {
+      await Permission.storage.request();
+    }
+  }
+}
+

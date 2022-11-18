@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/services/models/userAccountDetailModel.dart';
 
@@ -23,7 +27,8 @@ class EditAccountActivity extends StatefulWidget {
 class _EditAccountActivityState extends State<EditAccountActivity> {
   double height = 0.0;
   double width = 0.0;
-
+  final picker = ImagePicker();
+  late File _profileImage;
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
 
   //
@@ -47,8 +52,9 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
         elevation: 0,
         leading: InkWell(
           onTap: () {
-            Navigator.of(context).pop();
-          },
+            Navigator.pushNamed(context, '/myAccountActivity' );
+
+            },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Icon(
@@ -230,19 +236,97 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                         size: height * .15,
                         color: ThemeApp.lightGreyTab,
                       ))),
-              Align(
+              images !=
+                  ""
+                  ? Align(
+                  alignment: Alignment(0, -1),
+                  child: Container(
+                    // height: 50,width:50,
+                    decoration: new BoxDecoration(
+                      shape: BoxShape.circle,),
+                      alignment: Alignment(0, -1),
+                     child:    InkWell(
+                       onTap: () async {
+                         await ManagePermissions
+                             .askCameraPermission()
+                             .then((value) async {
+                           var img = await ImagePicker()
+                               .getImage(
+                               source: ImageSource
+                                   .camera);
+                           if (mounted) {
+                             setState(() {
+                               _profileImage =
+                                   File(img!.path);
+                               getBase64Image(img)
+                                   .then((value) => {
+                                 images =
+                                     value
+
+                               });print("images....$_profileImage");
+                             });
+                           }
+                         });
+                       },
+                       child: ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(100)),
+                        child: Image.memory(
+                            Base64Decoder().convert(images
+                                .replaceAll(
+                                RegExp(
+                                    r'^data:image\/[a-z]+;base64,'),
+                                '')),fit: BoxFit.fill,
+                          width: 100,
+                          height: 100,
+                            ),
+                    ),
+                     ),))
+                  :  Align(
                   alignment: Alignment(0, -1),
                   child: Container(
                       alignment: Alignment(0, -1),
-                      child: Icon(
-                        Icons.account_circle_rounded,
-                        size: height * .15,
-                        color: ThemeApp.darkGreyTab,
+                      child: InkWell(
+                        onTap: () async {
+                          await ManagePermissions
+                              .askCameraPermission()
+                              .then((value) async {
+                            var img = await ImagePicker()
+                                .getImage(
+                                source: ImageSource
+                                    .camera);
+                            if (mounted) {
+                              setState(() {
+                                _profileImage =
+                                    File(img!.path);
+                                getBase64Image(img)
+                                    .then((value) => {
+                                  images =
+                                      value
+
+                                });print("images....$_profileImage");
+                              });
+                            }
+                          });
+                        },
+                        child: Icon(
+                          Icons.account_circle_rounded,
+                          size: height * .15,
+                          color: ThemeApp.darkGreyTab,
+                        ),
                       ))),
             ],
           ),
         );
       }),
     );
+  }
+  String images='';
+  Future<String> getBase64Image(PickedFile img) async {
+    List<int> imageBytes = await File(img.path).readAsBytesSync();
+    String img64 = base64Encode(imageBytes);
+    // print(img.path);
+    // print(img64);
+    return img64;
   }
 }

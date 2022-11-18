@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/models/CartModel.dart';
 import '../../services/models/ProductDetailModel.dart';
+import '../../services/providers/Home_Provider.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
@@ -24,7 +25,8 @@ class CartDetailsActivity extends StatefulWidget {
   // ProductDetailsModel model;
   ProductProvider value;
 
-  CartDetailsActivity( {Key? key, required this.value, required this.productList})
+  CartDetailsActivity(
+      {Key? key, required this.value, required this.productList})
       : super(key: key);
 
   @override
@@ -54,11 +56,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     // TODO: implement initState
     super.initState();
     // getListFromPref();
-    print("widget.cartDetailScreen[]"+widget.productList.toString());
+    print("widget.cartDetailScreen[]" + widget.productList.toString());
     print("value.cartList.length");
     print(widget.value.cartList.length);
     getListFromPref();
-   // widget.productList[0]["productCartMaxCounter"] = '1';
+    // widget.productList[0]["productCartMaxCounter"] = '1';
     finalOriginalPrice = 0.0;
     finalDiscountPrice = 0.0;
     finalDiffrenceDiscountPrice = 0.0;
@@ -66,16 +68,21 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
     for (int i = 0; i < widget.value.cartList.length; i++) {
       finalOriginalPrice = finalOriginalPrice +
-          (int.parse(widget.value.cartList[i].cartProductsTempCounter.toString()) *
-              double.parse(widget.value.cartList[i].cartProductsOriginalPrice.toString()));
+          (int.parse(
+                  widget.value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(widget.value.cartList[i].cartProductsOriginalPrice
+                  .toString()));
 
-      Prefs().setDoubleToken(StringConstant.totalOriginalPricePref,finalOriginalPrice);
+      Prefs().setDoubleToken(
+          StringConstant.totalOriginalPricePref, finalOriginalPrice);
 
       print("________finalOriginalPrice add: $i $finalOriginalPrice");
 
       finalDiscountPrice = finalDiscountPrice +
-          (int.parse(widget.value.cartList[i].cartProductsTempCounter.toString()) *
-              double.parse(widget.value.cartList[i].cartProductsDiscountPrice.toString()));
+          (int.parse(
+                  widget.value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(widget.value.cartList[i].cartProductsDiscountPrice
+                  .toString()));
 
       print("________finalDiscountPrice add: $i $finalDiscountPrice");
 
@@ -86,7 +93,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       finalTotalPrice = widget.value.deliveryAmount +
           (finalOriginalPrice - finalDiffrenceDiscountPrice);
 
-      Prefs().setDoubleToken(StringConstant.totalFinalPricePref,finalTotalPrice);
+      Prefs()
+          .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
 
       print("grandTotalAmount inside add: $i $finalTotalPrice");
     }
@@ -96,7 +104,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-
   }
 
   var listFromPref;
@@ -121,28 +128,38 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-          context,
-          appTitle(context, "My Cart"),SizedBox(),
-        ),
+        child: Consumer<HomeProvider>(builder: (context, provider, child) {
+          return appBar_backWidget(
+            context,
+            appTitle(context, "My Cart"),
+            provider.isHome == true
+                ? "/dashBoardScreen"
+                : "/productListByCategoryActivity",
+            const SizedBox(),
+          );
+        }),
       ),
       bottomNavigationBar: BottomAppBar(
         color: ThemeApp.backgroundColor,
         elevation: 0,
         child: Consumer<ProductProvider>(builder: (context, value, child) {
-          return Container(
+          return widget.value.cartList.isEmpty
+              ? bottomNavigationBarWidget(context) : Container(
             height: height * .2,
             width: width,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: ThemeApp.darkGreyColor,
               borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                  topLeft: Radius.circular(15)),
+                  topRight: Radius.circular(15), topLeft: Radius.circular(15)),
             ),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15,top: 10,),
+                 Padding(
+                  padding: const EdgeInsets.only(
+                    left: 15,
+                    right: 15,
+                    top: 10,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -167,67 +184,83 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                             //     builder: (context) => Payment_Creditcard_debitcardScreen(productList: widget.productList),
                             //   ),
                             // );
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => OrderReviewSubActivity(value:value),
-                              ),
+                            const snackBar = SnackBar(
+                              content: Text('Card is Empty!'),
+                              clipBehavior: Clip.antiAlias,
+                              backgroundColor:
+                                  ThemeApp.innerTextFieldErrorColor,
                             );
+                            finalTotalPrice == 0
+                                ? ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar)
+                                : Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          OrderReviewSubActivity(value: value),
+                                    ),
+                                  );
                             // Prefs().clear();
-                              StringConstant.totalOriginalPrice =
-                              (await Prefs().getDoubleToken(StringConstant.totalOriginalPricePref))!;
-                              print('StringConstant.totalOriginalPrice' +
-                                  StringConstant.totalOriginalPrice.toString());
+                            StringConstant.totalOriginalPrice = (await Prefs()
+                                .getDoubleToken(
+                                    StringConstant.totalOriginalPricePref))!;
+                            print('StringConstant.totalOriginalPrice' +
+                                StringConstant.totalOriginalPrice.toString());
 
-                              StringConstant.totalFinalPrice =
-                              (await Prefs().getDoubleToken(StringConstant.totalFinalPricePref))!;
-                              print('StringConstant.totalFinalPrice' +
-                                  StringConstant.totalFinalPrice.toString());
-
+                            StringConstant.totalFinalPrice = (await Prefs()
+                                .getDoubleToken(
+                                    StringConstant.totalFinalPricePref))!;
+                            print('StringConstant.totalFinalPrice' +
+                                StringConstant.totalFinalPrice.toString());
                           },
                           child: Container(
                               height: height * 0.05,
                               alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(
                                   Radius.circular(10),
                                 ),
                                 color: ThemeApp.whiteColor,
                               ),
-                              padding: const EdgeInsets.only(left: 15, right: 15),
+                              padding:
+                                  const EdgeInsets.only(left: 15, right: 15),
                               child: TextFieldUtils().usingPassTextFields(
-                                  "Place Order", ThemeApp.blackColor, context))),
+                                  "Place Order",
+                                  ThemeApp.blackColor,
+                                  context))),
                     ],
                   ),
                 ),
                 bottomNavigationBarWidget(context),
               ],
             ),
-
-
           );
         }),
       ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Consumer<ProductProvider>(builder: (context, value, child) {
           return Container(
               height: MediaQuery.of(context).size.height,
               padding: const EdgeInsets.all(10),
               child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                  widget.value.cartList.isEmpty?Container(height: height*.5,alignment: Alignment.center, child:  TextFieldUtils().dynamicText(
+                child:widget.value.cartList.isEmpty
+                    ? Container(
+                  height: height * .5,
+                  alignment: Alignment.center,
+                  child: TextFieldUtils().dynamicText(
                       "Cart is Empty",
                       context,
                       TextStyle(
                           color: ThemeApp.blackColor,
                           fontWeight: FontWeight.w500,
                           fontSize: height * .03,
-                          overflow:
-                          TextOverflow.ellipsis)),) : cartProductList(value),
+                          overflow: TextOverflow.ellipsis)),
+                )
+                    :Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                     cartProductList(value),
                     priceDetails(value),
                   ],
                 ),
@@ -239,119 +272,125 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget cartProductList(ProductProvider value) {
     return Container(
-      height: MediaQuery.of(context).size.height * .6,
-      child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: value.cartList.length,
-              itemBuilder: (BuildContext context, int index) {
-
-                  return value.cartList.isEmpty? Center(child: Text("Hiiii",)):Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: height * 0.2,
-                        width: width,
-                        decoration: BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(
-                            15,
+        height: MediaQuery.of(context).size.height * .6,
+        child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemCount: value.cartList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return value.cartList.isEmpty
+                  ? const Center(
+                      child: Text(
+                      "Hiiii",
+                    ))
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: height * 0.2,
+                          width: width,
+                          decoration: const BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10)),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  child: Image.asset(
-                                    // width: double.infinity,
-                                    // snapshot.data![index].serviceImage,
-                                    value.cartList[index].cartProductsImage.toString(),
-                                    fit: BoxFit.fill,
-                                    // width: width*.18,
-                                    height: height * .18,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 15,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextFieldUtils().appBarTextField(
-                                          value.cartList[index].cartProductsDescription
-                                              .toString(),
-                                          context),
-                                      SizedBox(
-                                        height: height * .01,
-                                      ),
-                                      rattingBar(value, index),
-                                      SizedBox(
-                                        height: height * .01,
-                                      ),
-                                      prices(value, index),
-                                      SizedBox(
-                                        height: height * .01,
-                                      ),
-                                      TextFieldUtils().subHeadingTextFields(
-                                          value.cartList[index].cartProductsDeliveredBy
-                                              .toString(),
-                                          context),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: width,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: Colors.grey,
-                              width: 0.5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                              15,
                             ),
-                            bottom: BorderSide(color: Colors.grey, width: 0.5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    child: Image.asset(
+                                      // width: double.infinity,
+                                      // snapshot.data![index].serviceImage,
+                                      value.cartList[index].cartProductsImage
+                                          .toString(),
+                                      fit: BoxFit.fill,
+                                      // width: width*.18,
+                                      height: height * .18,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 15,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextFieldUtils().appBarTextField(
+                                            value.cartList[index]
+                                                .cartProductsDescription
+                                                .toString(),
+                                            context),
+                                        SizedBox(
+                                          height: height * .01,
+                                        ),
+                                        rattingBar(value, index),
+                                        SizedBox(
+                                          height: height * .01,
+                                        ),
+                                        prices(value, index),
+                                        SizedBox(
+                                          height: height * .01,
+                                        ),
+                                        TextFieldUtils().subHeadingTextFields(
+                                            value.cartList[index]
+                                                .cartProductsDeliveredBy
+                                                .toString(),
+                                            context),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10)),
+                        Container(
+                          width: width,
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                color: Colors.grey,
+                                width: 0.5,
+                              ),
+                              bottom:
+                                  BorderSide(color: Colors.grey, width: 0.5),
+                            ),
+                          ),
                         ),
-                        padding: const EdgeInsets.only(
-                            top: 10, left: 15, right: 15, bottom: 10),
-                        child: aadToCartCounter(value, index),
-                      ),
-                      SizedBox(
-                        height: height * .02,
-                      )
-                    ],
-                  );
-
-              })
-
-    );
+                        Container(
+                          decoration: const BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10)),
+                          ),
+                          padding: const EdgeInsets.only(
+                              top: 10, left: 15, right: 15, bottom: 10),
+                          child: aadToCartCounter(value, index),
+                        ),
+                        SizedBox(
+                          height: height * .02,
+                        )
+                      ],
+                    );
+            }));
   }
 
   var originialAmount;
@@ -362,7 +401,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) <
         int.parse(value.cartList[index].cartProductsMaxCounter.toString())) {
       value.cartList[index].cartProductsTempCounter =
-          int.parse(value.cartList[index].cartProductsTempCounter.toString()) + 1;
+          int.parse(value.cartList[index].cartProductsTempCounter.toString()) +
+              1;
       print("temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
 
       finalPrices(value, index);
@@ -378,17 +418,19 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     for (int i = 0; i < value.cartList.length; i++) {
       finalOriginalPrice = finalOriginalPrice +
           (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
-              double.parse(value.cartList[i].cartProductsOriginalPrice.toString()));
+              double.parse(
+                  value.cartList[i].cartProductsOriginalPrice.toString()));
 
-      Prefs().setDoubleToken(StringConstant.totalOriginalPricePref,finalOriginalPrice);
+      Prefs().setDoubleToken(
+          StringConstant.totalOriginalPricePref, finalOriginalPrice);
 
       print("______finaloriginalPrice______" + finalOriginalPrice.toString());
 
       finalDiscountPrice = finalDiscountPrice +
           (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
-              double.parse(value.cartList[i].cartProductsDiscountPrice .toString()));
+              double.parse(
+                  value.cartList[i].cartProductsDiscountPrice.toString()));
       print("______finalDiscountPrice______" + finalDiscountPrice.toString());
-
 
       finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
       print(
@@ -396,24 +438,30 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
       finalTotalPrice = widget.value.deliveryAmount +
           (finalOriginalPrice - finalDiffrenceDiscountPrice);
-      Prefs().setDoubleToken(StringConstant.totalFinalPricePref,finalTotalPrice);
+      Prefs()
+          .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
 
       print("grandTotalAmount inside add: $i $finalTotalPrice");
-
-
     }
   }
 
   Future<void> minusQuantity(ProductProvider value, int index) async {
     print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
-    print("temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
+    print(
+        "temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
 
-    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) > 0) {
+    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) >
+        0) {
       value.cartList[index].cartProductsTempCounter =
-          int.parse(value.cartList[index].cartProductsTempCounter.toString()) - 1;
-      print("temp counter 2 minus  ${value.cartList[index].cartProductsTempCounter}");
-      value.cartList[index].cartProductsTotalOriginalPrice = ((value.cartList[index].cartProductsTempCounter)! *
-          double.parse(value.cartList[index].cartProductsOriginalPrice.toString())) as int?;
+          int.parse(value.cartList[index].cartProductsTempCounter.toString()) -
+              1;
+      print(
+          "temp counter 2 minus  ${value.cartList[index].cartProductsTempCounter}");
+      value.cartList[index].cartProductsTotalOriginalPrice = ((value
+                  .cartList[index].cartProductsTempCounter)! *
+              double.parse(
+                  value.cartList[index].cartProductsOriginalPrice.toString()))
+          as int?;
       print(
           "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
 
@@ -437,8 +485,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               direction: Axis.horizontal,
               allowHalfRating: true,
               itemCount: 5,
-              itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-              itemBuilder: (context, _) => Icon(
+              itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
+              itemBuilder: (context, _) => const Icon(
                 Icons.star,
                 color: Colors.amber,
               ),
@@ -447,7 +495,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               },
             ),
             TextFieldUtils().subHeadingTextFields(
-                '${value.cartList[index].cartProductsRatting} Reviews', context),
+                '${value.cartList[index].cartProductsRatting} Reviews',
+                context),
           ],
         ),
       ),
@@ -466,14 +515,15 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             width: width * .02,
           ),
           TextFieldUtils().homePageheadingTextFieldLineThrough(
-              indianRupeesFormat
-                  .format(int.parse(value.cartList[index].cartProductsOriginalPrice.toString())),
+              indianRupeesFormat.format(int.parse(
+                  value.cartList[index].cartProductsOriginalPrice.toString())),
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().homePageTitlesTextFields(
-              value.cartList[index].cartProductsOfferPercent.toString(), context),
+              value.cartList[index].cartProductsOfferPercent.toString(),
+              context),
         ],
       ),
     );
@@ -490,8 +540,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             height: height * 0.06,
             width: width * .2,
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(
                 Radius.circular(10),
               ),
             ),
@@ -508,10 +558,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       });
                     },
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: ThemeApp.lightGreyTab,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.remove,
                         // size: 20,
                         color: Colors.black,
@@ -537,10 +587,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       });
                     },
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: ThemeApp.lightGreyTab,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                         // size: 20,
                         color: Colors.black,
@@ -563,7 +613,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(Icons.delete_rounded),
+                const Icon(Icons.delete_rounded),
                 TextFieldUtils().subHeadingTextFields('Remove', context),
               ],
             ),
@@ -581,7 +631,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         Container(
           height: height * 0.16,
           width: width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: ThemeApp.whiteColor,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10)),
@@ -650,7 +700,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         ),
         Container(
           width: width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: ThemeApp.whiteColor,
             borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(10),

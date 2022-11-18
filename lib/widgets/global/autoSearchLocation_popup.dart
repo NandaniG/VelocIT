@@ -11,9 +11,8 @@ import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 
 class AutoSearchPlacesPopUp extends StatefulWidget {
-  final String text;
 
-  AutoSearchPlacesPopUp({required this.text});
+  AutoSearchPlacesPopUp();
 
   @override
   State<AutoSearchPlacesPopUp> createState() => _AutoSearchPlacesPopUpState();
@@ -216,11 +215,8 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
 
                           print(
                               "placesFromCurrentLocation pref...${StringConstant.placesFromCurrentLocation.toString()}");
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => DashboardScreen(),
-                            ),
-                          );
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
+
                         },
                         child: ListTile(
                           title: Text(_placeList[index]["description"]),

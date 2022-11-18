@@ -65,7 +65,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
           context,
-          appTitle(context, "Add New Delivery Address"),
+          appTitle(context, "Add New Delivery Address"),'/savedAddressDetails',
           SizedBox(),
         ),
       ),
@@ -447,7 +447,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
           context,
-          appTitle(context, "Add New Delivery Address"),
+          appTitle(context, "Add New Delivery Address"),'/savedAddressDetails',
           SizedBox(),
         ),
       ),

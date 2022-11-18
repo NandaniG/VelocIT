@@ -80,6 +80,7 @@ Widget appBarWidget(
                   MaterialPageRoute(
                     builder: (context) => const MyAccountActivity(),
                   ),
+
                 );
               },
               child: Padding(
@@ -123,6 +124,7 @@ Widget appBarWidget(
 Widget appBar_backWidget(
   BuildContext context,
   Widget titleWidget,
+  String routName,
   Widget location,
 ) {
   double height = 0.0;
@@ -164,7 +166,8 @@ Widget appBar_backWidget(
                 child: IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.black),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pushNamed(context, routName);
+                      // Navigator.pop(context);
                     })),
           ),
 
@@ -280,7 +283,7 @@ Widget addressWidget(BuildContext context, String addressString) {
           context: context,
           builder: (BuildContext context) {
             return AutoSearchPlacesPopUp(
-                text: "Please enter all details Sign In");
+                );
           });
       // Navigator.of(context).push(
       //   MaterialPageRoute(
@@ -356,35 +359,26 @@ Widget bottomNavBarItems(BuildContext context) {
           currentIndex: _currentIndex,
           onTap: (int index) {
             if (index == 0) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const DashboardScreen(),
-                ),
-              );
+              // Navigator.pushNamed(context, '/dashBoardScreen');
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
+              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
+
             }
             if (index == 1) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const OfferActivity(),
-                ),
-              );
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => OfferActivity(),), (route) => false);
             }
             if (index == 3) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ShopByCategoryActivity(
-                      shopByCategoryList: provider.jsonData["shopByCategoryList"]),
-                ),
-              );
+
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ShopByCategoryActivity(
+                  shopByCategoryList: provider.jsonData["shopByCategoryList"]),
+              ), (route) => false);
             }
             if (index == 4) {
               print("provider.cartProductList");
               print(provider.cartProductList);
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CartDetailsActivity(value: value, productList: provider.cartProductList)
-                ),
-              );
+              provider.isHome = true;
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>CartDetailsActivity(value: value, productList: provider.cartProductList)
+              ), (route) => false);
             }
           },
           items: [

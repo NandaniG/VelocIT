@@ -9,6 +9,7 @@ import '../../../services/models/CartModel.dart';
 import '../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../services/models/ProductDetailModel.dart';
 import '../../../services/models/demoModel.dart';
+import '../../../services/providers/Home_Provider.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../services/providers/cart_Provider.dart';
 import '../../../utils/constants.dart';
@@ -81,7 +82,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
           context,
-          appTitle(context, "My Product"),SizedBox(),
+          appTitle(context, "My Product"),'/productListByCategoryActivity',SizedBox(),
         ),
       ), bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -262,7 +263,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           children: [
             TextFieldUtils()
                 .homePageTitlesTextFields("Available variants", context),
-            variantImages()
+            variantImages(),TextFieldUtils()
+                .subHeadingTextFields("* Images may differ in appearance from the actual product", context),
+
           ],
         ),
       ),
@@ -434,119 +437,127 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             SizedBox(
               width: MediaQuery.of(context).size.width * .05,
             ),
-            Consumer<ProductProvider>(builder: (context, value, child) {
-              return Expanded(
-                flex: 1,
-                child: InkWell(
-                  onTap: () async {
-                    widget.productList["productTempCounter"] = counterPrice;
-                    print("_________widget.productListtempCounter_" +
-                        widget.productList["productTempCounter"].toString());
-                    final navigator = Navigator.of(context); // <- Add this
-
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-
-                    var contain = value.cartList.where((element) =>
-                        element.cartProductsDescription ==
-                            widget.productList["productsListDescription"]);
-                    if (value.cartList.length >= 0) {
-                      if (contain.isNotEmpty) {
-                        print("-------------I got Values_________" +
-                            widget.productList["productsListDescription"].toString());
-                        navigator
-                            .push(MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    CartDetailsActivity(
-                                      productList:   widget.productList,
-                                        value: value)))
-                            .then((value) => setState(() {}));
-                        print("_________widget.productList" +
+            Consumer<HomeProvider>(builder: (context, homeProvider, child) {
+              return Consumer<ProductProvider>(builder: (context, value, child) {
+                  return Expanded(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: () async {
+                        setState(() {
+                          homeProvider.isHome =false;
+                        });
+                        widget.productList["productTempCounter"] = counterPrice;
+                        print("_________widget.productListtempCounter_" +
                             widget.productList["productTempCounter"].toString());
-                      } else {
-                        print("-------------I do not have any Values_________");
+                        final navigator = Navigator.of(context); // <- Add this
 
-                        navigator
-                            .push(MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    CartDetailsActivity(productList:  widget.productList,
-                                        value: value)))
-                            .then((value) => setState(() {}));
-                        print(
-                            "-------------Cart Length before ADD in product details_________${value.cartList.length}");
 
-                        value.add(
-                          widget.productList["productsListImage"],
-                       widget.productList["productsListName"],
-                       widget.productList["productSellerName"],
-                          double.parse(widget.productList["productRatting"].toString()),
-                       widget.productList["productDiscountPrice"],
-                       widget.productList["productOriginalPrice"],
-                       widget.productList["productOfferPercent"],
-                       widget.productList["productAvailableVariants"],
-                       widget.productList["productCartProductsLength"],
-                       widget.productList["productsListDescription"],
-                       widget.productList["productCartMaxCounter"],
-                       widget.productList["productDeliveredBy"],
-                       widget.productList["productTempCounter"] == 0
-                              ? widget.productList["productTempCounter"] = 1
-                              : widget.productList["productTempCounter"],
-                        );
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
 
-                        print(
-                            "-------------Cart Length after ADD in product details_________${value.cartList.length}");
-                      }
-                    } else {
-                      print("-------------List is empty_________");
-                      print(
-                          "-------------Cart Length before ADD in product details_________${value.cartList.length}");
+                        var contain = value.cartList.where((element) =>
+                            element.cartProductsDescription ==
+                                widget.productList["productsListDescription"]);
 
-                      value.add(
-                        widget.productList["productsListImage"],
-                        widget.productList["productsListName"],
-                        widget.productList["productSellerName"],
-                       double.parse(widget.productList["productRatting"].toString()),
-                        widget.productList["productDiscountPrice"],
-                        widget.productList["productOriginalPrice"],
-                        widget.productList["productOfferPercent"],
-                        widget.productList["productAvailableVariants"],
-                        widget.productList["productCartProductsLength"],
-                        widget.productList["productsListDescription"],
-                        widget.productList["productCartMaxCounter"],
-                        widget.productList["productDeliveredBy"],
-                        widget.productList["productTempCounter"] == 0
-                            ? widget.productList["productTempCounter"] = 1
-                            : widget.productList["productTempCounter"],
-                      );
-                      print("_________widget.model.tempCounter_333333333" +
-                          widget.model.tempCounter.toString());
-                      print(
-                          "-------------Cart Length after ADD in product details_________${value.cartList.length}");
+                        if (value.cartList.length >= 0) {
+                          if (contain.isNotEmpty) {
+                            print("-------------I got Values_________" +
+                                widget.productList["productsListDescription"].toString());
+                            navigator
+                                .push(MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        CartDetailsActivity(
+                                          productList:   widget.productList,
+                                            value: value)))
+                                .then((value) => setState(() {}));
+                            print("_________widget.productList" +
+                                widget.productList["productTempCounter"].toString());
+                          } else {
+                            print("-------------I do not have any Values_________");
 
-                      // if(value.lst.length>=0) {
-                      navigator
-                          .push(MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  CartDetailsActivity(productList:  widget.productList,
-                                      value: value)))
-                          .then((value) => setState(() {}));
-                      // }
-                    }
-                  },
-                  child: Container(
-                      height: height * 0.06,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                        color: ThemeApp.blackColor,
-                      ),
-                      child: TextFieldUtils().usingPassTextFields(
-                          "Buy now", ThemeApp.whiteColor, context)),
-                ),
-              );
-            })
+                            navigator
+                                .push(MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        CartDetailsActivity(productList:  widget.productList,
+                                            value: value)))
+                                .then((value) => setState(() {}));
+                            print(
+                                "-------------Cart Length before ADD in product details_________${value.cartList.length}");
+
+                            value.add(
+                              widget.productList["productsListImage"],
+                           widget.productList["productsListName"],
+                           widget.productList["productSellerName"],
+                              double.parse(widget.productList["productRatting"].toString()),
+                           widget.productList["productDiscountPrice"],
+                           widget.productList["productOriginalPrice"],
+                           widget.productList["productOfferPercent"],
+                           widget.productList["productAvailableVariants"],
+                           widget.productList["productCartProductsLength"],
+                           widget.productList["productsListDescription"],
+                           widget.productList["productCartMaxCounter"],
+                           widget.productList["productDeliveredBy"],
+                           widget.productList["productTempCounter"] == 0
+                                  ? widget.productList["productTempCounter"] = 1
+                                  : widget.productList["productTempCounter"],
+                            );
+
+                            print(
+                                "-------------Cart Length after ADD in product details_________${value.cartList.length}");
+                          }
+                        } else {
+                          print("-------------List is empty_________");
+                          print(
+                              "-------------Cart Length before ADD in product details_________${value.cartList.length}");
+
+                          value.add(
+                            widget.productList["productsListImage"],
+                            widget.productList["productsListName"],
+                            widget.productList["productSellerName"],
+                           double.parse(widget.productList["productRatting"].toString()),
+                            widget.productList["productDiscountPrice"],
+                            widget.productList["productOriginalPrice"],
+                            widget.productList["productOfferPercent"],
+                            widget.productList["productAvailableVariants"],
+                            widget.productList["productCartProductsLength"],
+                            widget.productList["productsListDescription"],
+                            widget.productList["productCartMaxCounter"],
+                            widget.productList["productDeliveredBy"],
+                            widget.productList["productTempCounter"] == 0
+                                ? widget.productList["productTempCounter"] = 1
+                                : widget.productList["productTempCounter"],
+                          );
+                          print("_________widget.model.tempCounter_333333333" +
+                              widget.model.tempCounter.toString());
+                          print(
+                              "-------------Cart Length after ADD in product details_________${value.cartList.length}");
+
+                          // if(value.lst.length>=0) {
+                          navigator
+                              .push(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      CartDetailsActivity(productList:  widget.productList,
+                                          value: value)))
+                              .then((value) => setState(() {}));
+                          // }
+                        }
+                      },
+                      child: Container(
+                          height: height * 0.06,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            color: ThemeApp.blackColor,
+                          ),
+                          child: TextFieldUtils().usingPassTextFields(
+                              "Buy now", ThemeApp.whiteColor, context)),
+                    ),
+                  );
+                });
+              }
+            )
           ],
         )
         // : TextFieldUtils().textFieldHeightFour("OUT OF STOCK", context),

@@ -8,9 +8,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/AccountSettingScreen.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/CustomerSupport/CustomerSupportActivity.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/MyAccountActivity/Edit_Account_activity.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
+import 'package:velocit/pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
+import 'package:velocit/pages/Activity/Payment_Activities/payments_Activity.dart';
+import 'package:velocit/pages/Activity/Product_Activities/ProductDetails_activity.dart';
+import 'package:velocit/pages/Activity/Product_Activities/Products_List.dart';
 import 'package:velocit/pages/homePage.dart';
+import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 import 'package:velocit/services/providers/cart_Provider.dart';
@@ -21,6 +28,7 @@ import 'L10n/l10n.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'auth/sign_in.dart';
 import 'l10n/localeProvider.dart';
+import 'pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import 'services/providers/Products_provider.dart';
 
 Future<void> main() async {
@@ -29,24 +37,25 @@ Future<void> main() async {
   runApp(const MyApp());
   await Prefs().getToken(StringConstant.pinCodePref);
 
-  StringConstant.userAccountName = (await Prefs().getToken(StringConstant.userAccountNamePref))!;
-  StringConstant.userAccountEmail = (await Prefs().getToken(StringConstant.userAccountEmailPref))!;
-  StringConstant.userAccountMobile = (await Prefs().getToken(StringConstant.userAccountMobilePref))!;
-  StringConstant.userAccountPass = (await Prefs().getToken(StringConstant.userAccountPassPref))!;
-
+  StringConstant.userAccountName =
+      (await Prefs().getToken(StringConstant.userAccountNamePref))!;
+  StringConstant.userAccountEmail =
+      (await Prefs().getToken(StringConstant.userAccountEmailPref))!;
+  StringConstant.userAccountMobile =
+      (await Prefs().getToken(StringConstant.userAccountMobilePref))!;
+  StringConstant.userAccountPass =
+      (await Prefs().getToken(StringConstant.userAccountPassPref))!;
 
   StringConstant.placesFromCurrentLocation =
-  (await Prefs().getToken(StringConstant.pinCodePref))!;
+      (await Prefs().getToken(StringConstant.pinCodePref))!;
 
   StringConstant.addressFromCurrentLocation =
-  (await Prefs().getToken(StringConstant.addressPref))!;
+      (await Prefs().getToken(StringConstant.addressPref))!;
 
   SharedPreferences.setMockInitialValues({});
 
- await Prefs().getToken(StringConstant.cartListForPreferenceKey);
- await Prefs().getToken('copyCartList');
-
-
+  await Prefs().getToken(StringConstant.cartListForPreferenceKey);
+  await Prefs().getToken('copyCartList');
 
   //
   // final box = GetStorage();
@@ -54,7 +63,6 @@ Future<void> main() async {
 
   // storageList = box.read('tasks');
   // print("Storage List Length"+storageList.length.toString());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -63,38 +71,75 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => LocaleProvider(),),
-        ChangeNotifierProvider(create: (_) => HomeProvider(),),
-        ChangeNotifierProvider(create: (_) => CartProvider(),),
-        ChangeNotifierProvider(create: (_) => ProductProvider(),),
-        // ChangeNotifierProvider(create: (_) => ProductsVM(),),
 
-      ],
-      child: Consumer<LocaleProvider>(builder: (context, provider, snapshot) {
-        return MaterialApp(
-          locale: provider.locale,
-          localizationsDelegates:const [
-            //AppLocalizationsDelegate(),
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            AppLocalizations.delegate,
-          ],
-          supportedLocales: L10n.all,
-          theme: ThemeData(
-            primarySwatch: colorCustomForMaterialApp,
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => LocaleProvider(),
           ),
-          debugShowCheckedModeBanner: false,
-          // home: SignIn_Screen(),
-          home: Consumer<HomeProvider>(builder: (context, provider, child){
-              return SplashScreen();
-            }
+          ChangeNotifierProvider(
+            create: (_) => HomeProvider(),
           ),
-        );
-      }),
-    );
+          ChangeNotifierProvider(
+            create: (_) => CartProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ProductProvider(),
+          ),
+          // ChangeNotifierProvider(create: (_) => ProductsVM(),),
+        ],
+        child: Consumer<HomeProvider>(builder: (context, provider, child) {
+          return Consumer<ProductProvider>(builder: (context, value, child) {
+            return Consumer<LocaleProvider>(
+                builder: (context, localeProvider, snapshot) {
+              return MaterialApp(
+                locale: localeProvider.locale,
+                localizationsDelegates: const [
+                  //AppLocalizationsDelegate(),
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  AppLocalizations.delegate,
+                ],
+                supportedLocales: L10n.all,
+                theme: ThemeData(
+                  primarySwatch: colorCustomForMaterialApp,
+                ),
+                debugShowCheckedModeBanner: false,
+                // home: SignIn_Screen(),
+                // home: Consumer<HomeProvider>(builder: (context, provider, child){
+                //     return SplashScreen();
+                //   }
+                // ),
+                initialRoute: '/',
+                routes: {
+                  '/': (context) => SplashScreen(),
+                  '/dashBoardScreen': (context) => const DashboardScreen(),
+                  '/editAccountActivity': (context) =>
+                      const EditAccountActivity(),
+                  '/myAccountActivity': (context) => const MyAccountActivity(),
+                  '/accountSettingScreen': (context) =>
+                      const AccountSettingScreen(),
+                  '/myOrdersActivity': (context) => const MyOrdersActivity(),
+                  '/cardListManagePayments': (context) =>
+                      const CardListManagePayments(),
+                  '/savedAddressDetails': (context) =>
+                      const SavedAddressDetails(),
+                  '/customerSupportActivity': (context) =>
+                      const CustomerSupportActivity(),
+                  '/productListByCategoryActivity': (context) =>
+                      ProductListByCategoryActivity(
+                          productList: provider.productList[provider.indexofSubProductList]),
+
+                  '/cartScreen': (context) => CartDetailsActivity(
+                      value: value, productList: provider.cartProductList),
+                  '/orderReviewSubActivity': (context) => OrderReviewSubActivity(value: value),
+                  '/payment_Creditcard_debitcardScreen': (context) => Payment_Creditcard_debitcardScreen(),
+                },
+              );
+            });
+          });
+        }));
   }
 }
 
@@ -102,6 +147,7 @@ class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
+
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
@@ -109,23 +155,22 @@ class _SplashScreenState extends State<SplashScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<HomeProvider>(context, listen: false).loadJson();
     });
-    Timer(Duration(seconds: 3),
-            ()=>Navigator.pushReplacement(context,
-            MaterialPageRoute(builder:
-                (context) =>
-                DashboardScreen()
-            )
-        )
-    );
+    Timer(
+        const Duration(seconds: 3),
+        () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const DashboardScreen())));
   }
+
   @override
   Widget build(BuildContext context) {
-    return Container(height: 500,
-        color: Colors.white,
-        child:Image.asset(
-          'assets/images/VelocIT_Icon_512.png',
-          height: 120,width: 100,
-        ),
+    return Container(
+      height: 500,
+      color: Colors.white,
+      child: Image.asset(
+        'assets/images/VelocIT_Icon_512.png',
+        height: 120,
+        width: 100,
+      ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/styles.dart';
+import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -35,6 +36,11 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
 
     return Scaffold(
         backgroundColor: ThemeApp.backgroundColor,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(height * .09),
+          child: appBar_backWidget(
+              context, appTitle(context, "Address"), '/myAccountActivity',SizedBox()),
+        ),
         body: SafeArea(child: deliveryAddress()));
   }
 

@@ -31,7 +31,7 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
           child: appBar_backWidget(
-              context, appTitle(context, "Account Setting"), SizedBox()),
+              context, appTitle(context, "Account Setting"),'/myAccountActivity', SizedBox()),
         ),
         body: SafeArea(
             child: Consumer<HomeProvider>(builder: (context, value, child) {

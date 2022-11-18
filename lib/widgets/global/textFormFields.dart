@@ -362,6 +362,7 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: IntlPhoneField(
+        // showCountryFlag: false,
 
         controller: widget.controller,
         dropdownDecoration: BoxDecoration(
@@ -376,6 +377,7 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
           LengthLimitingTextInputFormatter(10),
         ],
         decoration: InputDecoration(
+          hintText: 'Do not enter country code',
           counterText: "",
           suffixIconConstraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * .3,
@@ -387,7 +389,7 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
           fillColor: Colors.white,
           hintStyle: TextStyle(
               color: Colors.grey,
-              fontSize: MediaQuery.of(context).size.height * 0.020),
+              fontSize: MediaQuery.of(context).size.height * 0.015),
           errorStyle: TextStyle(
               color: ThemeApp.innerTextFieldErrorColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),

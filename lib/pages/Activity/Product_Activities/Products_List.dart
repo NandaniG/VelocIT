@@ -44,7 +44,6 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
     print("shopByCategoryList-------");
         print(widget.productList.length.toString());
         print(widget.productList["productsList"].length.toString());
-
         getListFromPref();
   }
 
@@ -76,6 +75,7 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
   }
   String sortedBy = "Low to High";
 
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -100,25 +100,27 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
 
       body: SafeArea(
         child: Consumer<ProductProvider>(builder: (context, product, _) {
-    return Container(
-          height: MediaQuery.of(context).size.height,
-          padding:
-              const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-          child: ListView(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              listOfMobileDevices(productsList),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .02,
-              ),
-              filterWidgets(productsList),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .02,
-              ),
-              mobileGridList(productsList, product)
-            ],
-          ));
+    return Padding( padding:
+    const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+
+      child: SingleChildScrollView(
+            // height: MediaQuery.of(context).size.height,
+               child: Column(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                listOfMobileDevices(productsList),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .02,
+                ),
+                filterWidgets(productsList),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .02,
+                ),
+                mobileGridList(productsList, product)
+              ],
+            )),
+    );
         }),
       ),
     );
@@ -139,10 +141,10 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
                 children: [
                   Container(
                       width: width * .27,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: ThemeApp.whiteColor,
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
+                              BorderRadius.all(Radius.circular(10))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,7 +188,7 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
 
   Widget filterWidgets(List<ProductDetailsModel> product) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(color: Colors.grey, width: 1),
@@ -265,11 +267,11 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
                 },
                 child: TextFieldUtils()
                     .titleTextFields("Sort By: ${sortedBy}", context)),
-            Icon(Icons.keyboard_arrow_down)
+            const Icon(Icons.keyboard_arrow_down)
           ]),
           InkWell(
             onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>FilterScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const FilterScreen()));
             },
             child: Row(children: [
               _icon(Icons.filter_list_sharp),
@@ -288,106 +290,116 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
       ),
     );
   }
+  SortPrice(){
+    for(int i = 0;i <=widget.productList["productsList"].length; i ++) {
 
+      widget.productList["productsList"][i]["discountPrice"].sort((a, b) => a.compareTo(b));
+      for (ProductDetailsModel p in widget.productList["productsList"]) {
+        print("p.originalPrice");
+        print(p.discountPrice);
+      }
+    }
+  }
   Widget mobileGridList(
       List<ProductDetailsModel> product, ProductProvider value) {
-    return SingleChildScrollView(
-      child: Container(
-          height: MediaQuery.of(context).size.height * .7,
-          // padding: EdgeInsets.all(12.0),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * .75,
+      // width: MediaQuery.of(context).size.width,
+      child: GridView.builder(
+        itemCount: widget.productList["productsList"].length,
+        physics:  const NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            // childAspectRatio: 4 / 4.8,
+            childAspectRatio:
+            (MediaQuery.of(context).orientation == Orientation.landscape)
+                ? 5 / 1.8
+                : 2.3 / 3.2,
 
-          child: GridView.builder(
-            itemCount: widget.productList["productsList"].length,
-            physics: const BouncingScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                // childAspectRatio: 4 / 4.8,
-                childAspectRatio: (MediaQuery.of(context).orientation ==
-                        Orientation.landscape)
-                    ? 5 / 1.8
-                    : 2.3 / 4,
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-            itemBuilder: (BuildContext context, int index) {
-              print(" widget.productList['productsList']");
-              print( widget.productList["productsList"]);
-              return InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailsActivity(
-                        productList: widget.productList["productsList"][index],
-                        model:product[index],
-                        value: value,
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10),
+        itemBuilder: (BuildContext context, int index) {
+          print(" widget.productList['productsList']");
+          print("SortPrice");
+          print( widget.productList["productsList"][index]["productDiscountPrice"].toString());
+          // SortPrice(int.parse(widget.productList["productsList"]));
+          return InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailsActivity(
+                    productList: widget.productList["productsList"][index],
+                    model:product[index],
+                    value: value,
+                  ),
+                ),
+              );
+              /*    Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ProductDetailsActivity(model: product[index], value: value,),
+                ),
+              );*/
+            },
+            child: Container(
+                width: MediaQuery.of(context).size.width * .45,
+                decoration: const BoxDecoration(
+                    color: ThemeApp.darkGreyTab,
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(10))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height:
+                          SizeConfig.orientations != Orientation.landscape
+                              ? MediaQuery.of(context).size.height * .26
+                              : MediaQuery.of(context).size.height * .1,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                          color: ThemeApp.whiteColor,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            topLeft: Radius.circular(10),
+                          )),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          topLeft: Radius.circular(10),
+                        ),
+                        child: Image.asset(
+                          // width: double.infinity,
+                          widget.productList["productsList"][index]["productsListImage"],
+                          fit: BoxFit.fill,
+                          height: (MediaQuery.of(context).orientation ==
+                                  Orientation.landscape)
+                              ? MediaQuery.of(context).size.height * .26
+                              : MediaQuery.of(context).size.height * .1,
+                        ),
                       ),
                     ),
-                  );
-                  /*    Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ProductDetailsActivity(model: product[index], value: value,),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .01,
                     ),
-                  );*/
-                },
-                child: Container(
-                    width: MediaQuery.of(context).size.width * .45,
-                    decoration: BoxDecoration(
-                        color: ThemeApp.darkGreyTab,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height:
-                              SizeConfig.orientations != Orientation.landscape
-                                  ? MediaQuery.of(context).size.height * .26
-                                  : MediaQuery.of(context).size.height * .1,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: ThemeApp.whiteColor,
-                              borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                topLeft: Radius.circular(10),
-                              )),
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              topLeft: Radius.circular(10),
-                            ),
-                            child: Image.asset(
-                              // width: double.infinity,
-                              widget.productList["productsList"][index]["productsListImage"],
-                              fit: BoxFit.fill,
-                              height: (MediaQuery.of(context).orientation ==
-                                      Orientation.landscape)
-                                  ? MediaQuery.of(context).size.height * .26
-                                  : MediaQuery.of(context).size.height * .1,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * .01,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 18),
-                          child: TextFieldUtils().homePageTitlesTextFieldsWHITE(
-                              widget.productList["productsList"][index]["productsListDescription"], context),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * .01,
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(left: 18),
-                            child: TextFieldUtils().homePageheadingTextFieldWHITE(
-                                "${indianRupeesFormat.format(int.parse(widget.productList["productsList"][index]["productDiscountPrice"].toString()))}",
-                                context)),
-                      ],
-                    )),
-              );
-            },
-          )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 18),
+                      child: TextFieldUtils().homePageTitlesTextFieldsWHITE(
+                          widget.productList["productsList"][index]["productsListDescription"], context),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .01,
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(left: 18),
+                        child: TextFieldUtils().homePageheadingTextFieldWHITE(
+                            "${indianRupeesFormat.format(int.parse(widget.productList["productsList"][index]["productDiscountPrice"].toString()))}",
+                            context)),
+                  ],
+                )),
+          );
+        },
+      ),
     );
   }
 }
@@ -417,13 +429,13 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10.0),
+      margin: const EdgeInsets.all(10.0),
       child: Wrap(
         children: <Widget>[
           Center(
               child: Container(
-                  height: 3.0, width: 40.0, color: Color(0xFF32335C))),
-          SizedBox(
+                  height: 3.0, width: 40.0, color: const Color(0xFF32335C))),
+          const SizedBox(
             height: 10.0,
           ),
           Column(

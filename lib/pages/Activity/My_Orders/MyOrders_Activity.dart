@@ -42,7 +42,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "My Orders"), SizedBox()),
+            context, appTitle(context, "My Orders"), '/myAccountActivity',SizedBox()),
       ),
       body: SafeArea(
         child: Container(

@@ -57,19 +57,32 @@ class HomeProvider with ChangeNotifier {
   //----------------- shopByCategoryService--------------------
 
   var shopByCategoryList;
+  var productList;
   var subProductList;
+  int indexofSubProductList=0;
 
   Future<List<ShopByCategoryList>> shopByCategoryService() async {
     final jsondata = await rootBundle.loadString('assets/jsonData.json');
     shopByCategoryList = json.decode(jsondata);
     shopByCategoryList = shopByCategoryList["shopByCategoryList"];
 
-    for (int i = 0; i <= shopByCategoryList["shopByCategoryList"].length; i++) {
-      subProductList =
-          shopByCategoryList["shopByCategoryList"][i]["subShopByCategoryList"];
+    for (int i = 0; i <= shopByCategoryList.length; i++) {
+      indexofSubProductList =i;
+
+      productList =
+          shopByCategoryList[i]["subShopByCategoryList"];
+      // print("-------------shopByCategoryList Data-subProductListproductList------------");
+      // print(productList.toString());
+      for (int j = 0; j <= shopByCategoryList[i]["subShopByCategoryList"].length; j++) {
+
+        subProductList =
+        shopByCategoryList[i]["subShopByCategoryList"][j]['productsList'];
+        print("-------------shopByCategoryList Data-subProductList------------");
+        print(shopByCategoryList[i]["subShopByCategoryList"][j]['productsList'].toString());
+      }
     }
-    print("-------------shopByCategoryList Data-------------");
-    // print(shopByCategoryList.toString());
+
+
     return shopByCategoryList;
   }
 
@@ -153,6 +166,7 @@ class HomeProvider with ChangeNotifier {
   //----------------- cartProductList--------------------
 
   var cartProductList;
+  bool isHome=false;
 
   Future<List<CartProductList>> cartProductListService() async {
     final jsondata = await rootBundle.loadString('assets/jsonData.json');

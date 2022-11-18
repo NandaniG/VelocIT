@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -27,9 +26,17 @@ class _MerchantActvityState extends State<MerchantActvity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
-  // bool isGridView = false;
+  bool isGridView = false;
 
   late GoogleMapController mapController; //contrller for Google map
+
+  bool servicestatus = false;
+  bool haspermission = false;
+  late LocationPermission permission;
+  late Position position;
+  String long = "", lat = "";
+  late StreamSubscription<Position> positionStream;
+
   final Set<Marker> markers = new Set(); //markers for google map
   static const LatLng showLocation =
       const LatLng(27.7089427, 85.3086209); //location to show in map
@@ -41,14 +48,77 @@ class _MerchantActvityState extends State<MerchantActvity> {
     getmarkers();
   }
 
+
+  getGPSInfo() async {
+    bool servicestatus = await Geolocator.isLocationServiceEnabled();
+
+    if(servicestatus){
+      print("GPS service is enabled");
+    }else{
+      print("GPS service is disabled.");
+    }
+    //
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print('Location permissions are denied');
+      }else if(permission == LocationPermission.deniedForever){
+        print("'Location permissions are permanently denied");
+      }else{
+        print("GPS Location service is granted");
+        getLocation();
+      }
+    }else{    getLocation();
+      print("GPS Location permission granted.");
+    }
+  }
+
+
+
+  getLocation() async {
+    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print(position.longitude); //Output: 80.24599079
+    print(position.latitude); //Output: 29.6593457
+
+    long = position.longitude.toString();
+    lat = position.latitude.toString();
+
+    setState(() {
+      //refresh UI
+    });
+
+    LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high, //accuracy of the location data
+      distanceFilter: 100, //minimum distance (measured in meters) a
+      //device must move horizontally before an update event is generated;
+    );
+
+    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
+        locationSettings: locationSettings).listen((Position position) {
+      print(position.longitude); //Output: 80.24599079
+      print(position.latitude); //Output: 29.6593457
+
+      long = position.longitude.toString();
+      lat = position.latitude.toString();
+
+      setState(() {
+        //refresh UI on update
+      });
+    });
+  }
+
   Set<Marker> getmarkers() {
+
+    getGPSInfo();
     //markers to place on map
     setState(() {
       markers.add(Marker(
         //add first marker
         markerId: MarkerId(showLocation.toString()),
         position: showLocation, //position of marker
-        infoWindow: InfoWindow(
+        infoWindow: const InfoWindow(
           //popup info
           title: 'Marker Title First ',
           snippet: 'My Custom Subtitle',
@@ -59,8 +129,8 @@ class _MerchantActvityState extends State<MerchantActvity> {
       markers.add(Marker(
         //add second marker
         markerId: MarkerId(showLocation.toString()),
-        position: LatLng(27.7099116, 85.3132343), //position of marker
-        infoWindow: InfoWindow(
+        position: const LatLng(27.7099116, 85.3132343), //position of marker
+        infoWindow: const InfoWindow(
           //popup info
           title: 'Marker Title Second ',
           snippet: 'My Custom Subtitle',
@@ -71,8 +141,8 @@ class _MerchantActvityState extends State<MerchantActvity> {
       markers.add(Marker(
         //add third marker
         markerId: MarkerId(showLocation.toString()),
-        position: LatLng(27.7137735, 85.315626), //position of marker
-        infoWindow: InfoWindow(
+        position: const LatLng(27.7137735, 85.315626), //position of marker
+        infoWindow: const InfoWindow(
           //popup info
           title: 'Marker Title Third ',
           snippet: 'My Custom Subtitle',
@@ -86,17 +156,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
     return markers;
   }
 
-  Future<List<OfferBannerModel>> getOfferImages() async {
-    String response = '['
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Quality Clothing","serviceDescription":"Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Starting from 14,232"},'
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Croma Electronics","serviceDescription":"Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Starting 5,232"},'
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"IFB Appliances","serviceDescription":"One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Under 11,232"},'
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Shree Retailer","serviceDescription":"IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Min 43% Off"},'
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Abhiruchi Electronics","serviceDescription":"IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Min 43% Off"},'
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Shree Retailer","serviceDescription":"IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV","price":"Min 43% Off"}]';
-    var serviceList = bannerServiceFromJson(response);
-    return serviceList;
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -133,14 +193,14 @@ class _MerchantActvityState extends State<MerchantActvity> {
                       scale: 1.3,
                       child: Switch(
                         // This bool value toggles the switch.
-                        value: widget.merchantList["merchantNearYouIsGridView"],
+                        value: isGridView,
                         activeColor: ThemeApp.darkGreyTab,
                         inactiveTrackColor: ThemeApp.textFieldBorderColor,
                         inactiveThumbColor: ThemeApp.darkGreyTab,
                         onChanged: (bool value) {
                           // This is called when the user toggles the switch.
                           setState(() {
-                            widget.merchantList["merchantNearYouIsGridView"] = value;
+                            isGridView = value;
                           });
                         },
                       ),
@@ -159,7 +219,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      VerticalDivider(
+                      const VerticalDivider(
                         color: ThemeApp.textFieldBorderColor,
                         thickness: 1,
                       ),
@@ -167,7 +227,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                         onTap: (){
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => Merchant_FilterScreen(),
+                              builder: (context) => const Merchant_FilterScreen(),
                             ),
                           );
 
@@ -177,7 +237,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                               left: 20,
                               right: 20,
                             ),
-                            child: Icon(Icons.filter_alt_outlined, size: 30)),
+                            child: const Icon(Icons.filter_alt_outlined, size: 30)),
                       ),
                     ],
                   ),
@@ -198,8 +258,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
         child: Stack(
           children: [
-            !widget.merchantList["merchantNearYouIsGridView"] ? budgetBuyList() : mapView(),
-            SizedBox(
+            !isGridView ? budgetBuyList() : mapView(),            SizedBox(
               height: MediaQuery.of(context).size.height * .02,
             ),
           ],
@@ -216,6 +275,13 @@ class _MerchantActvityState extends State<MerchantActvity> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
+          Text(servicestatus? "GPS is Enabled": "GPS is disabled."),
+          Text(haspermission? "GPS is Enabled": "GPS is disabled."),
+
+          Text("Longitude: $long", style:TextStyle(fontSize: 20)),
+          Text("Latitude: $lat", style: TextStyle(fontSize: 20),),
+
           TextFieldUtils().listHeadingTextField(
               AppLocalizations.of(context).merchantNearYou, context),
           SizedBox(
@@ -243,9 +309,9 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                     orientation ? height * 26 : height * .17,
                                 // MediaQuery.of(context).size.height * .26,
                                 width: MediaQuery.of(context).size.width * .45,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                     color: ThemeApp.darkGreyTab,
-                                    borderRadius: const BorderRadius.all(
+                                    borderRadius: BorderRadius.all(
                                         Radius.circular(10))),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -263,10 +329,10 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                                   .17,
                                           width:
                                               MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: ThemeApp.whiteColor,
                                               borderRadius:
-                                                  const BorderRadius.only(
+                                                  BorderRadius.only(
                                                 topRight: Radius.circular(10),
                                                 topLeft: Radius.circular(10),
                                               )),
@@ -318,7 +384,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
     return GoogleMap(
       zoomGesturesEnabled: true,
       //enable Zoom in, out on map
-      initialCameraPosition: CameraPosition(
+      initialCameraPosition: const CameraPosition(
         //innital position in map
         target: showLocation, //initial position
         zoom: 15.0, //initial zoom level
@@ -335,39 +401,4 @@ class _MerchantActvityState extends State<MerchantActvity> {
       },
     );
   }
-}
-
-List<OfferBannerModel> bannerServiceFromJson(String str) =>
-    List<OfferBannerModel>.from(
-        json.decode(str).map((x) => OfferBannerModel.fromJson(x)));
-
-String bookServiceToJson(List<OfferBannerModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
-class OfferBannerModel {
-  String serviceImage;
-  String serviceName;
-  String serviceDescription;
-  String price;
-
-  OfferBannerModel({
-    required this.serviceImage,
-    required this.serviceName,
-    required this.serviceDescription,
-    required this.price,
-  });
-
-  factory OfferBannerModel.fromJson(Map<String, dynamic> json) =>
-      OfferBannerModel(
-        serviceImage: json["serviceImage"],
-        serviceName: json["serviceName"],
-        serviceDescription: json["serviceDescription"],
-        price: json["price"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "serviceImage": serviceImage,
-        "serviceName": serviceName,
-        "price": price,
-      };
 }

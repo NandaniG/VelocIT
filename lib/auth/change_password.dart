@@ -197,11 +197,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                             _confirmPass.text == _newPass.text) {
 
 
-                      Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => DashboardScreen(),
-                            ),
-                          );
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
+
                         } else {
                           showDialog(
                               context: context,

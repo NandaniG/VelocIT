@@ -138,11 +138,8 @@ class _OTPScreenState extends State<OTPScreen> {
 
             print("Email pref...${emailId.toString()}");
            if(controller.text.length >= 6){
-             Navigator.of(context).push(
-               MaterialPageRoute(
-                 builder: (context) => DashboardScreen(),
-               ),
-             );
+             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
+
            }else{
              showDialog(
                  context: context,

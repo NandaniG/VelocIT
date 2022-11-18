@@ -98,12 +98,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print('object-------------' + provider.jsonData.toString());
         return
         SafeArea(
-            child: provider.jsonData.length>0?Container(
+            child: provider.jsonData.isNotEmpty?Container(
                 // height: MediaQuery.of(context).size.height,
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                ),
+                // padding: const EdgeInsets.only(
+                //   left: 20,
+                //   right: 20,
+                // ),
+                padding: const EdgeInsets.all(10),
+
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -237,10 +239,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   height: (MediaQuery.of(context).orientation ==
                           Orientation.landscape)
                       ? height * .5
-                      : height * 0.23,
+                      : height * 0.2,width: width,
                   child: Carousel(
                     images: provider.homeSliderList["homeImageSlider"].map((e) {
-                      return Card(
+                      return Card(margin: EdgeInsets.zero,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
@@ -609,7 +611,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               height: MediaQuery.of(context).size.height * .01,
                             ),
                             Container(
-                              padding: const EdgeInsets.only(left: 18),
+                              padding:  EdgeInsets.only(left: 10,right: 10),
                               child: TextFieldUtils().homePageTitlesTextFields(
                                   provider.recommendedList[index]
                                       ["recommendedForYouDescription"],
@@ -618,18 +620,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             SizedBox(
                               height: MediaQuery.of(context).size.height * .01,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 18),
-                              child: Row(
+                            Container(
+                              padding:  EdgeInsets.only(left: 10,right: 10),
+                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextFieldUtils().homePageheadingTextField(
-                                      "${indianRupeesFormat.format(int.parse(provider.recommendedList[index]["recommendedForYouDiscountPrice"].toString()))}",
+                                      indianRupeesFormat.format(int.parse(provider.recommendedList[index]["recommendedForYouDiscountPrice"].toString())),
                                       context),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * .02,
-                                  ),
                                   TextFieldUtils().homePageheadingTextFieldLineThrough(
-                                      "${indianRupeesFormat.format(int.parse(provider.recommendedList[index]["recommendedForYouPrice"].toString()))}",
+                                      indianRupeesFormat.format(int.parse(provider.recommendedList[index]["recommendedForYouPrice"].toString())),
                                       context),
                                 ],
                               ),
@@ -726,8 +725,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 height: MediaQuery.of(context).size.height * .01,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 18),
-                                child: TextFieldUtils()
+                                padding:
+                                const EdgeInsets.only(left: 10, right: 10),                                child: TextFieldUtils()
                                     .homePageTitlesTextFieldsWHITE(
                                     provider.merchantNearYouList
                                             [index]["merchantNearYouDescription"],
@@ -737,9 +736,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 height: MediaQuery.of(context).size.height * .01,
                               ),
                               Padding(
-                                  padding: const EdgeInsets.only(left: 18),
-                                  child: TextFieldUtils().homePageheadingTextFieldWHITE(
-                                      "${indianRupeesFormat.format(int.parse(provider.merchantNearYouList[index]["merchantNearYouPrice"].toString()))}",
+                                  padding:
+                                  const EdgeInsets.only(left: 10, right: 10),                                     child: TextFieldUtils().homePageheadingTextFieldWHITE(
+                                      indianRupeesFormat.format(int.parse(provider.merchantNearYouList[index]["merchantNearYouPrice"].toString())),
                                       context)),
                             ],
                           )),
@@ -826,21 +825,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
             width: MediaQuery.of(context).size.width,
             // padding: EdgeInsets.all(12.0),
             child: GridView.builder(
-              itemCount: provider.budgetBuyList.length,
+              itemCount: 4,
               physics: const NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   childAspectRatio:
                       (MediaQuery.of(context).orientation == Orientation.landscape)
                           ? 5 / 1.8
-                          : 2.3 / 4,
+                          : 2.3 / 3.2,
                   /*      childAspectRatio: (MediaQuery.of(context).orientation ==
                                 Orientation.landscape)
                                 ? width*.05 / 1.8
                                 : width*.5 / 4,*/
 
                   crossAxisCount: 2,
-                  crossAxisSpacing: 2,
+                  crossAxisSpacing: width*.02,
                   mainAxisSpacing: 2),
               itemBuilder: (BuildContext context, int index) {
                 return Column(
@@ -865,11 +864,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   // width:
                                   //     MediaQuery.of(context).size.width *
                                   //         .45,
-                                  height: SizeConfig.orientations !=
-                                          Orientation.landscape
-                                      ? MediaQuery.of(context).size.height * .26
-                                      : MediaQuery.of(context).size.height * .1,
-                                  width: MediaQuery.of(context).size.width,
+                                  height:
+                                  MediaQuery.of(context).size.height * .25,
+                                  width: MediaQuery.of(context).size.width * .45,
+                                  // height: SizeConfig.orientations !=
+                                  //         Orientation.landscape
+                                  //     ? MediaQuery.of(context).size.height * .26
+                                  //     : MediaQuery.of(context).size.height * .1,
+                                  // width: MediaQuery.of(context).size.width,
                                   decoration: BoxDecoration(
                                       color: ThemeApp.whiteColor,
                                       borderRadius: const BorderRadius.only(
@@ -886,14 +888,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       provider.budgetBuyList[index]
                                           ["budgetBuyImage"],
                                       fit: BoxFit.fill,
-                                      /*  height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    .07,*/
-                                      height: (MediaQuery.of(context).orientation ==
-                                              Orientation.landscape)
-                                          ? MediaQuery.of(context).size.height * .26
-                                          : MediaQuery.of(context).size.height * .1,
+                                        // height: MediaQuery.of(context)
+                                        //                 .size
+                                        //                 .height *
+                                        //             .07,
+                                      // height: (MediaQuery.of(context).orientation ==
+                                      //         Orientation.landscape)
+                                      //     ? MediaQuery.of(context).size.height * .26
+                                      //     : MediaQuery.of(context).size.height * .1,
                                     ),
                                   ),
                                 ),
@@ -912,8 +914,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               height: MediaQuery.of(context).size.height * .01,
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 18),
-                              child: TextFieldUtils().homePageTitlesTextFieldsWHITE(
+                              padding:  EdgeInsets.only(left: 10,right: 10),                                child: TextFieldUtils().homePageTitlesTextFieldsWHITE(
                                   provider.budgetBuyList[index]
                                       ["budgetBuyDescription"],
                                   context),
@@ -922,9 +923,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               height: MediaQuery.of(context).size.height * .01,
                             ),
                             Padding(
-                                padding: const EdgeInsets.only(left: 18),
+                              padding:  EdgeInsets.only(left: 10,right: 10,bottom: 5),
                                 child: TextFieldUtils().homePageheadingTextFieldWHITE(
-                                    "${indianRupeesFormat.format(int.parse(provider.budgetBuyList[index]["budgetBuyPrice"]))}",
+                                    indianRupeesFormat.format(int.parse(provider.budgetBuyList[index]["budgetBuyPrice"])),
                                     context)),
                           ],
                         )),

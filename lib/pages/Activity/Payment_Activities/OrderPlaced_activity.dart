@@ -35,7 +35,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
       appBar: PreferredSize(
     preferredSize: Size.fromHeight(height * .09),
     child: appBar_backWidget(
-        context, appTitle(context, "Order Checkout"), SizedBox()),
+        context, appTitle(context, "Order Checkout"), '/payment_Creditcard_debitcardScreen',SizedBox()),
       ),
       body: SafeArea(
         child:Consumer<HomeProvider>(builder: (context, value, child) {
@@ -236,11 +236,12 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
           flex: 1,
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DashboardScreen(),
-                ),
-              );
+              // Navigator.of(context).pushReplacement(
+              //   MaterialPageRoute(
+              //     builder: (context) => DashboardScreen(),
+              //   ),
+              // );
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
             },
             child: Container(
                 padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
