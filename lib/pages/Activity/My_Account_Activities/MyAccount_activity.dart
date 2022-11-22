@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:velocit/auth/change_password.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/CustomerSupport/CustomerSupportActivity.dart';
 
@@ -11,6 +10,7 @@ import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/textFormFields.dart';
 import '../../../widgets/scannerWithGallery.dart';
+import '../../auth/change_password.dart';
 import '../../homePage.dart';
 import '../../screens/dashBoard.dart';
 import '../../screens/offers_Activity.dart';

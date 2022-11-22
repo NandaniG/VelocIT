@@ -27,6 +27,9 @@ class StringConstant {
 
   //shared preferences
   static String emailPref = 'emailPref';
+  static String emailvar = '';
+  static String emailOTPPref = 'emailOTPPref';
+  static String emailOTPVar = '';
   static String userNamePref = 'userNamePref';
   static String pinCodePref = 'pinCodePref';
   static String addressPref = 'addressPref';

@@ -43,7 +43,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     getPincode();
     StringConstant.controllerSpeechToText.clear();
-
+    HomeProvider.signIn();
 
   }
 

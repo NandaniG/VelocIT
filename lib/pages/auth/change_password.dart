@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
-import '../pages/homePage.dart';
-import '../utils/styles.dart';
-import '../widgets/global/okPopUp.dart';
-import '../widgets/global/proceedButtons.dart';
-import '../widgets/global/textFormFields.dart';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../utils/styles.dart';
+import '../../widgets/global/okPopUp.dart';
+import '../../widgets/global/proceedButtons.dart';
+import '../../widgets/global/textFormFields.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({Key? key}) : super(key: key);

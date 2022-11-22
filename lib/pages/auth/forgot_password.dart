@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:velocit/auth/sign_in.dart';
 
-import '../utils/constants.dart';
-import '../utils/styles.dart';
-import '../widgets/global/okPopUp.dart';
-import '../widgets/global/proceedButtons.dart';
-import '../widgets/global/textFormFields.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/pages/auth/sign_in.dart';
+
+import '../../utils/constants.dart';
+import '../../utils/styles.dart';
+import '../../widgets/global/proceedButtons.dart';
+import '../../widgets/global/textFormFields.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);

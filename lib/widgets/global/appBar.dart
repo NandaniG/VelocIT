@@ -11,7 +11,6 @@ import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 
-import '../../auth/change_password.dart';
 import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import '../../pages/homePage.dart';
