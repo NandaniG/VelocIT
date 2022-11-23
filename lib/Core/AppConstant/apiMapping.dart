@@ -2,8 +2,8 @@ import '../Enum/apiEndPointEnums.dart';
 
 class ApiMapping {
   static String baseProtocol = "https";
-  static String baseDomain = "veclocitapi.fulgorithmapi.com";
-  static String basePort = "80";
+  static String baseDomain = "velocitapiqa.fulgorithmapi.com";
+  static String basePort = "443";
   static String apiVersion = "v1";
   static String username = "/v1/IAM/authenticateWithUID";
 
@@ -11,13 +11,14 @@ class ApiMapping {
     return baseProtocol +
         "://" +
         baseDomain +
-        /* ":" +
-        basePort +*/
+        ":" +
+        basePort +
         "/" +
         apiVersion +
         path;
   }
 
+//https://velocitapiqa.fulgorithmapi.com:443/v1/IAM/authenticate
   static String getURI(apiEndPoint ep) {
     String retVal = "";
 
@@ -27,7 +28,14 @@ class ApiMapping {
         break;
 
       case apiEndPoint.signIn_authenticateWithUID_post:
-        retVal = ConstructURI("/v1/IAM/authenticateWithUID");
+        retVal = ConstructURI("/IAM/authenticateWithUID");
+        break;
+
+      case apiEndPoint.user_get:
+        retVal = ConstructURI("/users");
+        break;
+      case apiEndPoint.user_post:
+        retVal = ConstructURI("/users");
         break;
 
       default:

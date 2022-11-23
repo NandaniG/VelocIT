@@ -276,11 +276,11 @@ class _MerchantActvityState extends State<MerchantActvity> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          Text(servicestatus? "GPS is Enabled": "GPS is disabled."),
-          Text(haspermission? "GPS is Enabled": "GPS is disabled."),
-
-          Text("Longitude: $long", style:TextStyle(fontSize: 20)),
-          Text("Latitude: $lat", style: TextStyle(fontSize: 20),),
+          // Text(servicestatus? "GPS is Enabled": "GPS is disabled."),
+          // Text(haspermission? "GPS is Enabled": "GPS is disabled."),
+          //
+          // Text("Longitude: $long", style:TextStyle(fontSize: 20)),
+          // Text("Latitude: $lat", style: TextStyle(fontSize: 20),),
 
           TextFieldUtils().listHeadingTextField(
               AppLocalizations.of(context).merchantNearYou, context),

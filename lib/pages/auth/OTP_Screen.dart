@@ -5,6 +5,7 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 
+import '../../Core/Service/authenticateWithUID_Service.dart';
 import '../../Core/ViewModel/authenticateWithUID_Provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
@@ -19,8 +20,8 @@ import 'change_password.dart';
 
 class OTPScreen extends StatefulWidget {
   var Otp;
-
-  OTPScreen({Key? key, this.Otp}) : super(key: key);
+  AuthenticateService service;
+  OTPScreen({Key? key, this.Otp,required this.service}) : super(key: key);
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -47,7 +48,8 @@ var OTP;
 
   getOtp() async {
     OTP=await Prefs().getToken("otpKey");
-
+    print("widget.service.auth");
+    print(widget.service.auth);
 
   }
   @override
@@ -148,31 +150,37 @@ var OTP;
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .025,
                 ),
-                proceedButton(AppLocalizations.of(context).verifyOTP,
-                    ThemeApp.blackColor, context, () async {
-                  String? emailId =
-                      await Prefs().getToken(StringConstant.emailPref);
+                Consumer<AuthenticateWithUIDProvider>(
+                    builder: (context, provider, child) {
+                    return proceedButton(AppLocalizations.of(context).verifyOTP,
+                        ThemeApp.blackColor, context, () async {
+                      String? emailId =
+                          await Prefs().getToken(StringConstant.emailPref);
 
-                  print("SharePref OTP:"+OTP);
+                      print("SharePref OTP:"+OTP);
 
-                  print("Intend OTP:${widget.Otp}");
+                      print("Intend OTP:${widget.Otp}");
 
-                  if (controller.text.length >= 6) {
-                    if (widget.Otp == controller.text) {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DashboardScreen(),
-                          ),
-                          (route) => false);
-                    } else {
-                      errorToast("Please enter valid OTP");
-                    }
-                  } else {
-                    errorToast("Please enter 6 digit OTP");
+                      if (controller.text.length >= 6) {
+                        if (widget.Otp == controller.text) {
+                          provider.postAuthenticateWithUID(controller.text);
+
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DashboardScreen(),
+                              ),
+                              (route) => false);
+                        } else {
+                          errorToast("Please enter valid OTP");
+                        }
+                      } else {
+                        errorToast("Please enter 6 digit OTP");
+                      }
+                      ;
+                    });
                   }
-                  ;
-                }),
+                ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .025,
                 ),

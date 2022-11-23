@@ -311,15 +311,20 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                     password.text == "CodeElan@123") {
                                   provider.getAuthenticateWithUID();
 
+
                                   Timer(const Duration(seconds: 3), () {
                                     setState(() {
                                       provider.isLoading = false;
                                     });
+                                    successToast(provider.service.Otp);
+
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => OTPScreen(
                                             Otp: provider.service.Otp
-                                                .toString()),
+                                                .toString(),
+                                          service: provider.service,
+                                        ),
                                       ),
                                     );
                                   });
@@ -345,15 +350,24 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                     StringConstant.emailOTPPref, emailOtp.text);
 
                                 provider.getAuthenticateWithUID();
+                                provider.getUserList();
+                                provider.postUserData();
+
+                                print(provider.service);
                                 print(provider.isLoading);
                                 Timer(const Duration(seconds: 3), () {
+
                                   setState(() {
                                     provider.isLoading = false;
                                   });
+                                  successToast(provider.service.Otp);
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => OTPScreen(
-                                          Otp: provider.service.Otp.toString()),
+                                          Otp: provider.service.Otp.toString(),
+                                           service: provider.service,
+
+                                      ),
                                     ),
                                   );
                                 });
