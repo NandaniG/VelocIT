@@ -38,10 +38,10 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
     setState(() {
 
     });
-    StringConstant.userAccountName = (await Prefs().getToken(StringConstant.userAccountNamePref))!;
-    StringConstant.userAccountEmail = (await Prefs().getToken(StringConstant.userAccountEmailPref))!;
-    StringConstant.userAccountMobile = (await Prefs().getToken(StringConstant.userAccountMobilePref))!;
-    StringConstant.userAccountPass = (await Prefs().getToken(StringConstant.userAccountPassPref))!;
+    StringConstant.userAccountName = (await Prefs.instance.getToken(StringConstant.userAccountNamePref))!.isEmpty?StringConstant.userAccountName:(await Prefs.instance.getToken(StringConstant.userAccountNamePref))!;
+    StringConstant.userAccountEmail = (await Prefs.instance.getToken(StringConstant.userAccountEmailPref))!.isEmpty?StringConstant.userAccountEmail:(await Prefs.instance.getToken(StringConstant.userAccountEmailPref))!;
+    StringConstant.userAccountMobile = (await Prefs.instance.getToken(StringConstant.userAccountMobilePref))!.isEmpty?StringConstant.userAccountMobile:(await Prefs.instance.getToken(StringConstant.userAccountMobilePref))!;
+    StringConstant.userAccountPass = (await Prefs.instance.getToken(StringConstant.userAccountPassPref))!.isEmpty?StringConstant.userAccountPass:(await Prefs.instance.getToken(StringConstant.userAccountPassPref))!;
     print(StringConstant.userAccountName);
 
   }
@@ -226,7 +226,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                                 userPassword: passwordController.text));
 
 
-                            Prefs().setToken(StringConstant.userAccountPassPref,
+                            Prefs.instance.setToken(StringConstant.userAccountPassPref,
                                 passwordController.text);
                             getPreference();                          });
                           print("value.creditCardList__________" +

@@ -48,9 +48,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   getPincode() async {
-    await Prefs().getToken(StringConstant.pinCodePref);
+    await Prefs.instance.getToken(StringConstant.pinCodePref);
     StringConstant.placesFromCurrentLocation =
-        (await Prefs().getToken(StringConstant.pinCodePref))!;
+        (await Prefs.instance.getToken(StringConstant.pinCodePref))!;
 
     print(
         "placesFromCurrentLocation pref...${StringConstant.placesFromCurrentLocation.toString()}");
@@ -763,6 +763,87 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
           if (snapshot.hasError) print(snapshot.error);
         return Container(
+          height: MediaQuery.of(context).size.height * .35,
+          child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: provider.bestDealList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Row(
+                  children: [
+                    Container(
+                      // height: MediaQuery.of(context).size.height * .3,
+
+                      // width: 200,
+                        width: MediaQuery.of(context).size.width * .45,
+                        decoration: BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: MediaQuery.of(context).size.height * .26,
+                              width: MediaQuery.of(context).size.width * .45,
+                              decoration: BoxDecoration(
+                                  color: ThemeApp.textFieldBorderColor,
+                                  borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    topLeft: Radius.circular(10),
+                                  )),
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  topLeft: Radius.circular(10),
+                                ),
+                                child: Image.asset(
+                                  // width: double.infinity,
+                                  provider.bestDealList[index]
+                                  ["bestDealImage"],
+                                  fit: BoxFit.fill,
+                                  height: MediaQuery.of(context).size.height * .07,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * .01,
+                            ),
+                            Container(
+                              padding:  EdgeInsets.only(left: 10,right: 10),
+                              child: TextFieldUtils().homePageTitlesTextFields(
+                                  provider.bestDealList[index]
+                                  ["bestDealDescription"],
+                                  context),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * .01,
+                            ),
+                            Container(
+                              padding:  EdgeInsets.only(left: 10,right: 10),
+                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextFieldUtils().homePageheadingTextField(
+                                      indianRupeesFormat.format(int.parse(provider.bestDealList[index]["bestDealDiscountPrice"].toString())),
+                                      context),
+                                  TextFieldUtils().homePageheadingTextFieldLineThrough(
+                                      indianRupeesFormat.format(int.parse(provider.bestDealList[index]["bestDealPrice"].toString())),
+                                      context),
+                                ],
+                              ),
+                            )
+                          ],
+                        )),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * .03,
+                    )
+                  ],
+                );
+              }),
+        );
+
+          /* Container(
           height: MediaQuery.of(context).size.height * .3,
           child: ListView.builder(
               shrinkWrap: true,
@@ -807,7 +888,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 );
               }),
-        );
+        );*/
       }
     );
   }

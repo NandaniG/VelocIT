@@ -21,13 +21,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ProductListByCategoryActivity extends StatefulWidget {
   final dynamic productList;
 
-  const ProductListByCategoryActivity({Key? key,required this.productList}) : super(key: key);
+  const ProductListByCategoryActivity({Key? key, required this.productList})
+      : super(key: key);
 
   @override
-  State<ProductListByCategoryActivity> createState() => _ProductListByCategoryActivityState();
+  State<ProductListByCategoryActivity> createState() =>
+      _ProductListByCategoryActivityState();
 }
 
-class _ProductListByCategoryActivityState extends State<ProductListByCategoryActivity> {
+class _ProductListByCategoryActivityState
+    extends State<ProductListByCategoryActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
@@ -42,9 +45,10 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
     // TODO: implement initState
     super.initState();
     print("shopByCategoryList-------");
-        print(widget.productList.length.toString());
-        print(widget.productList["productsList"].length.toString());
-        getListFromPref();
+    StringConstant.sortByRadio;
+    print(widget.productList.length.toString());
+    print(widget.productList["productsList"].length.toString());
+    getListFromPref();
   }
 
   final indianRupeesFormat = NumberFormat.currency(
@@ -59,7 +63,7 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
 //   getListFromPref() async {
 //     final prefs = await SharedPreferences.getInstance();
 //
-//     listFromPref = Prefs().getToken(StringConstant.cartListForPreferenceKey);
+//     listFromPref = Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
 //
 //     print('____________CartData AFTER GETTING PREF______________');
 //     StringConstant.prettyPrintJson(listFromPref.toString());
@@ -68,18 +72,25 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
   getListFromPref() async {
     final prefs = await SharedPreferences.getInstance();
     StringConstant.getCartList_FromPref =
-        await Prefs().getToken(StringConstant.cartListForPreferenceKey);
+    await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
     print('____________CartData AFTER GETTING PREF______________');
     StringConstant.prettyPrintJson(
         StringConstant.getCartList_FromPref.toString());
   }
+
   String sortedBy = "Low to High";
 
 
   @override
   Widget build(BuildContext context) {
-    height = MediaQuery.of(context).size.height;
-    width = MediaQuery.of(context).size.width;
+    height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    width = MediaQuery
+        .of(context)
+        .size
+        .width;
     final cart = Provider.of<CartProvider>(context);
     final availableProducts = Provider.of<ProductProvider>(context);
 
@@ -89,38 +100,45 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
       backgroundColor: ThemeApp.backgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-    preferredSize: Size.fromHeight(height * .12),
-    child: appBarWidget(
-        context,
-        searchBar(context),
-        addressWidget(context, StringConstant.placesFromCurrentLocation),
-        setState(() {})),
-      ), bottomNavigationBar: bottomNavigationBarWidget(context),
+        preferredSize: Size.fromHeight(height * .12),
+        child: appBarWidget(
+            context,
+            searchBar(context),
+            addressWidget(context, StringConstant.placesFromCurrentLocation),
+            setState(() {})),
+      ),
+      bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       body: SafeArea(
         child: Consumer<ProductProvider>(builder: (context, product, _) {
-    return Padding( padding:
-    const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          return Padding(padding:
+          const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
 
-      child: SingleChildScrollView(
-            // height: MediaQuery.of(context).size.height,
-               child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                listOfMobileDevices(productsList),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .02,
-                ),
-                filterWidgets(productsList),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .02,
-                ),
-                mobileGridList(productsList, product)
-              ],
-            )),
-    );
+            child: SingleChildScrollView(
+              // height: MediaQuery.of(context).size.height,
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    listOfMobileDevices(productsList),
+                    SizedBox(
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * .02,
+                    ),
+                    filterWidgets(productsList),
+                    SizedBox(
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * .02,
+                    ),
+                    mobileGridList(productsList, product)
+                  ],
+                )),
+          );
         }),
       ),
     );
@@ -144,7 +162,7 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
                       decoration: const BoxDecoration(
                           color: ThemeApp.whiteColor,
                           borderRadius:
-                              BorderRadius.all(Radius.circular(10))),
+                          BorderRadius.all(Radius.circular(10))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -167,17 +185,26 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
                                   image: DecorationImage(
                                       fit: BoxFit.fill,
                                       image: AssetImage(
-                                        widget.productList["productsList"][index]["productsListImage"],
+                                        widget
+                                            .productList["productsList"][index]["productsListImage"],
                                       )))),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * .01,
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height * .01,
                           ),
                           TextFieldUtils().appliancesTitleTextFields(
-                              widget.productList["productsList"][index]["productsListName"], context)
+                              widget
+                                  .productList["productsList"][index]["productsListName"],
+                              context)
                         ],
                       )),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * .03,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * .03,
                   )
                 ],
               ),
@@ -201,68 +228,10 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
           Row(children: [
             InkWell(
                 onTap: () {
-                  /* showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                            top: 20, left: 15, right: 15, bottom: 15),
-                        child: Wrap(
-                          children: [
-                            TextFieldUtils().dynamicText(
-                                AppLocalizations.of(context).sortByPrice,
-                                context,
-                                TextStyle(
-                                    color: ThemeApp.blackColor,
-                                    fontSize: height * .025,
-                                    fontWeight: FontWeight.w600)),
-                            Row(
-                              children: [
-                                Radio(
-                                  value: 1,
-                                  groupValue: _radioSelected,
-                                  activeColor: Colors.blue,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _radioSelected = value as int;
-                                      _radioVal = 'UPI';
-                                      print(_radioVal);
-                                    });
-                                  },
-                                ),
-                                const Text("UPI"),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Radio(
-                                  value: 2,
-                                  groupValue: _radioSelected,
-                                  activeColor: Colors.blue,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _radioSelected = value as int;
-                                      _radioVal = 'Wallets';
-                                      print(_radioVal);
-                                    });
-                                  },
-                                ),
-                                const Text("Wallets"),
-                              ],
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.edit),
-                              title: Text('Edit'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );*/
                   showModalBottomSheet(
                       context: context,
                       builder: (context) {
-                        return SortByPriceBottomSheet(sortedBy:  sortedBy);
+                        return bottomSheetForPrice();
                       });
                 },
                 child: TextFieldUtils()
@@ -270,8 +239,9 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
             const Icon(Icons.keyboard_arrow_down)
           ]),
           InkWell(
-            onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const FilterScreen()));
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const FilterScreen()));
             },
             child: Row(children: [
               _icon(Icons.filter_list_sharp),
@@ -282,6 +252,7 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
       ),
     );
   }
+
   Widget _icon(IconData icon, {Color color = ThemeApp.iconColor}) {
     return Container(
       child: Icon(
@@ -290,28 +261,35 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
       ),
     );
   }
-  SortPrice(){
-    for(int i = 0;i <=widget.productList["productsList"].length; i ++) {
 
-      widget.productList["productsList"][i]["discountPrice"].sort((a, b) => a.compareTo(b));
+  SortPrice() {
+    for (int i = 0; i <= widget.productList["productsList"].length; i ++) {
+      widget.productList["productsList"][i]["discountPrice"].sort((a, b) =>
+          a.compareTo(b));
       for (ProductDetailsModel p in widget.productList["productsList"]) {
         print("p.originalPrice");
         print(p.discountPrice);
       }
     }
   }
-  Widget mobileGridList(
-      List<ProductDetailsModel> product, ProductProvider value) {
+
+  Widget mobileGridList(List<ProductDetailsModel> product,
+      ProductProvider value) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * .75,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height * .75,
       // width: MediaQuery.of(context).size.width,
       child: GridView.builder(
         itemCount: widget.productList["productsList"].length,
-        physics:  const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            // childAspectRatio: 4 / 4.8,
+          // childAspectRatio: 4 / 4.8,
             childAspectRatio:
-            (MediaQuery.of(context).orientation == Orientation.landscape)
+            (MediaQuery
+                .of(context)
+                .orientation == Orientation.landscape)
                 ? 5 / 1.8
                 : 2.3 / 3.2,
 
@@ -321,17 +299,20 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
         itemBuilder: (BuildContext context, int index) {
           print(" widget.productList['productsList']");
           print("SortPrice");
-          print( widget.productList["productsList"][index]["productDiscountPrice"].toString());
+          print(
+              widget.productList["productsList"][index]["productDiscountPrice"]
+                  .toString());
           // SortPrice(int.parse(widget.productList["productsList"]));
           return InkWell(
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ProductDetailsActivity(
-                    productList: widget.productList["productsList"][index],
-                    model:product[index],
-                    value: value,
-                  ),
+                  builder: (context) =>
+                      ProductDetailsActivity(
+                        productList: widget.productList["productsList"][index],
+                        model: product[index],
+                        value: value,
+                      ),
                 ),
               );
               /*    Navigator.of(context).push(
@@ -342,21 +323,33 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
               );*/
             },
             child: Container(
-                width: MediaQuery.of(context).size.width * .45,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width * .45,
                 decoration: const BoxDecoration(
                     color: ThemeApp.darkGreyTab,
                     borderRadius:
-                        BorderRadius.all(Radius.circular(10))),
+                    BorderRadius.all(Radius.circular(10))),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       height:
-                          SizeConfig.orientations != Orientation.landscape
-                              ? MediaQuery.of(context).size.height * .26
-                              : MediaQuery.of(context).size.height * .1,
-                      width: MediaQuery.of(context).size.width,
+                      SizeConfig.orientations != Orientation.landscape
+                          ? MediaQuery
+                          .of(context)
+                          .size
+                          .height * .26
+                          : MediaQuery
+                          .of(context)
+                          .size
+                          .height * .1,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
                       decoration: const BoxDecoration(
                           color: ThemeApp.whiteColor,
                           borderRadius: BorderRadius.only(
@@ -370,30 +363,49 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
                         ),
                         child: Image.asset(
                           // width: double.infinity,
-                          widget.productList["productsList"][index]["productsListImage"],
+                          widget
+                              .productList["productsList"][index]["productsListImage"],
                           fit: BoxFit.fill,
-                          height: (MediaQuery.of(context).orientation ==
-                                  Orientation.landscape)
-                              ? MediaQuery.of(context).size.height * .26
-                              : MediaQuery.of(context).size.height * .1,
+                          height: (MediaQuery
+                              .of(context)
+                              .orientation ==
+                              Orientation.landscape)
+                              ? MediaQuery
+                              .of(context)
+                              .size
+                              .height * .26
+                              : MediaQuery
+                              .of(context)
+                              .size
+                              .height * .1,
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .01,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * .01,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 18),
                       child: TextFieldUtils().homePageTitlesTextFieldsWHITE(
-                          widget.productList["productsList"][index]["productsListDescription"], context),
+                          widget
+                              .productList["productsList"][index]["productsListDescription"],
+                          context),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .01,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * .01,
                     ),
                     Padding(
                         padding: const EdgeInsets.only(left: 18),
                         child: TextFieldUtils().homePageheadingTextFieldWHITE(
-                            "${indianRupeesFormat.format(int.parse(widget.productList["productsList"][index]["productDiscountPrice"].toString()))}",
+                            "${indianRupeesFormat.format(int.parse(widget
+                                .productList["productsList"][index]["productDiscountPrice"]
+                                .toString()))}",
                             context)),
                   ],
                 )),
@@ -402,10 +414,123 @@ class _ProductListByCategoryActivityState extends State<ProductListByCategoryAct
       ),
     );
   }
+  int? _radioValue = 0;
+
+  /* var sheetController = showBottomSheet(
+        context: context,
+        builder: (context) => BottomSheetWidget());*/
+  void _handleRadioValueChange(int? value) {
+    setState(() {
+      _radioValue = value;
+    });
+    print("first" + value.toString() + "radiovalue" + _radioValue.toString());
+  }
+
+  Widget bottomSheetForPrice(){
+    return Container(
+      margin: const EdgeInsets.all(10.0),
+      child: Wrap(
+        children: <Widget>[
+          Center(
+              child: Container(
+                  height: 3.0, width: 40.0, color: const Color(0xFF32335C))),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFieldUtils().dynamicText(
+                  AppLocalizations
+                      .of(context)
+                      .sortByPrice,
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: MediaQuery
+                          .of(context)
+                          .size
+                          .height * .025,
+                      fontWeight: FontWeight.w600)),
+              Row(
+                children: [
+                  Radio(
+                    value: 0,
+                    groupValue: _radioValue,
+                    onChanged: (value) {
+                      setState(() {
+                        _radioValue = value;
+                        StringConstant.sortByRadio=_radioValue!;
+                        StringConstant.sortByRadio == 0 ? sortedBy = "Low to High" : '';
+                        print(sortedBy);
+                      });
+                      print("radiofirst" +
+                          value.toString() +
+                          "radiovalue" +
+                          StringConstant.sortByRadio.toString());
+                      _handleRadioValueChange(value);
+                    },
+                  ),
+                  TextFieldUtils().dynamicText(
+                      "Low to High",
+                      context,
+                      TextStyle(
+                          color: ThemeApp.darkGreyColor,
+                          fontSize: MediaQuery
+                              .of(context)
+                              .size
+                              .height * .02,
+                          fontWeight: FontWeight.w400)),
+                ],
+              ),
+              Row(
+                children: [
+                  Radio(
+                    value: 1,
+                    groupValue: _radioValue,
+                    onChanged: (value) {
+                      setState(() {
+                        _radioValue = value;
+                        StringConstant.sortByRadio=_radioValue!;
+                        StringConstant.sortByRadio == 1 ? sortedBy = "High to Low" : '';
+                        print(sortedBy);
+                      });
+                      print("radiofirst" +
+                          value.toString() +
+                          "radiovalue" +
+                          _radioValue.toString());
+                      _handleRadioValueChange(value);
+                    },
+                  ),
+                  TextFieldUtils().dynamicText(
+                      "High to Low",
+                      context,
+                      TextStyle(
+                          color: ThemeApp.darkGreyColor,
+                          fontSize: MediaQuery
+                              .of(context)
+                              .size
+                              .height * .02,
+                          fontWeight: FontWeight.w400)),
+                ],
+              ),
+              proceedButton("Sort Now", ThemeApp.darkGreyColor, context, () {
+            Navigator.pop(context);
+
+              })
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
+/*
 
 class SortByPriceBottomSheet extends StatefulWidget {
   String sortedBy;
+
   SortByPriceBottomSheet({required this.sortedBy});
 
   @override
@@ -416,9 +541,11 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
   bool _show = true;
   int? _radioValue = 0;
 
-  /* var sheetController = showBottomSheet(
+  */
+/* var sheetController = showBottomSheet(
         context: context,
-        builder: (context) => BottomSheetWidget());*/
+        builder: (context) => BottomSheetWidget());*//*
+
   void _handleRadioValueChange(int? value) {
     setState(() {
       _radioValue = value;
@@ -443,11 +570,16 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFieldUtils().dynamicText(
-                  AppLocalizations.of(context).sortByPrice,
+                  AppLocalizations
+                      .of(context)
+                      .sortByPrice,
                   context,
                   TextStyle(
                       color: ThemeApp.blackColor,
-                      fontSize: MediaQuery.of(context).size.height * .025,
+                      fontSize: MediaQuery
+                          .of(context)
+                          .size
+                          .height * .025,
                       fontWeight: FontWeight.w600)),
               Row(
                 children: [
@@ -457,14 +589,14 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
                     onChanged: (value) {
                       setState(() {
                         _radioValue = value;
-                        _radioValue ==0? widget.sortedBy="Low to High":'';
+                       StringConstant.sortByRadio=_radioValue!;
+                        StringConstant.sortByRadio == 0 ? widget.sortedBy = "Low to High" : '';
                         print(widget.sortedBy);
-
                       });
                       print("radiofirst" +
                           value.toString() +
                           "radiovalue" +
-                          _radioValue.toString());
+                          StringConstant.sortByRadio.toString());
                       _handleRadioValueChange(value);
                     },
                   ),
@@ -473,7 +605,10 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
                       context,
                       TextStyle(
                           color: ThemeApp.darkGreyColor,
-                          fontSize: MediaQuery.of(context).size.height * .02,
+                          fontSize: MediaQuery
+                              .of(context)
+                              .size
+                              .height * .02,
                           fontWeight: FontWeight.w400)),
                 ],
               ),
@@ -485,9 +620,9 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
                     onChanged: (value) {
                       setState(() {
                         _radioValue = value;
-                        _radioValue ==1? widget.sortedBy="High to Low":'';
+                        StringConstant.sortByRadio=_radioValue!;
+                        StringConstant.sortByRadio == 1 ? widget.sortedBy = "High to Low" : '';
                         print(widget.sortedBy);
-
                       });
                       print("radiofirst" +
                           value.toString() +
@@ -501,11 +636,21 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
                       context,
                       TextStyle(
                           color: ThemeApp.darkGreyColor,
-                          fontSize: MediaQuery.of(context).size.height * .02,
+                          fontSize: MediaQuery
+                              .of(context)
+                              .size
+                              .height * .02,
                           fontWeight: FontWeight.w400)),
                 ],
               ),
-              proceedButton("Sort Now", ThemeApp.darkGreyColor, context, () { Navigator.of(context).pop();})
+              proceedButton("Sort Now", ThemeApp.darkGreyColor, context, () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>  ProductListByCategoryActivity(productList: null,),
+                  ),
+                );
+
+              })
             ],
           ),
         ],
@@ -513,3 +658,4 @@ class _SortByPriceBottomSheetState extends State<SortByPriceBottomSheet> {
     );
   }
 }
+*/

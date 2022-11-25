@@ -101,7 +101,7 @@ class ProductProvider with ChangeNotifier {
     print('___________ SET PREF______________');
     StringConstant.prettyPrintJson(encodedMap);
 
-    Prefs().setToken(StringConstant.cartListForPreferenceKey, encodedMap);
+    Prefs.instance.setToken(StringConstant.cartListForPreferenceKey, encodedMap);
     prefs.commit();
 
     ///logic for cart list amount values
@@ -685,6 +685,6 @@ class ProductProvider with ChangeNotifier {
       <UserAccountList>[];
 
   TextEditingController userNameController = new TextEditingController();
-  TextEditingController userMobileController = new TextEditingController();
+  TextEditingController userMobileController = new TextEditingController(text: StringConstant.userAccountMobile);
   TextEditingController userEmailController = new TextEditingController();
 }

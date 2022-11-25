@@ -253,6 +253,8 @@ class _FilterScreenState extends State<FilterScreen> {
               //     builder: (context) => Home(),
               //   ),
               // );
+
+              Navigator.pop(context);
             },
             child: Container(
                 padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
@@ -263,7 +265,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   color: Colors.grey.shade800,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
-                    "View My Orders", ThemeApp.whiteColor, context)),
+                    "Cancel", ThemeApp.whiteColor, context)),
           ),
         ),
         SizedBox(
@@ -278,6 +280,8 @@ class _FilterScreenState extends State<FilterScreen> {
               //     builder: (context) => Home(),
               //   ),
               // );
+              Navigator.pop(context);
+
             },
             child: Container(
                 padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
@@ -288,7 +292,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   color: ThemeApp.backgroundColor,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
-                    "Continue Shopping ", ThemeApp.blackColor, context)),
+                    "Apply", ThemeApp.blackColor, context)),
           ),
         )
       ]),

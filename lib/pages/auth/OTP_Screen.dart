@@ -47,7 +47,7 @@ var OTP;
   }
 
   getOtp() async {
-    OTP=await Prefs().getToken("otpKey");
+    OTP=await Prefs.instance.getToken("otpKey");
     print("widget.service.auth");
     print(widget.service.auth);
 
@@ -155,7 +155,7 @@ var OTP;
                     return proceedButton(AppLocalizations.of(context).verifyOTP,
                         ThemeApp.blackColor, context, () async {
                       String? emailId =
-                          await Prefs().getToken(StringConstant.emailPref);
+                          await Prefs.instance.getToken(StringConstant.emailPref);
 
                       print("SharePref OTP:"+OTP);
 

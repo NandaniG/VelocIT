@@ -73,7 +73,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               double.parse(widget.value.cartList[i].cartProductsOriginalPrice
                   .toString()));
 
-      Prefs().setDoubleToken(
+      Prefs.instance.setDoubleToken(
           StringConstant.totalOriginalPricePref, finalOriginalPrice);
 
       print("________finalOriginalPrice add: $i $finalOriginalPrice");
@@ -93,7 +93,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       finalTotalPrice = widget.value.deliveryAmount +
           (finalOriginalPrice - finalDiffrenceDiscountPrice);
 
-      Prefs()
+      Prefs.instance
           .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
 
       print("grandTotalAmount inside add: $i $finalTotalPrice");
@@ -113,7 +113,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   getListFromPref() async {
     final prefs = await SharedPreferences.getInstance();
     StringConstant.getCartList_FromPref =
-        await Prefs().getToken(StringConstant.cartListForPreferenceKey);
+        await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
     print('____________CartData AFTER GETTING PREF______________');
     StringConstant.prettyPrintJson(
         StringConstant.getCartList_FromPref.toString());
@@ -199,14 +199,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                           OrderReviewSubActivity(value: value),
                                     ),
                                   );
-                            // Prefs().clear();
-                            StringConstant.totalOriginalPrice = (await Prefs()
+                            // Prefs.instance.clear();
+                            StringConstant.totalOriginalPrice = (await Prefs.instance
                                 .getDoubleToken(
                                     StringConstant.totalOriginalPricePref))!;
                             print('StringConstant.totalOriginalPrice' +
                                 StringConstant.totalOriginalPrice.toString());
 
-                            StringConstant.totalFinalPrice = (await Prefs()
+                            StringConstant.totalFinalPrice = (await Prefs.instance
                                 .getDoubleToken(
                                     StringConstant.totalFinalPricePref))!;
                             print('StringConstant.totalFinalPrice' +
@@ -421,7 +421,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               double.parse(
                   value.cartList[i].cartProductsOriginalPrice.toString()));
 
-      Prefs().setDoubleToken(
+      Prefs.instance.setDoubleToken(
           StringConstant.totalOriginalPricePref, finalOriginalPrice);
 
       print("______finaloriginalPrice______" + finalOriginalPrice.toString());
@@ -438,7 +438,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
       finalTotalPrice = widget.value.deliveryAmount +
           (finalOriginalPrice - finalDiffrenceDiscountPrice);
-      Prefs()
+      Prefs.instance
           .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
 
       print("grandTotalAmount inside add: $i $finalTotalPrice");

@@ -204,12 +204,12 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                                       userMobile: value.userMobileController.text,
                                       userPassword: 'userPassword'));
 
-                              Prefs().setToken(StringConstant.userAccountNamePref,
+                              Prefs.instance.setToken(StringConstant.userAccountNamePref,
                                   value.userNameController.text);
-                              Prefs().setToken(
+                              Prefs.instance.setToken(
                                   StringConstant.userAccountEmailPref,
                                   value.userEmailController.text);
-                              Prefs().setToken(
+                              Prefs.instance.setToken(
                                   StringConstant.userAccountMobilePref,
                                   value.userMobileController.text);
 

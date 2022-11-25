@@ -57,16 +57,16 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
     //get address
 
     StringConstant.addressFromCurrentLocation =
-        (await Prefs().getToken(StringConstant.addressPref))!;
+        (await Prefs.instance.getToken(StringConstant.addressPref))!;
     print('StringConstant.addressFromCurrentLocation${StringConstant.addressFromCurrentLocation}');
     //
     StringConstant.totalOriginalPrice =
-        (await Prefs().getDoubleToken(StringConstant.totalOriginalPricePref))!;
+        (await Prefs.instance.getDoubleToken(StringConstant.totalOriginalPricePref))!;
 
     print('StringConstant.totalOriginalPrice${StringConstant.totalOriginalPrice}');
 
     StringConstant.totalFinalPrice =
-        (await Prefs().getDoubleToken(StringConstant.totalFinalPricePref))!;
+        (await Prefs.instance.getDoubleToken(StringConstant.totalFinalPricePref))!;
 
     print('StringConstant.totalFinalPrice${StringConstant.totalFinalPrice}');
   }
@@ -723,7 +723,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
           (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
               double.parse(value.cartList[i].cartProductsOriginalPrice.toString()));
 
-      Prefs().setDoubleToken(
+      Prefs.instance.setDoubleToken(
           StringConstant.totalOriginalPricePref, finalOriginalPrice);
 
       print("______finaloriginalPrice______$finalOriginalPrice");
@@ -737,7 +737,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
       print(
           "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
       StringConstant.totalFinalPrice =
-          (await Prefs().getDoubleToken(StringConstant.totalFinalPricePref))!;
+          (await Prefs.instance.getDoubleToken(StringConstant.totalFinalPricePref))!;
 
       StringConstant.totalFinalPrice = value.deliveryAmount +
           (finalOriginalPrice - finalDiffrenceDiscountPrice);

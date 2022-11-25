@@ -5,6 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class StringConstant {
+  static bool isLogIn = true;
+  static int? sortByRadio = 0;
+
   static TextEditingController controllerSpeechToText =
       new TextEditingController();
 
@@ -22,7 +25,7 @@ class StringConstant {
 
   static String userAccountName = 'use name';
   static String userAccountEmail = 'test@gmail.com';
-  static String userAccountMobile = '5248632252';
+  static String userAccountMobile = '7990916338';
   static String userAccountPass = '';
 
   //shared preferences

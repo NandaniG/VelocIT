@@ -363,19 +363,22 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: IntlPhoneField(
         // showCountryFlag: false,
-
+        enabled: false,
         controller: widget.controller,
+        flagsButtonPadding:EdgeInsets.only(left: 20,) ,
         dropdownDecoration: const BoxDecoration(
+
             border: Border(
           right: BorderSide(
               //                   <--- left side
               color: ThemeApp.textFieldBorderColor,
               width: 1),
         )),
+        initialCountryCode: "IN",
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(10),
-        ],
+        ],style: TextStyle(color: ThemeApp.darkGreyColor),
         decoration: InputDecoration(
           hintText: 'Do not enter country code',
           counterText: "",

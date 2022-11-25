@@ -296,7 +296,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
         print("placesFromCurrentLocation--" +
             StringConstant.placesFromCurrentLocation);
-        Prefs().setToken(StringConstant.pinCodePref,
+        Prefs.instance.setToken(StringConstant.pinCodePref,
             place.postalCode.toString());
          });
     } catch (e) {

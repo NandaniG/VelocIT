@@ -25,6 +25,7 @@ class AuthenticateService extends ChangeNotifier {
 
   Future<Map<String, dynamic>?> getAuthentication() async {
     var URI = ApiMapping.getURI(apiEndPoint.signIn_authenticate_get);
+
     var client = http.Client();
     var response = await client.get(Uri.parse(URI));
     print("AuthenticateModel json");
@@ -35,7 +36,7 @@ class AuthenticateService extends ChangeNotifier {
       authenticateModel = auth;
       print("AuthenticateModel json${auth}");
       successToast(authenticateModel!["payload"]["otp"].toString());
-      await Prefs().setToken("otpKey", auth["payload"]["otp"].toString());
+      await Prefs.instance.setToken("otpKey", auth["payload"]["otp"].toString());
 
       Otp = auth["payload"]["otp"].toString();
     } else {

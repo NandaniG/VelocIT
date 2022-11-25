@@ -37,29 +37,45 @@ Future<void> main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
-  StringConstant.emailOTPVar = (await Prefs().getToken(StringConstant.emailOTPPref))! ;
-  StringConstant.emailvar = (await Prefs().getToken(StringConstant.emailPref))! ;
-  await Prefs().getToken(StringConstant.pinCodePref);
+  StringConstant.isLogIn = false;
+
+  StringConstant.emailOTPVar =
+      (await Prefs.instance.getToken(StringConstant.emailOTPPref))!;
+
+  print('The name is ${StringConstant.emailOTPVar}');
+
+  StringConstant.emailvar =
+      (await Prefs.instance.getToken(StringConstant.emailPref))!;
+  await Prefs.instance.getToken(StringConstant.pinCodePref);
 
   StringConstant.userAccountName =
-      (await Prefs().getToken(StringConstant.userAccountNamePref))!;
+      (await Prefs.instance.getToken(StringConstant.userAccountNamePref))!
+              .isEmpty
+          ? StringConstant.userAccountName
+          : StringConstant.userAccountName;
   StringConstant.userAccountEmail =
-      (await Prefs().getToken(StringConstant.userAccountEmailPref))!;
+      (await Prefs.instance.getToken(StringConstant.userAccountEmailPref))!
+              .isEmpty
+          ? StringConstant.userAccountEmail
+          : StringConstant.userAccountEmail;
   StringConstant.userAccountMobile =
-      (await Prefs().getToken(StringConstant.userAccountMobilePref))!;
+      (await Prefs.instance.getToken(StringConstant.userAccountMobilePref))!
+              .isEmpty
+          ? StringConstant.userAccountMobile
+          : StringConstant.userAccountMobile;
   StringConstant.userAccountPass =
-      (await Prefs().getToken(StringConstant.userAccountPassPref))!;
+      (await Prefs.instance.getToken(StringConstant.userAccountPassPref))!.isEmpty?StringConstant.userAccountPass:StringConstant.userAccountPass;
 
   StringConstant.placesFromCurrentLocation =
-      (await Prefs().getToken(StringConstant.pinCodePref))!;
+      (await Prefs.instance.getToken(StringConstant.pinCodePref))!.isEmpty?StringConstant.placesFromCurrentLocation:StringConstant.placesFromCurrentLocation;
 
   StringConstant.addressFromCurrentLocation =
-      (await Prefs().getToken(StringConstant.addressPref))!;
+      (await Prefs.instance.getToken(StringConstant.addressPref))!.isEmpty? StringConstant.addressFromCurrentLocation: StringConstant.addressFromCurrentLocation;
 
   SharedPreferences.setMockInitialValues({});
 
-  await Prefs().getToken(StringConstant.cartListForPreferenceKey);
-  await Prefs().getToken('copyCartList');
+  await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
+  await Prefs.instance.getToken('copyCartList');
 
   //
   // final box = GetStorage();
@@ -75,7 +91,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -113,10 +128,11 @@ class MyApp extends StatelessWidget {
                   primarySwatch: colorCustomForMaterialApp,
                 ),
                 debugShowCheckedModeBanner: false,
-
                 initialRoute: '/',
                 routes: {
-                  '/': (context) => StringConstant.emailOTPVar.isEmpty || StringConstant.emailvar.isEmpty?SignIn_Screen():DashboardScreen(),
+                  '/': (context) => StringConstant.isLogIn == false
+                      ? DashboardScreen()
+                      : DashboardScreen(),
                   '/dashBoardScreen': (context) => const DashboardScreen(),
                   '/editAccountActivity': (context) =>
                       const EditAccountActivity(),
@@ -132,12 +148,14 @@ class MyApp extends StatelessWidget {
                       const CustomerSupportActivity(),
                   '/productListByCategoryActivity': (context) =>
                       ProductListByCategoryActivity(
-                          productList: provider.productList[provider.indexofSubProductList]),
-
+                          productList: provider
+                              .productList[provider.indexofSubProductList]),
                   '/cartScreen': (context) => CartDetailsActivity(
                       value: value, productList: provider.cartProductList),
-                  '/orderReviewSubActivity': (context) => OrderReviewSubActivity(value: value),
-                  '/payment_Creditcard_debitcardScreen': (context) => Payment_Creditcard_debitcardScreen(),
+                  '/orderReviewSubActivity': (context) =>
+                      OrderReviewSubActivity(value: value),
+                  '/payment_Creditcard_debitcardScreen': (context) =>
+                      Payment_Creditcard_debitcardScreen(),
                 },
               );
             });
@@ -160,8 +178,8 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     Timer(
         const Duration(seconds: 3),
-        () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) =>  SignIn_Screen())));
+        () => Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SignIn_Screen())));
   }
 
   @override

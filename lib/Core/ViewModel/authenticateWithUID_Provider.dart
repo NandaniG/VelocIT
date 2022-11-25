@@ -10,6 +10,7 @@ class AuthenticateWithUIDProvider extends ChangeNotifier {
   final service = AuthenticateService();
   final serviceWithUID = AuthenticateWithUIDService();
   bool isLoading = false;
+
   AuthenticateModel authenticateModel =
   AuthenticateModel();
 

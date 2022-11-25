@@ -4,6 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Prefs {
   //set Preferences
+  Prefs._privateConstructor();
+  static final Prefs instance = Prefs._privateConstructor();
+
   Future<void> setDoubleToken(String key, double value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setDouble(key, value);

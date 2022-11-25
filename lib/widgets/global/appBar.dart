@@ -11,6 +11,7 @@ import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 
+import '../../pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import '../../pages/homePage.dart';
@@ -67,48 +68,67 @@ Widget appBarWidget(
                     bottomRight: Radius.circular(15)),
               ),
             ),
-            leading: InkWell(
-              onTap: () {
-                /// locale languages
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //       builder: (context) => FlutterLocalizationDemo()),
-                // );
+            leadingWidth: StringConstant.isLogIn == false ? 0 : 50,
+            leading: StringConstant.isLogIn == false
+                ? SizedBox(
+                    width: 0,
+                  )
+                : InkWell(
+                    onTap: () {
+                      /// locale languages
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //       builder: (context) => FlutterLocalizationDemo()),
+                      // );
 
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const MyAccountActivity(),
-                  ),
-
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(100),
-                  ),
-                  child:Icon(Icons.account_circle_rounded) /*Container(
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const MyAccountActivity(),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(100),
+                        ),
+                        child: Icon(Icons
+                            .account_circle_rounded,size: 40) /*Container(
                       alignment: Alignment.center,
                       child: const Image(
                         image: NetworkImage(
                             'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
                         fit: BoxFit.fill,
-                      ))*/,
-                ),
-              ),
-            ),
+                      ))*/
+                        ,
+                      ),
+                    ),
+                  ),
             // leadingWidth: width * .06,
             title: titleWidget,
             // Row
             actions: [
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(right: 10),
-                child: const Icon(
-                  Icons.notifications_none_outlined,
-                  color: ThemeApp.darkGreyTab,
-                  size: 35,
+              InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>  NotificationScreen(),
+                  ),
+                );
+              },
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: StringConstant.isLogIn == false
+                      ? EdgeInsets.only(right: 10, left: 20)
+                      : EdgeInsets.only(
+                          right: 10,
+                        ),
+                  child: const Icon(
+                    Icons.notifications_none_outlined,
+                    color: ThemeApp.darkGreyTab,
+                    size: 35,
+                  ),
                 ),
               ),
             ],
@@ -281,8 +301,7 @@ Widget addressWidget(BuildContext context, String addressString) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return AutoSearchPlacesPopUp(
-                );
+            return AutoSearchPlacesPopUp();
           });
       // Navigator.of(context).push(
       //   MaterialPageRoute(
@@ -352,103 +371,120 @@ final List<Widget> _tabs = List.unmodifiable([
 Widget bottomNavBarItems(BuildContext context) {
   int _currentIndex = 0;
   return Consumer<HomeProvider>(builder: (context, provider, child) {
-    return  Consumer<ProductProvider>(builder: (context, value, child) {
-        return BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _currentIndex,
-          onTap: (int index) {
-            if (index == 0) {
-              // Navigator.pushNamed(context, '/dashBoardScreen');
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
-              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
+    return Consumer<ProductProvider>(builder: (context, value, child) {
+      return BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          if (index == 0) {
+            // Navigator.pushNamed(context, '/dashBoardScreen');
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardScreen(),
+                ),
+                (route) => false);
+            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
 
-            }
-            if (index == 1) {
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => OfferActivity(),), (route) => false);
-            }
-            if (index == 3) {
-
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ShopByCategoryActivity(
-                  shopByCategoryList: provider.jsonData["shopByCategoryList"]),
-              ), (route) => false);
-            }
-            if (index == 4) {
-              print("provider.cartProductList");
-              print(provider.cartProductList);
-              provider.isHome = true;
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) =>CartDetailsActivity(value: value, productList: provider.cartProductList)
-              ), (route) => false);
-            }
-          },
-          items: [
-            BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                icon: _currentIndex == 0
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/home.png', height: 30),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/home.png', height: 30),
-                      ),
-                label: ''),
-            BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                icon: _currentIndex == 1
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child:
-                            Image.asset('assets/icons/percentage.png', height: 30),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child:
-                            Image.asset('assets/icons/percentage.png', height: 30),
-                      ),
-                label: ''),
-            BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                icon: _currentIndex == 2
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Icon(Icons.add, color: Colors.transparent),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Icon(Icons.add, color: Colors.transparent),
-                      ),
-                label: ''),
-            BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                icon: _currentIndex == 3
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/shop.png', height: 30),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/shop.png', height: 30),
-                      ),
-                label: ''),
-            BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                icon: _currentIndex == 4
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/shopping-cart.png',
-                            height: 30),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/shopping-cart.png',
-                            height: 30),
-                      ),
-                label: ''),
-          ],
-        );
-      }
-    );
+          }
+          if (index == 1) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OfferActivity(),
+                ),
+                (route) => false);
+          }
+          if (index == 3) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ShopByCategoryActivity(
+                      shopByCategoryList:
+                          provider.jsonData["shopByCategoryList"]),
+                ),
+                (route) => false);
+          }
+          if (index == 4) {
+            print("provider.cartProductList");
+            print(provider.cartProductList);
+            provider.isHome = true;
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CartDetailsActivity(
+                        value: value, productList: provider.cartProductList)),
+                (route) => false);
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+              backgroundColor: Colors.white,
+              icon: _currentIndex == 0
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Image.asset('assets/icons/home.png', height: 30),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Image.asset('assets/icons/home.png', height: 30),
+                    ),
+              label: ''),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.white,
+              icon: _currentIndex == 1
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Image.asset('assets/icons/percentage.png',
+                          height: 30),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Image.asset('assets/icons/percentage.png',
+                          height: 30),
+                    ),
+              label: ''),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.white,
+              icon: _currentIndex == 2
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Icon(Icons.add, color: Colors.transparent),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Icon(Icons.add, color: Colors.transparent),
+                    ),
+              label: ''),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.white,
+              icon: _currentIndex == 3
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Image.asset('assets/icons/shop.png', height: 30),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Image.asset('assets/icons/shop.png', height: 30),
+                    ),
+              label: ''),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.white,
+              icon: _currentIndex == 4
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Image.asset('assets/icons/shopping-cart.png',
+                          height: 30),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Image.asset('assets/icons/shopping-cart.png',
+                          height: 30),
+                    ),
+              label: ''),
+        ],
+      );
+    });
   });
 }
 
@@ -488,6 +524,7 @@ Widget bottomNavigationBarWidget(BuildContext context) {
     ],
   );
 }
+
 class ScannerWidget extends StatefulWidget {
   BarcodeFinderState state;
 
@@ -528,7 +565,9 @@ class _ScannerWidgetState extends State<ScannerWidget> {
 
                           scanQR();
                         }),
-                        SizedBox(height: MediaQuery.of(context).size.height*.01 ,),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .01,
+                        ),
                         _startScanFileButton(state),
                         Text(
                           'Code:',

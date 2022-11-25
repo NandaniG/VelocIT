@@ -200,17 +200,17 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                             _city = placeDetails.city;
                             _zipCode = placeDetails.zipCode;
                             setState(() {
-                              Prefs().setToken(StringConstant.pinCodePref,
+                              Prefs.instance.setToken(StringConstant.pinCodePref,
                                   placeDetails.zipCode.toString());
 
-                              Prefs().setToken(StringConstant.addressPref,
+                              Prefs.instance.setToken(StringConstant.addressPref,
                                   result['description'] + "-"+placeDetails.zipCode);
                             });
 
                             print("response zipcode $_zipCode");
                           });
                           StringConstant.placesFromCurrentLocation =
-                              (await Prefs()
+                              (await Prefs.instance
                                   .getToken(StringConstant.pinCodePref))!;
 
                           print(

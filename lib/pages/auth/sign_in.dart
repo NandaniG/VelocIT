@@ -298,7 +298,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             provider.isLoading = true;
                           });
                           setState(() {
-                            Prefs()
+                            Prefs.instance
                                 .setToken(StringConstant.emailPref, email.text);
                             // successToast(provider.service.Otp.toString());
 
@@ -346,7 +346,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               if (emailOtp.text.isNotEmpty &&
                                   (emailOtp.text == 'codeelan@gmail.com' ||
                                       emailOtp.text == '7990916638')) {
-                                Prefs().setToken(
+                                Prefs.instance.setToken(
                                     StringConstant.emailOTPPref, emailOtp.text);
 
                                 provider.getAuthenticateWithUID();

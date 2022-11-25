@@ -37,19 +37,19 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPreference();
+    // getPreference();
   }
 
   getPreference() async {
     setState(() {});
     StringConstant.userAccountName =
-        (await Prefs().getToken(StringConstant.userAccountNamePref))!;
+        (await Prefs.instance.getToken(StringConstant.userAccountNamePref))!;
     StringConstant.userAccountEmail =
-        (await Prefs().getToken(StringConstant.userAccountEmailPref))!;
+        (await Prefs.instance.getToken(StringConstant.userAccountEmailPref))!;
     StringConstant.userAccountMobile =
-        (await Prefs().getToken(StringConstant.userAccountMobilePref))!;
+        (await Prefs.instance.getToken(StringConstant.userAccountMobilePref))!;
     StringConstant.userAccountPass =
-        (await Prefs().getToken(StringConstant.userAccountPassPref))!;
+        (await Prefs.instance.getToken(StringConstant.userAccountPassPref))!;
     print(StringConstant.userAccountName);
   }
 
@@ -241,7 +241,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 ),
                               ),
                             ),
-                            Container(
+                       /*     Container(
                               width: width,
                               decoration: const BoxDecoration(
                                 border: Border(
@@ -288,7 +288,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                   ],
                                 ),
                               ),
-                            ),
+                            ),*/
                             Container(
                               width: width,
                               decoration: const BoxDecoration(
@@ -396,11 +396,19 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                               ),
                             ),
                             InkWell(
-                              onTap: () {
+                           /*   onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         const AccountSettingScreen(),
+                                  ),
+                                );
+                              },*/
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                    const EditAccountActivity(),
                                   ),
                                 );
                               },
