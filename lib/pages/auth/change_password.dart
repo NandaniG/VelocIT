@@ -188,7 +188,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                           .size
                           .height * .025,
                     ),
-                    proceedButton('Change Password',ThemeApp.blackColor, context, () async{
+                    proceedButton('Change Password',ThemeApp.blackColor, context, false,() async{
                       if (_formKey.currentState!.validate() &&
                           _currentPass.text.isNotEmpty &&
                           _newPass.text.isNotEmpty &&

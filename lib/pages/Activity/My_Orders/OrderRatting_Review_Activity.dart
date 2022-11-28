@@ -323,7 +323,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                 alignment: Alignment.bottomCenter,
                 padding: EdgeInsets.only(left: 20,right: 20),
                 child: proceedButton(
-                    "Submit", ThemeApp.blackColor, context, () {
+                    "Submit", ThemeApp.blackColor, context, false,() {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => MyOrderDetails(values: widget.values),

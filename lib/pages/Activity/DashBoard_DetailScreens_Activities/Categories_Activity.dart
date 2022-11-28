@@ -44,6 +44,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
     // print(widget.shopByCategoryList["shopCategoryImage"]);
     return payloadList;
   }
+  bool isExpand = false;
 
   @override
   Widget build(BuildContext context) {
@@ -107,66 +108,113 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 ExpansionTile(
-                                  key: Key(index.toString()),
-                                  //attention
-                                  initiallyExpanded: index == selected,
-                                  //attention
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 5),
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  trailing: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: ThemeApp.textFieldBorderColor,
-                                    size: height * .05,
-                                  ),
-                                  title: Row(
-                                    children: [
-                                      /*ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(100)),
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          productsList[index].serviceImage,
-                                          fit: BoxFit.fitWidth,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .06,
-                                        ),
-                                      ),*/
-                                      Container(
-                                          width: 60.0,
-                                          height: 60.0,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                  fit: BoxFit.fill,
-                                                  image: AssetImage(
-                                                    widget.shopByCategoryList[index]["shopCategoryImage"],
-                                                  )))),
-                                      SizedBox(
-                                        width: width * .03,
+                                  onExpansionChanged: (bool isExapnd) {
+                                    setState(() {
+                                      isExpand = isExapnd;
+                                    });
+                                  },
+                                    trailing: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: ThemeApp.textFieldBorderColor,
+                                      size: height * .05,
+                                    ),
+                                    tilePadding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 5),
+                                    childrenPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+
+                                  textColor: Colors.black,
+                                  title: Row(children: [
+                                          Container(
+                                              width: 60.0,
+                                              height: 60.0,
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.fill,
+                                                      image: AssetImage(
+                                                        widget.shopByCategoryList[index]["shopCategoryImage"],
+                                                      )))),
+                                          SizedBox(
+                                            width: width * .03,
+                                          ),
+                                          TextFieldUtils().homePageheadingTextField(
+                                              widget.shopByCategoryList[index]["shopCategoryName"],
+                                              context)
+                                        ],
                                       ),
-                                      TextFieldUtils().homePageheadingTextField(
-                                          widget.shopByCategoryList[index]["shopCategoryName"],
-                                          context)
-                                    ],
-                                  ),
-                                  children: [builderList( widget.shopByCategoryList[index])],
-                                  onExpansionChanged: ((newState) {
-                                    if (newState) {
-                                      setState(() {
-                                        const Duration(seconds: 20000);
-                                        selected = index;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        selected = -1;
-                                      });
-                                    }
-                                  }),
+
+                                  expandedAlignment: Alignment.centerLeft,
+                                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    builderList( widget.shopByCategoryList[index])
+                                  ],
                                 ),
+                                // ExpansionTile(
+                                //   key: Key(index.toString()),
+                                //   //attention
+                                //   expandedAlignment: Alignment.centerLeft,
+                                //   expandedCrossAxisAlignment:
+                                //   CrossAxisAlignment.start,
+                                //   initiallyExpanded: index == selected,
+                                //   //attention
+                                //   tilePadding: const EdgeInsets.symmetric(
+                                //       horizontal: 20, vertical: 5),
+                                //   childrenPadding: const EdgeInsets.symmetric(
+                                //       horizontal: 20, vertical: 10),
+                                //   trailing: Icon(
+                                //     Icons.keyboard_arrow_down,
+                                //     color: ThemeApp.textFieldBorderColor,
+                                //     size: height * .05,
+                                //   ),
+                                //
+                                //   title: Row(
+                                //     children: [
+                                //       /*ClipRRect(
+                                //         borderRadius: const BorderRadius.all(
+                                //             Radius.circular(100)),
+                                //         child: Image.network(
+                                //           // width: double.infinity,
+                                //           productsList[index].serviceImage,
+                                //           fit: BoxFit.fitWidth,
+                                //           height: MediaQuery.of(context)
+                                //                   .size
+                                //                   .height *
+                                //               .06,
+                                //         ),
+                                //       ),*/
+                                //       Container(
+                                //           width: 60.0,
+                                //           height: 60.0,
+                                //           decoration: BoxDecoration(
+                                //               shape: BoxShape.circle,
+                                //               image: DecorationImage(
+                                //                   fit: BoxFit.fill,
+                                //                   image: AssetImage(
+                                //                     widget.shopByCategoryList[index]["shopCategoryImage"],
+                                //                   )))),
+                                //       SizedBox(
+                                //         width: width * .03,
+                                //       ),
+                                //       TextFieldUtils().homePageheadingTextField(
+                                //           widget.shopByCategoryList[index]["shopCategoryName"],
+                                //           context)
+                                //     ],
+                                //   ),
+                                //   onExpansionChanged: ((newState) {
+                                //     if (newState) {
+                                //       setState(() {
+                                //         const Duration(seconds: 20000);
+                                //         selected = index;
+                                //       });
+                                //     } else {
+                                //       setState(() {
+                                //         selected = -1;
+                                //       });
+                                //     }
+                                //   }),
+                                //   children: [builderList( widget.shopByCategoryList[index])],
+                                // ),
                               ]),
                         );
                       },

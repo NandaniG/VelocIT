@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,9 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
     StringConstant.addressFromCurrentLocation =
         'Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India';
     getPreferences();
-    print("widget.productList");
+    if (kDebugMode) {
+      print("widget.productList");
+    }
   }
 
   var address =
@@ -1266,7 +1269,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                 alignment: FractionalOffset.bottomCenter,
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                 child: proceedButton(AppLocalizations.of(context).deliverHere,
-                    ThemeApp.blackColor, context, () {}),
+                    ThemeApp.blackColor, context, false,() {}),
               )
             ],
           ),

@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/utils/routes/routes.dart';
 
 import '../../services/models/CartModel.dart';
 import '../../services/models/ProductDetailModel.dart';
@@ -14,6 +16,8 @@ import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/appBar.dart';
+import '../../widgets/global/dynamicPopUp.dart';
+import '../../widgets/global/okPopUp.dart';
 import '../../widgets/global/textFormFields.dart';
 import '../Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import '../Activity/Payment_Activities/payments_Activity.dart';
@@ -56,9 +60,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     // TODO: implement initState
     super.initState();
     // getListFromPref();
-    print("widget.cartDetailScreen[]" + widget.productList.toString());
-    print("value.cartList.length");
-    print(widget.value.cartList.length);
+    if (kDebugMode) {
+      print("widget.cartDetailScreen[]${widget.productList}");
+      print("value.cartList.length");
+      print(widget.value.cartList.length);
+    }
     getListFromPref();
     // widget.productList[0]["productCartMaxCounter"] = '1';
     finalOriginalPrice = 0.0;
@@ -76,27 +82,31 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       Prefs.instance.setDoubleToken(
           StringConstant.totalOriginalPricePref, finalOriginalPrice);
 
-      print("________finalOriginalPrice add: $i $finalOriginalPrice");
-
+      if (kDebugMode) {
+        print("________finalOriginalPrice add: $i $finalOriginalPrice");
+      }
       finalDiscountPrice = finalDiscountPrice +
           (int.parse(
                   widget.value.cartList[i].cartProductsTempCounter.toString()) *
               double.parse(widget.value.cartList[i].cartProductsDiscountPrice
                   .toString()));
-
-      print("________finalDiscountPrice add: $i $finalDiscountPrice");
-
+      if (kDebugMode) {
+        print("________finalDiscountPrice add: $i $finalDiscountPrice");
+      }
       finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
-      print(
-          "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
+      if (kDebugMode) {
+        print(
+            "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
+      }
 
       finalTotalPrice = widget.value.deliveryAmount +
           (finalOriginalPrice - finalDiffrenceDiscountPrice);
 
       Prefs.instance
           .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
-
-      print("grandTotalAmount inside add: $i $finalTotalPrice");
+      if (kDebugMode) {
+        print("grandTotalAmount inside add: $i $finalTotalPrice");
+      }
     }
   }
 
@@ -114,7 +124,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     final prefs = await SharedPreferences.getInstance();
     StringConstant.getCartList_FromPref =
         await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
-    print('____________CartData AFTER GETTING PREF______________');
+    if (kDebugMode) {
+      print('____________CartData AFTER GETTING PREF______________');
+    }
     StringConstant.prettyPrintJson(
         StringConstant.getCartList_FromPref.toString());
   }
@@ -144,96 +156,111 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         elevation: 0,
         child: Consumer<ProductProvider>(builder: (context, value, child) {
           return widget.value.cartList.isEmpty
-              ? bottomNavigationBarWidget(context) : Container(
-            height: height * .2,
-            width: width,
-            decoration: const BoxDecoration(
-              color: ThemeApp.darkGreyColor,
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15), topLeft: Radius.circular(15)),
-            ),
-            child: Column(
-              children: [
-                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: 15,
-                    right: 15,
-                    top: 10,
+              ? bottomNavigationBarWidget(context)
+              : Container(
+                  height: height * .2,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    color: ThemeApp.darkGreyColor,
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(15),
+                        topLeft: Radius.circular(15)),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Column(
                     children: [
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 15,
+                          right: 15,
+                          top: 10,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            TextFieldUtils().pricesLineThroughWhite(
-                              " ${indianRupeesFormat.format(finalOriginalPrice)}",
-                              context,
-                              MediaQuery.of(context).size.height * .021,
-                            ),
-                            TextFieldUtils().homePageheadingTextFieldWHITE(
-                              "${indianRupeesFormat.format(finalTotalPrice)}",
-                              context,
-                            ),
-                          ]),
-                      InkWell(
-                          onTap: () async {
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //     builder: (context) => Payment_Creditcard_debitcardScreen(productList: widget.productList),
-                            //   ),
-                            // );
-                            const snackBar = SnackBar(
-                              content: Text('Card is Empty!'),
-                              clipBehavior: Clip.antiAlias,
-                              backgroundColor:
-                                  ThemeApp.innerTextFieldErrorColor,
-                            );
-                            finalTotalPrice == 0
-                                ? ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar)
-                                : Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          OrderReviewSubActivity(value: value),
-                                    ),
-                                  );
-                            // Prefs.instance.clear();
-                            StringConstant.totalOriginalPrice = (await Prefs.instance
-                                .getDoubleToken(
-                                    StringConstant.totalOriginalPricePref))!;
-                            print('StringConstant.totalOriginalPrice' +
-                                StringConstant.totalOriginalPrice.toString());
-
-                            StringConstant.totalFinalPrice = (await Prefs.instance
-                                .getDoubleToken(
-                                    StringConstant.totalFinalPricePref))!;
-                            print('StringConstant.totalFinalPrice' +
-                                StringConstant.totalFinalPrice.toString());
-                          },
-                          child: Container(
-                              height: height * 0.05,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextFieldUtils().pricesLineThroughWhite(
+                                    " ${indianRupeesFormat.format(finalOriginalPrice)}",
+                                    context,
+                                    MediaQuery.of(context).size.height * .021,
+                                  ),
+                                  TextFieldUtils()
+                                      .homePageheadingTextFieldWHITE(
+                                    "${indianRupeesFormat.format(finalTotalPrice)}",
+                                    context,
+                                  ),
+                                ]),
+                            InkWell(
+                                onTap: () async {
+                                     if (widget.value.deliveryAmount == 0.0) {
+                             Utils.flushBarErrorMessage('Please enter Product length', context);
+                            }
+                            else {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      OrderReviewSubActivity(value: value),
                                 ),
-                                color: ThemeApp.whiteColor,
-                              ),
-                              padding:
-                                  const EdgeInsets.only(left: 15, right: 15),
-                              child: TextFieldUtils().usingPassTextFields(
-                                  "Place Order",
-                                  ThemeApp.blackColor,
-                                  context))),
+                              );
+                            }
+                                  if (kDebugMode) {
+                                    print(StringConstant.isLogIn);
+                                  }
+                                  // Utils.flushBarErrorMessage(
+                                  //     "Please Sign Up", context);
+                                  StringConstant.isLogIn == true
+                                      ? Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                OrderReviewSubActivity(
+                                                    value: value),
+                                          ),
+                                        )
+                                      : Navigator.pushNamed(
+                                          context, RoutesName.signInRoute);
+
+                                  // Prefs.instance.clear();
+                                  StringConstant.totalOriginalPrice =
+                                      (await Prefs.instance.getDoubleToken(
+                                          StringConstant
+                                              .totalOriginalPricePref))!;
+                                  if (kDebugMode) {
+                                    print(
+                                        'StringConstant.totalOriginalPrice${StringConstant.totalOriginalPrice}');
+                                  }
+
+                                  StringConstant.totalFinalPrice =
+                                      (await Prefs.instance.getDoubleToken(
+                                          StringConstant.totalFinalPricePref))!;
+                                  if (kDebugMode) {
+                                    print(
+                                        'StringConstant.totalFinalPrice${StringConstant.totalFinalPrice}');
+                                  }
+                                },
+                                child: Container(
+                                    height: height * 0.05,
+                                    alignment: Alignment.center,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      color: ThemeApp.whiteColor,
+                                    ),
+                                    padding: const EdgeInsets.only(
+                                        left: 15, right: 15),
+                                    child: TextFieldUtils().usingPassTextFields(
+                                        "Place Order",
+                                        ThemeApp.blackColor,
+                                        context))),
+                          ],
+                        ),
+                      ),
+                      bottomNavigationBarWidget(context),
                     ],
                   ),
-                ),
-                bottomNavigationBarWidget(context),
-              ],
-            ),
-          );
+                );
         }),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -243,27 +270,27 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               height: MediaQuery.of(context).size.height,
               padding: const EdgeInsets.all(10),
               child: SingleChildScrollView(
-                child:widget.value.cartList.isEmpty
+                child: widget.value.cartList.isEmpty
                     ? Container(
-                  height: height * .5,
-                  alignment: Alignment.center,
-                  child: TextFieldUtils().dynamicText(
-                      "Cart is Empty",
-                      context,
-                      TextStyle(
-                          color: ThemeApp.blackColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: height * .03,
-                          overflow: TextOverflow.ellipsis)),
-                )
-                    :Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                     cartProductList(value),
-                    priceDetails(value),
-                  ],
-                ),
+                        height: height * .5,
+                        alignment: Alignment.center,
+                        child: TextFieldUtils().dynamicText(
+                            "Cart is Empty",
+                            context,
+                            TextStyle(
+                                color: ThemeApp.blackColor,
+                                fontWeight: FontWeight.w500,
+                                fontSize: height * .03,
+                                overflow: TextOverflow.ellipsis)),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          cartProductList(value),
+                          priceDetails(value),
+                        ],
+                      ),
               ));
         }),
       ),
@@ -272,10 +299,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget cartProductList(ProductProvider value) {
     return Container(
-        height: MediaQuery.of(context).size.height * .6,
+        height:value.cartList.length==1?MediaQuery.of(context).size.height * .5: MediaQuery.of(context).size.height * .6,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
+            physics:value.cartList.length==1?NeverScrollableScrollPhysics():ScrollPhysics() ,
             itemCount: value.cartList.length,
             itemBuilder: (BuildContext context, int index) {
               return value.cartList.isEmpty
@@ -396,15 +424,20 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   var originialAmount;
 
   void addQuantity(ProductProvider value, int index) {
-    print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
-    print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
+    if (kDebugMode) {
+      print(
+          "maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
+      print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
+    }
     if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) <
         int.parse(value.cartList[index].cartProductsMaxCounter.toString())) {
       value.cartList[index].cartProductsTempCounter =
           int.parse(value.cartList[index].cartProductsTempCounter.toString()) +
               1;
-      print("temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
-
+      if (kDebugMode) {
+        print(
+            "temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
+      }
       finalPrices(value, index);
     }
   }
@@ -414,6 +447,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     finalDiscountPrice = 0.0;
     finalDiffrenceDiscountPrice = 0.0;
     finalTotalPrice = 0.0;
+    widget.value.deliveryAmount=0.0;
 
     for (int i = 0; i < value.cartList.length; i++) {
       finalOriginalPrice = finalOriginalPrice +
@@ -423,48 +457,59 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
       Prefs.instance.setDoubleToken(
           StringConstant.totalOriginalPricePref, finalOriginalPrice);
-
-      print("______finaloriginalPrice______" + finalOriginalPrice.toString());
-
+      if (kDebugMode) {
+        print("______finaloriginalPrice______$finalOriginalPrice");
+      }
       finalDiscountPrice = finalDiscountPrice +
           (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
               double.parse(
                   value.cartList[i].cartProductsDiscountPrice.toString()));
-      print("______finalDiscountPrice______" + finalDiscountPrice.toString());
-
+      if (kDebugMode) {
+        print("______finalDiscountPrice______$finalDiscountPrice");
+      }
       finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
-      print(
-          "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
-
+      if (kDebugMode) {
+        print(
+            "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
+      }
       finalTotalPrice = widget.value.deliveryAmount +
           (finalOriginalPrice - finalDiffrenceDiscountPrice);
       Prefs.instance
           .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
-
-      print("grandTotalAmount inside add: $i $finalTotalPrice");
+      if(finalTotalPrice == 0){
+        value.del(index);
+        finalPrices(value, index);
+      }
+      if (kDebugMode) {
+        print("grandTotalAmount inside add: $i $finalTotalPrice");
+      }
     }
   }
 
   Future<void> minusQuantity(ProductProvider value, int index) async {
-    print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
-    print(
-        "temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
-
+    if (kDebugMode) {
+      print(
+          "maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
+      print(
+          "temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
+    }
     if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) >
         0) {
       value.cartList[index].cartProductsTempCounter =
           int.parse(value.cartList[index].cartProductsTempCounter.toString()) -
               1;
-      print(
-          "temp counter 2 minus  ${value.cartList[index].cartProductsTempCounter}");
-      value.cartList[index].cartProductsTotalOriginalPrice = ((value
-                  .cartList[index].cartProductsTempCounter)! *
-              double.parse(
-                  value.cartList[index].cartProductsOriginalPrice.toString()))
-          as int?;
-      print(
-          "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
-
+      if (kDebugMode) {
+        print(
+            "temp counter minus  ${value.cartList[index].cartProductsTempCounter}");
+      }
+      value.cartList[index].cartProductsTotalOriginalPrice =
+          ((value.cartList[index].cartProductsTempCounter)! *
+              int.parse(
+                  value.cartList[index].cartProductsOriginalPrice.toString()));
+      if (kDebugMode) {
+        print(
+            "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
+      }
 ////PRICE CODE AFTER ADDING COUNT
       finalPrices(value, index);
     }
@@ -491,7 +536,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 color: Colors.amber,
               ),
               onRatingUpdate: (rating) {
-                print(rating);
+                if (kDebugMode) {
+                  print(rating);
+                }
               },
             ),
             TextFieldUtils().subHeadingTextFields(

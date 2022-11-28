@@ -3,25 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
-import 'package:velocit/pages/screens/dashBoard.dart';
-
-import '../../Core/Service/authenticateWithUID_Service.dart';
-import '../../Core/ViewModel/authenticateWithUID_Provider.dart';
+import '../../Core/ViewModel/auth_view_model.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
-import '../../widgets/global/okPopUp.dart';
 import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../widgets/global/toastMessage.dart';
-import 'change_password.dart';
-
 class OTPScreen extends StatefulWidget {
-  var Otp;
-  AuthenticateService service;
-  OTPScreen({Key? key, this.Otp,required this.service}) : super(key: key);
+  OTPScreen({Key? key}) : super(key: key);
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -33,11 +24,12 @@ class _OTPScreenState extends State<OTPScreen> {
   String otpMsg = "";
 
   late Timer _timer;
-  int _start = 30;
+  int _start = 90;
   bool isLoading = false;
   TextEditingController controller = TextEditingController(text: "");
   FocusNode focusNode = FocusNode();
-var OTP;
+  var OTP;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -47,11 +39,10 @@ var OTP;
   }
 
   getOtp() async {
-    OTP=await Prefs.instance.getToken("otpKey");
-    print("widget.service.auth");
-    print(widget.service.auth);
-
+    OTP = await Prefs.instance.getToken("otpKey");
+    print("get OTP from Preference : $OTP");
   }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -60,26 +51,27 @@ var OTP;
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+
     return Scaffold(
-      backgroundColor: ThemeApp.whiteColor,
-      appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(70),
-          child: Container(
-            alignment: Alignment.centerLeft,
-            child: IconButton(
-              icon: Icon(Icons.arrow_back, color: ThemeApp.blackColor),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          )),
-      /* AppBar(
+        backgroundColor: ThemeApp.whiteColor,
+        appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(70),
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back, color: ThemeApp.blackColor),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            )),
+        /* AppBar(
     backgroundColor: ThemeApp.whiteColor,
     iconTheme: IconThemeData(
       color: Colors.black, //change your color here
     ),
     elevation: 0,
       ),*/
-      body:
-         SafeArea(
+        body: SafeArea(
           child: Container(
             padding:
                 const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 40),
@@ -150,37 +142,28 @@ var OTP;
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .025,
                 ),
-                Consumer<AuthenticateWithUIDProvider>(
-                    builder: (context, provider, child) {
-                    return proceedButton(AppLocalizations.of(context).verifyOTP,
-                        ThemeApp.blackColor, context, () async {
-                      String? emailId =
-                          await Prefs.instance.getToken(StringConstant.emailPref);
+                proceedButton(AppLocalizations.of(context).verifyOTP,
+                    ThemeApp.blackColor, context, authViewModel.loadingWithPost,() async {
+                  String? emailId =
+                      await Prefs.instance.getToken(StringConstant.emailPref);
 
-                      print("SharePref OTP:"+OTP);
+                  print("SharePref OTP:" + OTP);
 
-                      print("Intend OTP:${widget.Otp}");
+                  print("Intend OTP:${authViewModel.getOTP}");
 
-                      if (controller.text.length >= 6) {
-                        if (widget.Otp == controller.text) {
-                          provider.postAuthenticateWithUID(controller.text);
+                  if (controller.text.length >= 6) {
+                    if (authViewModel.getOTP == controller.text) {
+                      Map data = {'username': 'testuser@test.com'};
+                      authViewModel.loginApiWithPost(data, context);
+                      Utils.successToast("OTP is Correct!");
 
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DashboardScreen(),
-                              ),
-                              (route) => false);
-                        } else {
-                          errorToast("Please enter valid OTP");
-                        }
-                      } else {
-                        errorToast("Please enter 6 digit OTP");
-                      }
-                      ;
-                    });
+                    } else {
+                      Utils.errorToast("Please enter valid OTP");
+                    }
+                  } else {
+                    Utils.errorToast("Please enter 6 digit OTP");
                   }
-                ),
+                }),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .025,
                 ),
@@ -198,7 +181,7 @@ var OTP;
                         child: InkWell(
                         onTap: () {
                           setState(() {
-                            _start = 30;
+                            _start = 90;
                             isLoading = true;
                             startTimer();
                           });
@@ -215,9 +198,7 @@ var OTP;
               ],
             ),
           ),
-        )
-
-    );
+        ));
   }
 
   void startTimer() {

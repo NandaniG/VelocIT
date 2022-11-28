@@ -216,7 +216,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                         child: proceedButton(
                             AppLocalizations.of(context).update,
                             ThemeApp.blackColor,
-                            context, () {
+                            context, false,() {
                           setState(() {
                             value.userAccountDetailList.add(UserAccountList(
                                 userId: 1,

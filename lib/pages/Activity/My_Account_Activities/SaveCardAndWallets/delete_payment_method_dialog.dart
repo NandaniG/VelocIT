@@ -74,7 +74,7 @@ SizedBox(height: height*.02,),
                   child: Row(
                     children: [
                       Expanded(flex: 1,
-                        child: proceedButton(AppLocalizations.of(context).no, ThemeApp.whiteColor,context, () {
+                        child: proceedButton(AppLocalizations.of(context).no, ThemeApp.whiteColor,context,false, () {
                           Navigator.pop(context);
                         }),
                       ),
@@ -82,7 +82,7 @@ SizedBox(height: height*.02,),
                       Expanded(flex: 1,
                         child: Consumer<ProductProvider>(builder: (context, value, child) {
 
-                            return proceedButton(AppLocalizations.of(context).yes, ThemeApp.blackColor,context, () {
+                            return proceedButton(AppLocalizations.of(context).yes, ThemeApp.blackColor,context,false, () {
                             setState(() {
                               print(widget.cardList.length);
 value.deleteCardMethod(widget.index);

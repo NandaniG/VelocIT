@@ -196,7 +196,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                 SizedBox(
                   height: height * .04,
                 ),
-                proceedButton("Save", ThemeApp.blackColor, context, () {
+                proceedButton("Save", ThemeApp.blackColor, context, false,() {
                   value.creditCardList.add(MyCardList(
                       myCardBankName: 'Kotak Mahindra',
                       myCardType: 'Credit Card',
@@ -454,7 +454,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                 SizedBox(
                   height: height * .04,
                 ),
-                proceedButton("Save", ThemeApp.blackColor, context, () {
+                proceedButton("Save", ThemeApp.blackColor, context,false, () {
 
                     widget.cardList.myCardFullName = cardHolderNameController.text.toString();
                     widget.cardList.myCardNumber = cardNumberController.text.toString();

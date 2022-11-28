@@ -5,6 +5,8 @@ import 'package:velocit/utils/styles.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/models/NotificationsModel.dart';
 import '../../../../services/providers/Products_provider.dart';
+import '../../../../utils/constants.dart';
+import '../../../../utils/routes/routes.dart';
 import '../../../../widgets/global/appBar.dart';
 
 import '../../../../widgets/global/textFormFields.dart';
@@ -43,7 +45,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
           child: appBar_backWidget(
-              context, appTitle(context, "Notifications"), '/myAccountActivity',SizedBox()),
+              // context, appTitle(context, "Notifications"),StringConstant.isLogIn==false?RoutesName.dashboardRoute : '/myAccountActivity',SizedBox()),
+              context, appTitle(context, "Notifications"),RoutesName.dashboardRoute,SizedBox()),
         ),
         body: SafeArea(child: mainUI()));
   }

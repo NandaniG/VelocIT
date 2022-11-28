@@ -44,6 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     getPincode();
     StringConstant.controllerSpeechToText.clear();
     HomeProvider.signIn();
+    Provider.of<HomeProvider>(context, listen: false).loadJson();
 
   }
 
@@ -77,6 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -127,6 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           viewMoreButton(
                               AppLocalizations.of(context).viewAll, context,
                               () {
+                                // Utils.flushBarErrorMessage("Not Data",context);
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => ShopByCategoryActivity(
@@ -189,7 +192,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => MerchantActvity(merchantList: provider.merchantNearYouList),
+                                builder: (context) => MerchantActvity(merchantList: provider.merchantNearYouList[1]),
                               ),
                             );
                           })
@@ -939,20 +942,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               alignment: Alignment.topRight,
                               children: [
                                 Container(
-                                  // height:
-                                  //     MediaQuery.of(context).size.height *
-                                  //         .26,
-                                  // width:
-                                  //     MediaQuery.of(context).size.width *
-                                  //         .45,
                                   height:
                                   MediaQuery.of(context).size.height * .25,
                                   width: MediaQuery.of(context).size.width * .45,
-                                  // height: SizeConfig.orientations !=
-                                  //         Orientation.landscape
-                                  //     ? MediaQuery.of(context).size.height * .26
-                                  //     : MediaQuery.of(context).size.height * .1,
-                                  // width: MediaQuery.of(context).size.width,
+
                                   decoration: BoxDecoration(
                                       color: ThemeApp.whiteColor,
                                       borderRadius: const BorderRadius.only(

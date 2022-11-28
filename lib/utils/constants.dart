@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -130,17 +131,19 @@ class StringConstant {
           "^(?=.{6,19}\$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*(),.?:{}|<>]).*")
       .hasMatch(input);
 
-  static JsonDecoder decoder = JsonDecoder();
-  static JsonEncoder encoder = JsonEncoder.withIndent('  ');
+  static JsonDecoder decoder = const JsonDecoder();
+  static JsonEncoder encoder = const JsonEncoder.withIndent('  ');
 
   static void prettyPrintJson(String input) {
     var object = decoder.convert(input);
     var prettyString = encoder.convert(object);
-    print(
-        "_______________________________Json Printer_______________________________________");
-
+    if(kDebugMode) {
+      print(
+          "_______________________________Json Printer_______________________________________");
+    }
     prettyString.split('\n').forEach((element) {
-      print(element);
+      if(kDebugMode) {
+        print(element);}
     });
   }
   static void printObject(Object object) {

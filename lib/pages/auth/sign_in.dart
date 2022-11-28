@@ -1,21 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/Core/ViewModel/auth_view_model.dart';
 
-import '../../Core/Enum/viewState.dart';
-import '../../Core/Service/authenticateWithUID_Service.dart';
-import '../../Core/ViewModel/authenticateWithUID_Provider.dart';
 import '../../services/providers/Home_Provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
-import '../../widgets/global/toastMessage.dart';
-import 'OTP_Screen.dart';
 import 'forgot_password.dart';
 
 class SignIn_Screen extends StatefulWidget {
@@ -45,7 +40,18 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    email.dispose();
+    emailOtp.dispose();
+    password.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
         backgroundColor: ThemeApp.whiteColor,
         body: Container(
@@ -82,7 +88,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                           },
                           child: Container(
                               padding: const EdgeInsets.fromLTRB(
-                                  20.0, 15.0, 20.0, 15.0),
+                                  0, 15.0, 0, 15.0),
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(10),
@@ -112,7 +118,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                           },
                           child: Container(
                               padding: const EdgeInsets.fromLTRB(
-                                  20.0, 15.0, 20.0, 15.0),
+                                  0, 15.0, 0, 15.0),
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.only(
                                   topRight: Radius.circular(10),
@@ -279,106 +285,52 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     : const SizedBox(
                         height: 0,
                       ),
-                Consumer<AuthenticateWithUIDProvider>(
-                    builder: (context, provider, child) {
-                  // provider.isLoading=false;
-                  return provider.isLoading == true
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: ThemeApp.blackColor,
-                          ),
-                        )
-                      : proceedButton(
-                          !_usingPassVisible
-                              ? AppLocalizations.of(context).signin
-                              : AppLocalizations.of(context).sendOtp,
-                          ThemeApp.blackColor,
-                          context, () async {
-                          setState(() {
-                            provider.isLoading = true;
-                          });
-                          setState(() {
-                            Prefs.instance
-                                .setToken(StringConstant.emailPref, email.text);
-                            // successToast(provider.service.Otp.toString());
-
-                            if (!_usingPassVisible) {
-                              if (_formKey.currentState!.validate() &&
-                                  email.text.isNotEmpty &&
-                                  password.text.isNotEmpty) {
-                                if ((email.text == 'codeelan@gmail.com' ||
-                                        email.text == '7990916638') &&
-                                    password.text == "CodeElan@123") {
-                                  provider.getAuthenticateWithUID();
-
-
-                                  Timer(const Duration(seconds: 3), () {
-                                    setState(() {
-                                      provider.isLoading = false;
-                                    });
-                                    successToast(provider.service.Otp);
-
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => OTPScreen(
-                                            Otp: provider.service.Otp
-                                                .toString(),
-                                          service: provider.service,
-                                        ),
-                                      ),
-                                    );
-                                  });
-
-                                  print(email.text);
-                                } else {
-                                  final snackBar = const SnackBar(
-                                    content: Text('Please enter valid Details'),
-                                    clipBehavior: Clip.antiAlias,
-                                    backgroundColor: ThemeApp.greenappcolor,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                }
-                              } else {
-                                errorToast("Please enter valid Details.");
-                              }
-                            } else {
-                              if (emailOtp.text.isNotEmpty &&
-                                  (emailOtp.text == 'codeelan@gmail.com' ||
-                                      emailOtp.text == '7990916638')) {
+        proceedButton(
+                        !_usingPassVisible
+                            ? AppLocalizations.of(context).signin
+                            : AppLocalizations.of(context).sendOtp,
+                        ThemeApp.blackColor,
+                        context, authViewModel.loadingWithGet,() async {
+                        setState(() {
+                          Prefs.instance
+                              .setToken(StringConstant.emailPref, email.text);
+                          if (!_usingPassVisible) {
+                            if (_formKey.currentState!.validate() &&
+                                email.text.isNotEmpty &&
+                                password.text.isNotEmpty) {
+                              if ((email.text == 'codeelan@gmail.com' ||
+                                      email.text == '7990916638') &&
+                                  password.text == "CodeElan@123") {
                                 Prefs.instance.setToken(
                                     StringConstant.emailOTPPref, emailOtp.text);
 
-                                provider.getAuthenticateWithUID();
-                                provider.getUserList();
-                                provider.postUserData();
+                                // Map data = {'username': email.text};
+                                // authViewModel.loginApiWithPost(data, context);
+                                authViewModel.loginApiWithGet(context);
 
-                                print(provider.service);
-                                print(provider.isLoading);
-                                Timer(const Duration(seconds: 3), () {
-
-                                  setState(() {
-                                    provider.isLoading = false;
-                                  });
-                                  successToast(provider.service.Otp);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => OTPScreen(
-                                          Otp: provider.service.Otp.toString(),
-                                           service: provider.service,
-
-                                      ),
-                                    ),
-                                  );
-                                });
                               } else {
-                                errorToast("Please enter valid Details.");
+                                Utils.errorToast("Please enter valid Details.");
                               }
-                              print(emailOtp.text);
+                            } else {
+                              Utils.errorToast("Please enter Details.");
                             }
-                          });
+                          } else {
+                            if (emailOtp.text.isNotEmpty &&
+                                (emailOtp.text == 'codeelan@gmail.com' ||
+                                    emailOtp.text == '7990916638')) {
+                              Prefs.instance.setToken(
+                                  StringConstant.emailOTPPref, emailOtp.text);
+                              // Map data = {'username': 'testuser@test.com'};
+                              // authViewModel.loginApiWithPost(data, context);
+                              authViewModel.loginApiWithGet(context);
+
+                            } else {
+                              Utils.errorToast("Please enter valid Details.");
+                            }
+                            print(emailOtp.text);
+                          }
                         });
-                }),
+                      })
               ],
             ),
           ),

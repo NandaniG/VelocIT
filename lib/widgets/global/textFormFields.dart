@@ -84,7 +84,7 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
           hintText: widget.hintText,
           errorStyle: TextStyle(
               color: ThemeApp.innerTextFieldErrorColor,
-              fontSize: MediaQuery.of(context).size.height * 0.020),
+              fontSize: MediaQuery.of(context).size.height * 0.020),errorMaxLines: 2,
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

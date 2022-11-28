@@ -23,10 +23,11 @@ import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 import 'package:velocit/services/providers/cart_Provider.dart';
 import 'package:velocit/utils/constants.dart';
+import 'package:velocit/utils/routes/routes.dart';
+import 'package:velocit/utils/routes/routes_name.dart';
 import 'package:velocit/utils/styles.dart';
 import 'package:velocit/utils/utils.dart';
-import 'Core/Service/authenticateWithUID_Service.dart';
-import 'Core/ViewModel/authenticateWithUID_Provider.dart';
+import 'Core/ViewModel/auth_view_model.dart';
 import 'L10n/l10n.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'l10n/localeProvider.dart';
@@ -38,7 +39,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
   StringConstant.isLogIn = false;
-
   StringConstant.emailOTPVar =
       (await Prefs.instance.getToken(StringConstant.emailOTPPref))!;
 
@@ -91,11 +91,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => AuthenticateWithUIDProvider(),
+            create: (_) => AuthViewModel(),
           ),
+
           ChangeNotifierProvider(
             create: (_) => LocaleProvider(),
           ),
@@ -111,6 +114,7 @@ class MyApp extends StatelessWidget {
           // ChangeNotifierProvider(create: (_) => ProductsVM(),),
         ],
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
+          provider.loadJson();
           return Consumer<ProductProvider>(builder: (context, value, child) {
             return Consumer<LocaleProvider>(
                 builder: (context, localeProvider, snapshot) {
@@ -128,11 +132,14 @@ class MyApp extends StatelessWidget {
                   primarySwatch: colorCustomForMaterialApp,
                 ),
                 debugShowCheckedModeBanner: false,
-                initialRoute: '/',
+                // initialRoute: StringConstant.isLogIn == true?RoutesName.signInRoute:RoutesName.dashboardRoute,
+                initialRoute: RoutesName.splashScreenRoute,
+                onGenerateRoute: Routes.generateRoute,
                 routes: {
-                  '/': (context) => StringConstant.isLogIn == false
-                      ? DashboardScreen()
-                      : DashboardScreen(),
+                  // '/': (context) => StringConstant.isLogIn == false
+                  //     ? SignIn_Screen()
+                  //     : DashboardScreen(),
+                  '/': (context) =>SplashScreen(),
                   '/dashBoardScreen': (context) => const DashboardScreen(),
                   '/editAccountActivity': (context) =>
                       const EditAccountActivity(),
@@ -178,8 +185,9 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     Timer(
         const Duration(seconds: 3),
-        () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignIn_Screen())));
+        () {
+      StringConstant.isLogIn == false? Navigator.pushNamed(context, RoutesName.signInRoute) :Navigator.pushNamed(context, RoutesName.dashboardRoute);
+          });
   }
 
   @override

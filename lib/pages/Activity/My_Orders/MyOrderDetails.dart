@@ -711,7 +711,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
         alignment: Alignment.bottomCenter,
         padding: EdgeInsets.only(left: 20, right: 20),
         child: proceedButton(AppLocalizations.of(context).cancelOrder,
-            ThemeApp.blackColor, context, () {
+            ThemeApp.blackColor, context,false, () {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => MyOrderDetails(values: widget.values),
@@ -950,7 +950,7 @@ var valuesGroup='';
         alignment: Alignment.bottomCenter,
         padding: EdgeInsets.only(left: 20, right: 20),
         child: proceedButton(AppLocalizations.of(context).returnnn,
-            ThemeApp.blackColor, context, () {
+            ThemeApp.blackColor, context,false, () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => MyOrderDetails(values: widget.values),

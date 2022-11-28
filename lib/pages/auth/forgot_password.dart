@@ -83,7 +83,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             SizedBox(
               height: MediaQuery.of(context).size.height * .025,
             ),
-            proceedButton(AppLocalizations.of(context).resetPassword, ThemeApp.blackColor,context, () {
+            proceedButton(AppLocalizations.of(context).resetPassword, ThemeApp.blackColor,context, false,() {
               if (_formKey.currentState!.validate() &&
                   email.text.isNotEmpty) {
                 if (email.text == 'codeelan@gmail.com' ) {

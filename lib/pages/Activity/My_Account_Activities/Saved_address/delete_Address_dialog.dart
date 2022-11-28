@@ -79,7 +79,7 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                       Expanded(
                         flex: 1,
                         child: proceedButton(AppLocalizations.of(context).no,
-                            ThemeApp.whiteColor, context, () {
+                            ThemeApp.whiteColor, context, false,() {
                           Navigator.pop(context);
                         }),
                       ),
@@ -91,7 +91,7 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                         child: Consumer<ProductProvider>(
                             builder: (context, value, child) {
                           return proceedButton(AppLocalizations.of(context).yes,
-                              ThemeApp.blackColor, context, () {
+                              ThemeApp.blackColor, context,false, () {
                             setState(() {
                               print(widget.addressList.length);
                               value.deleteAddress(widget.index);

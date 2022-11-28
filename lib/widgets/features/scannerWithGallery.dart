@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -10,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
-import '../utils/styles.dart';
+import '../../utils/styles.dart';
 
 class ScannerWithGallery extends StatefulWidget {
   const ScannerWithGallery({Key? key}) : super(key: key);
@@ -42,10 +43,10 @@ class _ScannerWithGalleryState extends State<ScannerWithGallery> {
                 children: [
                   InkWell( onTap: (){ scanQR();}, child: Container(child: Text("Click"))),
                   Text(_scanBarcode),
-                  Text(
-                    'Code:',
-                    textAlign: TextAlign.center,
-                  ),
+                  // Text(
+                  //   'Code:',
+                  //   textAlign: TextAlign.center,
+                  // ),
                   if (state is BarcodeFinderLoading)
                     _loading()
                   else if (state is BarcodeFinderError)
@@ -110,7 +111,8 @@ class _ScannerWithGalleryState extends State<ScannerWithGallery> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-      print(barcodeScanRes);
+      if (kDebugMode) {
+      print(barcodeScanRes);}
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }

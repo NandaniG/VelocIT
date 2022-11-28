@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:highlight_text/highlight_text.dart';
+import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as speechToText;
+import 'package:velocit/services/providers/Home_Provider.dart';
 
-import '../pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
-import '../pages/Activity/Product_Activities/Products_List.dart';
-import '../utils/constants.dart';
-import 'global/okPopUp.dart';
+import '../../pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
+import '../../pages/Activity/Product_Activities/Products_List.dart';
+import '../../utils/constants.dart';
+import '../global/okPopUp.dart';
 
 class SpeechToTextDialog extends StatefulWidget {
   SpeechToTextDialog({super.key});
@@ -35,7 +37,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
             TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
   };
 
-  void startTimer() {
+  void startTimer(HomeProvider homeProvider) {
     const oneSec = Duration(seconds:3);
     _timer = Timer.periodic(
       oneSec,
@@ -44,8 +46,8 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
           Navigator.pop(context);
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) =>
-              const ProductListByCategoryActivity(productList: ''),
+              builder: (context) =>  ProductListByCategoryActivity(productList: homeProvider
+                  .jsonData["shopByCategoryList"][1]["subShopByCategoryList"][1]),
             ),
           );
 
@@ -69,7 +71,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
     );
   }
 
-  void listen() async {
+  void listen(HomeProvider homeProvider) async {
     if (!isListen) {
       bool avail = await speech!.initialize();
       if (avail) {
@@ -85,7 +87,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
               StringConstant.controllerSpeechToText.text = textString;
             }
           });
-          startTimer();
+          startTimer(homeProvider);
 
         });
       }
@@ -111,7 +113,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
     super.dispose();
   }
 
-  dialogContent(BuildContext context) {
+  dialogContent(BuildContext context, HomeProvider homeProvider) {
     {
       return ConstrainedBox(
         constraints: BoxConstraints(
@@ -175,7 +177,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                           color: isListen ? Colors.redAccent : Colors.black,
                           size: 50),
                       onPressed: () {
-                        listen();
+                        listen(homeProvider);
                       },
                     ),
                   ),
@@ -190,13 +192,14 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final homeProvider = Provider.of<HomeProvider>(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context),
+      child: dialogContent(context,homeProvider),
     );
   }
 }

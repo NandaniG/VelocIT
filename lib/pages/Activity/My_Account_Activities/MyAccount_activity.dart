@@ -9,7 +9,7 @@ import '../../../utils/styles.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/textFormFields.dart';
-import '../../../widgets/scannerWithGallery.dart';
+import '../../../widgets/features/scannerWithGallery.dart';
 import '../../auth/change_password.dart';
 import '../../homePage.dart';
 import '../../screens/dashBoard.dart';

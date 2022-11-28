@@ -1,29 +1,31 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 
 import '../../utils/styles.dart';
 
-class OkDialog extends StatefulWidget {
+class dynamicDialog extends StatefulWidget {
   final String text;
+  final VoidCallback onTapForYes;
 
-  OkDialog({required this.text});
+  dynamicDialog({required this.text,required this.onTapForYes});
 
   @override
-  State<OkDialog> createState() => _OkDialogState();
+  State<dynamicDialog> createState() => _dynamicDialogState();
 }
 
-class _OkDialogState extends State<OkDialog> {
+class _dynamicDialogState extends State<dynamicDialog> {
   dialogContent(BuildContext context) {
     {
       return ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: 70.0,
           maxHeight: 300.0,
-          maxWidth: 100.0,
+          maxWidth: MediaQuery.of(context).size.width,
         ),
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(15),
           decoration: new BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
@@ -44,13 +46,26 @@ class _OkDialogState extends State<OkDialog> {
               children: [
                 Flexible(
                     child: TextFieldUtils()
-                        .textFieldHeightThree("Searched Data is ", context)),
+                        .textFieldHeightThree("For purchase", context)),
                 Flexible(
                     child: TextFieldUtils()
                         .homePageheadingTextField(widget.text, context)),
-                proceedButton('Ok', ThemeApp.blackColor,context, false,() {
-                  Navigator.pop(context);
-                })
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: proceedButton(
+                          'Yes', ThemeApp.blackColor, context, false, widget.onTapForYes),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: proceedButton('No', ThemeApp.blackColor, context, false,
+                          () {
+                        Navigator.pop(context);
+                      }),
+                    ),
+                  ],
+                )
               ],
             ),
           ),

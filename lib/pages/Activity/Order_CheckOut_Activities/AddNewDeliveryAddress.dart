@@ -257,7 +257,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               height: height * .02,
             ),
             proceedButton(AppLocalizations.of(context).addDeliveryAddress,
-                ThemeApp.blackColor, context, () {
+                ThemeApp.blackColor, context, false,() {
               value.addressList.add(MyAddressList(
                   myAddressFullName: value.fullNameController.text,
                   myAddressPhoneNumber: value.mobileController.text,
@@ -640,7 +640,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               height: height * .02,
             ),
             proceedButton(AppLocalizations.of(context).addDeliveryAddress,
-                ThemeApp.blackColor, context, () {
+                ThemeApp.blackColor, context, false,() {
 
 
                   widget.model.myAddressFullName = fullNameController.text.toString();

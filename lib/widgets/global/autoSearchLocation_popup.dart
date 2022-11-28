@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -11,7 +12,6 @@ import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 
 class AutoSearchPlacesPopUp extends StatefulWidget {
-
   AutoSearchPlacesPopUp();
 
   @override
@@ -57,14 +57,18 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
     String request = '$baseURL?input=$input&key=$placeApikey';
 
     var response = await http.get(Uri.parse(request));
-    print(response.body);
+    if (kDebugMode) {
+      print(response.body);
+    }
 
     if (response.statusCode == 200) {
       setState(() {
         _placeList = jsonDecode(response.body.toString())['predictions'];
         _placeId =
             jsonDecode(response.body.toString())['predictions'][0]['place_id'];
-        print("Place Id : " + _placeId.toString());
+        if (kDebugMode) {
+          print("Place Id : " + _placeId.toString());
+        }
       });
     } else {
       throw Exception('Failed to load');
@@ -96,7 +100,9 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
           }
           if (type.contains('postal_code')) {
             place.zipCode = c['long_name'];
-            print("zipcode : " + place.zipCode.toString());
+            if (kDebugMode) {
+              print("zipcode : " + place.zipCode.toString());
+            }
           }
         });
         return place;
@@ -200,23 +206,33 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                             _city = placeDetails.city;
                             _zipCode = placeDetails.zipCode;
                             setState(() {
-                              Prefs.instance.setToken(StringConstant.pinCodePref,
+                              Prefs.instance.setToken(
+                                  StringConstant.pinCodePref,
                                   placeDetails.zipCode.toString());
 
-                              Prefs.instance.setToken(StringConstant.addressPref,
-                                  result['description'] + "-"+placeDetails.zipCode);
+                              Prefs.instance.setToken(
+                                  StringConstant.addressPref,
+                                  result['description'] +
+                                      "-" +
+                                      placeDetails.zipCode);
                             });
-
-                            print("response zipcode $_zipCode");
+                            if (kDebugMode) {
+                              print("response zipcode $_zipCode");
+                            }
                           });
                           StringConstant.placesFromCurrentLocation =
                               (await Prefs.instance
                                   .getToken(StringConstant.pinCodePref))!;
-
-                          print(
-                              "placesFromCurrentLocation pref...${StringConstant.placesFromCurrentLocation.toString()}");
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
-
+                          if (kDebugMode) {
+                            print(
+                                "placesFromCurrentLocation pref...${StringConstant.placesFromCurrentLocation.toString()}");
+                          }
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DashboardScreen(),
+                              ),
+                              (route) => false);
                         },
                         child: ListTile(
                           title: Text(_placeList[index]["description"]),
@@ -380,9 +396,10 @@ class _AutosearchState extends State<Autosearch> {
                   ),
                   filled: true,
                   fillColor: Colors.white,
-                  hintStyle: TextStyle(
-                      color: Colors.grey,
-                      fontSize: MediaQuery.of(context).size.height * 0.020),
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: ThemeApp.darkGreyTab,
+                  ),
                   contentPadding:
                       const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                   border: OutlineInputBorder(

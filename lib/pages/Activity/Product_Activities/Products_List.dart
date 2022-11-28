@@ -44,10 +44,7 @@ class _ProductListByCategoryActivityState
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("shopByCategoryList-------");
     StringConstant.sortByRadio;
-    print(widget.productList.length.toString());
-    print(widget.productList["productsList"].length.toString());
     getListFromPref();
   }
 
@@ -167,16 +164,6 @@ class _ProductListByCategoryActivityState
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          /*  ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(100)),
-                            child: Image.network(
-                              // width: double.infinity,
-                              product[index].serviceImage,
-                              fit: BoxFit.fitWidth,
-                              height: MediaQuery.of(context).size.height * .07,
-                            ),
-                          ),*/
                           Container(
                               width: 60.0,
                               height: 60.0,
@@ -285,17 +272,21 @@ class _ProductListByCategoryActivityState
         itemCount: widget.productList["productsList"].length,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          // childAspectRatio: 4 / 4.8,
-            childAspectRatio:
+       /*     childAspectRatio:
             (MediaQuery
                 .of(context)
                 .orientation == Orientation.landscape)
                 ? 5 / 1.8
                 : 2.3 / 3.2,
+*/  childAspectRatio:
+        (MediaQuery.of(context).orientation == Orientation.landscape)
+            ? 5 / 1.8
+            : 2.3 / 3.2,
 
             crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10),
+            crossAxisSpacing: width*.02,
+            mainAxisSpacing: 15),
+
         itemBuilder: (BuildContext context, int index) {
           print(" widget.productList['productsList']");
           print("SortPrice");
@@ -341,7 +332,7 @@ class _ProductListByCategoryActivityState
                           ? MediaQuery
                           .of(context)
                           .size
-                          .height * .26
+                          .height * .25
                           : MediaQuery
                           .of(context)
                           .size
@@ -515,7 +506,7 @@ class _ProductListByCategoryActivityState
                           fontWeight: FontWeight.w400)),
                 ],
               ),
-              proceedButton("Sort Now", ThemeApp.darkGreyColor, context, () {
+              proceedButton("Sort Now", ThemeApp.darkGreyColor, context, false,() {
             Navigator.pop(context);
 
               })

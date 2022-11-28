@@ -54,7 +54,7 @@ class ProductProvider with ChangeNotifier {
   double discountAmount = 0.0;
   double totalAmount = 0.0;
   double grandTotalAmount = 0.0;
-  double deliveryAmount = 60.0;
+  double deliveryAmount = 0.0;
   int counterPrice = 1;
   var copyCartList;
   double finalPrice = 0.0;
