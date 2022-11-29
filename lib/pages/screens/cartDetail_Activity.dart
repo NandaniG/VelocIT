@@ -144,9 +144,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           return appBar_backWidget(
             context,
             appTitle(context, "My Cart"),
-            provider.isHome == true
-                ? "/dashBoardScreen"
-                : "/productListByCategoryActivity",
+
             const SizedBox(),
           );
         }),
@@ -194,17 +192,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                 ]),
                             InkWell(
                                 onTap: () async {
-                                     if (widget.value.deliveryAmount == 0.0) {
-                             Utils.flushBarErrorMessage('Please enter Product length', context);
-                            }
-                            else {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      OrderReviewSubActivity(value: value),
-                                ),
-                              );
-                            }
+                                  if (widget.value.deliveryAmount == 0.0) {
+                                    Utils.flushBarErrorMessage(
+                                        'Please enter Product length', context);
+                                  }
+
                                   if (kDebugMode) {
                                     print(StringConstant.isLogIn);
                                   }
@@ -215,7 +207,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 OrderReviewSubActivity(
-                                                    value: value),
+                                                    value: value,cartListFromHome:widget.productList ),
                                           ),
                                         )
                                       : Navigator.pushNamed(
@@ -299,11 +291,15 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget cartProductList(ProductProvider value) {
     return Container(
-        height:value.cartList.length==1?MediaQuery.of(context).size.height * .5: MediaQuery.of(context).size.height * .6,
+        height: value.cartList.length == 1
+            ? MediaQuery.of(context).size.height * .5
+            : MediaQuery.of(context).size.height * .6,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            physics:value.cartList.length==1?NeverScrollableScrollPhysics():ScrollPhysics() ,
+            physics: value.cartList.length == 1
+                ? NeverScrollableScrollPhysics()
+                : ScrollPhysics(),
             itemCount: value.cartList.length,
             itemBuilder: (BuildContext context, int index) {
               return value.cartList.isEmpty
@@ -421,7 +417,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             }));
   }
 
-  var originialAmount;
 
   void addQuantity(ProductProvider value, int index) {
     if (kDebugMode) {
@@ -442,12 +437,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     }
   }
 
+
   void finalPrices(ProductProvider value, int index) {
     finalOriginalPrice = 0.0;
     finalDiscountPrice = 0.0;
     finalDiffrenceDiscountPrice = 0.0;
     finalTotalPrice = 0.0;
-    widget.value.deliveryAmount=0.0;
+    widget.value.deliveryAmount = 60.0;
 
     for (int i = 0; i < value.cartList.length; i++) {
       finalOriginalPrice = finalOriginalPrice +
@@ -476,7 +472,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           (finalOriginalPrice - finalDiffrenceDiscountPrice);
       Prefs.instance
           .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
-      if(finalTotalPrice == 0){
+      if (finalTotalPrice == 0) {
         value.del(index);
         finalPrices(value, index);
       }
@@ -494,7 +490,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           "temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
     }
     if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) >
-        0) {
+        1) {
       value.cartList[index].cartProductsTempCounter =
           int.parse(value.cartList[index].cartProductsTempCounter.toString()) -
               1;
@@ -511,6 +507,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
       }
 ////PRICE CODE AFTER ADDING COUNT
+      finalPrices(value, index);
+    }else{
+      value.del(index);
       finalPrices(value, index);
     }
   }

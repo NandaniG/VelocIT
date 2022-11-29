@@ -32,37 +32,35 @@ class ProductProvider with ChangeNotifier {
   final String? deliveredBy;
   final int? tempCounter;
 
-  ProductProvider(
-      {this.productId,
-      this.serviceImage,
-      this.serviceName,
-      this.sellerName,
-      this.ratting,
-      this.discountPrice,
-      this.originalPrice,
-      this.offerPercent,
-      this.availableVariants,
-      this.cartProductsLength,
-      this.serviceDescription,
-      this.maxCounter,
-      this.quantity,
-      this.deliveredBy,
-      this.tempCounter});
+  ProductProvider({this.productId,
+    this.serviceImage,
+    this.serviceName,
+    this.sellerName,
+    this.ratting,
+    this.discountPrice,
+    this.originalPrice,
+    this.offerPercent,
+    this.availableVariants,
+    this.cartProductsLength,
+    this.serviceDescription,
+    this.maxCounter,
+    this.quantity,
+    this.deliveredBy,
+    this.tempCounter});
 
   List<CartProductList> cartList = <CartProductList>[];
   double originialAmount = 0.0;
   double discountAmount = 0.0;
   double totalAmount = 0.0;
   double grandTotalAmount = 0.0;
-  double deliveryAmount = 0.0;
+  double deliveryAmount = 60.0;
   int counterPrice = 1;
   var copyCartList;
   double finalPrice = 0.0;
 
   ///price after sub cart products
 
-  add(
-      String serviceImage,
+  add(String serviceImage,
       serviceName,
       sellerName,
       ratting,
@@ -79,19 +77,19 @@ class ProductProvider with ChangeNotifier {
     print("-------------Cart Length Before ADD_________${cartList.length}");
     cartList;
     cartList.add(CartProductList(
-   cartProductsImage     : serviceImage,
-   cartProductsName     : serviceName,
-   cartProductsSellerName     : sellerName,
-   cartProductsRatting     : ratting,
-   cartProductsDiscountPrice     : discountPrice,
-   cartProductsOriginalPrice     : originalPrice,
-   cartProductsOfferPercent     : offerPercent,
-   cartProductsAvailableVariants     : availableVariants,
-   cartProductsLength     : cartProductsLength,
-   cartProductsDescription     : serviceDescription,
-   cartProductsMaxCounter     : conterProducts.toString(),
-   cartProductsDeliveredBy     : deliveredBy,
-   cartProductsTempCounter     : tempCounter));
+        cartProductsImage: serviceImage,
+        cartProductsName: serviceName,
+        cartProductsSellerName: sellerName,
+        cartProductsRatting: ratting,
+        cartProductsDiscountPrice: discountPrice,
+        cartProductsOriginalPrice: originalPrice,
+        cartProductsOfferPercent: offerPercent,
+        cartProductsAvailableVariants: availableVariants,
+        cartProductsLength: cartProductsLength,
+        cartProductsDescription: serviceDescription,
+        cartProductsMaxCounter: conterProducts.toString(),
+        cartProductsDeliveredBy: deliveredBy,
+        cartProductsTempCounter: tempCounter));
 
     print("-------------Cart Length After ADD_________${cartList.length}");
 
@@ -101,7 +99,8 @@ class ProductProvider with ChangeNotifier {
     print('___________ SET PREF______________');
     StringConstant.prettyPrintJson(encodedMap);
 
-    Prefs.instance.setToken(StringConstant.cartListForPreferenceKey, encodedMap);
+    Prefs.instance.setToken(
+        StringConstant.cartListForPreferenceKey, encodedMap);
     prefs.commit();
 
     ///logic for cart list amount values
@@ -118,7 +117,8 @@ class ProductProvider with ChangeNotifier {
       print("originialAmount inside add: $i $originialAmount");
 
       discountAmount =
-          discountAmount + double.parse(cartList[i].cartProductsDiscountPrice.toString());
+          discountAmount +
+              double.parse(cartList[i].cartProductsDiscountPrice.toString());
       print("discountAmount inside add: $i $discountAmount");
 
       totalAmount = originialAmount - discountAmount;
@@ -171,11 +171,13 @@ class ProductProvider with ChangeNotifier {
 
     for (int i = 0; i < cartList.length; i++) {
       if (cartList.length > 0) {
-        originialAmount = double.parse(cartList[i].cartProductsOriginalPrice.toString()) -
-            originialAmount;
+        originialAmount =
+            double.parse(cartList[i].cartProductsOriginalPrice.toString()) -
+                originialAmount;
         print("originialAmount inside add: $i $originialAmount");
         discountAmount =
-            double.parse(cartList[i].cartProductsDiscountPrice.toString()) - discountAmount;
+            double.parse(cartList[i].cartProductsDiscountPrice.toString()) -
+                discountAmount;
         print("discountAmount inside add: $i $discountAmount");
 
         totalAmount = originialAmount - discountAmount;
@@ -430,261 +432,282 @@ class ProductProvider with ChangeNotifier {
   TextEditingController stateController = new TextEditingController();
   TextEditingController cityController = new TextEditingController();
 
-  deleteAddress(int index) {
+  addAddress(String fullName,
+      mobile,
+      houseBuilding,
+      areaColony,
+      state,
+      city, typeOfAddress) async {
+    addressList.add(MyAddressList(
+        myAddressFullName: fullName,
+        myAddressPhoneNumber: mobile,
+        myAddressHouseNoBuildingName: houseBuilding,
+        myAddressAreaColony: areaColony,
+        myAddressState: state,
+        myAddressCity: city,
+        myAddressTypeOfAddress: typeOfAddress
+
+    ));
+
+    } deleteAddress(int index) {
     addressList.removeAt(index);
   }
-
 //------------------------#<- add Credit / debit card in list in checkOut screen->#-------------------
 
-  List<MyCardList> creditCardList = <MyCardList>[];
+    List<MyCardList> creditCardList = <MyCardList>[];
 
-  TextEditingController cardHolderNameController = new TextEditingController();
-  TextEditingController cardNumberController = new TextEditingController();
-  TextEditingController cVVController = new TextEditingController();
-  TextEditingController ExpiryDateController = new TextEditingController();
+    TextEditingController cardHolderNameController = new TextEditingController();
+    TextEditingController cardNumberController = new TextEditingController();
+    TextEditingController cVVController = new TextEditingController();
+    TextEditingController ExpiryDateController = new TextEditingController();
 
-  final focusNodeExpiryDate = FocusNode();
-  final focusNodeCvv = FocusNode();
+    final focusNodeExpiryDate = FocusNode();
+    final focusNodeCvv = FocusNode();
 
-  deleteCardMethod(int index) {
-    creditCardList.removeAt(index);
-  }
+    deleteCardMethod(int index) {
+      creditCardList.removeAt(index);
+    }
 
 //---------------------------------<- My Orders Provider ->--------------------------
 
-  List<MyOrdersModel> myOrderdetailList = <MyOrdersModel>[];
-  List<MyOrdersCancelModel> myOrderCancelList = <MyOrdersCancelModel>[];
-  int myOrderDetailIndex = 0;
+    List<MyOrdersModel> myOrderdetailList = <MyOrdersModel>[];
+    List<MyOrdersCancelModel> myOrderCancelList = <MyOrdersCancelModel>[];
+    int myOrderDetailIndex = 0;
 
-  var totalInvoiceAmount = 0.0;
+    var totalInvoiceAmount = 0.0;
 
-  List<MyOrdersModel> myOrderList = [
-    MyOrdersModel(
-      id: 1,
-      orderId: "OID12067800",
-      orderDate: "8 Sep 2022 at 2:00 PM",
-      orderPerson: "Vishal Taneja",
-      orderDeliveryAddress:
-          "Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India",
-      orderStatus: "Active",
-      orderPrice: "102030",
-      orderProgress: "1 item Return in progress",
-      orderDetailList: [
-        MyOrdersListModel(
-            id: 1,
-            ProductImage: "assets/images/androidImage.jpg",
-            productDetails:
-                "Galaxy S22 Ultra 5G (12GB, 256GB Storage) Without Offer, Dark Red",
-            price: "5308",
-            venderDetails: "Vender : Samyara Freezer Door",
-            isOrderCanceled: false,
-            isOrderReturned: false),
-        MyOrdersListModel(
-            id: 2,
-            ProductImage: "assets/images/IPhoneImage.jpg",
-            productDetails: "Apple iPhone 14 Pro Max",
-            price: "3308",
-            venderDetails: "Vender : Croma Electronics",
-            isOrderCanceled: false,
-            isOrderReturned: false),
-        MyOrdersListModel(
-            id: 3,
-            ProductImage: "assets/images/iphones_Image.jpg",
-            productDetails: "Apple iPhone 13",
-            price: "2128",
-            venderDetails: "Vender : Vijay Sales",
-            isOrderCanceled: false,
-            isOrderReturned: false),
-        MyOrdersListModel(
-            id: 4,
-            ProductImage: "assets/images/laptopImage3.jpg",
-            productDetails: "HP WES3 108CM (41 inch) ultra HD(4k) LED",
-            price: "99328",
-            venderDetails: "Vender : Dell Centre",
-            isOrderCanceled: false,
-            isOrderReturned: false),
-        MyOrdersListModel(
-            id: 5,
-            ProductImage: "assets/images/laptopImage3.jpg",
-            productDetails: "HP WES3 108CM (41 inch) ultra HD(4k) LED",
-            price: "7898",
-            venderDetails: "Vender : Tata Motors",
-            isOrderCanceled: false,
-            isOrderReturned: false),
-      ],
+    List<MyOrdersModel> myOrderList = [
+      MyOrdersModel(
+        id: 1,
+        orderId: "OID12067800",
+        orderDate: "8 Sep 2022 at 2:00 PM",
+        orderPerson: "Vishal Taneja",
+        orderDeliveryAddress:
+        "Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India",
+        orderStatus: "Active",
+        orderPrice: "102030",
+        orderProgress: "1 item Return in progress",
+        orderDetailList: [
+          MyOrdersListModel(
+              id: 1,
+              ProductImage: "assets/images/androidImage.jpg",
+              productDetails:
+              "Galaxy S22 Ultra 5G (12GB, 256GB Storage) Without Offer, Dark Red",
+              price: "5308",
+              venderDetails: "Vender : Samyara Freezer Door",
+              isOrderCanceled: false,
+              isOrderReturned: false),
+          MyOrdersListModel(
+              id: 2,
+              ProductImage: "assets/images/IPhoneImage.jpg",
+              productDetails: "Apple iPhone 14 Pro Max",
+              price: "3308",
+              venderDetails: "Vender : Croma Electronics",
+              isOrderCanceled: false,
+              isOrderReturned: false),
+          MyOrdersListModel(
+              id: 3,
+              ProductImage: "assets/images/iphones_Image.jpg",
+              productDetails: "Apple iPhone 13",
+              price: "2128",
+              venderDetails: "Vender : Vijay Sales",
+              isOrderCanceled: false,
+              isOrderReturned: false),
+          MyOrdersListModel(
+              id: 4,
+              ProductImage: "assets/images/laptopImage3.jpg",
+              productDetails: "HP WES3 108CM (41 inch) ultra HD(4k) LED",
+              price: "99328",
+              venderDetails: "Vender : Dell Centre",
+              isOrderCanceled: false,
+              isOrderReturned: false),
+          MyOrdersListModel(
+              id: 5,
+              ProductImage: "assets/images/laptopImage3.jpg",
+              productDetails: "HP WES3 108CM (41 inch) ultra HD(4k) LED",
+              price: "7898",
+              venderDetails: "Vender : Tata Motors",
+              isOrderCanceled: false,
+              isOrderReturned: false),
+        ],
 
-      ///canceled
-      orderCancelList: [
-        MyOrdersCancelModel(
-            id: 1,
-            whyCancelProduct: "I have purchased a product elsewhere",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 2,
-            whyCancelProduct: "Price for the product has decreased",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 3,
-            whyCancelProduct: "Expected delivery time is very long",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 4,
-            whyCancelProduct: "I have changed my mind",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 5,
-            whyCancelProduct: "I want to change address for my address",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 6,
-            whyCancelProduct: "Added to order by mistakenly",
-            isCancelProductFor: false),
-      ],
+        ///canceled
+        orderCancelList: [
+          MyOrdersCancelModel(
+              id: 1,
+              whyCancelProduct: "I have purchased a product elsewhere",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 2,
+              whyCancelProduct: "Price for the product has decreased",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 3,
+              whyCancelProduct: "Expected delivery time is very long",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 4,
+              whyCancelProduct: "I have changed my mind",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 5,
+              whyCancelProduct: "I want to change address for my address",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 6,
+              whyCancelProduct: "Added to order by mistakenly",
+              isCancelProductFor: false),
+        ],
 
-      ///return
-      orderReturnList: [
-        MyOrdersReturnModel(
-            id: 1,
-            whyReturnProduct: "Added to order by mistacally",
-            isReturnProductFor: false),
-        MyOrdersReturnModel(
-            id: 2,
-            whyReturnProduct: "Product variant is not as chosen",
-            isReturnProductFor: false),
-        MyOrdersReturnModel(
-            id: 3,
-            whyReturnProduct: "Received wrong item",
-            isReturnProductFor: false),
-        MyOrdersReturnModel(
-            id: 4, whyReturnProduct: "Faulty item", isReturnProductFor: false),
-        MyOrdersReturnModel(
-            id: 5,
-            whyReturnProduct: "Quality is not as per expectation",
-            isReturnProductFor: false),
-      ],
-    ),
-    MyOrdersModel(
-      id: 2,
-      orderId: "OID1206915",
-      orderDate: "8 Sep 2022 at 2:00 PM",
-      orderPerson: "John Jack",
-      orderDeliveryAddress:
-          "D - 3092, Railway station road, Pune, Maharastra, India - 412092",
-      orderStatus: "Delivered",
-      orderPrice: "3530",
-      orderProgress: "Rate Order",
-      orderDetailList: [
-        MyOrdersListModel(
-            id: 1,
-            ProductImage: "assets/images/laptopImage3.jpg",
-            productDetails: "HP WES3 108CM (41 inch) ultra HD(4k) LED",
-            price: "9731",
-            venderDetails: "Vijay Sales"),
-        MyOrdersListModel(
-            id: 2,
-            ProductImage: "assets/images/iphones_Image.jpg",
-            productDetails: "Apple iPhone 13 Pro Max",
-            price: "7731",
-            venderDetails: "Croma Centre"),
-        MyOrdersListModel(
-            id: 3,
-            ProductImage: "assets/images/IPhoneImage.jpg",
-            productDetails: "Apple iPhone 14",
-            price: "5731",
-            venderDetails: "Tata Motors"),
-      ],
+        ///return
+        orderReturnList: [
+          MyOrdersReturnModel(
+              id: 1,
+              whyReturnProduct: "Added to order by mistacally",
+              isReturnProductFor: false),
+          MyOrdersReturnModel(
+              id: 2,
+              whyReturnProduct: "Product variant is not as chosen",
+              isReturnProductFor: false),
+          MyOrdersReturnModel(
+              id: 3,
+              whyReturnProduct: "Received wrong item",
+              isReturnProductFor: false),
+          MyOrdersReturnModel(
+              id: 4,
+              whyReturnProduct: "Faulty item",
+              isReturnProductFor: false),
+          MyOrdersReturnModel(
+              id: 5,
+              whyReturnProduct: "Quality is not as per expectation",
+              isReturnProductFor: false),
+        ],
+      ),
+      MyOrdersModel(
+        id: 2,
+        orderId: "OID1206915",
+        orderDate: "8 Sep 2022 at 2:00 PM",
+        orderPerson: "John Jack",
+        orderDeliveryAddress:
+        "D - 3092, Railway station road, Pune, Maharastra, India - 412092",
+        orderStatus: "Delivered",
+        orderPrice: "3530",
+        orderProgress: "Rate Order",
+        orderDetailList: [
+          MyOrdersListModel(
+              id: 1,
+              ProductImage: "assets/images/laptopImage3.jpg",
+              productDetails: "HP WES3 108CM (41 inch) ultra HD(4k) LED",
+              price: "9731",
+              venderDetails: "Vijay Sales"),
+          MyOrdersListModel(
+              id: 2,
+              ProductImage: "assets/images/iphones_Image.jpg",
+              productDetails: "Apple iPhone 13 Pro Max",
+              price: "7731",
+              venderDetails: "Croma Centre"),
+          MyOrdersListModel(
+              id: 3,
+              ProductImage: "assets/images/IPhoneImage.jpg",
+              productDetails: "Apple iPhone 14",
+              price: "5731",
+              venderDetails: "Tata Motors"),
+        ],
 
-      ///canceled
-      orderCancelList: [
-        MyOrdersCancelModel(
-            id: 1,
-            whyCancelProduct: "I have purchased a product elsewhere",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 2,
-            whyCancelProduct: "Price for the product has decreased",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 3,
-            whyCancelProduct: "Expected delivery time is very long",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 4,
-            whyCancelProduct: "I have changed my mind",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 5,
-            whyCancelProduct: "I want to change address for my address",
-            isCancelProductFor: false),
-        MyOrdersCancelModel(
-            id: 6,
-            whyCancelProduct: "Added to order by mistakenly",
-            isCancelProductFor: false),
-      ],
+        ///canceled
+        orderCancelList: [
+          MyOrdersCancelModel(
+              id: 1,
+              whyCancelProduct: "I have purchased a product elsewhere",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 2,
+              whyCancelProduct: "Price for the product has decreased",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 3,
+              whyCancelProduct: "Expected delivery time is very long",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 4,
+              whyCancelProduct: "I have changed my mind",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 5,
+              whyCancelProduct: "I want to change address for my address",
+              isCancelProductFor: false),
+          MyOrdersCancelModel(
+              id: 6,
+              whyCancelProduct: "Added to order by mistakenly",
+              isCancelProductFor: false),
+        ],
 
-      ///return
-      orderReturnList: [
-        MyOrdersReturnModel(
-            id: 1,
-            whyReturnProduct: "Added to order by mistacally",
-            isReturnProductFor: false),
-        MyOrdersReturnModel(
-            id: 2,
-            whyReturnProduct: "Product variant is not as chosen",
-            isReturnProductFor: false),
-        MyOrdersReturnModel(
-            id: 3,
-            whyReturnProduct: "Received wrong item",
-            isReturnProductFor: false),
-        MyOrdersReturnModel(
-            id: 4, whyReturnProduct: "Faulty item", isReturnProductFor: false),
-        MyOrdersReturnModel(
-            id: 5,
-            whyReturnProduct: "Quality is not as per expectation",
-            isReturnProductFor: false),
-      ],
-    ),
-  ];
-
-//---------------------------------<- Notifications Provider ->--------------------------
-
-  // List<NotificationsList> notificationsList = <NotificationsList>[];
-  // List<NotificationsList> notificationsIsOffer = <NotificationsList>[];
-
-  // List<NotificationsList> notificationDataList = [
-  //   NotificationsModel(id: 1,
-  //       typeOfNotification: true,
-  //       newNotificationCounter: 2,
-  //       notificationImage: 'assets/images/androidImage.jpg',
-  //       notificationTitle: 'MEGA Deal on Superstar Brands',
-  //       notificationDetails:
-  //       'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
-  //       notificationTime: '1 day ago'),
-  //
-  //   NotificationsModel(id: 1,
-  //       typeOfNotification: true,
-  //       newNotificationCounter: 2,
-  //       notificationImage: 'assets/images/iphones_Image.jpg',
-  //       notificationTitle: 'Bathroom accessories upto 70% Off',
-  //       notificationDetails:
-  //       'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
-  //       notificationTime: '1 day ago'),
-  //
-  //   NotificationsModel(id: 1,
-  //       typeOfNotification: false,
-  //       newNotificationCounter: 2,
-  //       notificationImage: 'assets/images/androidImage.jpg',
-  //       notificationTitle: 'MEGA Deal on Superstar Brands',
-  //       notificationDetails:
-  //       'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
-  //       notificationTime: '1 day ago'),
-  // ];
+        ///return
+        orderReturnList: [
+          MyOrdersReturnModel(
+              id: 1,
+              whyReturnProduct: "Added to order by mistacally",
+              isReturnProductFor: false),
+          MyOrdersReturnModel(
+              id: 2,
+              whyReturnProduct: "Product variant is not as chosen",
+              isReturnProductFor: false),
+          MyOrdersReturnModel(
+              id: 3,
+              whyReturnProduct: "Received wrong item",
+              isReturnProductFor: false),
+          MyOrdersReturnModel(
+              id: 4,
+              whyReturnProduct: "Faulty item",
+              isReturnProductFor: false),
+          MyOrdersReturnModel(
+              id: 5,
+              whyReturnProduct: "Quality is not as per expectation",
+              isReturnProductFor: false),
+        ],
+      ),
+    ];
 
 //---------------------------------<- Notifications Provider ->--------------------------
-  List<UserAccountList> userAccountDetailList =
-      <UserAccountList>[];
 
-  TextEditingController userNameController = new TextEditingController();
-  TextEditingController userMobileController = new TextEditingController(text: StringConstant.userAccountMobile);
-  TextEditingController userEmailController = new TextEditingController();
-}
+    // List<NotificationsList> notificationsList = <NotificationsList>[];
+    // List<NotificationsList> notificationsIsOffer = <NotificationsList>[];
+
+    // List<NotificationsList> notificationDataList = [
+    //   NotificationsModel(id: 1,
+    //       typeOfNotification: true,
+    //       newNotificationCounter: 2,
+    //       notificationImage: 'assets/images/androidImage.jpg',
+    //       notificationTitle: 'MEGA Deal on Superstar Brands',
+    //       notificationDetails:
+    //       'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
+    //       notificationTime: '1 day ago'),
+    //
+    //   NotificationsModel(id: 1,
+    //       typeOfNotification: true,
+    //       newNotificationCounter: 2,
+    //       notificationImage: 'assets/images/iphones_Image.jpg',
+    //       notificationTitle: 'Bathroom accessories upto 70% Off',
+    //       notificationDetails:
+    //       'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
+    //       notificationTime: '1 day ago'),
+    //
+    //   NotificationsModel(id: 1,
+    //       typeOfNotification: false,
+    //       newNotificationCounter: 2,
+    //       notificationImage: 'assets/images/androidImage.jpg',
+    //       notificationTitle: 'MEGA Deal on Superstar Brands',
+    //       notificationDetails:
+    //       'Big Price drops, Crzy discounts and prices on the hottest brands! Find them here',
+    //       notificationTime: '1 day ago'),
+    // ];
+
+//---------------------------------<- Notifications Provider ->--------------------------
+    List<UserAccountList> userAccountDetailList =
+    <UserAccountList>[];
+
+    TextEditingController userNameController = new TextEditingController();
+    TextEditingController userMobileController = new TextEditingController(
+        text: StringConstant.userAccountMobile);
+    TextEditingController userEmailController = new TextEditingController();
+  }

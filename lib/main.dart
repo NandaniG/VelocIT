@@ -160,7 +160,7 @@ class MyApp extends StatelessWidget {
                   '/cartScreen': (context) => CartDetailsActivity(
                       value: value, productList: provider.cartProductList),
                   '/orderReviewSubActivity': (context) =>
-                      OrderReviewSubActivity(value: value),
+                      OrderReviewSubActivity(value: value,cartListFromHome: provider.productList),
                   '/payment_Creditcard_debitcardScreen': (context) =>
                       Payment_Creditcard_debitcardScreen(),
                 },
@@ -186,7 +186,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
         const Duration(seconds: 3),
         () {
-      StringConstant.isLogIn == false? Navigator.pushNamed(context, RoutesName.signInRoute) :Navigator.pushNamed(context, RoutesName.dashboardRoute);
+     /* StringConstant.isLogIn == false? Navigator.pushNamed(context, RoutesName.signInRoute) :*/Navigator.pushNamed(context, RoutesName.dashboardRoute);
           });
   }
 

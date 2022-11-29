@@ -46,7 +46,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           preferredSize: Size.fromHeight(height * .09),
           child: appBar_backWidget(
               // context, appTitle(context, "Notifications"),StringConstant.isLogIn==false?RoutesName.dashboardRoute : '/myAccountActivity',SizedBox()),
-              context, appTitle(context, "Notifications"),RoutesName.dashboardRoute,SizedBox()),
+              context, appTitle(context, "Notifications"),SizedBox()),
         ),
         body: SafeArea(child: mainUI()));
   }

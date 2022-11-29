@@ -13,6 +13,18 @@ class StringConstant {
       new TextEditingController();
 
   static String placesFromCurrentLocation = '';
+  static String selectedFullAddress = 'Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India - 380021';
+  static String selectedFullAddressPref = 'selectedfullAddressPref';
+
+  static String selectedFullName = 'David Wong';
+  static String selectedFullNamePref = 'selectedfullNamePref';
+
+  static String selectedTypeOfAddress = 'Home';
+  static String selectedTypeOfAddressPref = 'SelectedTypeOfAddressPref';
+
+  static String selectedMobile = '7898285852';
+  static String selectedMobilePref = 'selectedMobilePref';
+
   static String addressFromCurrentLocation = 'Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India - 380021';
   static var getCartList_FromPref;
 

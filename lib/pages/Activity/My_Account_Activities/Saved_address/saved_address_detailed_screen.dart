@@ -39,7 +39,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
           child: appBar_backWidget(
-              context, appTitle(context, "Address"), '/myAccountActivity',SizedBox()),
+              context, appTitle(context, "Address"), SizedBox()),
         ),
         body: SafeArea(child: deliveryAddress()));
   }

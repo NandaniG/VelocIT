@@ -51,11 +51,11 @@ class _ScannerWithGalleryState extends State<ScannerWithGallery> {
                     _loading()
                   else if (state is BarcodeFinderError)
                     _text(
-                      '${state.message}',
+                      state.message,
                     )
                   else if (state is BarcodeFinderSuccess)
                     _text(
-                      '${state.code}',
+                      state.code,
                     ),
                   _startScanFileButton(state),
                 ],

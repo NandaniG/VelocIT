@@ -872,7 +872,7 @@ class CartProductList {
   String? cartProductsDescription;
   String? cartProductsMaxCounter;
   String? cartProductsDeliveredBy;
-  int? cartProductsTempCounter;
+  int? cartProductsTempCounter = 1;
   int? cartProductsTotalOriginalPrice;
   int? cartProductsTotalDiscountPrice;
   int? cartProductsTotalDeliveryChargePrice;

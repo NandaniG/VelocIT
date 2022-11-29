@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/homePage.dart';
+import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/routes/routes.dart';
+import '../../../utils/routes/routes_name.dart';
 import '../../../utils/styles.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
@@ -21,8 +24,10 @@ import 'AddNewDeliveryAddress.dart';
 
 class OrderReviewSubActivity extends StatefulWidget {
   ProductProvider value;
+  final dynamic cartListFromHome;
 
-   OrderReviewSubActivity({Key? key, required this.value}) : super(key: key);
+  OrderReviewSubActivity({Key? key, required this.value, this.cartListFromHome})
+      : super(key: key);
 
   @override
   State<OrderReviewSubActivity> createState() => _OrderReviewSubActivityState();
@@ -45,11 +50,52 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    StringConstant.addressFromCurrentLocation =
-        'Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India';
+    StringConstant.addressFromCurrentLocation;
+    StringConstant.selectedFullName ;
+    StringConstant.selectedFullAddress ;
+    StringConstant.selectedTypeOfAddress;
+    StringConstant.selectedMobile ;
     getPreferences();
-    if (kDebugMode) {
-      print("widget.productList");
+
+    finalOriginalPrice = 0.0;
+    finalDiscountPrice = 0.0;
+    finalDiffrenceDiscountPrice = 0.0;
+    finalTotalPrice = 0.0;
+    for (int i = 0; i < widget.value.cartList.length; i++) {
+      finalOriginalPrice = finalOriginalPrice +
+          (int.parse(
+                  widget.value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(widget.value.cartList[i].cartProductsOriginalPrice
+                  .toString()));
+
+      Prefs.instance.setDoubleToken(
+          StringConstant.totalOriginalPricePref, finalOriginalPrice);
+
+      if (kDebugMode) {
+        print("________finalOriginalPrice add: $i $finalOriginalPrice");
+      }
+      finalDiscountPrice = finalDiscountPrice +
+          (int.parse(
+                  widget.value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(widget.value.cartList[i].cartProductsDiscountPrice
+                  .toString()));
+      if (kDebugMode) {
+        print("________finalDiscountPrice add: $i $finalDiscountPrice");
+      }
+      finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
+      if (kDebugMode) {
+        print(
+            "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
+      }
+
+      finalTotalPrice = widget.value.deliveryAmount +
+          (finalOriginalPrice - finalDiffrenceDiscountPrice);
+
+      Prefs.instance
+          .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
+      if (kDebugMode) {
+        print("grandTotalAmount inside add: $i $finalTotalPrice");
+      }
     }
   }
 
@@ -61,15 +107,19 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
 
     StringConstant.addressFromCurrentLocation =
         (await Prefs.instance.getToken(StringConstant.addressPref))!;
-    print('StringConstant.addressFromCurrentLocation${StringConstant.addressFromCurrentLocation}');
+    StringConstant.selectedFullAddress = (await Prefs.instance
+        .getToken(StringConstant.selectedFullAddressPref))!;
+    print(
+        'StringConstant.addressFromCurrentLocation${StringConstant.addressFromCurrentLocation}');
     //
-    StringConstant.totalOriginalPrice =
-        (await Prefs.instance.getDoubleToken(StringConstant.totalOriginalPricePref))!;
+    StringConstant.totalOriginalPrice = (await Prefs.instance
+        .getDoubleToken(StringConstant.totalOriginalPricePref))!;
 
-    print('StringConstant.totalOriginalPrice${StringConstant.totalOriginalPrice}');
+    print(
+        'StringConstant.totalOriginalPrice${StringConstant.totalOriginalPrice}');
 
-    StringConstant.totalFinalPrice =
-        (await Prefs.instance.getDoubleToken(StringConstant.totalFinalPricePref))!;
+    StringConstant.totalFinalPrice = (await Prefs.instance
+        .getDoubleToken(StringConstant.totalFinalPricePref))!;
 
     print('StringConstant.totalFinalPrice${StringConstant.totalFinalPrice}');
   }
@@ -82,33 +132,34 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
     return Scaffold(
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-    preferredSize: Size.fromHeight(height * .09),
-    child: appBar_backWidget(
-        context, appTitle(context, "Order Checkout"),'/cartScreen', const SizedBox()),
+        preferredSize: Size.fromHeight(height * .09),
+        child: appBar_backWidget(context, appTitle(context, "Order Checkout"),
+            const SizedBox()),
       ),
       bottomNavigationBar: BottomAppBar(
-    color: ThemeApp.backgroundColor,
-    elevation: 0,
-    child: Consumer<HomeProvider>(builder: (context, value, child) {
-      return Container(
-        height: height * .08,
-        width: width,
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          color: ThemeApp.darkGreyTab,
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(15), topLeft: Radius.circular(15)),
-        ),
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
+        color: ThemeApp.backgroundColor,
+        elevation: 0,
+        child: Consumer<HomeProvider>(builder: (context, value, child) {
+          return Container(
+            height: height * .08,
+            width: width,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              color: ThemeApp.darkGreyTab,
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+            ),
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                /*  Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextFieldUtils().pricesLineThroughWhite(
+                    // " ${indianRupeesFormat.format(finalOriginalPrice)}",
                     " ${indianRupeesFormat.format(finalOriginalPrice)}",
                     context,
                     MediaQuery.of(context).size.height * .021,
@@ -117,310 +168,330 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                     "${indianRupeesFormat.format(StringConstant.totalFinalPrice)}",
                     context,
                   ),
+                ]),*/
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  TextFieldUtils().pricesLineThroughWhite(
+                    " ${indianRupeesFormat.format(finalOriginalPrice)}",
+                    context,
+                    MediaQuery.of(context).size.height * .021,
+                  ),
+                  TextFieldUtils().homePageheadingTextFieldWHITE(
+                    "${indianRupeesFormat.format(finalTotalPrice)}",
+                    context,
+                  ),
                 ]),
-            InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Payment_Creditcard_debitcardScreen(orderReview:  value.orderCheckOutDetails),
-                    ),
-                  );
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(
-                  //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
-                  //   ),
-                  // );
-                },
-                child: Container(
-                    height: height * 0.05,
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                      color: ThemeApp.whiteColor,
-                    ),
-                    padding: const EdgeInsets.only(left: 15, right: 15),
-                    child: TextFieldUtils().usingPassTextFields(
-                        "Pay Now", ThemeApp.blackColor, context))),
-          ],
-        ),
-      );
-    }),
+                InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Payment_Creditcard_debitcardScreen(
+                                  orderReview: value.orderCheckOutDetails),
+                        ),
+                      );
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
+                      //   ),
+                      // );
+                    },
+                    child: Container(
+                        height: height * 0.05,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          color: ThemeApp.whiteColor,
+                        ),
+                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        child: TextFieldUtils().usingPassTextFields(
+                            "Pay Now", ThemeApp.blackColor, context))),
+              ],
+            ),
+          );
+        }),
       ),
       body: SafeArea(
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
-    return Container(
-        color: ThemeApp.backgroundColor,
-        width: width,
-        child: ListView(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              stepperWidget(),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Container(
-                      // height: height * 0.5,
-                      width: width,
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                        color: ThemeApp.whiteColor,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+          return Container(
+            color: ThemeApp.backgroundColor,
+            width: width,
+            child: ListView(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  stepperWidget(),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        Container(
+                          // height: height * 0.5,
+                          width: width,
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                flex: 1,
-                                child: TextFieldUtils().dynamicText(
-                                    AppLocalizations.of(context)
-                                        .deliveryDetails,
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: TextFieldUtils().dynamicText(
+                                        AppLocalizations.of(context)
+                                            .deliveryDetails,
+                                        context,
+                                        TextStyle(
+                                            color: Colors.grey.shade700,
+                                            fontSize: height * .023,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: InkWell(
+                                        onTap: () {
+                                          // Navigator.of(context).push(
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) => AddNewDeliveryAddress(),
+                                          //   ),
+                                          // );
+                                          showModalBottomSheet(
+                                              context: context,
+                                              builder: (context) {
+                                                return ChangeAddressBottomSheet(
+                                                    cartListFromHome: widget
+                                                        .cartListFromHome);
+                                              });
+                                        },
+                                        child: Container(
+                                          height: height * 0.05,
+                                          alignment: Alignment.center,
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                            color: ThemeApp.blackColor,
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              left: 15, right: 15),
+                                          child: TextFieldUtils().dynamicText(
+                                              AppLocalizations.of(context)
+                                                  .changeAddress,
+                                              context,
+                                              TextStyle(
+                                                  color: ThemeApp.whiteColor,
+                                                  fontSize: height * .021,
+                                                  fontWeight: FontWeight.w500)),
+                                        )),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: height * .03,
+                              ),
+                              Row(
+                                children: [
+                                  TextFieldUtils().dynamicText(
+                                      StringConstant.selectedFullName,
+                                      context,
+                                      TextStyle(
+                                          color: ThemeApp.blackColor,
+                                          fontSize: height * .021,
+                                          fontWeight: FontWeight.w500)),
+                                  SizedBox(
+                                    width: width * .02,
+                                  ),
+                                  Container(
+                                    // height: height * 0.05,
+                                    alignment: Alignment.center,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
+                                      color: ThemeApp.darkGreyTab,
+                                    ),
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10, top: 5, bottom: 5),
+                                    child: TextFieldUtils().dynamicText(
+                                        StringConstant.selectedTypeOfAddress,
+                                        context,
+                                        TextStyle(
+                                            color: ThemeApp.whiteColor,
+                                            fontSize: height * .02,
+                                            fontWeight: FontWeight.w400)),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: height * .01,
+                              ),
+                              TextFieldUtils().dynamicText(
+                                  // provider.orderCheckOutDetails[0]
+                                  //     ["orderCheckOutDeliveryAddress"],
+                                  StringConstant.selectedFullAddress,
+                                  context,
+                                  TextStyle(
+                                      color: ThemeApp.darkGreyTab,
+                                      fontSize: height * .021,
+                                      fontWeight: FontWeight.w400)),
+                              SizedBox(
+                                height: height * .02,
+                              ),
+                              Container(
+                                width: width,
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                      color: Colors.grey,
+                                      width: 0.5,
+                                    ),
+                                    bottom: BorderSide(
+                                        color: ThemeApp.darkGreyTab,
+                                        width: 0.5),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: height * .02,
+                              ),
+                              Row(
+                                children: [
+                                  TextFieldUtils().dynamicText(
+                                      '${AppLocalizations.of(context).contactNumber} : ',
+                                      context,
+                                      TextStyle(
+                                          color: Colors.grey.shade700,
+                                          fontSize: height * .022,
+                                          fontWeight: FontWeight.w500)),
+                                  TextFieldUtils().dynamicText(
+                                      StringConstant.selectedMobile ,
+                                      context,
+                                      TextStyle(
+                                          color: Colors.grey.shade700,
+                                          fontSize: height * .022,
+                                          fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: height * .02,
+                        ),
+                        Container(
+                            // height: height * 0.6,
+                            width: width,
+                            padding: const EdgeInsets.all(20),
+                            decoration: const BoxDecoration(
+                              color: ThemeApp.whiteColor,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFieldUtils().dynamicText(
+                                    AppLocalizations.of(context).orderSummary,
                                     context,
                                     TextStyle(
                                         color: Colors.grey.shade700,
                                         fontSize: height * .023,
                                         fontWeight: FontWeight.bold)),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: InkWell(
-                                    onTap: () {
-                                      // Navigator.of(context).push(
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => AddNewDeliveryAddress(),
-                                      //   ),
-                                      // );
-                                      showModalBottomSheet(
-                                          context: context,
-                                          builder: (context) {
-                                            return ChangeAddressBottomSheet();
-                                          });
-                                    },
-                                    child: Container(
-                                      height: height * 0.05,
-                                      alignment: Alignment.center,
-                                      decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        color: ThemeApp.blackColor,
-                                      ),
-                                      padding: const EdgeInsets.only(
-                                          left: 15, right: 15),
-                                      child: TextFieldUtils().dynamicText(
-                                          AppLocalizations.of(context)
-                                              .changeAddress,
-                                          context,
-                                          TextStyle(
-                                              color: ThemeApp.whiteColor,
-                                              fontSize: height * .021,
-                                              fontWeight: FontWeight.w500)),
-                                    )),
-                              ),
-                            ],
+                                cartProductList(widget.value),
+                              ],
+                            )),
+                        SizedBox(
+                          height: height * .02,
+                        ),
+                        Container(
+                          // height: height * 0.16,
+                          width: width,
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
-                          SizedBox(
-                            height: height * .03,
-                          ),
-                          Row(
-                            children: [
-                              TextFieldUtils().dynamicText(
-                                  provider.orderCheckOutDetails[0]["orderCheckOutFullName"],
-                                  context,
-                                  TextStyle(
-                                      color: ThemeApp.blackColor,
-                                      fontSize: height * .021,
-                                      fontWeight: FontWeight.w500)),
-                              SizedBox(
-                                width: width * .02,
-                              ),
-                              Container(
-                                // height: height * 0.05,
-                                alignment: Alignment.center,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5),
-                                  ),
-                                  color: ThemeApp.darkGreyTab,
-                                ),
-                                padding: const EdgeInsets.only(
-                                    left: 10, right: 10, top: 5, bottom: 5),
-                                child: TextFieldUtils().dynamicText(
-                                    provider.orderCheckOutDetails[0]["orderCheckOutTypeOfAddress"],
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFieldUtils().dynamicText(
+                                    AppLocalizations.of(context).applyPromoCode,
                                     context,
                                     TextStyle(
-                                        color: ThemeApp.whiteColor,
-                                        fontSize: height * .02,
-                                        fontWeight: FontWeight.w400)),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: height * .01,
-                          ),
-                          TextFieldUtils().dynamicText(
-                              provider.orderCheckOutDetails[0]["orderCheckOutDeliveryAddress"],
-                              context,
-                              TextStyle(
-                                  color: ThemeApp.darkGreyTab,
-                                  fontSize: height * .021,
-                                  fontWeight: FontWeight.w400)),
-                          SizedBox(
-                            height: height * .02,
-                          ),
-                          Container(
-                            width: width,
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                top: BorderSide(
-                                  color: Colors.grey,
-                                  width: 0.5,
-                                ),
-                                bottom: BorderSide(
-                                    color: ThemeApp.darkGreyTab, width: 0.5),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: height * .02,
-                          ),
-                          Row(
-                            children: [
-                              TextFieldUtils().dynamicText(
-                                  '${AppLocalizations.of(context).contactNumber} : ',
-                                  context,
-                                  TextStyle(
-                                      color: Colors.grey.shade700,
-                                      fontSize: height * .022,
-                                      fontWeight: FontWeight.w500)),
-                              TextFieldUtils().dynamicText(
-                                  provider.orderCheckOutDetails[0]["orderCheckOutContactNumber"],
-                                  context,
-                                  TextStyle(
-                                      color: Colors.grey.shade700,
-                                      fontSize: height * .022,
-                                      fontWeight: FontWeight.w500)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: height * .02,
-                    ),
-                    Container(
-                        // height: height * 0.6,
-                        width: width,
-                        padding: const EdgeInsets.all(20),
-                        decoration: const BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                                        color: ThemeApp.darkGreyColor,
+                                        fontSize: height * .023,
+                                        fontWeight: FontWeight.bold)),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: TextFormFieldsWidget(
+                                        textInputType: TextInputType.number,
+                                        controller: promoCodeController,
+                                        autoValidation:
+                                            AutovalidateMode.onUserInteraction,
+                                        onChange: (val) {
+                                          setState(() {});
+                                        },
+                                        validator: (value) {
+                                          return null;
+                                        },
+                                        errorText: '',
+                                        hintText: '',
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: width * .02,
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: InkWell(
+                                          onTap: () {
+                                            // Navigator.of(context).push(
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => AddNewCardScreen(),
+                                            //   ),
+                                            // );
+                                          },
+                                          child: Container(
+                                            height: height * 0.05,
+                                            alignment: Alignment.center,
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                              color: ThemeApp.blackColor,
+                                            ),
+                                            padding: const EdgeInsets.only(
+                                                left: 15, right: 15),
+                                            child: TextFieldUtils().dynamicText(
+                                                AppLocalizations.of(context)
+                                                    .apply,
+                                                context,
+                                                TextStyle(
+                                                    color: ThemeApp.whiteColor,
+                                                    fontSize: height * .021,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          )),
+                                    ),
+                                  ],
+                                )
+                              ]),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextFieldUtils().dynamicText(
-                                AppLocalizations.of(context).orderSummary,
-                                context,
-                                TextStyle(
-                                    color: Colors.grey.shade700,
-                                    fontSize: height * .023,
-                                    fontWeight: FontWeight.bold)),
-                            cartProductList(widget.value),
-                          ],
-                        )),
-                    SizedBox(
-                      height: height * .02,
+                        SizedBox(
+                          height: height * .02,
+                        ),
+                        priceDetails(widget.value),
+                      ],
                     ),
-                    Container(
-                      // height: height * 0.16,
-                      width: width,
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                        color: ThemeApp.whiteColor,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextFieldUtils().dynamicText(
-                                AppLocalizations.of(context).applyPromoCode,
-                                context,
-                                TextStyle(
-                                    color: ThemeApp.darkGreyColor,
-                                    fontSize: height * .023,
-                                    fontWeight: FontWeight.bold)),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: TextFormFieldsWidget(
-                                    textInputType: TextInputType.number,
-                                    controller: promoCodeController,
-                                    autoValidation:
-                                        AutovalidateMode.onUserInteraction,
-                                    onChange: (val) {
-                                      setState(() {});
-                                    },
-                                    validator: (value) {
-                                      return null;
-                                    },
-                                    errorText: '',
-                                    hintText: '',
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: width * .02,
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: InkWell(
-                                      onTap: () {
-                                        // Navigator.of(context).push(
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) => AddNewCardScreen(),
-                                        //   ),
-                                        // );
-                                      },
-                                      child: Container(
-                                        height: height * 0.05,
-                                        alignment: Alignment.center,
-                                        decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10),
-                                          ),
-                                          color: ThemeApp.blackColor,
-                                        ),
-                                        padding: const EdgeInsets.only(
-                                            left: 15, right: 15),
-                                        child: TextFieldUtils().dynamicText(
-                                            AppLocalizations.of(context)
-                                                .apply,
-                                            context,
-                                            TextStyle(
-                                                color: ThemeApp.whiteColor,
-                                                fontSize: height * .021,
-                                                fontWeight: FontWeight.w500)),
-                                      )),
-                                ),
-                              ],
-                            )
-                          ]),
-                    ),
-                    SizedBox(
-                      height: height * .02,
-                    ),
-                    priceDetails(widget.value),
-                  ],
-                ),
-              ),
-            ]),
-    );
+                  ),
+                ]),
+          );
         }),
       ),
     );
@@ -483,8 +554,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     TextFieldUtils().dynamicText(
                                         value.cartList[index]
@@ -507,7 +577,8 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                       height: height * .01,
                                     ),
                                     TextFieldUtils().dynamicText(
-                                        value.cartList[index].cartProductsDeliveredBy
+                                        value.cartList[index]
+                                            .cartProductsDeliveredBy
                                             .toString(),
                                         context,
                                         TextStyle(
@@ -572,8 +643,8 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
             width: width * .02,
           ),
           TextFieldUtils().dynamicText(
-              indianRupeesFormat.format(
-                  int.parse(value.cartList[index].cartProductsOriginalPrice.toString())),
+              indianRupeesFormat.format(int.parse(
+                  value.cartList[index].cartProductsOriginalPrice.toString())),
               context,
               TextStyle(
                 fontSize: height * .023,
@@ -677,11 +748,14 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
           flex: 1,
           child: InkWell(
             onTap: () {
-              setState(() {
-
-              });
+              setState(() {});
               value.del(index);
               finalPrices(value, index);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                    builder: (context) => CartDetailsActivity(
+                        value: value, productList: widget.cartListFromHome)),
+              );
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -697,7 +771,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
     );
   }
 
-  void addQuantity(ProductProvider value, int index) {
+  /*void addQuantity(ProductProvider value, int index) {
     print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
     print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
     if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) <
@@ -708,13 +782,58 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
 
       finalPrices(value, index);
     }
-  }
+  }*/
 
   double finalOriginalPrice = 0.0;
   double finalDiscountPrice = 0.0;
   double finalDiffrenceDiscountPrice = 0.0;
   double finalTotalPrice = 0.0;
 
+  /* void finalPrices(ProductProvider value, int index) {
+    finalOriginalPrice = 0.0;
+    finalDiscountPrice = 0.0;
+    finalDiffrenceDiscountPrice = 0.0;
+    finalTotalPrice = 0.0;
+    widget.value.deliveryAmount = 0.0;
+
+    for (int i = 0; i < value.cartList.length; i++) {
+      finalOriginalPrice = finalOriginalPrice +
+          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(
+                  value.cartList[i].cartProductsOriginalPrice.toString()));
+
+      Prefs.instance.setDoubleToken(
+          StringConstant.totalOriginalPricePref, finalOriginalPrice);
+      if (kDebugMode) {
+        print("______finaloriginalPrice______$finalOriginalPrice");
+      }
+      finalDiscountPrice = finalDiscountPrice +
+          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(
+                  value.cartList[i].cartProductsDiscountPrice.toString()));
+      if (kDebugMode) {
+        print("______finalDiscountPrice______$finalDiscountPrice");
+      }
+      finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
+      if (kDebugMode) {
+        print(
+            "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
+      }
+      finalTotalPrice = widget.value.deliveryAmount +
+          (finalOriginalPrice - finalDiffrenceDiscountPrice);
+      Prefs.instance
+          .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
+      if (finalTotalPrice == 0) {
+        value.del(index);
+        finalPrices(value, index);
+      }
+      if (kDebugMode) {
+        print("grandTotalAmount inside add: $i $finalTotalPrice");
+      }
+    }
+  }*/
+
+/*
   Future<void> finalPrices(ProductProvider value, int index) async {
     finalOriginalPrice = 0.0;
     finalDiscountPrice = 0.0;
@@ -748,7 +867,9 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
       print("grandTotalAmount inside add: $i $finalTotalPrice");
     }
   }
+*/
 
+/*
   Future<void> minusQuantity(ProductProvider value, int index) async {
     print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
     print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
@@ -762,7 +883,107 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
       finalPrices(value, index);
     }
   }
+*/
 
+  void addQuantity(ProductProvider value, int index) {
+    if (kDebugMode) {
+      print(
+          "maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
+      print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
+    }
+    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) <
+        int.parse(value.cartList[index].cartProductsMaxCounter.toString())) {
+      value.cartList[index].cartProductsTempCounter =
+          int.parse(value.cartList[index].cartProductsTempCounter.toString()) +
+              1;
+      if (kDebugMode) {
+        print(
+            "temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
+      }
+      finalPrices(value, index);
+    }
+  }
+
+  void finalPrices(ProductProvider value, int index) {
+    finalOriginalPrice = 0.0;
+    finalDiscountPrice = 0.0;
+    finalDiffrenceDiscountPrice = 0.0;
+    finalTotalPrice = 0.0;
+    widget.value.deliveryAmount = 60.0;
+
+    for (int i = 0; i < value.cartList.length; i++) {
+      finalOriginalPrice = finalOriginalPrice +
+          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(
+                  value.cartList[i].cartProductsOriginalPrice.toString()));
+
+      Prefs.instance.setDoubleToken(
+          StringConstant.totalOriginalPricePref, finalOriginalPrice);
+      if (kDebugMode) {
+        print("______finaloriginalPrice______$finalOriginalPrice");
+      }
+      finalDiscountPrice = finalDiscountPrice +
+          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+              double.parse(
+                  value.cartList[i].cartProductsDiscountPrice.toString()));
+      if (kDebugMode) {
+        print("______finalDiscountPrice______$finalDiscountPrice");
+      }
+      finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
+      if (kDebugMode) {
+        print(
+            "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
+      }
+      finalTotalPrice = widget.value.deliveryAmount +
+          (finalOriginalPrice - finalDiffrenceDiscountPrice);
+      Prefs.instance
+          .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
+      if (finalTotalPrice == 0) {
+        value.del(index);
+        finalPrices(value, index);
+      }
+      if (kDebugMode) {
+        print("grandTotalAmount inside add: $i $finalTotalPrice");
+      }
+    }
+  }
+
+  Future<void> minusQuantity(ProductProvider value, int index) async {
+    if (kDebugMode) {
+      print(
+          "maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
+      print(
+          "temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
+    }
+    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) >
+        1) {
+      value.cartList[index].cartProductsTempCounter =
+          int.parse(value.cartList[index].cartProductsTempCounter.toString()) -
+              1;
+      if (kDebugMode) {
+        print(
+            "temp counter minus  ${value.cartList[index].cartProductsTempCounter}");
+      }
+      value.cartList[index].cartProductsTotalOriginalPrice =
+          ((value.cartList[index].cartProductsTempCounter)! *
+              int.parse(
+                  value.cartList[index].cartProductsOriginalPrice.toString()));
+      if (kDebugMode) {
+        print(
+            "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
+      }
+////PRICE CODE AFTER ADDING COUNT
+      finalPrices(value, index);
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => CartDetailsActivity(
+                value: value, productList: widget.cartListFromHome)),
+      );
+    }
+  }
+
+/*
   Widget priceDetails(ProductProvider value) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -772,6 +993,109 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
           height: height * 0.16,
           width: width,
           decoration: BoxDecoration(
+            color: ThemeApp.whiteColor,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(
+              15,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFieldUtils().appBarTextField("Price Details", context),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextFieldUtils().homePageTitlesTextFields(
+                        "Price (${value.cartList.length.toString()} items)",
+                        context),
+                    TextFieldUtils().homePageTitlesTextFields(
+                        indianRupeesFormat.format(StringConstant.totalOriginalPrice),
+                        // counterPrice == 1
+                        //     ? value.originialAmount.toString()
+                        //     : value.originalPriceCounter.toString(),
+                        context)
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextFieldUtils()
+                        .homePageTitlesTextFields("Discount", context),
+                    TextFieldUtils().homePageTitlesTextFields(
+                        "- ${indianRupeesFormat.format(StringConstant.totalDiscountPrice)}",
+                        context),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextFieldUtils()
+                        .homePageTitlesTextFields("Delivery charges", context),
+                    TextFieldUtils().homePageTitlesTextFields(
+                        indianRupeesFormat.format(value.deliveryAmount),
+                        context),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          width: width,
+          decoration: const BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: Colors.grey,
+                width: 0.5,
+              ),
+              bottom: BorderSide(color: Colors.grey, width: 0.5),
+            ),
+          ),
+        ),
+        Container(
+          width: width,
+          decoration: BoxDecoration(
+            color: ThemeApp.whiteColor,
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(10),
+                bottomLeft: Radius.circular(10)),
+          ),
+          padding:
+              const EdgeInsets.only(top: 10, left: 15, right: 15, bottom: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextFieldUtils().titleTextFields("Total Amount", context),
+              TextFieldUtils().titleTextFields(
+                  "${indianRupeesFormat.format(StringConstant.totalFinalPrice)} ",
+                  context),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: height * .02,
+        )
+      ],
+    );
+  }
+*/
+  Widget priceDetails(ProductProvider value) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: height * 0.16,
+          width: width,
+          decoration: const BoxDecoration(
             color: ThemeApp.whiteColor,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10)),
@@ -840,7 +1164,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
         ),
         Container(
           width: width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: ThemeApp.whiteColor,
             borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(10),
@@ -854,8 +1178,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
             children: [
               TextFieldUtils().titleTextFields("Total Amount", context),
               TextFieldUtils().titleTextFields(
-                  "${indianRupeesFormat.format(StringConstant.totalFinalPrice)} ",
-                  context),
+                  "${indianRupeesFormat.format(finalTotalPrice)} ", context),
             ],
           ),
         ),
@@ -982,6 +1305,10 @@ int _curStep = 1;
 ///////////////show bottom sheet
 
 class ChangeAddressBottomSheet extends StatefulWidget {
+  final dynamic cartListFromHome;
+
+  ChangeAddressBottomSheet({required this.cartListFromHome});
+
   @override
   _ChangeAddressBottomSheetState createState() =>
       _ChangeAddressBottomSheetState();
@@ -1042,7 +1369,9 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => AddNewDeliveryAddress(isSavedAddress: false,),
+                      builder: (context) => AddNewDeliveryAddress(
+                        isSavedAddress: false,
+                      ),
                     ),
                   );
                 },
@@ -1080,13 +1409,16 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                       child: ListView.builder(
                           itemCount: value.addressList.length,
                           itemBuilder: (_, index) {
-                            var fullAddress =
-                                "${value.addressList[index].myAddressHouseNoBuildingName!}, ${value.addressList[index].myAddressAreaColony}, ${value.addressList[index].myAddressCity},\n ${value.addressList[index].myAddressState}";
                             return InkWell(
                               onLongPress: () {
                                 setState(() {
                                   value.addressList.removeAt(index);
                                 });
+                              },
+                              onTap: () {
+                                setState(() {});
+                                StringConstant.selectedFullAddress =
+                                    "${value.addressList[index].myAddressHouseNoBuildingName!}, ${value.addressList[index].myAddressAreaColony}, ${value.addressList[index].myAddressCity},\n ${value.addressList[index].myAddressState}";
                               },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -1094,8 +1426,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                 children: [
                                   Center(
                                     child: Container(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          20, 0, 20, 0),
 
                                       // padding: EdgeInsets.symmetric(
                                       //     horizontal: 10, vertical: 7),
@@ -1110,18 +1442,32 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                               onChanged: (int? value) {
                                                 setState(() {
                                                   _value2 = value!;
-                                                  print("Radio index is  $value");
+                                                  _selectedIndex = index;
+                                                  print(
+                                                      "Radio index is  $value");
+                                                  Prefs.instance.setToken(
+                                                      StringConstant
+                                                          .selectedFullAddressPref,
+                                                      StringConstant
+                                                          .selectedFullAddress);
+
+                                                  print("selected Address " +
+                                                      StringConstant
+                                                          .selectedFullAddress);
                                                 });
                                               }),
                                           Row(
                                             children: [
                                               TextFieldUtils().dynamicText(
-                                                  value.addressList[index].myAddressFullName!,
+                                                  value.addressList[index]
+                                                      .myAddressFullName!,
                                                   context,
                                                   TextStyle(
-                                                      color: ThemeApp.blackColor,
+                                                      color:
+                                                          ThemeApp.blackColor,
                                                       fontSize: height * .023,
-                                                      fontWeight: FontWeight.w400)),
+                                                      fontWeight:
+                                                          FontWeight.w400)),
                                               SizedBox(
                                                 width: width * .02,
                                               ),
@@ -1129,7 +1475,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                 // height: height * 0.05,
                                                 alignment: Alignment.center,
                                                 decoration: const BoxDecoration(
-                                                  borderRadius: BorderRadius.all(
+                                                  borderRadius:
+                                                      BorderRadius.all(
                                                     Radius.circular(5),
                                                   ),
                                                   color: ThemeApp.darkGreyTab,
@@ -1144,7 +1491,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                         .myAddressTypeOfAddress!,
                                                     context,
                                                     TextStyle(
-                                                        color: ThemeApp.whiteColor,
+                                                        color:
+                                                            ThemeApp.whiteColor,
                                                         fontSize: height * .02,
                                                         fontWeight:
                                                             FontWeight.w400)),
@@ -1156,10 +1504,10 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                     ),
                                   ),
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 70, right: 20),
+                                    padding: const EdgeInsets.only(
+                                        left: 70, right: 20),
                                     child: TextFieldUtils().dynamicText(
-                                        fullAddress,
+                                        "${value.addressList[index].myAddressHouseNoBuildingName!}, ${value.addressList[index].myAddressAreaColony}, ${value.addressList[index].myAddressCity},\n ${value.addressList[index].myAddressState}",
                                         context,
                                         TextStyle(
                                             color: ThemeApp.darkGreyTab,
@@ -1170,7 +1518,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                     padding: const EdgeInsets.only(
                                         left: 70, right: 20, top: 10),
                                     child: TextFieldUtils().dynamicText(
-                                        "${'${AppLocalizations.of(context).contactNumber} : ' + value.addressList[index].myAddressPhoneNumber!}",
+                                        "${'${AppLocalizations.of(context).contactNumber} : ' + StringConstant.selectedMobile}",
                                         context,
                                         TextStyle(
                                             color: ThemeApp.blackColor,
@@ -1208,7 +1556,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                 Row(
                                   children: [
                                     TextFieldUtils().dynamicText(
-                                        'Test Name',
+                                        StringConstant.selectedFullName,
                                         context,
                                         TextStyle(
                                             color: ThemeApp.blackColor,
@@ -1227,9 +1575,12 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                         color: ThemeApp.darkGreyTab,
                                       ),
                                       padding: const EdgeInsets.only(
-                                          left: 10, right: 10, top: 5, bottom: 5),
+                                          left: 10,
+                                          right: 10,
+                                          top: 5,
+                                          bottom: 5),
                                       child: TextFieldUtils().dynamicText(
-                                          'Home',
+                                          StringConstant.selectedTypeOfAddress,
                                           context,
                                           TextStyle(
                                               color: ThemeApp.whiteColor,
@@ -1242,21 +1593,22 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                             ),
                           ),
                         ),
+
                         Padding(
                           padding: const EdgeInsets.only(left: 70, right: 20),
                           child: TextFieldUtils().dynamicText(
-                              address,
+                              'Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India - 380021',
                               context,
-                              TextStyle(
+                              TextStyle(overflow: TextOverflow.ellipsis,
                                   color: ThemeApp.darkGreyTab,
                                   fontSize: height * .021,
                                   fontWeight: FontWeight.w400)),
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 70, right: 20, top: 10),
+                          padding: const EdgeInsets.only(
+                              left: 70, right: 20, top: 10),
                           child: TextFieldUtils().dynamicText(
-                              "${'${AppLocalizations.of(context).contactNumber} : '}9857436255",
+                              "${'${AppLocalizations.of(context).contactNumber} : ${StringConstant.selectedMobile}'}",
                               context,
                               TextStyle(
                                   color: ThemeApp.blackColor,
@@ -1269,7 +1621,41 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                 alignment: FractionalOffset.bottomCenter,
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                 child: proceedButton(AppLocalizations.of(context).deliverHere,
-                    ThemeApp.blackColor, context, false,() {}),
+                    ThemeApp.blackColor, context, false, () {
+                  setState(() {
+
+                      StringConstant.selectedFullAddress =
+                          "${value.addressList[_value2].myAddressHouseNoBuildingName!}, ${value.addressList[_value2].myAddressAreaColony}, ${value.addressList[_value2].myAddressCity},\n ${value.addressList[_value2].myAddressState}";
+                      Prefs.instance.setToken(
+                          StringConstant.selectedFullAddressPref,
+                          StringConstant.selectedFullAddress);
+
+                      StringConstant.selectedFullName =
+                          value.addressList[_value2].myAddressFullName!;
+                      Prefs.instance.setToken(
+                          StringConstant.selectedFullNamePref,
+                          StringConstant.selectedFullName);
+
+                      StringConstant.selectedMobile =
+                          value.addressList[_value2].myAddressPhoneNumber!;
+                      Prefs.instance.setToken(StringConstant.selectedMobilePref,
+                          StringConstant.selectedMobile);
+
+                      StringConstant.selectedTypeOfAddress =
+                          value.addressList[_value2].myAddressTypeOfAddress!;
+                      Prefs.instance.setToken(
+                          StringConstant.selectedTypeOfAddressPref,
+                          StringConstant.selectedTypeOfAddress);
+
+                  });
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => OrderReviewSubActivity(
+                          value: value,
+                          cartListFromHome: widget.cartListFromHome),
+                    ),
+                  );
+                }),
               )
             ],
           ),

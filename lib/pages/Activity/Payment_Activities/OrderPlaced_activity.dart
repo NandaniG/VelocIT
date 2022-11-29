@@ -35,7 +35,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
       appBar: PreferredSize(
     preferredSize: Size.fromHeight(height * .09),
     child: appBar_backWidget(
-        context, appTitle(context, "Order Checkout"), '/payment_Creditcard_debitcardScreen',SizedBox()),
+        context, appTitle(context, "Order Checkout"), SizedBox()),
       ),
       body: SafeArea(
         child:Consumer<HomeProvider>(builder: (context, value, child) {

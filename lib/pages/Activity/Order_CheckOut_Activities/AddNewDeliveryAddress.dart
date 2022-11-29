@@ -11,6 +11,7 @@ import '../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/okPopUp.dart';
 import '../../../widgets/global/proceedButtons.dart';
@@ -58,30 +59,65 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
-      key: scaffoldGlobalKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-          context,
-          appTitle(context, "Add New Delivery Address"),'/savedAddressDetails',
-          SizedBox(),
-        ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: ThemeApp.backgroundColor,
+        key: scaffoldGlobalKey,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(height * .09),
           child: Container(
-            width: width,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: ThemeApp.whiteColor,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+            width: MediaQuery.of(context).size.width,
+            color: ThemeApp.whiteColor,
+            child: AppBar(
+              centerTitle: false,
+              elevation: 0,
+              backgroundColor: ThemeApp.backgroundColor,
+              flexibleSpace: Container(
+                height: height * .11,
+                width: width,
+                decoration: const BoxDecoration(
+                  color: ThemeApp.whiteColor,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15)),
+                ),
+              ),
+              leading: Transform.scale(
+                  scale: 0,
+                  child: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      })),
+
+              leadingWidth: 10,
+              title: Container(
+                  alignment: Alignment.centerLeft,
+                  child: TextFieldUtils().textFieldHeightThree(
+                      "Add New Delivery Address", context)),
+              // Row
             ),
+          ),
+        ),
+        body: SafeArea(
+          child: Padding(
             padding: const EdgeInsets.all(20),
-            // padding: const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 40),
-            child: mainUi(),
+            child: Container(
+              width: width,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                color: ThemeApp.whiteColor,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              padding: const EdgeInsets.all(20),
+              // padding: const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 40),
+              child: mainUi(),
+            ),
           ),
         ),
       ),
@@ -90,6 +126,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
 
   Widget mainUi() {
     return Form(
+      key: _formKey,
       child: Consumer<ProductProvider>(builder: (context, value, child) {
         return ListView(
           // mainAxisAlignment: MainAxisAlignment.start,
@@ -121,7 +158,8 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            MobileNumberTextFormField(controller: value.mobileController),
+            MobileNumberTextFormField(
+                controller: value.mobileController, enable: true),
             SizedBox(
               height: height * .02,
             ),
@@ -257,40 +295,74 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               height: height * .02,
             ),
             proceedButton(AppLocalizations.of(context).addDeliveryAddress,
-                ThemeApp.blackColor, context, false,() {
-              value.addressList.add(MyAddressList(
-                  myAddressFullName: value.fullNameController.text,
-                  myAddressPhoneNumber: value.mobileController.text,
-                  myAddressHouseNoBuildingName: value.houseBuildingController.text,
-                  myAddressAreaColony: value.areaColonyController.text,
-                  myAddressState: value.stateController.text,
-                  myAddressCity: value.cityController.text,
-                  myAddressTypeOfAddress: selectedAddressIs));
-              print("value.addressList" + value.addressList.length.toString());
+                ThemeApp.blackColor, context, false, () {
+              setState(() {
+                if (_formKey.currentState!.validate() &&
+                    value.fullNameController.text.isNotEmpty &&
+                    value.mobileController.text.isNotEmpty &&
+                    value.houseBuildingController.text.isNotEmpty &&
+                    value.areaColonyController.text.isNotEmpty &&
+                    value.stateController.text.isNotEmpty &&
+                    value.cityController.text.isNotEmpty) {
+                  if (widget.isSavedAddress == true) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SavedAddressDetails(),
+                      ),
+                    );
+                  } else {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => OrderReviewSubActivity(
+                          value: value,
+                        ),
+                      ),
+                    );
+                  } StringConstant.selectedFullAddress =
+                  "${value.houseBuildingController.text}, ${value.areaColonyController.text}, ${value.cityController.text},\n ${value.stateController.text}";
+                  Prefs.instance.setToken(StringConstant.selectedFullAddressPref,
+                      StringConstant.selectedFullAddress);
 
-             value.fullNameController.clear();
-             value.mobileController.clear();
-             value.houseBuildingController.clear();
-             value.areaColonyController.clear();
-             value.stateController.clear();
-             value.cityController.clear();
+                  StringConstant.selectedFullName = value.fullNameController.text;
+                  Prefs.instance.setToken(StringConstant.selectedFullNamePref,
+                      StringConstant.selectedFullName);
 
-              var copyOfAddressList = value.addressList.map((v) => v).toList();
-              String encodedMap = json.encode(copyOfAddressList);
-              StringConstant.prettyPrintJson(encodedMap.toString());
-              if (widget.isSavedAddress == true) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => SavedAddressDetails(),
-                  ),
-                );
-              }else {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => OrderReviewSubActivity(value: value,),
-                  ),
-                );
-              }
+                  StringConstant.selectedMobile = value.mobileController.text;
+                  Prefs.instance.setToken(StringConstant.selectedMobilePref,
+                      StringConstant.selectedMobile);
+
+                  StringConstant.selectedTypeOfAddress = selectedAddressIs;
+                  Prefs.instance.setToken(
+                      StringConstant.selectedTypeOfAddressPref,
+                      StringConstant.selectedTypeOfAddress);
+                  value.addAddress(
+                      value.fullNameController.text,
+                      value.mobileController.text,
+                      value.houseBuildingController.text,
+                      value.areaColonyController.text,
+                      value.stateController.text,
+                      value.cityController.text,
+                      selectedAddressIs);
+                  print("value.addressList" +
+                      value.addressList.length.toString());
+
+                  value.fullNameController.clear();
+                  value.mobileController.clear();
+                  value.houseBuildingController.clear();
+                  value.areaColonyController.clear();
+                  value.stateController.clear();
+                  value.cityController.clear();
+
+                  var copyOfAddressList =
+                      value.addressList.map((v) => v).toList();
+                  String encodedMap = json.encode(copyOfAddressList);
+                  StringConstant.prettyPrintJson(encodedMap.toString());
+                } else {
+                  Utils.flushBarErrorMessage(
+                      "Please enter all details", context);
+                }
+
+              });
             })
           ],
         );
@@ -373,12 +445,12 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
 
 //////////edit address
 
-
 class EditDeliveryAddress extends StatefulWidget {
   final bool isSavedAddress;
   MyAddressList model;
 
-   EditDeliveryAddress({Key? key, required this.isSavedAddress,required this.model})
+  EditDeliveryAddress(
+      {Key? key, required this.isSavedAddress, required this.model})
       : super(key: key);
 
   @override
@@ -390,7 +462,6 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
   double height = 0.0;
   double width = 0.0;
 
-
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController fullNameController = new TextEditingController();
@@ -399,7 +470,6 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
   TextEditingController areaColonyController = new TextEditingController();
   TextEditingController stateController = new TextEditingController();
   TextEditingController cityController = new TextEditingController();
-
 
   @override
   void initState() {
@@ -435,7 +505,6 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -445,10 +514,36 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-          context,
-          appTitle(context, "Add New Delivery Address"),'/savedAddressDetails',
-          SizedBox(),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          color: ThemeApp.darkGreyTab,
+          child: AppBar(
+            centerTitle: false,
+            elevation: 0,
+            backgroundColor: ThemeApp.backgroundColor,
+            flexibleSpace: Container(
+              height: height * .08,
+              width: width,
+              decoration: const BoxDecoration(
+                color: ThemeApp.whiteColor,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15)),
+              ),
+            ),
+            titleSpacing: 0,
+            leading: Transform.scale(
+                scale: 0,
+                child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    })),
+
+            // leadingWidth: width * .06,
+            title: Text("Add New Delivery Address"),
+            // Row
+          ),
         ),
       ),
       body: SafeArea(
@@ -488,8 +583,8 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
 
             TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).enterFullName,
-                textInputType: TextInputType.text,
-                controller:fullNameController,
+                textInputType: TextInputType.name,
+                controller: fullNameController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 hintText: 'David Wong',
                 onChange: (val) {},
@@ -504,7 +599,10 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            MobileNumberTextFormField(controller: mobileController),
+            MobileNumberTextFormField(
+              controller: mobileController,
+              enable: true,
+            ),
             SizedBox(
               height: height * .02,
             ),
@@ -564,7 +662,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).houseBuildingNo,
                 textInputType: TextInputType.text,
-                controller:houseBuildingController,
+                controller: houseBuildingController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 hintText: '305, Lokseva Apartments',
                 onChange: (val) {},
@@ -581,7 +679,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).areaColonyName,
                 textInputType: TextInputType.text,
-                controller:areaColonyController,
+                controller: areaColonyController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 hintText: 'Telecom Housing Society',
                 onChange: (val) {},
@@ -640,45 +738,47 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               height: height * .02,
             ),
             proceedButton(AppLocalizations.of(context).addDeliveryAddress,
-                ThemeApp.blackColor, context, false,() {
+                ThemeApp.blackColor, context, false, () {
+              widget.model.myAddressFullName =
+                  fullNameController.text.toString();
+              widget.model.myAddressPhoneNumber =
+                  mobileController.text.toString();
+              widget.model.myAddressHouseNoBuildingName =
+                  houseBuildingController.text.toString();
+              widget.model.myAddressAreaColony =
+                  areaColonyController.text.toString();
+              widget.model.myAddressState = stateController.text.toString();
+              widget.model.myAddressCity = cityController.text.toString();
+              print(fullNameController.text);
+              print(value.fullNameController.text);
 
+              print("value.addressList" + value.addressList.length.toString());
 
-                  widget.model.myAddressFullName = fullNameController.text.toString();
-                  widget.model.myAddressPhoneNumber = mobileController.text.toString();
-                  widget.model.myAddressHouseNoBuildingName = houseBuildingController.text.toString();
-                  widget.model.myAddressAreaColony = areaColonyController.text.toString();
-                  widget.model.myAddressState = stateController.text.toString();
-                  widget.model.myAddressCity = cityController.text.toString();
-                  print( fullNameController.text);
-                  print(  value.fullNameController.text);
+              var copyOfAddressList = value.addressList.map((v) => v).toList();
+              String encodedMap = json.encode(copyOfAddressList);
+              StringConstant.prettyPrintJson(encodedMap.toString());
 
-                  print("value.addressList" + value.addressList.length.toString());
+              if (widget.isSavedAddress == true) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SavedAddressDetails(),
+                  ),
+                );
 
-                  var copyOfAddressList = value.addressList.map((v) => v).toList();
-                  String encodedMap = json.encode(copyOfAddressList);
-                  StringConstant.prettyPrintJson(encodedMap.toString());
-
-                  if (widget.isSavedAddress == true) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SavedAddressDetails(),
-                      ),
-                    );
-
-                    final snackBar = SnackBar(
-                      content: Text('Address update successfully!'),
-                      clipBehavior: Clip.antiAlias,
-                      backgroundColor: ThemeApp.greenappcolor,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }else {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => OrderReviewSubActivity(value: value),
-                      ),
-                    );
-                  }
-                })
+                final snackBar = SnackBar(
+                  content: Text('Address update successfully!'),
+                  clipBehavior: Clip.antiAlias,
+                  backgroundColor: ThemeApp.greenappcolor,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => OrderReviewSubActivity(value: value),
+                  ),
+                );
+              }
+            })
           ],
         );
       }),

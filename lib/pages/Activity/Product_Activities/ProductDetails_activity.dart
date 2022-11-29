@@ -82,7 +82,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
           context,
-          appTitle(context, "My Product"),'/productListByCategoryActivity',SizedBox(),
+          appTitle(context, "My Product"),SizedBox(),
         ),
       ), bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

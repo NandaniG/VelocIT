@@ -64,7 +64,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "My Account"),'/dashBoardScreen', const SizedBox()),
+            context, appTitle(context, "My Account"),const SizedBox()),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

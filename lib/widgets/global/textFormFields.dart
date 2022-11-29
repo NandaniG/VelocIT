@@ -347,8 +347,8 @@ class _CardCVVTextFormFieldWidgetState
 
 class MobileNumberTextFormField extends StatefulWidget {
   TextEditingController controller;
-
-  MobileNumberTextFormField({Key? key, required this.controller})
+  bool enable = true;
+  MobileNumberTextFormField({Key? key, required this.controller,required this.enable})
       : super(key: key);
 
   @override
@@ -363,7 +363,7 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: IntlPhoneField(
         // showCountryFlag: false,
-        enabled: false,
+        enabled: widget.enable,
         controller: widget.controller,
         flagsButtonPadding:EdgeInsets.only(left: 20,) ,
         dropdownDecoration: const BoxDecoration(

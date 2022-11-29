@@ -145,7 +145,6 @@ Widget appBarWidget(
 Widget appBar_backWidget(
   BuildContext context,
   Widget titleWidget,
-  String routName,
   Widget location,
 ) {
   double height = 0.0;
@@ -187,8 +186,8 @@ Widget appBar_backWidget(
                 child: IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.black),
                     onPressed: () {
-                      Navigator.pushNamed(context, routName);
-                      // Navigator.pop(context);
+
+                      Navigator.pop(context);
                     })),
           ),
 

@@ -131,7 +131,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                                   fontSize: height * .02,
                                   fontWeight: FontWeight.w600)),
                           MobileNumberTextFormField(
-                              controller: value.userMobileController),
+                              controller: value.userMobileController,enable: false),
 
                           /*    TextFormFieldsWidget(
                                 errorText: AppLocalizations.of(context).mobileNumber,
