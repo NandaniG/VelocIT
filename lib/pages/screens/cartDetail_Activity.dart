@@ -65,7 +65,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       print("value.cartList.length");
       print(widget.value.cartList.length);
     }
-    getListFromPref();
     // widget.productList[0]["productCartMaxCounter"] = '1';
     finalOriginalPrice = 0.0;
     finalDiscountPrice = 0.0;
@@ -120,16 +119,16 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   //getting preference for Cart list
 
-  getListFromPref() async {
-    final prefs = await SharedPreferences.getInstance();
-    StringConstant.getCartList_FromPref =
-        await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
-    if (kDebugMode) {
-      print('____________CartData AFTER GETTING PREF______________');
-    }
-    StringConstant.prettyPrintJson(
-        StringConstant.getCartList_FromPref.toString());
-  }
+  // getListFromPref() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   StringConstant.getCartList_FromPref =
+  //       await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
+  //   if (kDebugMode) {
+  //     print('____________CartData AFTER GETTING PREF______________');
+  //   }
+  //   StringConstant.prettyPrintJson(
+  //       StringConstant.getCartList_FromPref.toString());
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -141,11 +140,45 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
-          return appBar_backWidget(
+          return  provider.isBottomAppCart ==false? appBar_backWidget(
             context,
             appTitle(context, "My Cart"),
 
             const SizedBox(),
+          ):   PreferredSize(
+            preferredSize: Size.fromHeight(height * .09),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              color: ThemeApp.darkGreyTab,
+
+              child: AppBar(
+                centerTitle: false,
+                elevation: 0,
+                backgroundColor: ThemeApp.backgroundColor,
+                flexibleSpace: Container(
+                  height: height * .12,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    color: ThemeApp.whiteColor,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15)),
+                  ),
+                ),
+                titleSpacing: 0,
+                leadingWidth: 20,
+                leading: Transform.scale(
+                    scale: 0,
+                    child: IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white,size: 10),
+                        onPressed: () {
+                        })),
+
+                // leadingWidth: width * .06,
+                title: Text("My Cart"),
+                // Row
+              ),
+            ),
           );
         }),
       ),

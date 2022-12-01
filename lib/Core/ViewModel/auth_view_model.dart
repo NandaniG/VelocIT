@@ -76,7 +76,6 @@ class AuthViewModel with ChangeNotifier {
 
       StringConstant.isLogIn = true;
       Navigator.pushNamed(context, RoutesName.dashboardRoute);
-      Utils.successToast("Route toDashBoard");
     }).onError((error, stackTrace) {
       setLoadingWithPost(false);
       if (kDebugMode) {

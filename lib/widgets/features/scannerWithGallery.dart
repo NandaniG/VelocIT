@@ -41,7 +41,11 @@ class _ScannerWithGalleryState extends State<ScannerWithGallery> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  InkWell( onTap: (){ scanQR();}, child: Container(child: Text("Click"))),
+                  InkWell(
+                      onTap: () {
+                        scanQR();
+                      },
+                      child: Container(child: Text("Click"))),
                   Text(_scanBarcode),
                   // Text(
                   //   'Code:',
@@ -85,6 +89,7 @@ class _ScannerWithGalleryState extends State<ScannerWithGallery> {
       ),
     );
   }
+
 // Widget _scannerWidget(){
 //     return Container(
 //       child: Column(
@@ -112,7 +117,8 @@ class _ScannerWithGalleryState extends State<ScannerWithGallery> {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
       if (kDebugMode) {
-      print(barcodeScanRes);}
+        print(barcodeScanRes);
+      }
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -203,4 +209,3 @@ class BarcodeFinderController extends ChangeNotifier {
     }
   }
 }
-

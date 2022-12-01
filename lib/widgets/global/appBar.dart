@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:barcode_finder/barcode_finder.dart';
@@ -9,12 +10,14 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
+import 'package:velocit/utils/utils.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 
 import '../../pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
+import '../../pages/Activity/Product_Activities/Products_List.dart';
 import '../../pages/homePage.dart';
 import '../../pages/screens/dashBoard.dart';
 import '../../pages/screens/offers_Activity.dart';
@@ -22,6 +25,7 @@ import '../../pages/tabs/tabs.dart';
 import '../../services/providers/Home_Provider.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/constants.dart';
+import '../../utils/routes/routes.dart';
 import '../../utils/styles.dart';
 import '../features/SpeechToTextDialog_Screen.dart';
 import '../features/addressScreen.dart';
@@ -179,14 +183,13 @@ Widget appBar_backWidget(
           leading: InkWell(
             onTap: () {
               Navigator.of(context).pop();
-              Provider.of<ProductProvider>(context, listen: false);
+              // Provider.of<ProductProvider>(context, listen: false);
             },
             child: Transform.scale(
                 scale: 1.3,
                 child: IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.black),
                     onPressed: () {
-
                       Navigator.pop(context);
                     })),
           ),
@@ -213,84 +216,93 @@ Widget searchBar(BuildContext context) {
   double width = 0.0;
   height = MediaQuery.of(context).size.height;
   width = MediaQuery.of(context).size.width;
-  return Container(
-    width: width,
-    height: height * .1,
-    // color: ThemeApp.innerTextFieldErrorColor,
-    padding: const EdgeInsets.only(top: 10, left: 0),
-    alignment: Alignment.center,
-    child: TextFormField(
-      textInputAction: TextInputAction.search,
+  return Consumer<HomeProvider>(builder: (context, provider, child) {
+    return Container(
+      width: width,
+      height: height * .1,
+      // color: ThemeApp.innerTextFieldErrorColor,
+      padding: const EdgeInsets.only(top: 10, left: 0),
+      alignment: Alignment.center,
+      child: TextFormField(
+        textInputAction: TextInputAction.search,
 
-      controller: StringConstant.controllerSpeechToText,
-      onFieldSubmitted: (value) {
-        if (kDebugMode) {
-          print("search");
-        } // showDialog(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return OkDialog(text: StringConstant.controllerSpeechToText.text);
-        //     });
-      },
-      onChanged: (val) {
-        // print("StringConstant.speechToText..." +
-        //     StringConstant.speechToText);
-        // (() {
-        //   if (val.isEmpty) {
-        //     val = StringConstant.speechToText;
-        //   } else {
-        //     StringConstant.speechToText = StringConstant.controllerSpeechToText.text;
-        //   }
-        // });
-      },
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: ThemeApp.backgroundColor,
-        isDense: true,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-        /* -- Text and Icon -- */
-        hintText: "Search for Products",
-        hintStyle: const TextStyle(
-          fontSize: 14,
-          color: ThemeApp.darkGreyTab,
-        ),
-        prefixIcon: const Icon(
-          Icons.search,
-          size: 26,
-          color: Colors.black54,
-        ),
-        suffixIcon: InkWell(
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return SpeechToTextDialog();
-                });
-          },
-          child: const Icon(
-            Icons.mic,
+        controller: StringConstant.controllerSpeechToText,
+        onFieldSubmitted: (value) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ProductListByCategoryActivity(
+                  productList: provider.jsonData["shopByCategoryList"][1]
+                      ["subShopByCategoryList"][1]),
+            ),
+          );
+          if (kDebugMode) {
+            print("search.........");
+          } // showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) {
+          //       return OkDialog(text: StringConstant.controllerSpeechToText.text);
+          //     });
+        },
+        onChanged: (val) {
+          // print("StringConstant.speechToText..." +
+          //     StringConstant.speechToText);
+          // (() {
+          //   if (val.isEmpty) {
+          //     val = StringConstant.speechToText;
+          //   } else {
+          //     StringConstant.speechToText = StringConstant.controllerSpeechToText.text;
+          //   }
+          // });
+        },
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: ThemeApp.backgroundColor,
+          isDense: true,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+          /* -- Text and Icon -- */
+          hintText: "Search for Products",
+          hintStyle: const TextStyle(
+            fontSize: 14,
+            color: ThemeApp.darkGreyTab,
+          ),
+          prefixIcon: const Icon(
+            Icons.search,
             size: 26,
             color: Colors.black54,
           ),
-        ),
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-                color: ThemeApp.innerTextFieldErrorColor, width: 1)),
-        // OutlineInputBorder
-        enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide:
-                const BorderSide(color: ThemeApp.backgroundColor, width: 1)),
-        // OutlineInputBorder
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide:
-                const BorderSide(color: ThemeApp.backgroundColor, width: 1)),
-      ), // InputDecoration
-    ),
-  );
+          suffixIcon: InkWell(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SpeechToTextDialog();
+                  });
+            },
+            child: const Icon(
+              Icons.mic,
+              size: 26,
+              color: Colors.black54,
+            ),
+          ),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(
+                  color: ThemeApp.innerTextFieldErrorColor, width: 1)),
+          // OutlineInputBorder
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide:
+                  const BorderSide(color: ThemeApp.backgroundColor, width: 1)),
+          // OutlineInputBorder
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide:
+                  const BorderSide(color: ThemeApp.backgroundColor, width: 1)),
+        ), // InputDecoration
+      ),
+    );
+  });
 }
 
 Widget addressWidget(BuildContext context, String addressString) {
@@ -391,7 +403,6 @@ Widget bottomNavBarItems(BuildContext context) {
 
           }
           if (_currentIndex == 1) {
-
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -418,6 +429,7 @@ Widget bottomNavBarItems(BuildContext context) {
               print("provider.cartProductList");
               print(provider.cartProductList);
             }
+           provider.isBottomAppCart = true;
             provider.isHome = true;
             Navigator.pushAndRemoveUntil(
                 context,
@@ -427,7 +439,6 @@ Widget bottomNavBarItems(BuildContext context) {
                 (route) => false);
           }
         },
-
         items: [
           BottomNavigationBarItem(
               backgroundColor: Colors.white,
@@ -549,7 +560,7 @@ class _ScannerWidgetState extends State<ScannerWidget> {
   var getResult = 'QR Code Result';
   final controller = BarcodeFinderController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _scanBarcode = 'Unknown';
+  String _scanBarcode = 'Please scan proper content';
 
   @override
   Widget build(BuildContext context) {
@@ -574,7 +585,8 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                           // Navigator.of(context).pop();
 
                           scanQR();
-                        }),
+
+                          }),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .01,
                         ),
@@ -583,16 +595,18 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                         //   'Code:',
                         //   textAlign: TextAlign.center,
                         // ),
-                        if (state is BarcodeFinderLoading)
+                    /*    if (state is BarcodeFinderLoading)
                           _loading()
                         else if (state is BarcodeFinderError)
+
+
                           _text(
                             '${state.message}',
                           )
                         else if (state is BarcodeFinderSuccess)
                           _text(
                             '${state.code}',
-                          ),
+                          ),*/
                       ],
                     );
                   },
@@ -620,15 +634,17 @@ class _ScannerWidgetState extends State<ScannerWidget> {
       _scanBarcode = barcodeScanRes;
       print('_scanBarcode : ' + barcodeScanRes);
       print('_scanBarcode : ' + _scanBarcode);
-      if (!mounted) return;
-      Navigator.of(context).pop();
 
-      final snackBar = SnackBar(
-        content: Text(_scanBarcode),
-        backgroundColor: ThemeApp.greenappcolor,
-        clipBehavior: Clip.antiAlias,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      if (_scanBarcode == '-1') {
+        Utils.flushBarErrorMessage("Please scan proper content", context);
+      } else {
+        Utils.successToast(_scanBarcode);
+      }
+      print('_scanBarcode timer... : ' + _scanBarcode);
+
+      if (!mounted) return; print('_scanBarcode : ' + _scanBarcode);
+
+
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -657,12 +673,28 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                       controller.scanFile(file);
                     }
                   }
-                  final snackBar = SnackBar(
-                    content: Text(_scanBarcode),
-                    backgroundColor: ThemeApp.greenappcolor,
-                    clipBehavior: Clip.antiAlias,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                  if (state is BarcodeFinderLoading)
+                    _loading();
+                  else if   (state is BarcodeFinderError) {
+                 if(_scanBarcode== 'Please scan proper content')
+                Utils.errorToast(_scanBarcode);
+
+                _text(
+                      '${state.message}',
+                    );
+                  } else if (state is BarcodeFinderSuccess) {
+
+                    Utils.successToast(state.code);
+
+
+                  }
+                  // final snackBar = SnackBar(
+                  //   content: Text(_scanBarcode),
+                  //   backgroundColor: ThemeApp.greenappcolor,
+                  //   clipBehavior: Clip.antiAlias,
+                  // );
+                  // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               : null,
           child: TextFieldUtils().usingPassTextFields(

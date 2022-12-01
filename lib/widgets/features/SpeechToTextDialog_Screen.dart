@@ -21,7 +21,7 @@ class SpeechToTextDialog extends StatefulWidget {
 
 class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
   speechToText.SpeechToText? speech;
-  String textString = "Speak now...";
+  String textString = "Tap to speech";
   bool isListen = false;
   double confidence = 1.0;
 
@@ -38,7 +38,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
   };
 
   void startTimer(HomeProvider homeProvider) {
-    const oneSec = Duration(seconds:3);
+    const oneSec = Duration(seconds:2);
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {

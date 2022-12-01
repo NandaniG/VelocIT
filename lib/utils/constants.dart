@@ -7,7 +7,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 class StringConstant {
   static bool isLogIn = true;
-  static int? sortByRadio = 0;
+  static int sortByRadio = 0;
+  static String sortedBy = "Low to High";
+
 
   static TextEditingController controllerSpeechToText =
       new TextEditingController();

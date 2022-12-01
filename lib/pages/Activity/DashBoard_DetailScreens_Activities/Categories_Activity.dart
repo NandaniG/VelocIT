@@ -108,47 +108,65 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 ExpansionTile(
-                                  onExpansionChanged: (bool isExapnd) {
-                                    setState(() {
-                                      isExpand = isExapnd;
-                                    });
-                                  },
-                                    trailing: Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: ThemeApp.textFieldBorderColor,
-                                      size: height * .05,
-                                    ),
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 5),
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-
-                                  textColor: Colors.black,
-                                  title: Row(children: [
-                                          Container(
-                                              width: 60.0,
-                                              height: 60.0,
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  image: DecorationImage(
-                                                      fit: BoxFit.fill,
-                                                      image: AssetImage(
-                                                        widget.shopByCategoryList[index]["shopCategoryImage"],
-                                                      )))),
-                                          SizedBox(
-                                            width: width * .03,
-                                          ),
-                                          TextFieldUtils().homePageheadingTextField(
-                                              widget.shopByCategoryList[index]["shopCategoryName"],
-                                              context)
-                                        ],
+                                  key: Key(index.toString()),
+                                  //attention
+                                  initiallyExpanded: index == selected,
+                                  //attention
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  trailing: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: ThemeApp.textFieldBorderColor,
+                                    size: height * .05,
+                                  ),
+                                  title: Row(
+                                    children: [
+                                      /*ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(100)),
+                                        child: Image.network(
+                                          // width: double.infinity,
+                                          productsList[index].serviceImage,
+                                          fit: BoxFit.fitWidth,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .06,
+                                        ),
+                                      ),*/
+                                      Container(
+                                          width: 60.0,
+                                          height: 60.0,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                  fit: BoxFit.fill,
+                                                  image: AssetImage(
+                                                    widget.shopByCategoryList[index]["shopCategoryImage"],
+                                                  )))),
+                                      SizedBox(
+                                        width: width * .03,
                                       ),
-
-                                  expandedAlignment: Alignment.centerLeft,
-                                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    builderList( widget.shopByCategoryList[index])
-                                  ],
+                                      TextFieldUtils().homePageheadingTextField(
+                                          widget.shopByCategoryList[index]["shopCategoryName"],
+                                          context)
+                                    ],
+                                  ),
+                                  children: [builderList( widget.shopByCategoryList[index])],
+                                  onExpansionChanged: ((newState) {
+                                    if (newState) {
+                                      setState(() {
+                                        const Duration(seconds: 20000);
+                                        selected = index;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        selected = -1;
+                                      });
+                                    }
+                                  }),
                                 ),
                                 // ExpansionTile(
                                 //   key: Key(index.toString()),
@@ -267,7 +285,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                     boxFit: BoxFit.cover,
                     dotPosition: DotPosition.bottomCenter,
                   ))
-              : Center(child: CircularProgressIndicator());
+              : const Center(child: CircularProgressIndicator());
         });
   }
 
@@ -275,16 +293,23 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
     var orientation =
         (MediaQuery.of(context).orientation == Orientation.landscape);
     return Container(
-        height: orientation ? height * .5 : height * .3,
+        height: 290,
 
         // padding: EdgeInsets.all(12.0),
         alignment: Alignment.center,
         child: GridView.builder(
           itemCount: shopByCategoryList["subShopByCategoryList"].length,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          physics:  const AlwaysScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               // childAspectRatio: 2 / 3,
-              childAspectRatio: orientation
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 10,
+            // width / height: fixed for *all* items
+            childAspectRatio: 1.2,
+
+            crossAxisCount: 2,
+
+            /* childAspectRatio: orientation
                   ? MediaQuery.of(context).size.width /
                       2 /
                       MediaQuery.of(context).size.height /
@@ -295,7 +320,8 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                       0.23,
               crossAxisCount: 3,
               crossAxisSpacing: 5.7,
-              mainAxisSpacing: 6.9),
+              mainAxisSpacing: 6.9*/
+          ),
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
               onTap: () {
@@ -306,8 +332,8 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                 );
               },
               child: Container(
-                  width: 100,
-                  height: 100,
+                  // width: 100,
+                  // height: 100,
                   padding: const EdgeInsets.all(5.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -324,19 +350,24 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                       //   fit: BoxFit.fitWidth,
                       //   height: MediaQuery.of(context).size.height * .07,
                       // ),
-                      Container(
-                          width: 60.0,
-                          height: 60.0,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: AssetImage(
-                                    shopByCategoryList["subShopByCategoryList"][index]["subShopCategoryImage"],
-                                  )))),
-                      SizedBox(height: height*.01),
-                      TextFieldUtils().appliancesTitleTextFields(
-                          shopByCategoryList["subShopByCategoryList"][index]["subShopCategoryName"], context)
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                            width: 60.0,
+                            height: 60.0,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: AssetImage(
+                                      shopByCategoryList["subShopByCategoryList"][index]["subShopCategoryImage"],
+                                    )))),
+                      ),
+                      // SizedBox(height: height*.01),
+                      Expanded(flex: 1,
+                        child: TextFieldUtils().appliancesTitleTextFields(
+                            shopByCategoryList["subShopByCategoryList"][index]["subShopCategoryName"], context),
+                      )
                     ],
                   )),
             );

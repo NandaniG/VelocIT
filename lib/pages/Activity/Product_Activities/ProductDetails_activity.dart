@@ -445,6 +445,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       onTap: () async {
                         setState(() {
                           homeProvider.isHome =false;
+                          homeProvider.isBottomAppCart =false;
+
                         });
                         widget.productList["productTempCounter"] = counterPrice;
                         print("_________widget.productListtempCounter_" +

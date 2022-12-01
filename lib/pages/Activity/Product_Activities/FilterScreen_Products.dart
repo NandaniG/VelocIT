@@ -22,7 +22,7 @@ class _FilterScreenState extends State<FilterScreen> {
 
   @override
   void initState() {
-    model = FilterData.filterList[0]??0;
+    initializeFilter();
     // TODO: implement initState
     super.initState();
   }
@@ -36,7 +36,7 @@ class _FilterScreenState extends State<FilterScreen> {
       body: SafeArea(
         child: Container(
           color: ThemeApp.whiteColor,
-          height: AppTheme.fullHeight(context) - 50,
+          height: AppTheme.fullHeight(context) - 10,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -91,15 +91,20 @@ class _FilterScreenState extends State<FilterScreen> {
             ),
             Expanded(
               flex: 3,
-              child: Container(
-                alignment: Alignment.centerRight,
-                child: TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).clearFilter,
-                    context,
-                    TextStyle(
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .022,
-                        fontWeight: FontWeight.bold)),
+              child: InkWell(
+                onTap: () {
+                  clearFilter();
+                },
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: TextFieldUtils().dynamicText(
+                      AppLocalizations.of(context).clearFilter,
+                      context,
+                      TextStyle(
+                          color: ThemeApp.blackColor,
+                          fontSize: height * .022,
+                          fontWeight: FontWeight.bold)),
+                ),
               ),
             ),
           ],
@@ -107,6 +112,111 @@ class _FilterScreenState extends State<FilterScreen> {
       ),
     );
   }
+
+  void clearFilter() {
+    setState(() {});
+    initializeFilter();
+  }
+
+  List<FilterModel> initializeList = <FilterModel>[];
+
+  void initializeFilter() {
+    initializeList = <FilterModel>[];
+
+    initializeList.add(
+      FilterModel(
+          id: 1,
+          name: "Merchants",
+          isSelected: true,
+          filterDetailList: [
+            FilterDetailModel(id: 1, name: "Merchants 1", isSelected: false),
+            FilterDetailModel(id: 2, name: "Merchants 2", isSelected: false),
+            FilterDetailModel(id: 3, name: "Merchants 3", isSelected: false),
+            FilterDetailModel(id: 4, name: "Merchants 4", isSelected: false),
+          ]),
+    );
+    initializeList.add(
+      FilterModel(id: 2, name: "Categories", filterDetailList: [
+        FilterDetailModel(id: 1, name: "Categories 1", isSelected: false),
+        FilterDetailModel(id: 2, name: "Categories 2", isSelected: false),
+        FilterDetailModel(id: 3, name: "Categories 3", isSelected: false),
+        FilterDetailModel(id: 4, name: "Categories 4", isSelected: false),
+      ]),
+    );
+    initializeList.add(
+      FilterModel(id: 3, name: "Pricing", filterDetailList: [
+        FilterDetailModel(id: 1, name: "Pricing 1", isSelected: false),
+        FilterDetailModel(id: 2, name: "Pricing 2", isSelected: false),
+        FilterDetailModel(id: 3, name: "Pricing 3", isSelected: false),
+        FilterDetailModel(id: 4, name: "Pricing 4", isSelected: false),
+      ]),
+    );
+    initializeList.add(
+      FilterModel(id: 4, name: "Availability", filterDetailList: [
+        FilterDetailModel(id: 1, name: "Availability 1", isSelected: false),
+        FilterDetailModel(id: 2, name: "Availability 2", isSelected: false),
+        FilterDetailModel(id: 3, name: "Availability 3", isSelected: false),
+        FilterDetailModel(id: 4, name: "Availability 4", isSelected: false),
+      ]),
+    );
+    initializeList.add(
+      FilterModel(id: 5, name: "Brand", filterDetailList: [
+        FilterDetailModel(id: 1, name: "Brand 1", isSelected: false),
+        FilterDetailModel(id: 2, name: "Brand 2", isSelected: false),
+        FilterDetailModel(id: 3, name: "Brand 3", isSelected: false),
+        FilterDetailModel(id: 4, name: "Brand 4", isSelected: false),
+      ]),
+    );
+    model = initializeList[0] ?? 0; // initializeList.clear();
+  }
+
+  Widget subCategoriesFilter() {
+    return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: initializeList.length,
+        itemBuilder: (context, index) {
+          return Container(
+            color: ThemeApp.backgroundColor,
+            height: height * 0.05,
+            width: width,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      tappedIndex = index;
+                      model = initializeList[index] ?? 0;
+                    });
+                  },
+                  child: Container(
+                    alignment: Alignment.topLeft,
+                    width: width / 2.5,
+                    height: height * .05,
+                    padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+                    decoration: BoxDecoration(
+                      color: tappedIndex == index
+                          ? ThemeApp.darkGreyColor
+                          : ThemeApp.backgroundColor,
+                    ),
+                    child: TextFieldUtils().dynamicText(
+                        initializeList[index].name,
+                        context,
+                        TextStyle(
+                            color: tappedIndex == index
+                                ? ThemeApp.whiteColor
+                                : ThemeApp.darkGreyTab,
+                            fontSize: height * .018,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
   Widget _filterUi() {
     return Stack(
       children: [
@@ -116,16 +226,17 @@ class _FilterScreenState extends State<FilterScreen> {
               Expanded(
                 flex: 2,
                 child: Container(
-                    height: height * .87,width: width ,
-                    color:ThemeApp.backgroundColor,
+                    height: height * .87,
+                    width: width,
+                    color: ThemeApp.backgroundColor,
                     child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: FilterData.filterList.length,
+                        itemCount: initializeList.length,
                         itemBuilder: (context, index) {
-
                           return Container(
                             color: ThemeApp.backgroundColor,
-                            height: height * 0.05,width: width,
+                            height: height * 0.05,
+                            width: width,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -134,21 +245,22 @@ class _FilterScreenState extends State<FilterScreen> {
                                   onTap: () {
                                     setState(() {
                                       tappedIndex = index;
-                                      model = FilterData.filterList[index]??0;
+                                      model = initializeList[index] ?? 0;
                                     });
                                   },
                                   child: Container(
                                     alignment: Alignment.topLeft,
-                                    width: width /2.5,
+                                    width: width / 2.5,
                                     height: height * .05,
-                                    padding: EdgeInsets.only(left: 20,top: 10,bottom: 10),
+                                    padding: EdgeInsets.only(
+                                        left: 20, top: 10, bottom: 10),
                                     decoration: BoxDecoration(
                                       color: tappedIndex == index
                                           ? ThemeApp.darkGreyColor
                                           : ThemeApp.backgroundColor,
                                     ),
                                     child: TextFieldUtils().dynamicText(
-                                        FilterData.filterList[index].name,
+                                        initializeList[index].name,
                                         context,
                                         TextStyle(
                                             color: tappedIndex == index
@@ -176,25 +288,26 @@ class _FilterScreenState extends State<FilterScreen> {
                     color: ThemeApp.whiteColor,
                     child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: FilterData
-                            .filterList[tappedIndex].filterDetailList.length,
+                        itemCount:
+                            initializeList[tappedIndex].filterDetailList.length,
                         itemBuilder: (context, index1) {
-                            return Padding(
+                          return Padding(
                             padding: const EdgeInsets.only(left: 10.0),
                             child: Center(
                               child: Row(
                                 children: [
                                   Checkbox(
-                                    value: model.filterDetailList[index1].isSelected,
+                                    value: model
+                                        .filterDetailList[index1].isSelected,
                                     onChanged: (values) {
                                       setState(() {
-                                        model.filterDetailList[index1].isSelected = values!;
+                                        model.filterDetailList[index1]
+                                            .isSelected = values!;
                                       });
                                     },
                                   ),
                                   TextFieldUtils().dynamicText(
-                                      model
-                                          .filterDetailList[index1].name,
+                                      model.filterDetailList[index1].name,
                                       context,
                                       TextStyle(
                                           color: tappedIndex == index1
@@ -206,7 +319,6 @@ class _FilterScreenState extends State<FilterScreen> {
                               ),
                             ),
                           );
-
                         }),
                   ),
                 ),
@@ -215,34 +327,33 @@ class _FilterScreenState extends State<FilterScreen> {
           ),
         ),
         Positioned(
-          bottom:0,
+          bottom: 0,
           child: Column(
-            children: [ Container(
-              width: width,
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeApp.lightGreyTab, width: 1),
-                  // bottom: BorderSide(color: Colors.grey, width: 1),
-                ),
-              ),
-            ),
+            children: [
               Container(
                 width: width,
-                height: height * .1
-                ,
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: ThemeApp.lightGreyTab, width: 1),
+                  ),
+                ),
+              ),
+              Container(
+                width: width,
+                height: height * .1,
                 color: ThemeApp.whiteColor,
-                child:  _bottomBar(),
+                child: _bottomBar(),
               ),
             ],
           ),
         )
-
       ],
     );
   }
-  Widget _bottomBar(){
+
+  Widget _bottomBar() {
     return Container(
-      padding: EdgeInsets.only(left: 20,right: 20),
+      padding: EdgeInsets.only(left: 20, right: 20),
       child: Row(children: [
         Expanded(
           flex: 1,
@@ -281,7 +392,6 @@ class _FilterScreenState extends State<FilterScreen> {
               //   ),
               // );
               Navigator.pop(context);
-
             },
             child: Container(
                 padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
@@ -298,5 +408,4 @@ class _FilterScreenState extends State<FilterScreen> {
       ]),
     );
   }
-
 }

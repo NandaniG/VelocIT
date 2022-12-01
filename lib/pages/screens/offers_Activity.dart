@@ -163,73 +163,85 @@ class _OfferActivityState extends State<OfferActivity> {
 
     return Consumer<HomeProvider>(builder: (context, provider, child) {
     return  Container(
-          height: MediaQuery.of(context).size.height * .48,
+          height:400,
           // padding: EdgeInsets.all(12.0),
           child: GridView.builder(
-            itemCount: provider.offerListDetails!.length,
+            itemCount: orientation?2:4,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 // childAspectRatio: 3 / 3.1,
-                childAspectRatio:
+                /*childAspectRatio:
                     orientation ? 3 / 3.1 : width * 2 / height * 1,
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
+                mainAxisSpacing: 10*/
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              // width / height: fixed for *all* items
+              childAspectRatio: 1,
+
+              crossAxisCount: 2,
+            ),
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                  height: orientation
-                      ? height * .6
-                      : MediaQuery.of(context).size.height * .45,
+                  // height: orientation
+                  //     ? height * .6
+                  //     : MediaQuery.of(context).size.height * .45,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        height: orientation
-                            ? height * .35
-                            : MediaQuery.of(context).size.height * .16,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            color: ThemeApp.whiteColor,
+                      Expanded(flex: 2,
+                        child: Container(
+                          // height: orientation
+                          //     ? height * .35
+                          //     : MediaQuery.of(context).size.height * .16,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: ThemeApp.whiteColor,
+                              borderRadius: const BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                topLeft: Radius.circular(10),
+                              )),
+                          child: ClipRRect(
                             borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(10),
                               topLeft: Radius.circular(10),
-                            )),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            topLeft: Radius.circular(10),
-                          ),
-                          child: Image.asset(
-                            // width: double.infinity,
-                            provider.offerListDetails[index]["offerImage"],
-                            fit: BoxFit.fill,
-                            height: orientation
-                                ? height * .35
-                                : MediaQuery.of(context).size.height * .07,
+                            ),
+                            child: Image.asset(
+                              // width: double.infinity,
+                              provider.offerListDetails[index]["offerImage"],
+                              fit: BoxFit.fill,
+                              height: orientation
+                                  ? height * .35
+                                  : MediaQuery.of(context).size.height * .07,
+                            ),
                           ),
                         ),
                       ),
-                      Container(
-                        width: width,
-                        decoration: BoxDecoration(
-                            color: ThemeApp.darkGreyTab,
-                            borderRadius: const BorderRadius.only(
-                              bottomRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                            )),
-                        padding: orientation
-                            ? EdgeInsets.only(top: 10, bottom: 10)
-                            : EdgeInsets.zero,
-                        child: Column(
-                          children: [
-                            TextFieldUtils().subHeadingTextFieldsWhite(
-                                provider.offerListDetails[index]["offerName"], context),
-                            TextFieldUtils().homePageTitlesTextFieldsWHITE(
-                                provider.offerListDetails[index]["offerDiscountPrice"], context)
-                          ],
+                      Expanded(flex: 1,
+                        child: Container(
+                          width: width,
+                          decoration: BoxDecoration(
+                              color: ThemeApp.darkGreyTab,
+                              borderRadius: const BorderRadius.only(
+                                bottomRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                              )),
+                          padding: orientation
+                              ? EdgeInsets.only(top: 10, bottom: 10)
+                              : EdgeInsets.zero,
+                          child: Column(
+                            children: [
+                              TextFieldUtils().subHeadingTextFieldsWhite(
+                                  provider.offerListDetails[index]["offerName"], context),
+                              TextFieldUtils().homePageTitlesTextFieldsWHITE(
+                                  'Starting from ${provider.offerListDetails[index]
+                                    ["offerDiscountPrice"]}', context)
+                            ],
+                          ),
                         ),
                       ),
                     ],

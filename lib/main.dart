@@ -64,13 +64,20 @@ Future<void> main() async {
           ? StringConstant.userAccountMobile
           : StringConstant.userAccountMobile;
   StringConstant.userAccountPass =
-      (await Prefs.instance.getToken(StringConstant.userAccountPassPref))!.isEmpty?StringConstant.userAccountPass:StringConstant.userAccountPass;
+      (await Prefs.instance.getToken(StringConstant.userAccountPassPref))!
+              .isEmpty
+          ? StringConstant.userAccountPass
+          : StringConstant.userAccountPass;
 
   StringConstant.placesFromCurrentLocation =
-      (await Prefs.instance.getToken(StringConstant.pinCodePref))!.isEmpty?StringConstant.placesFromCurrentLocation:StringConstant.placesFromCurrentLocation;
+      (await Prefs.instance.getToken(StringConstant.pinCodePref))!.isEmpty
+          ? StringConstant.placesFromCurrentLocation
+          : StringConstant.placesFromCurrentLocation;
 
   StringConstant.addressFromCurrentLocation =
-      (await Prefs.instance.getToken(StringConstant.addressPref))!.isEmpty? StringConstant.addressFromCurrentLocation: StringConstant.addressFromCurrentLocation;
+      (await Prefs.instance.getToken(StringConstant.addressPref))!.isEmpty
+          ? StringConstant.addressFromCurrentLocation
+          : StringConstant.addressFromCurrentLocation;
 
   SharedPreferences.setMockInitialValues({});
 
@@ -91,8 +98,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -114,7 +119,7 @@ class MyApp extends StatelessWidget {
           // ChangeNotifierProvider(create: (_) => ProductsVM(),),
         ],
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
-          provider.loadJson();
+        var data =   provider.loadJson();
           return Consumer<ProductProvider>(builder: (context, value, child) {
             return Consumer<LocaleProvider>(
                 builder: (context, localeProvider, snapshot) {
@@ -139,7 +144,7 @@ class MyApp extends StatelessWidget {
                   // '/': (context) => StringConstant.isLogIn == false
                   //     ? SignIn_Screen()
                   //     : DashboardScreen(),
-                  '/': (context) =>SplashScreen(),
+                  '/': (context) => SplashScreen(),
                   '/dashBoardScreen': (context) => const DashboardScreen(),
                   '/editAccountActivity': (context) =>
                       const EditAccountActivity(),
@@ -160,9 +165,10 @@ class MyApp extends StatelessWidget {
                   '/cartScreen': (context) => CartDetailsActivity(
                       value: value, productList: provider.cartProductList),
                   '/orderReviewSubActivity': (context) =>
-                      OrderReviewSubActivity(value: value,cartListFromHome: provider.productList),
+                      OrderReviewSubActivity(
+                          value: value, cartListFromHome: provider.productList),
                   '/payment_Creditcard_debitcardScreen': (context) =>
-                      Payment_Creditcard_debitcardScreen(),
+                      const Payment_Creditcard_debitcardScreen(),
                 },
               );
             });
@@ -183,22 +189,29 @@ class _SplashScreenState extends State<SplashScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<HomeProvider>(context, listen: false).loadJson();
     });
-    Timer(
-        const Duration(seconds: 3),
-        () {
-     /* StringConstant.isLogIn == false? Navigator.pushNamed(context, RoutesName.signInRoute) :*/Navigator.pushNamed(context, RoutesName.dashboardRoute);
-          });
+    startTime();
+  }
+
+  startTime() async {
+
+    var _duration = const Duration(seconds: 3);
+    return Timer(_duration, navigationPage);
+  }
+
+  void navigationPage() {
+    Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      child: Padding(
-        padding: const EdgeInsets.all(100),
-        child: Image.asset(
-          'assets/images/VelocIT_Icon_512.png',
-          scale: 1,
+    return Scaffold(
+      body: Container(
+        color: ThemeApp.backgroundColor,
+
+        child: const Center(
+          child: CircularProgressIndicator(
+            color: ThemeApp.darkGreyColor,
+          ),
         ),
       ),
     );

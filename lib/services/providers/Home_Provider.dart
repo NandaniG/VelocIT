@@ -194,6 +194,7 @@ class HomeProvider with ChangeNotifier {
 
   var cartProductList;
   bool isHome = false;
+  bool isBottomAppCart = false;
 
   Future<List<CartProductList>> cartProductListService() async {
     final jsondata = await rootBundle.loadString('assets/jsonData.json');

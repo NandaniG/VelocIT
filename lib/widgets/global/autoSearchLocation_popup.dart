@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:uuid/uuid.dart';
+import 'package:velocit/widgets/global/proceedButtons.dart';
 
 import '../../pages/screens/dashBoard.dart';
 import '../../utils/constants.dart';
@@ -20,7 +21,7 @@ class AutoSearchPlacesPopUp extends StatefulWidget {
 
 class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
   TextEditingController _controller = new TextEditingController();
-  var uuid = Uuid();
+  var uuid = const Uuid();
   String _sessionToken = '122344';
   List<dynamic> _placeList = [];
   var _placeId = '';
@@ -116,19 +117,19 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
   dialogContent(BuildContext context) {
     {
       return ConstrainedBox(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
             minHeight: 70.0, maxHeight: 600.0, maxWidth: 350.0, minWidth: 200),
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: new BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
-              BoxShadow(
+              const BoxShadow(
                 color: Colors.black26,
                 blurRadius: 10.0,
-                offset: const Offset(0.0, 5.0),
+                offset: Offset(0.0, 5.0),
               ),
             ],
           ),
@@ -136,21 +137,27 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Align(
                   alignment: Alignment.topCenter,
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(
-                      hintText: "Seek your location here",
+                      hintText: "Search location",
                       // focusColor: Colors.white,
                       floatingLabelBehavior: FloatingLabelBehavior.never,
-                      prefixIcon: Icon(Icons.map, color: Colors.grey),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.cancel, color: Colors.grey),
-                        onPressed: () {
+                      prefixIcon: const Icon(Icons.map, color: Colors.grey),
+                      suffixIcon: InkWell(
+                        onTap: () {
                           _controller.clear();
                         },
+                        child: Container(
+                          width: 15,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(2.0),
+                          child: Text("Clear"),
+                        ),
                       ),
                       filled: true,
                       fillColor: Colors.white,
@@ -158,35 +165,35 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                           color: Colors.grey,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
                       contentPadding:
-                          const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          const EdgeInsets.fromLTRB(20.0, 15.0, 0, 15.0),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: ThemeApp.textFieldBorderColor,
                           )),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               color: ThemeApp.textFieldBorderColor, width: 1)),
                       disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               color: ThemeApp.textFieldBorderColor, width: 1)),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               color: ThemeApp.innerTextFieldErrorColor,
                               width: 1)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               color: ThemeApp.textFieldBorderColor, width: 1)),
                     ),
                   ),
                 ),
                 Expanded(
                   child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: _placeList.length,
                     itemBuilder: (context, index) {
@@ -230,7 +237,7 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DashboardScreen(),
+                                builder: (context) => const DashboardScreen(),
                               ),
                               (route) => false);
                         },
@@ -241,6 +248,11 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                     },
                   ),
                 ),
+                proceedButton("Cancel", ThemeApp.blackColor, context, false,
+                    () {
+                  Navigator.pop(context);
+                })
+
                 // listOfShopByCategories()
               ],
             ),
@@ -273,7 +285,7 @@ class Autosearch extends StatefulWidget {
 
 class _AutosearchState extends State<Autosearch> {
   TextEditingController _controller = new TextEditingController();
-  var uuid = Uuid();
+  var uuid = const Uuid();
   String _sessionToken = '122344';
   List<dynamic> _placeList = [];
   var _placeId = '';
@@ -370,7 +382,7 @@ class _AutosearchState extends State<Autosearch> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Google Map Search places Api',
         ),
       ),
@@ -387,9 +399,9 @@ class _AutosearchState extends State<Autosearch> {
                   hintText: "Seek your location here",
                   // focusColor: Colors.white,
                   floatingLabelBehavior: FloatingLabelBehavior.never,
-                  prefixIcon: Icon(Icons.map, color: Colors.grey),
+                  prefixIcon: const Icon(Icons.map, color: Colors.grey),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.cancel, color: Colors.grey),
+                    icon: const Icon(Icons.cancel, color: Colors.grey),
                     onPressed: () {
                       _controller.clear();
                     },
@@ -404,31 +416,31 @@ class _AutosearchState extends State<Autosearch> {
                       const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: ThemeApp.textFieldBorderColor,
                       )),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: ThemeApp.textFieldBorderColor, width: 1)),
                   disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: ThemeApp.textFieldBorderColor, width: 1)),
                   errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: ThemeApp.innerTextFieldErrorColor, width: 1)),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                           color: ThemeApp.textFieldBorderColor, width: 1)),
                 ),
               ),
             ),
             Expanded(
               child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _placeList.length,
                 itemBuilder: (context, index) {
@@ -472,7 +484,7 @@ class _AutosearchState extends State<Autosearch> {
                   height: MediaQuery.of(context).size.height * .13,
                   child: Text(snapshot.data!.zipCode.toString()),
                 )
-              : new Center(child: new CircularProgressIndicator());
+              : new Center(child: const CircularProgressIndicator());
         });
   }
 }

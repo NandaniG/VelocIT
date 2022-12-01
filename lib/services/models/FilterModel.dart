@@ -21,6 +21,11 @@ class FilterDetailModel {
 }
 
 class FilterData {
+  // List<FilterModel>? filterListModel;
+  // List<String>? filterStrings;
+
+/*
+
   static List<FilterModel> filterList = [
     FilterModel(id: 1, name: "Merchants", isSelected: true, filterDetailList: [
       FilterDetailModel(id: 1, name: "Merchants 1", isSelected: false),
@@ -53,4 +58,7 @@ class FilterData {
       FilterDetailModel(id: 4, name: "Brand 4", isSelected: false),
     ]),
   ];
+*/
+
+
 }
