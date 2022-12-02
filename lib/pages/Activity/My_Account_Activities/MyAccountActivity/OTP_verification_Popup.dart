@@ -38,6 +38,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
     setState(() {
 
     });
+    StringConstant.userAccountImagePicker = (await Prefs.instance.getToken(StringConstant.userAccountImagePickerPref))!.isEmpty?StringConstant.userAccountImagePicker:(await Prefs.instance.getToken(StringConstant.userAccountImagePickerPref))!;
     StringConstant.userAccountName = (await Prefs.instance.getToken(StringConstant.userAccountNamePref))!.isEmpty?StringConstant.userAccountName:(await Prefs.instance.getToken(StringConstant.userAccountNamePref))!;
     StringConstant.userAccountEmail = (await Prefs.instance.getToken(StringConstant.userAccountEmailPref))!.isEmpty?StringConstant.userAccountEmail:(await Prefs.instance.getToken(StringConstant.userAccountEmailPref))!;
     StringConstant.userAccountMobile = (await Prefs.instance.getToken(StringConstant.userAccountMobilePref))!.isEmpty?StringConstant.userAccountMobile:(await Prefs.instance.getToken(StringConstant.userAccountMobilePref))!;
@@ -95,7 +96,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                           color: ThemeApp.blackColor,
                           fontSize: height * .02,
                           fontWeight: FontWeight.w600)),
-                  TextFormFieldsWidget(
+                  CharacterTextFormFieldsWidget(
                       errorText: AppLocalizations.of(context).otpSentTo,
                       textInputType: TextInputType.text,
                       controller: emailOTPController,
@@ -128,7 +129,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                           color: ThemeApp.blackColor,
                           fontSize: height * .02,
                           fontWeight: FontWeight.w600)),
-                  TextFormFieldsWidget(
+                  CharacterTextFormFieldsWidget(
                       errorText: AppLocalizations.of(context).otpSentTo,
                       textInputType: TextInputType.text,
                       controller: mobileOTPController,
@@ -219,7 +220,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                             context, false,() {
                           setState(() {
                             value.userAccountDetailList.add(UserAccountList(
-                                userId: 1,
+                                userId: 1,userImage: value.images,
                                 userName: value.userNameController.text,
                                 userEmail: value.userEmailController.text,
                                 userMobile: value.userMobileController.text,

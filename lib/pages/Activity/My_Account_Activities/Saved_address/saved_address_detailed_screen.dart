@@ -13,7 +13,7 @@ import '../../Order_CheckOut_Activities/AddNewDeliveryAddress.dart';
 import 'delete_Address_dialog.dart';
 
 class SavedAddressDetails extends StatefulWidget {
-  const SavedAddressDetails({super.key});
+  const SavedAddressDetails({Key? key}) : super(key: key);
 
   @override
   _SavedAddressDetailsState createState() => _SavedAddressDetailsState();
@@ -28,7 +28,15 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
   TextEditingController _textEditingController = TextEditingController();
   var address =
       'Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India - 380021';
+@override
+  void initState() {
+    // TODO: implement initState
 
+  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    Provider.of<ProductProvider>(context, listen: false);
+  });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -76,7 +84,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
               InkWell(
                 onTap: () {
                   if(value.addressList.length<=4){
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) =>
                             AddNewDeliveryAddress(isSavedAddress: isSavedAddress),
@@ -236,7 +244,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                   InkWell(
                                                     onTap: () {
                                                       Navigator.of(context)
-                                                          .push(
+                                                          .pushReplacement(
                                                         MaterialPageRoute(
                                                           builder: (context) =>
                                                               EditDeliveryAddress(
@@ -287,104 +295,15 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                               ),
                             );
                           }))
-                  : Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: Container(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        TextFieldUtils().dynamicText(
-                                            'Test Name',
-                                            context,
-                                            TextStyle(
-                                                color: ThemeApp.blackColor,
-                                                fontSize: height * .023,
-                                                fontWeight: FontWeight.w400)),
-                                        SizedBox(
-                                          width: width * .02,
-                                        ),
-                                        Container(
-                                          // height: height * 0.05,
-                                          alignment: Alignment.center,
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5),
-                                            ),
-                                            color: ThemeApp.darkGreyTab,
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              left: 10,
-                                              right: 10,
-                                              top: 5,
-                                              bottom: 5),
-                                          child: TextFieldUtils().dynamicText(
-                                              'Home',
-                                              context,
-                                              TextStyle(
-                                                  color: ThemeApp.whiteColor,
-                                                  fontSize: height * .02,
-                                                  fontWeight: FontWeight.w400)),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.delete,
-                                          color: ThemeApp.darkGreyTab,
-                                        ),
-                                        SizedBox(
-                                          width: width * .03,
-                                        ),
-                                        Icon(
-                                          Icons.edit_note_rounded,
-                                          color: ThemeApp.darkGreyTab,
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: height * .02,
-                            ),
-                            TextFieldUtils().dynamicText(
-                                address,
-                                context,
-                                TextStyle(
-                                    color: ThemeApp.darkGreyTab,
-                                    fontSize: height * .021,
-                                    fontWeight: FontWeight.w400)),
-                            SizedBox(
-                              height: height * .02,
-                            ),
-                            TextFieldUtils().dynamicText(
-                                "${AppLocalizations.of(context).contactNumber + ' : '}9857436255",
-                                context,
-                                TextStyle(
-                                    color: ThemeApp.blackColor,
-                                    fontSize: height * .021,
-                                    fontWeight: FontWeight.w400)),
-                          ],
-                        ),
-                      ),
-                    ),
+                  :   Center(
+                    child: TextFieldUtils().dynamicText(
+                    'No data found',
+                    context,
+                    TextStyle(
+                        color: ThemeApp.darkGreyTab,
+                        fontSize: height * .03,
+                        fontWeight: FontWeight.w400)),
+                  ),
             ],
           ),
         ],

@@ -4,6 +4,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 
 import '../../utils/styles.dart';
 
+/*
 class TextFormFieldsWidget extends StatefulWidget {
   TextEditingController controller;
   bool enablepadding;
@@ -43,17 +44,6 @@ class TextFormFieldsWidget extends StatefulWidget {
 class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
   FocusNode focusNode = FocusNode();
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   if (widget.intialvalue != null) {
-  //     setState(() {
-  //       widget.controller.text = widget.intialvalue!;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -84,7 +74,8 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
           hintText: widget.hintText,
           errorStyle: TextStyle(
               color: ThemeApp.innerTextFieldErrorColor,
-              fontSize: MediaQuery.of(context).size.height * 0.020),errorMaxLines: 2,
+              fontSize: MediaQuery.of(context).size.height * 0.020),
+          errorMaxLines: 2,
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -93,20 +84,122 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
               )),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
                   color: ThemeApp.innerTextFieldErrorColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
+        ),
+        validator: widget.validator,
+      ),
+    );
+  }
+}
+*/
+
+class CharacterTextFormFieldsWidget extends StatefulWidget {
+  TextEditingController controller;
+  bool enablepadding;
+  bool obsecureText;
+  AutovalidateMode? autoValidation;
+  TextInputType textInputType;
+  String hintText;
+  String? intialvalue;
+  String errorText;
+  int maxline;
+  FormFieldSetter onChange;
+  FormFieldValidator validator;
+  Icon? icon;
+  Widget? suffixText;
+  int? maxLength;
+
+  CharacterTextFormFieldsWidget(
+      {required this.errorText,
+        this.intialvalue,
+        required this.textInputType,
+        required this.controller,
+        required this.hintText,
+        this.autoValidation,
+        this.obsecureText: false,
+        required this.onChange,
+        required this.validator,
+        this.enablepadding: true,
+        this.maxline: 1,
+        this.icon,
+        this.suffixText,
+        this.maxLength});
+
+  @override
+  _CharacterTextFormFieldsWidgetState createState() => _CharacterTextFormFieldsWidgetState();
+}
+
+class _CharacterTextFormFieldsWidgetState extends State<CharacterTextFormFieldsWidget> {
+  FocusNode focusNode = FocusNode();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: TextFormField(
+        controller: widget.controller,
+        autovalidateMode: widget.autoValidation,
+        keyboardType: widget.textInputType,
+        textCapitalization: TextCapitalization.words,
+        textInputAction: TextInputAction.next,
+        autofocus: false,
+        maxLength: widget.maxLength,
+        inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z -]"))],
+        // focusNode: focusNode,
+        maxLines: widget.maxline,
+        onChanged: widget.onChange,
+        decoration: InputDecoration(
+          counterText: "",
+          prefixIcon: widget.icon,
+          suffixIcon: widget.suffixText,
+          suffixIconConstraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * .3,
+              minWidth: MediaQuery.of(context).size.width * .3),
+          filled: true,
+          fillColor: Colors.white,
+          hintStyle: TextStyle(
+              color: Colors.grey,
+              fontSize: MediaQuery.of(context).size.height * 0.020),
+          hintText: widget.hintText,
+          errorStyle: TextStyle(
+              color: ThemeApp.innerTextFieldErrorColor,
+              fontSize: MediaQuery.of(context).size.height * 0.020),
+          errorMaxLines: 2,
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(
+                color: ThemeApp.textFieldBorderColor,
+              )),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
+          errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(
+                  color: ThemeApp.innerTextFieldErrorColor, width: 1)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
         ),
         validator: widget.validator,
       ),
@@ -192,20 +285,20 @@ class _PasswordTextFormFieldsWidgetState
               )),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
                   color: ThemeApp.innerTextFieldErrorColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           suffixIcon: IconButton(
             splashColor: Colors.white,
             highlightColor: Colors.white,
@@ -311,20 +404,20 @@ class _CardCVVTextFormFieldWidgetState
               )),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
                   color: ThemeApp.innerTextFieldErrorColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           suffixIcon: IconButton(
             splashColor: Colors.white,
             highlightColor: Colors.white,
@@ -348,7 +441,9 @@ class _CardCVVTextFormFieldWidgetState
 class MobileNumberTextFormField extends StatefulWidget {
   TextEditingController controller;
   bool enable = true;
-  MobileNumberTextFormField({Key? key, required this.controller,required this.enable})
+
+  MobileNumberTextFormField(
+      {Key? key, required this.controller, required this.enable})
       : super(key: key);
 
   @override
@@ -365,9 +460,10 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
         // showCountryFlag: false,
         enabled: widget.enable,
         controller: widget.controller,
-        flagsButtonPadding:EdgeInsets.only(left: 20,) ,
+        flagsButtonPadding: EdgeInsets.only(
+          left: 20,
+        ),
         dropdownDecoration: const BoxDecoration(
-
             border: Border(
           right: BorderSide(
               //                   <--- left side
@@ -378,7 +474,8 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(10),
-        ],style: TextStyle(color: ThemeApp.darkGreyColor),
+        ],
+        style: TextStyle(color: ThemeApp.darkGreyColor),
         decoration: InputDecoration(
           hintText: 'Do not enter country code',
           counterText: "",
@@ -404,20 +501,20 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
               )),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.innerTextFieldErrorColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.innerTextFieldErrorColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
         ),
         onChanged: (phone) {
           print(phone.completeNumber);
@@ -522,20 +619,20 @@ class _CardNumberTextFormFieldsWidgetState
               )),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
                   color: ThemeApp.innerTextFieldErrorColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.textFieldBorderColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.textFieldBorderColor, width: 1)),
         ),
         validator: widget.validator,
       ),
@@ -572,8 +669,8 @@ class CustomInputFormatter extends TextInputFormatter {
 }
 
 class TextFieldUtils {
-  Widget lineHorizontal(){
-    return   Container(
+  Widget lineHorizontal() {
+    return Container(
       decoration: const BoxDecoration(
         color: ThemeApp.whiteColor,
         border: Border(
@@ -586,21 +683,22 @@ class TextFieldUtils {
       ),
     );
   }
-  Widget lineVertical(){
-    return Container(height:42,
+
+  Widget lineVertical() {
+    return Container(
+      height: 42,
       decoration: const BoxDecoration(
         color: ThemeApp.blackColor,
         border: Border(
           right: BorderSide(
             color: ThemeApp.darkGreyTab,
-            width:1,
+            width: 1,
           ),
           left: BorderSide(color: ThemeApp.darkGreyTab, width: 1),
         ),
       ),
     );
   }
-
 
   Widget appBarTextField(String text, BuildContext context) {
     return Text(
@@ -657,7 +755,9 @@ class TextFieldUtils {
     return Text(
       text,
       style: TextStyle(
-          shadows: [const Shadow(color: Colors.blueAccent, offset: Offset(0, -5))],
+          shadows: [
+            const Shadow(color: Colors.blueAccent, offset: Offset(0, -5))
+          ],
           color: Colors.transparent,
           decoration: TextDecoration.underline,
           decorationColor: Colors.blueAccent,
@@ -843,7 +943,11 @@ class TextFieldUtils {
   }
 
   Widget dynamicText(String text, BuildContext context, TextStyle style) {
-    return Text(text, style: style,maxLines: 2,);
+    return Text(
+      text,
+      style: style,
+      maxLines: 2,
+    );
   }
 }
 
@@ -997,7 +1101,6 @@ class _DateFormatter extends TextInputFormatter {
   }
 }
 
-
 class StepperGlobalWidget extends StatefulWidget {
   const StepperGlobalWidget({Key? key}) : super(key: key);
 
@@ -1011,14 +1114,8 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
 
   @override
   Widget build(BuildContext context) {
-    height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return stepperWidget();
   }
 
@@ -1045,7 +1142,8 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: _titleViews(context),
                 ),
-              ), Flexible(
+              ),
+              Flexible(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: _dateViews(context),
@@ -1063,7 +1161,7 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
           ? ThemeApp.darkGreyTab
           : ThemeApp.lightGreyTab;
       var lineColor =
-      _curStep > i + 1 ? ThemeApp.darkGreyTab : ThemeApp.lightGreyTab;
+          _curStep > i + 1 ? ThemeApp.darkGreyTab : ThemeApp.lightGreyTab;
       var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.darkGreyTab
           : ThemeApp.lightGreyTab;
@@ -1083,15 +1181,15 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
           //   ),),
           child: (i == 0 || _curStep > i + 1)
               ? Icon(
-            Icons.circle,
-            color: iconColor,
-            size: 18.0,
-          )
+                  Icons.circle,
+                  color: iconColor,
+                  size: 18.0,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: iconColor,
-            size: 18.0,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: iconColor,
+                  size: 18.0,
+                ),
         ),
       );
 
@@ -1099,9 +1197,9 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
       if (i != titles.length - 1) {
         list.add(Expanded(
             child: Container(
-              height: 3.0,
-              color: lineColor,
-            )));
+          height: 3.0,
+          color: lineColor,
+        )));
       }
     });
 
@@ -1114,19 +1212,19 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
             ? TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(
-                color: ThemeApp.darkGreyColor,
-                fontSize: height * .018,
-                fontWeight: FontWeight.bold))
+                text,
+                context,
+                TextStyle(
+                    color: ThemeApp.darkGreyColor,
+                    fontSize: height * .018,
+                    fontWeight: FontWeight.bold))
             : TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(
-                color: ThemeApp.darkGreyColor,
-                fontSize: height * .018,
-                fontWeight: FontWeight.w400)),
+                text,
+                context,
+                TextStyle(
+                    color: ThemeApp.darkGreyColor,
+                    fontSize: height * .018,
+                    fontWeight: FontWeight.w400)),
       );
     });
     return list;
@@ -1138,25 +1236,25 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
             ? TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(
-                color: ThemeApp.darkGreyTab,
-                fontSize: height * .016,
-                fontWeight: FontWeight.w400))
+                text,
+                context,
+                TextStyle(
+                    color: ThemeApp.darkGreyTab,
+                    fontSize: height * .016,
+                    fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(
-                color: ThemeApp.darkGreyTab,
-                fontSize: height * .016,
-                fontWeight: FontWeight.w400)),
+                text,
+                context,
+                TextStyle(
+                    color: ThemeApp.darkGreyTab,
+                    fontSize: height * .016,
+                    fontWeight: FontWeight.w400)),
       );
     });
     return list;
   }
-
 }
+
 final List<String> titles = [
   'Order Placed',
   'Packed',
@@ -1168,7 +1266,5 @@ final List<String> dates = [
   '8 Sept 2022',
   '9 Sept 2022',
   '10 Sept 2022',
-
 ];
 int _curStep = 1;
-

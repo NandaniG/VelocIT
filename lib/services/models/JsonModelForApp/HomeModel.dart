@@ -1491,12 +1491,14 @@ class MyCardList {
 class UserAccountList {
   int? userId;
   String? userName;
+  String? userImage;
   String? userEmail;
   String? userMobile;
   String? userPassword;
 
   UserAccountList(
       {this.userId,
+        this.userImage,
         this.userName,
         this.userEmail,
         this.userMobile,
@@ -1504,6 +1506,7 @@ class UserAccountList {
 
   UserAccountList.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
+    userImage = json['userImage'];
     userName = json['userName'];
     userEmail = json['userEmail'];
     userMobile = json['userMobile'];
@@ -1513,6 +1516,7 @@ class UserAccountList {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['userId'] = this.userId;
+    data['userImage'] = this.userImage;
     data['userName'] = this.userName;
     data['userEmail'] = this.userEmail;
     data['userMobile'] = this.userMobile;

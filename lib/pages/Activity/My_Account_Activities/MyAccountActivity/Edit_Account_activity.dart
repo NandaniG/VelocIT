@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/services/models/userAccountDetailModel.dart';
 
+import '../../../../services/models/FilterModel.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/constants.dart';
@@ -52,9 +53,8 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
         elevation: 0,
         leading: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, '/myAccountActivity' );
-
-            },
+            Navigator.pushNamed(context, '/myAccountActivity');
+          },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Icon(
@@ -64,7 +64,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
           ),
         ),
       ),
-      body: Consumer<ProductProvider>(builder: (context, value, child) {
+      body: Consumer<ProductProvider>(builder: (context, provider, child) {
         return Container(
           padding: EdgeInsets.only(top: 0),
           color: ThemeApp.backgroundColor,
@@ -102,228 +102,237 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                         // mainAxisAlignment: MainAxisAlignment.start,
                         // crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          //Full Name
-                          TextFieldUtils().dynamicText(
-                              AppLocalizations.of(context).fullName,
-                              context,
-                              TextStyle(
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .02,
-                                  fontWeight: FontWeight.w600)),
-                          TextFormFieldsWidget(
-                              errorText:
-                                  AppLocalizations.of(context).enterFullName,
-                              textInputType: TextInputType.text,
-                              controller: value.userNameController,
-                              autoValidation:
-                                  AutovalidateMode.onUserInteraction,
-                              hintText: 'David Wong',
-                              onChange: (val) {},
-                              validator: (value) {
-                                return null;
-                              }),
-                          //Mobile Number
-                          TextFieldUtils().dynamicText(
-                              AppLocalizations.of(context).mobileNumber,
-                              context,
-                              TextStyle(
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .02,
-                                  fontWeight: FontWeight.w600)),
-                          MobileNumberTextFormField(
-                              controller: value.userMobileController,enable: false),
-
-                          /*    TextFormFieldsWidget(
-                                errorText: AppLocalizations.of(context).mobileNumber,
-                                textInputType: TextInputType.number,
-                                controller: mobileController,maxLength: 10,
-                                autoValidation: AutovalidateMode.onUserInteraction,
-                                hintText: 'Ex: 8582968541',
-                                onChange: (val) {
-
-                                },
-                                validator: (value) {
-                                  if (value.isEmpty && mobileController.text.isEmpty) {
-                                    _validateMobile = true;
-                                    return AppLocalizations.of(context).enterMobileNumber;
-                                  } else if (
-                                  mobileController.text.length <=9) {
-                                    _validateMobile = true;
-                                    return AppLocalizations.of(context).enterMobileNumber;
-                                  } else {
-                                    _validateMobile = false;
-                                  }
-                                  return null;
-                                }),*/
-                          //Mobile Number
-                          TextFieldUtils().dynamicText(
-                              AppLocalizations.of(context).email,
-                              context,
-                              TextStyle(
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .02,
-                                  fontWeight: FontWeight.w600)),
-                          TextFormFieldsWidget(
-                              errorText: AppLocalizations.of(context).email,
-                              textInputType: TextInputType.emailAddress,
-                              controller: value.userEmailController,
-                              autoValidation:
-                                  AutovalidateMode.onUserInteraction,
-                              hintText: 'david@gmil.com',
-                              onChange: (val) {},
-                              validator: (val) {
-                                if (val.isEmpty &&
-                                    value.userEmailController.text.isEmpty) {
-                                  _validateEmail = true;
-                                  return AppLocalizations.of(context)
-                                      .emailError;
-                                } else if (!StringConstant().isEmail(val)) {
-                                  _validateEmail = true;
-                                  return AppLocalizations.of(context)
-                                      .emailError;
-                                } else {
-                                  _validateEmail = false;
-                                }
-                                return null;
-                              }),
+                          fullName(provider),
+                          mobileNumber(provider),
+                          emailId(provider),
                           SizedBox(
                             height: height * .02,
                           ),
-                          proceedButton(AppLocalizations.of(context).update,
-                              ThemeApp.blackColor, context,false, () {
-
-
-                            print("value.creditCardList__________" +
-                                value.userAccountDetailList.length.toString());
-                            setState(() {
-                              value.userAccountDetailList.add(
-                                  UserAccountList(
-                                      userId: 1,
-                                      userName: value.userNameController.text,
-                                      userEmail: value.userEmailController.text,
-                                      userMobile: value.userMobileController.text,
-                                      userPassword: 'userPassword'));
-
-                              Prefs.instance.setToken(StringConstant.userAccountNamePref,
-                                  value.userNameController.text);
-                              Prefs.instance.setToken(
-                                  StringConstant.userAccountEmailPref,
-                                  value.userEmailController.text);
-                              Prefs.instance.setToken(
-                                  StringConstant.userAccountMobilePref,
-                                  value.userMobileController.text);
-
-
-                                });
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return OTPVerificationDialog();
-                                });
-                          })
+                          updateButton(provider)
                         ],
                       ),
                     ),
                   ),
                 ),
               ),
-              Align(
-                  alignment: Alignment(0, -1),
-                  child: Container(
-                      alignment: Alignment(0, -1),
-                      child: Icon(
-                        Icons.circle,
-                        size: height * .15,
-                        color: ThemeApp.lightGreyTab,
-                      ))),
-              images !=
-                  ""
-                  ? Align(
-                  alignment: Alignment(0, -1),
-                  child: Container(
-                    // height: 50,width:50,
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,),
-                      alignment: Alignment(0, -1),
-                     child:    InkWell(
-                       onTap: () async {
-                         await ManagePermissions
-                             .askCameraPermission()
-                             .then((value) async {
-                           var img = await ImagePicker()
-                               .getImage(
-                               source: ImageSource
-                                   .camera);
-                           if (mounted) {
-                             setState(() {
-                               _profileImage =
-                                   File(img!.path);
-                               getBase64Image(img)
-                                   .then((value) => {
-                                 images =
-                                     value
+              Stack(alignment: Alignment.topCenter,
+                children: [
 
-                               });print("images....$_profileImage");
-                             });
-                           }
-                         });
-                       },
-                       child: ClipRRect(
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(100)),
-                        child: Image.memory(
-                            Base64Decoder().convert(images
-                                .replaceAll(
-                                RegExp(
-                                    r'^data:image\/[a-z]+;base64,'),
-                                '')),fit: BoxFit.fill,
-                          width: 100,
-                          height: 100,
-                            ),
-                    ),
-                     ),))
-                  :  Align(
-                  alignment: Alignment(0, -1),
-                  child: Container(
+                  Align(
                       alignment: Alignment(0, -1),
-                      child: InkWell(
-                        onTap: () async {
-                          await ManagePermissions
-                              .askCameraPermission()
-                              .then((value) async {
-                            var img = await ImagePicker()
-                                .getImage(
-                                source: ImageSource
-                                    .camera);
-                            if (mounted) {
-                              setState(() {
-                                _profileImage =
-                                    File(img!.path);
-                                getBase64Image(img)
-                                    .then((value) => {
-                                  images =
-                                      value
-
-                                });print("images....$_profileImage");
-                              });
-                            }
-                          });
-                        },
-                        child: Icon(
-                          Icons.account_circle_rounded,
-                          size: height * .15,
-                          color: ThemeApp.darkGreyTab,
+                      child: Container(
+                          alignment: Alignment(0, -1),
+                          child: Icon(
+                            Icons.circle,
+                            size: height * .15,
+                            color: ThemeApp.lightGreyTab,
+                          ))),        provider.images != ""
+                      ? Align(
+                      alignment: Alignment(0, -1),
+                      child: Container(
+                        // height: 50,width:50,
+                        decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
                         ),
-                      ))),
+                        alignment: Alignment(0, -1),
+                        child: InkWell(
+                          onTap: () async {
+                            await ManagePermissions.askCameraPermission()
+                                .then((value) async {
+                              var img = await ImagePicker()
+                                  .getImage(source: ImageSource.camera);
+                              if (mounted) {
+                                setState(() {
+                                  _profileImage = File(img!.path);
+                                  getBase64Image(img)
+                                      .then((val) => {provider.images = val});
+                                  print("images....$_profileImage");
+                                });
+                              }
+                            });
+                          },
+                          child: ClipRRect(
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(100)),
+                            child: Image.memory(
+                              Base64Decoder().convert(provider.images
+                                  .replaceAll(
+                                  RegExp(r'^data:image\/[a-z]+;base64,'),
+                                  '')),
+                              fit: BoxFit.fill,
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                        ),
+                      ))
+                      : Align(
+                      alignment: Alignment(0, -1),
+                      child: Container(
+                          alignment: Alignment(0, -1),
+                          child: InkWell(
+                            onTap: () async {
+                              await ManagePermissions.askCameraPermission()
+                                  .then((value) async {
+                                var img = await ImagePicker()
+                                    .getImage(source: ImageSource.camera);
+                                if (mounted) {
+                                  setState(() {
+                                    _profileImage = File(img!.path);
+                                    getBase64Image(img).then(
+                                            (value) => {provider.images = value});
+                                    print("images....$_profileImage");
+                                  });
+                                }
+                              });
+                            },
+                            child: Icon(
+                              Icons.account_circle_rounded,
+                              size: height * .15,
+                              color: ThemeApp.darkGreyTab,
+                            ),
+                          ))),
+                  Align(
+                    alignment: Alignment(0.09, -1),
+                    child: Container(
+                        height: 100,
+                        width: 50,
+                        alignment: Alignment.bottomRight,
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: height * .03,
+                              color: ThemeApp.blackColor,
+                            )),
+                  ),
+                ],
+              ),
+
             ],
           ),
         );
       }),
     );
   }
-  String images='';
+
+  Widget fullName(ProductProvider provider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFieldUtils().dynamicText(
+            AppLocalizations.of(context).fullName,
+            context,
+            TextStyle(
+                color: ThemeApp.blackColor,
+                fontSize: height * .02,
+                fontWeight: FontWeight.w600)),
+        CharacterTextFormFieldsWidget(
+            errorText: AppLocalizations.of(context).enterFullName,
+            textInputType: TextInputType.name,
+
+            controller: provider.userNameController,
+            autoValidation: AutovalidateMode.onUserInteraction,
+            hintText: 'David Wong',
+
+            onChange: (val) {},
+            validator: (value) {
+              return null;
+            }),
+      ],
+    );
+  }
+
+  Widget mobileNumber(ProductProvider provider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFieldUtils().dynamicText(
+            AppLocalizations.of(context).mobileNumber,
+            context,
+            TextStyle(
+                color: ThemeApp.blackColor,
+                fontSize: height * .02,
+                fontWeight: FontWeight.w600)),
+        MobileNumberTextFormField(
+            controller: provider.userMobileController, enable: false),
+      ],
+    );
+  }
+
+  Widget emailId(ProductProvider provider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFieldUtils().dynamicText(
+            AppLocalizations.of(context).email,
+            context,
+            TextStyle(
+                color: ThemeApp.blackColor,
+                fontSize: height * .02,
+                fontWeight: FontWeight.w600)),
+        CharacterTextFormFieldsWidget(
+            errorText: AppLocalizations.of(context).email,
+            textInputType: TextInputType.emailAddress,
+            controller: provider.userEmailController,
+            autoValidation: AutovalidateMode.onUserInteraction,
+            hintText: 'david@gmil.com',
+            onChange: (val) {},
+            validator: (val) {
+              if (val.isEmpty && provider.userEmailController.text.isEmpty) {
+                _validateEmail = true;
+                return AppLocalizations.of(context).emailError;
+              } else if (!StringConstant().isEmail(val)) {
+                _validateEmail = true;
+                return AppLocalizations.of(context).emailError;
+              } else {
+                _validateEmail = false;
+              }
+              return null;
+            }),
+      ],
+    );
+  }
+
+  Widget updateButton(ProductProvider provider) {
+    return proceedButton(AppLocalizations.of(context).update,
+        ThemeApp.blackColor, context, false, () {
+      print("provider.creditCardList__________" +
+          provider.userAccountDetailList.length.toString());
+      initializeFilter(provider);
+
+      setState(() {
+
+        Prefs.instance.setToken(
+            StringConstant.userAccountImagePickerPref, provider.images);
+        Prefs.instance.setToken(StringConstant.userAccountNamePref,
+            provider.userNameController.text);
+        Prefs.instance.setToken(StringConstant.userAccountEmailPref,
+            provider.userEmailController.text);
+        Prefs.instance.setToken(StringConstant.userAccountMobilePref,
+            provider.userMobileController.text);
+      });
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return OTPVerificationDialog();
+          });
+    });
+  }
+
+  void initializeFilter(ProductProvider provider) {
+    provider.userAccountDetailList = <UserAccountList>[];
+
+    provider.userAccountDetailList.add(UserAccountList(
+        userId: 1,
+        userImage: provider.images,
+        userName: provider.userNameController.text,
+        userEmail: provider.userEmailController.text,
+        userMobile: provider.userMobileController.text,
+        userPassword: 'userPassword'));
+
+  }
+  // String images='';
   Future<String> getBase64Image(PickedFile img) async {
-    List<int> imageBytes = await File(img.path).readAsBytesSync();
+    List<int> imageBytes = File(img.path).readAsBytesSync();
     String img64 = base64Encode(imageBytes);
     // print(img.path);
     // print(img64);

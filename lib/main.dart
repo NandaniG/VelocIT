@@ -38,7 +38,7 @@ Future<void> main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
-  StringConstant.isLogIn = false;
+  StringConstant.isLogIn = true;
   StringConstant.emailOTPVar =
       (await Prefs.instance.getToken(StringConstant.emailOTPPref))!;
 
@@ -205,7 +205,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: Container(height: MediaQuery.of(context).size.height,
         color: ThemeApp.backgroundColor,
 
         child: const Center(

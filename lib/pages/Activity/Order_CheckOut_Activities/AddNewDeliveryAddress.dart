@@ -92,7 +92,6 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   child: IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () {
-                        Navigator.pop(context);
                       })),
 
               leadingWidth: 10,
@@ -140,9 +139,9 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).enterFullName,
-                textInputType: TextInputType.text,
+                textInputType: TextInputType.name,
                 controller: value.fullNameController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 hintText: 'David Wong',
@@ -216,7 +215,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).houseBuildingNo,
                 textInputType: TextInputType.text,
                 controller: value.houseBuildingController,
@@ -233,7 +232,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).areaColonyName,
                 textInputType: TextInputType.text,
                 controller: value.areaColonyController,
@@ -250,7 +249,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).state,
                 textInputType: TextInputType.text,
                 controller: value.stateController,
@@ -267,7 +266,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).city,
                 textInputType: TextInputType.text,
                 controller: value.cityController,
@@ -305,13 +304,13 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     value.stateController.text.isNotEmpty &&
                     value.cityController.text.isNotEmpty) {
                   if (widget.isSavedAddress == true) {
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => SavedAddressDetails(),
                       ),
                     );
                   } else {
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => OrderReviewSubActivity(
                           value: value,
@@ -516,13 +515,14 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
         preferredSize: Size.fromHeight(height * .09),
         child: Container(
           width: MediaQuery.of(context).size.width,
-          color: ThemeApp.darkGreyTab,
+          color: ThemeApp.whiteColor,
           child: AppBar(
+
             centerTitle: false,
             elevation: 0,
             backgroundColor: ThemeApp.backgroundColor,
             flexibleSpace: Container(
-              height: height * .08,
+              height: height * .11,
               width: width,
               decoration: const BoxDecoration(
                 color: ThemeApp.whiteColor,
@@ -532,16 +532,20 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               ),
             ),
             titleSpacing: 0,
+            leadingWidth: 20,
             leading: Transform.scale(
                 scale: 0,
                 child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    icon: const Icon(Icons.arrow_back, color: Colors.white,size: 10),
                     onPressed: () {
-                      Navigator.pop(context);
                     })),
 
-            // leadingWidth: width * .06,
-            title: Text("Add New Delivery Address"),
+
+
+            title: Container(
+                alignment: Alignment.centerLeft,
+                child: TextFieldUtils().textFieldHeightThree(
+                    "Edit Delivery Address", context)),
             // Row
           ),
         ),
@@ -581,7 +585,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
 
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).enterFullName,
                 textInputType: TextInputType.name,
                 controller: fullNameController,
@@ -659,7 +663,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).houseBuildingNo,
                 textInputType: TextInputType.text,
                 controller: houseBuildingController,
@@ -676,7 +680,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).areaColonyName,
                 textInputType: TextInputType.text,
                 controller: areaColonyController,
@@ -693,7 +697,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).state,
                 textInputType: TextInputType.text,
                 controller: stateController,
@@ -710,7 +714,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).city,
                 textInputType: TextInputType.text,
                 controller: cityController,
@@ -759,7 +763,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               StringConstant.prettyPrintJson(encodedMap.toString());
 
               if (widget.isSavedAddress == true) {
-                Navigator.of(context).push(
+                Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => SavedAddressDetails(),
                   ),

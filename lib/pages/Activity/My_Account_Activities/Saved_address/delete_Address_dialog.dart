@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 
 import '../../../../services/models/AddressListModel.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/styles.dart';
+import '../../../../utils/utils.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
 
@@ -95,19 +97,15 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                             setState(() {
                               print(widget.addressList.length);
                               value.deleteAddress(widget.index);
-                              final snackBar = SnackBar(
-                                content: Text('Address delete successfully!'),
-                                clipBehavior: Clip.antiAlias,
-                                backgroundColor:
-                                    ThemeApp.innerTextFieldErrorColor,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                              Navigator.of(context).push(
+                              Navigator.pushReplacementNamed(context, '/myAccountActivity');
+                              /*Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => SavedAddressDetails(),
+                                  builder: (context) =>
+                                  const MyAccountActivity(),
                                 ),
-                              );
+                              );*/
+                              Utils.errorToast('Address delete successfully!');
+
 
                               // widget.cardList.creditCardList.removeAt(widget.index);
                             });

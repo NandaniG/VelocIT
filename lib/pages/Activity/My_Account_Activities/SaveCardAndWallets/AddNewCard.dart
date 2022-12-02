@@ -78,7 +78,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
-                TextFormFieldsWidget(
+                CharacterTextFormFieldsWidget(
                     errorText: AppLocalizations.of(context).cardHolderName,
                     textInputType: TextInputType.text,
                     controller: value.cardHolderNameController,
@@ -336,7 +336,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
 
-                TextFormFieldsWidget(
+                CharacterTextFormFieldsWidget(
                     errorText: AppLocalizations.of(context).cardHolderName,
                     textInputType: TextInputType.text,
                     controller: cardHolderNameController,

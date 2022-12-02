@@ -42,6 +42,8 @@ class StringConstant {
   static String userAccountEmail = 'test@gmail.com';
   static String userAccountMobile = '7990916338';
   static String userAccountPass = '';
+  static String userAccountImagePicker = '';
+  static String userAccountImagePickerPref = 'userAccountImagePickerPref';
 
   //shared preferences
   static String emailPref = 'emailPref';
@@ -140,6 +142,8 @@ class StringConstant {
   bool isPhone(String input) =>
       RegExp(r"^[0-9]{10}$")
           .hasMatch(input);
+
+  bool  isValidName(String input) => RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$").hasMatch(input);
 
   bool isPass(String input) => RegExp(
           "^(?=.{6,19}\$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*(),.?:{}|<>]).*")

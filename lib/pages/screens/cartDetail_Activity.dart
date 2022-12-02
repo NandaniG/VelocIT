@@ -117,18 +117,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   var listFromPref;
 
-  //getting preference for Cart list
-
-  // getListFromPref() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   StringConstant.getCartList_FromPref =
-  //       await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
-  //   if (kDebugMode) {
-  //     print('____________CartData AFTER GETTING PREF______________');
-  //   }
-  //   StringConstant.prettyPrintJson(
-  //       StringConstant.getCartList_FromPref.toString());
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +144,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 elevation: 0,
                 backgroundColor: ThemeApp.backgroundColor,
                 flexibleSpace: Container(
-                  height: height * .12,
+                  height: height * .11,
                   width: width,
                   decoration: const BoxDecoration(
                     color: ThemeApp.whiteColor,

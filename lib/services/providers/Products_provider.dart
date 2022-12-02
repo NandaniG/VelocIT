@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/constants.dart';
@@ -438,6 +440,7 @@ class ProductProvider with ChangeNotifier {
       areaColony,
       state,
       city, typeOfAddress) async {
+    addressList = <MyAddressList>[];
     addressList.add(MyAddressList(
         myAddressFullName: fullName,
         myAddressPhoneNumber: mobile,
@@ -456,10 +459,10 @@ class ProductProvider with ChangeNotifier {
 
     List<MyCardList> creditCardList = <MyCardList>[];
 
-    TextEditingController cardHolderNameController = new TextEditingController();
-    TextEditingController cardNumberController = new TextEditingController();
-    TextEditingController cVVController = new TextEditingController();
-    TextEditingController ExpiryDateController = new TextEditingController();
+    TextEditingController cardHolderNameController = TextEditingController();
+    TextEditingController cardNumberController = TextEditingController();
+    TextEditingController cVVController = TextEditingController();
+    TextEditingController ExpiryDateController = TextEditingController();
 
     final focusNodeExpiryDate = FocusNode();
     final focusNodeCvv = FocusNode();
@@ -703,11 +706,13 @@ class ProductProvider with ChangeNotifier {
     // ];
 
 //---------------------------------<- Notifications Provider ->--------------------------
-    List<UserAccountList> userAccountDetailList =
-    <UserAccountList>[];
+    List<UserAccountList> userAccountDetailList = <UserAccountList>[];
+  String images='';
 
-    TextEditingController userNameController = new TextEditingController();
-    TextEditingController userMobileController = new TextEditingController(
+    TextEditingController userNameController = TextEditingController();
+    TextEditingController userMobileController = TextEditingController(
         text: StringConstant.userAccountMobile);
-    TextEditingController userEmailController = new TextEditingController();
+    TextEditingController userEmailController = TextEditingController();
+
+
   }

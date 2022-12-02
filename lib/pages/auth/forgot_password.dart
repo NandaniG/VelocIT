@@ -51,7 +51,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
             TextFieldUtils()
                 .titleTextFields(AppLocalizations.of(context).registeredEmailAddress, context),
-            TextFormFieldsWidget(
+            CharacterTextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).emailError,
                 textInputType: TextInputType.emailAddress,
                 controller: email,
