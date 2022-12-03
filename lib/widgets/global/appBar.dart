@@ -385,7 +385,7 @@ final List<Widget> _tabs = List.unmodifiable([
 Widget bottomNavBarItems(BuildContext context) {
   int _currentIndex = 0;
   return Consumer<HomeProvider>(builder: (context, provider, child) {
-    return Consumer<ProductProvider>(builder: (context, value, child) {
+    return Consumer<ProductProvider>(builder: (context, product, child) {
       return BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
@@ -435,7 +435,7 @@ Widget bottomNavBarItems(BuildContext context) {
                 context,
                 MaterialPageRoute(
                     builder: (context) => CartDetailsActivity(
-                        value: value, productList: provider.cartProductList)),
+                        value: product, productList: provider.cartProductList)),
                 (route) => false);
           }
         },
@@ -492,17 +492,62 @@ Widget bottomNavBarItems(BuildContext context) {
               label: ''),
           BottomNavigationBarItem(
               backgroundColor: Colors.white,
-              icon: _currentIndex == 4
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Image.asset('assets/icons/shopping-cart.png',
-                          height: 30),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Image.asset('assets/icons/shopping-cart.png',
-                          height: 30),
-                    ),
+              icon:   Stack(
+          children: <Widget>[
+          _currentIndex == 4
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Image.asset('assets/icons/shopping-cart.png',
+                        height: 35),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Image.asset('assets/icons/shopping-cart.png',
+                        height: 35),
+                  ),
+          Positioned(
+            right: 0,top: 0,
+            child: Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              constraints: BoxConstraints(
+
+                minWidth: 22,
+                minHeight: 10,
+                maxHeight: 25,maxWidth: 25
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(1),
+                child: Text(
+                  '${product.cartList.length}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+
+
+
+              // _currentIndex == 4
+              //     ? Padding(
+              //         padding: const EdgeInsets.only(top: 5.0),
+              //         child: Image.asset('assets/icons/shopping-cart.png',
+              //             height: 30),
+              //       )
+              //     : Padding(
+              //         padding: const EdgeInsets.only(top: 5.0),
+              //         child: Image.asset('assets/icons/shopping-cart.png',
+              //             height: 30),
+              //       ),
               label: ''),
         ],
       );

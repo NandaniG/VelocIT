@@ -14,6 +14,7 @@ import '../../../services/providers/Products_provider.dart';
 import '../../../services/providers/cart_Provider.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/textFormFields.dart';
 
@@ -45,19 +46,40 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   void initState() {
     // TODO: implement initState
     print("widget.productList[]" + widget.productList.toString());
+
     super.initState();
     remainingCounters();
+
+    dataCount();counterFromCart;
+    counterPrice;
+    counterFromPref;
+  }
+
+  var counterFromCart;
+
+  int counterFromPref = 0;
+
+  dataCount() async {
+    StringConstant.cartCounters = await Prefs.instance.getIntToken("counterProduct");
+    print("widget.productList[]counterProduct" + counterFromCart.toString());
+
+    if (counterPrice == 0) {
+      counterFromPref = int.parse(counterFromCart);
+      print(
+          "widget.productList[]counterProduct sd" + counterFromPref.toString());
+    } else {
+      counterFromPref;
+    }
   }
 
   remainingCounters() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      StringConstant.availableCounterValues =
-          (int.parse(widget.productList["productCartMaxCounter"]) -
-              counterPrice);
-      print("totalCounterValues${StringConstant.availableCounterValues}");
-      print("totalCounterValues${counterPrice}");
-    });
+    StringConstant.availableCounterValues =
+        (int.parse(widget.productList["productCartMaxCounter"]) - counterPrice);
+    print("totalCounterValues${StringConstant.availableCounterValues}");
+    print("totalCounterValues${counterPrice}");
+
+    print(widget.productList["productTempCounter"]);
 
     prefs.setInt(StringConstant.availableCounter, 1);
   }
@@ -328,232 +350,134 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   int counterPrice = 0;
 
   Widget addToCart() {
-    return Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            counterPrice == 0
-                ? Expanded(
-                    flex: 1,
-                    child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            counterPrice++;
-                            remainingCounters();
-                          });
-                        },
-                        child: Container(
-                            height: height * 0.06,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              color: ThemeApp.lightGreyTab,
-                            ),
-                            child: TextFieldUtils().usingPassTextFields(
-                                "Add to cart", ThemeApp.blackColor, context))),
-                  )
-                : Expanded(
-                    flex: 1,
-                    child: Container(
-                      height: height * 0.06,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                        color: ThemeApp.lightGreyTab,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  counterPrice--;
-                                  remainingCounters();
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: ThemeApp.lightGreyTab,
-                                ),
-                                child: Icon(
-                                  Icons.remove,
-                                  // size: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8.0, right: 8, top: 0, bottom: 0),
-                              child: Text(
-                                counterPrice.toString().padLeft(2, '0'),
-                                style: TextStyle(
-                                    fontSize:
-                                        MediaQuery.of(context).size.height *
-                                            .016,
-                                    fontWeight: FontWeight.w400,
-                                    overflow: TextOverflow.ellipsis,
-                                    color: Colors.black),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (counterPrice <
-                                      int.parse(widget.productList[
-                                          "productCartMaxCounter"])) {
-                                    counterPrice++;
-                                    remainingCounters();
-                                  }
+    return Consumer<HomeProvider>(builder: (context, homeProvider, child) {
+      return Consumer<ProductProvider>(builder: (context, value, child) {
+        return Padding(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-                                  // totalConter = counterPrice * item.price;
-                                  // counterPrice == 1
-                                  //     ? totalConter = item.price
-                                  //     : totalConter;
-                                });
-                              },
-                              child: Container(
+                counterPrice == 0 && counterFromPref == 0
+                    ? Expanded(
+                        flex: 1,
+                        child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                counterPrice++;
+                                remainingCounters();                                        addToCartData(homeProvider, value);
+
+                              });
+                            },
+                            child: Container(
+                                height: height * 0.06,
+                                alignment: Alignment.center,
                                 decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
                                   color: ThemeApp.lightGreyTab,
                                 ),
-                                child: Icon(
-                                  Icons.add,
-                                  // size: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
+                                child: TextFieldUtils().usingPassTextFields(
+                                    "Add to Cart",
+                                    ThemeApp.blackColor,
+                                    context))),
+                      )
+                    : Expanded(
+                        flex: 1,
+                        child: Container(
+                          height: height * 0.06,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
                             ),
-                          ],
+                            color: ThemeApp.lightGreyTab,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      counterPrice--;
+                                      remainingCounters();
+                                      addToCartData(homeProvider, value);
+
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: ThemeApp.lightGreyTab,
+                                    ),
+                                    child: Icon(
+                                      Icons.remove,
+                                      // size: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 8, top: 0, bottom: 0),
+                                  child: Text(
+                                    counterPrice.toString().padLeft(2, '0'),
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context).size.height *
+                                                .016,
+                                        fontWeight: FontWeight.w400,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      if (counterPrice <
+                                          int.parse(widget.productList[
+                                              "productCartMaxCounter"])) {
+                                        counterPrice++;
+                                        remainingCounters();
+                                        addToCartData(homeProvider, value);
+                                      }
+
+                                      // totalConter = counterPrice * item.price;
+                                      // counterPrice == 1
+                                      //     ? totalConter = item.price
+                                      //     : totalConter;
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: ThemeApp.lightGreyTab,
+                                    ),
+                                    child: Icon(
+                                      Icons.add,
+                                      // size: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * .05,
-            ),
-            Consumer<HomeProvider>(builder: (context, homeProvider, child) {
-              return Consumer<ProductProvider>(
-                  builder: (context, value, child) {
-                return Expanded(
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .05,
+                ),
+                Expanded(
                   flex: 1,
                   child: InkWell(
                     onTap: () async {
-                      setState(() {
-                        homeProvider.isHome = false;
-                        homeProvider.isBottomAppCart = false;
-                      });
-                      widget.productList["productTempCounter"] = counterPrice;
-                      print("_________widget.productListtempCounter_" +
-                          widget.productList["productTempCounter"].toString());
-                      final navigator = Navigator.of(context); // <- Add this
-
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-
-                      var contain = value.cartList.where((element) =>
-                          element.cartProductsDescription ==
-                          widget.productList["productsListDescription"]);
-
-                      if (value.cartList.length >= 0) {
-                        if (contain.isNotEmpty) {
-                          for (int i = 0; i < value.cartList.length; i++) {
-                            value.cartList[i].cartProductsTempCounter =
-                                (value.cartList[i].cartProductsTempCounter! +
-                                    1)!;
-                            print(
-                                "value.cartList[i].cartProductsTempCounter${value.cartList[i].cartProductsTempCounter.toString()}");
-                          }
-
-                          navigator
-                              .push(MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      CartDetailsActivity(
-                                          productList: widget.productList,
-                                          value: value)))
-                              .then((value) => setState(() {}));
-                        } else {
-                          print(
-                              "-------------I do not have any Values_________");
-
-                          navigator
-                              .push(MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      CartDetailsActivity(
-                                          productList: widget.productList,
-                                          value: value)))
-                              .then((value) => setState(() {}));
-                          print(
-                              "-------------Cart Length before ADD in product details_________${value.cartList.length}");
-
-                          value.add(
-                            widget.productList["productsListImage"],
-                            widget.productList["productsListName"],
-                            widget.productList["productSellerName"],
-                            double.parse(widget.productList["productRatting"]
-                                .toString()),
-                            widget.productList["productDiscountPrice"],
-                            widget.productList["productOriginalPrice"],
-                            widget.productList["productOfferPercent"],
-                            widget.productList["productAvailableVariants"],
-                            widget.productList["productCartProductsLength"],
-                            widget.productList["productsListDescription"],
-                            widget.productList["productCartMaxCounter"],
-                            widget.productList["productDeliveredBy"],
-                            widget.productList["productTempCounter"] == 0
-                                ? widget.productList["productTempCounter"] = 1
-                                : widget.productList["productTempCounter"],
-                          );
-
-                          print(
-                              "-------------Cart Length after ADD in product details_________${value.cartList.length}");
-                        }
-                      } else {
-                        print("-------------List is empty_________");
-                        print(
-                            "-------------Cart Length before ADD in product details_________${value.cartList.length}");
-
-                        value.add(
-                          widget.productList["productsListImage"],
-                          widget.productList["productsListName"],
-                          widget.productList["productSellerName"],
-                          double.parse(
-                              widget.productList["productRatting"].toString()),
-                          widget.productList["productDiscountPrice"],
-                          widget.productList["productOriginalPrice"],
-                          widget.productList["productOfferPercent"],
-                          widget.productList["productAvailableVariants"],
-                          widget.productList["productCartProductsLength"],
-                          widget.productList["productsListDescription"],
-                          widget.productList["productCartMaxCounter"],
-                          widget.productList["productDeliveredBy"],
-                          widget.productList["productTempCounter"] == 0
-                              ? widget.productList["productTempCounter"] = 1
-                              : widget.productList["productTempCounter"],
-                        );
-                        print("_________widget.model.tempCounter_333333333" +
-                            widget.model.tempCounter.toString());
-                        print(
-                            "-------------Cart Length after ADD in product details_________${value.cartList.length}");
-
-                        // if(value.lst.length>=0) {
-                        navigator
-                            .push(MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    CartDetailsActivity(
-                                        productList: widget.productList,
-                                        value: value)))
-                            .then((value) => setState(() {}));
-                        // }
-                      }
+                      buyNowButtonData(homeProvider, value);
                     },
                     child: Container(
                         height: height * 0.06,
@@ -567,13 +491,13 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         child: TextFieldUtils().usingPassTextFields(
                             "Buy now", ThemeApp.whiteColor, context)),
                   ),
-                );
-              });
-            })
-          ],
-        )
-        // : TextFieldUtils().textFieldHeightFour("OUT OF STOCK", context),
-        );
+                )
+              ],
+            )
+            // : TextFieldUtils().textFieldHeightFour("OUT OF STOCK", context),
+            );
+      });
+    });
   }
 
   Widget similarProductList() {
@@ -695,6 +619,210 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                 : new Center(child: new CircularProgressIndicator());
           }),
     );
+  }
+
+  buyNowButtonData(HomeProvider homeProvider, ProductProvider value) {
+    setState(() {
+      homeProvider.isHome = false;
+      homeProvider.isBottomAppCart = false;
+      widget.productList["productTempCounter"] = counterPrice;
+    });
+    print("_________widget.productListtempCounter_" +
+        widget.productList["productTempCounter"].toString());
+    final navigator = Navigator.of(context); // <- Add this
+
+    var contain = value.cartList.where((element) =>
+        element.cartProductsDescription ==
+        widget.productList["productsListDescription"]);
+
+    if (value.cartList.length >= 0) {
+      if (contain.isNotEmpty) {
+        for (int i = 0; i < value.cartList.length; i++) {
+          if (int.parse(widget.productList["productCartMaxCounter"]) >
+              value.cartList[i].cartProductsTempCounter!) {
+            value.cartList[i].cartProductsTempCounter =
+                (value.cartList[i].cartProductsTempCounter! + 1);
+          }
+          counterPrice = value.cartList[i].cartProductsTempCounter!;
+          print(
+              "value.cartList[i].cartProductsTempCounter${value.cartList[i].cartProductsTempCounter.toString()}");
+          Prefs.instance.setToken("counterProduct",
+              value.cartList[i].cartProductsTempCounter!.toString());
+        }
+
+        navigator
+            .push(MaterialPageRoute(
+                builder: (BuildContext context) => CartDetailsActivity(
+                    productList: widget.productList, value: value)))
+            .then((value) => setState(() {}));
+      } else {
+        print("-------------I do not have any Values_________");
+
+        navigator
+            .push(MaterialPageRoute(
+                builder: (BuildContext context) => CartDetailsActivity(
+                    productList: widget.productList, value: value)))
+            .then((value) => setState(() {}));
+        print(
+            "-------------Cart Length before ADD in product details_________${value.cartList.length}");
+
+        value.add(
+          widget.productList["productsListImage"],
+          widget.productList["productsListName"],
+          widget.productList["productSellerName"],
+          double.parse(widget.productList["productRatting"].toString()),
+          widget.productList["productDiscountPrice"],
+          widget.productList["productOriginalPrice"],
+          widget.productList["productOfferPercent"],
+          widget.productList["productAvailableVariants"],
+          widget.productList["productCartProductsLength"],
+          widget.productList["productsListDescription"],
+          widget.productList["productCartMaxCounter"],
+          widget.productList["productDeliveredBy"],
+          widget.productList["productTempCounter"] == 0
+              ? widget.productList["productTempCounter"] = 1
+              : widget.productList["productTempCounter"],
+        );
+
+        print(
+            "-------------Cart Length after ADD in product details_________${value.cartList.length}");
+      }
+    } else {
+      print("-------------List is empty_________");
+      print(
+          "-------------Cart Length before ADD in product details_________${value.cartList.length}");
+
+      value.add(
+        widget.productList["productsListImage"],
+        widget.productList["productsListName"],
+        widget.productList["productSellerName"],
+        double.parse(widget.productList["productRatting"].toString()),
+        widget.productList["productDiscountPrice"],
+        widget.productList["productOriginalPrice"],
+        widget.productList["productOfferPercent"],
+        widget.productList["productAvailableVariants"],
+        widget.productList["productCartProductsLength"],
+        widget.productList["productsListDescription"],
+        widget.productList["productCartMaxCounter"],
+        widget.productList["productDeliveredBy"],
+        widget.productList["productTempCounter"] == 0
+            ? widget.productList["productTempCounter"] = 1
+            : widget.productList["productTempCounter"],
+      );
+      print("_________widget.model.tempCounter_333333333" +
+          widget.model.tempCounter.toString());
+      print(
+          "-------------Cart Length after ADD in product details_________${value.cartList.length}");
+
+      // if(value.lst.length>=0) {
+      navigator
+          .push(MaterialPageRoute(
+              builder: (BuildContext context) => CartDetailsActivity(
+                  productList: widget.productList, value: value)))
+          .then((value) => setState(() {}));
+      // }
+    }
+  }
+
+  addToCartData(HomeProvider homeProvider, ProductProvider value) {
+    setState(() {
+      homeProvider.isHome = false;
+      homeProvider.isBottomAppCart = false;
+      widget.productList["productTempCounter"] = counterPrice;
+    });
+    print("_________widget.productListtempCounter_" +
+        widget.productList["productTempCounter"].toString());
+    final navigator = Navigator.of(context); // <- Add this
+
+    var contain = value.cartList.where((element) =>
+        element.cartProductsDescription ==
+        widget.productList["productsListDescription"]);
+
+    if (value.cartList.length >= 0) {
+      if (contain.isNotEmpty) {
+        for (int i = 0; i < value.cartList.length; i++) {
+          if (int.parse(widget.productList["productCartMaxCounter"]) >
+              value.cartList[i].cartProductsTempCounter!) {
+            value.cartList[i].cartProductsTempCounter =
+                (value.cartList[i].cartProductsTempCounter! + 1);
+          }
+          counterPrice = value.cartList[i].cartProductsTempCounter!;
+          print(
+              "value.cartList[i].cartProductsTempCounter${value.cartList[i].cartProductsTempCounter.toString()}");
+        }
+
+        // navigator
+        //     .push(MaterialPageRoute(
+        //     builder: (BuildContext context) => CartDetailsActivity(
+        //         productList: widget.productList, value: value)))
+        //     .then((value) => setState(() {}));
+      } else {
+        print("-------------I do not have any Values_________");
+
+        // navigator
+        //     .push(MaterialPageRoute(
+        //     builder: (BuildContext context) => CartDetailsActivity(
+        //         productList: widget.productList, value: value)))
+        //     .then((value) => setState(() {}));
+        print(
+            "-------------Cart Length before ADD in product details_________${value.cartList.length}");
+
+        value.add(
+          widget.productList["productsListImage"],
+          widget.productList["productsListName"],
+          widget.productList["productSellerName"],
+          double.parse(widget.productList["productRatting"].toString()),
+          widget.productList["productDiscountPrice"],
+          widget.productList["productOriginalPrice"],
+          widget.productList["productOfferPercent"],
+          widget.productList["productAvailableVariants"],
+          widget.productList["productCartProductsLength"],
+          widget.productList["productsListDescription"],
+          widget.productList["productCartMaxCounter"],
+          widget.productList["productDeliveredBy"],
+          widget.productList["productTempCounter"] == 0
+              ? widget.productList["productTempCounter"] = 1
+              : widget.productList["productTempCounter"],
+        );
+
+        print(
+            "-------------Cart Length after ADD in product details_________${value.cartList.length}");
+      }
+    } else {
+      print("-------------List is empty_________");
+      print(
+          "-------------Cart Length before ADD in product details_________${value.cartList.length}");
+
+      value.add(
+        widget.productList["productsListImage"],
+        widget.productList["productsListName"],
+        widget.productList["productSellerName"],
+        double.parse(widget.productList["productRatting"].toString()),
+        widget.productList["productDiscountPrice"],
+        widget.productList["productOriginalPrice"],
+        widget.productList["productOfferPercent"],
+        widget.productList["productAvailableVariants"],
+        widget.productList["productCartProductsLength"],
+        widget.productList["productsListDescription"],
+        widget.productList["productCartMaxCounter"],
+        widget.productList["productDeliveredBy"],
+        widget.productList["productTempCounter"] == 0
+            ? widget.productList["productTempCounter"] = 1
+            : widget.productList["productTempCounter"],
+      );
+      print("_________widget.model.tempCounter_333333333" +
+          widget.model.tempCounter.toString());
+      print(
+          "-------------Cart Length after ADD in product details_________${value.cartList.length}");
+
+      // if(value.lst.length>=0) {
+      // navigator
+      //     .push(MaterialPageRoute(
+      //     builder: (BuildContext context) => CartDetailsActivity(
+      //         productList: widget.productList, value: value)))
+      //     .then((value) => setState(() {}));
+      // }
+    }
   }
 
   getPrefData() async {

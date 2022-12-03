@@ -117,6 +117,20 @@ class Prefs {
   }
 
   //set Preferences
+  Future<void> setIntToken(String key, int value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(key, value);
+  }
+
+//get Preferences
+  Future<int> getIntToken(String key) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    int? Key;
+    Key = pref.getInt(key) ?? 0;
+    return Key;
+  }
+
+  //set Preferences
   Future<void> setTokenList(String key, List<String> value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList(key, value);

@@ -59,12 +59,12 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // getListFromPref();
+   // getListFromPref();
     if (kDebugMode) {
       print("widget.cartDetailScreen[]${widget.productList}");
       print("value.cartList.length");
       print(widget.value.cartList.length);
-    }
+    }StringConstant.cartCounters;
     // widget.productList[0]["productCartMaxCounter"] = '1';
     finalOriginalPrice = 0.0;
     finalDiscountPrice = 0.0;
@@ -80,6 +80,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
       Prefs.instance.setDoubleToken(
           StringConstant.totalOriginalPricePref, finalOriginalPrice);
+      Prefs.instance.setIntToken("counterProduct", widget.value.cartList[i].cartProductsTempCounter!);
 
       if (kDebugMode) {
         print("________finalOriginalPrice add: $i $finalOriginalPrice");
@@ -106,9 +107,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       if (kDebugMode) {
         print("grandTotalAmount inside add: $i $finalTotalPrice");
       }
-    }
+    }dataCount();
   }
 
+dataCount() async {
+  StringConstant.cartCounters= await Prefs.instance.getIntToken("counterProduct");
+  print("widget.productList[]" +  StringConstant.cartCounters.toString()   );
+}
   @override
   void dispose() {
     // TODO: implement dispose
@@ -128,11 +133,40 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
-          return  provider.isBottomAppCart ==false? appBar_backWidget(
-            context,
-            appTitle(context, "My Cart"),
+          return  provider.isBottomAppCart ==false? PreferredSize(
+            preferredSize: Size.fromHeight(height * .09),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              color: ThemeApp.darkGreyTab,
 
-            const SizedBox(),
+              child: AppBar(
+                centerTitle: false,
+                elevation: 0,
+                backgroundColor: ThemeApp.backgroundColor,
+                flexibleSpace: Container(
+                  height: height * .11,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    color: ThemeApp.whiteColor,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15)),
+                  ),
+                ),
+                leadingWidth: 40,
+                leading: Center(
+                  child: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: ThemeApp.blackColor,size: 30,),
+                      onPressed: () {
+                      Navigator.pop(context);
+                      }),
+                ),
+
+                // leadingWidth: width * .06,
+                title: Text("My Cart"),
+                // Row
+              ),
+            ),
           ):   PreferredSize(
             preferredSize: Size.fromHeight(height * .09),
             child: Container(
@@ -177,7 +211,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           return widget.value.cartList.isEmpty
               ? bottomNavigationBarWidget(context)
               : Container(
-                  height: height * .2,
+                  height: 144,
                   width: width,
                   decoration: const BoxDecoration(
                     color: ThemeApp.darkGreyColor,
@@ -454,6 +488,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         print(
             "temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
       }
+      setState(() {
+        StringConstant.availableCounterValues  =value.cartList[index].cartProductsTempCounter!;
+        widget.productList["productTempCounter"]  =value.cartList[index].cartProductsTempCounter;
+        Prefs.instance.setIntToken("counterProduct", value.cartList[index].cartProductsTempCounter!);
+
+      });
+
       finalPrices(value, index);
     }
   }
@@ -519,7 +560,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         print(
             "temp counter minus  ${value.cartList[index].cartProductsTempCounter}");
       }
-      value.cartList[index].cartProductsTotalOriginalPrice =
+      setState(() {
+        StringConstant.availableCounterValues  =value.cartList[index].cartProductsTempCounter!;
+        widget.productList["productTempCounter"]  =value.cartList[index].cartProductsTempCounter;
+        Prefs.instance.setIntToken("counterProduct", value.cartList[index].cartProductsTempCounter!);
+
+      });
+          value.cartList[index].cartProductsTotalOriginalPrice =
           ((value.cartList[index].cartProductsTempCounter)! *
               int.parse(
                   value.cartList[index].cartProductsOriginalPrice.toString()));
@@ -675,7 +722,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             onTap: () {
               value.del(index);
               finalPrices(value, index);
-            },
+              StringConstant.cartCounters = 0;
+              Prefs.instance.setIntToken("counterProduct",0);
+              },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,

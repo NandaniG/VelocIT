@@ -47,6 +47,7 @@ class _ProductListByCategoryActivityState
     StringConstant.sortByRadio;
     StringConstant.sortedBy;
     getListFromPref();
+    dataCount();
   }
 
   final indianRupeesFormat = NumberFormat.currency(
@@ -56,17 +57,11 @@ class _ProductListByCategoryActivityState
     symbol: '₹',
   );
 
-// var listFromPref;
-//
-//   getListFromPref() async {
-//     final prefs = await SharedPreferences.getInstance();
-//
-//     listFromPref = Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
-//
-//     print('____________CartData AFTER GETTING PREF______________');
-//     StringConstant.prettyPrintJson(listFromPref.toString());
-//
-//   }
+  dataCount() async {
+    StringConstant.cartCounters= await Prefs.instance.getIntToken("counterProduct");
+    print("dataCount..." +  StringConstant.cartCounters.toString());
+  }
+
   getListFromPref() async {
     final prefs = await SharedPreferences.getInstance();
     StringConstant.getCartList_FromPref =

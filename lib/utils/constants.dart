@@ -87,6 +87,7 @@ class StringConstant {
   static String deliveredByGetValues = '';
 
   static int availableCounterValues = 0;
+  static int cartCounters = 0;
   static var rupeesSymbol = '\u20B9';
 
 //cart price
