@@ -96,7 +96,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                           color: ThemeApp.blackColor,
                           fontSize: height * .02,
                           fontWeight: FontWeight.w600)),
-                  CharacterTextFormFieldsWidget(
+                  TextFormFieldsWidget(
                       errorText: AppLocalizations.of(context).otpSentTo,
                       textInputType: TextInputType.text,
                       controller: emailOTPController,
@@ -129,7 +129,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                           color: ThemeApp.blackColor,
                           fontSize: height * .02,
                           fontWeight: FontWeight.w600)),
-                  CharacterTextFormFieldsWidget(
+                  TextFormFieldsWidget(
                       errorText: AppLocalizations.of(context).otpSentTo,
                       textInputType: TextInputType.text,
                       controller: mobileOTPController,

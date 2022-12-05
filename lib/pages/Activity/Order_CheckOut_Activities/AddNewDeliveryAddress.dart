@@ -215,7 +215,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            CharacterTextFormFieldsWidget(
+            TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).houseBuildingNo,
                 textInputType: TextInputType.text,
                 controller: value.houseBuildingController,
@@ -232,7 +232,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            CharacterTextFormFieldsWidget(
+            TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).areaColonyName,
                 textInputType: TextInputType.text,
                 controller: value.areaColonyController,
@@ -249,7 +249,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            CharacterTextFormFieldsWidget(
+            TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).state,
                 textInputType: TextInputType.text,
                 controller: value.stateController,
@@ -266,7 +266,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            CharacterTextFormFieldsWidget(
+            TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).city,
                 textInputType: TextInputType.text,
                 controller: value.cityController,
@@ -663,7 +663,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            CharacterTextFormFieldsWidget(
+            TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).houseBuildingNo,
                 textInputType: TextInputType.text,
                 controller: houseBuildingController,
@@ -680,7 +680,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            CharacterTextFormFieldsWidget(
+            TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).areaColonyName,
                 textInputType: TextInputType.text,
                 controller: areaColonyController,
@@ -697,7 +697,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            CharacterTextFormFieldsWidget(
+            TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).state,
                 textInputType: TextInputType.text,
                 controller: stateController,
@@ -714,7 +714,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
-            CharacterTextFormFieldsWidget(
+            TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).city,
                 textInputType: TextInputType.text,
                 controller: cityController,

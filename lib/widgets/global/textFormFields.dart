@@ -4,7 +4,6 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 
 import '../../utils/styles.dart';
 
-/*
 class TextFormFieldsWidget extends StatefulWidget {
   TextEditingController controller;
   bool enablepadding;
@@ -104,7 +103,6 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
     );
   }
 }
-*/
 
 class CharacterTextFormFieldsWidget extends StatefulWidget {
   TextEditingController controller;

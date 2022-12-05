@@ -20,6 +20,7 @@ import 'package:velocit/pages/auth/sign_in.dart';
 import 'package:velocit/pages/homePage.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
+import 'package:velocit/services/models/ProductDetailModel.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 import 'package:velocit/services/providers/cart_Provider.dart';
 import 'package:velocit/utils/constants.dart';
@@ -37,8 +38,8 @@ import 'services/providers/Products_provider.dart';
 Future<void> main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
-  StringConstant.isLogIn = true;
+  runApp( MyApp());
+  StringConstant.isLogIn = false;
   StringConstant.emailOTPVar =
       (await Prefs.instance.getToken(StringConstant.emailOTPPref))!;
 
@@ -93,7 +94,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+   MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -120,7 +121,10 @@ class MyApp extends StatelessWidget {
         ],
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
         var data =   provider.loadJson();
-          return Consumer<ProductProvider>(builder: (context, value, child) {
+        final availableProducts = Provider.of<ProductProvider>(context);
+
+        final productsList = availableProducts.getProductsLists();
+        return Consumer<ProductProvider>(builder: (context, value, child) {
             return Consumer<LocaleProvider>(
                 builder: (context, localeProvider, snapshot) {
               return MaterialApp(
@@ -162,6 +166,7 @@ class MyApp extends StatelessWidget {
                       ProductListByCategoryActivity(
                           productList: provider
                               .productList[provider.indexofSubProductList]),
+                  // '/productDetailsActivity': (context) => ProductDetailsActivity(model: productsList[0], value: value),
                   '/cartScreen': (context) => CartDetailsActivity(
                       value: value, productList: provider.cartProductList),
                   '/orderReviewSubActivity': (context) =>

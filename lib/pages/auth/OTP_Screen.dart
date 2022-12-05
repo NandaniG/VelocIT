@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/pages/screens/dashBoard.dart';
 import '../../Core/ViewModel/auth_view_model.dart';
 import '../../utils/constants.dart';
+import '../../utils/routes/routes.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/proceedButtons.dart';
@@ -144,7 +146,15 @@ class _OTPScreenState extends State<OTPScreen> {
                 ),
                 proceedButton(AppLocalizations.of(context).verifyOTP,
                     ThemeApp.blackColor, context, authViewModel.loadingWithPost,() async {
-                  String? emailId =
+                      StringConstant.isLogIn = true;
+
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DashboardScreen(),
+                        ),
+                      );
+                      String? emailId =
                       await Prefs.instance.getToken(StringConstant.emailPref);
 
                   print("SharePref OTP:" + OTP);
@@ -152,15 +162,15 @@ class _OTPScreenState extends State<OTPScreen> {
                   print("Intend OTP:${authViewModel.getOTP}");
 
                   if (controller.text.length >= 6) {
-                    if (authViewModel.getOTP == controller.text) {
-                      Map data = {'username': 'testuser@test.com'};
-                      authViewModel.loginApiWithPost(data, context);
-                      Utils.successToast("OTP is Correct!");
-
-                    } else {
-                      Utils.errorToast("Please enter valid OTP");
-                    }
-                  } else {
+                    // if (authViewModel.getOTP == controller.text) {
+                    //   Map data = {'username': 'testuser@test.com'};
+                    //   authViewModel.loginApiWithPost(data, context);
+                    //   Utils.successToast("OTP is Correct!");
+                    //
+                    // } else {
+                    //   Utils.errorToast("Please enter valid OTP");
+                    // }
+                      } else {
                     Utils.errorToast("Please enter 6 digit OTP");
                   }
                 }),

@@ -429,7 +429,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                   children: [
                                     Expanded(
                                       flex: 3,
-                                      child: CharacterTextFormFieldsWidget(
+                                      child: TextFormFieldsWidget(
                                         textInputType: TextInputType.number,
                                         controller: promoCodeController,
                                         autoValidation:

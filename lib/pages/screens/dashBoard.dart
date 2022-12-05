@@ -132,7 +132,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ShopByCategoryActivity(
                                             shopByCategoryList:
                                                 provider.jsonData[
-                                                    "shopByCategoryList"]),
+                                                    "shopByCategoryList"],shopByCategorySelected: 0),
                                   ),
                                 );
                               })
@@ -322,7 +322,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             MaterialPageRoute(
                               builder: (context) => ShopByCategoryActivity(
                                   shopByCategoryList:
-                                      provider.shopByCategoryList),
+                                      provider.shopByCategoryList,shopByCategorySelected:  index),
                             ),
                           );
                         },

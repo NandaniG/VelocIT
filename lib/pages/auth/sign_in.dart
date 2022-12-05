@@ -144,7 +144,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     AppLocalizations.of(context).emailORMobile, context),
 
                 !_usingPassVisible
-                    ? CharacterTextFormFieldsWidget(
+                    ? TextFormFieldsWidget(
                         errorText: AppLocalizations.of(context).emailError,
                         textInputType: TextInputType.emailAddress,
                         controller: email,
@@ -182,7 +182,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     ? const SizedBox(
                         height: 0,
                       )
-                    : CharacterTextFormFieldsWidget(
+                    : TextFormFieldsWidget(
                         errorText: AppLocalizations.of(context).emailError,
                         textInputType: TextInputType.emailAddress,
                         controller: emailOtp,

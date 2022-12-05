@@ -258,8 +258,8 @@ Widget searchBar(BuildContext context) {
           filled: true,
           fillColor: ThemeApp.backgroundColor,
           isDense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+          // contentPadding:
+          //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
           /* -- Text and Icon -- */
           hintText: "Search for Products",
           hintStyle: const TextStyle(
@@ -418,7 +418,8 @@ Widget bottomNavBarItems(BuildContext context) {
                 MaterialPageRoute(
                   builder: (context) => ShopByCategoryActivity(
                       shopByCategoryList:
-                          provider.jsonData["shopByCategoryList"]),
+                          provider.jsonData["shopByCategoryList"],
+                      shopByCategorySelected:0),
                 ),
                 (route) => false);
           }
@@ -429,7 +430,7 @@ Widget bottomNavBarItems(BuildContext context) {
               print("provider.cartProductList");
               print(provider.cartProductList);
             }
-           provider.isBottomAppCart = true;
+            provider.isBottomAppCart = true;
             provider.isHome = true;
             Navigator.pushAndRemoveUntil(
                 context,
@@ -492,50 +493,48 @@ Widget bottomNavBarItems(BuildContext context) {
               label: ''),
           BottomNavigationBarItem(
               backgroundColor: Colors.white,
-              icon:   Stack(
-          children: <Widget>[
-          _currentIndex == 4
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Image.asset('assets/icons/shopping-cart.png',
-                        height: 35),
+              icon: Stack(
+                children: <Widget>[
+                  _currentIndex == 4
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Image.asset('assets/icons/shopping-cart.png',
+                              height: 35),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Image.asset('assets/icons/shopping-cart.png',
+                              height: 35),
+                        ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      constraints: BoxConstraints(
+                          minWidth: 22,
+                          minHeight: 10,
+                          maxHeight: 25,
+                          maxWidth: 25),
+                      child: Padding(
+                        padding: const EdgeInsets.all(1),
+                        child: Text(
+                          '${product.cartList.length}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                   )
-                : Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Image.asset('assets/icons/shopping-cart.png',
-                        height: 35),
-                  ),
-          Positioned(
-            right: 0,top: 0,
-            child: Container(
-              padding: EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(15),
+                ],
               ),
-              constraints: BoxConstraints(
-
-                minWidth: 22,
-                minHeight: 10,
-                maxHeight: 25,maxWidth: 25
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(1),
-                child: Text(
-                  '${product.cartList.length}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-
-
 
               // _currentIndex == 4
               //     ? Padding(
@@ -630,17 +629,16 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                           // Navigator.of(context).pop();
 
                           scanQR();
-
-                          }),
+                        }),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .01,
                         ),
-                        _startScanFileButton(state),
+                       _startScanFileButton(state),
                         // const Text(
                         //   'Code:',
                         //   textAlign: TextAlign.center,
                         // ),
-                    /*    if (state is BarcodeFinderLoading)
+                        /*    if (state is BarcodeFinderLoading)
                           _loading()
                         else if (state is BarcodeFinderError)
 
@@ -687,9 +685,8 @@ class _ScannerWidgetState extends State<ScannerWidget> {
       }
       print('_scanBarcode timer... : ' + _scanBarcode);
 
-      if (!mounted) return; print('_scanBarcode : ' + _scanBarcode);
-
-
+      if (!mounted) return;
+      print('_scanBarcode : ' + _scanBarcode);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -707,61 +704,27 @@ class _ScannerWidgetState extends State<ScannerWidget> {
         color: ThemeApp.darkGreyColor,
       ),
       child: InkWell(
-          onTap: state is! BarcodeFinderLoading
-              ? () async {
-                  FilePickerResult? pickedFile =
-                      await FilePicker.platform.pickFiles();
-                  if (pickedFile != null) {
-                    String? filePath = pickedFile.files.single.path;
-                    if (filePath != null) {
-                      final file = File(filePath);
-                      controller.scanFile(file);
-                    }
-                  }
+          onTap:state is! BarcodeFinderLoading
+          ? () async {
+            FilePickerResult? pickedFile =
+            await FilePicker.platform.pickFiles();
+            if (pickedFile != null) {
+              String? filePath = pickedFile.files.single.path;
+              if (filePath != null) {
+                final file = File(filePath);
+                controller.scanFile(file);
+              }
+            }else{
+              Utils.errorToast('Please select content');
+            }
+                }:null,
 
-                  if (state is BarcodeFinderLoading)
-                    _loading();
-                  else if   (state is BarcodeFinderError) {
-                 if(_scanBarcode== 'Please scan proper content')
-                Utils.errorToast(_scanBarcode);
-
-                _text(
-                      '${state.message}',
-                    );
-                  } else if (state is BarcodeFinderSuccess) {
-
-                    Utils.successToast(state.code);
-
-
-                  }
-                  // final snackBar = SnackBar(
-                  //   content: Text(_scanBarcode),
-                  //   backgroundColor: ThemeApp.greenappcolor,
-                  //   clipBehavior: Clip.antiAlias,
-                  // );
-                  // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-              : null,
           child: TextFieldUtils().usingPassTextFields(
               "Open Gallery", ThemeApp.whiteColor, context)),
     );
   }
 
-  Future<String?> scanFile() async {
-    // Used to pick a file from device storage
-    final pickedFile = await FilePicker.platform.pickFiles();
-    if (pickedFile != null) {
-      final filePath = pickedFile.files.single.path;
-      if (filePath != null) {
-        return await BarcodeFinder.scanFile(path: filePath);
-      }
-    }
-  }
 
-  Text _text(String text) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-    );
-  }
+
+
 }

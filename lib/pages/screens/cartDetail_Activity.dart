@@ -59,12 +59,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   // getListFromPref();
+    // getListFromPref();
     if (kDebugMode) {
       print("widget.cartDetailScreen[]${widget.productList}");
       print("value.cartList.length");
       print(widget.value.cartList.length);
-    }StringConstant.cartCounters;
+    }
+    // print("_________widget.productListcart......" +
+    //     widget.productList["productTempCounter"].toString());
     // widget.productList[0]["productCartMaxCounter"] = '1';
     finalOriginalPrice = 0.0;
     finalDiscountPrice = 0.0;
@@ -72,6 +74,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     finalTotalPrice = 0.0;
 
     for (int i = 0; i < widget.value.cartList.length; i++) {
+
+      // widget.value.cartList[i].cartProductsTempCounter= widget.productList["productTempCounter"];
+      print("_________widget.productListcart......" +
+          widget.value.cartList[i].cartProductsTempCounter.toString());
+
       finalOriginalPrice = finalOriginalPrice +
           (int.parse(
                   widget.value.cartList[i].cartProductsTempCounter.toString()) *
@@ -80,7 +87,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
       Prefs.instance.setDoubleToken(
           StringConstant.totalOriginalPricePref, finalOriginalPrice);
-      Prefs.instance.setIntToken("counterProduct", widget.value.cartList[i].cartProductsTempCounter!);
 
       if (kDebugMode) {
         print("________finalOriginalPrice add: $i $finalOriginalPrice");
@@ -107,13 +113,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       if (kDebugMode) {
         print("grandTotalAmount inside add: $i $finalTotalPrice");
       }
-    }dataCount();
+    }
   }
 
-dataCount() async {
-  StringConstant.cartCounters= await Prefs.instance.getIntToken("counterProduct");
-  print("widget.productList[]" +  StringConstant.cartCounters.toString()   );
-}
   @override
   void dispose() {
     // TODO: implement dispose
@@ -158,7 +160,9 @@ dataCount() async {
                   child: IconButton(
                       icon: const Icon(Icons.arrow_back, color: ThemeApp.blackColor,size: 30,),
                       onPressed: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
+                      // Navigator.pop(context);
+                      Navigator.pushReplacementNamed(context, '/productDetailsActivity').then((_) => setState(() {}));
                       }),
                 ),
 
@@ -489,9 +493,7 @@ dataCount() async {
             "temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
       }
       setState(() {
-        StringConstant.availableCounterValues  =value.cartList[index].cartProductsTempCounter!;
         widget.productList["productTempCounter"]  =value.cartList[index].cartProductsTempCounter;
-        Prefs.instance.setIntToken("counterProduct", value.cartList[index].cartProductsTempCounter!);
 
       });
 
@@ -560,12 +562,7 @@ dataCount() async {
         print(
             "temp counter minus  ${value.cartList[index].cartProductsTempCounter}");
       }
-      setState(() {
-        StringConstant.availableCounterValues  =value.cartList[index].cartProductsTempCounter!;
-        widget.productList["productTempCounter"]  =value.cartList[index].cartProductsTempCounter;
-        Prefs.instance.setIntToken("counterProduct", value.cartList[index].cartProductsTempCounter!);
 
-      });
           value.cartList[index].cartProductsTotalOriginalPrice =
           ((value.cartList[index].cartProductsTempCounter)! *
               int.parse(
@@ -573,7 +570,10 @@ dataCount() async {
       if (kDebugMode) {
         print(
             "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
-      }
+      }  setState(() {
+        widget.productList["productTempCounter"]  =value.cartList[index].cartProductsTempCounter;
+
+      });
 ////PRICE CODE AFTER ADDING COUNT
       finalPrices(value, index);
     }else{
@@ -686,7 +686,7 @@ dataCount() async {
                     padding: const EdgeInsets.only(
                         left: 8.0, right: 8, top: 0, bottom: 0),
                     child: Text(
-                      value.cartList[index].cartProductsTempCounter.toString(),
+                      value.cartList[index].cartProductsTempCounter.toString().padLeft(2, '0'),
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.height * .016,
                           fontWeight: FontWeight.w400,
@@ -722,9 +722,7 @@ dataCount() async {
             onTap: () {
               value.del(index);
               finalPrices(value, index);
-              StringConstant.cartCounters = 0;
-              Prefs.instance.setIntToken("counterProduct",0);
-              },
+            },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,

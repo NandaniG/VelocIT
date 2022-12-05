@@ -1,3 +1,5 @@
+/* ---------------------its useful file-------------------------*/
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -12,6 +14,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import '../../utils/styles.dart';
+import '../../utils/utils.dart';
 
 class ScannerWithGallery extends StatefulWidget {
   const ScannerWithGallery({Key? key}) : super(key: key);
@@ -90,25 +93,6 @@ class _ScannerWithGalleryState extends State<ScannerWithGallery> {
     );
   }
 
-// Widget _scannerWidget(){
-//     return Container(
-//       child: Column(
-//         children: [
-//           if (state is BarcodeFinderLoading)
-//             _loading()
-//           else if (state is BarcodeFinderError)
-//             _text(
-//               '${state.message}',
-//             )
-//           else if (state is BarcodeFinderSuccess)
-//               _text(
-//                 '${state.code}',
-//               ),
-//           _startScanFileButton(state),
-//         ],
-//       ),
-//     );
-// }
   String _scanBarcode = 'Unknown';
 
   Future<void> scanQR() async {
@@ -177,33 +161,37 @@ class BarcodeFinderError extends BarcodeFinderState {
 
 class BarcodeFinderController extends ChangeNotifier {
   BarcodeFinderState state = BarcodeFinderInitial();
+  var barcode = '';
 
   void scanFile(File file) async {
-    _emit(BarcodeFinderLoading());
+    emit(BarcodeFinderLoading());
     try {
-      final barcode = await BarcodeFinder.scanFile(
+      barcode = (await BarcodeFinder.scanFile(
         path: file.path,
-      );
+      ))!;
       _update(barcode);
+      Utils.successToast(barcode.toString());
+      print("scanned value is : barcode" + barcode.toString());
     } catch (_) {
-      _emit(
+      emit(
         BarcodeFinderError('Not found'),
       );
+      Utils.errorToast('Please scan proper content');
     }
   }
 
-  void _emit(BarcodeFinderState newState) {
+  void emit(BarcodeFinderState newState) {
     state = newState;
     notifyListeners();
   }
 
   void _update(String? barcode) {
     if (barcode != null) {
-      _emit(
+      emit(
         BarcodeFinderSuccess(barcode),
       );
     } else {
-      _emit(
+      emit(
         BarcodeFinderError('Not Found'),
       );
     }

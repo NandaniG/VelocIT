@@ -44,10 +44,13 @@ class AuthViewModel with ChangeNotifier {
       setLoadingWithGet(false);
       if (kDebugMode) {
         print("Login Api With Get: $value");
+        print("Login Api With Get: ${value!["response"]["body"]["payload"]}");
       }
-        _getOTP = value!["payload"]["otp"].toString();
-        Prefs.instance.setToken("otpKey", _getOTP);
-        Utils.successToast(value!["payload"]["otp"].toString());
+        _getOTP = value!["response"]["body"]["payload"].toString();
+      print("Login Api With Get: $_getOTP");
+
+      Prefs.instance.setToken("otpKey", _getOTP);
+        Utils.successToast(value!["response"]["body"]["payload"].toString());
 
         Navigator.pushNamed(context, RoutesName.otpRoute);
         // Navigator.of(context).push(
@@ -75,7 +78,7 @@ class AuthViewModel with ChangeNotifier {
       }
 
       StringConstant.isLogIn = true;
-      Navigator.pushNamed(context, RoutesName.dashboardRoute);
+      Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
     }).onError((error, stackTrace) {
       setLoadingWithPost(false);
       if (kDebugMode) {
