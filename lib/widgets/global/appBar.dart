@@ -430,8 +430,11 @@ Widget bottomNavBarItems(BuildContext context) {
               print("provider.cartProductList");
               print(provider.cartProductList);
             }
+            product.badgeFinalCount;
+
             provider.isBottomAppCart = true;
             provider.isHome = true;
+
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -523,7 +526,7 @@ Widget bottomNavBarItems(BuildContext context) {
                       child: Padding(
                         padding: const EdgeInsets.all(1),
                         child: Text(
-                          '${product.cartList.length}',
+                          '${product.badgeFinalCount}',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,

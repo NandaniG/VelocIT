@@ -944,7 +944,7 @@ class TextFieldUtils {
     return Text(
       text,
       style: style,
-      maxLines: 2,
+      maxLines: 2,textAlign: TextAlign.center,
     );
   }
 }

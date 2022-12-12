@@ -2,20 +2,20 @@ import 'dart:convert';
 
 
 
-List<Payload> payloadFromJson(String str) =>
-    List<Payload>.from(json.decode(str).map((x) => Payload.fromJson(x)));
+List<Payloads> payloadFromJson(String str) =>
+    List<Payloads>.from(json.decode(str).map((x) => Payloads.fromJson(x)));
 
-String payloadToJson(List<Payload> data) =>
+String payloadToJson(List<Payloads> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class Payload {
+class Payloads {
   String sponsorlogo;
 
-  Payload({
+  Payloads({
     required this.sponsorlogo,
   });
 
-  factory Payload.fromJson(Map<String, dynamic> json) => Payload(
+  factory Payloads.fromJson(Map<String, dynamic> json) => Payloads(
         sponsorlogo: json["sponsorlogo"],
       );
 

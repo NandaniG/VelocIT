@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../Core/Model/CategoriesModel.dart';
 import '../../../Core/Model/productSpecificListModel.dart';
+import '../../../Core/Model/servicesModel.dart';
 import '../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../Core/ViewModel/product_listing_view_model.dart';
 import '../../../Core/data/responses/status.dart';
@@ -21,28 +22,28 @@ import '../../homePage.dart';
 import '../../screens/dashBoard.dart';
 import '../Product_Activities/Products_List.dart';
 
-class ShopByCategoryActivity extends StatefulWidget {
-  List<CategoryList>? shopByCategoryList;
+class BookServiceActivity extends StatefulWidget {
+  List<ServiceList>? shopByCategoryList;
   final int shopByCategorySelected;
 
-  ShopByCategoryActivity({
+  BookServiceActivity({
     Key? key,
     required this.shopByCategoryList,
     required this.shopByCategorySelected,
   }) : super(key: key);
 
   @override
-  State<ShopByCategoryActivity> createState() => _ShopByCategoryActivityState();
+  State<BookServiceActivity> createState() => _BookServiceActivityState();
 }
 
-class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
+class _BookServiceActivityState extends State<BookServiceActivity> {
   int selected = 0;
   double height = 0.0;
   double width = 0.0;
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   ProductSpecificListViewModel productViewModel =
-      ProductSpecificListViewModel();
-    Map data = {"category_code":"EOLP","recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
+  ProductSpecificListViewModel();
+  Map data = {"category_code":"EOLP","recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
 
   var productList;
   @override
@@ -98,7 +99,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                       height: height * .02,
                     ),
                     TextFieldUtils().listHeadingTextField(
-                        AppLocalizations.of(context).shopByCategories, context),
+                        'Book our Services', context),
                     SizedBox(
                       height: height * .02,
                     ),
@@ -153,8 +154,8 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                               .imageUrl!,
                                           fit: BoxFit.fill,
                                           height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
+                                              .size
+                                              .height *
                                               .07,
                                         ),
                                       ),
@@ -170,7 +171,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                   ),
                                   expandedAlignment: Alignment.centerLeft,
                                   expandedCrossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  CrossAxisAlignment.start,
                                   children: [subListOfCategories()],
                                 ),
                               ]),
@@ -192,113 +193,113 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
               ? Container(
-                  height: height * 0.23,
-                  child: Carousel(
-                    images: snapshot.data?.map((e) {
-                      return Card(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        color: ThemeApp.whiteColor,
-                        child: ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            child: /*Image.network(
+              height: height * 0.23,
+              child: Carousel(
+                images: snapshot.data?.map((e) {
+                  return Card(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    color: ThemeApp.whiteColor,
+                    child: ClipRRect(
+                        borderRadius:
+                        const BorderRadius.all(Radius.circular(10)),
+                        child: /*Image.network(
                             // width: double.infinity,
                             e.sponsorlogo,
                             fit: BoxFit.fill,
                           ),*/
-                                Image.asset(
-                              e.sponsorlogo,
-                              fit: BoxFit.fill,
-                            )),
-                      );
-                    }).toList(),
-                    dotSize: 8.0,
-                    autoplay: false,
-                    dotSpacing: 15.0,
-                    dotColor: ThemeApp.lightGreyTab,
-                    dotIncreasedColor: ThemeApp.darkGreyTab,
-                    indicatorBgPadding: 10.0,
-                    dotBgColor: Colors.transparent,
-                    borderRadius: true,
-                    boxFit: BoxFit.cover,
-                    dotPosition: DotPosition.bottomCenter,
-                  ))
+                        Image.asset(
+                          e.sponsorlogo,
+                          fit: BoxFit.fill,
+                        )),
+                  );
+                }).toList(),
+                dotSize: 8.0,
+                autoplay: false,
+                dotSpacing: 15.0,
+                dotColor: ThemeApp.lightGreyTab,
+                dotIncreasedColor: ThemeApp.darkGreyTab,
+                indicatorBgPadding: 10.0,
+                dotBgColor: Colors.transparent,
+                borderRadius: true,
+                boxFit: BoxFit.cover,
+                dotPosition: DotPosition.bottomCenter,
+              ))
               : const Center(child: CircularProgressIndicator());
         });
   }
 
   Widget subListOfCategories() {
 
-          return Container(
-              height: 250,
-              alignment: Alignment.center,
-              child: GridView.builder(
-                itemCount: widget.shopByCategoryList!.length,
-                physics: const AlwaysScrollableScrollPhysics(),
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 1,
-                  crossAxisCount: 3,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    onTap: () {
+    return Container(
+        height: 250,
+        alignment: Alignment.center,
+        child: GridView.builder(
+          itemCount: widget.shopByCategoryList!.length,
+          physics: const AlwaysScrollableScrollPhysics(),
+          gridDelegate:
+          const SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1,
+            crossAxisCount: 3,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return InkWell(
+              onTap: () {
 
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductListByCategoryActivity(productList: widget.shopByCategoryList![index],
-                                 ),
-                            ),
-                          );
-                    },
-                    child: Container(
-                        padding: const EdgeInsets.all(2.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: ThemeApp.textFieldBorderColor,
-                              width: 1.5),
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) =>
+                //         ProductListByCategoryActivity(productList: widget.shopByCategoryList![index],
+                //         ),
+                //   ),
+                // );
+              },
+              child: Container(
+                  padding: const EdgeInsets.all(2.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: ThemeApp.textFieldBorderColor,
+                        width: 1.5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 1.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+
+                        ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(50)),
+                          child: Image.network(
+                            // width: double.infinity,
+                            widget
+                                .shopByCategoryList![index].imageUrl!,                                  fit: BoxFit.fill,
+
+                            height: MediaQuery.of(context)
+                                .size
+                                .height *
+                                .07,
+                          ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 1.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
 
-                              ClipRRect(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(50)),
-                                child: Image.network(
-                                  // width: double.infinity,
-                                  widget
-                                      .shopByCategoryList![index].imageUrl!,                                  fit: BoxFit.fill,
-
-                                  height: MediaQuery.of(context)
-                                      .size
-                                      .height *
-                                      .07,
-                                ),
-                              ),
-
-                              SizedBox(
-                                height:
-                                MediaQuery.of(context).size.height *
-                                    .01,
-                              ),TextFieldUtils().dynamicText(
-                                  widget.shopByCategoryList![index].name!,
-                                  context,
-                                  TextStyle(
-                                    color: ThemeApp.darkGreyColor,
-                                    // fontWeight: FontWeight.w500,
-                                    fontSize: height * .02,
-                                  )),
-                            /*  Expanded(
+                        SizedBox(
+                          height:
+                          MediaQuery.of(context).size.height *
+                              .01,
+                        ),TextFieldUtils().dynamicText(
+                            widget.shopByCategoryList![index].name!,
+                            context,
+                            TextStyle(
+                              color: ThemeApp.darkGreyColor,
+                              // fontWeight: FontWeight.w500,
+                              fontSize: height * .02,
+                            )),
+                        /*  Expanded(
                                 flex: 1,
                                 child: Container(
                                   width: 60.0,
@@ -328,12 +329,12 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                       fontSize: height * .02,
                                     )),
                               )*/
-                            ],
-                          ),
-                        )),
-                  );
-                },
-              ));
+                      ],
+                    ),
+                  )),
+            );
+          },
+        ));
 
 
     /*ChangeNotifierProvider<ProductSpecificListViewModel>(

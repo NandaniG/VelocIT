@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/ViewModel/product_listing_view_model.dart';
+import '../../../Core/Model/CategoriesModel.dart';
+import '../../../Core/Model/productSpecificListModel.dart';
+import '../../../Core/data/responses/status.dart';
 import '../../../services/models/CartModel.dart';
 import '../../../services/models/ProductDetailModel.dart';
 import '../../../services/providers/Products_provider.dart';
@@ -19,9 +23,9 @@ import 'ProductDetails_activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProductListByCategoryActivity extends StatefulWidget {
-  final dynamic productList;
+  CategoryList? productList;
 
-  const ProductListByCategoryActivity({Key? key, required this.productList})
+  ProductListByCategoryActivity({Key? key, required this.productList})
       : super(key: key);
 
   @override
@@ -32,21 +36,36 @@ class ProductListByCategoryActivity extends StatefulWidget {
 class _ProductListByCategoryActivityState
     extends State<ProductListByCategoryActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
+
   double height = 0.0;
   double width = 0.0;
 
-  // late List<CartModel> cartList;
   late List<ProductDetailsModel> productList;
-  int? _radioSelected = 1;
-  String _radioVal = "";
+  var categoryCode;
+  ProductSpecificListViewModel productSpecificListViewModel =
+      ProductSpecificListViewModel();
+  late Map<String, dynamic> data = new Map<String, dynamic>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    data = {
+      "category_code": 'EOLP',
+      "recommended_for_you": "1",
+      "Merchants Near You": "1",
+      "best_deal": "",
+      'budget_buys': ""
+    };
+    // data = {"category_code": widget.productList!.categoryCode,"recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
+    print(data.toString());
+    // categoryCode =widget.productList!.categoryCode;
+
+    // print("productList"+widget.productList!.categoryCode!);
+    productSpecificListViewModel.productSpecificListWithGet(context, data);
     StringConstant.sortByRadio;
     StringConstant.sortedBy;
-    getListFromPref();
+    // getListFromPref();
     dataCount();
   }
 
@@ -58,8 +77,9 @@ class _ProductListByCategoryActivityState
   );
 
   dataCount() async {
-    StringConstant.cartCounters= await Prefs.instance.getIntToken("counterProduct");
-    print("dataCount..." +  StringConstant.cartCounters.toString());
+    StringConstant.cartCounters =
+        await Prefs.instance.getIntToken("counterProduct");
+    print("dataCount..." + StringConstant.cartCounters.toString());
   }
 
   getListFromPref() async {
@@ -75,60 +95,79 @@ class _ProductListByCategoryActivityState
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    final cart = Provider.of<CartProvider>(context);
     final availableProducts = Provider.of<ProductProvider>(context);
 
     final productsList = availableProducts.getProductsLists();
 
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
-      key: scaffoldGlobalKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .12),
-        child: appBarWidget(
-            context,
-            searchBar(context),
-            addressWidget(context, StringConstant.placesFromCurrentLocation),
-            setState(() {})),
-      ),
-      bottomNavigationBar: bottomNavigationBarWidget(context),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: SafeArea(
-        child: Consumer<ProductProvider>(builder: (context, product, _) {
-          return Padding(
-            padding:
-                const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-            child: SingleChildScrollView(
-                // height: MediaQuery.of(context).size.height,
-                child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                listOfMobileDevices(productsList),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .02,
-                ),
-                filterWidgets(productsList),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .02,
-                ),
-                mobileGridList(productsList, product)
-              ],
-            )),
-          );
-        }),
-      ),
-    );
+        backgroundColor: ThemeApp.backgroundColor,
+        key: scaffoldGlobalKey,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(height * .12),
+          child: appBarWidget(
+              context,
+              searchBar(context),
+              addressWidget(context, StringConstant.placesFromCurrentLocation),
+              setState(() {})),
+        ),
+        bottomNavigationBar: bottomNavigationBarWidget(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        body: SafeArea(
+          child: ChangeNotifierProvider<ProductSpecificListViewModel>(
+            create: (BuildContext context) => productSpecificListViewModel,
+            child: Consumer<ProductSpecificListViewModel>(
+                builder: (context, productListProvider, child) {
+              switch (productListProvider.productSpecificList.status) {
+                case Status.LOADING:
+                  print("Api load");
+
+                  return CircularProgressIndicator();
+                case Status.ERROR:
+                  print("Api error");
+
+                  return Text(productListProvider.productSpecificList.message
+                      .toString());
+                case Status.COMPLETED:
+                  print("Api calll");
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, top: 10, bottom: 10),
+                    child: SingleChildScrollView(
+                        // height: MediaQuery.of(context).size.height,
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        listOfMobileDevices(productListProvider),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .02,
+                        ),
+                        filterWidgets(productsList),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .02,
+                        ),
+                        productListView(productListProvider)
+                      ],
+                    )),
+                  );
+              }
+              return Text("sahdjashdj");
+            }),
+          ),
+        ));
   }
 
-  Widget listOfMobileDevices(List<ProductDetailsModel> product) {
+  Widget listOfMobileDevices(ProductSpecificListViewModel productListProvider) {
     return Container(
       height: height * .15,
       child: ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: widget.productList["productsList"].length,
+          itemCount: productListProvider
+              .productSpecificList.data!.response!.body!.productList!.length,
           itemBuilder: (BuildContext context, int index) {
+            List<ProductList>? productList = productListProvider
+                .productSpecificList.data!.response!.body!.productList!;
             print("widget.productList.length");
             return InkWell(
               onTap: () {},
@@ -143,24 +182,22 @@ class _ProductListByCategoryActivityState
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                              width: 60.0,
-                              height: 60.0,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: AssetImage(
-                                        widget.productList["productsList"]
-                                            [index]["productsListImage"],
-                                      )))),
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(50)),
+                            child: Image.network(
+                              // width: double.infinity,
+                              productList[index].image1Url!,
+                              fit: BoxFit.fill,
+
+                              height: MediaQuery.of(context).size.height * .07,
+                            ),
+                          ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * .01,
                           ),
                           TextFieldUtils().appliancesTitleTextFields(
-                              widget.productList["productsList"][index]
-                                  ["productsListName"],
-                              context)
+                              productList[index].shortName!, context)
                         ],
                       )),
                   SizedBox(
@@ -222,7 +259,7 @@ class _ProductListByCategoryActivityState
     );
   }
 
-  SortPrice() {
+/*  SortPrice() {
     for (int i = 0; i <= widget.productList["productsList"].length; i++) {
       widget.productList["productsList"][i]["discountPrice"]
           .sort((a, b) => a.compareTo(b));
@@ -231,15 +268,15 @@ class _ProductListByCategoryActivityState
         print(p.discountPrice);
       }
     }
-  }
+  }*/
 
-  Widget mobileGridList(
-      List<ProductDetailsModel> product, ProductProvider value) {
+  Widget productListView(ProductSpecificListViewModel productListProvider) {
     return SizedBox(
       height: 600,
       // width: MediaQuery.of(context).size.width,
       child: GridView.builder(
-        itemCount: widget.productList["productsList"].length,
+        itemCount: productListProvider
+            .productSpecificList.data!.response!.body!.productList!.length,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           mainAxisSpacing: 20,
@@ -250,20 +287,17 @@ class _ProductListByCategoryActivityState
           crossAxisCount: 2,
         ),
         itemBuilder: (BuildContext context, int index) {
-          print(" widget.productList['productsList']");
-          print("SortPrice");
-          print(widget.productList["productsList"][index]
-                  ["productDiscountPrice"]
-              .toString());
-          // SortPrice(int.parse(widget.productList["productsList"]));
+          List<ProductList>? productList = productListProvider
+              .productSpecificList.data!.response!.body!.productList!;
+
           return InkWell(
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => ProductDetailsActivity(
-                    productList: widget.productList["productsList"][index],
-                    model: product[index],
-                    value: value,
+                    productList: productList[index],
+                    productSpecificListViewModel:   productSpecificListViewModel,
+
                   ),
                 ),
               );
@@ -294,10 +328,8 @@ class _ProductListByCategoryActivityState
                             topRight: Radius.circular(10),
                             topLeft: Radius.circular(10),
                           ),
-                          child: Image.asset(
-                            // width: double.infinity,
-                            widget.productList["productsList"][index]
-                                ["productsListImage"],
+                          child: Image.network(
+                            productList[index].image1Url!,
                             fit: BoxFit.fill,
                             height: (MediaQuery.of(context).orientation ==
                                     Orientation.landscape)
@@ -316,16 +348,30 @@ class _ProductListByCategoryActivityState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextFieldUtils().homePageTitlesTextFieldsWHITE(
-                                widget.productList["productsList"][index]
-                                    ["productsListDescription"],
-                                context),
-                            TextFieldUtils().dynamicText(
-                                "${indianRupeesFormat.format(int.parse(widget.productList["productsList"][index]["productDiscountPrice"].toString()))}",
-                                context,
-                                TextStyle(
-                                    color: ThemeApp.whiteColor,
-                                    fontSize: height * .022,
-                                    fontWeight: FontWeight.bold)),
+                                productList[index].shortName!, context),
+                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextFieldUtils().dynamicText(
+                                    indianRupeesFormat.format(
+                                        productList[index].currentPrice ??
+                                            0.0),
+                                    context,
+                                    TextStyle(
+                                        color: ThemeApp.whiteColor,
+                                        fontSize: height * .022,
+                                        fontWeight: FontWeight.bold)),
+                                TextFieldUtils().dynamicText(
+                                    indianRupeesFormat.format(
+                                        productList[index].scrappedPrice ??
+                                            0.0),
+                                    context,
+                                    TextStyle(
+                                        color: ThemeApp.whiteColor,
+                                        decoration: TextDecoration.lineThrough,
+                                        fontSize: height * .022,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            )
                           ],
                         ),
                       ),

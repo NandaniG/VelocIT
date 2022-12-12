@@ -1,0 +1,46 @@
+workflows:
+  hello-world:
+    name: velocIT
+    instance_type: mac_pro
+    max_build_duration: 100
+    environment:
+      groups:
+        - keystore_credentials
+        - app_store_credentials
+      vars:
+        GOOGLE_PLAY_TRACK: "beta"
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+
+      cache:
+        cache_paths:
+          - $HOME/.gradle/caches
+          - $FLUTTER_ROOT/.pub-cache
+          - $HOME/Library/Caches/CocoaPods
+      triggering:
+        events:
+          - push
+          - pull_request
+          - tag
+        branch_patterns:
+          - patterns: "*"
+            include: false
+          - pattern : develop
+            include: false
+      scripts:
+        - name: Get Flutter Package
+          script: flutter package pub get
+
+        - name: Build apk
+          script: flutter build apk --release --no-sound-null-safety
+
+        - name: Build ios
+          script: flutter build ios --release --no-sound-null-safety
+      artifacts:
+        - build/**/outputs/apk/**/*.apk
+        - build/**/outputs/**/*.aab
+      publishing:
+        email:
+          recipients:
+            - nandanig@codeelan.com

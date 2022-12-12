@@ -40,30 +40,11 @@ class HomeProvider with ChangeNotifier {
       accountSettingService();
       notificationsListService();
       offersListService();
-      signIn();
     } catch (e) {
       // print("Error in loadJson: $e");
     }
   }
 
-  static signIn() async {
-    // print("signIn Response: ");
-    var URI = ApiMapping.getURI(apiEndPoint.signIn_authenticate_get);
-    // print("signIn URI: " + URI);
-
-    var client = http.Client();
-    var response = await client.get(Uri.parse(URI));
-    try {
-      // print(await client.get(Uri.parse(URI)));
-      // print("Client.response.statusCode" +response.statusCode.toString());
-    }
-    finally {
-      client.close();
-    }
-
-    // // print("signIn Response: "+URI);
-    // print("signIn Response: " + client.toString());
-  }
 
   //---------------------------------------------------------
   //----------------- home slider service--------------------

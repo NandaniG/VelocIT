@@ -38,6 +38,24 @@ class ApiMapping {
         retVal = ConstructURI("/users");
         break;
 
+        case apiEndPoint.get_shopByCategories:
+        retVal = ConstructURI("/categories");
+        break;
+
+      case apiEndPoint.get_productsListing:
+        retVal = ConstructURI("/products/specificList");
+        break;
+
+        case apiEndPoint.get_bookOurServices:
+        retVal = ConstructURI("/serviceCategories");
+        break;
+        case apiEndPoint.get_products:
+        retVal = ConstructURI("/products");
+        break;
+        case apiEndPoint.put_carts:
+        retVal = ConstructURI("/carts");
+        break;
+
       default:
         retVal = "Error";
     }

@@ -87,8 +87,8 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             });
                           },
                           child: Container(
-                              padding: const EdgeInsets.fromLTRB(
-                                  0, 15.0, 0, 15.0),
+                              padding:
+                                  const EdgeInsets.fromLTRB(0, 15.0, 0, 15.0),
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(10),
@@ -111,14 +111,11 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                           onTap: () {
                             setState(() {
                               _usingPassVisible = true;
-
-                              // email.clear();
-                              // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
                             });
                           },
                           child: Container(
-                              padding: const EdgeInsets.fromLTRB(
-                                  0, 15.0, 0, 15.0),
+                              padding:
+                                  const EdgeInsets.fromLTRB(0, 15.0, 0, 15.0),
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.only(
                                   topRight: Radius.circular(10),
@@ -285,52 +282,51 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     : const SizedBox(
                         height: 0,
                       ),
-        proceedButton(
-                        !_usingPassVisible
-                            ? AppLocalizations.of(context).signin
-                            : AppLocalizations.of(context).sendOtp,
-                        ThemeApp.blackColor,
-                        context, authViewModel.loadingWithGet,() async {
-                        setState(() {
-                          Prefs.instance
-                              .setToken(StringConstant.emailPref, email.text);
-                          if (!_usingPassVisible) {
-                            if (_formKey.currentState!.validate() &&
-                                email.text.isNotEmpty &&
-                                password.text.isNotEmpty) {
-                              if ((email.text == 'codeelan@gmail.com' ||
-                                      email.text == '7990916638') &&
-                                  password.text == "CodeElan@123") {
-                                Prefs.instance.setToken(
-                                    StringConstant.emailOTPPref, emailOtp.text);
+                proceedButton(
+                    !_usingPassVisible
+                        ? AppLocalizations.of(context).signin
+                        : AppLocalizations.of(context).sendOtp,
+                    ThemeApp.blackColor,
+                    context,
+                    authViewModel.loadingWithGet, () async {
+                  setState(() {
+                    Prefs.instance
+                        .setToken(StringConstant.emailPref, email.text);
+                    if (!_usingPassVisible) {
+                      if (_formKey.currentState!.validate() &&
+                          email.text.isNotEmpty &&
+                          password.text.isNotEmpty) {
+                        if ((email.text == 'codeelan@gmail.com' ||
+                                email.text == '7990916638') &&
+                            password.text == "CodeElan@123") {
+                          Prefs.instance.setToken(
+                              StringConstant.emailOTPPref, emailOtp.text);
 
-                                // Map data = {'username': email.text};
-                                // authViewModel.loginApiWithPost(data, context);
-                                authViewModel.loginApiWithGet(context);
-
-                              } else {
-                                Utils.errorToast("Please enter valid Details.");
-                              }
-                            } else {
-                              Utils.errorToast("Please enter Details.");
-                            }
-                          } else {
-                            if (emailOtp.text.isNotEmpty &&
-                                (emailOtp.text == 'codeelan@gmail.com' ||
-                                    emailOtp.text == '7990916638')) {
-                              Prefs.instance.setToken(
-                                  StringConstant.emailOTPPref, emailOtp.text);
-                              // Map data = {'username': 'testuser@test.com'};
-                              // authViewModel.loginApiWithPost(data, context);
-                              authViewModel.loginApiWithGet(context);
-
-                            } else {
-                              Utils.errorToast("Please enter valid Details.");
-                            }
-                            print(emailOtp.text);
-                          }
-                        });
-                      })
+                          // Map data = {'username': email.text};
+                          // authViewModel.loginApiWithPost(data, context);
+                          authViewModel.loginApiWithGet(context);
+                        } else {
+                          Utils.errorToast("Please enter valid Details.");
+                        }
+                      } else {
+                        Utils.errorToast("Please enter Details.");
+                      }
+                    } else {
+                      if (emailOtp.text.isNotEmpty &&
+                          (emailOtp.text == 'codeelan@gmail.com' ||
+                              emailOtp.text == '7990916638')) {
+                        Prefs.instance.setToken(
+                            StringConstant.emailOTPPref, emailOtp.text);
+                        // Map data = {'username': 'testuser@test.com'};
+                        // authViewModel.loginApiWithPost(data, context);
+                        authViewModel.loginApiWithGet(context);
+                      } else {
+                        Utils.errorToast("Please enter valid Details.");
+                      }
+                      print(emailOtp.text);
+                    }
+                  });
+                })
               ],
             ),
           ),

@@ -29,6 +29,8 @@ import 'package:velocit/utils/routes/routes_name.dart';
 import 'package:velocit/utils/styles.dart';
 import 'package:velocit/utils/utils.dart';
 import 'Core/ViewModel/auth_view_model.dart';
+import 'Core/ViewModel/dashboard_view_model.dart';
+import 'Core/ViewModel/product_listing_view_model.dart';
 import 'L10n/l10n.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'l10n/localeProvider.dart';
@@ -95,16 +97,23 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
    MyApp({super.key});
+   ProductSpecificListViewModel productViewModel =
+   ProductSpecificListViewModel();    Map data = {"category_code":"EOLP","recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
 
-  // This widget is the root of your application.
+   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    productViewModel.productSpecificListWithGet(context,data);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
             create: (_) => AuthViewModel(),
           ),
-
+          ChangeNotifierProvider(
+            create: (_) => DashboardViewModel(),
+          ),  ChangeNotifierProvider(
+            create: (_) => ProductSpecificListViewModel(),
+          ),
           ChangeNotifierProvider(
             create: (_) => LocaleProvider(),
           ),
@@ -112,7 +121,7 @@ class MyApp extends StatelessWidget {
             create: (_) => HomeProvider(),
           ),
           ChangeNotifierProvider(
-            create: (_) => CartProvider(),
+            create: (_) => CartManageProvider(),
           ),
           ChangeNotifierProvider(
             create: (_) => ProductProvider(),
@@ -121,9 +130,7 @@ class MyApp extends StatelessWidget {
         ],
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
         var data =   provider.loadJson();
-        final availableProducts = Provider.of<ProductProvider>(context);
 
-        final productsList = availableProducts.getProductsLists();
         return Consumer<ProductProvider>(builder: (context, value, child) {
             return Consumer<LocaleProvider>(
                 builder: (context, localeProvider, snapshot) {

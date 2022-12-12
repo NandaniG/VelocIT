@@ -768,9 +768,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         context),
                     TextFieldUtils().homePageTitlesTextFields(
                         indianRupeesFormat.format(finalOriginalPrice),
-                        // counterPrice == 1
-                        //     ? value.originialAmount.toString()
-                        //     : value.originalPriceCounter.toString(),
                         context)
                   ],
                 ),
@@ -837,15 +834,5 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         )
       ],
     );
-  }
-
-  Future<List<BookServiceModel>> getSimmilarProductLists() async {
-    String response = '['
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Appliances","serviceDescription":"Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"},'
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Electronics","serviceDescription":"Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"},'
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Fashion","serviceDescription":"One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"},'
-        '{"serviceImage":"https://picsum.photos/250?image=9","serviceName":"Home","serviceDescription":"IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"}]';
-    var serviceList = bookServiceFromJson(response);
-    return serviceList;
   }
 }

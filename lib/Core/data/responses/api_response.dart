@@ -9,9 +9,11 @@ class ApiResponse<T> {
 
   ApiResponse.loading() : status = Status.LOADING;
 
-  ApiResponse.completed() : status = Status.COMPLETED;
+  ApiResponse.completed(this.data) : status = Status.COMPLETED;
 
-  ApiResponse.error() : status = Status.ERROR;
+  ApiResponse.error(this.message) : status = Status.ERROR;
+
+  get length => null;
 
   String toString(){
     return "Status : $status \n Message : $message \n  Data : $data";

@@ -1,10 +1,19 @@
 import 'dart:convert';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/Core/Model/CategoriesModel.dart';
+import 'package:velocit/Core/repository/dashboard_repository.dart';
+import 'package:velocit/utils/ProgressIndicatorLoader.dart';
+import '../../Core/Model/ProductListingModel.dart';
+import '../../Core/Model/servicesModel.dart';
+import '../../Core/ViewModel/dashboard_view_model.dart';
+import '../../Core/ViewModel/product_listing_view_model.dart';
+import '../../Core/data/responses/status.dart';
 import '../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../services/models/demoModel.dart';
 import '../../services/providers/Home_Provider.dart';
@@ -15,6 +24,7 @@ import '../../widgets/global/appBar.dart';
 import '../../widgets/global/proceedButtons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/global/textFormFields.dart';
+import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart';
 import '../Activity/Merchant_Near_Activities/merchant_Activity.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
 import 'offers_Activity.dart';
@@ -31,6 +41,10 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
+
+  DashboardViewModel dashboardViewModel = DashboardViewModel();
+  DashboardViewModel serviceViewModel = DashboardViewModel();
+
   double height = 0.0;
   double width = 0.0;
   String location = 'Null, Press Button';
@@ -41,9 +55,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    dashboardViewModel.shopByCategoriesWithGet();
+    serviceViewModel.bookOurServicesWithGet();
+    dashboardViewModel.productListingWithGet();
     getPincode();
     StringConstant.controllerSpeechToText.clear();
-    HomeProvider.signIn();
     Provider.of<HomeProvider>(context, listen: false).loadJson();
   }
 
@@ -54,18 +70,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     print(
         "placesFromCurrentLocation pref...${StringConstant.placesFromCurrentLocation.toString()}");
-  }
-
-  Future<List<Payload>> getImageSlide() async {
-    //final response = await http.get("getdata.php");
-    //return json.decode(response.body);
-    String response = '['
-        // '{"sponsorlogo":"https://picsum.photos/250?image=9"},'
-        '{"sponsorlogo":"assets/images/laptopImage.jpg"},'
-        '{"sponsorlogo":"assets/images/iphones_Image.jpg"},'
-        '{"sponsorlogo":"assets/images/laptopImage2.jpg"}]';
-    var payloadList = payloadFromJson(response);
-    return payloadList;
   }
 
   final indianRupeesFormat = NumberFormat.currency(
@@ -80,157 +84,159 @@ class _DashboardScreenState extends State<DashboardScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
-      key: scaffoldGlobalKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .12),
-        child: appBarWidget(
-            context,
-            searchBar(context),
-            addressWidget(context, StringConstant.placesFromCurrentLocation),
-            setState(() {})),
-      ),
-      bottomNavigationBar: bottomNavigationBarWidget(context),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: Consumer<HomeProvider>(builder: (context, provider, child) {
-        var data = provider.loadJson();
-        print('object-------------' + provider.jsonData.toString());
-        return SafeArea(
-            child: provider.jsonData.isNotEmpty
-                ? Container(
-                    // height: MediaQuery.of(context).size.height,
-                    // padding: const EdgeInsets.only(
-                    //   left: 20,
-                    //   right: 20,
-                    // ),
-                    padding: const EdgeInsets.all(10),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // TextFieldUtils()
-                          //     .listHeadingTextField(StringConstant.speechToText, context),
-                          imageLists(provider),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              TextFieldUtils().listHeadingTextField(
-                                  AppLocalizations.of(context).shopByCategories,
-                                  context),
-                              viewMoreButton(
-                                  AppLocalizations.of(context).viewAll, context,
-                                  () {
-                                // Utils.flushBarErrorMessage("Not Data",context);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ShopByCategoryActivity(
-                                            shopByCategoryList:
-                                                provider.jsonData[
-                                                    "shopByCategoryList"],shopByCategorySelected: 0),
-                                  ),
-                                );
-                              })
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          listOfShopByCategories(provider),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              TextFieldUtils().listHeadingTextField(
-                                  AppLocalizations.of(context).bookOurServices,
-                                  context),
-                              viewMoreButton(
-                                  AppLocalizations.of(context).viewAll,
-                                  context,
-                                  () {})
-                            ],
-                          ),
+        backgroundColor: ThemeApp.backgroundColor,
+        key: scaffoldGlobalKey,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(height * .12),
+          child: appBarWidget(
+              context,
+              searchBar(context),
+              addressWidget(context, StringConstant.placesFromCurrentLocation),
+              setState(() {})),
+        ),
+        bottomNavigationBar: bottomNavigationBarWidget(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        body: /*ChangeNotifierProvider<DashboardViewModel>(
+            create: (BuildContext context) => dashboardViewModel,
+            child: Consumer<DashboardViewModel>(
+                builder: (context, dashboardProvider, child) {
+              switch (dashboardProvider.categoryList.status) {
+                case Status.LOADING:
+                  print("Api load");
 
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          listOfBookOurServices(provider),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          stepperOfDelivery(provider),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          TextFieldUtils().listHeadingTextField(
-                              AppLocalizations.of(context).recommendedForYou,
-                              context),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          recommendedList(provider),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              TextFieldUtils().listHeadingTextField(
-                                  AppLocalizations.of(context).merchantNearYou,
-                                  context),
-                              viewMoreButton(
-                                  AppLocalizations.of(context).viewAll, context,
-                                  () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => MerchantActvity(
-                                        merchantList:
-                                            provider.merchantNearYouList[1]),
-                                  ),
-                                );
-                              })
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          merchantList(provider),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          TextFieldUtils().listHeadingTextField(
-                              AppLocalizations.of(context).bestDeal, context),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          bestDealList(provider),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          TextFieldUtils().listHeadingTextField(
-                              AppLocalizations.of(context).budgetBuys, context),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
-                          ),
-                          budgetBuyList(provider),
-                        ],
-                      ),
-                    ))
-                : const Center(
-                    child: CircularProgressIndicator(
-                    color: ThemeApp.blackColor,
-                  )));
-      }),
-    );
+                  return CircularProgressIndicator();
+                case Status.ERROR:
+                  print("Api error");
+
+                  return Text(
+                      dashboardProvider.categoryList.message.toString());
+                case Status.COMPLETED:
+                  print("Api calll");
+                  return listOfShopByCategories(dashboardProvider
+                      .categoryList.data!.response!.body!.payload);
+              }
+              return Text("sahdjashdj");
+            }))*/
+
+            ChangeNotifierProvider<DashboardViewModel>(
+          create: (BuildContext context) => dashboardViewModel,
+          child: Consumer<DashboardViewModel>(
+              builder: (context, dashboardProvider, child) {
+            // print('object-------------' + provider.jsonData.toString());
+            return Consumer<HomeProvider>(builder: (context, provider, child) {
+              var data = provider.loadJson();
+              return SafeArea(
+                  child: provider.jsonData.isNotEmpty
+                      ? Container(
+                          // height: MediaQuery.of(context).size.height,
+                          // padding: const EdgeInsets.only(
+                          //   left: 20,
+                          //   right: 20,
+                          // ),
+                          padding: const EdgeInsets.all(10),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // TextFieldUtils()
+                                //     .listHeadingTextField(StringConstant.speechToText, context),
+                                imageLists(provider),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+
+                                listOfShopByCategories(),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+
+                                listOfBookOurServices(),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                stepperOfDelivery(provider),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                TextFieldUtils().listHeadingTextField(
+                                    AppLocalizations.of(context)
+                                        .recommendedForYou,
+                                    context),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                recommendedList(),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    TextFieldUtils().listHeadingTextField(
+                                        AppLocalizations.of(context)
+                                            .merchantNearYou,
+                                        context),
+                                    viewMoreButton(
+                                        AppLocalizations.of(context).viewAll,
+                                        context, () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => MerchantActvity(
+                                              merchantList: provider
+                                                  .merchantNearYouList[1]),
+                                        ),
+                                      );
+                                    })
+                                  ],
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                merchantList(),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                TextFieldUtils().listHeadingTextField(
+                                    AppLocalizations.of(context).bestDeal,
+                                    context),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                bestDealList(),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                TextFieldUtils().listHeadingTextField(
+                                    AppLocalizations.of(context).budgetBuys,
+                                    context),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                budgetBuyList(),
+                              ],
+                            ),
+                          ))
+                      : const Center(
+                          child: CircularProgressIndicator(
+                          color: ThemeApp.blackColor,
+                        )));
+            });
+          }),
+        ));
   }
 
   Widget imageLists(HomeProvider provider) {
@@ -238,12 +244,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ? FutureBuilder(
             future: provider.homeImageSliderService(),
             builder: (context, snapShot) {
-              print("provider.homeSliderList" +
-                  provider.homeSliderList.toString());
-
-              //once data is ready this else block will execute
-              // items will hold all the data of DataModel
-              //items[index].name can be used to fetch name of product as done below
               return Container(
                   height: (MediaQuery.of(context).orientation ==
                           Orientation.landscape)
@@ -278,7 +278,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     dotColor: ThemeApp.lightGreyTab,
                     dotIncreasedColor: ThemeApp.lightGreyTab,
                     indicatorBgPadding: 10.0,
-                    dotBgColor: Colors.transparent,animationDuration:  const Duration(milliseconds: 100),
+                    dotBgColor: Colors.transparent,
+                    animationDuration: const Duration(milliseconds: 100),
                     borderRadius: true,
                     boxFit: BoxFit.cover,
                     dotPosition: DotPosition.bottomCenter,
@@ -287,195 +288,277 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : const CircularProgressIndicator();
   }
 
-  // Future<List<BookServiceModel>> getShopByCategoryLists() async {
-  //   String response = '['
-  //       '{"serviceImage":"assets/images/laptopImage.jpg","serviceName":"Appliances", "sellerName":"sellerName","ratting":0.2,"discountPrice":"47700", "originalPrice":"50600","offerPercent":"20% OFF","availableVariants":"3","cartProductsLength":"13","serviceDescription":"Dell ZX3 108CM (44 inch) ultra HD(4k) LED Smart Android TV","maxCounter":"7","deliveredBy":"Delivered by sep 22"},'
-  //       '{"serviceImage":"assets/images/iphones_Image.jpg","serviceName":"Electronics", "sellerName":"sellerName","ratting":3.5,"discountPrice":"12600", "originalPrice":"18990","offerPercent":"20% OFF","availableVariants":"3","cartProductsLength":"13","serviceDescription":"IPhone 14 108CM LED smart display","maxCounter":"5","deliveredBy":"Delivered by sep 12"},'
-  //       '{"serviceImage":"assets/images/laptopImage2.jpg","serviceName":"Home", "sellerName":"sellerName","ratting":4.0,"discountPrice":"21300", "originalPrice":"23300","offerPercent":"20% OFF","availableVariants":"3","cartProductsLength":"13","serviceDescription":"Asus IK02 108CM (46 inch) ultra HD(4k) LED Smart","maxCounter":"5","deliveredBy":"Delivered by sep 03"},'
-  //       '{"serviceImage":"assets/images/laptopImage.jpg","serviceName":"Electronics", "sellerName":"sellerName","ratting":4.5,"discountPrice":"42300", "originalPrice":"47600","offerPercent":"20% OFF","availableVariants":"3","cartProductsLength":"13","serviceDescription":"HP WES3 108CM (41 inch) ultra HD(4k) LED Smart Android TV","maxCounter":"5","deliveredBy":"Delivered by sep 30"},'
-  //       '{"serviceImage":"assets/images/laptopImage3.jpg","serviceName":"Fashion", "sellerName":"sellerName","ratting":2.8,"discountPrice":"14500", "originalPrice":"16400","offerPercent":"20% OFF","availableVariants":"3","cartProductsLength":"13","serviceDescription":"Lenovo ZX3 108CM (46 inch) ultra HD(4k) LED Smart Android ","maxCounter":"8","deliveredBy":"Delivered by oct 01"},'
-  //       '{"serviceImage":"assets/images/IPhoneImage.jpg","serviceName":"Home", "sellerName":"sellerName","ratting":4.8,"discountPrice":"65200", "originalPrice":"68300","offerPercent":"20% OFF","availableVariants":"3","cartProductsLength":"13","serviceDescription":"IPhone 13 108CM (47 inch) ultra HD(4k) LED Smart Android TV","maxCounter":"10","deliveredBy":"Delivered by dec 31"}]';
-  //   var serviceList = bookServiceFromJson(response);
-  //   return serviceList;
-  // }
+  Widget listOfShopByCategories() {
+    return Consumer<DashboardViewModel>(
+        builder: (context, dashboardProvider, child) {
+      switch (dashboardProvider.categoryList.status) {
+        case Status.LOADING:
+          print("Api load");
 
-  Widget listOfShopByCategories(HomeProvider provider) {
-    return provider.jsonData.isNotEmpty
-        ? FutureBuilder(
-            future: provider.shopByCategoryService(),
-            builder: (context, snapshot) {
-              print("provider.shopByCategoryService" +
-                  provider.shopByCategoryList.toString());
+          return ProgressIndicatorLoader(true);
+        case Status.ERROR:
+          print("Api error");
 
-              if (snapshot.hasError) print(snapshot.error);
-              return Container(
+          return Text(dashboardProvider.categoryList.message.toString());
+        case Status.COMPLETED:
+          print("Api calll");
+          List<CategoryList>? payloadsOfCategories =
+              dashboardProvider.categoryList.data!.response!.body!.payload;
+
+          return Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextFieldUtils().listHeadingTextField(
+                      AppLocalizations.of(context).shopByCategories, context),
+                  viewMoreButton(AppLocalizations.of(context).viewAll, context,
+                      () {
+                    // Utils.flushBarErrorMessage("Not Data",context);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ShopByCategoryActivity(
+                            shopByCategoryList: payloadsOfCategories,
+                            shopByCategorySelected: 0),
+                      ),
+                    );
+                  })
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .02,
+              ),
+              Container(
                 height: MediaQuery.of(context).size.height * .13,
                 width: width,
                 child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: provider.shopByCategoryList.length,
+                    itemCount: payloadsOfCategories!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return InkWell(
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => ShopByCategoryActivity(
-                                  shopByCategoryList:
-                                      provider.shopByCategoryList,shopByCategorySelected:  index),
+                                  shopByCategoryList: payloadsOfCategories,
+                                  shopByCategorySelected: index),
                             ),
                           );
                         },
-                        child: Row(
-                          children: [
-                            Container(
-                                width: width * 0.24,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.whiteColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                              width: width * 0.24,
+                              decoration: const BoxDecoration(
+                                  color: ThemeApp.whiteColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8.0, right: 8),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    /*   Image.network(
-                                            // width: double.infinity,
-                                            snapshot.data![index].serviceImage,
-                                            fit: BoxFit.fill,
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(50)),
+                                      child: Image.network(
+                                        // width: double.infinity,
+                                        payloadsOfCategories[index].imageUrl!,
+                                        fit: BoxFit.fill,
 
-                                            height:
-                                                MediaQuery.of(context).size.height *
-                                                    .07,
-                                          ),*/
-                                    //     ClipRRect(
-                                    //   borderRadius: const BorderRadius.all(
-                                    //       Radius.circular(50)),
-                                    //   child: Image.asset(
-                                    //     // width: double.infinity,
-                                    //     snapshot.data![index].serviceImage,
-                                    //     fit: BoxFit.fill,
-                                    //
-                                    //     height: MediaQuery.of(context)
-                                    //             .size
-                                    //             .height *
-                                    //         .07,
-                                    //   ),
-                                    // ),
-                                    Container(
-                                        width: 60.0,
-                                        height: 60.0,
-                                        decoration: new BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: new DecorationImage(
-                                                fit: BoxFit.fill,
-                                                image: new AssetImage(
-                                                  provider.shopByCategoryList[
-                                                          index]
-                                                      ["shopCategoryImage"],
-                                                )))),
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .07,
+                                      ),
+                                    ),
                                     SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height *
                                               .01,
                                     ),
-                                    TextFieldUtils().appliancesTitleTextFields(
-                                        provider.shopByCategoryList[index]
-                                            ['shopCategoryName'],
-                                        context)
+                                    Center(
+                                      child: TextFieldUtils().dynamicText(
+                                          payloadsOfCategories[index].name!,
+                                          context,
+                                          TextStyle(
+                                            color: ThemeApp.darkGreyColor,
+                                            // fontWeight: FontWeight.w500,
+                                            fontSize: height * .02,
+                                          )),
+                                    ),
                                   ],
-                                )),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * .03,
-                            )
-                          ],
+                                ),
+                              )),
                         ),
                       );
                     }),
-              );
-            })
-        : const CircularProgressIndicator();
+              ),
+            ],
+          );
+        default:
+          return Text("No Data found!");
+      }
+      return Text("No Data found!");
+    });
   }
 
-  Widget listOfBookOurServices(HomeProvider provider) {
-    return FutureBuilder(
-        future: provider.bookOurServicesService(),
-        builder: (context, snapshot) {
-          print("provider.bookOurServicesService" +
-              provider.bookOurServicesList.toString());
+  Widget listOfBookOurServices() {
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => serviceViewModel,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, dashboardProvider, child) {
+          return Consumer<DashboardViewModel>(
+              builder: (context, dashboardProvider, child) {
+            switch (dashboardProvider.serviceList.status) {
+              case Status.LOADING:
+                if (kDebugMode) {
+                  print("Api load");
+                }
+                return ProgressIndicatorLoader(true);
 
-          if (snapshot.hasError) print(snapshot.error);
-          return Container(
-            height: MediaQuery.of(context).size.height * .13,
-            child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: provider.bookOurServicesList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const OfferActivity(),
-                      //   ),
-                      // );
-                    },
-                    child: Row(
+              case Status.ERROR:
+                if (kDebugMode) {
+                  print("Api error");
+                }
+                return Text(dashboardProvider.serviceList.message.toString());
+
+              case Status.COMPLETED:
+                if (kDebugMode) {
+                  print("Api calll");
+                }
+
+                List<ServiceList>? serviceList = dashboardProvider
+                    .serviceList.data!.response!.body!.serviceList;
+
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                            // width: 130,
-                            width: width * 0.24,
-                            decoration: const BoxDecoration(
-                                color: ThemeApp.whiteColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                /*       ClipRRect(
-                                            borderRadius: const BorderRadius.all(
-                                                Radius.circular(100)),
-                                            child: Image.network(
-                                              // width: double.infinity,
-                                              snapshot.data![index].serviceImage,
-                                              fit: BoxFit.fitWidth,
+                        TextFieldUtils().listHeadingTextField(
+                            AppLocalizations.of(context).bookOurServices,
+                            context),
+                        viewMoreButton(AppLocalizations.of(context).viewAll,
+                            context, () {       Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => BookServiceActivity(
+                                    shopByCategoryList: serviceList!,
+                                    shopByCategorySelected: 0),
+                              ),
+                            );})
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .02,
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * .13,
+                      width: width,
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: serviceList!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => BookServiceActivity(
+                                        shopByCategoryList: serviceList!,
+                                        shopByCategorySelected: index),
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Container(
+                                      width: width * 0.24,
+                                      decoration: const BoxDecoration(
+                                          color: ThemeApp.whiteColor,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8.0, right: 8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(50)),
+                                              child: Image.network(
+                                                // width: double.infinity,
+                                                serviceList[index].imageUrl!,
+                                                fit: BoxFit.fill,
+
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .07,
+                                              ),
+                                            ),
+                                            //     ClipRRect(
+                                            //   borderRadius: const BorderRadius.all(
+                                            //       Radius.circular(50)),
+                                            //   child: Image.asset(
+                                            //     // width: double.infinity,
+                                            //     snapshot.data![index].serviceImage,
+                                            //     fit: BoxFit.fill,
+                                            //
+                                            //     height: MediaQuery.of(context)
+                                            //             .size
+                                            //             .height *
+                                            //         .07,
+                                            //   ),
+                                            // ),
+
+                                            SizedBox(
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  .07,
+                                                  .01,
                                             ),
-                                          ),*/
-                                Container(
-                                    width: 60.0,
-                                    height: 60.0,
-                                    decoration: new BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: new DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: new AssetImage(
-                                              provider.bookOurServicesList[
-                                                      index]
-                                                  ["bookOurServicesImage"],
-                                            )))),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * .01,
-                                ),
-                                TextFieldUtils().appliancesTitleTextFields(
-                                    provider.bookOurServicesList[index]
-                                        ["bookOurServicesName"],
-                                    context)
-                              ],
-                            )),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * .03,
-                        )
-                      ],
+                                            Center(
+                                              child:
+                                                  TextFieldUtils().dynamicText(
+                                                      serviceList[index].name!,
+                                                      context,
+                                                      TextStyle(
+                                                        color: ThemeApp
+                                                            .darkGreyColor,
+                                                        // fontWeight: FontWeight.w500,
+                                                        fontSize: height * .02,
+                                                      )),
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .03,
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
                     ),
-                  );
-                }),
-          );
-        });
+                  ],
+                );
+              default:
+                return Text("No Data found!");
+            }
+            return Text("No Data found!");
+          });
+        }));
   }
 
   Widget stepperOfDelivery(HomeProvider provider) {
@@ -563,164 +646,338 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ));
   }
 
-  Widget recommendedList(HomeProvider provider) {
-    return FutureBuilder(
-        future: provider.recommendedListService(),
-        builder: (context, snapshot) {
-          print("provider.recommendedListService" +
-              provider.recommendedList.toString());
+  Widget recommendedList() {
 
-          if (snapshot.hasError) print(snapshot.error);
-          return Container(
-            height: MediaQuery.of(context).size.height * .35,
-            child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: provider.recommendedList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Row(
-                    children: [
-                      Container(
-                          // height: MediaQuery.of(context).size.height * .3,
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => dashboardViewModel,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, dashboardProvider, child) {
+              return Consumer<DashboardViewModel>(
+                  builder: (context, dashboardProvider, child) {
+                    switch (dashboardViewModel.productListingList.status) {
+                      case Status.LOADING:
+                        if (kDebugMode) {
+                          print("Api load");
+                        }
+                        return ProgressIndicatorLoader(true);
 
-                          // width: 200,
-                          width: MediaQuery.of(context).size.width * .45,
-                          decoration: const BoxDecoration(
-                              color: ThemeApp.whiteColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * .26,
-                                width: MediaQuery.of(context).size.width * .45,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.textFieldBorderColor,
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      topLeft: Radius.circular(10),
-                                    )),
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    topLeft: Radius.circular(10),
-                                  ),
-                                  child: Image.asset(
-                                    // width: double.infinity,
-                                    provider.recommendedList[index]
-                                        ["recommendedForYouImage"],
-                                    fit: BoxFit.fill,
-                                    height: MediaQuery.of(context).size.height *
-                                        .07,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * .01,
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                child: TextFieldUtils()
-                                    .homePageTitlesTextFields(
-                                        provider.recommendedList[index]
-                                            ["recommendedForYouDescription"],
-                                        context),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * .01,
-                              ),
-                              Flexible(
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      TextFieldUtils().dynamicText(
-                                          indianRupeesFormat.format(int.parse(
-                                              provider.recommendedList[index][
-                                                      "recommendedForYouDiscountPrice"]
-                                                  .toString())),
-                                          context,
-                                          TextStyle(
-                                              color: ThemeApp.blackColor,
-                                              fontSize: height * .022,
-                                              fontWeight: FontWeight.bold)),
-                                      TextFieldUtils().dynamicText(
-                                          indianRupeesFormat.format(int.parse(
-                                              provider.recommendedList[index]
-                                                      ["recommendedForYouPrice"]
-                                                  .toString())),
-                                          context,
-                                          TextStyle(
-                                              color: ThemeApp.darkGreyTab,
-                                              fontSize: height * .02,
-                                              fontWeight: FontWeight.w500,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                              decorationThickness: 1.5)),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          )),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * .03,
-                      )
-                    ],
-                  );
-                }),
-          );
-        });
+                      case Status.ERROR:
+                        if (kDebugMode) {
+                          print("Api error");
+                        }
+                        return Text(
+                            dashboardViewModel.productListingList.message.toString());
+
+                      case Status.COMPLETED:
+                        if (kDebugMode) {
+                          print("Api calll");
+                        }
+
+                        List<ProductListing>? productListing = dashboardViewModel
+                            .productListingList.data!.response!.body!.productListing;
+
+                     return   Container(
+                          height: MediaQuery.of(context).size.height * .35,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: productListing!.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Row(
+                                  children: [
+                                    Container(
+                                      // height: MediaQuery.of(context).size.height * .3,
+
+                                      // width: 200,
+                                        width: MediaQuery.of(context).size.width * .45,
+                                        decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                            borderRadius:
+                                            BorderRadius.all(Radius.circular(10))),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              height:
+                                              MediaQuery.of(context).size.height * .26,
+                                              width: MediaQuery.of(context).size.width * .45,
+                                              decoration: const BoxDecoration(
+                                                  color: ThemeApp.textFieldBorderColor,
+                                                  borderRadius: BorderRadius.only(
+                                                    topRight: Radius.circular(10),
+                                                    topLeft: Radius.circular(10),
+                                                  )),
+                                              child: ClipRRect(
+                                                borderRadius: const BorderRadius.only(
+                                                  topRight: Radius.circular(10),
+                                                  topLeft: Radius.circular(10),
+                                                ),
+                                                child: Image.network(
+                                                  // width: double.infinity,
+                                                  productListing[index].image1Url!,
+                                                  fit: BoxFit.fill,
+                                                  height: MediaQuery.of(context).size.height *
+                                                      .07,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height:
+                                              MediaQuery.of(context).size.height * .01,
+                                            ),
+                                            Container(
+                                              padding:
+                                              const EdgeInsets.only(left: 10, right: 10),
+                                              child: TextFieldUtils()
+                                                  .homePageTitlesTextFields(
+                                                  productListing[index].shortName!,
+                                                  context),
+                                            ),
+                                            SizedBox(
+                                              height:
+                                              MediaQuery.of(context).size.height * .01,
+                                            ),
+                                            Flexible(
+                                              child: Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10, right: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    TextFieldUtils().dynamicText(
+                                                        indianRupeesFormat.format(
+                                                            productListing[index].scrappedPrice??0.0
+                                                                ),
+                                                        context,
+                                                        TextStyle(
+                                                            color: ThemeApp.blackColor,
+                                                            fontSize: height * .022,
+                                                            fontWeight: FontWeight.bold)),
+                                                    TextFieldUtils().dynamicText(
+                                                        indianRupeesFormat.format(
+                                                            productListing[index].currentPrice??0.0
+                                                                ),
+                                                        context,
+                                                        TextStyle(
+                                                            color: ThemeApp.darkGreyTab,
+                                                            fontSize: height * .02,
+                                                            fontWeight: FontWeight.w500,
+                                                            decoration:
+                                                            TextDecoration.lineThrough,
+                                                            decorationThickness: 1.5)),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width * .03,
+                                    )
+                                  ],
+                                );
+                              }),
+                        );
+                      default:
+                        return Text("No Data found!");
+                    }
+                    return Text("No Data found!");
+                  });
+            }));
+
+
   }
 
-  Widget merchantList(HomeProvider provider) {
-    return FutureBuilder(
-        future: provider.merchantNearYouListService(),
-        builder: (context, snapshot) {
-          // print("provider.merchantNearYouListService" +
-          //     provider.merchantNearYouList.toString());
+  Widget merchantList() {
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => dashboardViewModel,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, dashboardProvider, child) {
+          return Consumer<DashboardViewModel>(
+              builder: (context, dashboardProvider, child) {
+            switch (dashboardViewModel.productListingList.status) {
+              case Status.LOADING:
+                if (kDebugMode) {
+                  print("Api load");
+                }
+                return ProgressIndicatorLoader(true);
 
-          if (snapshot.hasError) print(snapshot.error);
-          return Container(
-            height: MediaQuery.of(context).size.height * .35,
-            child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: provider.merchantNearYouList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => MerchantActvity(
-                              merchantList:
-                                  provider.merchantNearYouList[index]),
-                        ),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                            width: MediaQuery.of(context).size.width * .45,
-                            decoration: const BoxDecoration(
-                                color: ThemeApp.darkGreyTab,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Stack(
-                                  alignment: Alignment.topRight,
+              case Status.ERROR:
+                if (kDebugMode) {
+                  print("Api error");
+                }
+                return Text(
+                    dashboardViewModel.productListingList.message.toString());
+
+              case Status.COMPLETED:
+                if (kDebugMode) {
+                  print("Api calll");
+                }
+
+                List<ProductListing>? productListing = dashboardViewModel
+                    .productListingList.data!.response!.body!.productListing;
+
+                return Container(
+                  height: MediaQuery.of(context).size.height * .35,
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: productListing!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: () {
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (context) => MerchantActvity(
+                            //         merchantList:
+                            //             provider.merchantNearYouList[index]),
+                            //   ),
+                            // );
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * .45,
+                                  decoration: const BoxDecoration(
+                                      color: ThemeApp.darkGreyTab,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        alignment: Alignment.topRight,
+                                        children: [
+                                          Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .28,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .45,
+                                            decoration: const BoxDecoration(
+                                                color: ThemeApp.whiteColor,
+                                                borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(10),
+                                                  topLeft: Radius.circular(10),
+                                                )),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              ),
+                                              child: Image.network(
+                                                // width: double.infinity,
+                                                productListing[index]
+                                                    .image1Url!,
+                                                fit: BoxFit.fill,
+
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .07,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10, right: 10),
+                                            child: kmAwayOnMerchantImage(
+                                              '1.2 KM away',
+                                              context,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .01,
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        padding: const EdgeInsets.all(10),
+                                        child: TextFieldUtils()
+                                            .homePageTitlesTextFieldsWHITE(
+                                                productListing[index]
+                                                    .shortName!,
+                                                context),
+                                      ),
+                                    ],
+                                  )),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * .03,
+                              )
+                            ],
+                          ),
+                        );
+                      }),
+                );
+              default:
+                return Text("No Data found!");
+            }
+            return Text("No Data found!");
+          });
+        }));
+  }
+
+  Widget bestDealList() {
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => dashboardViewModel,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, dashboardProvider, child) {
+          return Consumer<DashboardViewModel>(
+              builder: (context, dashboardProvider, child) {
+            switch (dashboardViewModel.productListingList.status) {
+              case Status.LOADING:
+                if (kDebugMode) {
+                  print("Api load");
+                }
+                return ProgressIndicatorLoader(true);
+
+              case Status.ERROR:
+                if (kDebugMode) {
+                  print("Api error");
+                }
+                return Text(
+                    dashboardViewModel.productListingList.message.toString());
+
+              case Status.COMPLETED:
+                if (kDebugMode) {
+                  print("Api calll");
+                }
+
+                List<ProductListing>? productListing = dashboardViewModel
+                    .productListingList.data!.response!.body!.productListing;
+
+                return Container(
+                  height: MediaQuery.of(context).size.height * .35,
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: productListing!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(
+                          children: [
+                            Container(
+                                // height: MediaQuery.of(context).size.height * .3,
+
+                                // width: 200,
+                                width: MediaQuery.of(context).size.width * .45,
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.whiteColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
                                       height:
@@ -729,7 +986,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       width: MediaQuery.of(context).size.width *
                                           .45,
                                       decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
+                                          color: ThemeApp.textFieldBorderColor,
                                           borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(10),
                                             topLeft: Radius.circular(10),
@@ -739,10 +996,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           topRight: Radius.circular(10),
                                           topLeft: Radius.circular(10),
                                         ),
-                                        child: Image.asset(
+                                        child: Image.network(
                                           // width: double.infinity,
-                                          provider.merchantNearYouList[index]
-                                              ["merchantNearYouImage"],
+                                          productListing[index].image1Url!,
                                           fit: BoxFit.fill,
                                           height: MediaQuery.of(context)
                                                   .size
@@ -751,341 +1007,205 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ),
                                       ),
                                     ),
-                                    Padding(
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .01,
+                                    ),
+                                    Container(
                                       padding: const EdgeInsets.only(
-                                          top: 10, right: 10),
-                                      child: kmAwayOnMerchantImage(
-                                        provider.merchantNearYouList[index]
-                                            ["merchantNearYoukmAWAY"],
-                                        context,
+                                          left: 10, right: 10),
+                                      child: TextFieldUtils()
+                                          .homePageTitlesTextFields(
+                                              productListing[index].shortName!,
+                                              context),
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .01,
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 10, right: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextFieldUtils().dynamicText(
+                                              indianRupeesFormat.format(
+                                                  productListing[index]
+                                                          .scrappedPrice ??
+                                                      0.0),
+                                              context,
+                                              TextStyle(
+                                                  color: ThemeApp.blackColor,
+                                                  fontSize: height * .022,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextFieldUtils().dynamicText(
+                                              indianRupeesFormat.format(
+                                                  productListing[index]
+                                                          .currentPrice ??
+                                                      0.0),
+                                              context,
+                                              TextStyle(
+                                                  color: ThemeApp.darkGreyTab,
+                                                  fontSize: height * .02,
+                                                  fontWeight: FontWeight.w500,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                  decorationThickness: 1.5)),
+                                        ],
                                       ),
                                     )
                                   ],
-                                ),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * .01,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10),
-                                  child: TextFieldUtils()
-                                      .homePageTitlesTextFieldsWHITE(
-                                          provider.merchantNearYouList[index]
-                                              ["merchantNearYouDescription"],
-                                          context),
-                                ),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * .01,
-                                ),
-                                Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, right: 10),
-                                    child: TextFieldUtils().dynamicText(
-                                        indianRupeesFormat.format(int.parse(
-                                            provider
-                                                .merchantNearYouList[index]
-                                            ["merchantNearYouPrice"]
-                                                .toString())),
-                                        context,
-                                        TextStyle(
-                                            color: ThemeApp.whiteColor,
-                                            fontSize: height * .022,
-                                            fontWeight: FontWeight.bold)),)
-
-
-                              ],
-                            )),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * .03,
-                        )
-                      ],
-                    ),
-                  );
-                }),
-          );
-        });
-  }
-
-  Widget bestDealList(HomeProvider provider) {
-    return FutureBuilder(
-        future: provider.bestDealListService(),
-        builder: (context, snapshot) {
-          print("provider.bestDealListService" +
-              provider.bestDealList.toString());
-
-          if (snapshot.hasError) print(snapshot.error);
-          return Container(
-            height: MediaQuery.of(context).size.height * .35,
-            child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: provider.bestDealList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Row(
-                    children: [
-                      Container(
-                          // height: MediaQuery.of(context).size.height * .3,
-
-                          // width: 200,
-                          width: MediaQuery.of(context).size.width * .45,
-                          decoration: const BoxDecoration(
-                              color: ThemeApp.whiteColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * .26,
-                                width: MediaQuery.of(context).size.width * .45,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.textFieldBorderColor,
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      topLeft: Radius.circular(10),
-                                    )),
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    topLeft: Radius.circular(10),
-                                  ),
-                                  child: Image.asset(
-                                    // width: double.infinity,
-                                    provider.bestDealList[index]
-                                        ["bestDealImage"],
-                                    fit: BoxFit.fill,
-                                    height: MediaQuery.of(context).size.height *
-                                        .07,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * .01,
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                child: TextFieldUtils()
-                                    .homePageTitlesTextFields(
-                                        provider.bestDealList[index]
-                                            ["bestDealDescription"],
-                                        context),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * .01,
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextFieldUtils().dynamicText(
-                                        indianRupeesFormat.format(int.parse(
-                                            provider.bestDealList[index]
-                                                    ["bestDealDiscountPrice"]
-                                                .toString())),
-                                        context,
-                                        TextStyle(
-                                            color: ThemeApp.blackColor,
-                                            fontSize: height * .022,
-                                            fontWeight: FontWeight.bold)),
-                                    TextFieldUtils().dynamicText(
-                                        indianRupeesFormat.format(int.parse(
-                                            provider.bestDealList[index]
-                                                    ["bestDealPrice"]
-                                                .toString())),
-                                        context,
-                                        TextStyle(
-                                            color: ThemeApp.darkGreyTab,
-                                            fontSize: height * .02,
-                                            fontWeight: FontWeight.w500,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                            decorationThickness: 1.5)),
-                                  ],
-                                ),
-                              )
-                            ],
-                          )),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * .03,
-                      )
-                    ],
-                  );
-                }),
-          );
-
-          /* Container(
-          height: MediaQuery.of(context).size.height * .3,
-          child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: provider.bestDealList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const OfferActivity(),
-                      ),
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Container(
-                        // width: 200,
-                        width: width * .45,
-                        height: MediaQuery.of(context).size.height * .25,
-                        decoration: BoxDecoration(
-                            color: ThemeApp.whiteColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10))),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          child: Image.asset(
-                            // width: double.infinity,
-                            provider.bestDealList[index]
-                                ["bestDealImage"],
-                            fit: BoxFit.fill,
-                            height: MediaQuery.of(context).size.height * .07,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * .03,
-                      )
-                    ],
-                  ),
+                                )),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .03,
+                            )
+                          ],
+                        );
+                      }),
                 );
-              }),
-        );*/
-        });
+              default:
+                return Text("No Data found!");
+            }
+            return Text("No Data found!");
+          });
+        }));
   }
 
-  Widget budgetBuyList(HomeProvider provider) {
-    return FutureBuilder(
-        future: provider.budgetBuyListService(),
-        builder: (context, snapshot) {
-          print("provider.budgetBuyListService" +
-              provider.budgetBuyList.toString());
+  Widget budgetBuyList() {
 
-          if (snapshot.hasError) print(snapshot.error);
-          return Container(
-              height: 580,
-              // width: MediaQuery.of(context).size.width,
-              // padding: EdgeInsets.all(12.0),
-              child: GridView.builder(
-                itemCount: 4,
-                physics: const NeverScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 10,
-                  // width / height: fixed for *all* items
-                  childAspectRatio: 0.75,
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => dashboardViewModel,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, dashboardProvider, child) {
+              return Consumer<DashboardViewModel>(
+                  builder: (context, dashboardProvider, child) {
+                    switch (dashboardViewModel.productListingList.status) {
+                      case Status.LOADING:
+                        if (kDebugMode) {
+                          print("Api load");
+                        }
+                        return ProgressIndicatorLoader(true);
 
-                  crossAxisCount: 2,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                          color: ThemeApp.darkGreyTab,
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Stack(
-                              alignment: Alignment.topRight,
-                              children: [
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * .25,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: const BoxDecoration(
-                                      color: ThemeApp.whiteColor,
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(10),
-                                        topLeft: Radius.circular(10),
-                                      )),
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      topLeft: Radius.circular(10),
-                                    ),
-                                    child: Image.asset(
-                                      // width: double.infinity,
-                                      provider.budgetBuyList[index]
-                                          ["budgetBuyImage"],
-                                      fit: BoxFit.fill,
-                                      // height: MediaQuery.of(context)
-                                      //                 .size
-                                      //                 .height *
-                                      //             .07,
-                                      // height: (MediaQuery.of(context).orientation ==
-                                      //         Orientation.landscape)
-                                      //     ? MediaQuery.of(context).size.height * .26
-                                      //     : MediaQuery.of(context).size.height * .1,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 10, right: 10),
-                                  child: kmAwayOnMerchantImage(
-                                    provider.budgetBuyList[index]["kmAWAY"],
-                                    context,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            // flex: 1,
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.only(left: 12, right: 12),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextFieldUtils()
-                                      .homePageTitlesTextFieldsWHITE(
-                                          provider.budgetBuyList[index]
-                                              ["budgetBuyDescription"],
-                                          context),
-                                  TextFieldUtils().dynamicText(
-                                      indianRupeesFormat.format(int.parse(
-                                          provider.budgetBuyList[index]
-                                          ["budgetBuyPrice"])),
-                                      context,
-                                      TextStyle(
-                                          color: ThemeApp.whiteColor,
-                                          fontSize: height * .022,
-                                          fontWeight: FontWeight.bold)),
+                      case Status.ERROR:
+                        if (kDebugMode) {
+                          print("Api error");
+                        }
+                        return Text(
+                            dashboardViewModel.productListingList.message.toString());
 
-                                ],
+                      case Status.COMPLETED:
+                        if (kDebugMode) {
+                          print("Api calll");
+                        }
+
+                        List<ProductListing>? productListing = dashboardViewModel
+                            .productListingList.data!.response!.body!.productListing;
+
+                        return Container(
+                            height: 580,
+                            // width: MediaQuery.of(context).size.width,
+                            // padding: EdgeInsets.all(12.0),
+                            child: GridView.builder(
+                              itemCount: 4,
+                              physics: const NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                mainAxisSpacing: 20,
+                                crossAxisSpacing: 10,
+                                // width / height: fixed for *all* items
+                                childAspectRatio: 0.75,
+
+                                crossAxisCount: 2,
                               ),
-                            ),
-                          )
-                        ],
-                      ));
-                },
-              ));
-        });
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: const BoxDecoration(
+                                        color: ThemeApp.darkGreyTab,
+                                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: Stack(
+                                            alignment: Alignment.topRight,
+                                            children: [
+                                              Container(
+                                                height:
+                                                MediaQuery.of(context).size.height * .25,
+                                                width: MediaQuery.of(context).size.width,
+                                                decoration: const BoxDecoration(
+                                                    color: ThemeApp.whiteColor,
+                                                    borderRadius: BorderRadius.only(
+                                                      topRight: Radius.circular(10),
+                                                      topLeft: Radius.circular(10),
+                                                    )),
+                                                child: ClipRRect(
+                                                  borderRadius: const BorderRadius.only(
+                                                    topRight: Radius.circular(10),
+                                                    topLeft: Radius.circular(10),
+                                                  ),
+                                                  child: Image.network(
+                                                    // width: double.infinity,
+                                                    productListing![index].image1Url!,
+                                                    fit: BoxFit.fill,
+
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                const EdgeInsets.only(top: 10, right: 10),
+                                                child: kmAwayOnMerchantImage(
+                                                  '1.1 KM away',
+                                                  context,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          // flex: 1,
+                                          child: Container(
+                                            padding:
+                                            const EdgeInsets.only(left: 12, right: 12),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                TextFieldUtils()
+                                                    .homePageTitlesTextFieldsWHITE(
+                                                    productListing[index].shortName!,
+                                                    context),
+                                                TextFieldUtils().dynamicText(
+                                                    indianRupeesFormat.format(
+                                                        productListing[index].currentPrice),
+                                                    context,
+                                                    TextStyle(
+                                                        color: ThemeApp.whiteColor,
+                                                        fontSize: height * .022,
+                                                        fontWeight: FontWeight.bold)),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ));
+                              },
+                            ));
+                      default:
+                        return Text("No Data found!");
+                    }
+                    return Text("No Data found!");
+                  });
+            }));
+
   }
 
   List<Widget> _iconViews() {
@@ -1153,36 +1273,4 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
     return list;
   }
-}
-
-List<BookServiceModel> bookServiceFromJson(String str) =>
-    List<BookServiceModel>.from(
-        json.decode(str).map((x) => BookServiceModel.fromJson(x)));
-
-String bookServiceToJson(List<BookServiceModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
-class BookServiceModel {
-  String serviceImage;
-  String serviceName;
-  String serviceDescription;
-
-  BookServiceModel({
-    required this.serviceImage,
-    required this.serviceName,
-    required this.serviceDescription,
-  });
-
-  factory BookServiceModel.fromJson(Map<String, dynamic> json) =>
-      BookServiceModel(
-        serviceImage: json["serviceImage"],
-        serviceName: json["serviceName"],
-        serviceDescription: json["serviceDescription"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "serviceImage": serviceImage,
-        "serviceName": serviceName,
-        "serviceDescription": serviceDescription,
-      };
 }
