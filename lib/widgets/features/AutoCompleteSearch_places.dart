@@ -156,7 +156,7 @@
 //                   errorBorder: OutlineInputBorder(
 //                       borderRadius: BorderRadius.circular(10),
 //                       borderSide: BorderSide(
-//                           color: ThemeApp.innerTextFieldErrorColor,
+//                           color: ThemeApp.redColor,
 //                           width: 1)),
 //                   enabledBorder: OutlineInputBorder(
 //                       borderRadius: BorderRadius.circular(10),

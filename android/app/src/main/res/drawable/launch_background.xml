@@ -6,7 +6,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/ic_launcher_vc" />
+            android:src="@mipmap/img" />
     </item>
 
     <!-- You can insert your own image assets here -->

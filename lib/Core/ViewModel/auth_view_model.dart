@@ -26,7 +26,12 @@ class AuthViewModel with ChangeNotifier {
 
   bool get loadingWithPost => _loadingWithPost;
 
+  bool _loadingWithAuthUSerPost = false;
 
+  bool get loadingWithAuthUSerPost => _loadingWithAuthUSerPost;
+  bool _loadingWithAuthUSerSignInPost = false;
+
+  bool get loadingWithAuthUSerSignInPost => _loadingWithAuthUSerSignInPost;
   setLoadingWithGet(bool value) {
     _loadingWithGet = value;
 
@@ -34,6 +39,17 @@ class AuthViewModel with ChangeNotifier {
   }
   setLoadingWithPost(bool value) {
     _loadingWithPost = value;
+
+    notifyListeners();
+  }
+  setLoadingAuthUserWithPost(bool value) {
+    _loadingWithAuthUSerPost = value;
+
+    notifyListeners();
+  }
+
+  setLoadingAuthUserSignInWithPost(bool value) {
+    _loadingWithAuthUSerSignInPost = value;
 
     notifyListeners();
   }
@@ -81,6 +97,48 @@ class AuthViewModel with ChangeNotifier {
       Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
     }).onError((error, stackTrace) {
       setLoadingWithPost(false);
+      if (kDebugMode) {
+        Utils.flushBarErrorMessage(error.toString(), context);
+
+        print(error.toString());
+      }
+    });
+  }
+
+
+  Future<void> authSignInUsingPost(dynamic data, BuildContext context) async {
+    setLoadingAuthUserSignInWithPost(true);
+    _myRepo.authSignInUsingPost(data).then((value) {
+      setLoadingAuthUserSignInWithPost(false);
+      if (kDebugMode) {
+        print("Login Api With Post : $value");
+      }
+
+      // StringConstant.isLogIn = true;
+      Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+    }).onError((error, stackTrace) {
+      setLoadingAuthUserSignInWithPost(false);
+      if (kDebugMode) {
+        Utils.flushBarErrorMessage(error.toString(), context);
+
+        print(error.toString());
+      }
+    });
+  }
+
+
+  Future<void> authSignUpUsingPost(dynamic data, BuildContext context) async {
+    setLoadingAuthUserWithPost(true);
+    _myRepo.authSignUpUsingPost(data).then((value) {
+      setLoadingAuthUserWithPost(false);
+      if (kDebugMode) {
+        print("Sign Up Api With Post : $value");
+      }
+
+      // StringConstant.isLogIn = true;
+      // Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+    }).onError((error, stackTrace) {
+      setLoadingAuthUserWithPost(false);
       if (kDebugMode) {
         Utils.flushBarErrorMessage(error.toString(), context);
 

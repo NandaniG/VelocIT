@@ -89,7 +89,7 @@ value.deleteCardMethod(widget.index);
                               final snackBar = SnackBar(
                                 content: Text('Card delete successfully!'),
                                 clipBehavior: Clip.antiAlias,
-                                backgroundColor: ThemeApp.innerTextFieldErrorColor,
+                                backgroundColor: ThemeApp.redColor,
                               );
                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
                               Navigator.of(context).push(

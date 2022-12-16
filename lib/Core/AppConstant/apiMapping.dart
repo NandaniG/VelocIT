@@ -2,10 +2,11 @@ import '../Enum/apiEndPointEnums.dart';
 
 class ApiMapping {
   static String baseProtocol = "https";
+  // static String baseDomain = "velocitapi.fulgorithmapi.com";
   static String baseDomain = "velocitapiqa.fulgorithmapi.com";
   static String basePort = "443";
   static String apiVersion = "v1";
-  static String username = "/v1/IAM/authenticateWithUID";
+  // static String username = "/v2/IAM/authenticateWithUID";
 
   static String ConstructURI(String path) {
     return baseProtocol +
@@ -54,6 +55,12 @@ class ApiMapping {
         break;
         case apiEndPoint.put_carts:
         retVal = ConstructURI("/carts");
+
+        break; case apiEndPoint.auth_signIn_using_post:
+        retVal = ConstructURI("/auth/signin");
+        break;
+        case apiEndPoint.auth_signUp_using_post:
+        retVal = ConstructURI("/auth/signup");
         break;
 
       default:

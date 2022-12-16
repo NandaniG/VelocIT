@@ -94,7 +94,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                     final snackBar = SnackBar(
                       content: Text('You can add only 5 addresse'),
                       clipBehavior: Clip.antiAlias,
-                      backgroundColor: ThemeApp.innerTextFieldErrorColor,
+                      backgroundColor: ThemeApp.redColor,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
 

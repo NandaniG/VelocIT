@@ -16,6 +16,9 @@ import 'package:velocit/pages/Activity/Order_CheckOut_Activities/OrderReviewScre
 import 'package:velocit/pages/Activity/Payment_Activities/payments_Activity.dart';
 import 'package:velocit/pages/Activity/Product_Activities/ProductDetails_activity.dart';
 import 'package:velocit/pages/Activity/Product_Activities/Products_List.dart';
+import 'package:velocit/pages/auth/OTP_Screen.dart';
+import 'package:velocit/pages/auth/Sign_Up.dart';
+import 'package:velocit/pages/auth/forgot_password.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
 import 'package:velocit/pages/homePage.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
@@ -148,14 +151,17 @@ class MyApp extends StatelessWidget {
                   primarySwatch: colorCustomForMaterialApp,
                 ),
                 debugShowCheckedModeBanner: false,
+                // home: ForgotPassword(),
                 // initialRoute: StringConstant.isLogIn == true?RoutesName.signInRoute:RoutesName.dashboardRoute,
-                initialRoute: RoutesName.splashScreenRoute,
+                initialRoute: RoutesName.signInRoute,
                 onGenerateRoute: Routes.generateRoute,
                 routes: {
-                  // '/': (context) => StringConstant.isLogIn == false
+                  // '/': (context) => StringConstant.emailOTPVar == '7990916638'
                   //     ? SignIn_Screen()
                   //     : DashboardScreen(),
-                  '/': (context) => SplashScreen(),
+                '/': (context) => SignIn_Screen(),
+                  // '/': (context) => SignUp(),
+                  '/': (context) => DashboardScreen(),
                   '/dashBoardScreen': (context) => const DashboardScreen(),
                   '/editAccountActivity': (context) =>
                       const EditAccountActivity(),

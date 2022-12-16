@@ -15,7 +15,7 @@ Widget proceedButton(String name, Color color, BuildContext context,
           ),
           border: Border.all(
               color: color == ThemeApp.whiteColor
-                  ? ThemeApp.darkGreyTab
+                  ? ThemeApp.tealButtonColor
                   : ThemeApp.whiteColor),
           color: color,
         ),

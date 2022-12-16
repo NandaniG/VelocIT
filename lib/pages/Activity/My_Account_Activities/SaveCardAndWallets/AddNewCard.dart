@@ -164,7 +164,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                           color: Colors.grey,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
                       errorStyle: TextStyle(
-                          color: ThemeApp.innerTextFieldErrorColor,
+                          color: ThemeApp.redColor,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
                       contentPadding:
                           const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -184,7 +184,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: ThemeApp.innerTextFieldErrorColor,
+                              color: ThemeApp.redColor,
                               width: 1)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -422,7 +422,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                           color: Colors.grey,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
                       errorStyle: TextStyle(
-                          color: ThemeApp.innerTextFieldErrorColor,
+                          color: ThemeApp.redColor,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
                       contentPadding:
                       const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -442,7 +442,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
-                              color: ThemeApp.innerTextFieldErrorColor,
+                              color: ThemeApp.redColor,
                               width: 1)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),

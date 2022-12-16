@@ -182,7 +182,7 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(
-                              color: ThemeApp.innerTextFieldErrorColor,
+                              color: ThemeApp.redColor,
                               width: 1)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -430,7 +430,7 @@ class _AutosearchState extends State<Autosearch> {
                   errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(
-                          color: ThemeApp.innerTextFieldErrorColor, width: 1)),
+                          color: ThemeApp.redColor, width: 1)),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(

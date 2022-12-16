@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ThemeApp {
+  static const appColor =  Color(0xff00A7BF);
+  static const appBackgrounColor =  Color(0xffD2FBFF);
+  static const primaryNavyBlackColor =  Color(0xff0C1A30);
+  static const redColor =  Color(0xfffe3a30);
+  static const tealButtonColor =  Color(0xff056C84);
   static const textFieldBorderColor = const Color.fromRGBO(199, 195, 195, 1);
  static const backgroundColor = const Color.fromRGBO(240, 237, 237, 1);
  static const lightGreyTab = const Color.fromRGBO(235, 232, 232, 1);
@@ -12,7 +17,7 @@ class ThemeApp {
  static const whiteColor = const Color.fromRGBO(255, 255, 255, 1);
  static const blackColor = const Color.fromRGBO(0, 0, 0, 1);
  static const innertextfieldbordercolor = const Color.fromRGBO(128, 189, 40, 1);
- static const innerTextFieldErrorColor = const Color.fromRGBO(247, 7, 7, 1);
+ // static const redColor = const Color.fromRGBO(247, 7, 7, 1);
  static const purplecolor = const Color.fromRGBO(142, 110, 207, 1);
  static const greenappcolor = const Color.fromRGBO(18, 122, 69, 1);
 

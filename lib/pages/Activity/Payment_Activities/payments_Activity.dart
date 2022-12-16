@@ -369,7 +369,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                                     0.020),
                                             errorStyle: TextStyle(
                                                 color: ThemeApp
-                                                    .innerTextFieldErrorColor,
+                                                    .redColor,
                                                 fontSize: MediaQuery.of(context)
                                                         .size
                                                         .height *
@@ -403,7 +403,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                                     BorderRadius.circular(10),
                                                 borderSide: BorderSide(
                                                     color: ThemeApp
-                                                        .innerTextFieldErrorColor,
+                                                        .redColor,
                                                     width: 1)),
                                             enabledBorder: OutlineInputBorder(
                                                 borderRadius:

@@ -23,7 +23,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeApp.whiteColor,
+      backgroundColor: ThemeApp.appBackgrounColor,
       appBar: PreferredSize(
       preferredSize: const Size.fromHeight(70),
       child: Container(
@@ -40,6 +40,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         key: _formKey,
         child: ListView(
           children: [
+            Container(
+              // group796Z38 (213:207)
+
+              width: double.infinity,
+              height: 70,
+              child: Image.asset(
+                'assets/appImages/appicon.png',
+                width: double.infinity,
+                height: 70,
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .04,
+            ),
             TextFieldUtils().textFieldHeightThree(AppLocalizations.of(context).forgotPassword, context),
             const SizedBox(
               height: 5,
@@ -47,10 +61,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             TextFieldUtils().subHeadingTextFields(
                 AppLocalizations.of(context).forgotPasswordSubHeading, context),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .04,
+              height: MediaQuery.of(context).size.height * .1,
             ),
-            TextFieldUtils()
-                .titleTextFields(AppLocalizations.of(context).registeredEmailAddress, context),
+            TextFieldUtils().asteriskTextField(
+                AppLocalizations.of(context).registeredEmailAddress,context),
             TextFormFieldsWidget(
                 errorText: AppLocalizations.of(context).emailError,
                 textInputType: TextInputType.emailAddress,
@@ -81,26 +95,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   return null;
                 }),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .025,
+              height: MediaQuery.of(context).size.height * .08,
             ),
-            proceedButton(AppLocalizations.of(context).resetPassword, ThemeApp.blackColor,context, false,() {
+            proceedButton(AppLocalizations.of(context).resetPassword, ThemeApp.tealButtonColor,context, false,() {
               if (_formKey.currentState!.validate() &&
                   email.text.isNotEmpty) {
-                if (email.text == 'codeelan@gmail.com' ) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SignIn_Screen(),
-                    ),
-                  );
-                } else {
-                  final snackBar = SnackBar(
-                    content: Text('Please enter valid Details.....'),
-                    clipBehavior: Clip.antiAlias,
-                    backgroundColor: ThemeApp.greenappcolor,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
 
+
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => SignIn_Screen(),
+                //   ),
+                // );
+                showDialog(
+                    context: context,
+                    builder: (BuildContext
+                    context) {
+                      return ForgotSuccessDialog(
+                      );
+                    });
 
               } else {
 
@@ -122,6 +135,85 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     ),
         ),
       ),
+    );
+  }
+}
+class ForgotSuccessDialog extends StatefulWidget {
+
+  ForgotSuccessDialog();
+
+  @override
+  State<ForgotSuccessDialog> createState() => _ForgotSuccessDialogState();
+}
+
+class _ForgotSuccessDialogState extends State<ForgotSuccessDialog> {
+  dialogContent(BuildContext context) {
+    {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: 70.0,
+          maxHeight: 300.0,
+          maxWidth: MediaQuery.of(context).size.width,
+        ),
+        child: Container(
+          padding: EdgeInsets.all(20),
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 5.0),
+              ),
+            ],
+          ),
+          child: Container(
+            //  padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  // group796Z38 (213:207)
+
+                  width: double.infinity,
+                  // height: 70,
+                  child: Image.asset(
+                    'assets/appImages/passwordResetIcon.png',
+                    width: double.infinity,
+                    height: 100,
+                  ),
+                ),
+                TextFieldUtils().dynamicText(
+                    'Password Reset Successfully',
+                    context,
+                    TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: MediaQuery.of(context).size.height * .025,
+                    )),
+                proceedButton('Ok', ThemeApp.blackColor,context, false,() {
+                  Navigator.pop(context);
+                })
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
     );
   }
 }

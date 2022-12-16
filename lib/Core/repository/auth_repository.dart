@@ -28,4 +28,33 @@ class AuthRepository {
       throw e;
     }
   }
+
+
+  Future<dynamic> authSignInUsingPost(dynamic data) async {
+    var url = ApiMapping.getURI(apiEndPoint.auth_signIn_using_post);
+
+    try {
+      dynamic resposnse = await _apiServices.getPostApiResponse(url, data);
+      return resposnse;
+    } catch (e) {
+      throw e;
+    }
+  }
+  Future<dynamic> authSignUpUsingPost(dynamic data) async {
+
+    var url = ApiMapping.getURI(apiEndPoint.auth_signUp_using_post);
+print("SignUp URL "+url.toString());
+    // dynamic resposnse = await _apiServices.getPostApiResponse(url, data);
+    print("SignUp Data "+data.toString());
+
+    // print(resposnse.toString());
+    try {
+      dynamic resposnse = await _apiServices.getPostApiResponse(url, data);
+
+      print(resposnse.toString());
+      return resposnse;
+    } catch (e) {
+      print ("SignUp error"+e.toString());
+    }
+  }
 }

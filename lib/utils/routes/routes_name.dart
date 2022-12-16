@@ -5,6 +5,7 @@ import 'package:velocit/pages/auth/OTP_Screen.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/routes/routes.dart';
 
+import '../../pages/auth/Sign_Up.dart';
 import '../../pages/auth/sign_in.dart';
 
 class Routes {
@@ -13,6 +14,9 @@ class Routes {
       case RoutesName.splashScreenRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => SplashScreen());
+        case RoutesName.signUpRoute:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => SignUp());
       case RoutesName.signInRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => SignIn_Screen());

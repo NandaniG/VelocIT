@@ -19,9 +19,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
    <application
+        android:requestLegacyExternalStorage="true"
         android:label="velocit"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher_vc">
+        android:icon="@mipmap/img">
         <activity
             android:name=".MainActivity"
             android:exported="true"

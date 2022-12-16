@@ -56,7 +56,7 @@ class _OTPScreenState extends State<OTPScreen> {
     final authViewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
-        backgroundColor: ThemeApp.whiteColor,
+        backgroundColor: ThemeApp.appBackgrounColor,
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(70),
             child: Container(
@@ -79,6 +79,20 @@ class _OTPScreenState extends State<OTPScreen> {
                 const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 40),
             child: ListView(
               children: [
+                Container(
+                  // group796Z38 (213:207)
+
+                  width: double.infinity,
+                  height: 70,
+                  child: Image.asset(
+                    'assets/appImages/appicon.png',
+                    width: double.infinity,
+                    height: 70,
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .04,
+                ),
                 TextFieldUtils().textFieldHeightThree(
                     AppLocalizations.of(context).verification, context),
                 const SizedBox(
@@ -87,6 +101,18 @@ class _OTPScreenState extends State<OTPScreen> {
                 TextFieldUtils().subHeadingTextFields(
                     AppLocalizations.of(context).verificationSubHeading,
                     context),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .04,
+                ),
+                Container(alignment: Alignment.centerLeft,
+                  child: TextFieldUtils().dynamicText(
+                      '+91 78945612352',
+                      context,
+                      TextStyle(
+                          color: ThemeApp.primaryNavyBlackColor,
+                          fontSize:22,
+                          fontWeight: FontWeight.bold)),
+                ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .04,
                 ),
@@ -118,8 +144,8 @@ class _OTPScreenState extends State<OTPScreen> {
                     print("OTP :  $text");
                     print("OTP CONTROLLER ${controller.text}");
                   },
-                  pinBoxWidth: 48,
-                  pinBoxHeight: 50,
+                  pinBoxWidth: 50,
+                  pinBoxHeight: 60,
                   hasUnderline: false,
                   wrapAlignment: WrapAlignment.spaceAround,
                   pinBoxDecoration:
@@ -142,10 +168,47 @@ class _OTPScreenState extends State<OTPScreen> {
                     ? TextFieldUtils().errorTextFields(otpMsg, context)
                     : Container(),
                 SizedBox(
+                  height: MediaQuery.of(context).size.height * .01,
+                ),
+                Row(mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _start != 0
+                        ? Center(
+                      child: Text(
+                        _start.toString(),
+                        style: TextStyle(
+                            color: ThemeApp.primaryNavyBlackColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 19),
+                      ),
+                    )
+                        : SizedBox(),
+                    SizedBox(width: MediaQuery.of(context).size.width*0.02 ,),
+                    Center(
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _start = 90;
+                              isLoading = true;
+                              startTimer();
+                            });
+                          },
+                          child: Text(
+                            AppLocalizations.of(context).resendOTP,
+                            style: TextStyle(
+                                color: ThemeApp.tealButtonColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize:
+                                MediaQuery.of(context).size.height * .021),
+                          ),
+                        )),
+                  ],
+                ),
+                SizedBox(
                   height: MediaQuery.of(context).size.height * .025,
                 ),
                 proceedButton(AppLocalizations.of(context).verifyOTP,
-                    ThemeApp.blackColor, context, authViewModel.loadingWithPost,() async {
+                    ThemeApp.tealButtonColor,context, authViewModel.loadingWithPost,() async {
                       StringConstant.isLogIn = true;
 
                       Navigator.of(context).pushReplacement(
@@ -174,37 +237,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     Utils.errorToast("Please enter 6 digit OTP");
                   }
                 }),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .025,
-                ),
-                _start != 0
-                    ? Center(
-                        child: Text(
-                          _start.toString(),
-                          style: TextStyle(
-                              color: ThemeApp.darkGreyTab,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
-                        ),
-                      )
-                    : Center(
-                        child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            _start = 90;
-                            isLoading = true;
-                            startTimer();
-                          });
-                        },
-                        child: Text(
-                          AppLocalizations.of(context).resendOTP,
-                          style: TextStyle(
-                              color: ThemeApp.darkGreyTab,
-                              fontWeight: FontWeight.bold,
-                              fontSize:
-                                  MediaQuery.of(context).size.height * .021),
-                        ),
-                      )),
+
               ],
             ),
           ),

@@ -220,7 +220,7 @@ Widget searchBar(BuildContext context) {
     return Container(
       width: width,
       height: height * .1,
-      // color: ThemeApp.innerTextFieldErrorColor,
+      // color: ThemeApp.redColor,
       padding: const EdgeInsets.only(top: 10, left: 0),
       alignment: Alignment.center,
       child: TextFormField(
@@ -288,7 +288,7 @@ Widget searchBar(BuildContext context) {
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
-                  color: ThemeApp.innerTextFieldErrorColor, width: 1)),
+                  color: ThemeApp.redColor, width: 1)),
           // OutlineInputBorder
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
