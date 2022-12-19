@@ -81,7 +81,7 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       backgroundColor: ThemeApp.backgroundColor,
+//       backgroundColor: ThemeApp.appBackgroundColor,
 //       body: _tabs[currentIndex] ,
 //       /*     bottomNavigationBar: Tabs(
 //         tabIcons: _tabIcons,

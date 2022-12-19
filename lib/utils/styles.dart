@@ -5,11 +5,19 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ThemeApp {
   static const appColor =  Color(0xff00A7BF);
-  static const appBackgrounColor =  Color(0xffD2FBFF);
+  static const appBackgroundColor =  Color(0xffE3FCFF);
+  static const innerBoxesColor =  Color(0xffCFF9FF);
   static const primaryNavyBlackColor =  Color(0xff0C1A30);
+  static const subIconColor =  Color(0xff79757F);
+  static const lightFontColor =  Color(0xff8C8C8C);
   static const redColor =  Color(0xfffe3a30);
   static const tealButtonColor =  Color(0xff056C84);
-  static const textFieldBorderColor = const Color.fromRGBO(199, 195, 195, 1);
+  static const packedButtonColor =  Color(0xff0DCCF0);
+  static const activeOrderColor =  Color(0xff34C759);
+  static const shippedOrderColor =  Color(0xffF59B40);
+
+
+ static const textFieldBorderColor = const Color.fromRGBO(199, 195, 195, 1);
  static const backgroundColor = const Color.fromRGBO(240, 237, 237, 1);
  static const lightGreyTab = const Color.fromRGBO(235, 232, 232, 1);
  static const darkGreyTab = const Color.fromRGBO(135, 134, 134, 1);

@@ -10,7 +10,8 @@ import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
 import 'OrderPlaced_activity.dart';
@@ -69,7 +70,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
@@ -77,7 +78,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
             context, appTitle(context, "Order Checkout"), SizedBox()),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: ThemeApp.backgroundColor,
+        color: ThemeApp.appBackgroundColor,
         elevation: 0,
         child: Consumer<HomeProvider>(builder: (context, value, child) {
           return Container(
@@ -171,7 +172,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextFieldUtils().dynamicText(
-                              AppLocalizations.of(context).allOtherOptions,
+                              StringUtils.allOtherOptions,
                               context,
                               TextStyle(
                                   color: ThemeApp.blackColor,
@@ -233,7 +234,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           // ):SizedBox(height: 0,),
                           _radioSelected == 3
                               ? TextFieldUtils().dynamicText(
-                                  AppLocalizations.of(context).cardNumber,
+                                  StringUtils.cardNumber,
                                   context,
                                   TextStyle(
                                       color: ThemeApp.blackColor,
@@ -245,7 +246,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           _radioSelected == 3
                               ? CardNumberTextFormFieldsWidget(
                                   errorText:
-                                      AppLocalizations.of(context).emailError,
+                                      StringUtils.emailError,
                                   textInputType: TextInputType.number,
                                   controller: cardNumberController,
                                   maxLength: 19,
@@ -292,7 +293,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   children: [
                                     Expanded(
                                       child: TextFieldUtils().dynamicText(
-                                          AppLocalizations.of(context)
+                                          StringUtils
                                               .expiryDate,
                                           context,
                                           TextStyle(
@@ -302,7 +303,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                     ),
                                     Expanded(
                                       child: TextFieldUtils().dynamicText(
-                                          AppLocalizations.of(context).cvv,
+                                          StringUtils.cvv,
                                           context,
                                           TextStyle(
                                               color: ThemeApp.blackColor,
@@ -320,7 +321,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                     // Expanded(
                                     //     child: TextFormFieldsWidget(
                                     //         errorText:
-                                    //             AppLocalizations.of(context)
+                                    //             StringUtils
                                     //                 .emailError,
                                     //         textInputType:
                                     //             TextInputType.emailAddress,

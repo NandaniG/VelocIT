@@ -1,10 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
+import 'package:velocit/services/models/JsonModelForApp/SignIn.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
+import '../../Core/AppConstant/apiMapping.dart';
+import '../../Core/Model/SignUpModel.dart';
 import '../../Core/ViewModel/auth_view_model.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
@@ -28,6 +36,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController confirmPassword = new TextEditingController();
   FocusNode focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
+  bool _validateName = false;
   bool _validateEmail = false;
   bool _validateEmailOtp = false;
   bool _validatePassword = false;
@@ -42,7 +51,7 @@ class _SignUpState extends State<SignUp> {
     final authViewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
-      backgroundColor: ThemeApp.appBackgrounColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       body: SingleChildScrollView(
         child: Container(
           padding:
@@ -69,14 +78,15 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
                     ),
-                    TextFieldUtils().textFieldHeightThree('Create an Account', context),
+                    TextFieldUtils()
+                        .textFieldHeightThree('Create an Account', context),
                     const SizedBox(
                       height: 5,
                     ),
-                    // Text(AppLocalizations.of(context)!.helloWorld);
+                    // Text(StringUtils!.helloWorld);
 
                     TextFieldUtils().subHeadingTextFields(
-                        AppLocalizations.of(context).signinSubTitle, context),
+                        StringUtils.signinSubTitle, context),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
                     ),
@@ -89,19 +99,19 @@ class _SignUpState extends State<SignUp> {
                       height: MediaQuery.of(context).size.height * .02,
                     ),
                     TextFieldUtils().asteriskTextField(
-                        AppLocalizations.of(context).emailAddress,context),
+                        StringUtils.emailAddress, context),
 
                     TextFormFieldsWidget(
-                        errorText: AppLocalizations.of(context).emailError,
+                        errorText: StringUtils.emailError,
                         textInputType: TextInputType.emailAddress,
                         controller: email,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: AppLocalizations.of(context).emailAddress,
+                        hintText: StringUtils.emailAddress,
                         onChange: (val) {
                           setState(() {
                             if (val.isEmpty && email.text.isEmpty) {
                               _validateEmail = true;
-                            } else if (!StringConstant().isEmail(val) ) {
+                            } else if (!StringConstant().isEmail(val)) {
                               _validateEmail = true;
                             } else {
                               _validateEmail = false;
@@ -111,10 +121,10 @@ class _SignUpState extends State<SignUp> {
                         validator: (value) {
                           if (value.isEmpty && email.text.isEmpty) {
                             _validateEmail = true;
-                            return AppLocalizations.of(context).validEmailError;
-                          } else if (!StringConstant().isEmail(value) ) {
+                            return StringUtils.validEmailError;
+                          } else if (!StringConstant().isEmail(value)) {
                             _validateEmail = true;
-                            return AppLocalizations.of(context).validEmailError;
+                            return StringUtils.validEmailError;
                           } else {
                             _validateEmail = false;
                           }
@@ -128,13 +138,13 @@ class _SignUpState extends State<SignUp> {
                       height: MediaQuery.of(context).size.height * .02,
                     ),
                     TextFieldUtils().asteriskTextField(
-                        AppLocalizations.of(context).password,context),
+                        StringUtils.password, context),
                     PasswordTextFormFieldsWidget(
-                        errorText: AppLocalizations.of(context).passwordError,
+                        errorText: StringUtils.passwordError,
                         textInputType: TextInputType.text,
                         controller: password,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: AppLocalizations.of(context).password,
+                        hintText: StringUtils.password,
                         onChange: (val) {
                           setState(() {
                             if (val.isEmpty && password.text.isEmpty) {
@@ -149,10 +159,10 @@ class _SignUpState extends State<SignUp> {
                         validator: (value) {
                           if (value.isEmpty && password.text.isEmpty) {
                             _validatePassword = true;
-                            return AppLocalizations.of(context).passwordError;
+                            return StringUtils.passwordError;
                           } else if (!StringConstant().isPass(value)) {
                             _validatePassword = true;
-                            return AppLocalizations.of(context)
+                            return StringUtils
                                 .validPasswordError;
                           } else {
                             _validatePassword = false;
@@ -163,14 +173,14 @@ class _SignUpState extends State<SignUp> {
                       height: MediaQuery.of(context).size.height * .02,
                     ),
                     TextFieldUtils().asteriskTextField(
-                        AppLocalizations.of(context).changePassword,context),
+                        StringUtils.changePassword, context),
 
                     PasswordTextFormFieldsWidget(
-                        errorText: AppLocalizations.of(context).passwordError,
+                        errorText: StringUtils.passwordError,
                         textInputType: TextInputType.text,
                         controller: confirmPassword,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: AppLocalizations.of(context).changePassword,
+                        hintText: StringUtils.changePassword,
                         onChange: (val) {
                           setState(() {
                             if (confirmPassword.text != password.text) {
@@ -185,10 +195,10 @@ class _SignUpState extends State<SignUp> {
                         validator: (value) {
                           if (value.isEmpty && password.text.isEmpty) {
                             _validateConfirmPassword = true;
-                            return AppLocalizations.of(context).passwordError;
+                            return StringUtils.passwordError;
                           } else if (confirmPassword.text != password.text) {
                             _validateConfirmPassword = true;
-                            return AppLocalizations.of(context)
+                            return StringUtils
                                 .validPasswordError;
                           } else {
                             _validateConfirmPassword = false;
@@ -204,29 +214,28 @@ class _SignUpState extends State<SignUp> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
-                      child: proceedButton('Create an Account', ThemeApp.tealButtonColor ,
-                          context, authViewModel.loadingWithAuthUSerPost, () {
+                      child: proceedButton(
+                          'Create an Account',
+                          ThemeApp.tealButtonColor,
+                          context,
+                          authViewModel.loadingWithAuthUSerPost, () {
                         if (_formKey.currentState!.validate()) {
-
-                          List<dynamic> role;
-
                           Map data = {
                             "username": businessNameController.text,
                             "password": password.text,
                             "email": email.text,
                             "mobile": mobileNumberController.text,
-                            "role": role = ['user']
                           };
-
-
-                          authViewModel.authSignUpUsingPost(data, context);
+                          apiRequest(data);
+                          // authViewModel.authSignUpUsingPost(data, context);
                         }
                       }),
                     ),
-                    Container(  padding:
-                    const EdgeInsets.only(top: 20, bottom: 10),
+                    Container(
+                      padding: const EdgeInsets.only(top: 20, bottom: 10),
                       alignment: Alignment.bottomCenter,
-                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
@@ -237,7 +246,7 @@ class _SignUpState extends State<SignUp> {
                                 fontWeight: FontWeight.w400),
                           ),
                           InkWell(
-                            onTap: (){
+                            onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => SignIn_Screen()));
                             },
@@ -252,7 +261,6 @@ class _SignUpState extends State<SignUp> {
                         ],
                       ),
                     )
-
                   ],
                 ),
               ),
@@ -281,16 +289,35 @@ class _SignUpState extends State<SignUp> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextFieldUtils().asteriskTextField(
-            AppLocalizations.of(context).fullName,context),
+        TextFieldUtils()
+            .asteriskTextField(StringUtils.fullName, context),
         CharacterTextFormFieldsWidget(
-            errorText: 'Please enter Business Name',
+            errorText: 'Please enter Name',
             textInputType: TextInputType.name,
             controller: businessNameController,
             autoValidation: AutovalidateMode.onUserInteraction,
             hintText: 'David Wong',
-            onChange: (val) {},
+            onChange: (val) {
+              setState(() {
+                if (val.isEmpty && businessNameController.text.isEmpty) {
+                  _validateName = true;
+                } else if (businessNameController.text.length<4) {
+                  _validateName = true;
+                } else {
+                  _validateName = false;
+                }
+              });
+            },
             validator: (value) {
+              if (value.isEmpty && businessNameController.text.isEmpty) {
+                _validateName = true;
+                return StringUtils.fullName;
+              } else if (businessNameController.text.length<4) {
+                _validateName = true;
+                return StringUtils.fullName;
+              } else {
+                _validateName = false;
+              }
               return null;
             }),
       ],
@@ -302,12 +329,43 @@ class _SignUpState extends State<SignUp> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFieldUtils().asteriskTextField(
-            AppLocalizations.of(context).mobileNumber,context),
+            StringUtils.mobileNumber, context),
         MobileNumberTextFormField(
           controller: mobileNumberController,
           enable: true,
         ),
       ],
     );
+  }
+
+  Future apiRequest(Map jsonMap) async {
+    var url = ApiMapping.getURI(apiEndPoint.auth_signUp_using_post);
+    print("SignUp URL " + url.toString());
+    print("SignUp Data " + jsonMap.toString());
+
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(jsonMap)));
+
+    HttpClientResponse response = await request.close();
+    // todo - you should check the response.statusCode
+    dynamic reply = await response.transform(utf8.decoder).join();
+    String rawJson = reply.toString();
+
+    Map<String, dynamic> map = jsonDecode(rawJson);
+    String name = map['message'];
+
+    if (response.statusCode == 200) {
+      Utils.successToast(name.toString());
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => SignIn_Screen()));
+      print(reply.toString());
+    } else {
+      Utils.errorToast("System is busy, Please try after sometime.");
+    }
+
+    httpClient.close();
+    return reply;
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 import '../../../../services/models/AddressListModel.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
@@ -80,7 +81,7 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                     children: [
                       Expanded(
                         flex: 1,
-                        child: proceedButton(AppLocalizations.of(context).no,
+                        child: proceedButton(StringUtils.no,
                             ThemeApp.whiteColor, context, false,() {
                           Navigator.pop(context);
                         }),
@@ -92,7 +93,7 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                         flex: 1,
                         child: Consumer<ProductProvider>(
                             builder: (context, value, child) {
-                          return proceedButton(AppLocalizations.of(context).yes,
+                          return proceedButton(StringUtils.yes,
                               ThemeApp.blackColor, context,false, () {
                             setState(() {
                               print(widget.addressList.length);

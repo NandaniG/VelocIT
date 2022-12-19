@@ -7,7 +7,8 @@ import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 class MyOrderDetails extends StatefulWidget {
   final dynamic values;
@@ -42,7 +43,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
@@ -266,7 +267,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFieldUtils().dynamicText(
-              AppLocalizations.of(context).deliveryDetails,
+              StringUtils.deliveryDetails,
               context,
               TextStyle(
                   color: ThemeApp.darkGreyTab,
@@ -315,7 +316,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFieldUtils().dynamicText(
-              AppLocalizations.of(context).invoice,
+              StringUtils.invoice,
               context,
               TextStyle(
                   color: ThemeApp.darkGreyTab,
@@ -402,7 +403,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFieldUtils().dynamicText(
-              AppLocalizations.of(context).proofOfDelivery,
+              StringUtils.proofOfDelivery,
               context,
               TextStyle(
                   color: ThemeApp.darkGreyTab,
@@ -434,7 +435,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                 });
           },
           child: TextFieldUtils().dynamicText(
-              AppLocalizations.of(context).returnItems,
+              StringUtils.returnItems,
               context,
               TextStyle(
                   color: ThemeApp.blackColor,
@@ -452,7 +453,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                 });
           },
           child: TextFieldUtils().dynamicText(
-              AppLocalizations.of(context).cancelOrder,
+              StringUtils.cancelOrder,
               context,
               TextStyle(
                   color: ThemeApp.blackColor,
@@ -539,7 +540,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
 
   Widget cancelOrderTitle() {
     return TextFieldUtils().dynamicText(
-        AppLocalizations.of(context).cancelOrder,
+        StringUtils.cancelOrder,
         context,
         TextStyle(
             color: ThemeApp.blackColor,
@@ -549,7 +550,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
 
   Widget chooseProductToReturn() {
     return TextFieldUtils().dynamicText(
-        AppLocalizations.of(context).chooseItemYouWantToCancel,
+        StringUtils.chooseItemYouWantToCancel,
         context,
         TextStyle(
             color: ThemeApp.blackColor,
@@ -603,7 +604,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
 
   Widget cancelText() {
     return TextFieldUtils().dynamicText(
-        AppLocalizations.of(context).whyYouWantToCancel,
+        StringUtils.whyYouWantToCancel,
         context,
         TextStyle(
             color: ThemeApp.blackColor,
@@ -710,7 +711,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
         height: kToolbarHeight,
         alignment: Alignment.bottomCenter,
         padding: EdgeInsets.only(left: 20, right: 20),
-        child: proceedButton(AppLocalizations.of(context).cancelOrder,
+        child: proceedButton(StringUtils.cancelOrder,
             ThemeApp.blackColor, context,false, () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -788,7 +789,7 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
 
   Widget returnOrderTitle() {
     return TextFieldUtils().dynamicText(
-        AppLocalizations.of(context).returnOrder,
+        StringUtils.returnOrder,
         context,
         TextStyle(
             color: ThemeApp.blackColor,
@@ -798,7 +799,7 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
 
   Widget chooseProductToReturn() {
     return TextFieldUtils().dynamicText(
-        AppLocalizations.of(context).chooseItemYouWantToReturn,
+        StringUtils.chooseItemYouWantToReturn,
         context,
         TextStyle(
             color: ThemeApp.blackColor,
@@ -852,7 +853,7 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
 
   Widget cancelText() {
     return TextFieldUtils().dynamicText(
-        AppLocalizations.of(context).whyYouWantToReturn,
+        StringUtils.whyYouWantToReturn,
         context,
         TextStyle(
             color: ThemeApp.blackColor,
@@ -949,7 +950,7 @@ var valuesGroup='';
         height: kToolbarHeight,
         alignment: Alignment.bottomCenter,
         padding: EdgeInsets.only(left: 20, right: 20),
-        child: proceedButton(AppLocalizations.of(context).returnnn,
+        child: proceedButton(StringUtils.returnnn,
             ThemeApp.blackColor, context,false, () {
               Navigator.of(context).push(
                 MaterialPageRoute(

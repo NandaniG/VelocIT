@@ -9,7 +9,8 @@ import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../widgets/global/appBar.dart';
 import '../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 class OfferActivity extends StatefulWidget {
   const OfferActivity({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _OfferActivityState extends State<OfferActivity> {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
         key: scaffoldGlobalKey,
-        backgroundColor: ThemeApp.backgroundColor,
+        backgroundColor: ThemeApp.appBackgroundColor,
         // resizeToAvoidBottomInset: false,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(height * .12),
@@ -59,7 +60,7 @@ class _OfferActivityState extends State<OfferActivity> {
                           height: MediaQuery.of(context).size.height * .02,
                         ),
                         TextFieldUtils().listHeadingTextField(
-                            AppLocalizations.of(context).lowerPriceOfTheDay,
+                            StringUtils.lowerPriceOfTheDay,
                             context),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
@@ -69,7 +70,7 @@ class _OfferActivityState extends State<OfferActivity> {
                           height: MediaQuery.of(context).size.height * .02,
                         ),
                         TextFieldUtils().listHeadingTextField(
-                            AppLocalizations.of(context).appliances, context),
+                            StringUtils.appliances, context),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
                         ),
@@ -78,7 +79,7 @@ class _OfferActivityState extends State<OfferActivity> {
                           height: MediaQuery.of(context).size.height * .02,
                         ),
                      /*   TextFieldUtils().listHeadingTextField(
-                            AppLocalizations.of(context).electronics, context),
+                            StringUtils.electronics, context),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
                         ),
@@ -87,7 +88,7 @@ class _OfferActivityState extends State<OfferActivity> {
                           height: MediaQuery.of(context).size.height * .02,
                         ),
                         TextFieldUtils().listHeadingTextField(
-                            AppLocalizations.of(context).fashion, context),
+                            StringUtils.fashion, context),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
                         ),

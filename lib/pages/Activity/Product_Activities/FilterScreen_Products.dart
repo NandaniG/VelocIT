@@ -4,7 +4,8 @@ import '../../../services/models/FilterModel.dart';
 import '../../../utils/AppTheme.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({Key? key}) : super(key: key);
@@ -69,7 +70,7 @@ class _FilterScreenState extends State<FilterScreen> {
             Container(
               alignment: Alignment.centerLeft,
               child: TextFieldUtils().dynamicText(
-                  AppLocalizations.of(context).filter,
+                  StringUtils.filter,
                   context,
                   TextStyle(
                       color: ThemeApp.blackColor,
@@ -98,7 +99,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 child: Container(
                   alignment: Alignment.centerRight,
                   child: TextFieldUtils().dynamicText(
-                      AppLocalizations.of(context).clearFilter,
+                      StringUtils.clearFilter,
                       context,
                       TextStyle(
                           color: ThemeApp.blackColor,
@@ -176,7 +177,7 @@ class _FilterScreenState extends State<FilterScreen> {
         itemCount: initializeList.length,
         itemBuilder: (context, index) {
           return Container(
-            color: ThemeApp.backgroundColor,
+            color: ThemeApp.appBackgroundColor,
             height: height * 0.05,
             width: width,
             child: Row(
@@ -198,7 +199,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     decoration: BoxDecoration(
                       color: tappedIndex == index
                           ? ThemeApp.darkGreyColor
-                          : ThemeApp.backgroundColor,
+                          : ThemeApp.appBackgroundColor,
                     ),
                     child: TextFieldUtils().dynamicText(
                         initializeList[index].name,
@@ -228,13 +229,13 @@ class _FilterScreenState extends State<FilterScreen> {
                 child: Container(
                     height: height * .87,
                     width: width,
-                    color: ThemeApp.backgroundColor,
+                    color: ThemeApp.appBackgroundColor,
                     child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: initializeList.length,
                         itemBuilder: (context, index) {
                           return Container(
-                            color: ThemeApp.backgroundColor,
+                            color: ThemeApp.appBackgroundColor,
                             height: height * 0.05,
                             width: width,
                             child: Row(
@@ -257,7 +258,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                     decoration: BoxDecoration(
                                       color: tappedIndex == index
                                           ? ThemeApp.darkGreyColor
-                                          : ThemeApp.backgroundColor,
+                                          : ThemeApp.appBackgroundColor,
                                     ),
                                     child: TextFieldUtils().dynamicText(
                                         initializeList[index].name,
@@ -399,7 +400,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  color: ThemeApp.backgroundColor,
+                  color: ThemeApp.appBackgroundColor,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
                     "Apply", ThemeApp.blackColor, context)),

@@ -31,7 +31,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       // appBar: PreferredSize(
       //   preferredSize: Size.fromHeight(height * .09),
@@ -40,7 +40,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
       // ),
       body: SafeArea(
         child: Container(
-          color: ThemeApp.backgroundColor,
+          color: ThemeApp.appBackgroundColor,
           // width: width,
           child: mainUI(),
         ),
@@ -343,7 +343,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
           itemSize: height * .04,
           initialRating: 0,
           minRating: 1,
-          unratedColor: ThemeApp.backgroundColor,
+          unratedColor: ThemeApp.appBackgroundColor,
           direction: Axis.horizontal,
           allowHalfRating: true,
           itemCount: 5,

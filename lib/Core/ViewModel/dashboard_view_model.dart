@@ -6,6 +6,7 @@ import 'package:velocit/Core/repository/dashboard_repository.dart';
 
 import '../Model/CategoriesModel.dart';
 import '../Model/CategoriesModel.dart';
+import '../Model/ProductCategoryModel.dart';
 import '../Model/servicesModel.dart';
 import '../repository/auth_repository.dart';
 
@@ -16,6 +17,7 @@ class DashboardViewModel with ChangeNotifier {
 
   ApiResponse<ServicesModel> serviceList = ApiResponse.loading();
   ApiResponse<ProductsListingModel> productListingList = ApiResponse.loading();
+  ApiResponse<ProductCategoryModel> productCategoryList = ApiResponse.loading();
 
   setCategoryList(ApiResponse<CategoriesModel> response) {
     categoryList = response;
@@ -24,8 +26,13 @@ class DashboardViewModel with ChangeNotifier {
   setServicesList(ApiResponse<ServicesModel> response) {
     serviceList = response;
     notifyListeners();
-  } setProductListingList(ApiResponse<ProductsListingModel> response) {
+  }
+  setProductListingList(ApiResponse<ProductsListingModel> response) {
     productListingList = response;
+    notifyListeners();
+  }
+  getProductCategoryListingList(ApiResponse<ProductCategoryModel> response) {
+    productCategoryList = response;
     notifyListeners();
   }
 
@@ -63,4 +70,18 @@ class DashboardViewModel with ChangeNotifier {
       setProductListingList(ApiResponse.error(error.toString()));
     });
   }
+    Future<void> productCategoryListingWithGet() async {
+      getProductCategoryListingList(ApiResponse.loading());
+
+    _myRepo.getProductCategoryListing().then((value) async {
+
+      getProductCategoryListingList(ApiResponse.completed(value));
+
+    }).onError((error, stackTrace) {
+      getProductCategoryListingList(ApiResponse.error(error.toString()));
+    });
+  }
+
+
+
 }

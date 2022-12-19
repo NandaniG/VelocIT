@@ -75,23 +75,23 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
         return Future.value(true);
       },
       child: Scaffold(
-        backgroundColor: ThemeApp.backgroundColor,
+        backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
           child: Container(
             width: MediaQuery.of(context).size.width,
-            color: ThemeApp.darkGreyTab,
+            color: ThemeApp.appBackgroundColor,
 
             child: AppBar(
               centerTitle: false,
               elevation: 0,
-              backgroundColor: ThemeApp.backgroundColor,
+              backgroundColor: ThemeApp.appBackgroundColor,
               flexibleSpace: Container(
                 height: height * .11,
                 width: width,
                 decoration: const BoxDecoration(
-                  color: ThemeApp.whiteColor,
+                  color: ThemeApp.appBackgroundColor,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(15),
                       bottomRight: Radius.circular(15)),
@@ -99,7 +99,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
               ),
               titleSpacing: 0,
               leading:IconButton(
-                  icon: const Icon(Icons.arrow_back, color:ThemeApp.darkGreyTab),
+                  icon: const Icon(Icons.arrow_back, color:ThemeApp.blackColor),
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/dashBoardScreen');
 
@@ -116,7 +116,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
         body: SafeArea(
           child: Consumer<ProductProvider>(builder: (context, value, child) {
             return Container(
-              color: ThemeApp.backgroundColor,
+              color: ThemeApp.appBackgroundColor,
               width: width,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20,top: 20),
@@ -144,14 +144,14 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 child: Container(
                                     width: 60.0,
                                     height: 60.0,
-                                   /* decoration: new BoxDecoration(
+                                    decoration: new BoxDecoration(
                                         shape: BoxShape.circle,
                                         image: new DecorationImage(
                                             fit: BoxFit.fill,
                                             image: new AssetImage(
                                               'assets/images/laptopImage.jpg',
-                                            )))*/
-                                child: Image.memory(
+                                            )))
+                         /*       child: Image.memory(
                                   Base64Decoder().convert(StringConstant.userAccountImagePicker
                                       .replaceAll(
                                       RegExp(
@@ -159,7 +159,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                       '')),fit: BoxFit.fill,
                                   width: 100,
                                   height: 100,
-                                ),),
+                                ),*/),
                               ),
                               Expanded(
                                 flex: 3,
@@ -172,7 +172,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       TextFieldUtils().dynamicText(
-                                          StringConstant.userAccountName,
+                                          // StringConstant.userAccountName,
+                                          'Dawid John',
                                           context,
                                           TextStyle(
                                             color: ThemeApp.blackColor,
@@ -183,7 +184,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                         height: height * .01,
                                       ),
                                       TextFieldUtils().dynamicText(
-                                          StringConstant.userAccountEmail,
+                                          // StringConstant.userAccountEmail,
+                                          'dawid@gmail.com',
                                           context,
                                           TextStyle(
                                             color: ThemeApp.darkGreyTab,
@@ -193,7 +195,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                         height: height * .01,
                                       ),
                                       TextFieldUtils().dynamicText(
-                                          StringConstant.userAccountMobile,
+                                          // StringConstant.userAccountMobile,
+                                          '+91 8787965428',
                                           context,
                                           TextStyle(
                                             color: ThemeApp.darkGreyTab,
@@ -300,7 +303,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 decoration: const BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
-                                        color: ThemeApp.backgroundColor, width: 1),
+                                        color: ThemeApp.appBackgroundColor, width: 1),
                                     // bottom: BorderSide(color: Colors.grey, width: 1),
                                   ),
                                 ),
@@ -348,7 +351,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 decoration: const BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
-                                        color: ThemeApp.backgroundColor, width: 1),
+                                        color: ThemeApp.appBackgroundColor, width: 1),
                                     // bottom: BorderSide(color: Colors.grey, width: 1),
                                   ),
                                 ),
@@ -396,7 +399,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 decoration: const BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
-                                        color: ThemeApp.backgroundColor, width: 1),
+                                        color: ThemeApp.appBackgroundColor, width: 1),
                                     // bottom: BorderSide(color: Colors.grey, width: 1),
                                   ),
                                 ),
@@ -444,7 +447,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 decoration: const BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
-                                        color: ThemeApp.backgroundColor, width: 1),
+                                        color: ThemeApp.appBackgroundColor, width: 1),
                                     // bottom: BorderSide(color: Colors.grey, width: 1),
                                   ),
                                 ),
@@ -500,7 +503,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 decoration: const BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
-                                        color: ThemeApp.backgroundColor, width: 1),
+                                        color: ThemeApp.appBackgroundColor, width: 1),
                                     // bottom: BorderSide(color: Colors.grey, width: 1),
                                   ),
                                 ),
@@ -548,7 +551,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 decoration: const BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
-                                        color: ThemeApp.backgroundColor, width: 1),
+                                        color: ThemeApp.appBackgroundColor, width: 1),
                                     // bottom: BorderSide(color: Colors.grey, width: 1),
                                   ),
                                 ),
@@ -597,7 +600,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 decoration: const BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
-                                        color: ThemeApp.backgroundColor, width: 1),
+                                        color: ThemeApp.appBackgroundColor, width: 1),
                                     // bottom: BorderSide(color: Colors.grey, width: 1),
                                   ),
                                 ),

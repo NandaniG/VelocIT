@@ -1,12 +1,13 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'AddNewCard.dart';
 import 'delete_payment_method_dialog.dart';
@@ -29,7 +30,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
@@ -38,7 +39,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
       ),
       body: SafeArea(
         child: Container(
-          color: ThemeApp.backgroundColor,
+          color: ThemeApp.appBackgroundColor,
           width: width,
           child: Padding(padding: const EdgeInsets.all(20), child: mainUI()),
         ),
@@ -440,7 +441,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                             Container(
                               alignment: Alignment.centerLeft,
                               child: TextFieldUtils().dynamicText(
-                                  AppLocalizations.of(context).addNewCard,
+                                  StringUtils.addNewCard,
                                   context,
                                   TextStyle(
                                       color: ThemeApp.blackColor,
@@ -470,7 +471,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         TextFieldUtils().dynamicText(
-                            AppLocalizations.of(context).upi,
+                            StringUtils.upi,
                             context,
                             TextStyle(
                                 color: ThemeApp.blackColor,
@@ -509,7 +510,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                       height: height * .01,
                                     ),
                                     TextFieldUtils().dynamicText(
-                                        AppLocalizations.of(context).googlePay,
+                                        StringUtils.googlePay,
                                         context,
                                         TextStyle(
                                             color: ThemeApp.blackColor,
@@ -547,7 +548,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                       height: height * .01,
                                     ),
                                     TextFieldUtils().dynamicText(
-                                        AppLocalizations.of(context).payTm,
+                                        StringUtils.payTm,
                                         context,
                                         TextStyle(
                                             color: ThemeApp.blackColor,
@@ -585,7 +586,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                       height: height * .01,
                                     ),
                                     TextFieldUtils().dynamicText(
-                                        AppLocalizations.of(context).phonePay,
+                                        StringUtils.phonePay,
                                         context,
                                         TextStyle(
                                             color: ThemeApp.blackColor,
@@ -831,7 +832,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: TextFieldUtils().dynamicText(
-                              AppLocalizations.of(context).addNewAddress,
+                              StringUtils.addNewAddress,
                               context,
                               TextStyle(
                                   color: ThemeApp.blackColor,

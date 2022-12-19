@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/Core/ViewModel/auth_view_model.dart';
 import 'package:velocit/pages/auth/OTP_Screen.dart';
 import 'package:velocit/pages/auth/Sign_Up.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 
+import '../../Core/repository/auth_repository.dart';
 import '../../services/providers/Home_Provider.dart';
+import '../../utils/StringUtils.dart';
 import '../../utils/constants.dart';
 import '../../utils/routes/routes.dart';
 import '../../utils/styles.dart';
@@ -57,17 +60,19 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
-        backgroundColor: ThemeApp.appBackgrounColor,
+        backgroundColor: ThemeApp.appBackgroundColor,
         body: SingleChildScrollView(
           child: Container(
             padding:
                 const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 10),
-            child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Form(
                   key: _formKey,
-                  child: Column(mainAxisAlignment: MainAxisAlignment.start,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
@@ -84,15 +89,15 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * .04,
                       ),
-                      TextFieldUtils().textFieldHeightThree(
-                          AppLocalizations.of(context).signin, context),
+                      TextFieldUtils()
+                          .textFieldHeightThree(StringUtils.signin, context),
                       const SizedBox(
                         height: 5,
                       ),
-                      // Text(AppLocalizations.of(context)!.helloWorld);
+                      // Text(StringUtils!.helloWorld);
 
                       TextFieldUtils().subHeadingTextFields(
-                          AppLocalizations.of(context).signinSubTitle, context),
+                          StringUtils.signinSubTitle, context),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * .04,
                       ),
@@ -105,13 +110,14 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                   setState(() {
                                     _usingPassVisible = true;
                                     _usingPassVisible = !_usingPassVisible;
-                                    // email.clear();
+                                    email.clear();
+                                    password.clear();
                                     // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
                                   });
                                 },
                                 child: Container(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 15.0, 0, 15.0),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 15.0, 0, 15.0),
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(10),
@@ -122,7 +128,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                           : ThemeApp.appColor,
                                     ),
                                     child: TextFieldUtils().usingPassTextFields(
-                                        AppLocalizations.of(context).usingPass,
+                                        StringUtils.usingPass,
                                         _usingPassVisible
                                             ? ThemeApp.blackColor
                                             : ThemeApp.whiteColor,
@@ -134,11 +140,12 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 onTap: () {
                                   setState(() {
                                     _usingPassVisible = true;
+                                    mobileController.clear();
                                   });
                                 },
                                 child: Container(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 15.0, 0, 15.0),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 15.0, 0, 15.0),
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.only(
                                         topRight: Radius.circular(10),
@@ -149,7 +156,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                           : ThemeApp.whiteColor,
                                     ),
                                     child: TextFieldUtils().usingPassTextFields(
-                                        AppLocalizations.of(context).usingOTP,
+                                        StringUtils.usingOTP,
                                         _usingPassVisible
                                             ? ThemeApp.whiteColor
                                             : ThemeApp.blackColor,
@@ -160,17 +167,20 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * .04,
                       ),
-                      !_usingPassVisible?  TextFieldUtils().asteriskTextField(
-                          AppLocalizations.of(context).emailAddress, context):TextFieldUtils().asteriskTextField(
-                          AppLocalizations.of(context).mobileNumber, context),
+                      !_usingPassVisible
+                          ? TextFieldUtils().asteriskTextField(
+                              StringUtils.emailAddress, context)
+                          : TextFieldUtils().asteriskTextField(
+                              StringUtils.mobileNumber, context),
 
                       !_usingPassVisible
                           ? TextFormFieldsWidget(
-                              errorText: AppLocalizations.of(context).emailError,
+                              errorText: StringUtils.emailError,
                               textInputType: TextInputType.emailAddress,
                               controller: email,
-                              autoValidation: AutovalidateMode.onUserInteraction,
-                              hintText: AppLocalizations.of(context).emailAddress,
+                              autoValidation:
+                                  AutovalidateMode.onUserInteraction,
+                              hintText: StringUtils.emailAddress,
                               onChange: (val) {
                                 setState(() {
                                   if (val.isEmpty && email.text.isEmpty) {
@@ -185,10 +195,10 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               validator: (value) {
                                 if (value.isEmpty && email.text.isEmpty) {
                                   _validateEmail = true;
-                                  return AppLocalizations.of(context).emailError;
+                                  return StringUtils.emailError;
                                 } else if (!StringConstant().isEmail(value)) {
                                   _validateEmail = true;
-                                  return AppLocalizations.of(context).emailError;
+                                  return StringUtils.emailError;
                                 } else {
                                   _validateEmail = false;
                                 }
@@ -202,17 +212,18 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               height: 0,
                             )
                           : TextFormFieldsWidget(
-                              errorText: AppLocalizations.of(context).emailError,
+                              errorText: StringUtils.emailError,
                               textInputType: TextInputType.phone,
                               controller: mobileController,
-                              autoValidation: AutovalidateMode.onUserInteraction,
-                              hintText: AppLocalizations.of(context).mobileNumber,
+                              autoValidation:
+                                  AutovalidateMode.onUserInteraction,
+                              hintText: StringUtils.mobileNumber,
                               onChange: (val) {
                                 setState(() {
-                                  if (val.isEmpty && mobileController.text.isEmpty) {
+                                  if (val.isEmpty &&
+                                      mobileController.text.isEmpty) {
                                     _validateMobile = true;
-                                  } else if (
-                                      !StringConstant().isPhone(val)) {
+                                  } else if (!StringConstant().isPhone(val)) {
                                     _validateMobile = true;
                                   } else {
                                     _validateMobile = false;
@@ -220,13 +231,14 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty && mobileController.text.isEmpty) {
+                                if (value.isEmpty &&
+                                    mobileController.text.isEmpty) {
                                   _validateMobile = true;
-                                  return AppLocalizations.of(context).mobileError;
-                                } else if (
-                                    !StringConstant().isPhone(value)) {
+                                  return StringUtils.mobileError;
+                                } else if (!StringConstant().isPhone(value)) {
                                   _validateMobile = true;
-                                  return AppLocalizations.of(context).mobileError;
+                                  return StringUtils
+                                      .mobileError;
                                 } else {
                                   _validateMobile = false;
                                 }
@@ -241,17 +253,19 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             ),
                       !_usingPassVisible
                           ? TextFieldUtils().asteriskTextField(
-                          AppLocalizations.of(context).password, context)
+                          StringUtils.password, context)
                           : const SizedBox(
                               height: 0,
                             ),
                       !_usingPassVisible
                           ? PasswordTextFormFieldsWidget(
-                              errorText: AppLocalizations.of(context).passwordError,
+                              errorText:
+                              StringUtils.passwordError,
                               textInputType: TextInputType.text,
                               controller: password,
-                              autoValidation: AutovalidateMode.onUserInteraction,
-                              hintText: AppLocalizations.of(context).password,
+                              autoValidation:
+                                  AutovalidateMode.onUserInteraction,
+                              hintText:StringUtils.password,
                               onChange: (val) {
                                 setState(() {
                                   if (val.isEmpty && password.text.isEmpty) {
@@ -266,10 +280,11 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               validator: (value) {
                                 if (value.isEmpty && password.text.isEmpty) {
                                   _validatePassword = true;
-                                  return AppLocalizations.of(context).passwordError;
+                                  return StringUtils
+                                      .passwordError;
                                 } else if (!StringConstant().isPass(value)) {
                                   _validatePassword = true;
-                                  return AppLocalizations.of(context)
+                                  return StringUtils
                                       .validPasswordError;
                                 } else {
                                   _validatePassword = false;
@@ -289,11 +304,12 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 onTap: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (context) => const ForgotPassword()),
+                                        builder: (context) =>
+                                            const ForgotPassword()),
                                   );
                                 },
                                 child: TextFieldUtils().hyperLinkTextFields(
-                                    AppLocalizations.of(context).forgotPassword,
+                                    StringUtils.forgotPassword,
                                     context),
                               ),
                             )
@@ -309,8 +325,8 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             ),
                       proceedButton(
                           !_usingPassVisible
-                              ? AppLocalizations.of(context).signin
-                              : AppLocalizations.of(context).sendOtp,
+                              ? StringUtils.signin
+                              : StringUtils.sendOtp,
                           ThemeApp.tealButtonColor,
                           context,
                           authViewModel.loadingWithGet, () async {
@@ -322,35 +338,55 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 email.text.isNotEmpty &&
                                 password.text.isNotEmpty) {
                               Prefs.instance.setToken(
-                                  StringConstant.emailOTPPref, mobileController.text);
-                              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                  builder: (context) => DashboardScreen()));
+                                  StringConstant.emailOTPPref,
+                                  mobileController.text);
 
+                              // Map data = {
+                              //   'email': email.text,
+                              //   'password': password.text
+                              // };
                               Map data = {
-                                'username': email.text,
+                                'email': email.text,
                                 'password': password.text
                               };
-                              // authViewModel.authSignInUsingPost(data, context);
-                              //
-                              // authViewModel.loginApiWithGet(context);
+                              Map mobileData = {
+                                'mobile': email.text,
+                                'password': password.text
+                              };
+
+                              if (StringConstant().isNumeric(email.text)) {
+                                print("Digit found");
+                              } else {
+                                AuthRepository()
+                                    .postApiUsingEmailRequest(data, context);
+
+                                print("Digit not found");
+                              }
                             } else {
                               Utils.errorToast("Please enter Details.");
                             }
                           } else {
-                            if (mobileController.text.isNotEmpty &&
-
-                                    mobileController.text == '7990916638') {
-                              // Navigator.pushNamed(context, RoutesName.otpRoute);
+                            if (mobileController.text.isNotEmpty) {
+                              authViewModel.loginApiWithGet(context);
 
                               Prefs.instance.setToken(
-                                  StringConstant.emailOTPPref, mobileController.text);
-                              // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                              //     builder: (context) => OTPScreen()));
+                                  StringConstant.emailOTPPref,
+                                  mobileController.text);
+                              Map mobileData = {
+                                'mobile': mobileController.text,
+                                'password': password.text
+                              };
 
+                              // AuthRepository().postApiUsingMobileRequest(
+                              //     mobileData, context);
+                              /*   if (StringConstant().isNumeric(email.text)) {
+                                AuthRepository().postApiUsingMobileRequest(
+                                    mobileData, context);
+                                print("Digit found");
+                              } else {
 
-                              // Map data = {'username': 'testuser@test.com'};
-                              // authViewModel.loginApiWithPost(data, context);
-                              authViewModel.loginApiWithGet(context);
+                                print("Digit not found");
+                              }*/
                             } else {
                               Utils.errorToast("Please enter valid Details.");
                             }
@@ -358,39 +394,39 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                           }
                         });
                       }),
-
                     ],
                   ),
                 ),
-                 Container(  padding:
-                 const EdgeInsets.only(top: 190, bottom: 10),
-                   alignment: Alignment.bottomCenter,
-                   child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            "Don't have an account? ",
-                            style: TextStyle(
-                                color: ThemeApp.primaryNavyBlackColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          InkWell(
-                            onTap: (){
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SignUp()));
-                            },
-                            child: Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                  color: ThemeApp.primaryNavyBlackColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
+                Container(
+                  padding: const EdgeInsets.only(top: 190, bottom: 10),
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: TextStyle(
+                            color: ThemeApp.primaryNavyBlackColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
                       ),
-                 )
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SignUp()));
+                        },
+                        child: Text(
+                          "Sign Up",
+                          style: TextStyle(
+                              color: ThemeApp.primaryNavyBlackColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

@@ -6,7 +6,8 @@ import '../../../services/providers/Home_Provider.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 import '../../homePage.dart';
 import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
@@ -56,14 +57,14 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
                 ),
 
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).orderPlacedSuccessfully,
+                    StringUtils.orderPlacedSuccessfully,
                     context,
                     TextStyle(
                         color: Colors.grey.shade700,
                         fontSize: height * .035,
                         fontWeight: FontWeight.w500)),
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).thankyouForOrderingWithUs,
+                    StringUtils.thankyouForOrderingWithUs,
                     context,
                     TextStyle(
                         color: ThemeApp.darkGreyTab,
@@ -74,7 +75,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
                 ),
 
                 TextFieldUtils().dynamicText(
-                    '${AppLocalizations.of(context).orderId + ": ${value.orderCheckOutList[0]['orderCheckOutOrderID']}"}',
+                    '${StringUtils.orderId + ": ${value.orderCheckOutList[0]['orderCheckOutOrderID']}"}',
                     context,
                     TextStyle(
                         color: Colors.grey.shade700,
@@ -249,7 +250,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  color: ThemeApp.backgroundColor,
+                  color: ThemeApp.appBackgroundColor,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
                     "Continue Shopping ", ThemeApp.blackColor, context)),

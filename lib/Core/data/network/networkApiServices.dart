@@ -27,7 +27,7 @@ class NetworkApiServices extends BaseApiServices {
     try {
       final client = http.Client();
 
-      Response response = await client.post(Uri.parse(url), body: data).timeout(
+      Response response = await client.post(Uri.parse(url), body: data, headers: {"Content-Type": "application/json"}).timeout(
           Duration(seconds: 10));
 
       responseJson = returnResponse(response);

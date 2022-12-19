@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -127,23 +130,27 @@ class AuthViewModel with ChangeNotifier {
   }
 
 
-  Future<void> authSignUpUsingPost(dynamic data, BuildContext context) async {
-    setLoadingAuthUserWithPost(true);
-    _myRepo.authSignUpUsingPost(data).then((value) {
-      setLoadingAuthUserWithPost(false);
-      if (kDebugMode) {
-        print("Sign Up Api With Post : $value");
-      }
+  // Future<void> authSignUpUsingPost(dynamic data, BuildContext context) async {
+  //   setLoadingAuthUserWithPost(true);
+  //   _myRepo.authSignUpUsingPost(data).then((value) {
+  //     setLoadingAuthUserWithPost(false);
+  //     if (kDebugMode) {
+  //       print("Sign Up Api With Post : $value");
+  //     }
+  //
+  //     // StringConstant.isLogIn = true;
+  //     // Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+  //   }).onError((error, stackTrace) {
+  //     setLoadingAuthUserWithPost(false);
+  //     if (kDebugMode) {
+  //       Utils.flushBarErrorMessage(error.toString(), context);
+  //
+  //       print(error.toString());
+  //     }
+  //   });
+  // }
 
-      // StringConstant.isLogIn = true;
-      // Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
-    }).onError((error, stackTrace) {
-      setLoadingAuthUserWithPost(false);
-      if (kDebugMode) {
-        Utils.flushBarErrorMessage(error.toString(), context);
 
-        print(error.toString());
-      }
-    });
-  }
+
+
 }

@@ -3,26 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Core/Model/CategoriesModel.dart';
-import '../../../Core/Model/productSpecificListModel.dart';
+import '../../../Core/Model/ProductCategoryModel.dart';
 import '../../../Core/ViewModel/dashboard_view_model.dart';
-import '../../../Core/ViewModel/product_listing_view_model.dart';
-import '../../../Core/data/responses/status.dart';
-import '../../../services/models/ProductDetailModel.dart';
 import '../../../services/models/demoModel.dart';
 import '../../../services/providers/Products_provider.dart';
+import '../../../utils/StringUtils.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
-import '../../../widgets/global/bottomAppBarCustom.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../homePage.dart';
 import '../../screens/dashBoard.dart';
 import '../Product_Activities/Products_List.dart';
 
 class ShopByCategoryActivity extends StatefulWidget {
-  List<CategoryList>? shopByCategoryList;
+  List<ProductList>? shopByCategoryList;
   final int shopByCategorySelected;
 
   ShopByCategoryActivity({
@@ -40,8 +37,8 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
   double height = 0.0;
   double width = 0.0;
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
-  ProductSpecificListViewModel productViewModel =
-      ProductSpecificListViewModel();
+  DashboardViewModel productViewModel =
+  DashboardViewModel();
     Map data = {"category_code":"EOLP","recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
 
   var productList;
@@ -50,7 +47,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
     // TODO: implement initState
 
     selected = widget.shopByCategorySelected;
-    productViewModel.productSpecificListWithGet(context,data);
+    productViewModel.productCategoryListingWithGet();
     super.initState();
   }
 
@@ -72,7 +69,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
 
     return Scaffold(
       key: scaffoldGlobalKey,
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .12),
         child: appBarWidget(
@@ -98,7 +95,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                       height: height * .02,
                     ),
                     TextFieldUtils().listHeadingTextField(
-                        AppLocalizations.of(context).shopByCategories, context),
+                        StringUtils.shopByCategories, context),
                     SizedBox(
                       height: height * .02,
                     ),
@@ -150,7 +147,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                             Radius.circular(50)),
                                         child: Image.network(
                                           widget.shopByCategoryList![index]
-                                              .imageUrl!,
+                                              .productCategoryImageId!,
                                           fit: BoxFit.fill,
                                           height: MediaQuery.of(context)
                                                   .size
@@ -247,11 +244,10 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () {
-
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) =>
-                                  ProductListByCategoryActivity(productList: widget.shopByCategoryList![index],
+                                  ProductListByCategoryActivity(
                                  ),
                             ),
                           );
@@ -277,7 +273,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                 child: Image.network(
                                   // width: double.infinity,
                                   widget
-                                      .shopByCategoryList![index].imageUrl!,                                  fit: BoxFit.fill,
+                                      .shopByCategoryList![index].productCategoryImageId!,                                  fit: BoxFit.fill,
 
                                   height: MediaQuery.of(context)
                                       .size

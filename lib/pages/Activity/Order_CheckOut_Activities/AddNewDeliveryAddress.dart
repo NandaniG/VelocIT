@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 import '../../../services/models/AddressListModel.dart';
 import '../../../services/models/JsonModelForApp/HomeModel.dart';
@@ -16,7 +17,7 @@ import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/okPopUp.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'OrderReviewScreen.dart';
 
@@ -66,7 +67,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
         return Future.value(true);
       },
       child: Scaffold(
-        backgroundColor: ThemeApp.backgroundColor,
+        backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
@@ -76,7 +77,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
             child: AppBar(
               centerTitle: false,
               elevation: 0,
-              backgroundColor: ThemeApp.backgroundColor,
+              backgroundColor: ThemeApp.appBackgroundColor,
               flexibleSpace: Container(
                 height: height * .11,
                 width: width,
@@ -133,14 +134,14 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
           children: [
             //Full Name
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).fullName,
+                StringUtils.fullName,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
             CharacterTextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).enterFullName,
+                errorText: StringUtils.enterFullName,
                 textInputType: TextInputType.name,
                 controller: value.fullNameController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -151,7 +152,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 }),
             //Mobile Number
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).mobileNumber,
+                StringUtils.mobileNumber,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
@@ -167,7 +168,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 Expanded(
                   flex: 1,
                   child: TextFieldUtils().dynamicText(
-                      AppLocalizations.of(context).addressDetails,
+                      StringUtils.addressDetails,
                       context,
                       TextStyle(
                           color: ThemeApp.blackColor,
@@ -195,7 +196,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                         ),
                         padding: const EdgeInsets.only(left: 15, right: 15),
                         child: TextFieldUtils().dynamicText(
-                            AppLocalizations.of(context).useMyLocation,
+                            StringUtils.useMyLocation,
                             context,
                             TextStyle(
                                 color: ThemeApp.whiteColor,
@@ -209,14 +210,14 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               height: height * .02,
             ),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).houseBuildingNo,
+                StringUtils.houseBuildingNo,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
             TextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).houseBuildingNo,
+                errorText: StringUtils.houseBuildingNo,
                 textInputType: TextInputType.text,
                 controller: value.houseBuildingController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -226,14 +227,14 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   return null;
                 }),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).areaColonyName,
+                StringUtils.areaColonyName,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
             TextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).areaColonyName,
+                errorText: StringUtils.areaColonyName,
                 textInputType: TextInputType.text,
                 controller: value.areaColonyController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -243,14 +244,14 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   return null;
                 }),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).state,
+                StringUtils.state,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
             TextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).state,
+                errorText: StringUtils.state,
                 textInputType: TextInputType.text,
                 controller: value.stateController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -260,14 +261,14 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   return null;
                 }),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).city,
+                StringUtils.city,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
             TextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).city,
+                errorText: StringUtils.city,
                 textInputType: TextInputType.text,
                 controller: value.cityController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -280,7 +281,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               height: height * .02,
             ),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).typeOfAddress,
+                StringUtils.typeOfAddress,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
@@ -293,7 +294,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
             SizedBox(
               height: height * .02,
             ),
-            proceedButton(AppLocalizations.of(context).addDeliveryAddress,
+            proceedButton(StringUtils.addDeliveryAddress,
                 ThemeApp.blackColor, context, false, () {
               setState(() {
                 if (_formKey.currentState!.validate() &&
@@ -387,7 +388,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               setState(() {
                 isHome = true;
                 isHome = !isHome;
-                selectedAddressIs = AppLocalizations.of(context).home;
+                selectedAddressIs = StringUtils.home;
               });
             },
             child: Container(
@@ -399,7 +400,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   color: isHome ? ThemeApp.lightGreyTab : ThemeApp.darkGreyTab,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
-                    AppLocalizations.of(context).home,
+                    StringUtils.home,
                     isHome == true ? ThemeApp.blackColor : ThemeApp.whiteColor,
                     context)),
           ),
@@ -413,7 +414,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
             onTap: () {
               setState(() {
                 isHome = true;
-                selectedAddressIs = AppLocalizations.of(context).office;
+                selectedAddressIs = StringUtils.office;
               });
               // Navigator.of(context).push(
               //   MaterialPageRoute(
@@ -432,7 +433,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                       : ThemeApp.lightGreyTab,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
-                    AppLocalizations.of(context).office,
+                    StringUtils.office,
                     isHome == true ? ThemeApp.whiteColor : ThemeApp.blackColor,
                     context)),
           ),
@@ -509,7 +510,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
@@ -520,7 +521,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
 
             centerTitle: false,
             elevation: 0,
-            backgroundColor: ThemeApp.backgroundColor,
+            backgroundColor: ThemeApp.appBackgroundColor,
             flexibleSpace: Container(
               height: height * .11,
               width: width,
@@ -578,7 +579,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
           children: [
             //Full Name
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).fullName,
+                StringUtils.fullName,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
@@ -586,7 +587,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     fontWeight: FontWeight.w500)),
 
             CharacterTextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).enterFullName,
+                errorText: StringUtils.enterFullName,
                 textInputType: TextInputType.name,
                 controller: fullNameController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -597,7 +598,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                 }),
             //Mobile Number
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).mobileNumber,
+                StringUtils.mobileNumber,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
@@ -615,7 +616,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                 Expanded(
                   flex: 1,
                   child: TextFieldUtils().dynamicText(
-                      AppLocalizations.of(context).addressDetails,
+                      StringUtils.addressDetails,
                       context,
                       TextStyle(
                           color: ThemeApp.blackColor,
@@ -643,7 +644,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                         ),
                         padding: const EdgeInsets.only(left: 15, right: 15),
                         child: TextFieldUtils().dynamicText(
-                            AppLocalizations.of(context).useMyLocation,
+                            StringUtils.useMyLocation,
                             context,
                             TextStyle(
                                 color: ThemeApp.whiteColor,
@@ -657,14 +658,14 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               height: height * .02,
             ),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).houseBuildingNo,
+                StringUtils.houseBuildingNo,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
             TextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).houseBuildingNo,
+                errorText: StringUtils.houseBuildingNo,
                 textInputType: TextInputType.text,
                 controller: houseBuildingController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -674,14 +675,14 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   return null;
                 }),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).areaColonyName,
+                StringUtils.areaColonyName,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
             TextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).areaColonyName,
+                errorText: StringUtils.areaColonyName,
                 textInputType: TextInputType.text,
                 controller: areaColonyController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -691,14 +692,14 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   return null;
                 }),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).state,
+                StringUtils.state,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
             TextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).state,
+                errorText: StringUtils.state,
                 textInputType: TextInputType.text,
                 controller: stateController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -708,14 +709,14 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   return null;
                 }),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).city,
+                StringUtils.city,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
             TextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).city,
+                errorText: StringUtils.city,
                 textInputType: TextInputType.text,
                 controller: cityController,
                 autoValidation: AutovalidateMode.onUserInteraction,
@@ -728,7 +729,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               height: height * .02,
             ),
             TextFieldUtils().dynamicText(
-                AppLocalizations.of(context).typeOfAddress,
+                StringUtils.typeOfAddress,
                 context,
                 TextStyle(
                     color: ThemeApp.blackColor,
@@ -741,7 +742,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             SizedBox(
               height: height * .02,
             ),
-            proceedButton(AppLocalizations.of(context).addDeliveryAddress,
+            proceedButton(StringUtils.addDeliveryAddress,
                 ThemeApp.blackColor, context, false, () {
               widget.model.myAddressFullName =
                   fullNameController.text.toString();
@@ -807,7 +808,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               setState(() {
                 isHome = true;
                 isHome = !isHome;
-                selectedAddressIs = AppLocalizations.of(context).home;
+                selectedAddressIs = StringUtils.home;
               });
             },
             child: Container(
@@ -819,7 +820,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   color: isHome ? ThemeApp.lightGreyTab : ThemeApp.darkGreyTab,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
-                    AppLocalizations.of(context).home,
+                    StringUtils.home,
                     isHome == true ? ThemeApp.blackColor : ThemeApp.whiteColor,
                     context)),
           ),
@@ -833,7 +834,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             onTap: () {
               setState(() {
                 isHome = true;
-                selectedAddressIs = AppLocalizations.of(context).office;
+                selectedAddressIs = StringUtils.office;
               });
               // Navigator.of(context).push(
               //   MaterialPageRoute(
@@ -852,7 +853,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                       : ThemeApp.lightGreyTab,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
-                    AppLocalizations.of(context).office,
+                    StringUtils.office,
                     isHome == true ? ThemeApp.whiteColor : ThemeApp.blackColor,
                     context)),
           ),

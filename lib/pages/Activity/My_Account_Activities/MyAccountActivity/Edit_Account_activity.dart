@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/services/models/userAccountDetailModel.dart';
@@ -17,6 +17,7 @@ import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
 import 'OTP_verification_Popup.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 class EditAccountActivity extends StatefulWidget {
   const EditAccountActivity({Key? key}) : super(key: key);
@@ -47,7 +48,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       appBar: AppBar(
         backgroundColor: ThemeApp.blackColor,
         elevation: 0,
@@ -67,7 +68,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
       body: Consumer<ProductProvider>(builder: (context, provider, child) {
         return Container(
           padding: EdgeInsets.only(top: 0),
-          color: ThemeApp.backgroundColor,
+          color: ThemeApp.appBackgroundColor,
           height: height * .6,
           child: Stack(
             children: [
@@ -125,8 +126,9 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                           child: Icon(
                             Icons.circle,
                             size: height * .15,
-                            color: ThemeApp.lightGreyTab,
-                          ))),        provider.images != ""
+                            color: ThemeApp.whiteColor,
+                          ))),
+                  imageFile1 != null
                       ? Align(
                       alignment: Alignment(0, -1),
                       child: Container(
@@ -136,29 +138,17 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                         ),
                         alignment: Alignment(0, -1),
                         child: InkWell(
-                          onTap: () async {
-                            await ManagePermissions.askCameraPermission()
-                                .then((value) async {
-                              var img = await ImagePicker()
-                                  .getImage(source: ImageSource.camera);
-                              if (mounted) {
-                                setState(() {
-                                  _profileImage = File(img!.path);
-                                  getBase64Image(img)
-                                      .then((val) => {provider.images = val});
-                                  print("images....$_profileImage");
-                                });
-                              }
-                            });
+                          onTap: () async {setState(() {
+
+                          });
+                            _getFromCamera();
                           },
                           child: ClipRRect(
                             borderRadius:
                             const BorderRadius.all(Radius.circular(100)),
-                            child: Image.memory(
-                              Base64Decoder().convert(provider.images
-                                  .replaceAll(
-                                  RegExp(r'^data:image\/[a-z]+;base64,'),
-                                  '')),
+                            child:   Image.file(
+                              imageFile1!,
+
                               fit: BoxFit.fill,
                               width: 100,
                               height: 100,
@@ -172,38 +162,27 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                           alignment: Alignment(0, -1),
                           child: InkWell(
                             onTap: () async {
-                              await ManagePermissions.askCameraPermission()
-                                  .then((value) async {
-                                var img = await ImagePicker()
-                                    .getImage(source: ImageSource.camera);
-                                if (mounted) {
-                                  setState(() {
-                                    _profileImage = File(img!.path);
-                                    getBase64Image(img).then(
-                                            (value) => {provider.images = value});
-                                    print("images....$_profileImage");
-                                  });
-                                }
-                              });
+                              _getFromCamera();
+
                             },
                             child: Icon(
                               Icons.account_circle_rounded,
                               size: height * .15,
-                              color: ThemeApp.darkGreyTab,
+                              color: ThemeApp.backgroundColor,
                             ),
                           ))),
-                  Align(
-                    alignment: Alignment(0.09, -1),
-                    child: Container(
-                        height: 100,
-                        width: 50,
-                        alignment: Alignment.bottomRight,
-                            child: Icon(
-                              Icons.camera_alt,
-                              size: height * .03,
-                              color: ThemeApp.blackColor,
-                            )),
-                  ),
+                  // Align(
+                  //   alignment: Alignment(0.09, -1),
+                  //   child: Container(
+                  //       height: 100,
+                  //       width: 50,
+                  //       alignment: Alignment.bottomRight,
+                  //           child: Icon(
+                  //             Icons.camera_alt,
+                  //             size: height * .03,
+                  //             color: ThemeApp.blackColor,
+                  //           )),
+                  // ),
                 ],
               ),
 
@@ -212,21 +191,33 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
         );
       }),
     );
-  }
+  }  File? imageFile1;
 
+  _getFromCamera() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile1 = File(pickedFile.path);
+      });
+    }
+  }
   Widget fullName(ProductProvider provider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFieldUtils().dynamicText(
-            AppLocalizations.of(context).fullName,
+            StringUtils.fullName,
             context,
             TextStyle(
                 color: ThemeApp.blackColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w600)),
         CharacterTextFormFieldsWidget(
-            errorText: AppLocalizations.of(context).enterFullName,
+            errorText: StringUtils.enterFullName,
             textInputType: TextInputType.name,
 
             controller: provider.userNameController,
@@ -246,7 +237,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFieldUtils().dynamicText(
-            AppLocalizations.of(context).mobileNumber,
+            StringUtils.mobileNumber,
             context,
             TextStyle(
                 color: ThemeApp.blackColor,
@@ -263,14 +254,14 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFieldUtils().dynamicText(
-            AppLocalizations.of(context).email,
+            StringUtils.email,
             context,
             TextStyle(
                 color: ThemeApp.blackColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w600)),
-        CharacterTextFormFieldsWidget(
-            errorText: AppLocalizations.of(context).email,
+        TextFormFieldsWidget(
+            errorText: StringUtils.email,
             textInputType: TextInputType.emailAddress,
             controller: provider.userEmailController,
             autoValidation: AutovalidateMode.onUserInteraction,
@@ -279,10 +270,10 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
             validator: (val) {
               if (val.isEmpty && provider.userEmailController.text.isEmpty) {
                 _validateEmail = true;
-                return AppLocalizations.of(context).emailError;
+                return StringUtils.emailError;
               } else if (!StringConstant().isEmail(val)) {
                 _validateEmail = true;
-                return AppLocalizations.of(context).emailError;
+                return StringUtils.emailError;
               } else {
                 _validateEmail = false;
               }
@@ -293,16 +284,14 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
   }
 
   Widget updateButton(ProductProvider provider) {
-    return proceedButton(AppLocalizations.of(context).update,
-        ThemeApp.blackColor, context, false, () {
+    return proceedButton(StringUtils.update,
+        ThemeApp.tealButtonColor, context, false, () {
       print("provider.creditCardList__________" +
           provider.userAccountDetailList.length.toString());
       initializeFilter(provider);
 
       setState(() {
 
-        Prefs.instance.setToken(
-            StringConstant.userAccountImagePickerPref, provider.images);
         Prefs.instance.setToken(StringConstant.userAccountNamePref,
             provider.userNameController.text);
         Prefs.instance.setToken(StringConstant.userAccountEmailPref,
@@ -323,7 +312,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
 
     provider.userAccountDetailList.add(UserAccountList(
         userId: 1,
-        userImage: provider.images,
+        userImage: provider.images.toString(),
         userName: provider.userNameController.text,
         userEmail: provider.userEmailController.text,
         userMobile: provider.userMobileController.text,

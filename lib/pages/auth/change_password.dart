@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../utils/StringUtils.dart';
 import '../../utils/styles.dart';
 import '../../widgets/global/okPopUp.dart';
 import '../../widgets/global/proceedButtons.dart';
@@ -27,7 +28,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Container(
@@ -42,8 +43,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
-                TextFieldUtils().appBarTextField(AppLocalizations
-                    .of(context)
+                TextFieldUtils().appBarTextField(StringUtils
                     .changePassword, context),
               ],
             ),
@@ -68,18 +68,15 @@ class _ChangePasswordState extends State<ChangePassword> {
                 child: ListView(
                   children: [
                     TextFieldUtils()
-                        .titleTextFields(AppLocalizations
-                        .of(context)
+                        .titleTextFields(StringUtils
                         .changePassword, context),
                     PasswordTextFormFieldsWidget(
-                        errorText: AppLocalizations
-                            .of(context)
+                        errorText: StringUtils
                             .passwordError,
                         textInputType: TextInputType.text,
                         controller: _currentPass,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: AppLocalizations
-                            .of(context)
+                        hintText: StringUtils
                             .password,
                         onChange: (val) {
                           setState(() {

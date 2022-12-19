@@ -14,22 +14,16 @@ Widget proceedButton(String name, Color color, BuildContext context,
             Radius.circular(10),
           ),
           border: Border.all(
-              color: color == ThemeApp.whiteColor
-                  ? ThemeApp.tealButtonColor
-                  : ThemeApp.whiteColor),
-          color: color,
+              color:ThemeApp.tealButtonColor
+          ),
+          color: ThemeApp.tealButtonColor,
         ),
         child: loading
             ? Center(
-              child: CircularProgressIndicator(color:  color == ThemeApp.whiteColor
-              ? ThemeApp.blackColor
-              : ThemeApp.whiteColor,),
+              child: CircularProgressIndicator(color: ThemeApp.tealButtonColor),
             )
             : TextFieldUtils().usingPassTextFields(
-                name,
-                color == ThemeApp.whiteColor
-                    ? ThemeApp.blackColor
-                    : ThemeApp.whiteColor,
+                name, ThemeApp.whiteColor,
                 context)),
   );
 }
@@ -61,7 +55,7 @@ Widget viewMoreButton(String name, BuildContext context, VoidCallback onTap) {
           borderRadius: const BorderRadius.all(
             Radius.circular(40),
           ),
-          color: ThemeApp.darkGreyTab,
+          color: ThemeApp.tealButtonColor,
         ),
         child: TextFieldUtils()
             .usingPassTextFields(name, ThemeApp.whiteColor, context)),

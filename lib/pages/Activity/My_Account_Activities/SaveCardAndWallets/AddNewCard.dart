@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 import '../../../../services/models/CreditCardModel.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
@@ -12,7 +13,7 @@ import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../Payment_Activities/payments_Activity.dart';
 import 'CardList_manage_Payment_Activity.dart';
@@ -36,7 +37,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
     preferredSize: Size.fromHeight(height * .09),
@@ -45,7 +46,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       ),
       body: SafeArea(
         child: Container(
-    color: ThemeApp.backgroundColor,
+    color: ThemeApp.appBackgroundColor,
     width: width,
     child: Padding(padding: const EdgeInsets.all(20), child: mainUI()),
         ),
@@ -72,14 +73,14 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).cardHolderName,
+                    StringUtils.cardHolderName,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
                 TextFormFieldsWidget(
-                    errorText: AppLocalizations.of(context).cardHolderName,
+                    errorText: StringUtils.cardHolderName,
                     textInputType: TextInputType.text,
                     controller: value.cardHolderNameController,
                     autoValidation: AutovalidateMode.onUserInteraction,
@@ -92,14 +93,14 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                   height: height * .01,
                 ),
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).cardNumber,
+                    StringUtils.cardNumber,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
                 CardNumberTextFormFieldsWidget(
-                    errorText: AppLocalizations.of(context).cardNumber,
+                    errorText: StringUtils.cardNumber,
                     textInputType: TextInputType.number,
                     controller: value.cardNumberController,
                     maxLength: 19,
@@ -132,7 +133,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                   height: height * .01,
                 ),
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).expiryDate,
+                    StringUtils.expiryDate,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,
@@ -293,7 +294,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
@@ -302,7 +303,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
       ),
       body: SafeArea(
         child: Container(
-          color: ThemeApp.backgroundColor,
+          color: ThemeApp.appBackgroundColor,
           width: width,
           child: Padding(padding: const EdgeInsets.all(20), child: mainUI()),
         ),
@@ -329,7 +330,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).cardHolderName,
+                    StringUtils.cardHolderName,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,
@@ -337,7 +338,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                         fontWeight: FontWeight.w500)),
 
                 CharacterTextFormFieldsWidget(
-                    errorText: AppLocalizations.of(context).cardHolderName,
+                    errorText: StringUtils.cardHolderName,
                     textInputType: TextInputType.text,
                     controller: cardHolderNameController,
                     autoValidation: AutovalidateMode.onUserInteraction,
@@ -350,14 +351,14 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                   height: height * .01,
                 ),
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).cardNumber,
+                    StringUtils.cardNumber,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
                 CardNumberTextFormFieldsWidget(
-                    errorText: AppLocalizations.of(context).cardNumber,
+                    errorText: StringUtils.cardNumber,
                     textInputType: TextInputType.number,
                     controller: cardNumberController,
                     maxLength: 19,
@@ -390,7 +391,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                   height: height * .01,
                 ),
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).expiryDate,
+                    StringUtils.expiryDate,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,

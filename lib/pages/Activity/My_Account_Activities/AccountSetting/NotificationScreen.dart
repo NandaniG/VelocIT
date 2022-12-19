@@ -5,12 +5,13 @@ import 'package:velocit/utils/styles.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/models/NotificationsModel.dart';
 import '../../../../services/providers/Products_provider.dart';
+import '../../../../utils/StringUtils.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/routes/routes.dart';
 import '../../../../widgets/global/appBar.dart';
 
 import '../../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../Product_Activities/Products_List.dart';
 
@@ -40,7 +41,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        backgroundColor: ThemeApp.backgroundColor,
+        backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
@@ -80,7 +81,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   width: width * .04,
                 ),
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).offersOnly,
+                    StringUtils.offersOnly,
                     context,
                     TextStyle(
                       color: ThemeApp.darkGreyColor,

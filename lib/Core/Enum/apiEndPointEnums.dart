@@ -1,8 +1,10 @@
 enum apiEndPoint {
+  auth_signUp_using_post,
+  get_product_categories,
+  get_product_by_sub_categories,
   signIn_authenticate_get,
   signIn_authenticateWithUID_post,
   auth_signIn_using_post,
-  auth_signUp_using_post,
   user_get,
   user_post,
   get_shopByCategories,

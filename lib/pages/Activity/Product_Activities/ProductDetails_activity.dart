@@ -6,6 +6,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/Model/FindProductBySubCategoryModel.dart';
 import 'package:velocit/utils/utils.dart';
 import '../../../Core/Model/productSpecificListModel.dart';
 import '../../../Core/ViewModel/product_listing_view_model.dart';
@@ -29,7 +30,7 @@ import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
 
 class ProductDetailsActivity extends StatefulWidget {
   // List<ProductList>? productList;
-  ProductList productList;
+  Content? productList;
 
   ProductSpecificListViewModel productSpecificListViewModel;
 
@@ -47,7 +48,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
-
+  int imageVariantIndex = 0;
   late List<CartProductList> cartList;
   int counterPrice = 0;
   int badgeData = 0;
@@ -127,7 +128,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ThemeApp.whiteColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
@@ -155,7 +156,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       right: 20,
                     ),
                     child: TextFieldUtils().homePageheadingTextField(
-                        widget.productList.shortName!, context),
+                        widget.productList!.shortName!, context),
                   ),
                   SizedBox(
                     height: height * .01,
@@ -180,6 +181,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     height: height * .01,
                   ),
                   availableVariant(),
+                  SizedBox(
+                    height: height * .01,
+                  ),
+                  productDescription(),
                   SizedBox(
                     height: height * .01,
                   ),
@@ -224,7 +229,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               child: Image.network(
                 // width: double.infinity,
-                widget.productList.image1Url!,
+                widget.productList!.imageUrls![imageVariantIndex].imageUrl!,
                 fit: BoxFit.fill,
                 width: width,
                 height: height * .28,
@@ -280,18 +285,20 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         children: [
           TextFieldUtils().textFieldHeightFour(
               indianRupeesFormat
-                  .format(widget.productList.scrappedPrice ?? randomNumber),
+                  .format(widget.productList!.defaultSellPrice ?? randomNumber),
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().pricesLineThrough(
-              indianRupeesFormat.format(widget.productList.currentPrice ?? 0.0),
+              indianRupeesFormat.format(widget.productList!.defaultMrp ?? 0.0),
               context),
           SizedBox(
             width: width * .02,
           ),
-          TextFieldUtils().textFieldTwoFiveGrey('10 %', context),
+          TextFieldUtils().textFieldTwoFiveGrey(
+              widget.productList!.defaultDiscount.toInt().toString() + "%",
+              context),
         ],
       ),
     );
@@ -311,9 +318,13 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFieldUtils()
-                .homePageTitlesTextFields("Available variants", context),
+          children: [   Text("Available variants",
+              style: TextStyle(
+                  color: ThemeApp.blackColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: height * .022
+              )),
+
             variantImages(),
             TextFieldUtils().subHeadingTextFields(
                 "* Images may differ in appearance from the actual product",
@@ -324,52 +335,77 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
+  Widget productDescription() {
+    return Container(
+      width: width,
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Colors.grey, width: 1),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Product Description",
+                style: TextStyle(
+                  color: ThemeApp.blackColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: height * .022
+                )),SizedBox(height: height* .01,),
+            Text(widget.productList!.oneliner!,
+                style: TextStyle(
+                  color: ThemeApp.darkGreyColor,
+                  // fontWeight: FontWeight.w500,
+                  fontSize: height * .02,
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget variantImages() {
-    return FutureBuilder<List<Payloads>>(
-        future: getImageSlide(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) print(snapshot.error);
-          return snapshot.hasData
-              ? Container(
-                  height: height * .08,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Row(
-                          children: [
-                            InkWell(
-                              onTap: () {},
-                              child: Container(
-                                // width: width * 0.24,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.greenappcolor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8))),
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8)),
-                                  child: Image.asset(
-                                    // width: double.infinity,
-                                    snapshot.data![index].sponsorlogo,
-                                    fit: BoxFit.fill,
-                                    height: MediaQuery.of(context).size.height *
-                                        .05,
-                                    width: width * .1,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * .01,
-                            )
-                          ],
-                        );
-                      }),
+    return Container(
+      height: height * .08,
+      child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.productList!.imageUrls!.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {});
+                    imageVariantIndex = index;
+                  },
+                  child: Container(
+                    // width: width * 0.24,
+                    decoration: const BoxDecoration(
+                        color: ThemeApp.greenappcolor,
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      child: Image.network(
+                        // width: double.infinity,
+                        widget.productList!.imageUrls![index].imageUrl!,
+                        fit: BoxFit.fill,
+                        height: MediaQuery.of(context).size.height * .05,
+                        width: width * .1,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .01,
                 )
-              : const CircularProgressIndicator();
-        });
+              ],
+            );
+          }),
+    );
   }
 
   Widget addToCart() {
@@ -405,7 +441,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 } else {}
                                 var data = {
                                   "user_id": userId.toString(),
-                                  "item_code": widget.productList.categoryCode
+                                  "item_code": widget.productList!.productCode
                                       .toString(),
                                   "qty": counterPrice.toString()
                                 };
@@ -421,12 +457,19 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10),
                                   ),
-                                  color: ThemeApp.lightGreyTab,
+                                  color: ThemeApp.whiteColor,
                                 ),
-                                child: TextFieldUtils().usingPassTextFields(
-                                    "Add to cart",
-                                    ThemeApp.blackColor,
-                                    context))))
+                                child: Text(
+                                  "Add to Cart",
+                                  style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            .021,
+                                    fontWeight: FontWeight.w500,
+                                    overflow: TextOverflow.ellipsis,
+                                    color: ThemeApp.tealButtonColor,
+                                  ),
+                                ))))
                     : Expanded(
                         flex: 1,
                         child: Container(
@@ -436,7 +479,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                             borderRadius: BorderRadius.all(
                               Radius.circular(10),
                             ),
-                            color: ThemeApp.lightGreyTab,
+                            color: ThemeApp.whiteColor,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(0),
@@ -453,7 +496,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                       var data = {
                                         "user_id": userId.toString(),
                                         "item_code": widget
-                                            .productList.categoryCode
+                                            .productList!.productCode
                                             .toString(),
                                         "qty": counterPrice.toString()
                                       };
@@ -464,12 +507,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   },
                                   child: Container(
                                     decoration: const BoxDecoration(
-                                      color: ThemeApp.lightGreyTab,
+                                      color: ThemeApp.whiteColor,
                                     ),
                                     child: const Icon(
                                       Icons.remove,
                                       // size: 20,
-                                      color: Colors.black,
+                                      color: ThemeApp.tealButtonColor,
                                     ),
                                   ),
                                 ),
@@ -484,7 +527,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                                 .016,
                                         fontWeight: FontWeight.w400,
                                         overflow: TextOverflow.ellipsis,
-                                        color: Colors.black),
+                                        color: ThemeApp.tealButtonColor),
                                   ),
                                 ),
                                 InkWell(
@@ -541,7 +584,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                         // "item_code": widget
                                         //     .productList.categoryCode
                                         //     .toString(),
-                                      "item_code":'1',
+                                        "item_code": '1',
                                         "qty": counterPrice.toString()
                                       };
                                       print("data maping " + data.toString());
@@ -551,12 +594,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   },
                                   child: Container(
                                     decoration: const BoxDecoration(
-                                      color: ThemeApp.lightGreyTab,
+                                      color: ThemeApp.whiteColor,
                                     ),
                                     child: const Icon(
                                       Icons.add,
                                       // size: 20,
-                                      color: Colors.black,
+                                      color: ThemeApp.tealButtonColor,
                                     ),
                                   ),
                                 ),
@@ -576,9 +619,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         productListProvider.isHome = false;
                         productListProvider.isBottomAppCart = false;
                       });
-                      if(StringConstant.isLogIn == false)
-                        {
-                          /*  ? Navigator.of(context).push(
+                      if (StringConstant.isLogIn == false) {
+                        /*  ? Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => OrderReviewSubActivity(
                                     value: productProvider,
@@ -697,7 +739,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           borderRadius: BorderRadius.all(
                             Radius.circular(10),
                           ),
-                          color: ThemeApp.blackColor,
+                          color: ThemeApp.tealButtonColor,
                         ),
                         child: TextFieldUtils().usingPassTextFields(
                             "Buy now", ThemeApp.whiteColor, context)),

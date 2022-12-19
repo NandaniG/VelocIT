@@ -703,7 +703,7 @@ class ProductProvider with ChangeNotifier {
 
 //---------------------------------<- Notifications Provider ->--------------------------
     List<UserAccountList> userAccountDetailList = <UserAccountList>[];
-  String images='';
+  File? images;
 
     TextEditingController userNameController = TextEditingController();
     TextEditingController userMobileController = TextEditingController(

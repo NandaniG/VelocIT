@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
 
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -23,7 +24,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeApp.appBackgrounColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       appBar: PreferredSize(
       preferredSize: const Size.fromHeight(70),
       child: Container(
@@ -54,23 +55,23 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             SizedBox(
               height: MediaQuery.of(context).size.height * .04,
             ),
-            TextFieldUtils().textFieldHeightThree(AppLocalizations.of(context).forgotPassword, context),
+            TextFieldUtils().textFieldHeightThree(StringUtils.forgotPassword, context),
             const SizedBox(
               height: 5,
             ),
             TextFieldUtils().subHeadingTextFields(
-                AppLocalizations.of(context).forgotPasswordSubHeading, context),
+                StringUtils.forgotPasswordSubHeading, context),
             SizedBox(
               height: MediaQuery.of(context).size.height * .1,
             ),
             TextFieldUtils().asteriskTextField(
-                AppLocalizations.of(context).registeredEmailAddress,context),
+                StringUtils.registeredEmailAddress,context),
             TextFormFieldsWidget(
-                errorText: AppLocalizations.of(context).emailError,
+                errorText: StringUtils.emailError,
                 textInputType: TextInputType.emailAddress,
                 controller: email,
                 autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: AppLocalizations.of(context).email,
+                hintText: StringUtils.email,
                 onChange: (val) {
                   setState(() {
                     if (val.isEmpty && email.text.isEmpty) {
@@ -85,10 +86,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 validator: (value) {
                   if (value.isEmpty && email.text.isEmpty) {
                     _validateEmail = true;
-                    return AppLocalizations.of(context).validateRegisteredEmail;
+                    return StringUtils.validateRegisteredEmail;
                   } else if (!StringConstant().isEmail(value) && !StringConstant().isPhone(value)) {
                     _validateEmail = true;
-                    return AppLocalizations.of(context).validateRegisteredEmail;
+                    return StringUtils.validateRegisteredEmail;
                   } else {
                     _validateEmail = false;
                   }
@@ -97,7 +98,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             SizedBox(
               height: MediaQuery.of(context).size.height * .08,
             ),
-            proceedButton(AppLocalizations.of(context).resetPassword, ThemeApp.tealButtonColor,context, false,() {
+            proceedButton(StringUtils.resetPassword, ThemeApp.tealButtonColor,context, false,() {
               if (_formKey.currentState!.validate() &&
                   email.text.isNotEmpty) {
 

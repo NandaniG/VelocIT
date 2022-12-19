@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/AccountSettingScreen.dart';
-import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/CustomerSupport/CustomerSupportActivity.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/MyAccountActivity/Edit_Account_activity.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
@@ -14,16 +12,9 @@ import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved
 import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
 import 'package:velocit/pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import 'package:velocit/pages/Activity/Payment_Activities/payments_Activity.dart';
-import 'package:velocit/pages/Activity/Product_Activities/ProductDetails_activity.dart';
 import 'package:velocit/pages/Activity/Product_Activities/Products_List.dart';
-import 'package:velocit/pages/auth/OTP_Screen.dart';
-import 'package:velocit/pages/auth/Sign_Up.dart';
-import 'package:velocit/pages/auth/forgot_password.dart';
-import 'package:velocit/pages/auth/sign_in.dart';
-import 'package:velocit/pages/homePage.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
-import 'package:velocit/services/models/ProductDetailModel.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 import 'package:velocit/services/providers/cart_Provider.dart';
 import 'package:velocit/utils/constants.dart';
@@ -35,7 +26,7 @@ import 'Core/ViewModel/auth_view_model.dart';
 import 'Core/ViewModel/dashboard_view_model.dart';
 import 'Core/ViewModel/product_listing_view_model.dart';
 import 'L10n/l10n.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'l10n/localeProvider.dart';
 import 'pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import 'services/providers/Products_provider.dart';
@@ -44,7 +35,14 @@ Future<void> main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   runApp( MyApp());
-  StringConstant.isLogIn = false;
+  // StringConstant.isLogIn = false;
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  // var loginId=await  prefs.getString(StringConstant.userId);
+  var testId=await  prefs.getString(StringConstant.testId);
+  print("on loging testId : "+testId.toString());
+
+  // StringConstant.isLogIn = true;
   StringConstant.emailOTPVar =
       (await Prefs.instance.getToken(StringConstant.emailOTPPref))!;
 
@@ -135,10 +133,10 @@ class MyApp extends StatelessWidget {
         var data =   provider.loadJson();
 
         return Consumer<ProductProvider>(builder: (context, value, child) {
-            return Consumer<LocaleProvider>(
-                builder: (context, localeProvider, snapshot) {
+            // return Consumer<LocaleProvider>(
+            //     builder: (context, localeProvider, snapshot) {
               return MaterialApp(
-                locale: localeProvider.locale,
+              /*  locale: localeProvider.locale,
                 localizationsDelegates: const [
                   //AppLocalizationsDelegate(),
                   GlobalMaterialLocalizations.delegate,
@@ -146,21 +144,19 @@ class MyApp extends StatelessWidget {
                   GlobalCupertinoLocalizations.delegate,
                   AppLocalizations.delegate,
                 ],
-                supportedLocales: L10n.all,
+                supportedLocales: L10n.all,*/
                 theme: ThemeData(
                   primarySwatch: colorCustomForMaterialApp,
                 ),
                 debugShowCheckedModeBanner: false,
                 // home: ForgotPassword(),
                 // initialRoute: StringConstant.isLogIn == true?RoutesName.signInRoute:RoutesName.dashboardRoute,
-                initialRoute: RoutesName.signInRoute,
+                initialRoute: RoutesName.dashboardRoute,
                 onGenerateRoute: Routes.generateRoute,
                 routes: {
-                  // '/': (context) => StringConstant.emailOTPVar == '7990916638'
+                  // '/': (context) => StringConstant.isLogIn == true
                   //     ? SignIn_Screen()
                   //     : DashboardScreen(),
-                '/': (context) => SignIn_Screen(),
-                  // '/': (context) => SignUp(),
                   '/': (context) => DashboardScreen(),
                   '/dashBoardScreen': (context) => const DashboardScreen(),
                   '/editAccountActivity': (context) =>
@@ -189,7 +185,7 @@ class MyApp extends StatelessWidget {
                       const Payment_Creditcard_debitcardScreen(),
                 },
               );
-            });
+            // });
           });
         }));
   }
@@ -211,6 +207,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   startTime() async {
+    var loginId=await  Prefs.instance.getToken(StringConstant.userId);
+    print("Splash LoginId : "+loginId.toString());
 
     var _duration = const Duration(seconds: 3);
     return Timer(_duration, navigationPage);
@@ -224,7 +222,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(height: MediaQuery.of(context).size.height,
-        color: ThemeApp.backgroundColor,
+        color: ThemeApp.appBackgroundColor,
 
         child: const Center(
           child: CircularProgressIndicator(

@@ -7,6 +7,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 class StringConstant {
   static bool isLogIn = true;
+  static String userId = 'userId';
+  static String testId = 'testIdPref';
   static int sortByRadio = 0;
   static String sortedBy = "Low to High";
 
@@ -147,8 +149,15 @@ class StringConstant {
   bool  isValidName(String input) => RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$").hasMatch(input);
 
   bool isPass(String input) => RegExp(
-          "^(?=.{6,19}\$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*(),.?:{}|<>]).*")
+          "^(?=.{8,16}\$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*(),.?:{}|<>]).*")
       .hasMatch(input);
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
 
   static JsonDecoder decoder = const JsonDecoder();
   static JsonEncoder encoder = const JsonEncoder.withIndent('  ');

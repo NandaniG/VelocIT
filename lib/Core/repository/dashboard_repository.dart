@@ -4,6 +4,7 @@ import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 
 import '../AppConstant/apiMapping.dart';
 import '../Model/CategoriesModel.dart';
+import '../Model/ProductCategoryModel.dart';
 import '../Model/ProductListingModel.dart';
 import '../Model/servicesModel.dart';
 import '../data/network/baseApiServices.dart';
@@ -51,4 +52,17 @@ class DashBoardRepository {
     }
   }
 
+
+  Future<ProductCategoryModel> getProductCategoryListing() async {
+    var url = ApiMapping.getURI(apiEndPoint.get_product_categories);
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url);
+
+      print("ProductCategoryModel list: " + response.toString());
+      return response = ProductCategoryModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
 }

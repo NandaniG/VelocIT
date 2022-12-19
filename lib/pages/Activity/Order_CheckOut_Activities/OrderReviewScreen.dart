@@ -16,7 +16,8 @@ import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 import '../Payment_Activities/OrderPlaced_activity.dart';
 import '../Payment_Activities/payments_Activity.dart';
@@ -137,7 +138,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
             const SizedBox()),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: ThemeApp.backgroundColor,
+        color: ThemeApp.appBackgroundColor,
         elevation: 0,
         child: Consumer<HomeProvider>(builder: (context, value, child) {
           return Container(
@@ -215,7 +216,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
       body: SafeArea(
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
           return Container(
-            color: ThemeApp.backgroundColor,
+            color: ThemeApp.appBackgroundColor,
             width: width,
             child: ListView(
                 // mainAxisAlignment: MainAxisAlignment.start,
@@ -242,7 +243,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                   Expanded(
                                     flex: 1,
                                     child: TextFieldUtils().dynamicText(
-                                        AppLocalizations.of(context)
+                                        StringUtils
                                             .deliveryDetails,
                                         context,
                                         TextStyle(
@@ -279,7 +280,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                           padding: const EdgeInsets.only(
                                               left: 15, right: 15),
                                           child: TextFieldUtils().dynamicText(
-                                              AppLocalizations.of(context)
+                                              StringUtils
                                                   .changeAddress,
                                               context,
                                               TextStyle(
@@ -361,7 +362,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                               Row(
                                 children: [
                                   TextFieldUtils().dynamicText(
-                                      '${AppLocalizations.of(context).contactNumber} : ',
+                                      '${StringUtils.contactNumber} : ',
                                       context,
                                       TextStyle(
                                           color: Colors.grey.shade700,
@@ -395,7 +396,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 TextFieldUtils().dynamicText(
-                                    AppLocalizations.of(context).orderSummary,
+                                    StringUtils.orderSummary,
                                     context,
                                     TextStyle(
                                         color: Colors.grey.shade700,
@@ -419,7 +420,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 TextFieldUtils().dynamicText(
-                                    AppLocalizations.of(context).applyPromoCode,
+                                    StringUtils.applyPromoCode,
                                     context,
                                     TextStyle(
                                         color: ThemeApp.darkGreyColor,
@@ -469,7 +470,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                                             padding: const EdgeInsets.only(
                                                 left: 15, right: 15),
                                             child: TextFieldUtils().dynamicText(
-                                                AppLocalizations.of(context)
+                                                StringUtils
                                                     .apply,
                                                 context,
                                                 TextStyle(
@@ -1346,7 +1347,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                 child: TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).deliveryAddress,
+                    StringUtils.deliveryAddress,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,
@@ -1390,7 +1391,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                         width: width,
                         alignment: Alignment.center,
                         child: TextFieldUtils().dynamicText(
-                            AppLocalizations.of(context).addNewAddress,
+                            StringUtils.addNewAddress,
                             context,
                             TextStyle(
                                 color: ThemeApp.blackColor,
@@ -1518,7 +1519,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                     padding: const EdgeInsets.only(
                                         left: 70, right: 20, top: 10),
                                     child: TextFieldUtils().dynamicText(
-                                        "${'${AppLocalizations.of(context).contactNumber} : ' + StringConstant.selectedMobile}",
+                                        "${'${StringUtils.contactNumber} : ' + StringConstant.selectedMobile}",
                                         context,
                                         TextStyle(
                                             color: ThemeApp.blackColor,
@@ -1608,7 +1609,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                           padding: const EdgeInsets.only(
                               left: 70, right: 20, top: 10),
                           child: TextFieldUtils().dynamicText(
-                              "${'${AppLocalizations.of(context).contactNumber} : ${StringConstant.selectedMobile}'}",
+                              "${'${StringUtils.contactNumber} : ${StringConstant.selectedMobile}'}",
                               context,
                               TextStyle(
                                   color: ThemeApp.blackColor,
@@ -1620,7 +1621,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
               Container(
                 alignment: FractionalOffset.bottomCenter,
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-                child: proceedButton(AppLocalizations.of(context).deliverHere,
+                child: proceedButton(StringUtils.deliverHere,
                     ThemeApp.blackColor, context, false, () {
                   setState(() {
 

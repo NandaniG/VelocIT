@@ -37,7 +37,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
@@ -46,7 +46,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       ),
       body: SafeArea(
         child: Container(
-          color: ThemeApp.backgroundColor,
+          color: ThemeApp.appBackgroundColor,
           width: width,
           child: Padding(padding: const EdgeInsets.all(20), child: mainUI()),
         ),
@@ -90,7 +90,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           topLeft: Radius.circular(8),
                                           topRight: Radius.circular(8),
                                         ),
-                                        color: ThemeApp.textFieldBorderColor,
+                                        color: ThemeApp.whiteColor,
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -140,7 +140,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                         const BorderRadius.all(
                                                       Radius.circular(20),
                                                     ),
-                                                    color: ThemeApp.whiteColor,
+                                                    color: ThemeApp.tealButtonColor,
                                                   ),
                                                   child: TextFieldUtils()
                                                       .dynamicText(
@@ -148,7 +148,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                           context,
                                                           TextStyle(
                                                               color: ThemeApp
-                                                                  .darkGreyTab,
+                                                                  .whiteColor,
                                                               fontSize:
                                                                   height * .018,
                                                               fontWeight:
@@ -678,7 +678,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
             itemSize: height * .03,
             initialRating: 0,
             minRating: 1,
-            unratedColor: ThemeApp.backgroundColor,
+            unratedColor: ThemeApp.appBackgroundColor,
             direction: Axis.horizontal,
             allowHalfRating: true,
             itemCount: 5,

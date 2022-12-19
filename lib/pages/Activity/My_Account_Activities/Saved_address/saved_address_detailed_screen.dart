@@ -7,7 +7,8 @@ import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 import '../../Order_CheckOut_Activities/AddNewDeliveryAddress.dart';
 import 'delete_Address_dialog.dart';
@@ -43,7 +44,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        backgroundColor: ThemeApp.backgroundColor,
+        backgroundColor: ThemeApp.appBackgroundColor,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
           child: appBar_backWidget(
@@ -62,7 +63,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
                 child: TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).deliveryAddress,
+                    StringUtils.deliveryAddress,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,
@@ -111,7 +112,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                     ),alignment: Alignment.center,
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: TextFieldUtils().dynamicText(
-                        "+ ${AppLocalizations.of(context).addNewAddress}",
+                        "+ ${StringUtils.addNewAddress}",
                         context,
                         TextStyle(
                             color: ThemeApp.whiteColor,
@@ -283,7 +284,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                         height: height * .02,
                                       ),
                                       TextFieldUtils().dynamicText(
-                                          "${AppLocalizations.of(context).contactNumber + ' : ' + value.addressList[index].myAddressPhoneNumber!}",
+                                          "${StringUtils.contactNumber + ' : ' + value.addressList[index].myAddressPhoneNumber!}",
                                           context,
                                           TextStyle(
                                               color: ThemeApp.blackColor,

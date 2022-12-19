@@ -11,7 +11,8 @@ import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 class OTPScreen extends StatefulWidget {
   OTPScreen({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _OTPScreenState extends State<OTPScreen> {
   String otpMsg = "";
 
   late Timer _timer;
-  int _start = 90;
+  int _start = 120;
   bool isLoading = false;
   TextEditingController controller = TextEditingController(text: "");
   FocusNode focusNode = FocusNode();
@@ -56,7 +57,7 @@ class _OTPScreenState extends State<OTPScreen> {
     final authViewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
-        backgroundColor: ThemeApp.appBackgrounColor,
+        backgroundColor: ThemeApp.appBackgroundColor,
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(70),
             child: Container(
@@ -94,12 +95,12 @@ class _OTPScreenState extends State<OTPScreen> {
                   height: MediaQuery.of(context).size.height * .04,
                 ),
                 TextFieldUtils().textFieldHeightThree(
-                    AppLocalizations.of(context).verification, context),
+                    StringUtils.verification, context),
                 const SizedBox(
                   height: 5,
                 ),
                 TextFieldUtils().subHeadingTextFields(
-                    AppLocalizations.of(context).verificationSubHeading,
+                    StringUtils.verificationSubHeading,
                     context),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .04,
@@ -133,7 +134,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   onTextChanged: (value) {
                     setState(() {
                       if (value.length <= 5) {
-                        otpMsg = AppLocalizations.of(context).verificationError;
+                        otpMsg = StringUtils.verificationError;
                       } else {
                         otpMsg = '';
                       }
@@ -194,7 +195,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             });
                           },
                           child: Text(
-                            AppLocalizations.of(context).resendOTP,
+                            StringUtils.resendOTP,
                             style: TextStyle(
                                 color: ThemeApp.tealButtonColor,
                                 fontWeight: FontWeight.bold,
@@ -207,7 +208,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .025,
                 ),
-                proceedButton(AppLocalizations.of(context).verifyOTP,
+                proceedButton(StringUtils.verifyOTP,
                     ThemeApp.tealButtonColor,context, authViewModel.loadingWithPost,() async {
                       StringConstant.isLogIn = true;
 

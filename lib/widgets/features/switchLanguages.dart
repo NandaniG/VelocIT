@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../L10n/l10n.dart';
 import '../../l10n/localeProvider.dart';
@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../utils/styles.dart';
 import '../global/textFormFields.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 class FlutterLocalizationDemo extends StatelessWidget {
   const FlutterLocalizationDemo({Key? key}) : super(key: key);
@@ -73,7 +74,7 @@ class FlutterLocalizationDemo extends StatelessWidget {
                     child: Padding(
                         padding: const EdgeInsets.only(top: 50),
                         child: TextFieldUtils()
-                            .homePageheadingTextField(AppLocalizations.of(context).languages, context)),
+                            .homePageheadingTextField(StringUtils.languages, context)),
                   ),
                 ],
               ),
@@ -83,7 +84,7 @@ class FlutterLocalizationDemo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                AppLocalizations.of(context).login,
+                StringUtils.login,
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.w500,

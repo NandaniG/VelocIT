@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:velocit/Core/Model/CategoriesModel.dart';
 import 'package:velocit/Core/repository/dashboard_repository.dart';
 import 'package:velocit/utils/ProgressIndicatorLoader.dart';
+import '../../Core/Model/ProductCategoryModel.dart';
 import '../../Core/Model/ProductListingModel.dart';
 import '../../Core/Model/servicesModel.dart';
 import '../../Core/ViewModel/dashboard_view_model.dart';
@@ -17,12 +18,13 @@ import '../../Core/data/responses/status.dart';
 import '../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../services/models/demoModel.dart';
 import '../../services/providers/Home_Provider.dart';
+import '../../utils/StringUtils.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/appBar.dart';
 import '../../widgets/global/proceedButtons.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/global/textFormFields.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart';
 import '../Activity/Merchant_Near_Activities/merchant_Activity.dart';
@@ -44,6 +46,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   DashboardViewModel dashboardViewModel = DashboardViewModel();
   DashboardViewModel serviceViewModel = DashboardViewModel();
+  DashboardViewModel productCategories = DashboardViewModel();
 
   double height = 0.0;
   double width = 0.0;
@@ -55,6 +58,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    productCategories.productCategoryListingWithGet();
+
     dashboardViewModel.shopByCategoriesWithGet();
     serviceViewModel.bookOurServicesWithGet();
     dashboardViewModel.productListingWithGet();
@@ -84,7 +89,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-        backgroundColor: ThemeApp.backgroundColor,
+        backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .12),
@@ -164,7 +169,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       MediaQuery.of(context).size.height * .02,
                                 ),
                                 TextFieldUtils().listHeadingTextField(
-                                    AppLocalizations.of(context)
+                                    StringUtils
                                         .recommendedForYou,
                                     context),
                                 SizedBox(
@@ -182,11 +187,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     TextFieldUtils().listHeadingTextField(
-                                        AppLocalizations.of(context)
+                                        StringUtils
                                             .merchantNearYou,
                                         context),
                                     viewMoreButton(
-                                        AppLocalizations.of(context).viewAll,
+                                        StringUtils.viewAll,
                                         context, () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
@@ -208,7 +213,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       MediaQuery.of(context).size.height * .02,
                                 ),
                                 TextFieldUtils().listHeadingTextField(
-                                    AppLocalizations.of(context).bestDeal,
+                                    StringUtils.bestDeal,
                                     context),
                                 SizedBox(
                                   height:
@@ -220,7 +225,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       MediaQuery.of(context).size.height * .02,
                                 ),
                                 TextFieldUtils().listHeadingTextField(
-                                    AppLocalizations.of(context).budgetBuys,
+                                    StringUtils.budgetBuys,
                                     context),
                                 SizedBox(
                                   height:
@@ -289,275 +294,310 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget listOfShopByCategories() {
-    return Consumer<DashboardViewModel>(
-        builder: (context, dashboardProvider, child) {
-      switch (dashboardProvider.categoryList.status) {
-        case Status.LOADING:
-          print("Api load");
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => productCategories,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-          return ProgressIndicatorLoader(true);
-        case Status.ERROR:
-          print("Api error");
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
 
-          return Text(dashboardProvider.categoryList.message.toString());
-        case Status.COMPLETED:
-          print("Api calll");
-          List<CategoryList>? payloadsOfCategories =
-              dashboardProvider.categoryList.data!.response!.body!.payload;
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-          return Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
+
+              return Column(
                 children: [
-                  TextFieldUtils().listHeadingTextField(
-                      AppLocalizations.of(context).shopByCategories, context),
-                  viewMoreButton(AppLocalizations.of(context).viewAll, context,
-                      () {
-                    // Utils.flushBarErrorMessage("Not Data",context);
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ShopByCategoryActivity(
-                            shopByCategoryList: payloadsOfCategories,
-                            shopByCategorySelected: 0),
-                      ),
-                    );
-                  })
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .02,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * .13,
-                width: width,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: payloadsOfCategories!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ShopByCategoryActivity(
-                                  shopByCategoryList: payloadsOfCategories,
-                                  shopByCategorySelected: index),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextFieldUtils().listHeadingTextField(
+                          StringUtils.bookOurServices,
+                          context),
+                      viewMoreButton(
+                          StringUtils.viewAll, context, () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => BookServiceActivity(
+                                shopByCategoryList: serviceList!,
+                                shopByCategorySelected: 0),
+                          ),
+                        );
+                      })
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .02,
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * .13,
+                    width: width,
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: serviceList!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => BookServiceActivity(
+                                      shopByCategoryList: serviceList!,
+                                      shopByCategorySelected: index),
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: width * 0.24,
+                                    decoration: const BoxDecoration(
+                                        color: ThemeApp.whiteColor,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 8.0, right: 8),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(50)),
+                                            child: Image.network(
+                                              // width: double.infinity,
+                                              serviceList[index]
+                                                  .productCategoryImageId!,
+                                              fit: BoxFit.fill,
+
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .07,
+                                            ),
+                                          ),
+                                          //     ClipRRect(
+                                          //   borderRadius: const BorderRadius.all(
+                                          //       Radius.circular(50)),
+                                          //   child: Image.asset(
+                                          //     // width: double.infinity,
+                                          //     snapshot.data![index].serviceImage,
+                                          //     fit: BoxFit.fill,
+                                          //
+                                          //     height: MediaQuery.of(context)
+                                          //             .size
+                                          //             .height *
+                                          //         .07,
+                                          //   ),
+                                          // ),
+
+                                          SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .01,
+                                          ),
+                                          Center(
+                                            child: TextFieldUtils().dynamicText(
+                                                serviceList[index].name!,
+                                                context,
+                                                TextStyle(
+                                                  color: ThemeApp.darkGreyColor,
+                                                  // fontWeight: FontWeight.w500,
+                                                  fontSize: height * .02,
+                                                )),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * .03,
+                                )
+                              ],
                             ),
                           );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Container(
-                              width: width * 0.24,
-                              decoration: const BoxDecoration(
-                                  color: ThemeApp.whiteColor,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 8.0, right: 8),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(50)),
-                                      child: Image.network(
-                                        // width: double.infinity,
-                                        payloadsOfCategories[index].imageUrl!,
-                                        fit: BoxFit.fill,
-
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .07,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                    ),
-                                    Center(
-                                      child: TextFieldUtils().dynamicText(
-                                          payloadsOfCategories[index].name!,
-                                          context,
-                                          TextStyle(
-                                            color: ThemeApp.darkGreyColor,
-                                            // fontWeight: FontWeight.w500,
-                                            fontSize: height * .02,
-                                          )),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                        ),
-                      );
-                    }),
-              ),
-            ],
-          );
-        default:
+                        }),
+                  ),
+                ],
+              );
+            default:
+              return Text("No Data found!");
+          }
           return Text("No Data found!");
-      }
-      return Text("No Data found!");
-    });
+        }));
   }
 
   Widget listOfBookOurServices() {
     return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => serviceViewModel,
+        create: (BuildContext context) => productCategories,
         child: Consumer<DashboardViewModel>(
-            builder: (context, dashboardProvider, child) {
-          return Consumer<DashboardViewModel>(
-              builder: (context, dashboardProvider, child) {
-            switch (dashboardProvider.serviceList.status) {
-              case Status.LOADING:
-                if (kDebugMode) {
-                  print("Api load");
-                }
-                return ProgressIndicatorLoader(true);
+            builder: (context, productCategories, child) {
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-              case Status.ERROR:
-                if (kDebugMode) {
-                  print("Api error");
-                }
-                return Text(dashboardProvider.serviceList.message.toString());
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
 
-              case Status.COMPLETED:
-                if (kDebugMode) {
-                  print("Api calll");
-                }
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-                List<ServiceList>? serviceList = dashboardProvider
-                    .serviceList.data!.response!.body!.serviceList;
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
 
-                return Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextFieldUtils().listHeadingTextField(
-                            AppLocalizations.of(context).bookOurServices,
-                            context),
-                        viewMoreButton(AppLocalizations.of(context).viewAll,
-                            context, () {       Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => BookServiceActivity(
-                                    shopByCategoryList: serviceList!,
-                                    shopByCategorySelected: 0),
-                              ),
-                            );})
-                      ],
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .02,
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * .13,
-                      width: width,
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: serviceList!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => BookServiceActivity(
-                                        shopByCategoryList: serviceList!,
-                                        shopByCategorySelected: index),
-                                  ),
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  Container(
-                                      width: width * 0.24,
-                                      decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 8.0, right: 8),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(50)),
-                                              child: Image.network(
-                                                // width: double.infinity,
-                                                serviceList[index].imageUrl!,
-                                                fit: BoxFit.fill,
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextFieldUtils().listHeadingTextField(
+                          StringUtils.bookOurServices,
+                          context),
+                      viewMoreButton(
+                          StringUtils.viewAll, context, () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => BookServiceActivity(
+                                shopByCategoryList: serviceList!,
+                                shopByCategorySelected: 0),
+                          ),
+                        );
+                      })
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .02,
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * .13,
+                    width: width,
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: serviceList!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => BookServiceActivity(
+                                      shopByCategoryList: serviceList!,
+                                      shopByCategorySelected: index),
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                    width: width * 0.24,
+                                    decoration: const BoxDecoration(
+                                        color: ThemeApp.whiteColor,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 8.0, right: 8),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(50)),
+                                            child: Image.network(
+                                              // width: double.infinity,
+                                              serviceList[index]
+                                                  .productCategoryImageId!,
+                                              fit: BoxFit.fill,
 
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    .07,
-                                              ),
-                                            ),
-                                            //     ClipRRect(
-                                            //   borderRadius: const BorderRadius.all(
-                                            //       Radius.circular(50)),
-                                            //   child: Image.asset(
-                                            //     // width: double.infinity,
-                                            //     snapshot.data![index].serviceImage,
-                                            //     fit: BoxFit.fill,
-                                            //
-                                            //     height: MediaQuery.of(context)
-                                            //             .size
-                                            //             .height *
-                                            //         .07,
-                                            //   ),
-                                            // ),
-
-                                            SizedBox(
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  .01,
+                                                  .07,
                                             ),
-                                            Center(
-                                              child:
-                                                  TextFieldUtils().dynamicText(
-                                                      serviceList[index].name!,
-                                                      context,
-                                                      TextStyle(
-                                                        color: ThemeApp
-                                                            .darkGreyColor,
-                                                        // fontWeight: FontWeight.w500,
-                                                        fontSize: height * .02,
-                                                      )),
-                                            ),
-                                          ],
-                                        ),
-                                      )),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * .03,
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                    ),
-                  ],
-                );
-              default:
-                return Text("No Data found!");
-            }
-            return Text("No Data found!");
-          });
+                                          ),
+                                          //     ClipRRect(
+                                          //   borderRadius: const BorderRadius.all(
+                                          //       Radius.circular(50)),
+                                          //   child: Image.asset(
+                                          //     // width: double.infinity,
+                                          //     snapshot.data![index].serviceImage,
+                                          //     fit: BoxFit.fill,
+                                          //
+                                          //     height: MediaQuery.of(context)
+                                          //             .size
+                                          //             .height *
+                                          //         .07,
+                                          //   ),
+                                          // ),
+
+                                          SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .01,
+                                          ),
+                                          Center(
+                                            child: TextFieldUtils().dynamicText(
+                                                serviceList[index].name!,
+                                                context,
+                                                TextStyle(
+                                                  color: ThemeApp.darkGreyColor,
+                                                  // fontWeight: FontWeight.w500,
+                                                  fontSize: height * .02,
+                                                )),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * .03,
+                                )
+                              ],
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              );
+            default:
+              return Text("No Data found!");
+          }
+          return Text("No Data found!");
         }));
   }
 
@@ -647,147 +687,153 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget recommendedList() {
-
     return ChangeNotifierProvider<DashboardViewModel>(
         create: (BuildContext context) => dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, dashboardProvider, child) {
-              return Consumer<DashboardViewModel>(
-                  builder: (context, dashboardProvider, child) {
-                    switch (dashboardViewModel.productListingList.status) {
-                      case Status.LOADING:
-                        if (kDebugMode) {
-                          print("Api load");
-                        }
-                        return ProgressIndicatorLoader(true);
+          return Consumer<DashboardViewModel>(
+              builder: (context, dashboardProvider, child) {
+            switch (dashboardViewModel.productListingList.status) {
+              case Status.LOADING:
+                if (kDebugMode) {
+                  print("Api load");
+                }
+                return ProgressIndicatorLoader(true);
 
-                      case Status.ERROR:
-                        if (kDebugMode) {
-                          print("Api error");
-                        }
-                        return Text(
-                            dashboardViewModel.productListingList.message.toString());
+              case Status.ERROR:
+                if (kDebugMode) {
+                  print("Api error");
+                }
+                return Text(
+                    dashboardViewModel.productListingList.message.toString());
 
-                      case Status.COMPLETED:
-                        if (kDebugMode) {
-                          print("Api calll");
-                        }
+              case Status.COMPLETED:
+                if (kDebugMode) {
+                  print("Api calll");
+                }
 
-                        List<ProductListing>? productListing = dashboardViewModel
-                            .productListingList.data!.response!.body!.productListing;
+                List<ProductListing>? productListing = dashboardViewModel
+                    .productListingList.data!.response!.body!.productListing;
 
-                     return   Container(
-                          height: MediaQuery.of(context).size.height * .35,
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: productListing!.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Row(
+                return Container(
+                  height: MediaQuery.of(context).size.height * .35,
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: productListing!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(
+                          children: [
+                            Container(
+                                // height: MediaQuery.of(context).size.height * .3,
+
+                                // width: 200,
+                                width: MediaQuery.of(context).size.width * .45,
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.whiteColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      // height: MediaQuery.of(context).size.height * .3,
-
-                                      // width: 200,
-                                        width: MediaQuery.of(context).size.width * .45,
-                                        decoration: const BoxDecoration(
-                                            color: ThemeApp.whiteColor,
-                                            borderRadius:
-                                            BorderRadius.all(Radius.circular(10))),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              height:
-                                              MediaQuery.of(context).size.height * .26,
-                                              width: MediaQuery.of(context).size.width * .45,
-                                              decoration: const BoxDecoration(
-                                                  color: ThemeApp.textFieldBorderColor,
-                                                  borderRadius: BorderRadius.only(
-                                                    topRight: Radius.circular(10),
-                                                    topLeft: Radius.circular(10),
-                                                  )),
-                                              child: ClipRRect(
-                                                borderRadius: const BorderRadius.only(
-                                                  topRight: Radius.circular(10),
-                                                  topLeft: Radius.circular(10),
-                                                ),
-                                                child: Image.network(
-                                                  // width: double.infinity,
-                                                  productListing[index].image1Url!,
-                                                  fit: BoxFit.fill,
-                                                  height: MediaQuery.of(context).size.height *
-                                                      .07,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height:
-                                              MediaQuery.of(context).size.height * .01,
-                                            ),
-                                            Container(
-                                              padding:
-                                              const EdgeInsets.only(left: 10, right: 10),
-                                              child: TextFieldUtils()
-                                                  .homePageTitlesTextFields(
-                                                  productListing[index].shortName!,
-                                                  context),
-                                            ),
-                                            SizedBox(
-                                              height:
-                                              MediaQuery.of(context).size.height * .01,
-                                            ),
-                                            Flexible(
-                                              child: Container(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10, right: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    TextFieldUtils().dynamicText(
-                                                        indianRupeesFormat.format(
-                                                            productListing[index].scrappedPrice??0.0
-                                                                ),
-                                                        context,
-                                                        TextStyle(
-                                                            color: ThemeApp.blackColor,
-                                                            fontSize: height * .022,
-                                                            fontWeight: FontWeight.bold)),
-                                                    TextFieldUtils().dynamicText(
-                                                        indianRupeesFormat.format(
-                                                            productListing[index].currentPrice??0.0
-                                                                ),
-                                                        context,
-                                                        TextStyle(
-                                                            color: ThemeApp.darkGreyTab,
-                                                            fontSize: height * .02,
-                                                            fontWeight: FontWeight.w500,
-                                                            decoration:
-                                                            TextDecoration.lineThrough,
-                                                            decorationThickness: 1.5)),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        )),
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .26,
+                                      width: MediaQuery.of(context).size.width *
+                                          .45,
+                                      decoration: const BoxDecoration(
+                                          color: ThemeApp.textFieldBorderColor,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            topLeft: Radius.circular(10),
+                                          )),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          topLeft: Radius.circular(10),
+                                        ),
+                                        child: Image.network(
+                                          // width: double.infinity,
+                                          productListing[index].image1Url!,
+                                          fit: BoxFit.fill,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .07,
+                                        ),
+                                      ),
+                                    ),
                                     SizedBox(
-                                      width: MediaQuery.of(context).size.width * .03,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .01,
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 10, right: 10),
+                                      child: TextFieldUtils()
+                                          .homePageTitlesTextFields(
+                                              productListing[index].shortName!,
+                                              context),
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .01,
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextFieldUtils().dynamicText(
+                                                indianRupeesFormat.format(
+                                                    productListing[index]
+                                                            .scrappedPrice ??
+                                                        0.0),
+                                                context,
+                                                TextStyle(
+                                                    color: ThemeApp.blackColor,
+                                                    fontSize: height * .022,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextFieldUtils().dynamicText(
+                                                indianRupeesFormat.format(
+                                                    productListing[index]
+                                                            .currentPrice ??
+                                                        0.0),
+                                                context,
+                                                TextStyle(
+                                                    color: ThemeApp.darkGreyTab,
+                                                    fontSize: height * .02,
+                                                    fontWeight: FontWeight.w500,
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                    decorationThickness: 1.5)),
+                                          ],
+                                        ),
+                                      ),
                                     )
                                   ],
-                                );
-                              }),
+                                )),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .03,
+                            )
+                          ],
                         );
-                      default:
-                        return Text("No Data found!");
-                    }
-                    return Text("No Data found!");
-                  });
-            }));
-
-
+                      }),
+                );
+              default:
+                return Text("No Data found!");
+            }
+            return Text("No Data found!");
+          });
+        }));
   }
 
   Widget merchantList() {
@@ -1076,136 +1122,141 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget budgetBuyList() {
-
     return ChangeNotifierProvider<DashboardViewModel>(
         create: (BuildContext context) => dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, dashboardProvider, child) {
-              return Consumer<DashboardViewModel>(
-                  builder: (context, dashboardProvider, child) {
-                    switch (dashboardViewModel.productListingList.status) {
-                      case Status.LOADING:
-                        if (kDebugMode) {
-                          print("Api load");
-                        }
-                        return ProgressIndicatorLoader(true);
+          return Consumer<DashboardViewModel>(
+              builder: (context, dashboardProvider, child) {
+            switch (dashboardViewModel.productListingList.status) {
+              case Status.LOADING:
+                if (kDebugMode) {
+                  print("Api load");
+                }
+                return ProgressIndicatorLoader(true);
 
-                      case Status.ERROR:
-                        if (kDebugMode) {
-                          print("Api error");
-                        }
-                        return Text(
-                            dashboardViewModel.productListingList.message.toString());
+              case Status.ERROR:
+                if (kDebugMode) {
+                  print("Api error");
+                }
+                return Text(
+                    dashboardViewModel.productListingList.message.toString());
 
-                      case Status.COMPLETED:
-                        if (kDebugMode) {
-                          print("Api calll");
-                        }
+              case Status.COMPLETED:
+                if (kDebugMode) {
+                  print("Api calll");
+                }
 
-                        List<ProductListing>? productListing = dashboardViewModel
-                            .productListingList.data!.response!.body!.productListing;
+                List<ProductListing>? productListing = dashboardViewModel
+                    .productListingList.data!.response!.body!.productListing;
 
+                return Container(
+                    height: 580,
+                    // width: MediaQuery.of(context).size.width,
+                    // padding: EdgeInsets.all(12.0),
+                    child: GridView.builder(
+                      itemCount: 4,
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 10,
+                        // width / height: fixed for *all* items
+                        childAspectRatio: 0.75,
+
+                        crossAxisCount: 2,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
                         return Container(
-                            height: 580,
-                            // width: MediaQuery.of(context).size.width,
-                            // padding: EdgeInsets.all(12.0),
-                            child: GridView.builder(
-                              itemCount: 4,
-                              physics: const NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                mainAxisSpacing: 20,
-                                crossAxisSpacing: 10,
-                                // width / height: fixed for *all* items
-                                childAspectRatio: 0.75,
-
-                                crossAxisCount: 2,
-                              ),
-                              itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: const BoxDecoration(
-                                        color: ThemeApp.darkGreyTab,
-                                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          flex: 3,
-                                          child: Stack(
-                                            alignment: Alignment.topRight,
-                                            children: [
-                                              Container(
-                                                height:
-                                                MediaQuery.of(context).size.height * .25,
-                                                width: MediaQuery.of(context).size.width,
-                                                decoration: const BoxDecoration(
-                                                    color: ThemeApp.whiteColor,
-                                                    borderRadius: BorderRadius.only(
-                                                      topRight: Radius.circular(10),
-                                                      topLeft: Radius.circular(10),
-                                                    )),
-                                                child: ClipRRect(
-                                                  borderRadius: const BorderRadius.only(
-                                                    topRight: Radius.circular(10),
-                                                    topLeft: Radius.circular(10),
-                                                  ),
-                                                  child: Image.network(
-                                                    // width: double.infinity,
-                                                    productListing![index].image1Url!,
-                                                    fit: BoxFit.fill,
-
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                const EdgeInsets.only(top: 10, right: 10),
-                                                child: kmAwayOnMerchantImage(
-                                                  '1.1 KM away',
-                                                  context,
-                                                ),
-                                              )
-                                            ],
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(
+                                color: ThemeApp.darkGreyTab,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Stack(
+                                    alignment: Alignment.topRight,
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .25,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
+                                            )),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            topLeft: Radius.circular(10),
+                                          ),
+                                          child: Image.network(
+                                            // width: double.infinity,
+                                            productListing![index].image1Url!,
+                                            fit: BoxFit.fill,
                                           ),
                                         ),
-                                        Expanded(
-                                          // flex: 1,
-                                          child: Container(
-                                            padding:
-                                            const EdgeInsets.only(left: 12, right: 12),
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                TextFieldUtils()
-                                                    .homePageTitlesTextFieldsWHITE(
-                                                    productListing[index].shortName!,
-                                                    context),
-                                                TextFieldUtils().dynamicText(
-                                                    indianRupeesFormat.format(
-                                                        productListing[index].currentPrice),
-                                                    context,
-                                                    TextStyle(
-                                                        color: ThemeApp.whiteColor,
-                                                        fontSize: height * .022,
-                                                        fontWeight: FontWeight.bold)),
-                                              ],
-                                            ),
-                                          ),
-                                        )
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10, right: 10),
+                                        child: kmAwayOnMerchantImage(
+                                          '1.1 KM away',
+                                          context,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  // flex: 1,
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 12, right: 12),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextFieldUtils()
+                                            .homePageTitlesTextFieldsWHITE(
+                                                productListing[index]
+                                                    .shortName!,
+                                                context),
+                                        TextFieldUtils().dynamicText(
+                                            indianRupeesFormat.format(
+                                                productListing[index]
+                                                    .currentPrice),
+                                            context,
+                                            TextStyle(
+                                                color: ThemeApp.whiteColor,
+                                                fontSize: height * .022,
+                                                fontWeight: FontWeight.bold)),
                                       ],
-                                    ));
-                              },
+                                    ),
+                                  ),
+                                )
+                              ],
                             ));
-                      default:
-                        return Text("No Data found!");
-                    }
-                    return Text("No Data found!");
-                  });
-            }));
-
+                      },
+                    ));
+              default:
+                return Text("No Data found!");
+            }
+            return Text("No Data found!");
+          });
+        }));
   }
 
   List<Widget> _iconViews() {

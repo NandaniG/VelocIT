@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../services/providers/Home_Provider.dart';
+import '../../../../utils/StringUtils.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountSettingScreen extends StatefulWidget {
   const AccountSettingScreen({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        backgroundColor: ThemeApp.backgroundColor,
+        backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
@@ -49,7 +50,7 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextFieldUtils().dynamicText(
-                              AppLocalizations.of(context).pushNotifications,
+                              StringUtils.pushNotifications,
                               context,
                               TextStyle(
                                 color: ThemeApp.blackColor,

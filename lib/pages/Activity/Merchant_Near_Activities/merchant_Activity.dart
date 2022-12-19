@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../utils/StringUtils.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'FilterScreen_Merchant.dart';
 
@@ -163,7 +164,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
     preferredSize: Size.fromHeight(height * .19),
@@ -187,7 +188,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                   children: [
                     Container(
                       child: TextFieldUtils().titleTextFields(
-                          AppLocalizations.of(context).gridView, context),
+                          StringUtils.gridView, context),
                     ),
                     Transform.scale(
                       scale: 1.3,
@@ -207,7 +208,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                     ),
                     Container(
                       child: TextFieldUtils().titleTextFields(
-                          AppLocalizations.of(context).mapView, context),
+                          StringUtils.mapView, context),
                     ),
                   ],
                 ),
@@ -283,7 +284,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
           // Text("Latitude: $lat", style: TextStyle(fontSize: 20),),
 
           TextFieldUtils().listHeadingTextField(
-              AppLocalizations.of(context).merchantNearYou, context),
+              StringUtils.merchantNearYou, context),
           SizedBox(
             height: MediaQuery.of(context).size.height * .02,
           ),

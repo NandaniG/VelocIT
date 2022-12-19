@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 import '../../../../services/models/CreditCardModel.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
@@ -53,7 +54,7 @@ class _DeletePaymentMethodDialogState extends State<DeletePaymentMethodDialog> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).deletePaymentMethod,
+                    StringUtils.deletePaymentMethod,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,
@@ -74,7 +75,7 @@ SizedBox(height: height*.02,),
                   child: Row(
                     children: [
                       Expanded(flex: 1,
-                        child: proceedButton(AppLocalizations.of(context).no, ThemeApp.whiteColor,context,false, () {
+                        child: proceedButton(StringUtils.no, ThemeApp.whiteColor,context,false, () {
                           Navigator.pop(context);
                         }),
                       ),
@@ -82,7 +83,7 @@ SizedBox(height: height*.02,),
                       Expanded(flex: 1,
                         child: Consumer<ProductProvider>(builder: (context, value, child) {
 
-                            return proceedButton(AppLocalizations.of(context).yes, ThemeApp.blackColor,context,false, () {
+                            return proceedButton(StringUtils.yes, ThemeApp.blackColor,context,false, () {
                             setState(() {
                               print(widget.cardList.length);
 value.deleteCardMethod(widget.index);

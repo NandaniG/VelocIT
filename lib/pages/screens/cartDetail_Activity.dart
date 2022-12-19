@@ -130,7 +130,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: ThemeApp.backgroundColor,
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
@@ -144,7 +144,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               child: AppBar(
                 centerTitle: false,
                 elevation: 0,
-                backgroundColor: ThemeApp.backgroundColor,
+                backgroundColor: ThemeApp.appBackgroundColor,
                 flexibleSpace: Container(
                   height: height * .11,
                   width: width,
@@ -180,7 +180,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               child: AppBar(
                 centerTitle: false,
                 elevation: 0,
-                backgroundColor: ThemeApp.backgroundColor,
+                backgroundColor: ThemeApp.appBackgroundColor,
                 flexibleSpace: Container(
                   height: height * .11,
                   width: width,
@@ -209,7 +209,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         }),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: ThemeApp.backgroundColor,
+        color: ThemeApp.appBackgroundColor,
         elevation: 0,
         child: Consumer<ProductProvider>(builder: (context, value, child) {
           return widget.value.cartList.isEmpty

@@ -92,8 +92,7 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
                   color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                  color: ThemeApp.redColor, width: 1)),
+              borderSide: const BorderSide(color: ThemeApp.redColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
@@ -197,8 +196,7 @@ class _CharacterTextFormFieldsWidgetState
                   color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                  color: ThemeApp.redColor, width: 1)),
+              borderSide: const BorderSide(color: ThemeApp.redColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
@@ -296,8 +294,7 @@ class _PasswordTextFormFieldsWidgetState
                   color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                  color: ThemeApp.redColor, width: 1)),
+              borderSide: const BorderSide(color: ThemeApp.redColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
@@ -415,8 +412,7 @@ class _CardCVVTextFormFieldWidgetState
                   color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                  color: ThemeApp.redColor, width: 1)),
+              borderSide: const BorderSide(color: ThemeApp.redColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
@@ -462,7 +458,7 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
       child: IntlPhoneField(
         dropdownIconPosition: IconPosition.trailing,
         // showCountryFlag: false,
-        enabled: widget.enable,
+        enabled: true,
         controller: widget.controller,
         flagsButtonPadding: EdgeInsets.only(
           left: 20,
@@ -513,8 +509,7 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
                   color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                  color: ThemeApp.redColor, width: 1)),
+              borderSide: const BorderSide(color: ThemeApp.redColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
@@ -631,8 +626,7 @@ class _CardNumberTextFormFieldsWidgetState
                   color: ThemeApp.textFieldBorderColor, width: 1)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                  color: ThemeApp.redColor, width: 1)),
+              borderSide: const BorderSide(color: ThemeApp.redColor, width: 1)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: const BorderSide(
@@ -758,8 +752,8 @@ class TextFieldUtils {
     );
   }
 
-  Widget asteriskTextField(String text,BuildContext context){
-    return  Container(
+  Widget asteriskTextField(String text, BuildContext context) {
+    return Container(
       // moreBGn (197:410)
       child: RichText(
         text: TextSpan(
@@ -775,7 +769,6 @@ class TextFieldUtils {
                 'Roboto',
                 fontSize: MediaQuery.of(context).size.height * .021,
                 fontWeight: FontWeight.w400,
-
                 color: ThemeApp.primaryNavyBlackColor,
               ),
             ),
@@ -792,8 +785,8 @@ class TextFieldUtils {
         ),
       ),
     );
-
   }
+
   Widget hyperLinkTextFields(String text, BuildContext context) {
     return Text(
       text,
@@ -819,7 +812,7 @@ class TextFieldUtils {
           fontSize: MediaQuery.of(context).size.height * .021,
           fontWeight: FontWeight.w500,
           overflow: TextOverflow.ellipsis,
-          color: colors),
+          color: ThemeApp.whiteColor,),
     );
   }
 
@@ -956,7 +949,7 @@ class TextFieldUtils {
 
   Widget appliancesTitleTextFields(String text, BuildContext context) {
     return Text(
-      text,
+      text,maxLines: 2,
       style: TextStyle(
           overflow: TextOverflow.ellipsis,
           fontSize: MediaQuery.of(context).size.height * .020,

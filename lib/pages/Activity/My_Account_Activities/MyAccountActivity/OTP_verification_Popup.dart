@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
@@ -10,6 +10,7 @@ import '../../../../utils/styles.dart';
 import '../../../../utils/utils.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
+import 'package:velocit/utils/StringUtils.dart';
 
 class OTPVerificationDialog extends StatefulWidget {
   const OTPVerificationDialog({Key? key}) : super(key: key);
@@ -90,14 +91,14 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                     height: height * .02,
                   ),
                   TextFieldUtils().dynamicText(
-                      "${AppLocalizations.of(context).otpSentTo} david@gmail.com",
+                      "${StringUtils.otpSentTo} david@gmail.com",
                       context,
                       TextStyle(
                           color: ThemeApp.blackColor,
                           fontSize: height * .02,
                           fontWeight: FontWeight.w600)),
                   TextFormFieldsWidget(
-                      errorText: AppLocalizations.of(context).otpSentTo,
+                      errorText: StringUtils.otpSentTo,
                       textInputType: TextInputType.text,
                       controller: emailOTPController,
                       autoValidation: AutovalidateMode.onUserInteraction,
@@ -123,14 +124,14 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                     height: height * .01,
                   ),
                   TextFieldUtils().dynamicText(
-                      "${AppLocalizations.of(context).otpSentTo} +91 5252634825",
+                      "${StringUtils.otpSentTo} +91 5252634825",
                       context,
                       TextStyle(
                           color: ThemeApp.blackColor,
                           fontSize: height * .02,
                           fontWeight: FontWeight.w600)),
                   TextFormFieldsWidget(
-                      errorText: AppLocalizations.of(context).otpSentTo,
+                      errorText: StringUtils.otpSentTo,
                       textInputType: TextInputType.text,
                       controller: mobileOTPController,
                       autoValidation: AutovalidateMode.onUserInteraction,
@@ -156,18 +157,18 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                     height: height * .01,
                   ),
                   TextFieldUtils().dynamicText(
-                      "${AppLocalizations.of(context).password} *",
+                      "${StringUtils.password} *",
                       context,
                       TextStyle(
                           color: ThemeApp.blackColor,
                           fontSize: height * .02,
                           fontWeight: FontWeight.w600)),
                   PasswordTextFormFieldsWidget(
-                      errorText: AppLocalizations.of(context).passwordError,
+                      errorText: StringUtils.passwordError,
                       textInputType: TextInputType.text,
                       controller: passwordController,
                       autoValidation: AutovalidateMode.onUserInteraction,
-                      hintText: AppLocalizations.of(context).password,
+                      hintText: StringUtils.password,
                       onChange: (val) {
                         setState(() {
                           if (val.isEmpty && passwordController.text.isEmpty) {
@@ -182,10 +183,10 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                       validator: (value) {
                         if (value.isEmpty && passwordController.text.isEmpty) {
                           _validatePassword = true;
-                          return AppLocalizations.of(context).passwordError;
+                          return StringUtils.passwordError;
                         } else if (!StringConstant().isPass(value)) {
                           _validatePassword = true;
-                          return AppLocalizations.of(context)
+                          return StringUtils
                               .validPasswordError;
                         } else {
                           _validatePassword = false;
@@ -200,7 +201,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                       Expanded(
                         flex: 1,
                         child: whiteProceedButton(
-                            AppLocalizations.of(context).cancel, context, () {
+                            StringUtils.cancel, context, () {
                           // Navigator.of(context).push(
                           //   MaterialPageRoute(
                           //     builder: (context) => AddNewCardActivity(),
@@ -215,12 +216,12 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                       Expanded(
                         flex: 1,
                         child: proceedButton(
-                            AppLocalizations.of(context).update,
+                            StringUtils.update,
                             ThemeApp.blackColor,
                             context, false,() {
                           setState(() {
                             value.userAccountDetailList.add(UserAccountList(
-                                userId: 1,userImage: value.images,
+                                userId: 1,userImage: value.images.toString(),
                                 userName: value.userNameController.text,
                                 userEmail: value.userEmailController.text,
                                 userMobile: value.userMobileController.text,

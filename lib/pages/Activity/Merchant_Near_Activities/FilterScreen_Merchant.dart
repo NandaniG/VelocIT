@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../services/models/FilterModel.dart';
 import '../../../services/models/FilterModel_merchant.dart';
 import '../../../utils/AppTheme.dart';
+import '../../../utils/StringUtils.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Merchant_FilterScreen extends StatefulWidget {
   const Merchant_FilterScreen({Key? key}) : super(key: key);
@@ -69,7 +70,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
             Container(
               alignment: Alignment.centerLeft,
               child: TextFieldUtils().dynamicText(
-                  AppLocalizations.of(context).filter,
+                  StringUtils.filter,
                   context,
                   TextStyle(
                       color: ThemeApp.blackColor,
@@ -94,7 +95,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
               child: Container(
                 alignment: Alignment.centerRight,
                 child: TextFieldUtils().dynamicText(
-                    AppLocalizations.of(context).clearFilter,
+                    StringUtils.clearFilter,
                     context,
                     TextStyle(
                         color: ThemeApp.blackColor,
@@ -117,14 +118,14 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                 flex: 2,
                 child: Container(
                     height: height * .87,width: width ,
-                    color:ThemeApp.backgroundColor,
+                    color:ThemeApp.appBackgroundColor,
                     child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: MerchantFilterData.merchantFilterList.length,
                         itemBuilder: (context, index) {
 
                           return Container(
-                            color: ThemeApp.backgroundColor,
+                            color: ThemeApp.appBackgroundColor,
                             height: height * 0.05,width: width,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,7 +146,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                                     decoration: BoxDecoration(
                                       color: tappedIndex == index
                                           ? ThemeApp.darkGreyColor
-                                          : ThemeApp.backgroundColor,
+                                          : ThemeApp.appBackgroundColor,
                                     ),
                                     child: TextFieldUtils().dynamicText(
                                         MerchantFilterData.merchantFilterList[index].name,
@@ -288,7 +289,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  color: ThemeApp.backgroundColor,
+                  color: ThemeApp.appBackgroundColor,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
                     "Apply ", ThemeApp.blackColor, context)),

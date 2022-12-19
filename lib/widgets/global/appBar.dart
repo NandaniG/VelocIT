@@ -8,12 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/Core/Model/ProductCategoryModel.dart';
 import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/utils/utils.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 
+import '../../Core/ViewModel/dashboard_view_model.dart';
 import '../../pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
@@ -58,19 +60,17 @@ Widget appBarWidget(
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          color: ThemeApp.backgroundColor,
+          color: ThemeApp.appBackgroundColor,
           child: AppBar(
             centerTitle: true,
-            elevation: 0,
-            backgroundColor: ThemeApp.darkGreyTab,
+            // elevation: 1,
+            backgroundColor: ThemeApp.appBackgroundColor,
             flexibleSpace: Container(
               height: height * .08,
               width: width,
               decoration: const BoxDecoration(
-                color: ThemeApp.whiteColor,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15)),
+                color: ThemeApp.appBackgroundColor,
+
               ),
             ),
             leadingWidth: StringConstant.isLogIn == false ? 0 : 50,
@@ -168,15 +168,13 @@ Widget appBar_backWidget(
         child: AppBar(
           centerTitle: false,
           elevation: 0,
-          backgroundColor: ThemeApp.backgroundColor,
+          backgroundColor: ThemeApp.appBackgroundColor,
           flexibleSpace: Container(
             height: height * .08,
             width: width,
             decoration: const BoxDecoration(
-              color: ThemeApp.whiteColor,
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  bottomRight: Radius.circular(15)),
+              color: ThemeApp.appBackgroundColor,
+
             ),
           ),
           titleSpacing: 0,
@@ -256,7 +254,7 @@ Widget searchBar(BuildContext context) {
         },
         decoration: InputDecoration(
           filled: true,
-          fillColor: ThemeApp.backgroundColor,
+          fillColor: ThemeApp.whiteColor,
           isDense: true,
           // contentPadding:
           //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
@@ -293,12 +291,12 @@ Widget searchBar(BuildContext context) {
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide:
-                  const BorderSide(color: ThemeApp.backgroundColor, width: 1)),
+                  const BorderSide(color: ThemeApp.appBackgroundColor, width: 1)),
           // OutlineInputBorder
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide:
-                  const BorderSide(color: ThemeApp.backgroundColor, width: 1)),
+                  const BorderSide(color: ThemeApp.appBackgroundColor, width: 1)),
         ), // InputDecoration
       ),
     );
@@ -326,7 +324,7 @@ Widget addressWidget(BuildContext context, String addressString) {
     child: Center(
       child: Container(
         height: height * .036,
-        color: ThemeApp.darkGreyTab,
+        color: ThemeApp.appBackgroundColor,
         width: width,
         padding: const EdgeInsets.all(2),
         child: Row(
@@ -338,23 +336,29 @@ Widget addressWidget(BuildContext context, String addressString) {
             ),
             Icon(
               Icons.not_listed_location_outlined,
-              color: ThemeApp.whiteColor,
+              color: ThemeApp.tealButtonColor,
               size: MediaQuery.of(context).size.height * .028,
             ),
             SizedBox(
               width: width * .01,
             ),
             SizedBox(
-              child: TextFieldUtils().subHeadingTextFieldsWhite(
-                  "Deliver to - $addressString ", context),
+              child: TextFieldUtils().dynamicText(
+                  "Deliver to - $addressString ",
+                  context,
+                  TextStyle(
+                      color: ThemeApp.tealButtonColor,
+                      fontSize: height * .022,
+                      fontWeight: FontWeight.bold)),
+
             ),
             //Text(StringConstant.placesFromCurrentLocation),
             SizedBox(
               width: width * .01,
             ),
             Icon(
-              Icons.mode_edit_outlined,
-              color: ThemeApp.whiteColor,
+              Icons.keyboard_arrow_down_sharp,
+              color: ThemeApp.tealButtonColor,
               // size: 20,
               size: MediaQuery.of(context).size.height * .028,
             ),
@@ -386,172 +390,177 @@ Widget bottomNavBarItems(BuildContext context) {
   int _currentIndex = 0;
   return Consumer<HomeProvider>(builder: (context, provider, child) {
     return Consumer<ProductProvider>(builder: (context, product, child) {
-      return BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          _currentIndex = index;
-          if (_currentIndex == 0) {
-            // Navigator.pushNamed(context, '/dashBoardScreen');
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DashboardScreen(),
-                ),
-                (route) => false);
-            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
-
-          }
-          if (_currentIndex == 1) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const OfferActivity(),
-                ),
-                (route) => false);
-          }
-          if (_currentIndex == 3) {
-            // colors = ThemeApp.blackColor;
-
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ShopByCategoryActivity(
-                      shopByCategoryList:
-                          provider.jsonData["shopByCategoryList"],
-                      shopByCategorySelected:0),
-                ),
-                (route) => false);
-          }
-          if (_currentIndex == 4) {
-            // colors = ThemeApp.blackColor;
-
-            if (kDebugMode) {
-              print("provider.cartProductList");
-              print(provider.cartProductList);
-            }
-            product.badgeFinalCount;
-
-            provider.isBottomAppCart = true;
-            provider.isHome = true;
-
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CartDetailsActivity(
-                        value: product, productList: provider.cartProductList)),
-                (route) => false);
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-              backgroundColor: Colors.white,
-              icon: _currentIndex == 0
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Image.asset('assets/icons/home.png', height: 30),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Image.asset('assets/icons/home.png', height: 30),
+      return Consumer<DashboardViewModel>(builder: (context, productCategories, child) {
+          return BottomNavigationBar(backgroundColor: ThemeApp.whiteColor,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _currentIndex,
+            onTap: (int index) {
+              _currentIndex = index;
+              if (_currentIndex == 0) {
+                // Navigator.pushNamed(context, '/dashBoardScreen');
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DashboardScreen(),
                     ),
-              label: ''),
-          BottomNavigationBarItem(
-              backgroundColor: Colors.white,
-              icon: _currentIndex == 1
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Image.asset('assets/icons/percentage.png',
-                          height: 30),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Image.asset('assets/icons/percentage.png',
-                          height: 30),
+                    (route) => false);
+                // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
+
+              }
+              if (_currentIndex == 1) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OfferActivity(),
                     ),
-              label: ''),
-          BottomNavigationBarItem(
-              backgroundColor: Colors.white,
-              icon: _currentIndex == 2
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Icon(Icons.add, color: Colors.transparent),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Icon(Icons.add, color: Colors.transparent),
+                    (route) => false);
+              }
+              if (_currentIndex == 3) {
+                // colors = ThemeApp.blackColor;
+                List<ProductList>? serviceList = productCategories
+                    .productCategoryList.data!.productList;
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShopByCategoryActivity(
+                          shopByCategoryList:serviceList,
+
+                          // provider.jsonData["shopByCategoryList"],
+                          shopByCategorySelected:0),
                     ),
-              label: ''),
-          BottomNavigationBarItem(
-              backgroundColor: Colors.white,
-              icon: _currentIndex == 3
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Image.asset('assets/icons/shop.png', height: 30),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Image.asset('assets/icons/shop.png', height: 30),
-                    ),
-              label: ''),
-          BottomNavigationBarItem(
-              backgroundColor: Colors.white,
-              icon: Stack(
-                children: <Widget>[
-                  _currentIndex == 4
+                    (route) => false);
+              }
+              if (_currentIndex == 4) {
+                // colors = ThemeApp.blackColor;
+
+                if (kDebugMode) {
+                  print("provider.cartProductList");
+                  print(provider.cartProductList);
+                }
+                product.badgeFinalCount;
+
+                provider.isBottomAppCart = true;
+                provider.isHome = true;
+
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CartDetailsActivity(
+                            value: product, productList: provider.cartProductList)),
+                    (route) => false);
+              }
+            },
+            items: [
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.white,
+                  icon: _currentIndex == 0
                       ? Padding(
                           padding: const EdgeInsets.only(top: 5.0),
-                          child: Image.asset('assets/icons/shopping-cart.png',
-                              height: 35),
+                          child: Image.asset('assets/icons/home.png', height: 30),
                         )
                       : Padding(
                           padding: const EdgeInsets.only(top: 5.0),
-                          child: Image.asset('assets/icons/shopping-cart.png',
-                              height: 35),
+                          child: Image.asset('assets/icons/home.png', height: 30),
                         ),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      constraints: BoxConstraints(
-                          minWidth: 22,
-                          minHeight: 10,
-                          maxHeight: 25,
-                          maxWidth: 25),
-                      child: Padding(
-                        padding: const EdgeInsets.all(1),
-                        child: Text(
-                          '${product.badgeFinalCount}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
+                  label: ''),
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.white,
+                  icon: _currentIndex == 1
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Image.asset('assets/icons/percentage.png',
+                              height: 30),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Image.asset('assets/icons/percentage.png',
+                              height: 30),
+                        ),
+                  label: ''),
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.white,
+                  icon: _currentIndex == 2
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Icon(Icons.add, color: Colors.transparent),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Icon(Icons.add, color: Colors.transparent),
+                        ),
+                  label: ''),
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.white,
+                  icon: _currentIndex == 3
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Image.asset('assets/icons/shop.png', height: 30),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Image.asset('assets/icons/shop.png', height: 30),
+                        ),
+                  label: ''),
+              BottomNavigationBarItem(
+                  backgroundColor: Colors.white,
+                  icon: Stack(
+                    children: <Widget>[
+                      _currentIndex == 4
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Image.asset('assets/icons/shopping-cart.png',
+                                  height: 35),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Image.asset('assets/icons/shopping-cart.png',
+                                  height: 35),
+                            ),
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: Container(
+                          padding: EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          textAlign: TextAlign.center,
+                          constraints: BoxConstraints(
+                              minWidth: 22,
+                              minHeight: 10,
+                              maxHeight: 25,
+                              maxWidth: 25),
+                          child: Padding(
+                            padding: const EdgeInsets.all(1),
+                            child: Text(
+                              '${product.badgeFinalCount}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                      )
+                    ],
+                  ),
 
-              // _currentIndex == 4
-              //     ? Padding(
-              //         padding: const EdgeInsets.only(top: 5.0),
-              //         child: Image.asset('assets/icons/shopping-cart.png',
-              //             height: 30),
-              //       )
-              //     : Padding(
-              //         padding: const EdgeInsets.only(top: 5.0),
-              //         child: Image.asset('assets/icons/shopping-cart.png',
-              //             height: 30),
-              //       ),
-              label: ''),
-        ],
+                  // _currentIndex == 4
+                  //     ? Padding(
+                  //         padding: const EdgeInsets.only(top: 5.0),
+                  //         child: Image.asset('assets/icons/shopping-cart.png',
+                  //             height: 30),
+                  //       )
+                  //     : Padding(
+                  //         padding: const EdgeInsets.only(top: 5.0),
+                  //         child: Image.asset('assets/icons/shopping-cart.png',
+                  //             height: 30),
+                  //       ),
+                  label: ''),
+            ],
+          );
+        }
       );
     });
   });
@@ -569,7 +578,7 @@ Widget bottomNavigationBarWidget(BuildContext context) {
           height: 70,
           width: 70,
           child: FloatingActionButton(
-            backgroundColor: ThemeApp.darkGreyTab,
+            backgroundColor: ThemeApp.appColor,
             onPressed: () {
               // scanQRCode();
               // scanFile();

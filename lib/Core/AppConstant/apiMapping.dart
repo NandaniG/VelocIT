@@ -5,8 +5,10 @@ class ApiMapping {
   // static String baseDomain = "velocitapi.fulgorithmapi.com";
   static String baseDomain = "velocitapiqa.fulgorithmapi.com";
   static String basePort = "443";
-  static String apiVersion = "v1";
+  static String apiVersion = "api/v1";
   // static String username = "/v2/IAM/authenticateWithUID";
+static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
+
 
   static String ConstructURI(String path) {
     return baseProtocol +
@@ -55,12 +57,18 @@ class ApiMapping {
         break;
         case apiEndPoint.put_carts:
         retVal = ConstructURI("/carts");
-
+///new apis
         break; case apiEndPoint.auth_signIn_using_post:
         retVal = ConstructURI("/auth/signin");
         break;
         case apiEndPoint.auth_signUp_using_post:
         retVal = ConstructURI("/auth/signup");
+        break;
+        case apiEndPoint.get_product_categories:
+        retVal = ConstructURI("/product-category");
+        break;
+        case apiEndPoint.get_product_by_sub_categories:
+        retVal = ConstructURI("/product/findBySubCategoryId");
         break;
 
       default:
