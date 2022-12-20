@@ -52,7 +52,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   late List<CartProductList> cartList;
   int counterPrice = 0;
   int badgeData = 0;
-
+  String sellerAvailable = "";
   Random random = new Random();
   int randomNumber = 0;
 
@@ -229,11 +229,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               child: Image.network(
                 // width: double.infinity,
-                widget.productList!.imageUrls![imageVariantIndex].imageUrl!,
+                widget.productList!.imageUrls![imageVariantIndex].imageUrl!??
+                    '',
                 fit: BoxFit.fill,
                 width: width,
                 height: height * .28,
-              ),
+              )??SizedBox(),
             ),
           ),
           variantImages(),
@@ -413,7 +414,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         builder: (context, cartProvider, child) {
       return Consumer<ProductSpecificListViewModel>(
           builder: (context, productListProvider, child) {
-        return Padding(
+        return sellerAvailable.isEmpty ?Padding(
             padding:
                 const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
             child: Row(
@@ -746,7 +747,18 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   ),
                 )
               ],
-            ));
+            )):Padding(
+          padding:
+          const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+          child: TextFieldUtils().dynamicText(
+              "OUT OF STOCK",
+              context,
+              TextStyle(
+                color: ThemeApp.darkGreyTab,
+                fontWeight: FontWeight.w500,
+                fontSize: height * .035,
+              )),
+            );
       });
     });
   }

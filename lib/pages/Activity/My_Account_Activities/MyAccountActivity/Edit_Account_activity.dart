@@ -138,9 +138,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                         ),
                         alignment: Alignment(0, -1),
                         child: InkWell(
-                          onTap: () async {setState(() {
-
-                          });
+                          onTap: () async {
                             _getFromCamera();
                           },
                           child: ClipRRect(
@@ -191,20 +189,27 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
         );
       }),
     );
-  }  File? imageFile1;
+  }
+  File? imageFile1;
 
   _getFromCamera() async {
-    PickedFile? pickedFile = await ImagePicker().getImage(
+
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(
       source: ImageSource.camera,
       maxWidth: 1800,
       maxHeight: 1800,
     );
-    if (pickedFile != null) {
+    if (pickedImage != null) {
       setState(() {
-        imageFile1 = File(pickedFile.path);
+        imageFile1 = File(pickedImage.path);
+        isEnable = true;
       });
     }
   }
+
+  bool isEnable =false;
+
   Widget fullName(ProductProvider provider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,12 +222,14 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                 fontSize: height * .02,
                 fontWeight: FontWeight.w600)),
         CharacterTextFormFieldsWidget(
+          isEnable: isEnable,
             errorText: StringUtils.enterFullName,
             textInputType: TextInputType.name,
 
             controller: provider.userNameController,
             autoValidation: AutovalidateMode.onUserInteraction,
             hintText: 'David Wong',
+
 
             onChange: (val) {},
             validator: (value) {

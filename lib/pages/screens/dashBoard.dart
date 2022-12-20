@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +23,7 @@ import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/appBar.dart';
 import '../../widgets/global/proceedButtons.dart';
+
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/global/textFormFields.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart';
@@ -53,16 +53,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String location = 'Null, Press Button';
   String Address = 'search';
   var homeData;
+  bool _isProductListChip = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     productCategories.productCategoryListingWithGet();
-
-    dashboardViewModel.shopByCategoriesWithGet();
-    serviceViewModel.bookOurServicesWithGet();
-    dashboardViewModel.productListingWithGet();
+    _isProductListChip = false;
     getPincode();
     StringConstant.controllerSpeechToText.clear();
     Provider.of<HomeProvider>(context, listen: false).loadJson();
@@ -101,29 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: /*ChangeNotifierProvider<DashboardViewModel>(
-            create: (BuildContext context) => dashboardViewModel,
-            child: Consumer<DashboardViewModel>(
-                builder: (context, dashboardProvider, child) {
-              switch (dashboardProvider.categoryList.status) {
-                case Status.LOADING:
-                  print("Api load");
-
-                  return CircularProgressIndicator();
-                case Status.ERROR:
-                  print("Api error");
-
-                  return Text(
-                      dashboardProvider.categoryList.message.toString());
-                case Status.COMPLETED:
-                  print("Api calll");
-                  return listOfShopByCategories(dashboardProvider
-                      .categoryList.data!.response!.body!.payload);
-              }
-              return Text("sahdjashdj");
-            }))*/
-
-            ChangeNotifierProvider<DashboardViewModel>(
+        body: ChangeNotifierProvider<DashboardViewModel>(
           create: (BuildContext context) => dashboardViewModel,
           child: Consumer<DashboardViewModel>(
               builder: (context, dashboardProvider, child) {
@@ -146,13 +122,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               children: [
                                 // TextFieldUtils()
                                 //     .listHeadingTextField(StringConstant.speechToText, context),
+                                productServiceChip(),
+                                SizedBox(
+                                  height: height * .02,
+                                ),
+                                _isProductListChip
+                                    ? productList()
+                                    : serviceList(),
+                                SizedBox(
+                                  height: height * .02,
+                                ),
                                 imageLists(provider),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * .02,
                                 ),
 
-                                listOfShopByCategories(),
+                                /*    listOfShopByCategories(),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * .02,
@@ -162,16 +148,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * .02,
-                                ),
+                                ),*/
                                 stepperOfDelivery(provider),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * .02,
                                 ),
                                 TextFieldUtils().listHeadingTextField(
-                                    StringUtils
-                                        .recommendedForYou,
-                                    context),
+                                    StringUtils.recommendedForYou, context),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * .02,
@@ -187,12 +171,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     TextFieldUtils().listHeadingTextField(
-                                        StringUtils
-                                            .merchantNearYou,
-                                        context),
-                                    viewMoreButton(
-                                        StringUtils.viewAll,
-                                        context, () {
+                                        StringUtils.merchantNearYou, context),
+                                    viewMoreButton(StringUtils.viewAll, context,
+                                        () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) => MerchantActvity(
@@ -213,8 +194,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       MediaQuery.of(context).size.height * .02,
                                 ),
                                 TextFieldUtils().listHeadingTextField(
-                                    StringUtils.bestDeal,
-                                    context),
+                                    StringUtils.bestDeal, context),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * .02,
@@ -225,8 +205,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       MediaQuery.of(context).size.height * .02,
                                 ),
                                 TextFieldUtils().listHeadingTextField(
-                                    StringUtils.budgetBuys,
-                                    context),
+                                    StringUtils.budgetBuys, context),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * .02,
@@ -237,11 +216,274 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ))
                       : const Center(
                           child: CircularProgressIndicator(
-                          color: ThemeApp.blackColor,
+                          color: ThemeApp.primaryNavyBlackColor,
                         )));
             });
           }),
         ));
+  }
+
+  Widget productServiceChip() {
+    return Container(
+      width: width / 1.5,
+      padding: EdgeInsets.only(top: 10),
+      child: Container(
+        height: 40,
+        decoration: BoxDecoration(
+          border: Border.all(color: Color(0xff00a7bf)),
+          color: Color(0xffffffff),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 1,
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _isProductListChip = true;
+                    _isProductListChip = !_isProductListChip;
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: _isProductListChip
+                        ? ThemeApp.whiteColor
+                        : ThemeApp.appColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: TextFieldUtils().dynamicText(
+                        'Products',
+                        context,
+                        TextStyle(
+                            color: _isProductListChip
+                                ? ThemeApp.blackColor
+                                : ThemeApp.whiteColor,
+                            // fontWeight: FontWeight.w500,
+                            fontSize: height * .022,
+                            fontWeight: FontWeight.w500)),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _isProductListChip = true;
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color:
+                        _isProductListChip ? Color(0xff00a7bf) : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: TextFieldUtils().dynamicText(
+                        'Services',
+                        context,
+                        TextStyle(
+                            color: _isProductListChip
+                                ? ThemeApp.whiteColor
+                                : ThemeApp.blackColor,
+                            // fontWeight: FontWeight.w500,
+                            fontSize: height * .022,
+                            fontWeight: FontWeight.w500)),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget productList() {
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => productCategories,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
+
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
+
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
+
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
+
+              return Container(
+                height: 40,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: serviceList!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BookServiceActivity(
+                                  shopByCategoryList: serviceList!,
+                                  shopByCategorySelected: index),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                            // height: 40,
+
+                            padding:
+                                const EdgeInsets.fromLTRB(15.0, 5, 15.0, 5),
+                            decoration: BoxDecoration(
+                              color: ThemeApp.containerColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: TextFieldUtils().dynamicText(
+                                  serviceList[index].name!,
+                                  context,
+                                  TextStyle(
+                                    color: ThemeApp.blackColor,
+                                    // fontWeight: FontWeight.w500,
+                                    fontSize: height * .02,
+                                  )),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+              );
+            default:
+              return Text("No Data found!");
+          }
+          return Text("No Data found!");
+        }));
+
+    return Container(
+      // height: 40,
+
+      padding: const EdgeInsets.fromLTRB(15.0, 10, 15.0, 10),
+      decoration: BoxDecoration(
+        color: ThemeApp.containerColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text("sakdjsak"),
+    );
+  }
+
+  Widget serviceList() {
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => productCategories,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
+
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
+
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
+
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
+
+              return Container(
+                height: 40,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: serviceList!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ShopByCategoryActivity(
+                                  shopByCategoryList: serviceList!,
+                                  shopByCategorySelected: index),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                            // height: 40,
+
+                            padding:
+                                const EdgeInsets.fromLTRB(15.0, 5, 15.0, 5),
+                            decoration: BoxDecoration(
+                              color: ThemeApp.containerColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: TextFieldUtils().dynamicText(
+                                  serviceList[index].name!,
+                                  context,
+                                  TextStyle(
+                                    color: ThemeApp.blackColor,
+                                    // fontWeight: FontWeight.w500,
+                                    fontSize: height * .02,
+                                  )),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+              );
+            default:
+              return Text("No Data found!");
+          }
+          return Text("No Data found!");
+        }));
+
+    return Container(
+      // height: 40,
+
+      padding: const EdgeInsets.fromLTRB(15.0, 10, 15.0, 10),
+      decoration: BoxDecoration(
+        color: ThemeApp.containerColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text("sakdjsak"),
+    );
   }
 
   Widget imageLists(HomeProvider provider) {
@@ -250,6 +492,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
             future: provider.homeImageSliderService(),
             builder: (context, snapShot) {
               return Container(
+                  height: (MediaQuery.of(context).orientation ==
+                          Orientation.landscape)
+                      ? height * .5
+                      : height * 0.2,
+                  width: width,
+                  child: CarouselSlider(
+                    items: provider.homeSliderList["homeImageSlider"]
+                        .map<Widget>((e) {
+                      return Card(
+                        margin: EdgeInsets.zero,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        color: ThemeApp.whiteColor,
+                        child: ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            child:Container(
+                              width: width,
+                              color: Colors.red,
+                              child: Image.asset(
+                                e["homeSliderImage"],
+                                fit: BoxFit.fill,
+                              ),
+                            )),
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                        autoPlay: false,
+                        viewportFraction: 1,
+                        height: height * .3),
+                  ));
+              /*    return Container(
                   height: (MediaQuery.of(context).orientation ==
                           Orientation.landscape)
                       ? height * .5
@@ -266,11 +541,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         child: ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
-                            child: /*Image.network(
+                            child: */ /*Image.network(
                                 // width: double.infinity,
                                 e.sponsorlogo,
                                 fit: BoxFit.fill,
-                              ),*/
+                              ),*/ /*
                                 Image.asset(
                               e["homeSliderImage"],
                               fit: BoxFit.fill,
@@ -288,7 +563,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     borderRadius: true,
                     boxFit: BoxFit.cover,
                     dotPosition: DotPosition.bottomCenter,
-                  ));
+                  ));*/
             })
         : const CircularProgressIndicator();
   }
@@ -327,13 +602,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       TextFieldUtils().listHeadingTextField(
-                          StringUtils.bookOurServices,
-                          context),
-                      viewMoreButton(
-                          StringUtils.viewAll, context, () {
+                          StringUtils.shopByCategories, context),
+                      viewMoreButton(StringUtils.viewAll, context, () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => BookServiceActivity(
+                            builder: (context) => ShopByCategoryActivity(
                                 shopByCategoryList: serviceList!,
                                 shopByCategorySelected: 0),
                           ),
@@ -345,7 +618,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     height: MediaQuery.of(context).size.height * .02,
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * .13,
+                    height: MediaQuery.of(context).size.height * .11,
                     width: width,
                     child: ListView.builder(
                         shrinkWrap: true,
@@ -356,7 +629,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => BookServiceActivity(
+                                  builder: (context) => ShopByCategoryActivity(
                                       shopByCategoryList: serviceList!,
                                       shopByCategorySelected: index),
                                 ),
@@ -365,9 +638,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: Row(
                               children: [
                                 Container(
-                                    width: width * 0.24,
+                                    width: width * 0.3,
                                     decoration: const BoxDecoration(
-                                        color: ThemeApp.whiteColor,
+                                        color: ThemeApp.containerColor,
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(10))),
                                     child: Padding(
@@ -392,7 +665,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  .07,
+                                                  .055,
                                             ),
                                           ),
                                           //     ClipRRect(
@@ -421,7 +694,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 serviceList[index].name!,
                                                 context,
                                                 TextStyle(
-                                                  color: ThemeApp.darkGreyColor,
+                                                  color: ThemeApp.blackColor,
                                                   // fontWeight: FontWeight.w500,
                                                   fontSize: height * .02,
                                                 )),
@@ -481,10 +754,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       TextFieldUtils().listHeadingTextField(
-                          StringUtils.bookOurServices,
-                          context),
-                      viewMoreButton(
-                          StringUtils.viewAll, context, () {
+                          StringUtils.bookOurServices, context),
+                      viewMoreButton(StringUtils.viewAll, context, () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => BookServiceActivity(
@@ -499,7 +770,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     height: MediaQuery.of(context).size.height * .02,
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * .13,
+                    height: MediaQuery.of(context).size.height * .11,
                     width: width,
                     child: ListView.builder(
                         shrinkWrap: true,
@@ -519,9 +790,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: Row(
                               children: [
                                 Container(
-                                    width: width * 0.24,
+                                    width: width * 0.3,
                                     decoration: const BoxDecoration(
-                                        color: ThemeApp.whiteColor,
+                                        color: ThemeApp.containerColor,
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(10))),
                                     child: Padding(
@@ -546,7 +817,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  .07,
+                                                  .055,
                                             ),
                                           ),
                                           //     ClipRRect(
@@ -575,9 +846,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 serviceList[index].name!,
                                                 context,
                                                 TextStyle(
-                                                  color: ThemeApp.darkGreyColor,
-                                                  // fontWeight: FontWeight.w500,
-                                                  fontSize: height * .02,
+                                                  color: ThemeApp.blackColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: height * .021,
                                                 )),
                                           ),
                                         ],
@@ -687,6 +958,149 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget recommendedList() {
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => productCategories,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
+
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
+
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
+
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
+
+              return Container(
+                height: MediaQuery.of(context).size.height * .35,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: serviceList!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
+                        children: [
+                          Container(
+                              // height: MediaQuery.of(context).size.height * .3,
+
+                              // width: 200,
+                              width: MediaQuery.of(context).size.width * .45,
+                              decoration: const BoxDecoration(
+                                  color: ThemeApp.tealButtonColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        .26,
+                                    width:
+                                        MediaQuery.of(context).size.width * .45,
+                                    decoration: const BoxDecoration(
+                                        color: ThemeApp.textFieldBorderColor,
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          topLeft: Radius.circular(10),
+                                        )),
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        topRight: Radius.circular(10),
+                                        topLeft: Radius.circular(10),
+                                      ),
+                                      child: Image.network(
+                                        // width: double.infinity,
+                                        serviceList[index]
+                                            .productCategoryImageId!,
+                                        fit: BoxFit.fill,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .07,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        .01,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    child: TextFieldUtils().dynamicText(
+                                        serviceList[index].name!,
+                                        context,
+                                        TextStyle(
+                                            color: ThemeApp.whiteColor,
+                                            fontSize: height * .023,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        .01,
+                                  ),
+                                  Flexible(
+                                    child: Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 10, right: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          //discount
+                                          TextFieldUtils().dynamicText(
+                                              indianRupeesFormat
+                                                  .format(2200 ?? 0.0),
+                                              context,
+                                              TextStyle(
+                                                  color: ThemeApp.whiteColor,
+                                                  fontSize: height * .022,
+                                                  fontWeight: FontWeight.w500)),
+                                          //priginal
+                                          TextFieldUtils().dynamicText(
+                                              indianRupeesFormat
+                                                  .format(2350 ?? 0.0),
+                                              context,
+                                              TextStyle(
+                                                  color: ThemeApp.whiteColor,
+                                                  fontSize: height * .02,
+                                                  fontWeight: FontWeight.w400,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                  decorationThickness: 1.5)),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .03,
+                          )
+                        ],
+                      );
+                    }),
+              );
+            default:
+              return Text("No Data found!");
+          }
+          return Text("No Data found!");
+        }));
+
+/*
     return ChangeNotifierProvider<DashboardViewModel>(
         create: (BuildContext context) => dashboardViewModel,
         child: Consumer<DashboardViewModel>(
@@ -798,7 +1212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                         0.0),
                                                 context,
                                                 TextStyle(
-                                                    color: ThemeApp.blackColor,
+                                                    color: ThemeApp.primaryNavyBlackColor
                                                     fontSize: height * .022,
                                                     fontWeight:
                                                         FontWeight.bold)),
@@ -834,9 +1248,141 @@ class _DashboardScreenState extends State<DashboardScreen> {
             return Text("No Data found!");
           });
         }));
+*/
   }
 
   Widget merchantList() {
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => productCategories,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
+
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
+
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
+
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
+
+              return Container(
+                height: MediaQuery.of(context).size.height * .35,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: serviceList!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => MerchantActvity(
+                          //         merchantList:
+                          //             provider.merchantNearYouList[index]),
+                          //   ),
+                          // );
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                                width: MediaQuery.of(context).size.width * .45,
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.tealButtonColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Stack(
+                                      alignment: Alignment.topRight,
+                                      children: [
+                                        Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .28,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .45,
+                                          decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              )),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
+                                            ),
+                                            child: Image.network(
+                                              // width: double.infinity,
+                                              serviceList[index]
+                                                  .productCategoryImageId!,
+                                              fit: BoxFit.fill,
+
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .07,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10, right: 10),
+                                          child: kmAwayOnMerchantImage(
+                                            '1.2 km Away',
+                                            context,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .01,
+                                    ),
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.all(10),
+                                      child: TextFieldUtils()
+                                          .homePageTitlesTextFieldsWHITE(
+                                              serviceList[index].name!,
+                                              context),
+                                    ),
+                                  ],
+                                )),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .03,
+                            )
+                          ],
+                        ),
+                      );
+                    }),
+              );
+            default:
+              return Text("No Data found!");
+          }
+          return Text("No Data found!");
+        }));
+
+/*
     return ChangeNotifierProvider<DashboardViewModel>(
         create: (BuildContext context) => dashboardViewModel,
         child: Consumer<DashboardViewModel>(
@@ -972,9 +1518,149 @@ class _DashboardScreenState extends State<DashboardScreen> {
             return Text("No Data found!");
           });
         }));
+*/
   }
 
   Widget bestDealList() {
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => productCategories,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
+
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
+
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
+
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
+
+              return Container(
+                height: MediaQuery.of(context).size.height * .35,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: serviceList!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
+                        children: [
+                          Container(
+                              // height: MediaQuery.of(context).size.height * .3,
+
+                              // width: 200,
+                              width: MediaQuery.of(context).size.width * .45,
+                              decoration: const BoxDecoration(
+                                  color: ThemeApp.tealButtonColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        .26,
+                                    width:
+                                        MediaQuery.of(context).size.width * .45,
+                                    decoration: const BoxDecoration(
+                                        color: ThemeApp.textFieldBorderColor,
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          topLeft: Radius.circular(10),
+                                        )),
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        topRight: Radius.circular(10),
+                                        topLeft: Radius.circular(10),
+                                      ),
+                                      child: Image.network(
+                                        // width: double.infinity,
+                                        serviceList[index]
+                                            .productCategoryImageId!,
+                                        fit: BoxFit.fill,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .07,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        .01,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    child: TextFieldUtils().dynamicText(
+                                        serviceList[index].name!,
+                                        context,
+                                        TextStyle(
+                                            color: ThemeApp.whiteColor,
+                                            fontSize: height * .022,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        .01,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        TextFieldUtils().dynamicText(
+                                            // indianRupeesFormat.format(
+                                            ' 2688',
+                                            // 0.0),
+                                            context,
+                                            TextStyle(
+                                                color: ThemeApp.whiteColor,
+                                                fontSize: height * .022,
+                                                fontWeight: FontWeight.bold)),
+                                        TextFieldUtils().dynamicText(
+                                            indianRupeesFormat
+                                                .format(3566 ?? 0.0),
+                                            context,
+                                            TextStyle(
+                                                color: ThemeApp.whiteColor,
+                                                fontSize: height * .02,
+                                                fontWeight: FontWeight.w500,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                decorationThickness: 1.5)),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              )),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .03,
+                          )
+                        ],
+                      );
+                    }),
+              );
+            default:
+              return Text("No Data found!");
+          }
+          return Text("No Data found!");
+        }));
+/*
     return ChangeNotifierProvider<DashboardViewModel>(
         create: (BuildContext context) => dashboardViewModel,
         child: Consumer<DashboardViewModel>(
@@ -1085,7 +1771,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                       0.0),
                                               context,
                                               TextStyle(
-                                                  color: ThemeApp.blackColor,
+                                                  color: ThemeApp.primaryNavyBlackColor
                                                   fontSize: height * .022,
                                                   fontWeight: FontWeight.bold)),
                                           TextFieldUtils().dynamicText(
@@ -1119,9 +1805,131 @@ class _DashboardScreenState extends State<DashboardScreen> {
             return Text("No Data found!");
           });
         }));
+*/
   }
 
   Widget budgetBuyList() {
+    return ChangeNotifierProvider<DashboardViewModel>(
+        create: (BuildContext context) => productCategories,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
+
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
+
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
+
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
+
+              return Container(
+                  height: 580,
+                  // width: MediaQuery.of(context).size.width,
+                  // padding: EdgeInsets.all(12.0),
+                  child: GridView.builder(
+                    itemCount: serviceList!.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 10,
+                      // width / height: fixed for *all* items
+                      childAspectRatio: 0.75,
+
+                      crossAxisCount: 2,
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(
+                              color: ThemeApp.tealButtonColor,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .25,
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: const BoxDecoration(
+                                          color: ThemeApp.whiteColor,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            topLeft: Radius.circular(10),
+                                          )),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          topLeft: Radius.circular(10),
+                                        ),
+                                        child: Image.network(
+                                          // width: double.infinity,
+                                          serviceList![index]
+                                              .productCategoryImageId!,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                // flex: 1,
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                      left: 12, right: 12),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldUtils()
+                                          .homePageTitlesTextFieldsWHITE(
+                                              serviceList[index].name!,
+                                              context),
+                                      TextFieldUtils().dynamicText(
+                                          "under 9532",
+                                          context,
+                                          TextStyle(
+                                              color: ThemeApp.whiteColor,
+                                              fontSize: height * .022,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ));
+                    },
+                  ));
+            default:
+              return Text("No Data found!");
+          }
+          return Text("No Data found!");
+        }));
+/*
     return ChangeNotifierProvider<DashboardViewModel>(
         create: (BuildContext context) => dashboardViewModel,
         child: Consumer<DashboardViewModel>(
@@ -1257,6 +2065,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             return Text("No Data found!");
           });
         }));
+*/
   }
 
   List<Widget> _iconViews() {

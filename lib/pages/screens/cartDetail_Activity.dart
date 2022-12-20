@@ -161,8 +161,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       icon: const Icon(Icons.arrow_back, color: ThemeApp.blackColor,size: 30,),
                       onPressed: () {
                       // Navigator.pop(context);
-                      // Navigator.pop(context);
-                      Navigator.pushReplacementNamed(context, '/productDetailsActivity').then((_) => setState(() {}));
+                      Navigator.pop(context);
+                      // Navigator.pushReplacementNamed(context, '/productDetailsActivity').then((_) => setState(() {}));
                       }),
                 ),
 

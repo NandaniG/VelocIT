@@ -25,7 +25,7 @@ class _ProgressIndicatorState extends State<ProgressIndicatorLoader> {
                 width:20,
                 child: new CircularProgressIndicator(
                   strokeWidth: 3,
-                  valueColor: AlwaysStoppedAnimation<Color>(ThemeApp.darkGreyTab),
+                  valueColor: AlwaysStoppedAnimation<Color>(ThemeApp.innerBoxesColor),
                   backgroundColor: Colors.transparent,
                 ),
               )))

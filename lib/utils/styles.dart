@@ -15,6 +15,8 @@ class ThemeApp {
   static const packedButtonColor =  Color(0xff0DCCF0);
   static const activeOrderColor =  Color(0xff34C759);
   static const shippedOrderColor =  Color(0xffF59B40);
+  static const blueColor =  Color(0xff3372F2);
+  static const containerColor =  Color(0xff95EAF1);
 
 
  static const textFieldBorderColor = const Color.fromRGBO(199, 195, 195, 1);

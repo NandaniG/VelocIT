@@ -55,21 +55,35 @@ Widget viewMoreButton(String name, BuildContext context, VoidCallback onTap) {
           borderRadius: const BorderRadius.all(
             Radius.circular(40),
           ),
-          color: ThemeApp.tealButtonColor,
+          // color: ThemeApp.tealButtonColor,
         ),
-        child: TextFieldUtils()
-            .usingPassTextFields(name, ThemeApp.whiteColor, context)),
+        child: TextFieldUtils().dynamicText(
+           name,
+            context,
+            TextStyle(
+              color: ThemeApp.tealButtonColor,
+              fontWeight: FontWeight.w500,
+              fontSize: MediaQuery.of(context).size.height  * .02,
+            )),),
   );
 }
 
 Widget kmAwayOnMerchantImage(String name, BuildContext context) {
   return Container(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
           Radius.circular(40),
         ),
-        color: ThemeApp.textFieldBorderColor,
+        color: ThemeApp.blueColor,
       ),
-      child: TextFieldUtils().homePageTitlesTextFieldsWHITE(name, context));
+      child: Text(
+        name,
+        style: TextStyle(
+          fontSize: MediaQuery.of(context).size.height * .020,
+          color: ThemeApp.whiteColor,
+          fontWeight: FontWeight.bold,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ));
 }

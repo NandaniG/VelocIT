@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/Core/Model/ProductCategoryModel.dart';
 import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
@@ -56,13 +58,14 @@ Widget appBarWidget(
   return SafeArea(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
           color: ThemeApp.appBackgroundColor,
           child: AppBar(
-            centerTitle: true,
+            centerTitle: true,        titleSpacing: 5,
+
             // elevation: 1,
             backgroundColor: ThemeApp.appBackgroundColor,
             flexibleSpace: Container(
@@ -70,72 +73,190 @@ Widget appBarWidget(
               width: width,
               decoration: const BoxDecoration(
                 color: ThemeApp.appBackgroundColor,
-
               ),
             ),
-            leadingWidth: StringConstant.isLogIn == false ? 0 : 50,
-            leading: StringConstant.isLogIn == false
-                ? const SizedBox(
-                    width: 0,
-                  )
-                : InkWell(
-                    onTap: () {
-                      /// locale languages
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //       builder: (context) => FlutterLocalizationDemo()),
-                      // );
+              automaticallyImplyLeading: false,
+            leadingWidth:  Navigator.canPop(context)?width * .1:0,
 
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const MyAccountActivity(),
-                        ),
-                      );
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(100),
-                        ),
-                        child: Icon(Icons.account_circle_rounded,
-                            size:
-                                40) /*Container(
-                      alignment: Alignment.center,
-                      child: const Image(
-                        image: NetworkImage(
-                            'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
-                        fit: BoxFit.fill,
-                      ))*/
-                        ,
-                      ),
-                    ),
-                  ),
+            leading: Navigator.canPop(context)?InkWell(
+            onTap: () {
+              Navigator.of(context).pop();
+              // Provider.of<ProductProvider>(context, listen: false);
+            },
+            child: Container(
+              margin: const EdgeInsets.only(left: 15),
+              child: Center(
+                child: Transform.scale(
+                  scale:1.5,
+                  child:Image.asset(
+                    'assets/appImages/backArrow.png',
+                    color: ThemeApp.primaryNavyBlackColor,
+                    // height: height*.001,
+
+                  ),),
+              ),
+            ),
+          ):SizedBox(),
+         /*   leading: Consumer<HomeProvider>(builder: (context, provider, child) {
+                return  Consumer  <ProductProvider>(builder: (context, product, child) {
+
+                  return StringConstant.isLogIn == false
+                        ? const SizedBox(
+                            width: 0,
+                          )
+                        : InkWell(
+                            onTap: () {
+                              /// locale languages
+                              // Navigator.of(context).push(
+                              //   MaterialPageRoute(
+                              //       builder: (context) => FlutterLocalizationDemo()),
+                              // );
+
+                              if (kDebugMode) {
+                                print("provider.cartProductList");
+                                print(provider.cartProductList);
+                              }
+                              product.badgeFinalCount;
+
+                              provider.isBottomAppCart = true;
+                              provider.isHome = true;
+
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CartDetailsActivity(
+                                          value: product, productList: provider.cartProductList)),
+                                      (route) => false);
+
+                              // Navigator.of(context).push(
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const MyAccountActivity(),
+                              //   ),
+                              // );
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(100),
+                                ),
+                                child: Icon(Icons.account_circle_rounded,
+                                    size:
+                                        40) *//*Container(
+                              alignment: Alignment.center,
+                              child: const Image(
+                                image: NetworkImage(
+                                    'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
+                                fit: BoxFit.fill,
+                              ))*//*
+                                ,
+                              ),
+                            ),
+                          );
+                  }
+                );
+              }
+            ),*/
             // leadingWidth: width * .06,
             title: titleWidget,
             // Row
-            actions: [
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationScreen(),
+            actions: [              InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationScreen(),
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 13,bottom: 13,right: 15,left: 15),
+                child: Image.asset(
+                  'assets/appImages/bellIcon.png',
+                  // width: double.infinity,
+                  height: height*.11,
+                  color: ThemeApp.primaryNavyBlackColor,
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+
+              Consumer<HomeProvider>(builder: (context, provider, child) {
+                return  Consumer  <ProductProvider>(builder: (context, product, child) {
+
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Stack(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            /// locale languages
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //       builder: (context) => FlutterLocalizationDemo()),
+                            // );
+
+                            if (kDebugMode) {
+                              print("provider.cartProductList");
+                              print(provider.cartProductList);
+                            }
+                            product.badgeFinalCount;
+
+                            provider.isBottomAppCart = true;
+                            provider.isHome = true;
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CartDetailsActivity(
+                                        value: product, productList: provider.cartProductList)),
+                                  );
+
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 13,bottom: 13,right: 15),
+                            child: Image.asset(
+                              'assets/appImages/shoppingCart.png',
+                              // width: double.infinity,
+                              height: height*.11,
+                              color: ThemeApp.primaryNavyBlackColor,
+                              fit: BoxFit.fill,
+                            ),
+
+                          ),
+                        ),
+                        product.badgeFinalCount==0?SizedBox() :        Positioned(
+                          right: 5,
+                          top: 2,
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            constraints: BoxConstraints(
+                                minWidth: 22,
+                                minHeight: 10,
+                                maxHeight: 25,
+                                maxWidth: 25),
+                            child: Padding(
+                              padding: const EdgeInsets.all(1),
+                              child: Text(
+                                '${product.badgeFinalCount}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   );
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  margin: StringConstant.isLogIn == false
-                      ? const EdgeInsets.only(right: 10, left: 20)
-                      : const EdgeInsets.only(
-                          right: 10,
-                        ),
-                  child: const Icon(
-                    Icons.notifications_none_outlined,
-                    color: ThemeApp.darkGreyTab,
-                    size: 35,
-                  ),
-                ),
+                }
+                );
+              }
               ),
             ],
           ),
@@ -174,22 +295,22 @@ Widget appBar_backWidget(
             width: width,
             decoration: const BoxDecoration(
               color: ThemeApp.appBackgroundColor,
-
             ),
           ),
-          titleSpacing: 0,
+          titleSpacing: 10,
           leading: InkWell(
             onTap: () {
               Navigator.of(context).pop();
               // Provider.of<ProductProvider>(context, listen: false);
             },
             child: Transform.scale(
-                scale: 1.3,
-                child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    })),
+                scale: 0.7,
+                child:Image.asset(
+                  'assets/appImages/backArrow.png',
+                  color: ThemeApp.primaryNavyBlackColor,
+                  // height: height*.001,
+
+                ),),
           ),
 
           // leadingWidth: width * .06,
@@ -263,11 +384,23 @@ Widget searchBar(BuildContext context) {
           hintStyle: const TextStyle(
             fontSize: 14,
             color: ThemeApp.darkGreyTab,
-          ),
-          prefixIcon: const Icon(
+          ),prefixIconColor: ThemeApp.primaryNavyBlackColor,
+          prefixIcon: /*const Icon(
             Icons.search,
             size: 26,
             color: Colors.black54,
+          ),*/
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: SvgPicture.asset(
+                'assets/appImages/searchIcon.svg',
+                color: ThemeApp.primaryNavyBlackColor,
+                semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(currentColor: ThemeApp.primaryNavyBlackColor,),
+
+              height: height*.001,
+
+            ),
           ),
           suffixIcon: InkWell(
             onTap: () {
@@ -277,26 +410,36 @@ Widget searchBar(BuildContext context) {
                     return SpeechToTextDialog();
                   });
             },
-            child: const Icon(
+            child:    Padding(
+          padding: const EdgeInsets.all(10),
+          child: SvgPicture.asset(
+            'assets/appImages/miceIcon.svg',
+            color: ThemeApp.primaryNavyBlackColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(currentColor: ThemeApp.primaryNavyBlackColor,),
+
+            height: height*.001,
+
+          ),
+        ), /*const Icon(
               Icons.mic,
               size: 26,
               color: Colors.black54,
-            ),
+            ),*/
           ),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                  color: ThemeApp.redColor, width: 1)),
+              borderSide: const BorderSide(color: ThemeApp.redColor, width: 1)),
           // OutlineInputBorder
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.appBackgroundColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.appBackgroundColor, width: 1)),
           // OutlineInputBorder
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide:
-                  const BorderSide(color: ThemeApp.appBackgroundColor, width: 1)),
+              borderSide: const BorderSide(
+                  color: ThemeApp.appBackgroundColor, width: 1)),
         ), // InputDecoration
       ),
     );
@@ -350,7 +493,6 @@ Widget addressWidget(BuildContext context, String addressString) {
                       color: ThemeApp.tealButtonColor,
                       fontSize: height * .022,
                       fontWeight: FontWeight.bold)),
-
             ),
             //Text(StringConstant.placesFromCurrentLocation),
             SizedBox(
@@ -390,47 +532,58 @@ Widget bottomNavBarItems(BuildContext context) {
   int _currentIndex = 0;
   return Consumer<HomeProvider>(builder: (context, provider, child) {
     return Consumer<ProductProvider>(builder: (context, product, child) {
-      return Consumer<DashboardViewModel>(builder: (context, productCategories, child) {
-          return BottomNavigationBar(backgroundColor: ThemeApp.whiteColor,
-            type: BottomNavigationBarType.fixed,
-            currentIndex: _currentIndex,
-            onTap: (int index) {
-              _currentIndex = index;
-              if (_currentIndex == 0) {
-                // Navigator.pushNamed(context, '/dashBoardScreen');
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DashboardScreen(),
-                    ),
-                    (route) => false);
-                // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
+      return Consumer<DashboardViewModel>(
+          builder: (context, productCategories, child) {
+        return BottomNavigationBar(
+          backgroundColor: ThemeApp.whiteColor,
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          onTap: (int index) {
+            _currentIndex = index;
+            if (_currentIndex == 0) {
+              // Navigator.pushNamed(context, '/dashBoardScreen');
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DashboardScreen(),
+                  ),
+                  (route) => false);
+              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
 
-              }
-              if (_currentIndex == 1) {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const OfferActivity(),
-                    ),
-                    (route) => false);
-              }
-              if (_currentIndex == 3) {
-                // colors = ThemeApp.blackColor;
-                List<ProductList>? serviceList = productCategories
-                    .productCategoryList.data!.productList;
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShopByCategoryActivity(
-                          shopByCategoryList:serviceList,
+            }
+            if (_currentIndex == 1) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const OfferActivity(),
+                  ),
+                  (route) => false);
+            }
+            if (_currentIndex == 3) {
+              // colors = ThemeApp.blackColor;
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopByCategoryActivity(
+                        shopByCategoryList: serviceList,
 
-                          // provider.jsonData["shopByCategoryList"],
-                          shopByCategorySelected:0),
-                    ),
-                    (route) => false);
+                        // provider.jsonData["shopByCategoryList"],
+                        shopByCategorySelected: 0),
+                  ),
+                  (route) => false);
+            }
+            if (_currentIndex == 4) {
+              if (StringConstant.isLogIn == true) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const MyAccountActivity(),
+                  ),
+                );
               }
-              if (_currentIndex == 4) {
+            }
+            /*   if (_currentIndex == 4) {
                 // colors = ThemeApp.blackColor;
 
                 if (kDebugMode) {
@@ -448,62 +601,99 @@ Widget bottomNavBarItems(BuildContext context) {
                         builder: (context) => CartDetailsActivity(
                             value: product, productList: provider.cartProductList)),
                     (route) => false);
-              }
-            },
-            items: [
-              BottomNavigationBarItem(
-                  backgroundColor: Colors.white,
-                  icon: _currentIndex == 0
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Image.asset('assets/icons/home.png', height: 30),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Image.asset('assets/icons/home.png', height: 30),
+              }*/
+          },
+          items: [
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 0
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/home.png', height: 30),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/home.png', height: 30),
+                      ),
+                label: ''),
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 1
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/percentage.png',
+                            height: 30),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/percentage.png',
+                            height: 30),
+                      ),
+                label: ''),
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 2
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Icon(Icons.add, color: Colors.transparent),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Icon(Icons.add, color: Colors.transparent),
+                      ),
+                label: ''),
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 3
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/shop.png', height: 30),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Image.asset('assets/icons/shop.png', height: 30),
+                      ),
+                label: ''),
+            BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: _currentIndex == 4
+                    ? const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(100),
+                          ),
+                          child: Icon(Icons.account_circle_rounded,
+                              size:
+                                  40) /*Container(
+                      alignment: Alignment.center,
+                      child: const Image(
+                        image: NetworkImage(
+                            'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
+                        fit: BoxFit.fill,
+                      ))*/
+                          ,
                         ),
-                  label: ''),
-              BottomNavigationBarItem(
-                  backgroundColor: Colors.white,
-                  icon: _currentIndex == 1
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Image.asset('assets/icons/percentage.png',
-                              height: 30),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Image.asset('assets/icons/percentage.png',
-                              height: 30),
+                      )
+                    : const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(100),
+                          ),
+                          child: Icon(Icons.account_circle_rounded,
+                              size:
+                                  40) /*Container(
+                      alignment: Alignment.center,
+                      child: const Image(
+                        image: NetworkImage(
+                            'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
+                        fit: BoxFit.fill,
+                      ))*/
+                          ,
                         ),
-                  label: ''),
-              BottomNavigationBarItem(
-                  backgroundColor: Colors.white,
-                  icon: _currentIndex == 2
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Icon(Icons.add, color: Colors.transparent),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Icon(Icons.add, color: Colors.transparent),
-                        ),
-                  label: ''),
-              BottomNavigationBarItem(
-                  backgroundColor: Colors.white,
-                  icon: _currentIndex == 3
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Image.asset('assets/icons/shop.png', height: 30),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Image.asset('assets/icons/shop.png', height: 30),
-                        ),
-                  label: ''),
-              BottomNavigationBarItem(
-                  backgroundColor: Colors.white,
-                  icon: Stack(
+                      ),
+                /*Stack(
                     children: <Widget>[
                       _currentIndex == 4
                           ? Padding(
@@ -544,24 +734,12 @@ Widget bottomNavBarItems(BuildContext context) {
                         ),
                       )
                     ],
-                  ),
+                  ),*/
 
-                  // _currentIndex == 4
-                  //     ? Padding(
-                  //         padding: const EdgeInsets.only(top: 5.0),
-                  //         child: Image.asset('assets/icons/shopping-cart.png',
-                  //             height: 30),
-                  //       )
-                  //     : Padding(
-                  //         padding: const EdgeInsets.only(top: 5.0),
-                  //         child: Image.asset('assets/icons/shopping-cart.png',
-                  //             height: 30),
-                  //       ),
-                  label: ''),
-            ],
-          );
-        }
-      );
+                label: ''),
+          ],
+        );
+      });
     });
   });
 }
@@ -645,7 +823,7 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .01,
                         ),
-                       _startScanFileButton(state),
+                        _startScanFileButton(state),
                         // const Text(
                         //   'Code:',
                         //   textAlign: TextAlign.center,
@@ -716,27 +894,23 @@ class _ScannerWidgetState extends State<ScannerWidget> {
         color: ThemeApp.darkGreyColor,
       ),
       child: InkWell(
-          onTap:state is! BarcodeFinderLoading
-          ? () async {
-            FilePickerResult? pickedFile =
-            await FilePicker.platform.pickFiles();
-            if (pickedFile != null) {
-              String? filePath = pickedFile.files.single.path;
-              if (filePath != null) {
-                final file = File(filePath);
-                controller.scanFile(file);
-              }
-            }else{
-              Utils.errorToast('Please select content');
-            }
-                }:null,
-
+          onTap: state is! BarcodeFinderLoading
+              ? () async {
+                  FilePickerResult? pickedFile =
+                      await FilePicker.platform.pickFiles();
+                  if (pickedFile != null) {
+                    String? filePath = pickedFile.files.single.path;
+                    if (filePath != null) {
+                      final file = File(filePath);
+                      controller.scanFile(file);
+                    }
+                  } else {
+                    Utils.errorToast('Please select content');
+                  }
+                }
+              : null,
           child: TextFieldUtils().usingPassTextFields(
               "Open Gallery", ThemeApp.whiteColor, context)),
     );
   }
-
-
-
-
 }

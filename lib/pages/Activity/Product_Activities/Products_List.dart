@@ -308,7 +308,7 @@ class _ProductListByCategoryActivityState
                 // width: MediaQuery.of(context).size.width,
                 child: GridView.builder(
                   itemCount: subProductList!.length,
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: const AlwaysScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     mainAxisSpacing: 20,
                     crossAxisSpacing: 10,

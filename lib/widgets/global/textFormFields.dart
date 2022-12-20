@@ -119,6 +119,7 @@ class CharacterTextFormFieldsWidget extends StatefulWidget {
   Icon? icon;
   Widget? suffixText;
   int? maxLength;
+  bool? isEnable;
 
   CharacterTextFormFieldsWidget(
       {required this.errorText,
@@ -134,7 +135,8 @@ class CharacterTextFormFieldsWidget extends StatefulWidget {
       this.maxline: 1,
       this.icon,
       this.suffixText,
-      this.maxLength});
+      this.maxLength,
+      this.isEnable});
 
   @override
   _CharacterTextFormFieldsWidgetState createState() =>
@@ -149,7 +151,7 @@ class _CharacterTextFormFieldsWidgetState
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      child: TextFormField(
+      child: TextFormField(enabled: widget.isEnable,
         controller: widget.controller,
         autovalidateMode: widget.autoValidation,
         keyboardType: widget.textInputType,

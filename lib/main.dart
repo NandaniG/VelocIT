@@ -35,7 +35,7 @@ Future<void> main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
   runApp( MyApp());
-  // StringConstant.isLogIn = false;
+  StringConstant.isLogIn = false;
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   // var loginId=await  prefs.getString(StringConstant.userId);
@@ -151,13 +151,13 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 // home: ForgotPassword(),
                 // initialRoute: StringConstant.isLogIn == true?RoutesName.signInRoute:RoutesName.dashboardRoute,
-                initialRoute: RoutesName.dashboardRoute,
+                initialRoute: RoutesName.splashScreenRoute,
                 onGenerateRoute: Routes.generateRoute,
                 routes: {
                   // '/': (context) => StringConstant.isLogIn == true
                   //     ? SignIn_Screen()
                   //     : DashboardScreen(),
-                  '/': (context) => DashboardScreen(),
+                  '/': (context) => SplashScreen(),
                   '/dashBoardScreen': (context) => const DashboardScreen(),
                   '/editAccountActivity': (context) =>
                       const EditAccountActivity(),

@@ -17,13 +17,14 @@ dependencies:
   http: ^0.13.5
   fluttertoast: ^8.1.1
   another_flushbar: ^1.12.29
+  flutter_svg: ^1.1.6
 
   google_fonts: ^3.0.1
   pin_code_text_field: ^1.8.0
   flutter_keyboard_visibility: ^5.3.0
   intl: ^0.17.0
   shared_preferences: ^2.0.15
-  carousel_pro: ^1.0.0
+#  carousel_pro: ^1.0.0
   carousel_slider: ^4.1.1
   flutter_barcode_scanner: ^2.0.0
   uuid: ^3.0.6

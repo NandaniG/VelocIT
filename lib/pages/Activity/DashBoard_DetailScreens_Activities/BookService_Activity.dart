@@ -1,4 +1,4 @@
-import 'package:carousel_pro/carousel_pro.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/Core/Model/FindProductBySubCategoryModel.dart';
@@ -203,10 +203,44 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
-              ? Container(
+              ?           Container(
+              height: (MediaQuery.of(context).orientation ==
+                  Orientation.landscape)
+                  ? height * .5
+                  : height * 0.2,
+              width: width,
+              child: CarouselSlider(
+                items: snapshot.data?.map((e) {
+                  return Card(
+                    margin: EdgeInsets.zero,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    color: ThemeApp.whiteColor,
+                    child: ClipRRect(
+                        borderRadius:
+                        const BorderRadius.all(Radius.circular(10)),
+                        child:Container(
+                          width: width,
+                          color: Colors.red,
+                          child: Image.asset(
+                            e.sponsorlogo,
+                            fit: BoxFit.fill,
+                          ),
+                        )),
+                  );
+                }).toList(),
+                options: CarouselOptions(
+                    autoPlay: false,
+                    viewportFraction: 1,
+                    height: height * .3),
+              ))
+
+
+          /*Container(
                   height: height * 0.23,
-                  child: Carousel(
-                    images: snapshot.data?.map((e) {
+                  child: CarouselSlider(
+                    items: snapshot.data?.map((e) {
                       return Card(
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -215,28 +249,21 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                         child: ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
-                            child: /*Image.network(
+                            child: *//*Image.network(
                             // width: double.infinity,
                             e.sponsorlogo,
                             fit: BoxFit.fill,
-                          ),*/
+                          ),*//*
                                 Image.asset(
                               e.sponsorlogo,
                               fit: BoxFit.fill,
                             )),
                       );
                     }).toList(),
-                    dotSize: 8.0,
-                    autoplay: false,
-                    dotSpacing: 15.0,
-                    dotColor: ThemeApp.lightGreyTab,
-                    dotIncreasedColor: ThemeApp.darkGreyTab,
-                    indicatorBgPadding: 10.0,
-                    dotBgColor: Colors.transparent,
-                    borderRadius: true,
-                    boxFit: BoxFit.cover,
-                    dotPosition: DotPosition.bottomCenter,
-                  ))
+                    options: CarouselOptions(
+
+                    ),
+                  ))*/
               : const Center(child: CircularProgressIndicator());
         });
   }
