@@ -14,16 +14,16 @@ class CartViewModel with ChangeNotifier {
     cartCreateRetrieve = response;
     notifyListeners();
   }
-
-  Future<void> cartCreateRetrieveViewWithGet(
-      BuildContext context, dynamic data) async {
-    setCartCreateRetrieveList(ApiResponse.loading());
-
-    _myRepo.cartCreateAndRetrieveUsingPost(data).then((value) async {
-      setCartCreateRetrieveList(ApiResponse.completed(value));
-    }).onError((error, stackTrace) {
-      setCartCreateRetrieveList(ApiResponse.error(error.toString()));
-    });
-  }
+  //
+  // Future<void> cartCreateRetrieveViewWithGet(
+  //     BuildContext context, dynamic data) async {
+  //   setCartCreateRetrieveList(ApiResponse.loading());
+  //
+  //   _myRepo.cartCreateAndRetrieveUsingPost(data).then((value) async {
+  //     setCartCreateRetrieveList(ApiResponse.completed(value));
+  //   }).onError((error, stackTrace) {
+  //     setCartCreateRetrieveList(ApiResponse.error(error.toString()));
+  //   });
+  // }
 
 }

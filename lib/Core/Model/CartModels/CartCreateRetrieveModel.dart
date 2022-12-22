@@ -25,16 +25,16 @@ class CartCreateRetrieveModel {
 
 class Payload {
   int? id;
-  Null? ordersForPurchase;
-  Null? ordersSavedLater;
+  var ordersForPurchase;
+  var ordersSavedLater;
   int? tempUserId;
-  Null? scratchedTotal;
-  Null? mrpTotal;
-  Null? totalDiscount;
-  Null? totalDeliveryCharges;
-  Null? cartType;
+  var scratchedTotal;
+  var mrpTotal;
+  var totalDiscount;
+  var totalDeliveryCharges;
+  var cartType;
   bool? isOpen;
-  Null? user;
+ var user;
 
   Payload(
       {this.id,

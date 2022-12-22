@@ -62,6 +62,7 @@ class DashBoardRepository {
       dynamic response = await _apiServices.getGetApiResponse(url);
 
       print("ProductCategoryModel list: " + response.toString());
+
       return response = ProductCategoryModel.fromJson(response);
     } catch (e) {
       throw e;

@@ -280,7 +280,73 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
   }
 
   Widget subListOfCategories(ProductList productList) {
-  return  Container(
+  return   Container(
+      height: 100,
+      alignment: Alignment.center,color: ThemeApp.whiteColor,
+      child:    ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      itemCount: productList!.simpleSubCats!.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ProductListByCategoryActivity(
+                    productList: productList!.simpleSubCats![index]),
+              ));
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0,bottom: 8),
+              child: Container(width: width*.25,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: ThemeApp.containerColor,
+                          width: 1.5),color: ThemeApp.containerColor
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(50)),
+                          child: Image.network(
+                            productList.simpleSubCats![index]
+                                .imageUrl! ??
+                                '',
+                            fit: BoxFit.fill,
+                            height:
+                            MediaQuery.of(context).size.height *
+                                .07,
+                          )??SizedBox(),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: TextFieldUtils().dynamicText(
+                              productList.simpleSubCats![index].name!,
+                              context,
+                              TextStyle(
+                                color: ThemeApp.blackColor,
+                                // fontWeight: FontWeight.w500,
+                                fontSize: height * .02,
+                              )),
+                        ),
+                      )
+                    ],
+                  )),
+            ),
+          );
+        },
+      ));
+
+
+    /*Container(
         height: 200,
         alignment: Alignment.center,color: ThemeApp.whiteColor,
         child: GridView.builder(
@@ -346,93 +412,6 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                   )),
             );
           },
-        ));
-    /*ChangeNotifierProvider<ProductSpecificListViewModel>(
-        create: (BuildContext context) => productViewModel,
-        child: Consumer<ProductSpecificListViewModel>(
-            builder: (context, dashboardProvider, child) {
-
-          switch (dashboardProvider.categoryList.status) {
-            case Status.LOADING:
-              print("Api load");
-
-              return CircularProgressIndicator();
-            case Status.ERROR:
-              print("Api error");
-
-              return Text(dashboardProvider.categoryList.message.toString());
-            case Status.COMPLETED:
-              print("Api calll");
-
-              return Container(
-                  height: 220,
-                  alignment: Alignment.center,
-                  child: GridView.builder(
-                    itemCount: widget.shopByCategoryList!.length,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 20,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 1.2,
-                      crossAxisCount: 3,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductListByCategoryActivity(
-                                      productList:
-                                          widget.shopByCategoryList![index]),
-                            ),
-                          );
-                        },
-                        child: Container(
-                            padding: const EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: ThemeApp.textFieldBorderColor,
-                                  width: 1.5),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    width: 60.0,
-                                    height: 60.0,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Image.network(
-                                      widget
-                                          .shopByCategoryList![index].imageUrl!,
-                                      fit: BoxFit.fitWidth,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .07,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: TextFieldUtils()
-                                      .appliancesTitleTextFields(
-                                          widget
-                                              .shopByCategoryList![index].name!,
-                                          context),
-                                )
-                              ],
-                            )),
-                      );
-                    },
-                  ));
-          }
-        }));*/
+        ));*/
   }
 }

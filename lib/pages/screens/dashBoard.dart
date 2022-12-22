@@ -68,7 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var ID;
 
   @override
-void initState()  {
+  void initState() {
     // TODO: implement initState
     super.initState();
     addCartList();
@@ -91,7 +91,8 @@ void initState()  {
 
   addCartList() async {
     var loginId = await Prefs.instance.getToken(StringConstant.userId);
-print("loginId for add to cart"+loginId.toString());
+    print("loginId for add to cart" + loginId.toString());
+
     if (loginId == '' || loginId == null) {
       print("loginId for add to cart From If");
 
@@ -99,19 +100,25 @@ print("loginId for add to cart"+loginId.toString());
       var r = min + rnd.nextInt(max - min);
       print("$r is in the range of $min and $max");
       ID = r;
-    }else{
+    } else {
       print("loginId for add to cart from else");
 
       ID = loginId;
     }
-String finalId = ID.toString();
+    String finalId = ID.toString();
 
-    print('finalId'+finalId);
+    print('finalId' + finalId);
     Map<String, String> data = {'userId': finalId};
 
     print("cart data pass : " + data.toString());
-    cartViewModel.cartCreateRetrieveViewWithGet(context, data);
+    // cartViewModel.cartCreateRetrieveViewWithGet(context, data);
     CartRepository().cartPostRequest(data, context);
+
+    var cartId = await Prefs.instance.getToken(Prefs.prefCartId);
+
+    Prefs.instance.setToken(Prefs.prefRandomUserId, finalId.toString());
+
+    print("cartId from Pref" + cartId.toString());
   }
 
   getPincode() async {
@@ -669,17 +676,28 @@ String finalId = ID.toString();
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(50)),
-                                            child: Image.network(
-                                              // width: double.infinity,
-                                              serviceList[index]
-                                                  .productCategoryImageId!,
-                                              fit: BoxFit.fill,
+                                            child: serviceList[index]
+                                                    .productCategoryImageId!
+                                                    .isNotEmpty
+                                                ? Image.network(
+                                                    // width: double.infinity,
+                                                    serviceList[index]
+                                                        .productCategoryImageId!,
+                                                    fit: BoxFit.fill,
 
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .055,
-                                            ),
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            .055,
+                                                  )
+                                                : SizedBox(
+                                                    // height: height * .28,
+                                                    width: width,
+                                                    child: Icon(
+                                                      Icons.image_outlined,
+                                                      size: 50,
+                                                    )),
                                           ),
                                           //     ClipRRect(
                                           //   borderRadius: const BorderRadius.all(
@@ -821,7 +839,8 @@ String finalId = ID.toString();
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(50)),
-                                            child: Image.network(
+                                            child:serviceList[index]
+                                                .productCategoryImageId!.isNotEmpty? Image.network(
                                               // width: double.infinity,
                                               serviceList[index]
                                                   .productCategoryImageId!,
@@ -831,7 +850,13 @@ String finalId = ID.toString();
                                                       .size
                                                       .height *
                                                   .055,
-                                            ),
+                                            ): SizedBox(
+                                // height: height * .28,
+                                width: width,
+                                child: Icon(
+                                  Icons.image_outlined,
+                                  size: 50,
+                                )),
                                           ),
                                           //     ClipRRect(
                                           //   borderRadius: const BorderRadius.all(
@@ -1005,136 +1030,169 @@ String finalId = ID.toString();
 
               return Container(
                 height: MediaQuery.of(context).size.height * .35,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: serviceList!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetailsActivity(
-                                    id: serviceList[index].id,
-                                    // productList: subProductList[index],
-                                    // productSpecificListViewModel:
-                                    //     productSpecificListViewModel,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                                // height: MediaQuery.of(context).size.height * .3,
+                child: serviceList!.isNotEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: serviceList!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProductDetailsActivity(
+                                        id: serviceList[index].id,
+                                        // productList: subProductList[index],
+                                        // productSpecificListViewModel:
+                                        //     productSpecificListViewModel,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                    // height: MediaQuery.of(context).size.height * .3,
 
-                                // width: 200,
-                                width: MediaQuery.of(context).size.width * .45,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.tealButtonColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .26,
-                                      width: MediaQuery.of(context).size.width *
-                                          .45,
-                                      decoration: const BoxDecoration(
-                                          color: ThemeApp.textFieldBorderColor,
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            topLeft: Radius.circular(10),
-                                          )),
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                        ),
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          serviceList[index]
-                                              .imageUrls![0]
-                                              .imageUrl!,
-                                          fit: BoxFit.fill,
+                                    // width: 200,
+                                    width:
+                                        MediaQuery.of(context).size.width * .45,
+                                    decoration: const BoxDecoration(
+                                        color: ThemeApp.tealButtonColor,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                              .07,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 10),
-                                      child: Text(serviceList[index].shortName!,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color: ThemeApp.whiteColor,
-                                              fontSize: height * .022,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                    ),
-                                    Flexible(
-                                      child: Container(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, right: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            //discount
-                                            Text(
-                                                indianRupeesFormat.format(
+                                              .26,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .45,
+                                          decoration: const BoxDecoration(
+                                              color:
+                                                  ThemeApp.textFieldBorderColor,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              )),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
+                                            ),
+                                            child: serviceList[index]
+                                                    .imageUrls![0]
+                                                    .imageUrl!
+                                                    .isNotEmpty
+                                                ? Image.network(
+                                                    // width: double.infinity,
                                                     serviceList[index]
-                                                            .defaultSellPrice ??
-                                                        0.0),
-                                                style: TextStyle(
-                                                    color: ThemeApp.whiteColor,
-                                                    fontSize: height * .022,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                            //priginal
-                                            TextFieldUtils().dynamicText(
-                                                indianRupeesFormat.format(
-                                                    serviceList[index]
-                                                            .defaultMrp ??
-                                                        0.0),
-                                                context,
-                                                TextStyle(
-                                                    color: ThemeApp.whiteColor,
-                                                    fontSize: height * .02,
-                                                    fontWeight: FontWeight.w400,
-                                                    decoration: TextDecoration
-                                                        .lineThrough,
-                                                    decorationThickness: 1.5)),
-                                          ],
+                                                        .imageUrls![0]
+                                                        .imageUrl!,
+                                                    fit: BoxFit.fill,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            .07,
+                                                  )
+                                                : SizedBox(
+                                                    // height: height * .28,
+                                                    width: width,
+                                                    child: Icon(
+                                                      Icons.image_outlined,
+                                                      size: 50,
+                                                    )),
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                )),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * .03,
-                          )
-                        ],
-                      );
-                    }),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .01,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          child: Text(
+                                              serviceList[index].shortName!,
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  color: ThemeApp.whiteColor,
+                                                  fontSize: height * .022,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .01,
+                                        ),
+                                        Flexible(
+                                          child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 10, right: 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                //discount
+                                                Text(
+                                                    indianRupeesFormat.format(
+                                                        serviceList[index]
+                                                                .defaultSellPrice ??
+                                                            0.0),
+                                                    style: TextStyle(
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        fontSize: height * .022,
+                                                        fontWeight:
+                                                            FontWeight.w500)),
+                                                //priginal
+                                                TextFieldUtils().dynamicText(
+                                                    indianRupeesFormat.format(
+                                                        serviceList[index]
+                                                                .defaultMrp ??
+                                                            0.0),
+                                                    context,
+                                                    TextStyle(
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        fontSize: height * .02,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough,
+                                                        decorationThickness:
+                                                            1.5)),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * .03,
+                              )
+                            ],
+                          );
+                        })
+                    : SizedBox(),
               );
             default:
               return Text("No Data found!");
@@ -1372,7 +1430,9 @@ String finalId = ID.toString();
                                               topRight: Radius.circular(10),
                                               topLeft: Radius.circular(10),
                                             ),
-                                            child: Image.network(
+                                            child: serviceList[index]
+                                                .imageUrls![0]
+                                                .imageUrl!.isNotEmpty?Image.network(
                                               // width: double.infinity,
                                               serviceList[index]
                                                   .imageUrls![0]
@@ -1383,7 +1443,13 @@ String finalId = ID.toString();
                                                       .size
                                                       .height *
                                                   .07,
-                                            ),
+                                            ): SizedBox(
+                                              // height: height * .28,
+                                              width: width,
+                                              child: Icon(
+                                                Icons.image_outlined,
+                                                size: 50,
+                                              )),
                                           ),
                                         ),
                                         Padding(
@@ -1774,17 +1840,28 @@ String finalId = ID.toString();
                                           topRight: Radius.circular(10),
                                           topLeft: Radius.circular(10),
                                         ),
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          serviceList[index]
-                                              .imageUrls![0]
-                                              .imageUrl!,
-                                          fit: BoxFit.fill,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .07,
-                                        ),
+                                        child: serviceList[index]
+                                                .imageUrls![0]
+                                                .imageUrl!
+                                                .isNotEmpty
+                                            ? Image.network(
+                                                // width: double.infinity,
+                                                serviceList[index]
+                                                    .imageUrls![0]
+                                                    .imageUrl!,
+                                                fit: BoxFit.fill,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .07,
+                                              )
+                                            : SizedBox(
+                                                // height: height * .28,
+                                                width: width,
+                                                child: Icon(
+                                                  Icons.image_outlined,
+                                                  size: 50,
+                                                )),
                                       ),
                                     ),
                                     SizedBox(
@@ -2085,13 +2162,24 @@ String finalId = ID.toString();
                                           topRight: Radius.circular(10),
                                           topLeft: Radius.circular(10),
                                         ),
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          serviceList![index]
-                                              .imageUrls![0]
-                                              .imageUrl!,
-                                          fit: BoxFit.fill,
-                                        ),
+                                        child: serviceList![index]
+                                                .imageUrls![0]
+                                                .imageUrl!
+                                                .isNotEmpty
+                                            ? Image.network(
+                                                // width: double.infinity,
+                                                serviceList![index]
+                                                    .imageUrls![0]
+                                                    .imageUrl!,
+                                                fit: BoxFit.fill,
+                                              )
+                                            : SizedBox(
+                                                // height: height * .28,
+                                                width: width,
+                                                child: Icon(
+                                                  Icons.image_outlined,
+                                                  size: 50,
+                                                )),
                                       ),
                                     ),
                                   ],

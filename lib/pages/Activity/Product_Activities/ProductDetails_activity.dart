@@ -11,6 +11,7 @@ import 'package:velocit/utils/utils.dart';
 import '../../../Core/Model/productSpecificListModel.dart';
 import '../../../Core/ViewModel/product_listing_view_model.dart';
 import '../../../Core/data/responses/status.dart';
+import '../../../Core/repository/cart_repository.dart';
 import '../../../services/models/CartModel.dart';
 import '../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../services/models/ProductDetailModel.dart';
@@ -49,7 +50,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   double width = 0.0;
   int imageVariantIndex = 0;
   late List<CartProductList> cartList;
-  int counterPrice = 0;
+  int counterPrice = 1;
+
   int badgeData = 0;
   String sellerAvailable = "";
   Random random = new Random();
@@ -63,6 +65,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
   @override
   void initState() {
+    imageVariantIndex;
     // TODO: implement initState
     super.initState();
     randomNumber = random.nextInt(100);
@@ -71,7 +74,6 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       10,
       4,
     );
-
     print("Random number : " + data.toString());
     print("widget.id! number : " + widget.id!.toString());
 
@@ -106,7 +108,26 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       print("_________widget.productListcart......counterPrice" +
           counterPrice.toString());
     }*/
-    // remainingCounters();
+  }
+
+// update cart list
+  updateCart(var merchantId, int quantity) async {
+    var cartId = await Prefs.instance.getToken(Prefs.prefCartId);
+    var prefUserId = await Prefs.instance.getToken(
+      Prefs.prefRandomUserId,
+    );
+    print("cartId from Pref" + cartId.toString());
+    print("prefUserId from Pref" + prefUserId.toString());
+
+    Map<String, String> data = {
+      "cartId": cartId.toString(),
+      "userId": prefUserId.toString(),
+      "productId": widget.id.toString(),
+      "merchantId": merchantId.toString(),
+      "qty": quantity.toString()
+    };
+    print("update cart DATA" + data.toString());
+    CartRepository().updateCartPostRequest(data, context);
   }
 
   remainingCounters() async {
@@ -245,6 +266,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   SizedBox(
                                     height: height * .01,
                                   ),
+                                  counterWidget(subProductList[i]),
+                                  SizedBox(
+                                    height: height * .01,
+                                  ),
                                   addToCart(subProductList![i]),
                                   SizedBox(
                                     height: height * .03,
@@ -268,7 +293,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                             }
                           }
                       }
-                      return Container(     height: height*.8,
+                      return Container(
+                        height: height * .8,
                         alignment: Alignment.center,
                         child: TextFieldUtils().dynamicText(
                             'No Match found!',
@@ -365,13 +391,21 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
               child: subProductList!.imageUrls![0].imageUrl!.isNotEmpty
                   ? Image.network(
                         // width: double.infinity,
-                        subProductList!.imageUrls![0].imageUrl! ?? '',
+                        subProductList!
+                                .imageUrls![imageVariantIndex].imageUrl! ??
+                            '',
                         fit: BoxFit.fill,
                         width: width,
                         height: height * .28,
                       ) ??
                       SizedBox()
-                  : SizedBox( height: height * .28,width: width, child: Icon(Icons.image_outlined,size: 50,)),
+                  : SizedBox(
+                      height: height * .28,
+                      width: width,
+                      child: Icon(
+                        Icons.image_outlined,
+                        size: 50,
+                      )),
             ),
           ),
           variantImages(subProductList),
@@ -519,6 +553,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   onTap: () {
                     setState(() {});
                     imageVariantIndex = index;
+                    print(imageVariantIndex);
                   },
                   child: Container(
                     // width: width * 0.24,
@@ -549,6 +584,164 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
+  Widget counterWidget(Content subProductList) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: TextFieldUtils().dynamicText(
+                'Quantity : ',
+                context,
+                TextStyle(
+                    color: ThemeApp.blackColor,
+                    // fontWeight: FontWeight.w500,
+                    fontSize: height * .023,
+                    fontWeight: FontWeight.w500)),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * .05,
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              height: height * 0.06,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+                color: ThemeApp.whiteColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          counterPrice--;
+                          remainingCounters();
+
+                          var data = {
+                            "user_id": userId.toString(),
+                            "item_code": subProductList.productCode.toString(),
+                            "qty": counterPrice.toString()
+                          };
+                          print("data maping " + data.toString());
+                          productSpecificListViewModel.cartListWithPut(
+                              context, data);
+                        });
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: ThemeApp.whiteColor,
+                        ),
+                        child: const Icon(
+                          Icons.remove,
+                          // size: 20,
+                          color: ThemeApp.tealButtonColor,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8.0, right: 8, top: 0, bottom: 0),
+                      child: Text(
+                        counterPrice.toString().padLeft(2, '0'),
+                        style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.height * .016,
+                            fontWeight: FontWeight.w400,
+                            overflow: TextOverflow.ellipsis,
+                            color: ThemeApp.tealButtonColor),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          counterPrice++;
+                          remainingCounters();
+
+                          //badge counting
+                          badgeData = 0;
+
+                          ///counting will manage after api
+                          /*   for (int i = 0;
+                                            i < cartProvider.cartList.length;
+                                            i++) {
+                                              if (widget.productList.shortName==
+                                                  cartProvider.cartList[i]
+                                                      .cartProductsDescription) {
+                                                widget.productList[
+                                                "productCartMaxCounter"] =
+                                                    counterPrice;
+                                                widget.value.cartList[i]
+                                                    .cartProductsTempCounter =
+                                                widget.productList[
+                                                "productCartMaxCounter"];
+                                              }
+                                              //badge counting
+                                              print("Badge counting before" +
+                                                  badgeData.toString());
+                                              print("Badge cTemp Counting" +
+                                                  widget.value.cartList[i]
+                                                      .cartProductsTempCounter
+                                                      .toString());
+                                              print("Badge Product name" +
+                                                  widget.value.cartList[i]
+                                                      .cartProductsDescription
+                                                      .toString());
+
+                                              badgeData = badgeData +
+                                                  widget.value.cartList[i]
+                                                      .cartProductsTempCounter!;
+                                              widget.value.badgeFinalCount =
+                                                  badgeData;
+                                            }
+                                            print("Badge counting" +
+                                                badgeData.toString());
+                                            //setting value of count to the badge
+*/
+
+                          ///api for counting
+
+                          var data = {
+                            "user_id": userId.toString(),
+                            // "item_code": widget
+                            //     .productList.categoryCode
+                            //     .toString(),
+                            "item_code": '1',
+                            "qty": counterPrice.toString()
+                          };
+                          print("data maping " + data.toString());
+                          productSpecificListViewModel.cartListWithPut(
+                              context, data);
+                        });
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: ThemeApp.whiteColor,
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          // size: 20,
+                          color: ThemeApp.tealButtonColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget addToCart(Content subProductList) {
     return Consumer<CartManageProvider>(
         builder: (context, cartProvider, child) {
@@ -562,58 +755,62 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    counterPrice == 0
-                        ? Expanded(
-                            flex: 1,
-                            child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    counterPrice++;
-                                    userId = 1;
-                                    remainingCounters();
-                                    // addProductInCartBadge(
-                                    //     productProvider, homeProvider);
-                                    print("Badge counting before..." +
-                                        counterPrice.toString());
-                                    if (counterPrice > 0) {
-                                      cartProvider.badgeFinalCount =
-                                          cartProvider.badgeFinalCount + 1;
-                                      print("widget.value.badgeFinalCount" +
-                                          cartProvider.badgeFinalCount
-                                              .toString());
-                                    } else {}
-                                    var data = {
-                                      "user_id": userId.toString(),
-                                      "item_code":
-                                          subProductList.productCode.toString(),
-                                      "qty": counterPrice.toString()
-                                    };
-                                    print("data maping " + data.toString());
-                                    productSpecificListViewModel
-                                        .cartListWithPut(context, data);
-                                  });
-                                },
-                                child: Container(
-                                    height: height * 0.06,
-                                    alignment: Alignment.center,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      color: ThemeApp.whiteColor,
-                                    ),
-                                    child: Text(
-                                      "Add to Cart",
-                                      style: TextStyle(
-                                        fontSize:
-                                            MediaQuery.of(context).size.height *
-                                                .021,
-                                        fontWeight: FontWeight.w500,
-                                        overflow: TextOverflow.ellipsis,
-                                        color: ThemeApp.tealButtonColor,
-                                      ),
-                                    ))))
-                        : Expanded(
+                    /*counterPrice == 0
+                        ?*/
+                    Expanded(
+                        flex: 1,
+                        child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                // counterPrice++;
+                                userId = 1;
+                                remainingCounters();
+                                // addProductInCartBadge(
+                                //     productProvider, homeProvider);
+                                print("Badge counting before..." +
+                                    counterPrice.toString());
+                                if (counterPrice > 0) {
+                                  cartProvider.badgeFinalCount =
+                                      cartProvider.badgeFinalCount + 1;
+                                  print("widget.value.badgeFinalCount" +
+                                      cartProvider.badgeFinalCount.toString());
+                                } else {}
+                                var data = {
+                                  "user_id": userId.toString(),
+                                  "item_code":
+                                      subProductList.productCode.toString(),
+                                  "qty": counterPrice.toString()
+                                };
+                                print("data maping " + data.toString());
+                                productSpecificListViewModel.cartListWithPut(
+                                    context, data);
+
+                                // method for update cart value
+                                updateCart(subProductList.merchants![0].id,
+                                    counterPrice);
+                              });
+                            },
+                            child: Container(
+                                height: height * 0.06,
+                                alignment: Alignment.center,
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  color: ThemeApp.whiteColor,
+                                ),
+                                child: Text(
+                                  "Add to Cart",
+                                  style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            .021,
+                                    fontWeight: FontWeight.w500,
+                                    overflow: TextOverflow.ellipsis,
+                                    color: ThemeApp.tealButtonColor,
+                                  ),
+                                )))),
+                    /* : Expanded(
                             flex: 1,
                             child: Container(
                               height: height * 0.06,
@@ -688,7 +885,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                           badgeData = 0;
 
                                           ///counting will manage after api
-                                          /*   for (int i = 0;
+                                          */
+                    /*   for (int i = 0;
                                     i < cartProvider.cartList.length;
                                     i++) {
                                       if (widget.productList.shortName==
@@ -724,6 +922,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                         badgeData.toString());
                                     //setting value of count to the badge
 */
+                    /*
 
                                           ///api for counting
 
@@ -756,7 +955,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 ),
                               ),
                             ),
-                          ),
+                          ),*/
                     SizedBox(
                       width: MediaQuery.of(context).size.width * .05,
                     ),

@@ -85,6 +85,9 @@ class Prefs {
   Prefs._privateConstructor();
 
   static final Prefs instance = Prefs._privateConstructor();
+  static String prefCartId = "prefCartId";
+  static String prefRandomUserId = "prefRandomUserId";
+
 
   Future<void> setDoubleToken(String key, double value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

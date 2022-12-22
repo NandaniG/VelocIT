@@ -61,8 +61,8 @@ class _ProductListByCategoryActivityState
     super.initState();
 
     productSpecificListViewModel.productBySubCategoryWithGet(
-      pageCount,
-      size,
+      0,
+      10,
       widget.productList!.id!,
     );
 
@@ -483,7 +483,9 @@ class _ProductListByCategoryActivityState
                                                   topRight: Radius.circular(10),
                                                   topLeft: Radius.circular(10),
                                                 ),
-                                                child: Image.network(
+                                                child: subProductList[index]
+                          .imageUrls![0]
+                          .imageUrl!.isNotEmpty?Image.network(
                                                   subProductList[index]
                                                       .imageUrls![0]
                                                       .imageUrl!,
@@ -500,7 +502,13 @@ class _ProductListByCategoryActivityState
                                                               .size
                                                               .height *
                                                           .1,
-                                                ),
+                                                ) :SizedBox(
+                                                  // height: height * .28,
+                                                    width: width,
+                                                    child: Icon(
+                                                      Icons.image_outlined,
+                                                      size: 50,
+                                                    )),
                                               ),
                                             ),
                                           ),
