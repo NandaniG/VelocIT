@@ -173,14 +173,14 @@ class _SignUpState extends State<SignUp> {
                       height: MediaQuery.of(context).size.height * .02,
                     ),
                     TextFieldUtils().asteriskTextField(
-                        StringUtils.changePassword, context),
+                        StringUtils.confirmPassword, context),
 
                     PasswordTextFormFieldsWidget(
                         errorText: StringUtils.passwordError,
                         textInputType: TextInputType.text,
                         controller: confirmPassword,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: StringUtils.changePassword,
+                        hintText: StringUtils.confirmPassword,
                         onChange: (val) {
                           setState(() {
                             if (confirmPassword.text != password.text) {

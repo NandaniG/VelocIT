@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:velocit/Core/data/responses/api_response.dart';
 import '../Model/FindProductBySubCategoryModel.dart';
 import '../Model/CartModel.dart';
+import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
 import '../Model/productSpecificListModel.dart';
 import '../repository/product_subCategory_repository.dart';
@@ -11,12 +12,14 @@ import '../repository/productlisting_repository.dart';
 class ProductSpecificListViewModel with ChangeNotifier {
   final _myRepo = ProductSpecificListRepository();
   final _mySubCategoryRepo = ProductSubCategoryRepository();
+  final _myProductListingRepo = ProductSubCategoryRepository();
 
   ApiResponse<ProductSpecificListModel> productSpecificList =
       ApiResponse.loading();
   ApiResponse<CartListModel> cartList = ApiResponse.loading();
   ApiResponse<ProductCategoryModel> productCategories = ApiResponse.loading();
   ApiResponse<FindProductBySubCategoryModel> productSubCategory = ApiResponse.loading();
+  ApiResponse<ProductAllPaginatedModel> productListingResponse = ApiResponse.loading();
   bool isHome = false;
   bool isBottomAppCart = false;
 
@@ -26,6 +29,10 @@ class ProductSpecificListViewModel with ChangeNotifier {
   }
   setProductSubCategoryList(ApiResponse<FindProductBySubCategoryModel> response) {
     productSubCategory = response;
+    notifyListeners();
+  }
+  getProductListing(ApiResponse<ProductAllPaginatedModel> response) {
+    productListingResponse = response;
     notifyListeners();
   }
 
@@ -67,24 +74,12 @@ class ProductSpecificListViewModel with ChangeNotifier {
     setProductSubCategoryList(ApiResponse.loading());
 
     _mySubCategoryRepo.getProductBySubCategoryList(page,size, subCategoryId).then((value) async {
+      // productSubCategory.data!.payload!.content! .addAll(value.payload!.content!);
+
       setProductSubCategoryList(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       setProductSubCategoryList(ApiResponse.error(error.toString()));
     });
   }
-/*var productCategoryList ;
-  Future<void> productCategorieWithGet() async {
-    getProductCategoriesList(ApiResponse.loading());
 
-    _myRepo.getProductCategoryList().then((value) async {
-
-      getProductCategoriesList(ApiResponse.completed(value));
-      print('value.productList![1].productCategoryImageId');
-      print(value.productList![1].productCategoryImageId);
-      productCategoryList =value.productList![1].productCategoryImageId;
-    }).onError((error, stackTrace) {
-
-      getProductCategoriesList(ApiResponse.error(error.toString()));
-    });
-  }*/
 }

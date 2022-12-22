@@ -18,10 +18,12 @@ import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 
 import '../../Core/ViewModel/dashboard_view_model.dart';
+import '../../Core/data/responses/status.dart';
 import '../../pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import '../../pages/Activity/Product_Activities/Products_List.dart';
+import '../../pages/SearchContent/searchProductListScreen.dart';
 import '../../pages/homePage.dart';
 import '../../pages/screens/dashBoard.dart';
 import '../../pages/screens/offers_Activity.dart';
@@ -64,7 +66,8 @@ Widget appBarWidget(
           width: MediaQuery.of(context).size.width,
           color: ThemeApp.appBackgroundColor,
           child: AppBar(
-            centerTitle: true,        titleSpacing: 5,
+            centerTitle: true,
+            titleSpacing: 5,
 
             // elevation: 1,
             backgroundColor: ThemeApp.appBackgroundColor,
@@ -75,29 +78,32 @@ Widget appBarWidget(
                 color: ThemeApp.appBackgroundColor,
               ),
             ),
-              automaticallyImplyLeading: false,
-            leadingWidth:  Navigator.canPop(context)?width * .1:0,
+            automaticallyImplyLeading: false,
+            leadingWidth: Navigator.canPop(context) ? width * .1 : 0,
 
-            leading: Navigator.canPop(context)?InkWell(
-            onTap: () {
-              Navigator.of(context).pop();
-              // Provider.of<ProductProvider>(context, listen: false);
-            },
-            child: Container(
-              margin: const EdgeInsets.only(left: 15),
-              child: Center(
-                child: Transform.scale(
-                  scale:1.5,
-                  child:Image.asset(
-                    'assets/appImages/backArrow.png',
-                    color: ThemeApp.primaryNavyBlackColor,
-                    // height: height*.001,
-
-                  ),),
-              ),
-            ),
-          ):SizedBox(),
-         /*   leading: Consumer<HomeProvider>(builder: (context, provider, child) {
+            leading: Navigator.canPop(context)
+                ? InkWell(
+                    onTap: () {
+                      (() {});
+                      Navigator.of(context).pop();
+                      // Provider.of<ProductProvider>(context, listen: false);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 15),
+                      child: Center(
+                        child: Transform.scale(
+                          scale: 1.5,
+                          child: Image.asset(
+                            'assets/appImages/backArrow.png',
+                            color: ThemeApp.primaryNavyBlackColor,
+                            // height: height*.001,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox(),
+            /*   leading: Consumer<HomeProvider>(builder: (context, provider, child) {
                 return  Consumer  <ProductProvider>(builder: (context, product, child) {
 
                   return StringConstant.isLogIn == false
@@ -142,13 +148,13 @@ Widget appBarWidget(
                                 ),
                                 child: Icon(Icons.account_circle_rounded,
                                     size:
-                                        40) *//*Container(
+                                        40) */ /*Container(
                               alignment: Alignment.center,
                               child: const Image(
                                 image: NetworkImage(
                                     'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
                                 fit: BoxFit.fill,
-                              ))*//*
+                              ))*/ /*
                                 ,
                               ),
                             ),
@@ -160,29 +166,30 @@ Widget appBarWidget(
             // leadingWidth: width * .06,
             title: titleWidget,
             // Row
-            actions: [              InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationScreen(),
+            actions: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationScreen(),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 13, bottom: 13, right: 15, left: 15),
+                  child: Image.asset(
+                    'assets/appImages/bellIcon.png',
+                    // width: double.infinity,
+                    height: height * .11,
+                    color: ThemeApp.primaryNavyBlackColor,
+                    fit: BoxFit.fill,
                   ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 13,bottom: 13,right: 15,left: 15),
-                child: Image.asset(
-                  'assets/appImages/bellIcon.png',
-                  // width: double.infinity,
-                  height: height*.11,
-                  color: ThemeApp.primaryNavyBlackColor,
-                  fit: BoxFit.fill,
                 ),
               ),
-            ),
-
               Consumer<HomeProvider>(builder: (context, provider, child) {
-                return  Consumer  <ProductProvider>(builder: (context, product, child) {
-
+                return Consumer<ProductProvider>(
+                    builder: (context, product, child) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 5),
                     child: Stack(
@@ -205,59 +212,59 @@ Widget appBarWidget(
                             provider.isHome = true;
 
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CartDetailsActivity(
-                                        value: product, productList: provider.cartProductList)),
-                                  );
-
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CartDetailsActivity(
+                                      value: product,
+                                      productList: provider.cartProductList)),
+                            );
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 13,bottom: 13,right: 15),
+                            padding: const EdgeInsets.only(
+                                top: 13, bottom: 13, right: 15),
                             child: Image.asset(
                               'assets/appImages/shoppingCart.png',
                               // width: double.infinity,
-                              height: height*.11,
+                              height: height * .11,
                               color: ThemeApp.primaryNavyBlackColor,
                               fit: BoxFit.fill,
                             ),
-
                           ),
                         ),
-                        product.badgeFinalCount==0?SizedBox() :        Positioned(
-                          right: 5,
-                          top: 2,
-                          child: Container(
-                            padding: EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            constraints: BoxConstraints(
-                                minWidth: 22,
-                                minHeight: 10,
-                                maxHeight: 25,
-                                maxWidth: 25),
-                            child: Padding(
-                              padding: const EdgeInsets.all(1),
-                              child: Text(
-                                '${product.badgeFinalCount}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
+                        product.badgeFinalCount == 0
+                            ? SizedBox()
+                            : Positioned(
+                                right: 5,
+                                top: 2,
+                                child: Container(
+                                  padding: EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  constraints: BoxConstraints(
+                                      minWidth: 22,
+                                      minHeight: 10,
+                                      maxHeight: 25,
+                                      maxWidth: 25),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(1),
+                                    child: Text(
+                                      '${product.badgeFinalCount}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        )
+                              )
                       ],
                     ),
                   );
-                }
-                );
-              }
-              ),
+                });
+              }),
             ],
           ),
         ),
@@ -304,13 +311,13 @@ Widget appBar_backWidget(
               // Provider.of<ProductProvider>(context, listen: false);
             },
             child: Transform.scale(
-                scale: 0.7,
-                child:Image.asset(
-                  'assets/appImages/backArrow.png',
-                  color: ThemeApp.primaryNavyBlackColor,
-                  // height: height*.001,
-
-                ),),
+              scale: 0.7,
+              child: Image.asset(
+                'assets/appImages/backArrow.png',
+                color: ThemeApp.primaryNavyBlackColor,
+                // height: height*.001,
+              ),
+            ),
           ),
 
           // leadingWidth: width * .06,
@@ -335,115 +342,149 @@ Widget searchBar(BuildContext context) {
   double width = 0.0;
   height = MediaQuery.of(context).size.height;
   width = MediaQuery.of(context).size.width;
-  return Consumer<HomeProvider>(builder: (context, provider, child) {
-    return Container(
-      width: width,
-      height: height * .1,
-      // color: ThemeApp.redColor,
-      padding: const EdgeInsets.only(top: 10, left: 0),
-      alignment: Alignment.center,
-      child: TextFormField(
-        textInputAction: TextInputAction.search,
+  DashboardViewModel productCategories = DashboardViewModel();
+  productCategories.productCategoryListingWithGet();
 
-        controller: StringConstant.controllerSpeechToText,
-        onFieldSubmitted: (value) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ProductListByCategoryActivity(
-                  productList: provider.jsonData["shopByCategoryList"][1]
-                      ["subShopByCategoryList"][1]),
-            ),
-          );
-          if (kDebugMode) {
-            print("search.........");
-          } // showDialog(
-          //     context: context,
-          //     builder: (BuildContext context) {
-          //       return OkDialog(text: StringConstant.controllerSpeechToText.text);
-          //     });
-        },
-        onChanged: (val) {
-          // print("StringConstant.speechToText..." +
-          //     StringConstant.speechToText);
-          // (() {
-          //   if (val.isEmpty) {
-          //     val = StringConstant.speechToText;
-          //   } else {
-          //     StringConstant.speechToText = StringConstant.controllerSpeechToText.text;
-          //   }
-          // });
-        },
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: ThemeApp.whiteColor,
-          isDense: true,
-          // contentPadding:
-          //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-          /* -- Text and Icon -- */
-          hintText: "Search for Products",
-          hintStyle: const TextStyle(
-            fontSize: 14,
-            color: ThemeApp.darkGreyTab,
-          ),prefixIconColor: ThemeApp.primaryNavyBlackColor,
-          prefixIcon: /*const Icon(
-            Icons.search,
-            size: 26,
-            color: Colors.black54,
-          ),*/
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: SvgPicture.asset(
-                'assets/appImages/searchIcon.svg',
-                color: ThemeApp.primaryNavyBlackColor,
-                semanticsLabel: 'Acme Logo',
-              theme: SvgTheme(currentColor: ThemeApp.primaryNavyBlackColor,),
+  return ChangeNotifierProvider<DashboardViewModel>(
+    create: (BuildContext context) => productCategories,
+    child: Consumer<DashboardViewModel>(
+        builder: (context, dashBoardProvider, child) {
 
-              height: height*.001,
+      return Consumer<HomeProvider>(builder: (context, provider, child) {
+        return Container(
+          width: width,
+          height: height * .1,
+          // color: ThemeApp.redColor,
+          padding: const EdgeInsets.only(top: 10, left: 0),
+          alignment: Alignment.center,
+          child: TextFormField(
+            textInputAction: TextInputAction.search,
 
-            ),
-          ),
-          suffixIcon: InkWell(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SpeechToTextDialog();
-                  });
+            controller: StringConstant.controllerSpeechToText,
+            onFieldSubmitted: (value) {
+              print("Getting Value"+productCategories.productCategoryList.data!.productList![0].name. toString());
+              switch (dashBoardProvider.productCategoryList.status) {
+                case Status.LOADING:
+                  return print("Getting Value");
+                case Status.COMPLETED:
+                  if (kDebugMode) {
+                    print("Api calll");
+                  }
+
+                  List<ProductList>? serviceList =
+                      productCategories.productCategoryList.data!.productList;
+                  productCategories.getProductBySearchTermsWithGet(
+                    0,
+                    10,
+                    StringConstant.controllerSpeechToText.text .toString(),
+                  );
+                Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SearchProductListScreen(
+),
+                ),
+              );
+              }
+              /*  Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductListByCategoryActivity(
+                      productList: productCategories.),
+                ),
+              );*/
+              if (kDebugMode) {
+                print("search.........");
+              } // showDialog(
+              //     context: context,
+              //     builder: (BuildContext context) {
+              //       return OkDialog(text: StringConstant.controllerSpeechToText.text);
+              //     });
             },
-            child:    Padding(
-          padding: const EdgeInsets.all(10),
-          child: SvgPicture.asset(
-            'assets/appImages/miceIcon.svg',
-            color: ThemeApp.primaryNavyBlackColor,
-            semanticsLabel: 'Acme Logo',
-            theme: SvgTheme(currentColor: ThemeApp.primaryNavyBlackColor,),
-
-            height: height*.001,
-
+            onChanged: (val) {
+              // print("StringConstant.speechToText..." +
+              //     StringConstant.speechToText);
+              // (() {
+              //   if (val.isEmpty) {
+              //     val = StringConstant.speechToText;
+              //   } else {
+              //     StringConstant.speechToText = StringConstant.controllerSpeechToText.text;
+              //   }
+              // });
+            },
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: ThemeApp.whiteColor,
+              isDense: true,
+              // contentPadding:
+              //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              /* -- Text and Icon -- */
+              hintText: "Search for Products",
+              hintStyle: const TextStyle(
+                fontSize: 14,
+                color: ThemeApp.darkGreyTab,
+              ),
+              prefixIconColor: ThemeApp.primaryNavyBlackColor,
+              prefixIcon: /*const Icon(
+                  Icons.search,
+                  size: 26,
+                  color: Colors.black54,
+                ),*/
+                  Padding(
+                padding: const EdgeInsets.all(10),
+                child: SvgPicture.asset(
+                  'assets/appImages/searchIcon.svg',
+                  color: ThemeApp.primaryNavyBlackColor,
+                  semanticsLabel: 'Acme Logo',
+                  theme: SvgTheme(
+                    currentColor: ThemeApp.primaryNavyBlackColor,
+                  ),
+                  height: height * .001,
+                ),
+              ),
+              suffixIcon: InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SpeechToTextDialog();
+                      });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: SvgPicture.asset(
+                    'assets/appImages/miceIcon.svg',
+                    color: ThemeApp.primaryNavyBlackColor,
+                    semanticsLabel: 'Acme Logo',
+                    theme: SvgTheme(
+                      currentColor: ThemeApp.primaryNavyBlackColor,
+                    ),
+                    height: height * .001,
+                  ),
+                ), /*const Icon(
+                    Icons.mic,
+                    size: 26,
+                    color: Colors.black54,
+                  ),*/
+              ),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide:
+                      const BorderSide(color: ThemeApp.redColor, width: 1)),
+              // OutlineInputBorder
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                      color: ThemeApp.appBackgroundColor, width: 1)),
+              // OutlineInputBorder
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                      color: ThemeApp.appBackgroundColor, width: 1)),
+            ), // InputDecoration
           ),
-        ), /*const Icon(
-              Icons.mic,
-              size: 26,
-              color: Colors.black54,
-            ),*/
-          ),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: ThemeApp.redColor, width: 1)),
-          // OutlineInputBorder
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                  color: ThemeApp.appBackgroundColor, width: 1)),
-          // OutlineInputBorder
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                  color: ThemeApp.appBackgroundColor, width: 1)),
-        ), // InputDecoration
-      ),
-    );
-  });
+        );
+      });
+    }),
+  );
 }
 
 Widget addressWidget(BuildContext context, String addressString) {
@@ -850,12 +891,9 @@ class _ScannerWidgetState extends State<ScannerWidget> {
     );
   }
 
-  Widget _loading() => const Padding(
+  Widget _loading() =>  Padding(
         padding: EdgeInsets.all(8.0),
-        child: Center(
-            child: CircularProgressIndicator(
-          color: ThemeApp.darkGreyColor,
-        )),
+        child: TextFieldUtils().circularBar(context),
       );
 
   Future<void> scanQR() async {

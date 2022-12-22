@@ -683,6 +683,15 @@ class TextFieldUtils {
       ),
     );
   }
+  Widget circularBar(BuildContext context){
+    return  Container(
+      height: MediaQuery.of(context).size.height*.8,
+      alignment: Alignment.center,
+      child: CircularProgressIndicator(
+        color: ThemeApp.appColor,
+      ),
+    );
+  }
 
   Widget lineVertical() {
     return Container(
@@ -932,8 +941,8 @@ class TextFieldUtils {
     return Text(
       text,
       style: TextStyle(
-          fontSize: MediaQuery.of(context).size.height * .012,
-          fontWeight: FontWeight.w400,
+          fontSize: MediaQuery.of(context).size.height * .013,
+          fontWeight: FontWeight.w500,
           overflow: TextOverflow.ellipsis,
           color: color),
     );

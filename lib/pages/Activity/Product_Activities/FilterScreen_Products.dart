@@ -33,24 +33,24 @@ class _FilterScreenState extends State<FilterScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
+    return Scaffold(backgroundColor: ThemeApp.appBackgroundColor,
       body: SafeArea(
         child: Container(
-          color: ThemeApp.whiteColor,
+          color: ThemeApp.appBackgroundColor,
           height: AppTheme.fullHeight(context) - 10,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _appBar(),
-              Container(
-                width: width,
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: ThemeApp.lightGreyTab, width: 1),
-                    // bottom: BorderSide(color: Colors.grey, width: 1),
-                  ),
-                ),
-              ),
+              // Container(
+              //   width: width,
+              //   decoration: BoxDecoration(
+              //     border: Border(
+              //       top: BorderSide(color: ThemeApp.lightGreyTab, width: 1),
+              //       // bottom: BorderSide(color: Colors.grey, width: 1),
+              //     ),
+              //   ),
+              // ),
               _filterUi(),
             ],
           ),
@@ -61,7 +61,7 @@ class _FilterScreenState extends State<FilterScreen> {
 
   Widget _appBar() {
     return Container(
-      color: ThemeApp.whiteColor,
+      color: ThemeApp.appBackgroundColor,
       child: Container(
         padding: EdgeInsets.all(15),
         child: Row(
@@ -198,7 +198,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
                     decoration: BoxDecoration(
                       color: tappedIndex == index
-                          ? ThemeApp.darkGreyColor
+                          ? ThemeApp.tealButtonColor
                           : ThemeApp.appBackgroundColor,
                     ),
                     child: TextFieldUtils().dynamicText(
@@ -257,7 +257,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                         left: 20, top: 10, bottom: 10),
                                     decoration: BoxDecoration(
                                       color: tappedIndex == index
-                                          ? ThemeApp.darkGreyColor
+                                          ? ThemeApp.tealButtonColor
                                           : ThemeApp.appBackgroundColor,
                                     ),
                                     child: TextFieldUtils().dynamicText(
@@ -266,9 +266,9 @@ class _FilterScreenState extends State<FilterScreen> {
                                         TextStyle(
                                             color: tappedIndex == index
                                                 ? ThemeApp.whiteColor
-                                                : ThemeApp.darkGreyTab,
-                                            fontSize: height * .018,
-                                            fontWeight: FontWeight.w600)),
+                                                : ThemeApp.primaryNavyBlackColor,
+                                            fontSize: height * .02,
+                                            fontWeight: FontWeight.w500)),
                                   ),
                                 ),
                               ],
@@ -286,7 +286,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   child: Container(
                     width: width * .4,
                     height: height * .04,
-                    color: ThemeApp.whiteColor,
+                    color: ThemeApp.appBackgroundColor,
                     child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         itemCount:
@@ -297,7 +297,8 @@ class _FilterScreenState extends State<FilterScreen> {
                             child: Center(
                               child: Row(
                                 children: [
-                                  Checkbox(
+                                  Checkbox(activeColor:ThemeApp.tealButtonColor ,
+
                                     value: model
                                         .filterDetailList[index1].isSelected,
                                     onChanged: (values) {
@@ -331,14 +332,14 @@ class _FilterScreenState extends State<FilterScreen> {
           bottom: 0,
           child: Column(
             children: [
-              Container(
-                width: width,
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: ThemeApp.lightGreyTab, width: 1),
-                  ),
-                ),
-              ),
+              // Container(
+              //   width: width,
+              //   decoration: BoxDecoration(
+              //     border: Border(
+              //       top: BorderSide(color: ThemeApp.lightGreyTab, width: 1),
+              //     ),
+              //   ),
+              // ),
               Container(
                 width: width,
                 height: height * .1,
@@ -353,7 +354,7 @@ class _FilterScreenState extends State<FilterScreen> {
   }
 
   Widget _bottomBar() {
-    return Container(
+    return Container(color: ThemeApp.appBackgroundColor,
       padding: EdgeInsets.only(left: 20, right: 20),
       child: Row(children: [
         Expanded(
@@ -374,7 +375,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  color: Colors.grey.shade800,
+                  color: ThemeApp.tealButtonColor,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
                     "Cancel", ThemeApp.whiteColor, context)),
@@ -400,11 +401,18 @@ class _FilterScreenState extends State<FilterScreen> {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  color: ThemeApp.appBackgroundColor,
+                  color: ThemeApp.whiteColor,
                 ),
-                child: TextFieldUtils().usingPassTextFields(
-                    "Apply", ThemeApp.blackColor, context)),
-          ),
+                child:Text(
+                  'Apply',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * .021,
+                    fontWeight: FontWeight.w500,
+                    overflow: TextOverflow.ellipsis,
+                    color: ThemeApp.blackColor,),
+                ),
+          ),)
         )
       ]),
     );

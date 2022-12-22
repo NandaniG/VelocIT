@@ -70,6 +70,9 @@ static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
         case apiEndPoint.get_product_by_sub_categories:
         retVal = ConstructURI("/product/findBySubCategoryId");
         break;
+        case apiEndPoint.cart_create_retrive:
+        retVal = ConstructURI("/cart/createOrRetrieve");
+        break;
 
       default:
         retVal = "Error";

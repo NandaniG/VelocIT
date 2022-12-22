@@ -15,6 +15,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
+import '../global/textFormFields.dart';
 
 class ScannerWithGallery extends StatefulWidget {
   const ScannerWithGallery({Key? key}) : super(key: key);
@@ -131,7 +132,7 @@ class _ScannerWithGalleryState extends State<ScannerWithGallery> {
     );
   }
 
-  Widget _loading() => Center(child: CircularProgressIndicator());
+  Widget _loading() => TextFieldUtils().circularBar(context);
 
   Text _text(String text) {
     return Text(

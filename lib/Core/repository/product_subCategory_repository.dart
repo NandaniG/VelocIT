@@ -1,8 +1,10 @@
 import 'package:velocit/Core/AppConstant/apiMapping.dart';
 
+import '../../utils/constants.dart';
 import '../Model/FindProductBySubCategoryModel.dart';
 import 'package:http/http.dart' as http;
 
+import '../Model/ProductAllPaginatedModel.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
 import '../data/app_excaptions.dart';
@@ -28,23 +30,37 @@ class ProductSubCategoryRepository {
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
-      print("AllProductPaginatedModel list: " + response.toString());
-
+      print("getProductBySubCategoryList list: " + response.toString());
       return response = FindProductBySubCategoryModel.fromJson(response);
     } catch (e) {
       throw e;
     }
-
- /*   dynamic responseJson;
-    try {
-      final client = http.Client();
-      final response =
-      await client.get(Uri.parse(url)).timeout(Duration(seconds: 10));
-      responseJson = NetworkApiServices().returnResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    }
-    return responseJson;*/
   }
+
+/*
+  Future<ProductAllPaginatedModel> getProductListing(int page,int size, String searchString) async {
+
+
+    Map<String, String> productListingData = {
+      'page': page.toString(),
+      'size': size.toString(),
+      // 'searchString':searchString.toString(),
+    };
+    print("getProductListing Query"+productListingData.toString());
+    var url = '/product/page-query';
+    String queryString = Uri(queryParameters: productListingData).query;
+
+    var requestUrl = ApiMapping.baseAPI +url + '?' + queryString!;
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(requestUrl);
+      print("getProductListing list: " + response.toString());
+
+      return response = ProductAllPaginatedModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+*/
 
 }

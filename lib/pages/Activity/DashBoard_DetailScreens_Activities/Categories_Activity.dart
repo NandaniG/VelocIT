@@ -53,6 +53,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
 
     selected = widget.shopByCategorySelected;
     productViewModel.productCategoryListingWithGet();
+    productViewModel.productCategoryListingWithGet();
     super.initState();
   }
 
@@ -98,9 +99,15 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                     // carouselImages(),
                     SizedBox(
                       height: height * .02,
-                    ),
-                    TextFieldUtils().listHeadingTextField(
-                        StringUtils.shopByCategories, context),
+                    ),TextFieldUtils().dynamicText(
+                        StringUtils.shopByCategories,
+                        context,
+                        TextStyle(
+                          color: ThemeApp.primaryNavyBlackColor,
+                          fontWeight: FontWeight.w400,
+                          fontSize: height * .03,
+                        )),
+
                     SizedBox(
                       height: height * .02,
                     ),
@@ -110,74 +117,78 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: widget.shopByCategoryList!.length,
                       itemBuilder: (context, index) {
-                        return Card(
+                        return Card(elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
-                          ),
+                          ),color: ThemeApp.whiteColor,
                           margin: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 5),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                ExpansionTile(
-                                  key: Key(index.toString()),
-                                  onExpansionChanged: ((newState) {
-                                    if (newState) {
-                                      setState(() {
-                                        const Duration(seconds: 20000);
-                                        selected = index;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        selected = -1;
-                                      });
-                                    }
-                                  }),
-                                  initiallyExpanded: index == selected,
-                                  trailing: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: ThemeApp.textFieldBorderColor,
-                                    size: height * .05,
+                          child: ExpansionTile(
+                            key: Key(index.toString()),
+                            onExpansionChanged: ((newState) {
+                              if (newState) {
+                                setState(() {
+                                  const Duration(seconds: 20000);
+                                  selected = index;
+                                });
+                              } else {
+                                setState(() {
+                                  selected = -1;
+                                });
+                              }
+                            }),
+                            initiallyExpanded: index == selected,
+                            trailing:index != selected? Icon(
+                              Icons.arrow_drop_down,
+                              color: ThemeApp.subIconColor,
+                              size: height * .05,
+                            ):Icon(
+                              Icons.arrow_drop_up,
+                              color: ThemeApp.subIconColor,
+                              size: height * .05,
+                            ),
+                            tilePadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            childrenPadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            textColor: Colors.black,maintainState: true,
+                            title: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(50)),
+                                  child: Image.network(
+                                    widget.shopByCategoryList![index]
+                                        .productCategoryImageId!,
+                                    fit: BoxFit.fill,
+                                    height: MediaQuery.of(context)
+                                            .size
+                                            .height *
+                                        .07,
                                   ),
-                                  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 5),
-                                  childrenPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  textColor: Colors.black,
-                                  title: Row(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(50)),
-                                        child: Image.network(
-                                          widget.shopByCategoryList![index]
-                                              .productCategoryImageId!,
-                                          fit: BoxFit.fill,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .07,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: width * .03,
-                                      ),
-                                      TextFieldUtils().homePageheadingTextField(
-                                          widget
-                                              .shopByCategoryList![index].name!,
-                                          context)
-                                    ],
-                                  ),
-                                  expandedAlignment: Alignment.centerLeft,
-                                  expandedCrossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    subListOfCategories(
-                                        widget.shopByCategoryList![index])
-                                  ],
                                 ),
-                              ]),
+                                SizedBox(
+                                  width: width * .03,
+                                ),TextFieldUtils().dynamicText(
+                                    widget
+                                        .shopByCategoryList![index].name!,
+                                    context,
+                                    TextStyle(
+                                      color: ThemeApp.primaryNavyBlackColor,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: height * .025,
+                                    )),
+
+                              ],
+                            ),
+                            expandedAlignment: Alignment.centerLeft,
+                            expandedCrossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            children: [
+                              subListOfCategories(
+                                  widget.shopByCategoryList![index])
+                            ],
+                          ),
                         );
                       },
                     )
@@ -270,8 +281,8 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
 
   Widget subListOfCategories(ProductList productList) {
   return  Container(
-        height: 230,
-        alignment: Alignment.center,
+        height: 200,
+        alignment: Alignment.center,color: ThemeApp.whiteColor,
         child: GridView.builder(
           itemCount: productList!.simpleSubCats!.length,
           physics: const AlwaysScrollableScrollPhysics(),
@@ -279,7 +290,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
           const SliverGridDelegateWithFixedCrossAxisCount(
             mainAxisSpacing: 20,
             crossAxisSpacing: 10,
-            childAspectRatio: 1.1,
+            childAspectRatio: 1.5,
             crossAxisCount: 3,
           ),
           itemBuilder: (BuildContext context, int index) {
@@ -295,8 +306,8 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                        color: ThemeApp.textFieldBorderColor,
-                        width: 1.5),
+                        color: ThemeApp.containerColor,
+                        width: 1.5),color: ThemeApp.containerColor
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -325,7 +336,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                               productList.simpleSubCats![index].name!,
                               context,
                               TextStyle(
-                                color: ThemeApp.darkGreyColor,
+                                color: ThemeApp.blackColor,
                                 // fontWeight: FontWeight.w500,
                                 fontSize: height * .02,
                               )),

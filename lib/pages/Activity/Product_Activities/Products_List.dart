@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,14 +25,14 @@ import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
 import 'FilterScreen_Products.dart';
 import 'ProductDetails_activity.dart';
+
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 class ProductListByCategoryActivity extends StatefulWidget {
   SimpleSubCats? productList;
 
-  ProductListByCategoryActivity({Key? key, this.productList})
-      : super(key: key);
+  ProductListByCategoryActivity({Key? key, this.productList}) : super(key: key);
 
   @override
   State<ProductListByCategoryActivity> createState() =>
@@ -39,7 +42,7 @@ class ProductListByCategoryActivity extends StatefulWidget {
 class _ProductListByCategoryActivityState
     extends State<ProductListByCategoryActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
-
+  late ScrollController scrollController = ScrollController();
   double height = 0.0;
   double width = 0.0;
 
@@ -48,10 +51,21 @@ class _ProductListByCategoryActivityState
       ProductSpecificListViewModel();
   late Map<String, dynamic> data = new Map<String, dynamic>();
 
+  bool isLoading = false;
+  int pageCount = 1;
+  int size = 10;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    productSpecificListViewModel.productBySubCategoryWithGet(
+      pageCount,
+      size,
+      widget.productList!.id!,
+    );
+
     data = {
       "category_code": 'EOLP',
       "recommended_for_you": "1",
@@ -61,13 +75,9 @@ class _ProductListByCategoryActivityState
     };
     // data = {"category_code": widget.productList!.categoryCode,"recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
     print(data.toString());
-    print("subProduct............." +
-        widget.productList!.id .toString());
-    productSpecificListViewModel.productBySubCategoryWithGet(
-      0,
-      10,
-      widget.productList!.id!,
-    );
+    print("subProduct.............${widget.productList!.id}");
+    scrollController = new ScrollController(initialScrollOffset: 5.0)
+      ..addListener(_scrollListener);
     // categoryCode =widget.productList!.categoryCode;
 
     // print("productList"+widget.productList!.categoryCode!);
@@ -76,6 +86,33 @@ class _ProductListByCategoryActivityState
     StringConstant.sortedBy;
     // getListFromPref();
     dataCount();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    scrollController.dispose();
+  }
+
+  _scrollListener() {
+    if (scrollController.offset >= scrollController.position.maxScrollExtent &&
+        !scrollController.position.outOfRange) {
+      setState(() {
+        print("comes to bottom $isLoading");
+        isLoading = true;
+
+        if (isLoading) {
+          print("RUNNING LOAD MORE");
+
+          pageCount = pageCount + 1;
+
+          //// CALL YOUR API HERE FOR THE NEXT FUNCTIONALITY
+          productSpecificListViewModel.productBySubCategoryWithGet(
+              pageCount, 10, 4);
+        }
+      });
+    }
   }
 
   final indianRupeesFormat = NumberFormat.currency(
@@ -88,7 +125,7 @@ class _ProductListByCategoryActivityState
   dataCount() async {
     StringConstant.cartCounters =
         await Prefs.instance.getIntToken("counterProduct");
-    print("dataCount..." + StringConstant.cartCounters.toString());
+    print("dataCount...${StringConstant.cartCounters}");
   }
 
   getListFromPref() async {
@@ -122,138 +159,168 @@ class _ProductListByCategoryActivityState
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
-          child: Padding(
-            padding:
-                const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-            child: SingleChildScrollView(
-                // height: MediaQuery.of(context).size.height,
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: Container(
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+            child: ListView(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                listOfMobileDevices(),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .02,
-                ),
+                //
+
+                /* listOfMobileDevices(),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .02,
+            ),*/
                 filterWidgets(productsList),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .02,
                 ),
                 productListView()
               ],
-            )),
+            ),
           ),
         ));
   }
 
+  ///top header list of product
+/*
   Widget listOfMobileDevices() {
     return ChangeNotifierProvider<ProductSpecificListViewModel>(
         create: (BuildContext context) => productSpecificListViewModel,
         child: Consumer<ProductSpecificListViewModel>(
             builder: (context, productSubCategoryProvider, child) {
-              switch (productSubCategoryProvider.productSubCategory.status) {
-                case Status.LOADING:
-                  print("Api load");
+          switch (productSubCategoryProvider.productSubCategory.status) {
+            case Status.LOADING:
+              print("Api load");
 
-                  return CircularProgressIndicator(
-                    color: ThemeApp.appColor,
-                  );
-                case Status.ERROR:
-                  print("Api error");
+              return TextFieldUtils().circularBar(context);
+            case Status.ERROR:
+              print("Api error");
 
-                  return Text(productSubCategoryProvider.productSubCategory.message
-                      .toString());
-                case Status.COMPLETED:
-                  print("Api calll");
-                  List<Content>? subProductList = productSubCategoryProvider
-                      .productSubCategory.data!.payload!.content;
-                  return Container(
-                    height: height * .15,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: subProductList!.length,
-                        itemBuilder: (BuildContext context, int index) {
+              return Text(productSubCategoryProvider.productSubCategory.message
+                  .toString());
+            case Status.COMPLETED:
+              print("Api calll");
+              List<Content>? subProductList = productSubCategoryProvider
+                  .productSubCategory.data!.payload!.content;
+              return Container(
+                height: height * .15,
+                child: ListView.builder(
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: subProductList!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      print("widget.productList.length");
+                      return InkWell(
+                        onTap: () {},
+                        child: Row(
+                          children: [
+                            Container(
+                                width: width * .27,
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.whiteColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(50)),
+                                      child: Image.network(
+                                        // width: double.infinity,
+                                        subProductList[index]
+                                            .imageUrls![0]
+                                            .imageUrl!,
+                                        fit: BoxFit.fill,
 
-                          print("widget.productList.length");
-                          return InkWell(
-                            onTap: () {},
-                            child: Row(
-                              children: [
-                                Container(
-                                    width: width * .27,
-                                    decoration: const BoxDecoration(
-                                        color: ThemeApp.whiteColor,
-                                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                          const BorderRadius.all(Radius.circular(50)),
-                                          child: Image.network(
-                                            // width: double.infinity,
-                                            subProductList [index].imageUrls![0].imageUrl!,
-                                            fit: BoxFit.fill,
-
-                                            height: MediaQuery.of(context).size.height * .07,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.of(context).size.height * .01,
-                                        ),
-                                        Center(
-                                          child:
-                                          TextFieldUtils().dynamicText(
-                                              subProductList[index].shortName!,
-                                              context,
-                                              TextStyle(
-                                                color: ThemeApp
-                                                    .darkGreyColor,
-                                                // fontWeight: FontWeight.w500,
-                                                fontSize: height * .02,
-                                              )),
-                                        ),
-                                      ],
-                                    )),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * .03,
-                                )
-                              ],
-                            ),
-                          );
-                        }),
-                  );
-              }
-              return Text("fgd");
-            }));
-
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .07,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .01,
+                                    ),
+                                    Center(
+                                      child: TextFieldUtils().dynamicText(
+                                          subProductList[index].shortName!,
+                                          context,
+                                          TextStyle(
+                                            color: ThemeApp.darkGreyColor,
+                                            // fontWeight: FontWeight.w500,
+                                            fontSize: height * .02,
+                                          )),
+                                    ),
+                                  ],
+                                )),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .03,
+                            )
+                          ],
+                        ),
+                      );
+                    }),
+              );
+          }
+          return Container(
+            width: width,
+            height: height * .8,
+            alignment: Alignment.center,
+            child: TextFieldUtils().dynamicText(
+                'No Match found!',
+                context,
+                TextStyle(
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .03,
+                    fontWeight: FontWeight.bold)),
+          );
+        }));
   }
+*/
 
   Widget filterWidgets(List<ProductDetailsModel> product) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Colors.grey, width: 1),
-          bottom: BorderSide(color: Colors.grey, width: 1),
-        ),
-      ),
+          // border: Border(
+          //   top: BorderSide(color: Colors.grey, width: 1),
+          //   bottom: BorderSide(color: Colors.grey, width: 1),
+          // ),
+          ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(children: [
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            TextFieldUtils().dynamicText(
+                'Sort By  ',
+                context,
+                TextStyle(
+                  color: ThemeApp.lightFontColor,
+                  // fontWeight: FontWeight.w500,
+                  fontSize: height * .02,
+                )),
             InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return bottomSheetForPrice();
-                      });
-                },
-                child: TextFieldUtils().titleTextFields(
-                    "Sort By: ${StringConstant.sortedBy}", context)),
+              onTap: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return bottomSheetForPrice();
+                    });
+              },
+              child: TextFieldUtils().dynamicText(
+                  StringConstant.sortedBy,
+                  context,
+                  TextStyle(
+                    color: ThemeApp.blackColor,
+                    // fontWeight: FontWeight.w500,
+                    fontSize: height * .022,
+                  )),
+            ),
             const Icon(Icons.keyboard_arrow_down)
           ]),
           InkWell(
@@ -261,10 +328,34 @@ class _ProductListByCategoryActivityState
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const FilterScreen()));
             },
-            child: Row(children: [
-              _icon(Icons.filter_list_sharp),
-              TextFieldUtils().titleTextFields("Filter", context),
-            ]),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: ThemeApp.tealButtonColor)),
+              padding: const EdgeInsets.all(8),
+              child: Row(children: [
+                TextFieldUtils().dynamicText(
+                    'Filters',
+                    context,
+                    TextStyle(
+                      color: ThemeApp.blackColor,
+                      // fontWeight: FontWeight.w500,
+                      fontSize: height * .022,
+                    )),
+                Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: SvgPicture.asset(
+                    'assets/appImages/filterIcon.svg',
+                    color: ThemeApp.primaryNavyBlackColor,
+                    semanticsLabel: 'Acme Logo',
+                    theme: SvgTheme(
+                      currentColor: ThemeApp.primaryNavyBlackColor,
+                    ),
+                    height: height * .02,
+                  ),
+                ),
+              ]),
+            ),
           ),
         ],
       ),
@@ -280,155 +371,255 @@ class _ProductListByCategoryActivityState
     );
   }
 
-
-
   Widget productListView() {
-    return ChangeNotifierProvider<ProductSpecificListViewModel>(
-        create: (BuildContext context) => productSpecificListViewModel,
-        child: Consumer<ProductSpecificListViewModel>(
-            builder: (context, productSubCategoryProvider, child) {
-          switch (productSubCategoryProvider.productSubCategory.status) {
-            case Status.LOADING:
-              print("Api load");
+    return LayoutBuilder(builder: (context, constrains) {
+      return ChangeNotifierProvider<ProductSpecificListViewModel>(
+          create: (BuildContext context) => productSpecificListViewModel,
+          child: Consumer<ProductSpecificListViewModel>(
+              builder: (context, productSubCategoryProvider, child) {
+            switch (productSubCategoryProvider.productSubCategory.status) {
+              case Status.LOADING:
+                print("Api load");
 
-              return CircularProgressIndicator(
-                color: ThemeApp.appColor,
-              );
-            case Status.ERROR:
-              print("Api error");
+                return TextFieldUtils().circularBar(context);
+              case Status.ERROR:
+                print("Api error");
 
-              return Text(productSubCategoryProvider.productSubCategory.message
-                  .toString());
-            case Status.COMPLETED:
-              print("Api calll");
-              List<Content>? subProductList = productSubCategoryProvider
-                  .productSubCategory.data!.payload!.content;
-              return SizedBox(
-                height: 600,
-                // width: MediaQuery.of(context).size.width,
-                child: GridView.builder(
-                  itemCount: subProductList!.length,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 10,
-                    // width / height: fixed for *all* items
-                    childAspectRatio: 0.75,
+                return Text(productSubCategoryProvider
+                    .productSubCategory.message
+                    .toString());
+              case Status.COMPLETED:
+                print("Api calll");
+                List<Content>? subProductList = productSubCategoryProvider
+                    .productSubCategory.data!.payload!.content;
+                print("subProductList length.......${subProductList!.length}");
+                return Container(
+                  height: height,
+                  // width: MediaQuery.of(context).size.width,
+                  child: GridView.builder(
+                    controller: scrollController,
+                    itemCount: subProductList!.length,
+                    // physics:  AlwaysScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      mainAxisSpacing: 30,
+                      crossAxisSpacing: 10,
+                      // width / height: fixed for *all* items
+                      childAspectRatio: 0.75,
 
-                    crossAxisCount: 2,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                         onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ProductDetailsActivity(
-                          productList: subProductList[index],
-                          productSpecificListViewModel:   productSpecificListViewModel,
-
-                        ),
-                      ),
-                    );
-                  },
-                      child: Container(
-                          decoration: const BoxDecoration(
-                              color: ThemeApp.darkGreyTab,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Container(
-                                  height: SizeConfig.orientations !=
-                                          Orientation.landscape
-                                      ? MediaQuery.of(context).size.height * .25
-                                      : MediaQuery.of(context).size.height * .1,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: const BoxDecoration(
-                                      color: ThemeApp.whiteColor,
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(10),
-                                        topLeft: Radius.circular(10),
-                                      )),
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      topLeft: Radius.circular(10),
-                                    ),
-                                    child: Image.network(
-                                      subProductList[index]
-                                          .imageUrls![0]
-                                          .imageUrl!,
-                                      fit: BoxFit.fill,
-                                      height: (MediaQuery.of(context)
-                                                  .orientation ==
-                                              Orientation.landscape)
-                                          ? MediaQuery.of(context).size.height *
-                                              .26
-                                          : MediaQuery.of(context).size.height *
-                                              .1,
+                      crossAxisCount: 2,
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      return Stack(
+                        children: [
+                          index == subProductList!.length
+                              ? Container(
+                                  width: constrains.minWidth,
+                                  height: 20,
+                                  // height: MediaQuery.of(context).size.height * .08,
+                                  // alignment: Alignment.center,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: ThemeApp.blackColor,
                                     ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                // flex: 1,
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                      left: 12, right: 12),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextFieldUtils()
-                                          .homePageTitlesTextFieldsWHITE(
-                                              subProductList[index].shortName!,
-                                              context),
-                                      Row(
+                                )
+                              : InkWell(
+                                  onTap: () {
+                                    print(
+                                        "Id ........${subProductList[index].id}");
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductDetailsActivity(
+                                          id: subProductList[index].id,
+                                          // productList: subProductList[index],
+                                          // productSpecificListViewModel:
+                                          //     productSpecificListViewModel,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                      decoration: const BoxDecoration(
+                                          color: ThemeApp.tealButtonColor,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          TextFieldUtils().dynamicText(
-                                              indianRupeesFormat.format(
-                                                  subProductList[index]
-                                                          .defaultSellPrice ??
-                                                      0.0),
-                                              context,
-                                              TextStyle(
+                                          Expanded(
+                                            flex: 2,
+                                            child: Container(
+                                              height: SizeConfig.orientations !=
+                                                      Orientation.landscape
+                                                  ? MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .25
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .1,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              decoration: const BoxDecoration(
                                                   color: ThemeApp.whiteColor,
-                                                  fontSize: height * .022,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextFieldUtils().dynamicText(
-                                              indianRupeesFormat.format(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(10),
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                  )),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topRight: Radius.circular(10),
+                                                  topLeft: Radius.circular(10),
+                                                ),
+                                                child: Image.network(
                                                   subProductList[index]
-                                                          .defaultMrp ??
-                                                      0.0),
-                                              context,
-                                              TextStyle(
-                                                  color: ThemeApp.whiteColor,
-                                                  decoration: TextDecoration
-                                                      .lineThrough,
-                                                  fontSize: height * .022,
-                                                  fontWeight: FontWeight.bold)),
+                                                      .imageUrls![0]
+                                                      .imageUrl!,
+                                                  fit: BoxFit.fill,
+                                                  height: (MediaQuery.of(
+                                                                  context)
+                                                              .orientation ==
+                                                          Orientation.landscape)
+                                                      ? MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                          .26
+                                                      : MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                          .1,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            // flex: 1,
+                                            child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 12, right: 12),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      subProductList[index]
+                                                          .shortName!,
+                                                      style: TextStyle(
+                                                          color: ThemeApp
+                                                              .whiteColor,
+                                                          fontSize:
+                                                              height * .022,
+                                                          fontWeight:
+                                                              FontWeight.w400)),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      TextFieldUtils().dynamicText(
+                                                          indianRupeesFormat
+                                                              .format(subProductList[
+                                                                          index]
+                                                                      .defaultSellPrice ??
+                                                                  0.0),
+                                                          context,
+                                                          TextStyle(
+                                                              color: ThemeApp
+                                                                  .whiteColor,
+                                                              fontSize:
+                                                                  height * .023,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500)),
+                                                      TextFieldUtils().dynamicText(
+                                                          indianRupeesFormat.format(
+                                                              subProductList[
+                                                                          index]
+                                                                      .defaultMrp ??
+                                                                  0.0),
+                                                          context,
+                                                          TextStyle(
+                                                              color: ThemeApp
+                                                                  .whiteColor,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough,
+                                                              fontSize:
+                                                                  height * .022,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          )
                                         ],
-                                      )
-                                    ],
-                                  ),
+                                      )),
                                 ),
-                              )
-                            ],
-                          )),
-                    );
-                  },
-                ),
-              );
-          }
-          return Text("fgd");
-        }));
+                          index == subProductList!.length
+                              ? Container(
+                                  width: constrains.minWidth,
+                                  height: 20,
+                                  // height: MediaQuery.of(context).size.height * .08,
+                                  // alignment: Alignment.center,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: ThemeApp.blackColor,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox()
+                        ],
+                      );
+                      /*else {
+                        return  Container(
+                          // width: constrains.minWidth,
+                          height: 80,
+                          // height: MediaQuery.of(context).size.height * .08,
+                          // alignment: Alignment.center,
+                          child: TextFieldUtils().dynamicText(
+                              'Nothing more to load',
+                              context,
+                              TextStyle(
+                                  color: ThemeApp.blackColor,
+                                  fontSize: height * .03,
+                                  fontWeight: FontWeight.bold)),
+                        );
+                      }*/
+                    },
+                  ),
+                );
+            }
+            return Container(
+              height: height * .08,
+              alignment: Alignment.center,
+              child: TextFieldUtils().dynamicText(
+                  'No Match found!',
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .03,
+                      fontWeight: FontWeight.bold)),
+            );
+          }));
+    });
   }
 
   int? _radioValue = 0;
@@ -458,6 +649,7 @@ class _ProductListByCategoryActivityState
                         fontSize: MediaQuery.of(context).size.height * .025,
                         fontWeight: FontWeight.w600)),
                 RadioListTile(
+                  activeColor: ThemeApp.appColor,
                   value: 0,
                   groupValue: _radioValue,
                   onChanged: (value) {
@@ -467,15 +659,14 @@ class _ProductListByCategoryActivityState
                       print(StringConstant.sortedBy);
                     });
                   },
-                  title: TextFieldUtils().dynamicText(
-                      "Low to High",
-                      context,
-                      TextStyle(
+                  title: Text("Low to High",
+                      style: TextStyle(
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),
                 ),
                 RadioListTile(
+                  activeColor: ThemeApp.appColor,
                   value: 1,
                   groupValue: _radioValue,
                   onChanged: (value) {
@@ -485,10 +676,8 @@ class _ProductListByCategoryActivityState
                       print(StringConstant.sortedBy);
                     });
                   },
-                  title: TextFieldUtils().dynamicText(
-                      "High to Low",
-                      context,
-                      TextStyle(
+                  title: Text("High to Low",
+                      style: TextStyle(
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),

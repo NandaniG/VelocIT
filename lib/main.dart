@@ -13,6 +13,7 @@ import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
 import 'package:velocit/pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import 'package:velocit/pages/Activity/Payment_Activities/payments_Activity.dart';
 import 'package:velocit/pages/Activity/Product_Activities/Products_List.dart';
+import 'package:velocit/pages/auth/sign_in.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
@@ -22,10 +23,12 @@ import 'package:velocit/utils/routes/routes.dart';
 import 'package:velocit/utils/routes/routes_name.dart';
 import 'package:velocit/utils/styles.dart';
 import 'package:velocit/utils/utils.dart';
+import 'package:velocit/widgets/global/textFormFields.dart';
 import 'Core/ViewModel/auth_view_model.dart';
 import 'Core/ViewModel/dashboard_view_model.dart';
 import 'Core/ViewModel/product_listing_view_model.dart';
 import 'L10n/l10n.dart';
+
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'l10n/localeProvider.dart';
 import 'pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
@@ -34,13 +37,13 @@ import 'services/providers/Products_provider.dart';
 Future<void> main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
-  runApp( MyApp());
+  runApp(MyApp());
   StringConstant.isLogIn = false;
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   // var loginId=await  prefs.getString(StringConstant.userId);
-  var testId=await  prefs.getString(StringConstant.testId);
-  print("on loging testId : "+testId.toString());
+  var testId = await prefs.getString(StringConstant.testId);
+  print("on loging testId : " + testId.toString());
 
   // StringConstant.isLogIn = true;
   StringConstant.emailOTPVar =
@@ -97,14 +100,22 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
-   ProductSpecificListViewModel productViewModel =
-   ProductSpecificListViewModel();    Map data = {"category_code":"EOLP","recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
+  MyApp({super.key});
 
-   // This widget is the root of your application.
+  ProductSpecificListViewModel productViewModel =
+      ProductSpecificListViewModel();
+  Map data = {
+    "category_code": "EOLP",
+    "recommended_for_you": "1",
+    "Merchants Near You": "1",
+    "best_deal": "",
+    'budget_buys': ""
+  };
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    productViewModel.productSpecificListWithGet(context,data);
+    productViewModel.productSpecificListWithGet(context, data);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -112,7 +123,8 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => DashboardViewModel(),
-          ),  ChangeNotifierProvider(
+          ),
+          ChangeNotifierProvider(
             create: (_) => ProductSpecificListViewModel(),
           ),
           ChangeNotifierProvider(
@@ -130,12 +142,12 @@ class MyApp extends StatelessWidget {
           // ChangeNotifierProvider(create: (_) => ProductsVM(),),
         ],
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
-        var data =   provider.loadJson();
+          var data = provider.loadJson();
 
-        return Consumer<ProductProvider>(builder: (context, value, child) {
+          return Consumer<ProductProvider>(builder: (context, value, child) {
             // return Consumer<LocaleProvider>(
             //     builder: (context, localeProvider, snapshot) {
-              return MaterialApp(
+            return MaterialApp(
               /*  locale: localeProvider.locale,
                 localizationsDelegates: const [
                   //AppLocalizationsDelegate(),
@@ -145,46 +157,45 @@ class MyApp extends StatelessWidget {
                   AppLocalizations.delegate,
                 ],
                 supportedLocales: L10n.all,*/
-                theme: ThemeData(
-                  primarySwatch: colorCustomForMaterialApp,
-                ),
-                debugShowCheckedModeBanner: false,
-                // home: ForgotPassword(),
-                // initialRoute: StringConstant.isLogIn == true?RoutesName.signInRoute:RoutesName.dashboardRoute,
-                initialRoute: RoutesName.splashScreenRoute,
-                onGenerateRoute: Routes.generateRoute,
-                routes: {
-                  // '/': (context) => StringConstant.isLogIn == true
-                  //     ? SignIn_Screen()
-                  //     : DashboardScreen(),
-                  '/': (context) => SplashScreen(),
-                  '/dashBoardScreen': (context) => const DashboardScreen(),
-                  '/editAccountActivity': (context) =>
-                      const EditAccountActivity(),
-                  '/myAccountActivity': (context) => const MyAccountActivity(),
-                  '/accountSettingScreen': (context) =>
-                      const AccountSettingScreen(),
-                  '/myOrdersActivity': (context) => const MyOrdersActivity(),
-                  '/cardListManagePayments': (context) =>
-                      const CardListManagePayments(),
-                  '/savedAddressDetails': (context) =>
-                      const SavedAddressDetails(),
-                  '/customerSupportActivity': (context) =>
-                      const CustomerSupportActivity(),
-                  '/productListByCategoryActivity': (context) =>
-                      ProductListByCategoryActivity(
-                          productList: provider
-                              .productList[provider.indexofSubProductList]),
-                  // '/productDetailsActivity': (context) => ProductDetailsActivity(model: productsList[0], value: value),
-                  '/cartScreen': (context) => CartDetailsActivity(
-                      value: value, productList: provider.cartProductList),
-                  '/orderReviewSubActivity': (context) =>
-                      OrderReviewSubActivity(
-                          value: value, cartListFromHome: provider.productList),
-                  '/payment_Creditcard_debitcardScreen': (context) =>
-                      const Payment_Creditcard_debitcardScreen(),
-                },
-              );
+              theme: ThemeData(
+                primarySwatch: colorCustomForMaterialApp,
+              ),
+              debugShowCheckedModeBanner: false,
+              // home: ForgotPassword(),
+              // initialRoute: StringConstant.isLogIn != true?RoutesName.signInRoute:RoutesName.dashboardRoute,
+              initialRoute: RoutesName.splashScreenRoute,
+              onGenerateRoute: Routes.generateRoute,
+              routes: {
+                // '/': (context) => StringConstant.isLogIn != true
+                //     ? SignIn_Screen()
+                //     : DashboardScreen(),
+                '/': (context) => SplashScreen(),
+                '/dashBoardScreen': (context) => const DashboardScreen(),
+                '/editAccountActivity': (context) =>
+                    const EditAccountActivity(),
+                '/myAccountActivity': (context) => const MyAccountActivity(),
+                '/accountSettingScreen': (context) =>
+                    const AccountSettingScreen(),
+                '/myOrdersActivity': (context) => const MyOrdersActivity(),
+                '/cardListManagePayments': (context) =>
+                    const CardListManagePayments(),
+                '/savedAddressDetails': (context) =>
+                    const SavedAddressDetails(),
+                '/customerSupportActivity': (context) =>
+                    const CustomerSupportActivity(),
+                '/productListByCategoryActivity': (context) =>
+                    ProductListByCategoryActivity(
+                        productList: provider
+                            .productList[provider.indexofSubProductList]),
+                // '/productDetailsActivity': (context) => ProductDetailsActivity(model: productsList[0], value: value),
+                '/cartScreen': (context) => CartDetailsActivity(
+                    value: value, productList: provider.cartProductList),
+                '/orderReviewSubActivity': (context) => OrderReviewSubActivity(
+                    value: value, cartListFromHome: provider.productList),
+                '/payment_Creditcard_debitcardScreen': (context) =>
+                    const Payment_Creditcard_debitcardScreen(),
+              },
+            );
             // });
           });
         }));
@@ -207,8 +218,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   startTime() async {
-    var loginId=await  Prefs.instance.getToken(StringConstant.userId);
-    print("Splash LoginId : "+loginId.toString());
+    var loginId = await Prefs.instance.getToken(StringConstant.userId);
+    print("Splash LoginId : " + loginId.toString());
 
     var _duration = const Duration(seconds: 3);
     return Timer(_duration, navigationPage);
@@ -221,15 +232,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(height: MediaQuery.of(context).size.height,
-        color: ThemeApp.appBackgroundColor,
-
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: ThemeApp.darkGreyColor,
-          ),
-        ),
-      ),
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          color: ThemeApp.appBackgroundColor,
+          child: TextFieldUtils().circularBar(context)),
     );
   }
 }
