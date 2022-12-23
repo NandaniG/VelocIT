@@ -823,7 +823,7 @@ class TextFieldUtils {
           fontSize: MediaQuery.of(context).size.height * .021,
           fontWeight: FontWeight.w500,
           overflow: TextOverflow.ellipsis,
-          color: ThemeApp.whiteColor,),
+          color: colors,),
     );
   }
 

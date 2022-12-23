@@ -79,6 +79,9 @@ class AuthRepository {
       // Prefs.instance.setToken(StringConstant.userId, id.toString());
 
       var loginId = await Prefs.instance.getToken(StringConstant.userId);
+      final preferences = await SharedPreferences.getInstance();
+      preferences.setInt('isUserLoggedIn',1);
+      preferences.setString('isUserId',id.toString());
 
       print("LoginId : .. " + loginId.toString());
       StringConstant.isLogIn = true;
@@ -93,7 +96,26 @@ class AuthRepository {
     httpClient.close();
     return responseJson;
   }
+/*  Future<void> _loadCounter() async {
+    String isUserLoginPref = 'isUserLoginPref';
 
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      StringConstant.isUserLoggedIn = (prefs.getInt(isUserLoginPref) ?? 0);
+
+    });
+  }
+  //Incrementing counter after click
+  Future<void> _incrementCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    String isUserLoginPref = 'isUserLoginPref';
+    setState(() {
+      StringConstant.isUserLoggedIn = (prefs.getInt(isUserLoginPref) ?? 0) + 1;
+      prefs.setInt('counter',      StringConstant.isUserLoggedIn);
+
+
+    });
+  }*/
   // I/flutter ( 7520): SignUp Data {username: NandaniTesting, password: Nandani@123, email: nandanig@codeelan.com, mobile: 7878787878}
 
   // Future postApiUsingMobileRequest(Map jsonMap, BuildContext context) async {

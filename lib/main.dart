@@ -34,10 +34,16 @@ import 'l10n/localeProvider.dart';
 import 'pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import 'services/providers/Products_provider.dart';
 
-Future<void> main() async {
-  await GetStorage.init();
-  WidgetsFlutterBinding.ensureInitialized();
+late SharedPreferences sp;
+
+void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
+// getpref();
+}
+
+getpref() async {
+  Prefs.instance;
   StringConstant.isLogIn = false;
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -87,16 +93,6 @@ Future<void> main() async {
           : StringConstant.addressFromCurrentLocation;
 
   SharedPreferences.setMockInitialValues({});
-
-  await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
-  await Prefs.instance.getToken('copyCartList');
-
-  //
-  // final box = GetStorage();
-  // List storageList = [];
-
-  // storageList = box.read('tasks');
-  // print("Storage List Length"+storageList.length.toString());
 }
 
 class MyApp extends StatelessWidget {
@@ -166,6 +162,7 @@ class MyApp extends StatelessWidget {
               initialRoute: RoutesName.splashScreenRoute,
               onGenerateRoute: Routes.generateRoute,
               routes: {
+
                 // '/': (context) => StringConstant.isLogIn != true
                 //     ? SignIn_Screen()
                 //     : DashboardScreen(),
@@ -226,7 +223,35 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+    _loadCounter();
+    // Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+  }
+
+  Future<void> _loadCounter() async {
+    String isUserLoginPref = 'isUserLoginPref';
+
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      StringConstant.isUserLoggedIn = (prefs.getInt(isUserLoginPref) ?? 0);
+
+      StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
+      print("IS USER LOGGEDIN ..............." +
+          StringConstant.isUserLoggedIn.toString());
+
+      StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+
+      print("USER LOGIN ID..............." +
+          StringConstant.UserLoginId.toString());
+
+      if (StringConstant.isUserLoggedIn != 0) {
+        Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+      } else {
+        Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+
+      print("Not Logged in");
+        // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
+      }
+    });
   }
 
   @override

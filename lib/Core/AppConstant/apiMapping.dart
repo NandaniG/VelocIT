@@ -72,8 +72,23 @@ static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
         break;
         case apiEndPoint.cart_create_retrive:
         retVal = ConstructURI("/cart/createOrRetrieve");
-        break;   case apiEndPoint.cart_update:
+        break;
+        case apiEndPoint.cart_update:
         retVal = ConstructURI("/cart/updateCart");
+        break;
+        case apiEndPoint.cart_by_ID:
+        retVal = ConstructURI("/cart/");
+        break;
+
+        case apiEndPoint.single_product_scanner:
+        retVal = ConstructURI("/product/findByFmcgCode");
+        break;
+
+        case apiEndPoint.single_product_scanner:
+        retVal = ConstructURI("/product/findByFmcgCode");
+        break;
+        case apiEndPoint.single_product:
+        retVal = ConstructURI("/product/");
         break;
 
       default:

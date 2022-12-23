@@ -2,27 +2,33 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 
+import '../../services/providers/Products_provider.dart';
 import '../../utils/utils.dart';
 import '../AppConstant/apiMapping.dart';
 import '../Model/CartModels/CartCreateRetrieveModel.dart';
+import '../Model/CartModels/CartSpecificIdModel.dart';
 import '../Model/CartModels/updateCartModel.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
 
 class CartRepository {
   BaseApiServices _apiServices = NetworkApiServices();
+
   CartCreateRetrieveModel modelResponse = CartCreateRetrieveModel();
 
   Future<CartCreateRetrieveModel> cartPostRequest(
       Map jsonMap, BuildContext context) async {
-    dynamic responseJson;
+    final prefs = await SharedPreferences.getInstance();
+
+  dynamic responseJson;
     var url = ApiMapping.getURI(apiEndPoint.cart_create_retrive);
     print(url);
     HttpClient httpClient = new HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
-    print("Cart response" + request.toString());
 
     request.headers.set("Content-Type", "application/json; charset=UTF-8");
 
@@ -38,31 +44,12 @@ class CartRepository {
     Map<String, dynamic> map = jsonDecode(rawJson);
 
     var userData = CartCreateRetrieveModel.fromJson(map);
-
+    prefs.setString('CartIdPref', userData.payload!.id.toString());
     print(userData.payload!.id.toString());
     Prefs.instance.setToken(Prefs.prefCartId, userData.payload!.id.toString());
 
+
     print("userData.payload!.id");
-
-    var payload = map['payload'];
-
-    int age = map['age'];
-
-    var id = map["id"];
-    var prod_items_for_purchase = map["prod_items_for_purchase"];
-    var service_items_for_purchase = map["service_items_for_purchase"];
-    var orders_for_purchase = map["orders_for_purchase"];
-    var orders_saved_later = map["orders_saved_later"];
-    var tempUserId = map["tempUserId"];
-    var scratched_total = map["scratched_total"];
-    var mrp_total = map["mrp_total"];
-    var total_discount = map["total_discount"];
-    var total_delivery_charges = map["total_delivery_charges"];
-    var cart_type = map["cart_type"];
-    var is_open = map["is_open"];
-    var user = map["user"];
-
-    CartCreateRetrieveModel person = CartCreateRetrieveModel(payload: payload);
 
     if (response.statusCode == 200) {
       print(responseJson.toString());
@@ -74,9 +61,13 @@ class CartRepository {
     return responseJson;
   }
 
+  int badgeLength = 0;
 
   Future<UpdateCartModel> updateCartPostRequest(
       Map jsonMap, BuildContext context) async {
+    SessionManager prefs =  SessionManager();
+
+
     dynamic responseJson;
     var url = ApiMapping.getURI(apiEndPoint.cart_update);
     print(url);
@@ -98,37 +89,36 @@ class CartRepository {
 
     var userData = UpdateCartModel.fromJson(map);
 
-    print(userData.payload!.id.toString());
-
-    print("userData.payload!.id");
-
-    var payload = map['payload'];
-
-    int age = map['age'];
-
-    var id = map["id"];
-    var prod_items_for_purchase = map["prod_items_for_purchase"];
-    var service_items_for_purchase = map["service_items_for_purchase"];
-    var orders_for_purchase = map["orders_for_purchase"];
-    var orders_saved_later = map["orders_saved_later"];
-    var tempUserId = map["tempUserId"];
-    var scratched_total = map["scratched_total"];
-    var mrp_total = map["mrp_total"];
-    var total_discount = map["total_discount"];
-    var total_delivery_charges = map["total_delivery_charges"];
-    var cart_type = map["cart_type"];
-    var is_open = map["is_open"];
-    var user = map["user"];
-
-    CartCreateRetrieveModel person = CartCreateRetrieveModel(payload: payload);
-
     if (response.statusCode == 200) {
+      print(userData.payload!.id.toString());
+
+      print(userData.payload!.ordersForPurchase![0].itemQuantity);
+      badgeLength = userData.payload!.ordersForPurchase![0].itemQuantity!;
+
+      print("userData.payload!.id");
       print(responseJson.toString());
+      Provider.of<ProductProvider>(context, listen: false);
+      final preference = await SharedPreferences.getInstance();
+
+      prefs.setBadgeToken(badgeLength.toString());
+
     } else {
       Utils.errorToast("System is busy, Please try after sometime.");
     }
 
     httpClient.close();
-    return responseJson;
+    return responseJson = UpdateCartModel.fromJson(map);
+  }
+
+  Future<CartSpecificIdModel> getCartSpecificIDList(String id) async {
+    var url = ApiMapping.getURI(apiEndPoint.cart_by_ID);
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url + id);
+      print("Cart Specific Id : "+response.toString());
+      return response = CartSpecificIdModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
   }
 }

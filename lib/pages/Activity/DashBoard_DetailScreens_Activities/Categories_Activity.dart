@@ -46,13 +46,11 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
     'budget_buys': ""
   };
 
-
   @override
   void initState() {
     // TODO: implement initState
 
     selected = widget.shopByCategorySelected;
-    productViewModel.productCategoryListingWithGet();
     productViewModel.productCategoryListingWithGet();
     super.initState();
   }
@@ -99,7 +97,8 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                     // carouselImages(),
                     SizedBox(
                       height: height * .02,
-                    ),TextFieldUtils().dynamicText(
+                    ),
+                    TextFieldUtils().dynamicText(
                         StringUtils.shopByCategories,
                         context,
                         TextStyle(
@@ -117,10 +116,12 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: widget.shopByCategoryList!.length,
                       itemBuilder: (context, index) {
-                        return Card(elevation: 0,
+                        return Card(
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
-                          ),color: ThemeApp.whiteColor,
+                          ),
+                          color: ThemeApp.whiteColor,
                           margin: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 5),
                           child: ExpansionTile(
@@ -138,47 +139,56 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                               }
                             }),
                             initiallyExpanded: index == selected,
-                            trailing:index != selected? Icon(
-                              Icons.arrow_drop_down,
-                              color: ThemeApp.subIconColor,
-                              size: height * .05,
-                            ):Icon(
-                              Icons.arrow_drop_up,
-                              color: ThemeApp.subIconColor,
-                              size: height * .05,
-                            ),
+                            trailing: index != selected
+                                ? Icon(
+                                    Icons.arrow_drop_down,
+                                    color: ThemeApp.subIconColor,
+                                    size: height * .05,
+                                  )
+                                : Icon(
+                                    Icons.arrow_drop_up,
+                                    color: ThemeApp.subIconColor,
+                                    size: height * .05,
+                                  ),
                             tilePadding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 5),
                             childrenPadding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),
-                            textColor: Colors.black,maintainState: true,
+                            textColor: Colors.black,
+                            maintainState: true,
                             title: Row(
                               children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(50)),
-                                  child: Image.network(
-                                    widget.shopByCategoryList![index]
-                                        .productCategoryImageId!,
-                                    fit: BoxFit.fill,
-                                    height: MediaQuery.of(context)
-                                            .size
-                                            .height *
-                                        .07,
-                                  ),
-                                ),
+                                CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: NetworkImage(widget
+                                          .shopByCategoryList![index]
+                                          .productCategoryImageId!),
+                                    ) ??
+                                    SizedBox(),
+                                // ClipRRect(
+                                //   borderRadius: const BorderRadius.all(
+                                //       Radius.circular(50)),
+                                //   child: Image.network(
+                                //     widget.shopByCategoryList![index]
+                                //         .productCategoryImageId!,
+                                //     fit: BoxFit.fill,
+                                //     height: MediaQuery.of(context)
+                                //             .size
+                                //             .height *
+                                //         .07,
+                                //   ),
+                                // ),
                                 SizedBox(
                                   width: width * .03,
-                                ),TextFieldUtils().dynamicText(
-                                    widget
-                                        .shopByCategoryList![index].name!,
+                                ),
+                                TextFieldUtils().dynamicText(
+                                    widget.shopByCategoryList![index].name!,
                                     context,
                                     TextStyle(
                                       color: ThemeApp.primaryNavyBlackColor,
                                       fontWeight: FontWeight.w700,
                                       fontSize: height * .025,
                                     )),
-
                               ],
                             ),
                             expandedAlignment: Alignment.centerLeft,
@@ -218,18 +228,18 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                         child: ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
-                            child: *//*Image.network(
+                            child: */ /*Image.network(
                             // width: double.infinity,
                             e.sponsorlogo,
                             fit: BoxFit.fill,
-                          ),*//*
+                          ),*/ /*
                                 Image.asset(
                               e.sponsorlogo,
                               fit: BoxFit.fill,
                             )),
                       );
                     }).toList(),
-                   *//* dotSize: 8.0,
+                   */ /* dotSize: 8.0,
                     autoplay: false,
                     dotSpacing: 15.0,
                     dotColor: ThemeApp.lightGreyTab,
@@ -238,80 +248,87 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                     dotBgColor: Colors.transparent,
                     borderRadius: true,
                     boxFit: BoxFit.cover,
-                    dotPosition: DotPosition.bottomCenter,*//*
+                    dotPosition: DotPosition.bottomCenter,*/ /*
                     options: CarouselOptions(
                       autoPlay: false
                     ),
                   ))*/
-          Container(
-              height: (MediaQuery.of(context).orientation ==
-                  Orientation.landscape)
-                  ? height * .5
-                  : height * 0.2,
-              width: width,
-              child: CarouselSlider(
-                items: snapshot.data?.map((e) {
-                  return Card(
-                    margin: EdgeInsets.zero,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    color: ThemeApp.whiteColor,
-                    child: ClipRRect(
-                        borderRadius:
-                        const BorderRadius.all(Radius.circular(10)),
-                        child:Container(
-                          width: width,
-                          color: Colors.red,
-                          child: Image.asset(
-                            e.sponsorlogo,
-                            fit: BoxFit.fill,
-                          ),
-                        )),
-                  );
-                }).toList(),
-                options: CarouselOptions(
-                    autoPlay: false,
-                    viewportFraction: 1,
-                    height: height * .3),
-              ))
+              Container(
+                  height: (MediaQuery.of(context).orientation ==
+                          Orientation.landscape)
+                      ? height * .5
+                      : height * 0.2,
+                  width: width,
+                  child: CarouselSlider(
+                    items: snapshot.data?.map((e) {
+                      return Card(
+                        margin: EdgeInsets.zero,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        color: ThemeApp.whiteColor,
+                        child: ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            child: Container(
+                              width: width,
+                              color: Colors.red,
+                              child: Image.asset(
+                                e.sponsorlogo,
+                                fit: BoxFit.fill,
+                              ),
+                            )),
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                        autoPlay: false,
+                        viewportFraction: 1,
+                        height: height * .3),
+                  ))
               : const Center(child: CircularProgressIndicator());
         });
   }
 
   Widget subListOfCategories(ProductList productList) {
-  return   Container(
-      height: 100,
-      alignment: Alignment.center,color: ThemeApp.whiteColor,
-      child:    ListView.builder(
-      shrinkWrap: true,
-      scrollDirection: Axis.horizontal,
-      itemCount: productList!.simpleSubCats!.length,
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ProductListByCategoryActivity(
-                    productList: productList!.simpleSubCats![index]),
-              ));
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0,bottom: 8),
-              child: Container(width: width*.25,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: ThemeApp.containerColor,
-                          width: 1.5),color: ThemeApp.containerColor
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: ClipRRect(
+    return Container(
+        height: 100,
+        alignment: Alignment.center,
+        color: ThemeApp.whiteColor,
+        child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: productList!.simpleSubCats!.length,
+          itemBuilder: (BuildContext context, int index) {
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProductListByCategoryActivity(
+                      productList: productList!.simpleSubCats![index]),
+                ));
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+                child: Container(
+                    width: width * .25,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: ThemeApp.containerColor, width: 1.5),
+                        color: ThemeApp.containerColor),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(productList
+                                    .simpleSubCats![index].imageUrl!),
+                              ) ??
+                              SizedBox(),
+                          /* ClipRRect(
                           borderRadius: const BorderRadius.all(
                               Radius.circular(50)),
                           child: Image.network(
@@ -323,28 +340,27 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                             MediaQuery.of(context).size.height *
                                 .07,
                           )??SizedBox(),
+                        ),*/
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: TextFieldUtils().dynamicText(
-                              productList.simpleSubCats![index].name!,
-                              context,
-                              TextStyle(
-                                color: ThemeApp.blackColor,
-                                // fontWeight: FontWeight.w500,
-                                fontSize: height * .02,
-                              )),
-                        ),
-                      )
-                    ],
-                  )),
-            ),
-          );
-        },
-      ));
-
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: TextFieldUtils().dynamicText(
+                                productList.simpleSubCats![index].name!,
+                                context,
+                                TextStyle(
+                                  color: ThemeApp.blackColor,
+                                  // fontWeight: FontWeight.w500,
+                                  fontSize: height * .02,
+                                )),
+                          ),
+                        )
+                      ],
+                    )),
+              ),
+            );
+          },
+        ));
 
     /*Container(
         height: 200,

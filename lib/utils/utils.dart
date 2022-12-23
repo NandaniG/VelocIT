@@ -79,6 +79,37 @@ class Utils {
         content: Text(message)));
   }
 }
+class SessionManager {
+  final String auth_token = "auth_token";
+  final String badgeCounter = "badge_token";
+
+//set data into shared preferences like this
+  Future<void> setAuthToken(String auth_token) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(this.auth_token, auth_token);
+  }
+
+//get value from shared preferences
+  Future<String> getAuthToken() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    String auth_token;
+    auth_token = (pref.getString(this.auth_token) ?? null)!;
+    return auth_token;
+  }
+  Future<void> setBadgeToken(String badge_token) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(this.badgeCounter, badge_token);
+  }
+
+//get value from shared preferences
+  Future<String> getBadgeToken() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    String badge_token;
+    badge_token = (pref.getString(this.badgeCounter) ?? null)!;
+    return badge_token;
+  }
+}
+
 
 class Prefs {
   //set Preferences
@@ -87,8 +118,22 @@ class Prefs {
   static final Prefs instance = Prefs._privateConstructor();
   static String prefCartId = "prefCartId";
   static String prefRandomUserId = "prefRandomUserId";
+ late SharedPreferences ShareSave ;
+
+  void Instatce() async{
+    ShareSave = await SharedPreferences.getInstance();
+  }
+  Future<bool> set(key, value) async{
+    return ShareSave.setString(key, value);
+
+  }
+
+  Future<String?> get(key) async{
+    return ShareSave.getString(key);
+  }
 
 
+  /////
   Future<void> setDoubleToken(String key, double value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setDouble(key, value);
@@ -154,7 +199,6 @@ class Prefs {
     return Text("${'\u20A8' + value}");
   }
 }
-
 TextStyle SafeGoogleFont(
     String fontFamily, {
       TextStyle? textStyle,

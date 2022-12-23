@@ -25,10 +25,12 @@ class UpdateCartModel {
 
 class Payload {
   int? id;
+  // List<Null>? prodItemsForPurchase;
+  // List<Null>? serviceItemsForPurchase;
   List? prodItemsForPurchase;
   List? serviceItemsForPurchase;
-  List? ordersForPurchase;
-  List? ordersSavedLater;
+  List<OrdersForPurchase>? ordersForPurchase;
+  List<OrdersSavedLater>? ordersSavedLater;
   int? tempUserId;
   var scratchedTotal;
   var mrpTotal;
@@ -68,16 +70,16 @@ class Payload {
       // });
     }
     if (json['orders_for_purchase'] != null) {
-      ordersForPurchase = <Null>[];
-      // json['orders_for_purchase'].forEach((v) {
-      //   ordersForPurchase!.add(new Null.fromJson(v));
-      // });
+      ordersForPurchase = <OrdersForPurchase>[];
+      json['orders_for_purchase'].forEach((v) {
+        ordersForPurchase!.add(new OrdersForPurchase.fromJson(v));
+      });
     }
     if (json['orders_saved_later'] != null) {
-      ordersSavedLater = <Null>[];
-      // json['orders_saved_later'].forEach((v) {
-      //   ordersSavedLater!.add(new Null.fromJson(v));
-      // });
+      ordersSavedLater = <OrdersSavedLater>[];
+      json['orders_saved_later'].forEach((v) {
+        ordersSavedLater!.add(new OrdersSavedLater.fromJson(v));
+      });
     }
     tempUserId = json['tempUserId'];
     scratchedTotal = json['scratched_total'];
@@ -120,3 +122,132 @@ class Payload {
   }
 }
 
+class OrdersForPurchase {
+  int? id;
+  String? currentStatus;
+  var orderNumber;
+  bool? isProductItem;
+  bool? isServiceItem;
+  bool? isCancelled;
+  bool? isUndeliverable;
+  var itemQuantity;
+var goodsCharges;
+  double? deliveryCharges;
+  double? discount;
+ double? gstAmount;
+  double? netPayable;
+
+  OrdersForPurchase(
+      {this.id,
+        this.currentStatus,
+        this.orderNumber,
+        this.isProductItem,
+        this.isServiceItem,
+        this.isCancelled,
+        this.isUndeliverable,
+        this.itemQuantity,
+        this.goodsCharges,
+        this.deliveryCharges,
+        this.discount,
+        this.gstAmount,
+        this.netPayable});
+
+  OrdersForPurchase.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    currentStatus = json['current_status'];
+    orderNumber = json['orderNumber'];
+    isProductItem = json['is_product_item'];
+    isServiceItem = json['is_service_item'];
+    isCancelled = json['is_cancelled'];
+    isUndeliverable = json['is_undeliverable'];
+    itemQuantity = json['item_quantity'];
+    goodsCharges = json['goods_charges'];
+    deliveryCharges = json['delivery_charges'];
+    discount = json['discount'];
+    gstAmount = json['gst_amount'];
+    netPayable = json['net_payable'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['current_status'] = this.currentStatus;
+    data['orderNumber'] = this.orderNumber;
+    data['is_product_item'] = this.isProductItem;
+    data['is_service_item'] = this.isServiceItem;
+    data['is_cancelled'] = this.isCancelled;
+    data['is_undeliverable'] = this.isUndeliverable;
+    data['item_quantity'] = this.itemQuantity;
+    data['goods_charges'] = this.goodsCharges;
+    data['delivery_charges'] = this.deliveryCharges;
+    data['discount'] = this.discount;
+    data['gst_amount'] = this.gstAmount;
+    data['net_payable'] = this.netPayable;
+    return data;
+  }
+}
+
+class OrdersSavedLater {
+  int? id;
+  String? currentStatus;
+  Null? orderNumber;
+  bool? isProductItem;
+  bool? isServiceItem;
+  bool? isCancelled;
+  bool? isUndeliverable;
+  int? itemQuantity;
+  int? goodsCharges;
+  int? deliveryCharges;
+  int? discount;
+  int? gstAmount;
+  int? netPayable;
+
+  OrdersSavedLater(
+      {this.id,
+        this.currentStatus,
+        this.orderNumber,
+        this.isProductItem,
+        this.isServiceItem,
+        this.isCancelled,
+        this.isUndeliverable,
+        this.itemQuantity,
+        this.goodsCharges,
+        this.deliveryCharges,
+        this.discount,
+        this.gstAmount,
+        this.netPayable});
+
+  OrdersSavedLater.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    currentStatus = json['current_status'];
+    orderNumber = json['orderNumber'];
+    isProductItem = json['is_product_item'];
+    isServiceItem = json['is_service_item'];
+    isCancelled = json['is_cancelled'];
+    isUndeliverable = json['is_undeliverable'];
+    itemQuantity = json['item_quantity'];
+    goodsCharges = json['goods_charges'];
+    deliveryCharges = json['delivery_charges'];
+    discount = json['discount'];
+    gstAmount = json['gst_amount'];
+    netPayable = json['net_payable'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['current_status'] = this.currentStatus;
+    data['orderNumber'] = this.orderNumber;
+    data['is_product_item'] = this.isProductItem;
+    data['is_service_item'] = this.isServiceItem;
+    data['is_cancelled'] = this.isCancelled;
+    data['is_undeliverable'] = this.isUndeliverable;
+    data['item_quantity'] = this.itemQuantity;
+    data['goods_charges'] = this.goodsCharges;
+    data['delivery_charges'] = this.deliveryCharges;
+    data['discount'] = this.discount;
+    data['gst_amount'] = this.gstAmount;
+    data['net_payable'] = this.netPayable;
+    return data;
+  }
+}

@@ -8,7 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/FindProductBySubCategoryModel.dart';
 import 'package:velocit/utils/utils.dart';
+import '../../../Core/Model/CartModels/updateCartModel.dart';
 import '../../../Core/Model/productSpecificListModel.dart';
+import '../../../Core/Model/scannerModel/SingleProductModel.dart';
 import '../../../Core/ViewModel/product_listing_view_model.dart';
 import '../../../Core/data/responses/status.dart';
 import '../../../Core/repository/cart_repository.dart';
@@ -69,11 +71,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     // TODO: implement initState
     super.initState();
     randomNumber = random.nextInt(100);
-    productSpecificListViewModel.productBySubCategoryWithGet(
-      0,
-      10,
-      4,
-    );
+    productSpecificListViewModel.productSingleIDListWithGet(
+        context, widget.id.toString());
     print("Random number : " + data.toString());
     print("widget.id! number : " + widget.id!.toString());
 
@@ -111,23 +110,51 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   }
 
 // update cart list
-  updateCart(var merchantId, int quantity) async {
-    var cartId = await Prefs.instance.getToken(Prefs.prefCartId);
+  updateCart(
+    var merchantId,
+    int quantity,
+    ProductProvider productProvider,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    var userId ='';
+
+    StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+    StringConstant.RandomUserLoginId =
+        (prefs.getString('isRandomUserId')) ?? '';
+
+    StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+
     var prefUserId = await Prefs.instance.getToken(
       Prefs.prefRandomUserId,
     );
-    print("cartId from Pref" + cartId.toString());
+    print("cartId from Pref" + StringConstant.UserCartID.toString());
     print("prefUserId from Pref" + prefUserId.toString());
 
+    if (StringConstant.UserLoginId.toString() == '' ||
+        StringConstant.UserLoginId.toString() == null) {
+      userId = StringConstant.RandomUserLoginId;
+    } else {
+      userId = StringConstant.UserLoginId;
+    }
     Map<String, String> data = {
-      "cartId": cartId.toString(),
-      "userId": prefUserId.toString(),
+      // "cartId": StringConstant.UserCartID.toString(),
+      "cartId": StringConstant.UserCartID.toString(),
+      "userId": userId,
       "productId": widget.id.toString(),
       "merchantId": merchantId.toString(),
       "qty": quantity.toString()
     };
     print("update cart DATA" + data.toString());
     CartRepository().updateCartPostRequest(data, context);
+    productProvider.badgeFinalCount = quantity;
+    prefs.setString(
+      'setBadgeCountPref',
+      quantity.toString(),
+    );
+    setState(() {});
+    StringConstant.BadgeCounterValue =
+        (prefs.getString('setBadgeCountPref')) ?? '';
+    print("Badge,........" + StringConstant.BadgeCounterValue);
   }
 
   remainingCounters() async {
@@ -177,7 +204,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     child: Consumer<ProductSpecificListViewModel>(
                         builder: (context, productSubCategoryProvider, child) {
                       switch (productSubCategoryProvider
-                          .productSubCategory.status) {
+                          .singleproductSpecificList.status) {
                         case Status.LOADING:
                           print("Api load");
 
@@ -186,111 +213,99 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           print("Api error");
 
                           return Text(productSubCategoryProvider
-                              .productSubCategory.message
+                              .singleproductSpecificList.message
                               .toString());
                         case Status.COMPLETED:
                           print("Api calll");
-                          List<Content>? subProductList;
+                          SingleProductPayload? model =
+                              productSubCategoryProvider
+                                  .singleproductSpecificList.data!.payload;
+//                           List<SingleProductsubCategory>? subProductList;
+// var payLoadData= productSubCategoryProvider.singleproductSpecificList
+//     .data!.payload!;
 
-                          subProductList = [];
-                          for (int i = 0;
-                              i <
-                                  productSubCategoryProvider.productSubCategory
-                                      .data!.payload!.content!.length;
-                              i++) {
-                            subProductList = productSubCategoryProvider
-                                .productSubCategory.data!.payload!.content;
-                            if (subProductList![i].id == widget.id) {
-                              print("subProductList shortname" +
-                                  subProductList![i].shortName.toString());
-                              print("widget id ....." + widget.id.toString());
-                              print("details id ....." +
-                                  productSubCategoryProvider.productSubCategory
-                                      .data!.payload!.content![i].id
-                                      .toString());
-                            }
+                          if (widget.id == model!.id) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                productImage(model),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 20,
+                                    right: 20,
+                                  ),
+                                  child: TextFieldUtils()
+                                      .homePageheadingTextField(
+                                          model!.shortName!, context),
+                                ),
+                                SizedBox(
+                                  height: height * .01,
+                                ),
+                                // Text("Merchant  "+model.merchants![0].merchantName.toString() ),
+                                model.merchants!.isNotEmpty
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 20,
+                                          right: 20,
+                                        ),
+                                        child: TextFieldUtils()
+                                            .homePageTitlesTextFields(
+                                                model!.merchants![0]
+                                                    .merchantName!,
+                                                context),
+                                      )
+                                    : SizedBox(),
+                                model!.merchants!.isNotEmpty
+                                    ? SizedBox(
+                                        height: height * .01,
+                                      )
+                                    : SizedBox(),
+                                rattingBar(model),
+                                SizedBox(
+                                  height: height * .01,
+                                ),
+                                prices(model),
+                                SizedBox(
+                                  height: height * .01,
+                                ),
+                                model.productVariants!.isNotEmpty
+                                    ? availableVariant(model)
+                                    : SizedBox(),
+                                SizedBox(
+                                  height: height * .01,
+                                ),
+                                productDescription(model),
+                                SizedBox(
+                                  height: height * .01,
+                                ),
+                                counterWidget(model),
+                                SizedBox(
+                                  height: height * .01,
+                                ),
+                                addToCart(model),
 
-                            if (subProductList![i].id == widget.id) {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  productImage(subProductList[i]),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 20,
-                                      right: 20,
-                                    ),
-                                    child: TextFieldUtils()
-                                        .homePageheadingTextField(
-                                            subProductList![i].shortName!,
-                                            context),
+                                //similar product
+
+                                /*   SizedBox(
+                                  height: height * .03,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 20,
+                                    right: 20,
                                   ),
-                                  SizedBox(
-                                    height: height * .01,
-                                  ),
-                                  subProductList![i].merchants!.isNotEmpty
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 20,
-                                            right: 20,
-                                          ),
-                                          child: TextFieldUtils()
-                                              .homePageTitlesTextFields(
-                                                  subProductList![i]
-                                                      .merchants![0]
-                                                      .merchantName!,
-                                                  context),
-                                        )
-                                      : SizedBox(),
-                                  subProductList![i].merchants!.isNotEmpty
-                                      ? SizedBox(
-                                          height: height * .01,
-                                        )
-                                      : SizedBox(),
-                                  rattingBar(),
-                                  SizedBox(
-                                    height: height * .01,
-                                  ),
-                                  prices(subProductList![i]),
-                                  SizedBox(
-                                    height: height * .01,
-                                  ),
-                                  subProductList![i].productVariants!.isNotEmpty
-                                      ? availableVariant(subProductList![i])
-                                      : SizedBox(),
-                                  SizedBox(
-                                    height: height * .01,
-                                  ),
-                                  productDescription(subProductList![i]),
-                                  SizedBox(
-                                    height: height * .01,
-                                  ),
-                                  counterWidget(subProductList[i]),
-                                  SizedBox(
-                                    height: height * .01,
-                                  ),
-                                  addToCart(subProductList![i]),
-                                  SizedBox(
-                                    height: height * .03,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 20,
-                                      right: 20,
-                                    ),
-                                    child: TextFieldUtils()
-                                        .listHeadingTextField(
-                                            "Similar Products", context),
-                                  ),
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        .02,
-                                  ),
-                                  similarProductList()
-                                ],
-                              );
-                            }
+                                  child: TextFieldUtils()
+                                      .listHeadingTextField(
+                                      "Similar Products", context),
+                                ),
+                                SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      .02,
+                                ),
+                                similarProductList()*/
+                              ],
+                            );
                           }
                       }
                       return Container(
@@ -372,7 +387,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
-  Widget productImage(Content subProductList) {
+  Widget productImage(SingleProductPayload? model) {
     return Padding(
       padding: const EdgeInsets.only(
         left: 20,
@@ -388,12 +403,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             color: ThemeApp.whiteColor,
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
-              child: subProductList!.imageUrls![0].imageUrl!.isNotEmpty
+              child: model!.imageUrls![0].imageUrl!.isNotEmpty
                   ? Image.network(
                         // width: double.infinity,
-                        subProductList!
-                                .imageUrls![imageVariantIndex].imageUrl! ??
-                            '',
+                        model!.imageUrls![imageVariantIndex].imageUrl! ?? '',
                         fit: BoxFit.fill,
                         width: width,
                         height: height * .28,
@@ -408,13 +421,13 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       )),
             ),
           ),
-          variantImages(subProductList),
+          variantImages(model),
         ],
       ),
     );
   }
 
-  Widget rattingBar() {
+  Widget rattingBar(SingleProductPayload model) {
     return Container(
       width: width * .7,
       padding: const EdgeInsets.only(
@@ -426,7 +439,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           RatingBar.builder(
             itemSize: height * .03,
             // initialRating: double.parse(widget.productList["productRatting"]),
-            initialRating: 5.5,
+            initialRating: 4.5,
             minRating: 1,
             direction: Axis.horizontal,
             allowHalfRating: true,
@@ -440,13 +453,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
               print(rating);
             },
           ),
-          TextFieldUtils().subHeadingTextFields('${12} Reviews', context),
         ],
       ),
     );
   }
 
-  Widget prices(Content subProductList) {
+  Widget prices(SingleProductPayload model) {
     return Container(
       padding: const EdgeInsets.only(
         left: 20,
@@ -457,25 +469,26 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         children: [
           TextFieldUtils().textFieldHeightFour(
               indianRupeesFormat
-                  .format(subProductList.defaultSellPrice ?? randomNumber),
+                  .format(double.parse(model.defaultSellPrice.toString())),
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().pricesLineThrough(
-              indianRupeesFormat.format(subProductList.defaultMrp ?? 0.0),
+              indianRupeesFormat
+                  .format(double.parse(model.defaultMrp.toString()) ?? 0.0),
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().textFieldTwoFiveGrey(
-              subProductList.defaultDiscount.toInt().toString() + "%", context),
+              model.defaultDiscount.toString() + "%", context),
         ],
       ),
     );
   }
 
-  Widget availableVariant(Content subProductList) {
+  Widget availableVariant(SingleProductPayload model) {
     return Container(
       width: width,
       decoration: const BoxDecoration(
@@ -495,7 +508,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     color: ThemeApp.blackColor,
                     fontWeight: FontWeight.w500,
                     fontSize: height * .022)),
-            variantImages(subProductList),
+            variantImages(model),
             TextFieldUtils().subHeadingTextFields(
                 "* Images may differ in appearance from the actual product",
                 context),
@@ -505,7 +518,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
-  Widget productDescription(Content subProductList) {
+  Widget productDescription(SingleProductPayload model) {
     return Container(
       width: width,
       decoration: const BoxDecoration(
@@ -527,7 +540,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             SizedBox(
               height: height * .01,
             ),
-            Text(subProductList.oneliner!,
+            Text(model.oneliner!,
                 style: TextStyle(
                   color: ThemeApp.darkGreyColor,
                   // fontWeight: FontWeight.w500,
@@ -539,13 +552,13 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
-  Widget variantImages(Content subProductList) {
+  Widget variantImages(SingleProductPayload model) {
     return Container(
       height: height * .08,
       child: ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: subProductList.imageUrls!.length,
+          itemCount: model.imageUrls!.length,
           itemBuilder: (BuildContext context, int index) {
             return Row(
               children: [
@@ -562,11 +575,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      child: subProductList
-                              .imageUrls![index].imageUrl!.isNotEmpty
+                      child: model.imageUrls![index].imageUrl!.isNotEmpty
                           ? Image.network(
                               // width: double.infinity,
-                              subProductList.imageUrls![index].imageUrl!,
+                              model.imageUrls![index].imageUrl!,
                               fit: BoxFit.fill,
                               height: MediaQuery.of(context).size.height * .05,
                               width: width * .1,
@@ -584,92 +596,95 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
-  Widget counterWidget(Content subProductList) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: TextFieldUtils().dynamicText(
-                'Quantity : ',
-                context,
-                TextStyle(
-                    color: ThemeApp.blackColor,
-                    // fontWeight: FontWeight.w500,
-                    fontSize: height * .023,
-                    fontWeight: FontWeight.w500)),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * .05,
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: height * 0.06,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
+  Widget counterWidget(SingleProductPayload model) {
+    return model.merchants!.isNotEmpty
+        ? Padding(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: TextFieldUtils().dynamicText(
+                      'Quantity : ',
+                      context,
+                      TextStyle(
+                          color: ThemeApp.blackColor,
+                          // fontWeight: FontWeight.w500,
+                          fontSize: height * .023,
+                          fontWeight: FontWeight.w500)),
                 ),
-                color: ThemeApp.whiteColor,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          counterPrice--;
-                          remainingCounters();
-
-                          var data = {
-                            "user_id": userId.toString(),
-                            "item_code": subProductList.productCode.toString(),
-                            "qty": counterPrice.toString()
-                          };
-                          print("data maping " + data.toString());
-                          productSpecificListViewModel.cartListWithPut(
-                              context, data);
-                        });
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                        ),
-                        child: const Icon(
-                          Icons.remove,
-                          // size: 20,
-                          color: ThemeApp.tealButtonColor,
-                        ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .05,
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    height: height * 0.06,
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
                       ),
+                      color: ThemeApp.whiteColor,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8.0, right: 8, top: 0, bottom: 0),
-                      child: Text(
-                        counterPrice.toString().padLeft(2, '0'),
-                        style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.height * .016,
-                            fontWeight: FontWeight.w400,
-                            overflow: TextOverflow.ellipsis,
-                            color: ThemeApp.tealButtonColor),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          counterPrice++;
-                          remainingCounters();
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                counterPrice--;
+                                remainingCounters();
 
-                          //badge counting
-                          badgeData = 0;
+                                var data = {
+                                  "user_id": userId.toString(),
+                                  "item_code": model.productCode.toString(),
+                                  "qty": counterPrice.toString()
+                                };
+                                print("data maping " + data.toString());
+                                productSpecificListViewModel.cartListWithPut(
+                                    context, data);
+                              });
+                            },
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: ThemeApp.whiteColor,
+                              ),
+                              child: const Icon(
+                                Icons.remove,
+                                // size: 20,
+                                color: ThemeApp.tealButtonColor,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0, right: 8, top: 0, bottom: 0),
+                            child: Text(
+                              counterPrice.toString().padLeft(2, '0'),
+                              style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.height * .016,
+                                  fontWeight: FontWeight.w400,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: ThemeApp.tealButtonColor),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                counterPrice++;
+                                remainingCounters();
 
-                          ///counting will manage after api
-                          /*   for (int i = 0;
+                                //badge counting
+                                badgeData = 0;
+
+                                ///counting will manage after api
+                                /*   for (int i = 0;
                                             i < cartProvider.cartList.length;
                                             i++) {
                                               if (widget.productList.shortName==
@@ -706,48 +721,49 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                             //setting value of count to the badge
 */
 
-                          ///api for counting
+                                ///api for counting
 
-                          var data = {
-                            "user_id": userId.toString(),
-                            // "item_code": widget
-                            //     .productList.categoryCode
-                            //     .toString(),
-                            "item_code": '1',
-                            "qty": counterPrice.toString()
-                          };
-                          print("data maping " + data.toString());
-                          productSpecificListViewModel.cartListWithPut(
-                              context, data);
-                        });
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          // size: 20,
-                          color: ThemeApp.tealButtonColor,
-                        ),
+                                var data = {
+                                  "user_id": userId.toString(),
+                                  // "item_code": widget
+                                  //     .productList.categoryCode
+                                  //     .toString(),
+                                  "item_code": '1',
+                                  "qty": counterPrice.toString()
+                                };
+                                print("data maping " + data.toString());
+                                productSpecificListViewModel.cartListWithPut(
+                                    context, data);
+                              });
+                            },
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: ThemeApp.whiteColor,
+                              ),
+                              child: const Icon(
+                                Icons.add,
+                                // size: 20,
+                                color: ThemeApp.tealButtonColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          )
+        : SizedBox();
   }
 
-  Widget addToCart(Content subProductList) {
-    return Consumer<CartManageProvider>(
-        builder: (context, cartProvider, child) {
+  Widget addToCart(SingleProductPayload model) {
+    return Consumer<ProductProvider>(
+        builder: (context, productProvider, child) {
       return Consumer<ProductSpecificListViewModel>(
           builder: (context, productListProvider, child) {
-        return subProductList.merchants!.isNotEmpty
+        return model.merchants!.isNotEmpty
             ? Padding(
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 5, bottom: 5),
@@ -761,7 +777,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         flex: 1,
                         child: InkWell(
                             onTap: () {
-                              setState(() {
+                              /*    setState(() async {
                                 // counterPrice++;
                                 userId = 1;
                                 remainingCounters();
@@ -769,26 +785,32 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 //     productProvider, homeProvider);
                                 print("Badge counting before..." +
                                     counterPrice.toString());
-                                if (counterPrice > 0) {
-                                  cartProvider.badgeFinalCount =
-                                      cartProvider.badgeFinalCount + 1;
-                                  print("widget.value.badgeFinalCount" +
-                                      cartProvider.badgeFinalCount.toString());
-                                } else {}
-                                var data = {
-                                  "user_id": userId.toString(),
-                                  "item_code":
-                                      subProductList.productCode.toString(),
-                                  "qty": counterPrice.toString()
-                                };
+                                // if (counterPrice > 0) {
+                                //   cartProvider.badgeFinalCount =
+                                //       cartProvider.badgeFinalCount + 1;
+                                //   print("widget.value.badgeFinalCount" +
+                                //       cartProvider.badgeFinalCount.toString());
+                                // } else {}
+                                // var data = {
+                                //   "user_id": userId.toString(),
+                                //   "item_code":
+                                //       subProductList.productCode.toString(),
+                                //   "qty": counterPrice.toString()
+                                // };
+
+
                                 print("data maping " + data.toString());
-                                productSpecificListViewModel.cartListWithPut(
-                                    context, data);
+                                // productSpecificListViewModel.cartListWithPut(
+                                //     context, data);
+                                //
 
                                 // method for update cart value
-                                updateCart(subProductList.merchants![0].id,
-                                    counterPrice);
-                              });
+
+
+
+                              }); */
+                              updateCart(model.merchants![0].id, counterPrice,
+                                  productProvider);
                             },
                             child: Container(
                                 height: height * 0.06,

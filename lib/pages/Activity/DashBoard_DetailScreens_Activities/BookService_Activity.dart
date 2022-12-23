@@ -155,17 +155,19 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                                   textColor: Colors.black,
                                   title: Row(
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(50)),
-                                        child: Image.network(
-                                          widget.shopByCategoryList![index]
-                                              .productCategoryImageId!,
-                                          fit: BoxFit.fill,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .07,
+                                      CircleAvatar(
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(50)),
+                                          child: Image.network(
+                                            widget.shopByCategoryList![index]
+                                                .productCategoryImageId!,
+                                            fit: BoxFit.fill,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .07,
+                                          ),
                                         ),
                                       ),
                                       SizedBox(
@@ -203,41 +205,40 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
-              ?           Container(
-              height: (MediaQuery.of(context).orientation ==
-                  Orientation.landscape)
-                  ? height * .5
-                  : height * 0.2,
-              width: width,
-              child: CarouselSlider(
-                items: snapshot.data?.map((e) {
-                  return Card(
-                    margin: EdgeInsets.zero,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    color: ThemeApp.whiteColor,
-                    child: ClipRRect(
-                        borderRadius:
-                        const BorderRadius.all(Radius.circular(10)),
-                        child:Container(
-                          width: width,
-                          color: Colors.red,
-                          child: Image.asset(
-                            e.sponsorlogo,
-                            fit: BoxFit.fill,
-                          ),
-                        )),
-                  );
-                }).toList(),
-                options: CarouselOptions(
-                    autoPlay: false,
-                    viewportFraction: 1,
-                    height: height * .3),
-              ))
+              ? Container(
+                  height: (MediaQuery.of(context).orientation ==
+                          Orientation.landscape)
+                      ? height * .5
+                      : height * 0.2,
+                  width: width,
+                  child: CarouselSlider(
+                    items: snapshot.data?.map((e) {
+                      return Card(
+                        margin: EdgeInsets.zero,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        color: ThemeApp.whiteColor,
+                        child: ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            child: Container(
+                              width: width,
+                              color: Colors.red,
+                              child: Image.asset(
+                                e.sponsorlogo,
+                                fit: BoxFit.fill,
+                              ),
+                            )),
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                        autoPlay: false,
+                        viewportFraction: 1,
+                        height: height * .3),
+                  ))
 
-
-          /*Container(
+              /*Container(
                   height: height * 0.23,
                   child: CarouselSlider(
                     items: snapshot.data?.map((e) {
@@ -249,11 +250,11 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                         child: ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
-                            child: *//*Image.network(
+                            child: */ /*Image.network(
                             // width: double.infinity,
                             e.sponsorlogo,
                             fit: BoxFit.fill,
-                          ),*//*
+                          ),*/ /*
                                 Image.asset(
                               e.sponsorlogo,
                               fit: BoxFit.fill,
@@ -269,14 +270,13 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
   }
 
   Widget subListOfCategories(ProductList productList) {
-    return  Container(
+    return Container(
         height: 230,
         alignment: Alignment.center,
         child: GridView.builder(
           itemCount: productList!.simpleSubCats!.length,
           physics: const AlwaysScrollableScrollPhysics(),
-          gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             mainAxisSpacing: 20,
             crossAxisSpacing: 10,
             childAspectRatio: 1.1,
@@ -295,8 +295,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                        color: ThemeApp.textFieldBorderColor,
-                        width: 1.5),
+                        color: ThemeApp.textFieldBorderColor, width: 1.5),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -304,18 +303,19 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                     children: [
                       Expanded(
                         flex: 2,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(50)),
-                          child: Image.network(
-                            productList.simpleSubCats![index]
-                                .imageUrl! ??
-                                '',
-                            fit: BoxFit.fill,
-                            height:
-                            MediaQuery.of(context).size.height *
-                                .07,
-                          )??SizedBox(),
+                        child: CircleAvatar(
+                          child: ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(50)),
+                            child: Image.network(
+                                  productList.simpleSubCats![index].imageUrl! ??
+                                      '',
+                                  fit: BoxFit.fill,
+                                  // height:
+                                  //     MediaQuery.of(context).size.height * .07,
+                                ) ??
+                                SizedBox(),
+                          ),
                         ),
                       ),
                       Expanded(

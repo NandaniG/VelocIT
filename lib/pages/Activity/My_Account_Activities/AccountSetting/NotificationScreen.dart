@@ -54,7 +54,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   Widget mainUI() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+      padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
       child: Consumer<HomeProvider>(builder: (context, value, child) {
         return Column(
           children: [

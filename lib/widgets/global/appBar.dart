@@ -10,6 +10,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/ProductCategoryModel.dart';
 import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
@@ -18,10 +19,13 @@ import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 
 import '../../Core/ViewModel/dashboard_view_model.dart';
+import '../../Core/ViewModel/product_listing_view_model.dart';
 import '../../Core/data/responses/status.dart';
+import '../../Core/repository/cart_repository.dart';
 import '../../pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
+import '../../pages/Activity/Product_Activities/ProductDetails_activity.dart';
 import '../../pages/Activity/Product_Activities/Products_List.dart';
 import '../../pages/SearchContent/searchProductListScreen.dart';
 import '../../pages/homePage.dart';
@@ -190,6 +194,70 @@ Widget appBarWidget(
               Consumer<HomeProvider>(builder: (context, provider, child) {
                 return Consumer<ProductProvider>(
                     builder: (context, product, child) {
+                  return /*StringConstant.isLogIn == false
+                        ? const SizedBox(
+                            width: 0,
+                          )
+                        : */
+                      InkWell(
+                    onTap: () {
+                      /// locale languages
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //       builder: (context) => FlutterLocalizationDemo()),
+                      // );
+
+                      if (kDebugMode) {
+                        print("provider.cartProductList");
+                        // print(provider.cartProductList);
+                      }
+                      product.badgeFinalCount;
+
+                      provider.isBottomAppCart = true;
+                      provider.isHome = true;
+
+                      // Navigator.pushAndRemoveUntil(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => CartDetailsActivity(
+                      //             value: product, productList: provider.cartProductList)),
+                      //         (route) => false);
+
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const MyAccountActivity(),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: SvgPicture.asset(
+                        'assets/appImages/profileIcon.svg',
+                        color: ThemeApp.primaryNavyBlackColor,
+                        semanticsLabel: 'Acme Logo',
+                        theme: SvgTheme(
+                          currentColor: ThemeApp.primaryNavyBlackColor,
+                        ),
+                        height: height * .04,
+                      ),
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       top: 13, bottom: 13, right: 15),
+                    //   child: Image.asset(
+                    //     'assets/appImages/userIcon.png',
+                    //     // width: double.infinity,
+                    //     height: height * .1,
+                    //     color: ThemeApp.primaryNavyBlackColor,
+                    //     fit: BoxFit.fill,
+                    //   ),
+                    // ),
+                  );
+                });
+              }),
+/*              Consumer<HomeProvider>(builder: (context, provider, child) {
+                return Consumer<ProductProvider>(
+                    builder: (context, product, child) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 5),
                     child: Stack(
@@ -264,7 +332,7 @@ Widget appBarWidget(
                     ),
                   );
                 });
-              }),
+              }),*/
             ],
           ),
         ),
@@ -349,7 +417,6 @@ Widget searchBar(BuildContext context) {
     create: (BuildContext context) => productCategories,
     child: Consumer<DashboardViewModel>(
         builder: (context, dashBoardProvider, child) {
-
       return Consumer<HomeProvider>(builder: (context, provider, child) {
         return Container(
           width: width,
@@ -362,7 +429,10 @@ Widget searchBar(BuildContext context) {
 
             controller: StringConstant.controllerSpeechToText,
             onFieldSubmitted: (value) {
-              print("Getting Value"+productCategories.productCategoryList.data!.productList![0].name. toString());
+              print("Getting Value" +
+                  productCategories
+                      .productCategoryList.data!.productList![0].name
+                      .toString());
               switch (dashBoardProvider.productCategoryList.status) {
                 case Status.LOADING:
                   return print("Getting Value");
@@ -376,14 +446,13 @@ Widget searchBar(BuildContext context) {
                   productCategories.getProductBySearchTermsWithGet(
                     0,
                     10,
-                    StringConstant.controllerSpeechToText.text .toString(),
+                    StringConstant.controllerSpeechToText.text.toString(),
                   );
-                Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SearchProductListScreen(
-),
-                ),
-              );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SearchProductListScreen(),
+                    ),
+                  );
               }
               /*  Navigator.of(context).push(
                 MaterialPageRoute(
@@ -570,7 +639,15 @@ final List<Widget> _tabs = List.unmodifiable([
 ]);
 
 Widget bottomNavBarItems(BuildContext context) {
+  (() {
+    final dashBoardData =
+        Provider.of<DashboardViewModel>(context, listen: false);
+    dashBoardData.productCategoryListingWithGet();
+  });
+
   int _currentIndex = 0;
+  final dashBoardData = Provider.of<DashboardViewModel>(context);
+
   return Consumer<HomeProvider>(builder: (context, provider, child) {
     return Consumer<ProductProvider>(builder: (context, product, child) {
       return Consumer<DashboardViewModel>(
@@ -579,7 +656,9 @@ Widget bottomNavBarItems(BuildContext context) {
           backgroundColor: ThemeApp.whiteColor,
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
-          onTap: (int index) {
+          onTap: (int index) async {
+            final preference = await SharedPreferences.getInstance();
+
             _currentIndex = index;
             if (_currentIndex == 0) {
               // Navigator.pushNamed(context, '/dashBoardScreen');
@@ -601,6 +680,8 @@ Widget bottomNavBarItems(BuildContext context) {
                   (route) => false);
             }
             if (_currentIndex == 3) {
+              // final dashBoardData = Provider.of<DashboardViewModel>(context, listen: false).productCategoryList;
+              List<ProductList>? serviceListss;
               // colors = ThemeApp.blackColor;
               List<ProductList>? serviceList =
                   productCategories.productCategoryList.data!.productList;
@@ -608,14 +689,14 @@ Widget bottomNavBarItems(BuildContext context) {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ShopByCategoryActivity(
-                        shopByCategoryList: serviceList,
+                        shopByCategoryList: serviceListss,
 
                         // provider.jsonData["shopByCategoryList"],
                         shopByCategorySelected: 0),
                   ),
                   (route) => false);
             }
-            if (_currentIndex == 4) {
+            /*      if (_currentIndex == 4) {
               if (StringConstant.isLogIn == true) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -623,26 +704,27 @@ Widget bottomNavBarItems(BuildContext context) {
                   ),
                 );
               }
+            }*/
+
+            if (_currentIndex == 4) {
+              // colors = ThemeApp.blackColor;
+
+//             StringConstant.BadgeCounterValue =  (preference.getString('setBadgeCountPref'))??'';
+// print("Badge,........"+ StringConstant.BadgeCounterValue);
+              if (kDebugMode) {}
+              product.badgeFinalCount;
+
+              provider.isBottomAppCart = true;
+              provider.isHome = true;
+
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CartDetailsActivity(
+                          value: product,
+                          productList: provider.cartProductList)),
+                  (route) => false);
             }
-            /*   if (_currentIndex == 4) {
-                // colors = ThemeApp.blackColor;
-
-                if (kDebugMode) {
-                  print("provider.cartProductList");
-                  print(provider.cartProductList);
-                }
-                product.badgeFinalCount;
-
-                provider.isBottomAppCart = true;
-                provider.isHome = true;
-
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CartDetailsActivity(
-                            value: product, productList: provider.cartProductList)),
-                    (route) => false);
-              }*/
           },
           items: [
             BottomNavigationBarItem(
@@ -697,86 +779,91 @@ Widget bottomNavBarItems(BuildContext context) {
                 label: ''),
             BottomNavigationBarItem(
                 backgroundColor: Colors.white,
-                icon: _currentIndex == 4
-                    ? const Padding(
+                icon: /*_currentIndex == 4
+                    ?  Padding(
                         padding: EdgeInsets.only(left: 8.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(
                             Radius.circular(100),
                           ),
-                          child: Icon(Icons.account_circle_rounded,
+                          child: */ /*Icon(Icons.account_circle_rounded,
                               size:
-                                  40) /*Container(
+                                  40) */ /*
+                          Container(
                       alignment: Alignment.center,
-                      child: const Image(
-                        image: NetworkImage(
-                            'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
+                      child: Image.asset(
+                        'assets/appImages/shoppingCart.png',
+                        // width: double.infinity,
+                        // height: height * .11,
+                        color: ThemeApp.primaryNavyBlackColor,
                         fit: BoxFit.fill,
-                      ))*/
+                      ),)
                           ,
                         ),
                       )
-                    : const Padding(
+                    :  Padding(
                         padding: EdgeInsets.only(left: 8.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(
                             Radius.circular(100),
                           ),
-                          child: Icon(Icons.account_circle_rounded,
+                          child:*/ /* Icon(Icons.account_circle_rounded,
                               size:
-                                  40) /*Container(
-                      alignment: Alignment.center,
-                      child: const Image(
-                        image: NetworkImage(
-                            'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
-                        fit: BoxFit.fill,
-                      ))*/
-                          ,
-                        ),
-                      ),
-                /*Stack(
-                    children: <Widget>[
-                      _currentIndex == 4
-                          ? Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Image.asset('assets/icons/shopping-cart.png',
-                                  height: 35),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Image.asset('assets/icons/shopping-cart.png',
-                                  height: 35),
-                            ),
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: Container(
-                          padding: EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          constraints: BoxConstraints(
-                              minWidth: 22,
-                              minHeight: 10,
-                              maxHeight: 25,
-                              maxWidth: 25),
-                          child: Padding(
-                            padding: const EdgeInsets.all(1),
-                            child: Text(
-                              '${product.badgeFinalCount}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),*/
+                                  40) */ /*Image.asset(
+                                    'assets/appImages/shoppingCart.png',
+                                    // width: double.infinity,
+                                    // height: height * .11,
+                                    color: ThemeApp.primaryNavyBlackColor,
+                                    fit: BoxFit.fill,
+                                  ),
 
+                        ),
+                      ),*/
+                    Stack(
+                  children: <Widget>[
+                    _currentIndex == 4
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Image.asset('assets/icons/shopping-cart.png',
+                                height: 35),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Image.asset('assets/icons/shopping-cart.png',
+                                height: 35),
+                          ),
+                    StringConstant.BadgeCounterValue == ''
+                        ? SizedBox()
+                        : Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              constraints: BoxConstraints(
+                                  minWidth: 22,
+                                  minHeight: 10,
+                                  maxHeight: 25,
+                                  maxWidth: 25),
+                              child: Padding(
+                                padding: const EdgeInsets.all(1),
+                                child: Text(
+                                  // CartRepository().badgeLength.toString(),
+                                  '${StringConstant.BadgeCounterValue}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          )
+                  ],
+                ),
                 label: ''),
           ],
         );
@@ -832,6 +919,15 @@ class ScannerWidget extends StatefulWidget {
 }
 
 class _ScannerWidgetState extends State<ScannerWidget> {
+  ProductSpecificListViewModel getSingleProduct =
+      ProductSpecificListViewModel();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   var getResult = 'QR Code Result';
   final controller = BarcodeFinderController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -891,13 +987,13 @@ class _ScannerWidgetState extends State<ScannerWidget> {
     );
   }
 
-  Widget _loading() =>  Padding(
+  Widget _loading() => Padding(
         padding: EdgeInsets.all(8.0),
         child: TextFieldUtils().circularBar(context),
       );
-
+  String barcodeScanRes = '';
   Future<void> scanQR() async {
-    String barcodeScanRes;
+    barcodeScanRes = '';
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
@@ -905,6 +1001,13 @@ class _ScannerWidgetState extends State<ScannerWidget> {
       _scanBarcode = barcodeScanRes;
       print('_scanBarcode : ' + barcodeScanRes);
       print('_scanBarcode : ' + _scanBarcode);
+      // getSingleProduct.getSingleProductScannerWithGet(_scanBarcode.toString());
+      getSingleProduct.getSingleProductScannerWithGet(_scanBarcode.toString(),context);
+
+      final prefs = await SharedPreferences.getInstance();
+
+      StringConstant.ScannedProductId = (prefs.getString('ScannedProductIDPref')) ?? '';
+
 
       if (_scanBarcode == '-1') {
         Utils.flushBarErrorMessage("Please scan proper content", context);
@@ -912,8 +1015,23 @@ class _ScannerWidgetState extends State<ScannerWidget> {
         Utils.successToast(_scanBarcode);
       }
       print('_scanBarcode timer... : ' + _scanBarcode);
+      print('_scanBarcode timer... : ' + StringConstant.ScannedProductId);
+      if( StringConstant.ScannedProductId !=''||StringConstant.ScannedProductId !=null) {
 
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsActivity(
+              id: int.parse(StringConstant.ScannedProductId),
+
+            ),
+          ),
+        ).then((value) => setState(() {  _scanBarcode = '';}));
+        _scanBarcode = '';
+      }else{
+        _scanBarcode = '';
+      }
       if (!mounted) return;
+
       print('_scanBarcode : ' + _scanBarcode);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';

@@ -6,8 +6,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/ViewModel/cart_view_model.dart';
 import 'package:velocit/utils/routes/routes.dart';
 
+import '../../Core/Model/CartModels/CartSpecificIdModel.dart';
+import '../../Core/data/responses/status.dart';
 import '../../services/models/CartModel.dart';
 import '../../services/models/ProductDetailModel.dart';
 import '../../services/providers/Home_Provider.dart';
@@ -54,12 +57,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     decimalDigits: 0, // change it to get decimal places
     symbol: '₹',
   );
+  CartViewModel cartListView = CartViewModel();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // getListFromPref();
+    getCartId();
     if (kDebugMode) {
       print("widget.cartDetailScreen[]${widget.productList}");
       print("value.cartList.length");
@@ -74,7 +79,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     finalTotalPrice = 0.0;
 
     for (int i = 0; i < widget.value.cartList.length; i++) {
-
       // widget.value.cartList[i].cartProductsTempCounter= widget.productList["productTempCounter"];
       print("_________widget.productListcart......" +
           widget.value.cartList[i].cartProductsTempCounter.toString());
@@ -116,6 +120,17 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     }
   }
 
+  getCartId() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+    StringConstant.RandomUserLoginId =
+        (prefs.getString('isRandomUserId')) ?? '';
+    StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+
+    cartListView.cartSpecificIDWithGet(context, StringConstant.UserCartID);
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -123,7 +138,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   }
 
   var listFromPref;
-
 
   @override
   Widget build(BuildContext context) {
@@ -135,77 +149,81 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
-          return  provider.isBottomAppCart ==false? PreferredSize(
-            preferredSize: Size.fromHeight(height * .09),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              color: ThemeApp.darkGreyTab,
+          return provider.isBottomAppCart == false
+              ? PreferredSize(
+                  preferredSize: Size.fromHeight(height * .09),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: ThemeApp.darkGreyTab,
+                    child: AppBar(
+                      centerTitle: false,
+                      elevation: 0,
+                      backgroundColor: ThemeApp.appBackgroundColor,
+                      flexibleSpace: Container(
+                        height: height * .11,
+                        width: width,
+                        decoration: const BoxDecoration(
+                          color: ThemeApp.whiteColor,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15)),
+                        ),
+                      ),
+                      leadingWidth: 40,
+                      leading: Center(
+                        child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: ThemeApp.blackColor,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              // Navigator.pop(context);
+                              Navigator.pop(context);
+                              // Navigator.pushReplacementNamed(context, '/productDetailsActivity').then((_) => setState(() {}));
+                            }),
+                      ),
 
-              child: AppBar(
-                centerTitle: false,
-                elevation: 0,
-                backgroundColor: ThemeApp.appBackgroundColor,
-                flexibleSpace: Container(
-                  height: height * .11,
-                  width: width,
-                  decoration: const BoxDecoration(
-                    color: ThemeApp.whiteColor,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15)),
+                      // leadingWidth: width * .06,
+                      title: Text("My Cart"),
+                      // Row
+                    ),
                   ),
-                ),
-                leadingWidth: 40,
-                leading: Center(
-                  child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: ThemeApp.blackColor,size: 30,),
-                      onPressed: () {
-                      // Navigator.pop(context);
-                      Navigator.pop(context);
-                      // Navigator.pushReplacementNamed(context, '/productDetailsActivity').then((_) => setState(() {}));
-                      }),
-                ),
+                )
+              : PreferredSize(
+                  preferredSize: Size.fromHeight(height * .09),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: ThemeApp.darkGreyTab,
+                    child: AppBar(
+                      centerTitle: false,
+                      elevation: 0,
+                      backgroundColor: ThemeApp.appBackgroundColor,
+                      flexibleSpace: Container(
+                        height: height * .11,
+                        width: width,
+                        decoration: const BoxDecoration(
+                          color: ThemeApp.whiteColor,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15)),
+                        ),
+                      ),
+                      titleSpacing: 0,
+                      leadingWidth: 20,
+                      leading: Transform.scale(
+                          scale: 0,
+                          child: IconButton(
+                              icon: const Icon(Icons.arrow_back,
+                                  color: Colors.white, size: 10),
+                              onPressed: () {})),
 
-                // leadingWidth: width * .06,
-                title: Text("My Cart"),
-                // Row
-              ),
-            ),
-          ):   PreferredSize(
-            preferredSize: Size.fromHeight(height * .09),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              color: ThemeApp.darkGreyTab,
-
-              child: AppBar(
-                centerTitle: false,
-                elevation: 0,
-                backgroundColor: ThemeApp.appBackgroundColor,
-                flexibleSpace: Container(
-                  height: height * .11,
-                  width: width,
-                  decoration: const BoxDecoration(
-                    color: ThemeApp.whiteColor,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15)),
+                      // leadingWidth: width * .06,
+                      title: Text("My Cart"),
+                      // Row
+                    ),
                   ),
-                ),
-                titleSpacing: 0,
-                leadingWidth: 20,
-                leading: Transform.scale(
-                    scale: 0,
-                    child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white,size: 10),
-                        onPressed: () {
-                        })),
-
-                // leadingWidth: width * .06,
-                title: Text("My Cart"),
-                // Row
-              ),
-            ),
-          );
+                );
         }),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -266,7 +284,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 OrderReviewSubActivity(
-                                                    value: value,cartListFromHome:widget.productList ),
+                                                    value: value,
+                                                    cartListFromHome:
+                                                        widget.productList),
                                           ),
                                         )
                                       : Navigator.pushNamed(
@@ -316,55 +336,89 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        child: Consumer<ProductProvider>(builder: (context, value, child) {
-          return Container(
-              height: MediaQuery.of(context).size.height,
-              padding: const EdgeInsets.all(10),
-              child: SingleChildScrollView(
-                child: widget.value.cartList.isEmpty
-                    ? Container(
-                        height: height * .5,
-                        alignment: Alignment.center,
-                        child: TextFieldUtils().dynamicText(
-                            "Cart is Empty",
-                            context,
-                            TextStyle(
-                                color: ThemeApp.blackColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: height * .03,
-                                overflow: TextOverflow.ellipsis)),
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          cartProductList(value),
-                          priceDetails(value),
-                        ],
-                      ),
-              ));
-        }),
+        child:  ChangeNotifierProvider<CartViewModel>(
+              create: (BuildContext context) => cartListView,
+              child: Consumer<CartViewModel>(
+                  builder: (context, cartProvider, child) {
+                switch (cartProvider.cartSpecificID.status) {
+                  case Status.LOADING:
+                    print("Api load");
+
+                    return TextFieldUtils().circularBar(context);
+                  case Status.ERROR:
+                    print("Api error");
+
+                    return Text(cartProvider.cartSpecificID.message.toString());
+                  case Status.COMPLETED:
+                    print("Api calll");
+                    List<OrdersForPurchase>? orderPurchaseList = cartProvider
+                        .cartSpecificID.data!.payload!.ordersForPurchase;
+
+                    print("orderPurchaseList" +
+                        orderPurchaseList!.length.toString());
+                    return Container(
+                        height: MediaQuery.of(context).size.height,
+                        padding: const EdgeInsets.all(10),
+                        child: SingleChildScrollView(
+                          child: /*orderPurchaseList!.length!.isEmpty
+                                    ? Container(
+                                  height: height * .5,
+                                  alignment: Alignment.center,
+                                  child: TextFieldUtils().dynamicText(
+                                      "Cart is Empty",
+                                      context,
+                                      TextStyle(
+                                          color: ThemeApp.blackColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: height * .03,
+                                          overflow: TextOverflow.ellipsis)),
+                                )
+                                    :*/
+                              Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              cartProductList(orderPurchaseList),
+                              priceDetails(cartProvider
+                                  .cartSpecificID.data!.payload!),
+                            ],
+                          ),
+                        ));
+                }
+                return Container(
+                  height: height * .8,
+                  alignment: Alignment.center,
+                  child: TextFieldUtils().dynamicText(
+                      'No Match found!',
+                      context,
+                      TextStyle(
+                          color: ThemeApp.blackColor,
+                          fontSize: height * .03,
+                          fontWeight: FontWeight.bold)),
+                );
+              }))
+
       ),
     );
   }
 
-  Widget cartProductList(ProductProvider value) {
+  Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
     return Container(
-        height: value.cartList.length == 1
+        height: orderPurchaseList!.length == 1
             ? MediaQuery.of(context).size.height * .5
             : MediaQuery.of(context).size.height * .6,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            physics: value.cartList.length == 1
+            physics: orderPurchaseList.length == 1
                 ? NeverScrollableScrollPhysics()
                 : ScrollPhysics(),
-            itemCount: value.cartList.length,
+            itemCount: orderPurchaseList.length,
             itemBuilder: (BuildContext context, int index) {
-              return value.cartList.isEmpty
+              return orderPurchaseList.isEmpty
                   ? const Center(
                       child: Text(
-                      "Hiiii",
+                      "No Match",
                     ))
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -392,10 +446,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                   child: ClipRRect(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(10)),
-                                    child: Image.asset(
+                                    child: Image.network(
                                       // width: double.infinity,
                                       // snapshot.data![index].serviceImage,
-                                      value.cartList[index].cartProductsImage
+                                      orderPurchaseList[index]
+                                          .imageUrl
                                           .toString(),
                                       fit: BoxFit.fill,
                                       // width: width*.18,
@@ -416,24 +471,24 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         TextFieldUtils().appBarTextField(
-                                            value.cartList[index]
-                                                .cartProductsDescription
+                                            orderPurchaseList[index]
+                                                .itemName
                                                 .toString(),
                                             context),
                                         SizedBox(
                                           height: height * .01,
                                         ),
-                                        rattingBar(value, index),
+                                               rattingBar(orderPurchaseList[index], index),
                                         SizedBox(
                                           height: height * .01,
                                         ),
-                                        prices(value, index),
+                                        prices(orderPurchaseList[index], index),
                                         SizedBox(
                                           height: height * .01,
                                         ),
                                         TextFieldUtils().subHeadingTextFields(
-                                            value.cartList[index]
-                                                .cartProductsDeliveredBy
+                                            orderPurchaseList[index]
+                                                .deliveryDate
                                                 .toString(),
                                             context),
                                       ],
@@ -457,7 +512,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                             ),
                           ),
                         ),
-                        Container(
+                           Container(
                           decoration: const BoxDecoration(
                             color: ThemeApp.whiteColor,
                             borderRadius: BorderRadius.only(
@@ -466,7 +521,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                           ),
                           padding: const EdgeInsets.only(
                               top: 10, left: 15, right: 15, bottom: 10),
-                          child: aadToCartCounter(value, index),
+                          child: aadToCartCounter(orderPurchaseList, index),
                         ),
                         SizedBox(
                           height: height * .02,
@@ -476,9 +531,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             }));
   }
 
-
-  void addQuantity(ProductProvider value, int index) {
-    if (kDebugMode) {
+  void addQuantity(List<OrdersForPurchase>? value, int index) {
+/*    if (kDebugMode) {
       print(
           "maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
       print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
@@ -493,96 +547,96 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             "temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
       }
       setState(() {
-        widget.productList["productTempCounter"]  =value.cartList[index].cartProductsTempCounter;
-
+        widget.productList["productTempCounter"] =
+            value.cartList[index].cartProductsTempCounter;
       });
 
       finalPrices(value, index);
-    }
+    }*/
   }
 
-
-  void finalPrices(ProductProvider value, int index) {
+  void finalPrices(List<OrdersForPurchase>? value, int index) {
     finalOriginalPrice = 0.0;
     finalDiscountPrice = 0.0;
     finalDiffrenceDiscountPrice = 0.0;
     finalTotalPrice = 0.0;
     widget.value.deliveryAmount = 60.0;
-
-    for (int i = 0; i < value.cartList.length; i++) {
-      finalOriginalPrice = finalOriginalPrice +
-          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
-              double.parse(
-                  value.cartList[i].cartProductsOriginalPrice.toString()));
-
-      Prefs.instance.setDoubleToken(
-          StringConstant.totalOriginalPricePref, finalOriginalPrice);
-      if (kDebugMode) {
-        print("______finaloriginalPrice______$finalOriginalPrice");
-      }
-      finalDiscountPrice = finalDiscountPrice +
-          (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
-              double.parse(
-                  value.cartList[i].cartProductsDiscountPrice.toString()));
-      if (kDebugMode) {
-        print("______finalDiscountPrice______$finalDiscountPrice");
-      }
-      finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
-      if (kDebugMode) {
-        print(
-            "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
-      }
-      finalTotalPrice = widget.value.deliveryAmount +
-          (finalOriginalPrice - finalDiffrenceDiscountPrice);
-      Prefs.instance
-          .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
-      if (finalTotalPrice == 0) {
-        value.del(index);
-        finalPrices(value, index);
-      }
-      if (kDebugMode) {
-        print("grandTotalAmount inside add: $i $finalTotalPrice");
-      }
-    }
+    //
+    // for (int i = 0; i < value!.length; i++) {
+    //   finalOriginalPrice = finalOriginalPrice +
+    //       (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+    //           double.parse(
+    //               value.cartList[i].cartProductsOriginalPrice.toString()));
+    //
+    //   Prefs.instance.setDoubleToken(
+    //       StringConstant.totalOriginalPricePref, finalOriginalPrice);
+    //   if (kDebugMode) {
+    //     print("______finaloriginalPrice______$finalOriginalPrice");
+    //   }
+    //   finalDiscountPrice = finalDiscountPrice +
+    //       (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
+    //           double.parse(
+    //               value.cartList[i].cartProductsDiscountPrice.toString()));
+    //   if (kDebugMode) {
+    //     print("______finalDiscountPrice______$finalDiscountPrice");
+    //   }
+    //   finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
+    //   if (kDebugMode) {
+    //     print(
+    //         "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
+    //   }
+    //   finalTotalPrice = widget.value.deliveryAmount +
+    //       (finalOriginalPrice - finalDiffrenceDiscountPrice);
+    //   Prefs.instance
+    //       .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
+    //   if (finalTotalPrice == 0) {
+    //     value.del(index);
+    //     finalPrices(value, index);
+    //   }
+    //   if (kDebugMode) {
+    //     print("grandTotalAmount inside add: $i $finalTotalPrice");
+    //   }
+    // }
   }
 
-  Future<void> minusQuantity(ProductProvider value, int index) async {
-    if (kDebugMode) {
-      print(
-          "maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
-      print(
-          "temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
-    }
-    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) >
-        1) {
-      value.cartList[index].cartProductsTempCounter =
-          int.parse(value.cartList[index].cartProductsTempCounter.toString()) -
-              1;
-      if (kDebugMode) {
-        print(
-            "temp counter minus  ${value.cartList[index].cartProductsTempCounter}");
-      }
-
-          value.cartList[index].cartProductsTotalOriginalPrice =
-          ((value.cartList[index].cartProductsTempCounter)! *
-              int.parse(
-                  value.cartList[index].cartProductsOriginalPrice.toString()));
-      if (kDebugMode) {
-        print(
-            "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
-      }  setState(() {
-        widget.productList["productTempCounter"]  =value.cartList[index].cartProductsTempCounter;
-
-      });
-////PRICE CODE AFTER ADDING COUNT
-      finalPrices(value, index);
-    }else{
-      value.del(index);
-      finalPrices(value, index);
-    }
+  Future<void> minusQuantity(OrdersForPurchase value, int index) async {
+//     if (kDebugMode) {
+//       print(
+//           "maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
+//       print(
+//           "temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
+//     }
+//     if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) >
+//         1) {
+//       value.cartList[index].cartProductsTempCounter =
+//           int.parse(value.cartList[index].cartProductsTempCounter.toString()) -
+//               1;
+//       if (kDebugMode) {
+//         print(
+//             "temp counter minus  ${value.cartList[index].cartProductsTempCounter}");
+//       }
+//
+//       value.cartList[index].cartProductsTotalOriginalPrice =
+//           ((value.cartList[index].cartProductsTempCounter)! *
+//               int.parse(
+//                   value.cartList[index].cartProductsOriginalPrice.toString()));
+//       if (kDebugMode) {
+//         print(
+//             "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
+//       }
+//       setState(() {
+//         widget.productList["productTempCounter"] =
+//             value.cartList[index].cartProductsTempCounter;
+//       });
+// ////PRICE CODE AFTER ADDING COUNT
+//       finalPrices(value, index);
+//     } else {
+//       value.del(index);
+//       finalPrices(value, index);
+//     }
   }
 
-  Widget rattingBar(ProductProvider value, int index) {
+  Widget rattingBar(OrdersForPurchase value, int index) {
     return Container(
       // width: width * .7,
       child: Expanded(
@@ -592,7 +646,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           children: [
             RatingBar.builder(
               itemSize: height * .022,
-              initialRating: value.cartList[index].cartProductsRatting!,
+              initialRating: value.itemRating!,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
@@ -609,7 +663,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               },
             ),
             TextFieldUtils().subHeadingTextFields(
-                '${value.cartList[index].cartProductsRatting} Reviews',
+                '${value.itemRating} Reviews',
                 context),
           ],
         ),
@@ -617,33 +671,32 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     );
   }
 
-  Widget prices(ProductProvider value, int index) {
+  Widget prices(OrdersForPurchase value, int index) {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextFieldUtils().homePageheadingTextField(
-              "${indianRupeesFormat.format(int.parse(value.cartList[index].cartProductsDiscountPrice.toString()))}",
+              "${indianRupeesFormat.format(double.parse(value.itemMrpPrice.toString()))}",
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().homePageheadingTextFieldLineThrough(
-              indianRupeesFormat.format(int.parse(
-                  value.cartList[index].cartProductsOriginalPrice.toString())),
+              indianRupeesFormat.format(double.parse(  value.itemOfferPrice.toString())),
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().homePageTitlesTextFields(
-              value.cartList[index].cartProductsOfferPercent.toString(),
+              value.itemDiscountPercent.toString() +"%",
               context),
         ],
       ),
     );
   }
 
-  Widget aadToCartCounter(ProductProvider value, int index) {
+  Widget aadToCartCounter(List<OrdersForPurchase>? value, int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -668,7 +721,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        minusQuantity(value, index);
+                        minusQuantity(value![index], index);
                       });
                     },
                     child: Container(
@@ -686,7 +739,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     padding: const EdgeInsets.only(
                         left: 8.0, right: 8, top: 0, bottom: 0),
                     child: Text(
-                      value.cartList[index].cartProductsTempCounter.toString().padLeft(2, '0'),
+                      value![index].itemQty
+                          .toString()
+                          .padLeft(2, '0'),
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.height * .016,
                           fontWeight: FontWeight.w400,
@@ -720,7 +775,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           flex: 1,
           child: InkWell(
             onTap: () {
-              value.del(index);
+              setState(() {
+              });
+              value.removeAt(index);
               finalPrices(value, index);
             },
             child: Row(
@@ -737,7 +794,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     );
   }
 
-  Widget priceDetails(ProductProvider value) {
+  Widget priceDetails(Payload payload) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -764,11 +821,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextFieldUtils().homePageTitlesTextFields(
-                        "Price (${value.cartList.length.toString()} items)",
+                        "Price (${payload.ordersForPurchase!.length.toString()} items)",
                         context),
                     TextFieldUtils().homePageTitlesTextFields(
-                        indianRupeesFormat.format(finalOriginalPrice),
-                        context)
+                        indianRupeesFormat.format(double.parse(payload.totalMrp.toString())), context)
                   ],
                 ),
                 Row(
@@ -778,7 +834,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     TextFieldUtils()
                         .homePageTitlesTextFields("Discount", context),
                     TextFieldUtils().homePageTitlesTextFields(
-                        "- ${indianRupeesFormat.format(finalDiffrenceDiscountPrice)}",
+                        "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
                         context),
                   ],
                 ),
@@ -789,7 +845,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     TextFieldUtils()
                         .homePageTitlesTextFields("Delivery charges", context),
                     TextFieldUtils().homePageTitlesTextFields(
-                        indianRupeesFormat.format(value.deliveryAmount),
+                        indianRupeesFormat.format(double.parse(payload.totalDeliveryCharges.toString())),
                         context),
                   ],
                 ),
@@ -825,7 +881,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             children: [
               TextFieldUtils().titleTextFields("Total Amount", context),
               TextFieldUtils().titleTextFields(
-                  "${indianRupeesFormat.format(finalTotalPrice)} ", context),
+                  "${indianRupeesFormat.format(payload.totalPayable)} ", context),
             ],
           ),
         ),

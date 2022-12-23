@@ -6,8 +6,17 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class StringConstant {
+  static int isUserLoggedIn = 0;
+  static String UserLoginId = '';
+  static String RandomUserLoginId = '';
+  static String UserCartID = '';
+  static String BadgeCounterValue = '';
+  static String ScannedProductId = '';
+
+  ////////////////////////old strings
   static bool isLogIn = true;
   static String userId = 'userId';
+  static String userIdPref = 'userIdPref';
   static String testId = 'testIdPref';
   static int sortByRadio = 0;
   static String sortedBy = "Low to High";
