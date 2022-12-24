@@ -30,9 +30,9 @@ static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
         retVal = ConstructURI("/IAM/authenticate");
         break;
 
-      case apiEndPoint.signIn_authenticateWithUID_post:
-        retVal = ConstructURI("/IAM/authenticateWithUID");
-        break;
+      // case apiEndPoint.signIn_authenticateWithUID_post:
+      //   retVal = ConstructURI("/IAM/authenticateWithUID");
+      //   break;
 
       case apiEndPoint.user_get:
         retVal = ConstructURI("/users");
@@ -45,9 +45,9 @@ static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
         retVal = ConstructURI("/categories");
         break;
 
-      case apiEndPoint.get_productsListing:
-        retVal = ConstructURI("/products/specificList");
-        break;
+      // case apiEndPoint.get_productsListing:
+      //   retVal = ConstructURI("/products/specificList");
+      //   break;
 
         case apiEndPoint.get_bookOurServices:
         retVal = ConstructURI("/serviceCategories");
@@ -67,9 +67,9 @@ static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
         case apiEndPoint.get_product_categories:
         retVal = ConstructURI("/product-category");
         break;
-        case apiEndPoint.get_product_by_sub_categories:
-        retVal = ConstructURI("/product/findBySubCategoryId");
-        break;
+        // case apiEndPoint.get_product_by_sub_categories:
+        // retVal = ConstructURI("/product/findBySubCategoryId");
+        // break;
         case apiEndPoint.cart_create_retrive:
         retVal = ConstructURI("/cart/createOrRetrieve");
         break;

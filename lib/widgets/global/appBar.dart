@@ -25,6 +25,7 @@ import '../../Core/repository/cart_repository.dart';
 import '../../pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
+import '../../pages/Activity/My_Account_Activities/is_My_account_login_dialog.dart';
 import '../../pages/Activity/Product_Activities/ProductDetails_activity.dart';
 import '../../pages/Activity/Product_Activities/Products_List.dart';
 import '../../pages/SearchContent/searchProductListScreen.dart';
@@ -200,7 +201,7 @@ Widget appBarWidget(
                           )
                         : */
                       InkWell(
-                    onTap: () {
+                    onTap: () async {
                       /// locale languages
                       // Navigator.of(context).push(
                       //   MaterialPageRoute(
@@ -216,18 +217,29 @@ Widget appBarWidget(
                       provider.isBottomAppCart = true;
                       provider.isHome = true;
 
+                      final prefs = await SharedPreferences.getInstance();
+                      StringConstant.isUserLoggedIn =
+                          (prefs.getInt('isUserLoggedIn')) ?? 0;
                       // Navigator.pushAndRemoveUntil(
                       //     context,
                       //     MaterialPageRoute(
                       //         builder: (context) => CartDetailsActivity(
                       //             value: product, productList: provider.cartProductList)),
                       //         (route) => false);
+                      if (StringConstant.isUserLoggedIn != 0) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const MyAccountActivity(),
+                          ),
+                        );
+                      }else{ showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AccountVerificationDialog(
+                              );
+                          });
 
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const MyAccountActivity(),
-                        ),
-                      );
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(right: 10),
@@ -992,6 +1004,7 @@ class _ScannerWidgetState extends State<ScannerWidget> {
         child: TextFieldUtils().circularBar(context),
       );
   String barcodeScanRes = '';
+
   Future<void> scanQR() async {
     barcodeScanRes = '';
     try {
@@ -1002,12 +1015,13 @@ class _ScannerWidgetState extends State<ScannerWidget> {
       print('_scanBarcode : ' + barcodeScanRes);
       print('_scanBarcode : ' + _scanBarcode);
       // getSingleProduct.getSingleProductScannerWithGet(_scanBarcode.toString());
-      getSingleProduct.getSingleProductScannerWithGet(_scanBarcode.toString(),context);
+      getSingleProduct.getSingleProductScannerWithGet(
+          _scanBarcode.toString(), context);
 
       final prefs = await SharedPreferences.getInstance();
 
-      StringConstant.ScannedProductId = (prefs.getString('ScannedProductIDPref')) ?? '';
-
+      StringConstant.ScannedProductId =
+          (prefs.getString('ScannedProductIDPref')) ?? '';
 
       if (_scanBarcode == '-1') {
         Utils.flushBarErrorMessage("Please scan proper content", context);
@@ -1016,18 +1030,21 @@ class _ScannerWidgetState extends State<ScannerWidget> {
       }
       print('_scanBarcode timer... : ' + _scanBarcode);
       print('_scanBarcode timer... : ' + StringConstant.ScannedProductId);
-      if( StringConstant.ScannedProductId !=''||StringConstant.ScannedProductId !=null) {
-
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ProductDetailsActivity(
-              id: int.parse(StringConstant.ScannedProductId),
-
-            ),
-          ),
-        ).then((value) => setState(() {  _scanBarcode = '';}));
+      if (StringConstant.ScannedProductId != '' ||
+          StringConstant.ScannedProductId != null) {
+        Navigator.of(context)
+            .push(
+              MaterialPageRoute(
+                builder: (context) => ProductDetailsActivity(
+                  id: int.parse(StringConstant.ScannedProductId),
+                ),
+              ),
+            )
+            .then((value) => setState(() {
+                  _scanBarcode = '';
+                }));
         _scanBarcode = '';
-      }else{
+      } else {
         _scanBarcode = '';
       }
       if (!mounted) return;

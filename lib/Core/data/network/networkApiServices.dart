@@ -51,11 +51,11 @@ class NetworkApiServices extends BaseApiServices {
       case 200:
         dynamic responseJson = jsonDecode(response.body);
         return responseJson;
-      case 400:
-        throw  Utils.errorToast("System is busy, Please try after sometime.");
+      // case 400:
+      //   throw  Utils.errorToast("System is busy, Please try after sometime.");
       case 500:
-      case 404:
-      throw  Utils.errorToast("System is busy, Please try after sometime.");
+      // case 404:
+      // throw  Utils.errorToast("System is busy, Please try after sometime.");
 
       default:
         throw  Utils.errorToast("System is busy, Please try after sometime.");

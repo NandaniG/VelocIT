@@ -21,16 +21,16 @@ import '../data/network/networkApiServices.dart';
 class ProductSpecificListRepository {
   BaseApiServices _apiServices = NetworkApiServices();
 
-  Future<ProductSpecificListModel> getProductSpecificList(dynamic data) async {
-    var url = ApiMapping.getURI(apiEndPoint.get_productsListing);
-
-    try {
-      dynamic response = await _apiServices.getPostApiResponse(url, data);
-      return response = ProductSpecificListModel.fromJson(response);
-    } catch (e) {
-      throw e;
-    }
-  }
+  // Future<ProductSpecificListModel> getProductSpecificList(dynamic data) async {
+  //   var url = ApiMapping.getURI(apiEndPoint.get_productsListing);
+  //
+  //   try {
+  //     dynamic response = await _apiServices.getPostApiResponse(url, data);
+  //     return response = ProductSpecificListModel.fromJson(response);
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  // }
 
   Future<SingleProductIDModel> getSingleProductSpecificList(String productId) async {
     var url = ApiMapping.getURI(apiEndPoint.single_product);

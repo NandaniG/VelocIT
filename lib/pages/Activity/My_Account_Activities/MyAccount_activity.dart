@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/CustomerSupport/CustomerSupportActivity.dart';
 
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/routes/routes.dart';
 import '../../../utils/styles.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
@@ -606,32 +608,41 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 ),
                               ),
 
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        width: 30.0,
-                                        height: 30.0,
-                                        decoration: new BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: new DecorationImage(
-                                                fit: BoxFit.fill,
-                                                image: new AssetImage(
-                                                  'assets/images/laptopImage.jpg',
-                                                )))),
-                                    SizedBox(
-                                      width: width * .03,
-                                    ),
-                                    TextFieldUtils().dynamicText(
-                                        'Sign Out',
-                                        context,
-                                        TextStyle(
-                                          color: ThemeApp.blackColor,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: height * .02,
-                                        )),
-                                  ],
+                              InkWell(
+                                onTap: () async {
+                                  final prefs = await SharedPreferences.getInstance();
+                                  prefs.setInt('isUserLoggedIn',0);
+
+                                  Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                          width: 30.0,
+                                          height: 30.0,
+                                          decoration: new BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: new DecorationImage(
+                                                  fit: BoxFit.fill,
+                                                  image: new AssetImage(
+                                                    'assets/images/laptopImage.jpg',
+                                                  )))),
+                                      SizedBox(
+                                        width: width * .03,
+                                      ),
+                                      TextFieldUtils().dynamicText(
+                                          'Sign Out',
+                                          context,
+                                          TextStyle(
+                                            color: ThemeApp.blackColor,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: height * .02,
+                                          )),
+                                    ],
+                                  ),
                                 ),
                               )
                             ],

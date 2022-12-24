@@ -24,7 +24,7 @@ class CartRepository {
       Map jsonMap, BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
 
-  dynamic responseJson;
+    dynamic responseJson;
     var url = ApiMapping.getURI(apiEndPoint.cart_create_retrive);
     print(url);
     HttpClient httpClient = new HttpClient();
@@ -48,14 +48,13 @@ class CartRepository {
     print(userData.payload!.id.toString());
     Prefs.instance.setToken(Prefs.prefCartId, userData.payload!.id.toString());
 
-
     print("userData.payload!.id");
 
-    if (response.statusCode == 200) {
-      print(responseJson.toString());
-    } else {
-      Utils.errorToast("System is busy, Please try after sometime.");
-    }
+    // if (response.statusCode == 200) {
+    //   print(responseJson.toString());
+    // } else {
+    //   Utils.errorToast("System is busy, Please try after sometime.");
+    // }
 
     httpClient.close();
     return responseJson;
@@ -65,8 +64,7 @@ class CartRepository {
 
   Future<UpdateCartModel> updateCartPostRequest(
       Map jsonMap, BuildContext context) async {
-    SessionManager prefs =  SessionManager();
-
+    SessionManager prefs = SessionManager();
 
     dynamic responseJson;
     var url = ApiMapping.getURI(apiEndPoint.cart_update);
@@ -89,22 +87,22 @@ class CartRepository {
 
     var userData = UpdateCartModel.fromJson(map);
 
-    if (response.statusCode == 200) {
-      print(userData.payload!.id.toString());
+    // if (response.statusCode == 200) {
+    print(userData.payload!.id.toString());
 
-      print(userData.payload!.ordersForPurchase![0].itemQuantity);
-      badgeLength = userData.payload!.ordersForPurchase![0].itemQuantity!;
+    print(userData.payload!.ordersForPurchase![0].itemQuantity);
+    badgeLength = userData.payload!.ordersForPurchase![0].itemQuantity!;
 
-      print("userData.payload!.id");
-      print(responseJson.toString());
-      Provider.of<ProductProvider>(context, listen: false);
-      final preference = await SharedPreferences.getInstance();
+    print("userData.payload!.id");
+    print(responseJson.toString());
+    Provider.of<ProductProvider>(context, listen: false);
+    final preference = await SharedPreferences.getInstance();
 
-      prefs.setBadgeToken(badgeLength.toString());
+    prefs.setBadgeToken(badgeLength.toString());
 
-    } else {
-      Utils.errorToast("System is busy, Please try after sometime.");
-    }
+    // } else {
+    //   Utils.errorToast("System is busy, Please try after sometime.");
+    // }
 
     httpClient.close();
     return responseJson = UpdateCartModel.fromJson(map);
@@ -112,10 +110,16 @@ class CartRepository {
 
   Future<CartSpecificIdModel> getCartSpecificIDList(String id) async {
     var url = ApiMapping.getURI(apiEndPoint.cart_by_ID);
+    final prefs = await SharedPreferences.getInstance();
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
-      print("Cart Specific Id : "+response.toString());
+      print("Cart Specific Id : " + response.toString());
+
+      prefs.setString(
+        'setBadgeCountPref',
+        response['payload']['total_item_count'].toString(),
+      );
       return response = CartSpecificIdModel.fromJson(response);
     } catch (e) {
       throw e;

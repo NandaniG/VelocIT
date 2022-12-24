@@ -341,10 +341,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                   StringConstant.emailOTPPref,
                                   mobileController.text);
 
-                              // Map data = {
-                              //   'email': email.text,
-                              //   'password': password.text
-                              // };
+
                               Map data = {
                                 'email': email.text,
                                 'password': password.text
@@ -353,7 +350,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 'mobile': email.text,
                                 'password': password.text
                               };
-
+print(data);
                               if (StringConstant().isNumeric(email.text)) {
                                 print("Digit found");
                               } else {

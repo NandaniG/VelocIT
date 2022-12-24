@@ -11,6 +11,7 @@ import 'package:velocit/utils/utils.dart';
 import '../../../Core/Model/CartModels/updateCartModel.dart';
 import '../../../Core/Model/productSpecificListModel.dart';
 import '../../../Core/Model/scannerModel/SingleProductModel.dart';
+import '../../../Core/ViewModel/cart_view_model.dart';
 import '../../../Core/ViewModel/product_listing_view_model.dart';
 import '../../../Core/data/responses/status.dart';
 import '../../../Core/repository/cart_repository.dart';
@@ -75,38 +76,17 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         context, widget.id.toString());
     print("Random number : " + data.toString());
     print("widget.id! number : " + widget.id!.toString());
+    print("Badge,........" + StringConstant.BadgeCounterValue);
+    getBadgePref();
+  }
 
-/*
-    if (widget.value.cartList.length != 0) {
-      print("in add to cart");
+  CartViewModel cartListView = CartViewModel();
 
-      for (int i = 0; i < widget.value.cartList.length; i++) {
-        if (widget.value.cartList[i].cartProductsDescription ==
-            widget.productList.shortName) {
-          print(widget.value.cartList[i].cartProductsTempCounter);
-          // if()
-          counterPrice = widget.value.cartList[i].cartProductsTempCounter!;
-          print("Matched");
-
-          // counterPrice++;
-          remainingCounters();
-        } else {
-          print("not Matched");
-        }
-      }
-    } else {
-      print("Cart is empty");
-    }*/
-/*
-    cartCounter =widget.productList["productTempCounter"];
-    print("cartCounter"+cartCounter.toString());
-    if (cartCounter == 0) {
-      counterPrice = 0;
-    } else {
-      counterPrice = cartCounter ?? 0;
-      print("_________widget.productListcart......counterPrice" +
-          counterPrice.toString());
-    }*/
+  getBadgePref() async {
+    setState(() {});
+    final prefs = await SharedPreferences.getInstance();
+    StringConstant.BadgeCounterValue =
+        (prefs.getString('setBadgeCountPref')) ?? '';
   }
 
 // update cart list
@@ -114,9 +94,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     var merchantId,
     int quantity,
     ProductProvider productProvider,
+    List<SingleProductsubCategory>? productsubCategory,
   ) async {
     final prefs = await SharedPreferences.getInstance();
-    var userId ='';
+    var userId = '';
 
     StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
     StringConstant.RandomUserLoginId =
@@ -146,15 +127,18 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     };
     print("update cart DATA" + data.toString());
     CartRepository().updateCartPostRequest(data, context);
-    productProvider.badgeFinalCount = quantity;
-    prefs.setString(
-      'setBadgeCountPref',
-      quantity.toString(),
-    );
-    setState(() {});
-    StringConstant.BadgeCounterValue =
-        (prefs.getString('setBadgeCountPref')) ?? '';
-    print("Badge,........" + StringConstant.BadgeCounterValue);
+
+    Utils.successToast('Added Successfully!');
+    cartListView.cartSpecificIDWithGet(context, StringConstant.UserCartID);
+    setState(() {
+      prefs.setString(
+        'setBadgeCountPref',
+        quantity.toString(),
+      );
+      StringConstant.BadgeCounterValue =
+          (prefs.getString('setBadgeCountPref')) ?? '';
+      print("Badge,........" + StringConstant.BadgeCounterValue);
+    });
   }
 
   remainingCounters() async {
@@ -646,8 +630,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   "qty": counterPrice.toString()
                                 };
                                 print("data maping " + data.toString());
-                                productSpecificListViewModel.cartListWithPut(
-                                    context, data);
+                                // productSpecificListViewModel.cartListWithPut(
+                                //     context, data);
                               });
                             },
                             child: Container(
@@ -732,8 +716,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   "qty": counterPrice.toString()
                                 };
                                 print("data maping " + data.toString());
-                                productSpecificListViewModel.cartListWithPut(
-                                    context, data);
+                                // productSpecificListViewModel.cartListWithPut(
+                                //     context, data);
                               });
                             },
                             child: Container(
@@ -810,7 +794,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
                               }); */
                               updateCart(model.merchants![0].id, counterPrice,
-                                  productProvider);
+                                  productProvider, model.productsubCategory);
                             },
                             child: Container(
                                 height: height * 0.06,
@@ -989,18 +973,30 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                             productListProvider.isHome = false;
                             productListProvider.isBottomAppCart = false;
                           });
-                          if (StringConstant.isLogIn == false) {
-                            /*  ? Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => OrderReviewSubActivity(
-                                    value: productProvider,
-                                    cartListFromHome: widget.productList),
-                              ),
-                            )
-                          :*/
-                            Navigator.pushNamed(
-                                context, RoutesName.signInRoute);
+                          // StringConstant.isLogIn == false
+                          //     ? Navigator.of(context).push(
+                          //     MaterialPageRoute(
+                          //       builder: (context) => OrderReviewSubActivity(
+                          //           value: productProvider,
+                          //           cartListFromHome: widget.productList),
+                          //     ),
+                          //   )
+                          // :
+                       final prefs = await SharedPreferences.getInstance();
+                          StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
+
+                          if (StringConstant.isUserLoggedIn != 0) {
+                            Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+                          } else {
+                            Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
+
+                            print("Not Logged in");
+                            // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
                           }
+
+                          // StringConstant.isUserLoggedIn == 0?'':     Navigator.pushNamed(
+                          //       context, RoutesName.signInRoute);
+
 
                           /*    widget.productList["productTempCounter"] = counterPrice;
                               print("_________widget.productListtempCounter_" +

@@ -92,7 +92,7 @@ class DashBoardRepository {
   Future<ProductFindBySearchTermModel> getProductBySearchTerms(int page,int size, String searchString) async {
     Map<String, String> productListingData = {
       // 'search_term': searchString.toString(),
-      'search_term': 'Apple',
+      'search_term': searchString,
       'page': page.toString(),
       'size': size.toString(),
       // 'searchString':searchString.toString(),

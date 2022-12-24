@@ -88,25 +88,25 @@ class AuthViewModel with ChangeNotifier {
     });
   }
 
-  Future<void> loginApiWithPost(dynamic data, BuildContext context) async {
-    setLoadingWithPost(true);
-    _myRepo.loginApiWithPost(data).then((value) {
-      setLoadingWithPost(false);
-      if (kDebugMode) {
-        print("Login Api With Post : $value");
-      }
-
-      StringConstant.isLogIn = true;
-      Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
-    }).onError((error, stackTrace) {
-      setLoadingWithPost(false);
-      if (kDebugMode) {
-        Utils.flushBarErrorMessage(error.toString(), context);
-
-        print(error.toString());
-      }
-    });
-  }
+  // Future<void> loginApiWithPost(dynamic data, BuildContext context) async {
+  //   setLoadingWithPost(true);
+  //   _myRepo.loginApiWithPost(data).then((value) {
+  //     setLoadingWithPost(false);
+  //     if (kDebugMode) {
+  //       print("Login Api With Post : $value");
+  //     }
+  //
+  //     StringConstant.isLogIn = true;
+  //     Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+  //   }).onError((error, stackTrace) {
+  //     setLoadingWithPost(false);
+  //     if (kDebugMode) {
+  //       Utils.flushBarErrorMessage(error.toString(), context);
+  //
+  //       print(error.toString());
+  //     }
+  //   });
+  // }
 
 
   Future<void> authSignInUsingPost(dynamic data, BuildContext context) async {

@@ -76,16 +76,15 @@ class _ProductListByCategoryActivityState
     // data = {"category_code": widget.productList!.categoryCode,"recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
     print(data.toString());
     print("subProduct.............${widget.productList!.id}");
-    scrollController = new ScrollController(initialScrollOffset: 5.0)
-      ..addListener(_scrollListener);
-    // categoryCode =widget.productList!.categoryCode;
+/*    scrollController = new ScrollController(initialScrollOffset: 5.0)
+      ..addListener(_scrollListener);*/
 
-    // print("productList"+widget.productList!.categoryCode!);
-    // productSpecificListViewModel.productSpecificListWithGet(context, data);
+
+
+
+
     StringConstant.sortByRadio;
     StringConstant.sortedBy;
-    // getListFromPref();
-    dataCount();
   }
 
   @override
@@ -109,7 +108,7 @@ class _ProductListByCategoryActivityState
 
           //// CALL YOUR API HERE FOR THE NEXT FUNCTIONALITY
           productSpecificListViewModel.productBySubCategoryWithGet(
-              pageCount, 10, 4);
+              pageCount, 10, widget.productList!.id!);
         }
       });
     }
@@ -122,20 +121,6 @@ class _ProductListByCategoryActivityState
     symbol: '₹',
   );
 
-  dataCount() async {
-    StringConstant.cartCounters =
-        await Prefs.instance.getIntToken("counterProduct");
-    print("dataCount...${StringConstant.cartCounters}");
-  }
-
-  getListFromPref() async {
-    final prefs = await SharedPreferences.getInstance();
-    StringConstant.getCartList_FromPref =
-        await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
-    print('____________CartData AFTER GETTING PREF______________');
-    StringConstant.prettyPrintJson(
-        StringConstant.getCartList_FromPref.toString());
-  }
 
   @override
   Widget build(BuildContext context) {

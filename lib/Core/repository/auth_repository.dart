@@ -27,16 +27,16 @@ class AuthRepository {
     }
   }
 
-  Future<dynamic> loginApiWithPost(dynamic data) async {
-    var url = ApiMapping.getURI(apiEndPoint.signIn_authenticateWithUID_post);
-
-    try {
-      dynamic resposnse = await _apiServices.getPostApiResponse(url, data);
-      return resposnse;
-    } catch (e) {
-      throw e;
-    }
-  }
+  // Future<dynamic> loginApiWithPost(dynamic data) async {
+  //   var url = ApiMapping.getURI(apiEndPoint.signIn_authenticateWithUID_post);
+  //
+  //   try {
+  //     dynamic resposnse = await _apiServices.getPostApiResponse(url, data);
+  //     return resposnse;
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  // }
 
   Future<dynamic> authSignInUsingPost(dynamic data) async {
     var url = ApiMapping.getURI(apiEndPoint.auth_signIn_using_post);

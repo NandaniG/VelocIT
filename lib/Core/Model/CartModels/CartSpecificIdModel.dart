@@ -1,6 +1,6 @@
 class CartSpecificIdModel {
   String? status;
-  Payload? payload;
+  CartPayLoad? payload;
   String? timestamp;
 
   CartSpecificIdModel({this.status, this.payload, this.timestamp});
@@ -8,7 +8,7 @@ class CartSpecificIdModel {
   CartSpecificIdModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     payload =
-        json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+    json['payload'] != null ? new CartPayLoad.fromJson(json['payload']) : null;
     timestamp = json['timestamp'];
   }
 
@@ -23,27 +23,27 @@ class CartSpecificIdModel {
   }
 }
 
-class Payload {
+class CartPayLoad {
   int? id;
   int? userId;
   List<OrdersForPurchase>? ordersForPurchase;
-  var totalItemCount;
+  int? totalItemCount;
   double? totalMrp;
-  var totalDiscountAmount;
-  var totalDeliveryCharges;
-  var totalPayable;
+  double? totalDiscountAmount;
+  double? totalDeliveryCharges;
+  double? totalPayable;
 
-  Payload(
+  CartPayLoad(
       {this.id,
-      this.userId,
-      this.ordersForPurchase,
-      this.totalItemCount,
-      this.totalMrp,
-      this.totalDiscountAmount,
-      this.totalDeliveryCharges,
-      this.totalPayable});
+        this.userId,
+        this.ordersForPurchase,
+        this.totalItemCount,
+        this.totalMrp,
+        this.totalDiscountAmount,
+        this.totalDeliveryCharges,
+        this.totalPayable});
 
-  Payload.fromJson(Map<String, dynamic> json) {
+  CartPayLoad.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     if (json['orders_for_purchase'] != null) {
@@ -82,6 +82,7 @@ class OrdersForPurchase {
   String? deliveryDate;
   double? itemMrpPrice;
   double? itemOfferPrice;
+  var merchantId;
   var itemDiscountPercent;
   String? imageUrl;
   var itemRating;
@@ -89,14 +90,15 @@ class OrdersForPurchase {
 
   OrdersForPurchase(
       {this.productItemId,
-      this.itemName,
-      this.deliveryDate,
-      this.itemMrpPrice,
-      this.itemOfferPrice,
-      this.itemDiscountPercent,
-      this.imageUrl,
-      this.itemRating,
-      this.itemQty});
+        this.itemName,
+        this.deliveryDate,
+        this.itemMrpPrice,
+        this.itemOfferPrice,
+        this.merchantId,
+        this.itemDiscountPercent,
+        this.imageUrl,
+        this.itemRating,
+        this.itemQty});
 
   OrdersForPurchase.fromJson(Map<String, dynamic> json) {
     productItemId = json['product_item_id'];
@@ -104,6 +106,7 @@ class OrdersForPurchase {
     deliveryDate = json['delivery_date'];
     itemMrpPrice = json['item_mrp_price'];
     itemOfferPrice = json['item_offer_price'];
+    merchantId = json['merchant_id'];
     itemDiscountPercent = json['item_discount_percent'];
     imageUrl = json['image_url'];
     itemRating = json['item_rating'];
@@ -117,6 +120,7 @@ class OrdersForPurchase {
     data['delivery_date'] = this.deliveryDate;
     data['item_mrp_price'] = this.itemMrpPrice;
     data['item_offer_price'] = this.itemOfferPrice;
+    data['merchant_id'] = this.merchantId;
     data['item_discount_percent'] = this.itemDiscountPercent;
     data['image_url'] = this.imageUrl;
     data['item_rating'] = this.itemRating;

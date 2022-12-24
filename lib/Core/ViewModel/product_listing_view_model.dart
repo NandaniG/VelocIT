@@ -31,11 +31,11 @@ class ProductSpecificListViewModel with ChangeNotifier {
       ApiResponse.loading();
   bool isHome = false;
   bool isBottomAppCart = false;
-
-  setProductSpecificList(ApiResponse<ProductSpecificListModel> response) {
-    productSpecificList = response;
-    notifyListeners();
-  }
+  //
+  // setProductSpecificList(ApiResponse<ProductSpecificListModel> response) {
+  //   productSpecificList = response;
+  //   notifyListeners();
+  // }
   setSingleProductSpecificList(ApiResponse<SingleProductIDModel> response) {
     singleproductSpecificList = response;
     notifyListeners();
@@ -69,16 +69,16 @@ class ProductSpecificListViewModel with ChangeNotifier {
 
   //   Map data = {'username': 'testuser@test.com'};
 
-  Future<void> productSpecificListWithGet(
-      BuildContext context, dynamic data) async {
-    setProductSpecificList(ApiResponse.loading());
-
-    _myRepo.getProductSpecificList(data).then((value) async {
-      setProductSpecificList(ApiResponse.completed(value));
-    }).onError((error, stackTrace) {
-      setProductSpecificList(ApiResponse.error(error.toString()));
-    });
-  }
+  // Future<void> productSpecificListWithGet(
+  //     BuildContext context, dynamic data) async {
+  //   setProductSpecificList(ApiResponse.loading());
+  //
+  //   _myRepo.getProductSpecificList(data).then((value) async {
+  //     setProductSpecificList(ApiResponse.completed(value));
+  //   }).onError((error, stackTrace) {
+  //     setProductSpecificList(ApiResponse.error(error.toString()));
+  //   });
+  // }
 
   Future<void> productSingleIDListWithGet(
       BuildContext context,String productId) async {

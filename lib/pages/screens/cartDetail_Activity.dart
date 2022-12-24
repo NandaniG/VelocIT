@@ -11,6 +11,7 @@ import 'package:velocit/utils/routes/routes.dart';
 
 import '../../Core/Model/CartModels/CartSpecificIdModel.dart';
 import '../../Core/data/responses/status.dart';
+import '../../Core/repository/cart_repository.dart';
 import '../../services/models/CartModel.dart';
 import '../../services/models/ProductDetailModel.dart';
 import '../../services/providers/Home_Provider.dart';
@@ -21,6 +22,7 @@ import '../../utils/utils.dart';
 import '../../widgets/global/appBar.dart';
 import '../../widgets/global/dynamicPopUp.dart';
 import '../../widgets/global/okPopUp.dart';
+import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
 import '../Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import '../Activity/Payment_Activities/payments_Activity.dart';
@@ -50,6 +52,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   double finalDiscountPrice = 0.0;
   double finalDiffrenceDiscountPrice = 0.0;
   double finalTotalPrice = 0.0;
+  final DateTime now = DateTime.now();
 
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
@@ -65,7 +68,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     super.initState();
     // getListFromPref();
     getCartId();
-    if (kDebugMode) {
+    // dateFormat();
+    /*  if (kDebugMode) {
       print("widget.cartDetailScreen[]${widget.productList}");
       print("value.cartList.length");
       print(widget.value.cartList.length);
@@ -117,7 +121,20 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       if (kDebugMode) {
         print("grandTotalAmount inside add: $i $finalTotalPrice");
       }
-    }
+    }*/
+  }
+
+  // var date = '2021-01-26T03:17:00.000000Z';
+
+  String convertDateTimeDisplay(String date) {
+    // toISOString().replace('Z', '').replace('T', '')
+    final DateFormat displayFormater = DateFormat('yyyy-MM-ddTHH:mm:ssZ');
+
+    final DateFormat serverFormater =
+        DateFormat('E' + " " + 'd' + ' ' + 'MMM' + " " + 'y');
+    final DateTime displayDate = displayFormater.parse(date);
+    final String formatted = serverFormater.format(displayDate);
+    return formatted;
   }
 
   getCartId() async {
@@ -137,7 +154,51 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     super.dispose();
   }
 
-  var listFromPref;
+  updateCart(List<OrdersForPurchase>? value, var merchantId, int quantity,
+      String productId) async {
+    final prefs = await SharedPreferences.getInstance();
+    var userId = '';
+
+    StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+    StringConstant.RandomUserLoginId =
+        (prefs.getString('isRandomUserId')) ?? '';
+
+    StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+
+    var prefUserId = await Prefs.instance.getToken(
+      Prefs.prefRandomUserId,
+    );
+    print("cartId from Pref" + StringConstant.UserCartID.toString());
+    print("prefUserId from Pref" + prefUserId.toString());
+
+    if (StringConstant.UserLoginId.toString() == '' ||
+        StringConstant.UserLoginId.toString() == null) {
+      userId = StringConstant.RandomUserLoginId;
+    } else {
+      userId = StringConstant.UserLoginId;
+    }
+    Map<String, String> data = {
+      // "cartId": StringConstant.UserCartID.toString(),
+      "cartId": StringConstant.UserCartID.toString(),
+      "userId": userId,
+      "productId": productId,
+      "merchantId": merchantId.toString(),
+      "qty": quantity.toString()
+    };
+    print("update cart DATA" + data.toString());
+    CartRepository().updateCartPostRequest(data, context);
+
+    for (int i = 0; i < value!.length; i++) {
+      StringConstant.BadgeCounterValue =
+          value!.length.toString() + value[i].itemQty.toString();
+      print("Badge,.......in for." + StringConstant.BadgeCounterValue);
+    }
+    setState(() {
+      StringConstant.BadgeCounterValue =
+          (prefs.getString('setBadgeCountPref')) ?? '';
+      print("Badge,........" + StringConstant.BadgeCounterValue);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -336,7 +397,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        child:  ChangeNotifierProvider<CartViewModel>(
+          child: ChangeNotifierProvider<CartViewModel>(
               create: (BuildContext context) => cartListView,
               child: Consumer<CartViewModel>(
                   builder: (context, cartProvider, child) {
@@ -360,8 +421,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         height: MediaQuery.of(context).size.height,
                         padding: const EdgeInsets.all(10),
                         child: SingleChildScrollView(
-                          child: /*orderPurchaseList!.length!.isEmpty
-                                    ? Container(
+                          child: cartProvider.cartSpecificID.data!.payload!
+                                      .ordersForPurchase!.length <=
+                                  0
+                              ? Container(
                                   height: height * .5,
                                   alignment: Alignment.center,
                                   child: TextFieldUtils().dynamicText(
@@ -373,16 +436,15 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                           fontSize: height * .03,
                                           overflow: TextOverflow.ellipsis)),
                                 )
-                                    :*/
-                              Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              cartProductList(orderPurchaseList),
-                              priceDetails(cartProvider
-                                  .cartSpecificID.data!.payload!),
-                            ],
-                          ),
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    cartProductList(orderPurchaseList),
+                                    priceDetails(cartProvider
+                                        .cartSpecificID.data!.payload!),
+                                  ],
+                                ),
                         ));
                 }
                 return Container(
@@ -396,9 +458,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                           fontSize: height * .03,
                           fontWeight: FontWeight.bold)),
                 );
-              }))
-
-      ),
+              }))),
     );
   }
 
@@ -478,7 +538,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                         SizedBox(
                                           height: height * .01,
                                         ),
-                                               rattingBar(orderPurchaseList[index], index),
+                                        rattingBar(
+                                            orderPurchaseList[index], index),
                                         SizedBox(
                                           height: height * .01,
                                         ),
@@ -486,11 +547,20 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                         SizedBox(
                                           height: height * .01,
                                         ),
-                                        TextFieldUtils().subHeadingTextFields(
-                                            orderPurchaseList[index]
-                                                .deliveryDate
-                                                .toString(),
-                                            context),
+                                        Row(
+                                          children: [
+                                            TextFieldUtils()
+                                                .subHeadingTextFields(
+                                                    'Delivery by ', context),
+                                            TextFieldUtils()
+                                                .subHeadingTextFields(
+                                                    convertDateTimeDisplay(
+                                                        orderPurchaseList[index]
+                                                            .deliveryDate
+                                                            .toString()),
+                                                    context),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -512,7 +582,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                             ),
                           ),
                         ),
-                           Container(
+                        Container(
                           decoration: const BoxDecoration(
                             color: ThemeApp.whiteColor,
                             borderRadius: BorderRadius.only(
@@ -529,111 +599,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       ],
                     );
             }));
-  }
-
-  void addQuantity(List<OrdersForPurchase>? value, int index) {
-/*    if (kDebugMode) {
-      print(
-          "maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
-      print("temp counter 1 ${value.cartList[index].cartProductsTempCounter}");
-    }
-    if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) <
-        int.parse(value.cartList[index].cartProductsMaxCounter.toString())) {
-      value.cartList[index].cartProductsTempCounter =
-          int.parse(value.cartList[index].cartProductsTempCounter.toString()) +
-              1;
-      if (kDebugMode) {
-        print(
-            "temp counter 2 ${value.cartList[index].cartProductsTempCounter}");
-      }
-      setState(() {
-        widget.productList["productTempCounter"] =
-            value.cartList[index].cartProductsTempCounter;
-      });
-
-      finalPrices(value, index);
-    }*/
-  }
-
-  void finalPrices(List<OrdersForPurchase>? value, int index) {
-    finalOriginalPrice = 0.0;
-    finalDiscountPrice = 0.0;
-    finalDiffrenceDiscountPrice = 0.0;
-    finalTotalPrice = 0.0;
-    widget.value.deliveryAmount = 60.0;
-    //
-    // for (int i = 0; i < value!.length; i++) {
-    //   finalOriginalPrice = finalOriginalPrice +
-    //       (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
-    //           double.parse(
-    //               value.cartList[i].cartProductsOriginalPrice.toString()));
-    //
-    //   Prefs.instance.setDoubleToken(
-    //       StringConstant.totalOriginalPricePref, finalOriginalPrice);
-    //   if (kDebugMode) {
-    //     print("______finaloriginalPrice______$finalOriginalPrice");
-    //   }
-    //   finalDiscountPrice = finalDiscountPrice +
-    //       (int.parse(value.cartList[i].cartProductsTempCounter.toString()) *
-    //           double.parse(
-    //               value.cartList[i].cartProductsDiscountPrice.toString()));
-    //   if (kDebugMode) {
-    //     print("______finalDiscountPrice______$finalDiscountPrice");
-    //   }
-    //   finalDiffrenceDiscountPrice = finalOriginalPrice - finalDiscountPrice;
-    //   if (kDebugMode) {
-    //     print(
-    //         "________finalDiffrenceDiscountPrice add: $i $finalDiffrenceDiscountPrice");
-    //   }
-    //   finalTotalPrice = widget.value.deliveryAmount +
-    //       (finalOriginalPrice - finalDiffrenceDiscountPrice);
-    //   Prefs.instance
-    //       .setDoubleToken(StringConstant.totalFinalPricePref, finalTotalPrice);
-    //   if (finalTotalPrice == 0) {
-    //     value.del(index);
-    //     finalPrices(value, index);
-    //   }
-    //   if (kDebugMode) {
-    //     print("grandTotalAmount inside add: $i $finalTotalPrice");
-    //   }
-    // }
-  }
-
-  Future<void> minusQuantity(OrdersForPurchase value, int index) async {
-//     if (kDebugMode) {
-//       print(
-//           "maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
-//       print(
-//           "temp counter 1 minus ${value.cartList[index].cartProductsTempCounter}");
-//     }
-//     if (int.parse(value.cartList[index].cartProductsTempCounter.toString()) >
-//         1) {
-//       value.cartList[index].cartProductsTempCounter =
-//           int.parse(value.cartList[index].cartProductsTempCounter.toString()) -
-//               1;
-//       if (kDebugMode) {
-//         print(
-//             "temp counter minus  ${value.cartList[index].cartProductsTempCounter}");
-//       }
-//
-//       value.cartList[index].cartProductsTotalOriginalPrice =
-//           ((value.cartList[index].cartProductsTempCounter)! *
-//               int.parse(
-//                   value.cartList[index].cartProductsOriginalPrice.toString()));
-//       if (kDebugMode) {
-//         print(
-//             "_____________value.lst[index].totalOriginalPrice ${value.cartList[index].cartProductsTotalOriginalPrice}");
-//       }
-//       setState(() {
-//         widget.productList["productTempCounter"] =
-//             value.cartList[index].cartProductsTempCounter;
-//       });
-// ////PRICE CODE AFTER ADDING COUNT
-//       finalPrices(value, index);
-//     } else {
-//       value.del(index);
-//       finalPrices(value, index);
-//     }
   }
 
   Widget rattingBar(OrdersForPurchase value, int index) {
@@ -662,9 +627,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 }
               },
             ),
-            TextFieldUtils().subHeadingTextFields(
-                '${value.itemRating} Reviews',
-                context),
+            TextFieldUtils()
+                .subHeadingTextFields('${value.itemRating} Reviews', context),
           ],
         ),
       ),
@@ -677,20 +641,20 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextFieldUtils().homePageheadingTextField(
-              "${indianRupeesFormat.format(double.parse(value.itemMrpPrice.toString()))}",
+              "${indianRupeesFormat.format(double.parse(value.itemOfferPrice.toString()))}",
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().homePageheadingTextFieldLineThrough(
-              indianRupeesFormat.format(double.parse(  value.itemOfferPrice.toString())),
+              indianRupeesFormat
+                  .format(double.parse(value.itemMrpPrice.toString())),
               context),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().homePageTitlesTextFields(
-              value.itemDiscountPercent.toString() +"%",
-              context),
+              value.itemDiscountPercent.toString() + "%", context),
         ],
       ),
     );
@@ -721,7 +685,41 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        minusQuantity(value![index], index);
+                        // minusQuantity(value![index], index);
+                        if (value![index].itemQty > 1) {
+                          value![index].itemQty--;
+                          updateCart(
+                              value,
+                              value[index].merchantId,
+                              value[index].itemQty,
+                              value[index].productItemId.toString());
+                          StringConstant.BadgeCounterValue =
+                              value!.length.toString() +
+                                  value![index].itemQty.toString();
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ConfirmDialog(
+                                  text:
+                                      "Are you sure, you want to remove product from cart list?",
+                                  tap: () {
+                                    setState(() {
+                                      print("value[index].merchantId" +
+                                          value[index].merchantId.toString());
+
+                                      updateCart(value, value[index].merchantId, 0,
+                                          value[index].productItemId.toString());
+
+
+                                      value.removeAt(index);
+                                      Navigator.pop(context);
+
+                                    });
+                                  },
+                                );
+                              });
+                        }
                       });
                     },
                     child: Container(
@@ -739,9 +737,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     padding: const EdgeInsets.only(
                         left: 8.0, right: 8, top: 0, bottom: 0),
                     child: Text(
-                      value![index].itemQty
-                          .toString()
-                          .padLeft(2, '0'),
+                      value![index].itemQty.toString().padLeft(2, '0'),
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.height * .016,
                           fontWeight: FontWeight.w400,
@@ -752,7 +748,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        addQuantity(value, index);
+                        value![index].itemQty++;
+                        // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
+                        updateCart(
+                            value,
+                            value[index].merchantId,
+                            value[index].itemQty,
+                            value[index].productItemId.toString());
                       });
                     },
                     child: Container(
@@ -775,10 +777,12 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           flex: 1,
           child: InkWell(
             onTap: () {
-              setState(() {
-              });
+              setState(() {});
+              print("value[index].merchantId" +
+                  value[index].merchantId.toString());
+              updateCart(value, value[index].merchantId, 0,
+                  value[index].productItemId.toString());
               value.removeAt(index);
-              finalPrices(value, index);
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -794,7 +798,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     );
   }
 
-  Widget priceDetails(Payload payload) {
+  Widget priceDetails(CartPayLoad payload) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -824,7 +828,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         "Price (${payload.ordersForPurchase!.length.toString()} items)",
                         context),
                     TextFieldUtils().homePageTitlesTextFields(
-                        indianRupeesFormat.format(double.parse(payload.totalMrp.toString())), context)
+                        indianRupeesFormat
+                            .format(double.parse(payload.totalMrp.toString())),
+                        context)
                   ],
                 ),
                 Row(
@@ -845,7 +851,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     TextFieldUtils()
                         .homePageTitlesTextFields("Delivery charges", context),
                     TextFieldUtils().homePageTitlesTextFields(
-                        indianRupeesFormat.format(double.parse(payload.totalDeliveryCharges.toString())),
+                        indianRupeesFormat.format(double.parse(
+                            payload.totalDeliveryCharges.toString())),
                         context),
                   ],
                 ),
@@ -881,7 +888,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             children: [
               TextFieldUtils().titleTextFields("Total Amount", context),
               TextFieldUtils().titleTextFields(
-                  "${indianRupeesFormat.format(payload.totalPayable)} ", context),
+                  "${indianRupeesFormat.format(payload.totalPayable)} ",
+                  context),
             ],
           ),
         ),
@@ -889,6 +897,81 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           height: height * .02,
         )
       ],
+    );
+  }
+}
+
+class ConfirmDialog extends StatefulWidget {
+  final String text;
+  final VoidCallback tap;
+
+  ConfirmDialog({required this.text, required this.tap});
+
+  @override
+  State<ConfirmDialog> createState() => _ConfirmDialogState();
+}
+
+class _ConfirmDialogState extends State<ConfirmDialog> {
+  dialogContent(BuildContext context) {
+    {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: 70.0,
+          maxHeight: 300.0,
+          maxWidth: 100.0,
+        ),
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 5.0),
+              ),
+            ],
+          ),
+          child: Container(
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Flexible(
+                //     child: TextFieldUtils()
+                //         .textFieldHeightThree("Searched Data is ", context)),
+                Flexible(
+                  child: TextFieldUtils().dynamicText(
+                      widget.text,
+                      context,
+                      TextStyle(
+                          color: ThemeApp.primaryNavyBlackColor,
+
+                          // fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400)),
+                ),
+                proceedButton('Ok', ThemeApp.blackColor, context, false, widget.tap),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
     );
   }
 }

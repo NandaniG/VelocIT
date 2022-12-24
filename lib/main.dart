@@ -111,7 +111,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    productViewModel.productSpecificListWithGet(context, data);
+    // productViewModel.productSpecificListWithGet(context, data);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -214,8 +214,11 @@ class _SplashScreenState extends State<SplashScreen> {
     startTime();
   }
 
-  startTime() async {
-    var loginId = await Prefs.instance.getToken(StringConstant.userId);
+  startTime() async {    final prefs = await SharedPreferences.getInstance();
+
+  var loginId = await Prefs.instance.getToken(StringConstant.userId);
+    StringConstant.BadgeCounterValue =
+        (prefs.getString('setBadgeCountPref')) ?? '';
     print("Splash LoginId : " + loginId.toString());
 
     var _duration = const Duration(seconds: 3);
@@ -228,11 +231,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _loadCounter() async {
-    String isUserLoginPref = 'isUserLoginPref';
 
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      StringConstant.isUserLoggedIn = (prefs.getInt(isUserLoginPref) ?? 0);
 
       StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
       print("IS USER LOGGEDIN ..............." +

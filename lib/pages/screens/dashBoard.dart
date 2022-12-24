@@ -93,40 +93,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   String finalId = '';
 
-  // addCartList() async {
-  //   SessionManager prefs = SessionManager();
-  //   var cartId = await Prefs.instance.getToken(Prefs.prefCartId);
-  //
-  //   var loginId = await Prefs.instance.getToken(StringConstant.userId);
-  //   print("loginId for add to cart" + loginId.toString());
-  //
-  //   if (loginId == '' || loginId == null) {
-  //     rnd = new Random();
-  //     var r = min + rnd.nextInt(max - min);
-  //     print("$r is in the range of $min and $max");
-  //     ID = r;
-  //     print("cartId empty" + ID.toString());
-  //     print("loginId for add to cart From If");
-  //   } else {
-  //     print("loginId for add to cart from else");
-  //
-  //     ID = loginId;
-  //   }
-  //
-  //   finalId = ID.toString();
-  //
-  //   print('finalId' + finalId);
-  //   Map<String, String> data = {'userId': finalId};
-  //
-  //   print("cart data pass : " + data.toString());
-  //
-  //   CartRepository().cartPostRequest(data, context);
-  //
-  //   prefs.setAuthToken(finalId.toString());
-  //
-  //   print("cartId from Pref" + cartId.toString());
-  // }
-
   Future<void> getCartDetailsFromPref() async {
     String isUserLoginPref = 'isUserLoginPref';
 
@@ -135,16 +101,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
       StringConstant.isUserLoggedIn = (prefs.getInt(isUserLoginPref) ?? 0);
 
       StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
+
+      StringConstant.RandomUserLoginId =
+          (prefs.getString('isRandomUserId')) ?? '';
+
       print("IS USER LOG-IN ..............." +
           StringConstant.isUserLoggedIn.toString());
+      print("ISRANDOM ID............" +
+          StringConstant.RandomUserLoginId.toString());
 
       StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
 
       print("USER LOGIN ID..............." +
           StringConstant.UserLoginId.toString());
-
-      if (StringConstant.UserLoginId == '' ||
-          StringConstant.UserLoginId == null) {
+      if ((StringConstant.RandomUserLoginId == '' ||
+          StringConstant.RandomUserLoginId == null)&&(StringConstant.UserLoginId == '' ||
+          StringConstant.UserLoginId == null)) {
+        print("RandomUserLoginId empty");
         rnd = new Random();
         var r = min + rnd.nextInt(max - min);
 
@@ -152,13 +125,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ID = r;
         print("cartId empty" + ID.toString());
       } else {
-        ID = StringConstant.UserLoginId;
+        print("RandomUserLoginId empty");
+        // ID = StringConstant.UserLoginId;
+        ID = StringConstant.RandomUserLoginId;
       }
-
+      // 715223688
       finalId = ID.toString();
-      prefs.setString('isRandomUserId',finalId.toString());
+      prefs.setString('isRandomUserId', finalId.toString());
 
-      print('finalId' + finalId);
+      print('finalId  RandomUserLoginId' + finalId);
       Map<String, String> data = {'userId': finalId};
 
       print("cart data pass : " + data.toString());
