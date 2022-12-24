@@ -5,10 +5,12 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:highlight_text/highlight_text.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as speechToText;
+import 'package:velocit/Core/ViewModel/dashboard_view_model.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 
 import '../../pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
 import '../../pages/Activity/Product_Activities/Products_List.dart';
+import '../../pages/SearchContent/searchProductListScreen.dart';
 import '../../utils/constants.dart';
 import '../global/okPopUp.dart';
 
@@ -27,6 +29,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
 
   late Timer _timer;
   int _start = 3;
+  DashboardViewModel productCategories = DashboardViewModel();
 
   final Map<String, HighlightedWord> highlightWords = {
     "flutter": HighlightedWord(
@@ -37,19 +40,24 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
             TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
   };
 
-  void startTimer(HomeProvider homeProvider) {
+  void startTimer(DashboardViewModel dashboardViewModel) {
     const oneSec = Duration(seconds:2);
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
         if (_start == 1) {
           Navigator.pop(context);
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) =>  ProductListByCategoryActivity(productList: homeProvider
-                  .jsonData["shopByCategoryList"][1]["subShopByCategoryList"][1]),
-            ),
+          productCategories.getProductBySearchTermsWithGet(
+            0,
+            10,
+            StringConstant.controllerSpeechToText.text.toString(),
           );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SearchProductListScreen( searchText: StringConstant.controllerSpeechToText.text, ),
+                ),
+              );
+
 
           // showDialog(
           //     context: context,
@@ -71,7 +79,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
     );
   }
 
-  void listen(HomeProvider homeProvider) async {
+  void listen(DashboardViewModel dashboardViewModel) async {
     if (!isListen) {
       bool avail = await speech!.initialize();
       if (avail) {
@@ -87,7 +95,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
               StringConstant.controllerSpeechToText.text = textString;
             }
           });
-          startTimer(homeProvider);
+          startTimer(dashboardViewModel);
 
         });
       }
@@ -103,7 +111,8 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
     super.initState();
     // startTimer();
     speech = speechToText.SpeechToText();
-    isListen = false;
+    isListen = false;  productCategories.productCategoryListingWithGet();
+
   }
 
   @override
@@ -113,7 +122,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
     super.dispose();
   }
 
-  dialogContent(BuildContext context, HomeProvider homeProvider) {
+  dialogContent(BuildContext context, DashboardViewModel dashboardViewModel, ) {
     {
       return ConstrainedBox(
         constraints: BoxConstraints(
@@ -177,7 +186,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                           color: isListen ? Colors.redAccent : Colors.black,
                           size: 50),
                       onPressed: () {
-                        listen(homeProvider);
+                        listen(dashboardViewModel);
                       },
                     ),
                   ),
@@ -193,13 +202,14 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
   @override
   Widget build(BuildContext context) {
     final homeProvider = Provider.of<HomeProvider>(context);
+    final dashboardViewModel = Provider.of<DashboardViewModel>(context);
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context,homeProvider),
+      child: dialogContent(context,dashboardViewModel,),
     );
   }
 }

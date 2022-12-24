@@ -232,13 +232,12 @@ Widget appBarWidget(
                             builder: (context) => const MyAccountActivity(),
                           ),
                         );
-                      }else{ showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AccountVerificationDialog(
-                              );
-                          });
-
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AccountVerificationDialog();
+                            });
                       }
                     },
                     child: Padding(
@@ -462,7 +461,7 @@ Widget searchBar(BuildContext context) {
                   );
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => SearchProductListScreen(),
+                      builder: (context) => SearchProductListScreen(searchText: StringConstant.controllerSpeechToText.text,),
                     ),
                   );
               }
@@ -937,6 +936,7 @@ class _ScannerWidgetState extends State<ScannerWidget> {
   @override
   void initState() {
     // TODO: implement initState
+    barcodeScanRes = '';
     super.initState();
   }
 
@@ -966,6 +966,9 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                         proceedButton("Scan with Camera",
                             ThemeApp.darkGreyColor, context, false, () {
                           // Navigator.of(context).pop();
+                          setState(() {
+                            barcodeScanRes = '';
+                          });
 
                           scanQR();
                         }),
@@ -1007,6 +1010,9 @@ class _ScannerWidgetState extends State<ScannerWidget> {
 
   Future<void> scanQR() async {
     barcodeScanRes = '';
+    setState(() {
+
+    });
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
@@ -1015,8 +1021,6 @@ class _ScannerWidgetState extends State<ScannerWidget> {
       print('_scanBarcode : ' + barcodeScanRes);
       print('_scanBarcode : ' + _scanBarcode);
       // getSingleProduct.getSingleProductScannerWithGet(_scanBarcode.toString());
-      getSingleProduct.getSingleProductScannerWithGet(
-          _scanBarcode.toString(), context);
 
       final prefs = await SharedPreferences.getInstance();
 
@@ -1030,23 +1034,10 @@ class _ScannerWidgetState extends State<ScannerWidget> {
       }
       print('_scanBarcode timer... : ' + _scanBarcode);
       print('_scanBarcode timer... : ' + StringConstant.ScannedProductId);
-      if (StringConstant.ScannedProductId != '' ||
-          StringConstant.ScannedProductId != null) {
-        Navigator.of(context)
-            .push(
-              MaterialPageRoute(
-                builder: (context) => ProductDetailsActivity(
-                  id: int.parse(StringConstant.ScannedProductId),
-                ),
-              ),
-            )
-            .then((value) => setState(() {
-                  _scanBarcode = '';
-                }));
-        _scanBarcode = '';
-      } else {
-        _scanBarcode = '';
-      }
+
+      getSingleProduct.getSingleProductScannerWithGet(
+          barcodeScanRes.toString(), context);
+
       if (!mounted) return;
 
       print('_scanBarcode : ' + _scanBarcode);

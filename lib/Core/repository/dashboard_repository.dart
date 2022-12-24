@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 
 import '../AppConstant/apiMapping.dart';
@@ -92,7 +93,7 @@ class DashBoardRepository {
   Future<ProductFindBySearchTermModel> getProductBySearchTerms(int page,int size, String searchString) async {
     Map<String, String> productListingData = {
       // 'search_term': searchString.toString(),
-      'search_term': searchString,
+      'search_term': searchString.toString(),
       'page': page.toString(),
       'size': size.toString(),
       // 'searchString':searchString.toString(),

@@ -33,9 +33,9 @@ import '../Activity/Product_Activities/FilterScreen_Products.dart';
 import '../Activity/Product_Activities/ProductDetails_activity.dart';
 
 class SearchProductListScreen extends StatefulWidget {
-  // SimpleSubCats? productList;
+  final String searchText;
 
-  SearchProductListScreen({Key? key,/* this.productList*/}) : super(key: key);
+  const SearchProductListScreen({Key? key, required this.searchText,/* this.productList*/}) : super(key: key);
 
   @override
   State<SearchProductListScreen> createState() =>
@@ -58,7 +58,8 @@ class _SearchProductListScreenState
   void initState() {
     // TODO: implement initState
     super.initState();
-    dashboardViewModel.getProductBySearchTermsWithGet(0, 10, 'Apple');
+    // dashboardViewModel.getProductBySearchTermsWithGet(0, 10, 'Apple');
+    dashboardViewModel.getProductBySearchTermsWithGet(0, 10, widget.searchText);
 
     _scrollController.addListener(() {
 
@@ -187,7 +188,17 @@ class _SearchProductListScreenState
                 case Status.COMPLETED:
                   print("Api calll");
                   List<SearchProduct>? searchProductList = productSearchProvider.productByTermResponse.data!.payload!.content;
-                  return Container(
+                  print("searchProductList"+searchProductList!.length.toString());
+                  return searchProductList!.length=='' ? Container(     height: height*.8,
+                    alignment: Alignment.center,
+                    child: TextFieldUtils().dynamicText(
+                        'No Match found!',
+                        context,
+                        TextStyle(
+                            color: ThemeApp.blackColor,
+                            fontSize: height * .03,
+                            fontWeight: FontWeight.bold)),
+                  ): Container(
                     height: height * .15,
                     child: ListView.builder(
                         controller: _scrollController,
@@ -371,7 +382,16 @@ class _SearchProductListScreenState
                   print("Api calll");
                   List<SearchProduct>? searchProductList = productSearchProvider.productByTermResponse.data!.payload!.content;
                   print("productSearchProvider length"+searchProductList!.length.toString());
-                  return SizedBox(
+                  return searchProductList!.length >=0 ? Container(     height: height*.5,
+                    alignment: Alignment.center,
+                    child: TextFieldUtils().dynamicText(
+                        'No Match found!',
+                        context,
+                        TextStyle(
+                            color: ThemeApp.blackColor,
+                            fontSize: height * .03,
+                            fontWeight: FontWeight.bold)),
+                  ): SizedBox(
                     height: height,
                     // width: MediaQuery.of(context).size.width,
                     child: GridView.builder(
