@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 
+import '../../pages/Activity/Product_Activities/ProductDetails_activity.dart';
 import '../AppConstant/apiMapping.dart';
 import '../Model/FindProductBySubCategoryModel.dart';
 import '../Model/CartModel.dart';
@@ -56,14 +58,14 @@ class ProductSpecificListRepository {
   }
 
   Future<FindByFMCGCodeScannerModel> getSingleProductScannerList(
-      String FMCGCode) async {
+      String FMCGCode,BuildContext context) async {
 
 
     Map<String, String> fmcgData = {
       'fmcg_code': FMCGCode.toString(),
 
     };
-    print("getProductBySearchTerms Query"+fmcgData.toString());
+    print("getProductBy Query"+fmcgData.toString());
     var url = '/product/findByFmcgCode';
     String queryString = Uri(queryParameters: fmcgData).query;
     var urls = ApiMapping.getURI(apiEndPoint.single_product_scanner);
@@ -78,6 +80,15 @@ class ProductSpecificListRepository {
       print("ProductScanModel list: " + response['payload']['id'].toString());
       prefs.setString('ScannedProductIDPref', response['payload']['id'].toString());
 
+      Navigator.of(context)
+          .pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => ProductDetailsActivity(
+            id: response['payload']['id'],
+          ),
+        ),
+      )
+       ;
 
       return response = FindByFMCGCodeScannerModel.fromJson(response);
     } catch (e) {

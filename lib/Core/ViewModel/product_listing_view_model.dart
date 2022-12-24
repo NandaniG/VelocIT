@@ -119,7 +119,7 @@ class ProductSpecificListViewModel with ChangeNotifier {
   Future<void> getSingleProductScannerWithGet( String subCategoryId,BuildContext context) async {
     setSingleProductScannerList(ApiResponse.loading());
 
-    _myRepo.getSingleProductScannerList(subCategoryId).then((value) async {
+    _myRepo.getSingleProductScannerList(subCategoryId,context).then((value) async {
       // productSubCategory.data!.payload!.content! .addAll(value.payload!.content!);
 
 
