@@ -1115,7 +1115,7 @@ class _OrderReviewSubActivityState extends State<OrderReviewSubActivity> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextFieldUtils().homePageTitlesTextFields(
-                        "Price (${value.cartList.length.toString()} items)",
+                        "Price",
                         context),
                     TextFieldUtils().homePageTitlesTextFields(
                         indianRupeesFormat.format(finalOriginalPrice),

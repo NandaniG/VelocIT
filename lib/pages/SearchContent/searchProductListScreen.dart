@@ -23,7 +23,6 @@ import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
 
-
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
@@ -35,23 +34,25 @@ import '../Activity/Product_Activities/ProductDetails_activity.dart';
 class SearchProductListScreen extends StatefulWidget {
   final String searchText;
 
-  const SearchProductListScreen({Key? key, required this.searchText,/* this.productList*/}) : super(key: key);
+  const SearchProductListScreen({
+    Key? key,
+    required this.searchText,
+    /* this.productList*/
+  }) : super(key: key);
 
   @override
   State<SearchProductListScreen> createState() =>
       _SearchProductListScreenState();
 }
 
-class _SearchProductListScreenState
-    extends State<SearchProductListScreen> {
+class _SearchProductListScreenState extends State<SearchProductListScreen> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
   double height = 0.0;
   double width = 0.0;
 
   var categoryCode;
-  DashboardViewModel dashboardViewModel =
-  DashboardViewModel();
+  DashboardViewModel dashboardViewModel = DashboardViewModel();
   late Map<String, dynamic> data = new Map<String, dynamic>();
 
   @override
@@ -62,7 +63,6 @@ class _SearchProductListScreenState
     dashboardViewModel.getProductBySearchTermsWithGet(0, 10, widget.searchText);
 
     _scrollController.addListener(() {
-
       // if(_scrollController.position.pixels >=_scrollController.position.maxScrollExtent ){
       //   productSpecificListViewModel.productBySubCategoryWithGet(
       //     0,
@@ -70,7 +70,6 @@ class _SearchProductListScreenState
       //     widget.productList!.id!,
       //   );
       // }
-
     });
     data = {
       "category_code": 'EOLP',
@@ -95,6 +94,7 @@ class _SearchProductListScreenState
     // getListFromPref();
     dataCount();
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -111,14 +111,14 @@ class _SearchProductListScreenState
 
   dataCount() async {
     StringConstant.cartCounters =
-    await Prefs.instance.getIntToken("counterProduct");
+        await Prefs.instance.getIntToken("counterProduct");
     print("dataCount..." + StringConstant.cartCounters.toString());
   }
 
   getListFromPref() async {
     final prefs = await SharedPreferences.getInstance();
     StringConstant.getCartList_FromPref =
-    await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
+        await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
     print('____________CartData AFTER GETTING PREF______________');
     StringConstant.prettyPrintJson(
         StringConstant.getCartList_FromPref.toString());
@@ -147,8 +147,7 @@ class _SearchProductListScreenState
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Padding(
-            padding:
-            const EdgeInsets.only(left: 10, right: 10, top: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: ListView(
               // mainAxisAlignment: MainAxisAlignment.start,
               // crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,115 +174,127 @@ class _SearchProductListScreenState
         create: (BuildContext context) => dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, productSearchProvider, child) {
-              switch (productSearchProvider.productByTermResponse.status) {
-                case Status.LOADING:
-                  print("Api load");
+          switch (productSearchProvider.productByTermResponse.status) {
+            case Status.LOADING:
+              print("Api load");
 
-                  return TextFieldUtils().circularBar(context);
-                case Status.ERROR:
-                  print("Api error");
+              return TextFieldUtils().circularBar(context);
+            case Status.ERROR:
+              print("Api error");
 
-                  return Text(productSearchProvider.productByTermResponse.message
-                      .toString());
-                case Status.COMPLETED:
-                  print("Api calll");
-                  List<SearchProduct>? searchProductList = productSearchProvider.productByTermResponse.data!.payload!.content;
-                  print("searchProductList"+searchProductList!.length.toString());
-                  return searchProductList!.length=='' ? Container(     height: height*.8,
-                    alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
-                  ): Container(
-                    height: height * .15,
-                    child: ListView.builder(
-                        controller: _scrollController,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: searchProductList!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          print("widget.productList.length");
-                          return InkWell(
-                            onTap: () {},
-                            child: Row(
-                              children: [
-                                Container(
-                                    width: width * .27,
-                                    decoration: const BoxDecoration(
-                                        color: ThemeApp.whiteColor,
-                                        borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(50)),
-                                          child: Image.network(
-                                            // width: double.infinity,
-                                            searchProductList[index]
-                                                .imageUrls![0]
-                                                .imageUrl!,
-                                            fit: BoxFit.fill,
+              return Text(productSearchProvider.productByTermResponse.message
+                  .toString());
+            case Status.COMPLETED:
+              print("Api calll");
+              List<SearchProduct>? searchProductList = productSearchProvider
+                  .productByTermResponse.data!.payload!.content;
+              print("searchProductList" + searchProductList!.length.toString());
+              return searchProductList!.length == ''
+                  ? Container(
+                      height: height * .8,
+                      alignment: Alignment.center,
+                      child: TextFieldUtils().dynamicText(
+                          'No Match found!',
+                          context,
+                          TextStyle(
+                              color: ThemeApp.blackColor,
+                              fontSize: height * .03,
+                              fontWeight: FontWeight.bold)),
+                    )
+                  : Container(
+                      height: height * .15,
+                      child: ListView.builder(
+                          controller: _scrollController,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: searchProductList!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            print("widget.productList.length");
+                            return InkWell(
+                              onTap: () {},
+                              child: Row(
+                                children: [
+                                  Container(
+                                      width: width * .27,
+                                      decoration: const BoxDecoration(
+                                          color: ThemeApp.whiteColor,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(50)),
+                                            child: Image.network(
+                                              // width: double.infinity,
+                                              searchProductList[index]
+                                                  .imageUrls![0]
+                                                  .imageUrl!,
+                                              fit: BoxFit.fill,
 
-                                            height:
-                                            MediaQuery.of(context).size.height *
-                                                .07,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .07,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                        ),
-                                        Center(
-                                          child: TextFieldUtils().dynamicText(
-                                              searchProductList[index].shortName!,
-                                              context,
-                                              TextStyle(
-                                                color: ThemeApp.darkGreyColor,
-                                                // fontWeight: FontWeight.w500,
-                                                fontSize: height * .02,
-                                              )),
-                                        ),
-                                      ],
-                                    )),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * .03,
-                                )
-                              ],
-                            ),
-                          );
-                        }),
-                  );
-              }
-              return Container(     height: height*.8,
-                alignment: Alignment.center,
-                child: TextFieldUtils().dynamicText(
-                    'No Match found!',
-                    context,
-                    TextStyle(
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .03,
-                        fontWeight: FontWeight.bold)),
-              );
-            }));
+                                          SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .01,
+                                          ),
+                                          Center(
+                                            child: TextFieldUtils().dynamicText(
+                                                searchProductList[index]
+                                                    .shortName!,
+                                                context,
+                                                TextStyle(
+                                                  color: ThemeApp.darkGreyColor,
+                                                  // fontWeight: FontWeight.w500,
+                                                  fontSize: height * .02,
+                                                )),
+                                          ),
+                                        ],
+                                      )),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .03,
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
+                    );
+          }
+          return Container(
+            height: height * .8,
+            alignment: Alignment.center,
+            child: TextFieldUtils().dynamicText(
+                'No Match found!',
+                context,
+                TextStyle(
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .03,
+                    fontWeight: FontWeight.bold)),
+          );
+        }));
   }
 
   Widget filterWidgets(List<ProductDetailsModel> product) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
-        // border: Border(
-        //   top: BorderSide(color: Colors.grey, width: 1),
-        //   bottom: BorderSide(color: Colors.grey, width: 1),
-        // ),
-      ),
+          // border: Border(
+          //   top: BorderSide(color: Colors.grey, width: 1),
+          //   bottom: BorderSide(color: Colors.grey, width: 1),
+          // ),
+          ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -368,165 +379,198 @@ class _SearchProductListScreenState
         create: (BuildContext context) => dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, productSearchProvider, child) {
-              switch (productSearchProvider.productByTermResponse.status) {
-                case Status.LOADING:
-                  print("Api load");
+          switch (productSearchProvider.productByTermResponse.status) {
+            case Status.LOADING:
+              print("Api load");
 
-                  return TextFieldUtils().circularBar(context);
-                case Status.ERROR:
-                  print("Api error");
+              return TextFieldUtils().circularBar(context);
+            case Status.ERROR:
+              print("Api error");
 
-                  return Text(productSearchProvider.productByTermResponse.message
-                      .toString());
-                case Status.COMPLETED:
-                  print("Api calll");
-                  List<SearchProduct>? searchProductList = productSearchProvider.productByTermResponse.data!.payload!.content;
-                  print("productSearchProvider length"+searchProductList!.length.toString());
-                  return searchProductList!.length >=0 ? Container(     height: height*.5,
-                    alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
-                  ): SizedBox(
-                    height: height,
-                    // width: MediaQuery.of(context).size.width,
-                    child: GridView.builder(
-                      itemCount: searchProductList!.length,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        mainAxisSpacing: 30,
-                        crossAxisSpacing: 10,
-                        // width / height: fixed for *all* items
-                        childAspectRatio: 0.75,
+              return Text(productSearchProvider.productByTermResponse.message
+                  .toString());
+            case Status.COMPLETED:
+              print("Api calll");
+              List<SearchProduct>? searchProductList = productSearchProvider
+                  .productByTermResponse.data!.payload!.content;
 
-                        crossAxisCount: 2,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ProductDetailsActivity(
+              if (searchProductList!.length == 0) {
+                print("productSearchProvider length" +
+                    searchProductList!.length.toString());
+              } else {
+                print("productSearchProvider length........" +
+                    searchProductList!.length.toString());
+              }
+              return searchProductList!.isEmpty ||
+                      searchProductList!.length == 0
+                  ? Container(
+                      height: height * .5,
+                      alignment: Alignment.center,
+                      child: TextFieldUtils().dynamicText(
+                          'No Match found!',
+                          context,
+                          TextStyle(
+                              color: ThemeApp.darkGreyTab,
+                              fontSize: height * .03,
+                              fontWeight: FontWeight.bold)),
+                    )
+                  : SizedBox(
+                      height: height,
+                      // width: MediaQuery.of(context).size.width,
+                      child: GridView.builder(
+                        itemCount: searchProductList!.length,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisSpacing: 30,
+                          crossAxisSpacing: 10,
+                          // width / height: fixed for *all* items
+                          childAspectRatio: 0.75,
 
-                                   id: searchProductList[index].id,
+                          crossAxisCount: 2,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetailsActivity(
+                                    id: searchProductList[index].id,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                              decoration: const BoxDecoration(
-                                  color: ThemeApp.tealButtonColor,
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      height: SizeConfig.orientations !=
-                                          Orientation.landscape
-                                          ? MediaQuery.of(context).size.height * .25
-                                          : MediaQuery.of(context).size.height * .1,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                          borderRadius: BorderRadius.only(
+                              );
+                            },
+                            child: Container(
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.tealButtonColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        height: SizeConfig.orientations !=
+                                                Orientation.landscape
+                                            ? MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .25
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .1,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
+                                            )),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.only(
                                             topRight: Radius.circular(10),
                                             topLeft: Radius.circular(10),
-                                          )),
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                        ),
-                                        child: Image.network(
-                                          searchProductList[index]
-                                              .imageUrls![0]
-                                              .imageUrl!,
-                                          fit: BoxFit.fill,
-                                          height: (MediaQuery.of(context)
-                                              .orientation ==
-                                              Orientation.landscape)
-                                              ? MediaQuery.of(context).size.height *
-                                              .26
-                                              : MediaQuery.of(context).size.height *
-                                              .1,
+                                          ),
+                                          child: Image.network(
+                                            searchProductList[index]
+                                                .imageUrls![0]
+                                                .imageUrl!,
+                                            fit: BoxFit.fill,
+                                            height: (MediaQuery.of(context)
+                                                        .orientation ==
+                                                    Orientation.landscape)
+                                                ? MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .26
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .1,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    // flex: 1,
-                                    child: Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 12, right: 12),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Text(searchProductList[index].shortName!,
-                                              style: TextStyle(
-                                                  color: ThemeApp.whiteColor,
-                                                  fontSize: height * .022,
-                                                  fontWeight: FontWeight.w400)),
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              TextFieldUtils().dynamicText(
-                                                  indianRupeesFormat.format(
-                                                      searchProductList[index]
-                                                          .defaultSellPrice ??
-                                                          0.0),
-                                                  context,
-                                                  TextStyle(
-                                                      color: ThemeApp.whiteColor,
-                                                      fontSize: height * .023,
-                                                      fontWeight: FontWeight.w500)),
-                                              TextFieldUtils().dynamicText(
-                                                  indianRupeesFormat.format(
-                                                      searchProductList[index]
-                                                          .defaultMrp ??
-                                                          0.0),
-                                                  context,
-                                                  TextStyle(
-                                                      color: ThemeApp.whiteColor,
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
-                                                      fontSize: height * .022,
-                                                      fontWeight: FontWeight.bold)),
-                                            ],
-                                          )
-                                        ],
+                                    Expanded(
+                                      // flex: 1,
+                                      child: Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 12, right: 12),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                searchProductList[index]
+                                                    .shortName!,
+                                                style: TextStyle(
+                                                    color: ThemeApp.whiteColor,
+                                                    fontSize: height * .022,
+                                                    fontWeight:
+                                                        FontWeight.w400)),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                TextFieldUtils().dynamicText(
+                                                    indianRupeesFormat.format(
+                                                        searchProductList[index]
+                                                                .defaultSellPrice ??
+                                                            0.0),
+                                                    context,
+                                                    TextStyle(
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        fontSize: height * .023,
+                                                        fontWeight:
+                                                            FontWeight.w500)),
+                                                TextFieldUtils().dynamicText(
+                                                    indianRupeesFormat.format(
+                                                        searchProductList[index]
+                                                                .defaultMrp ??
+                                                            0.0),
+                                                    context,
+                                                    TextStyle(
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough,
+                                                        fontSize: height * .022,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ],
-                              )),
-                        );
-                      },
-                    ),
-                  );
-              }
-              return Container(     height: height*.8,
-                alignment: Alignment.center,
-                child: TextFieldUtils().dynamicText(
-                    'No Match found!',
-                    context,
-                    TextStyle(
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .03,
-                        fontWeight: FontWeight.bold)),
-              );
-            }));
+                                    )
+                                  ],
+                                )),
+                          );
+                        },
+                      ),
+                    );
+          }
+          return Container(
+            height: height * .8,
+            alignment: Alignment.center,
+            child: TextFieldUtils().dynamicText(
+                'No Match found!',
+                context,
+                TextStyle(
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .03,
+                    fontWeight: FontWeight.bold)),
+          );
+        }));
   }
 
   int? _radioValue = 0;

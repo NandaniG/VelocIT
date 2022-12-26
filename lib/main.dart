@@ -218,7 +218,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   var loginId = await Prefs.instance.getToken(StringConstant.userId);
     StringConstant.BadgeCounterValue =
-        (prefs.getString('setBadgeCountPref')) ?? '';
+        (prefs.getString('setBadgeCountPrefs')) ?? '';
     print("Splash LoginId : " + loginId.toString());
 
     var _duration = const Duration(seconds: 3);

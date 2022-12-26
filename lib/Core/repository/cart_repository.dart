@@ -57,7 +57,7 @@ class CartRepository {
     // }
 
     httpClient.close();
-    return responseJson;
+    return userData;
   }
 
   int badgeLength = 0;
@@ -117,9 +117,10 @@ class CartRepository {
       print("Cart Specific Id : " + response.toString());
 
       prefs.setString(
-        'setBadgeCountPref',
+        'setBadgeCountPrefs',
         response['payload']['total_item_count'].toString(),
       );
+
       return response = CartSpecificIdModel.fromJson(response);
     } catch (e) {
       throw e;

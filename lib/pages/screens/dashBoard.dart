@@ -63,6 +63,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // String Address = 'search';
   var homeData;
   bool _isProductListChip = false;
+  bool _isServiceListChip = false;
+  bool _isCRMListChip = false;
   late Random rnd;
   var min = 100000000;
   int max = 1000000000;
@@ -85,7 +87,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     };
     print("getProductListing Query" + productListingData.toString());
     productListView.productListingWithGet(0, 10);
-    _isProductListChip = false;
+    _isProductListChip = true;
     getPincode();
     StringConstant.controllerSpeechToText.clear();
     Provider.of<HomeProvider>(context, listen: false).loadJson();
@@ -115,8 +117,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       print("USER LOGIN ID..............." +
           StringConstant.UserLoginId.toString());
       if ((StringConstant.RandomUserLoginId == '' ||
-          StringConstant.RandomUserLoginId == null)&&(StringConstant.UserLoginId == '' ||
-          StringConstant.UserLoginId == null)) {
+              StringConstant.RandomUserLoginId == null) &&
+          (StringConstant.UserLoginId == '' ||
+              StringConstant.UserLoginId == null)) {
         print("RandomUserLoginId empty");
         rnd = new Random();
         var r = min + rnd.nextInt(max - min);
@@ -302,7 +305,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget productServiceChip() {
     return Container(
-      width: width / 1.5,
+      width: width / 1,
       padding: EdgeInsets.only(top: 10),
       child: Container(
         height: 40,
@@ -321,8 +324,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onTap: () {
                   setState(() {
                     _isProductListChip = true;
-                    _isProductListChip = !_isProductListChip;
+
+                  _isServiceListChip = false;
+                    _isCRMListChip = false;
+                    // _isProductListChip = !_isProductListChip;
+                    print("_isProductListChip 1"+_isProductListChip.toString());
                   });
+
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -330,8 +338,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   height: double.infinity,
                   decoration: BoxDecoration(
                     color: _isProductListChip
-                        ? ThemeApp.whiteColor
-                        : ThemeApp.appColor,
+                        ? ThemeApp.appColor
+                        : ThemeApp.whiteColor,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
@@ -340,8 +348,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         context,
                         TextStyle(
                             color: _isProductListChip
-                                ? ThemeApp.blackColor
-                                : ThemeApp.whiteColor,
+                                ? ThemeApp.whiteColor
+                                : ThemeApp.blackColor,
                             // fontWeight: FontWeight.w500,
                             fontSize: height * .022,
                             fontWeight: FontWeight.w500)),
@@ -354,7 +362,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: InkWell(
                 onTap: () {
                   setState(() {
-                    _isProductListChip = true;
+                    _isServiceListChip = true;
+                    _isCRMListChip = false;
+                    _isProductListChip = false;
+                    // _isProductListChip = !_isProductListChip;
+                    print("_isProductListChip 2"+_isServiceListChip.toString());
+
                   });
                 },
                 child: Container(
@@ -363,7 +376,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   height: double.infinity,
                   decoration: BoxDecoration(
                     color:
-                        _isProductListChip ? Color(0xff00a7bf) : Colors.white,
+                    _isServiceListChip ? Color(0xff00a7bf) : Colors.white,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
@@ -371,7 +384,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         'Services',
                         context,
                         TextStyle(
-                            color: _isProductListChip
+                            color: _isServiceListChip
+                                ? ThemeApp.whiteColor
+                                : ThemeApp.blackColor,
+                            // fontWeight: FontWeight.w500,
+                            fontSize: height * .022,
+                            fontWeight: FontWeight.w500)),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    // _isProductListChip = true;
+                    _isCRMListChip = true;
+                    _isServiceListChip = false;
+                    _isProductListChip = false;
+                    print("_isProductListChip 3"+_isCRMListChip.toString());
+
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color:
+                    _isCRMListChip ? Color(0xff00a7bf) : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: TextFieldUtils().dynamicText(
+                        'CRM',
+                        context,
+                        TextStyle(
+                            color: _isCRMListChip
                                 ? ThemeApp.whiteColor
                                 : ThemeApp.blackColor,
                             // fontWeight: FontWeight.w500,
@@ -592,7 +642,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     const BorderRadius.all(Radius.circular(10)),
                                 child: Container(
                                   width: width,
-                                  color: Colors.red,
+                                  color: Colors.white,
                                   child: Image.asset(
                                     e["homeSliderImage"],
                                     fit: BoxFit.fill,
@@ -1063,7 +1113,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         scrollDirection: Axis.horizontal,
                         itemCount: serviceList!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Row(
+                          return  Row(
                             children: [
                               InkWell(
                                 onTap: () {
@@ -1217,7 +1267,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 width: MediaQuery.of(context).size.width * .03,
                               )
                             ],
-                          );
+                          )??SizedBox();
                         })
                     : SizedBox(),
               );
@@ -2201,7 +2251,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             topRight: Radius.circular(10),
                                             topLeft: Radius.circular(10),
                                           ),
-                                          child: serviceList![index]
+                                          child: serviceList[index]
                                                   .imageUrls![0]
                                                   .imageUrl!
                                                   .isNotEmpty

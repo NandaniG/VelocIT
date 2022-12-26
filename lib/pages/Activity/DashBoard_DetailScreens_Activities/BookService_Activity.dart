@@ -224,7 +224,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                                 const BorderRadius.all(Radius.circular(10)),
                             child: Container(
                               width: width,
-                              color: Colors.red,
+                              color: Colors.white,
                               child: Image.asset(
                                 e.sponsorlogo,
                                 fit: BoxFit.fill,

@@ -195,7 +195,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     }
     setState(() {
       StringConstant.BadgeCounterValue =
-          (prefs.getString('setBadgeCountPref')) ?? '';
+          (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
     });
   }
@@ -627,8 +627,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 }
               },
             ),
-            TextFieldUtils()
-                .subHeadingTextFields('${value.itemRating} Reviews', context),
+            // TextFieldUtils()
+            //     .subHeadingTextFields('${value.itemRating} Reviews', context),
           ],
         ),
       ),

@@ -6,8 +6,10 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
+import 'package:velocit/utils/utils.dart';
 
 import '../../pages/Activity/Product_Activities/ProductDetails_activity.dart';
+import '../../utils/constants.dart';
 import '../AppConstant/apiMapping.dart';
 import '../Model/FindProductBySubCategoryModel.dart';
 import '../Model/CartModel.dart';
@@ -34,11 +36,12 @@ class ProductSpecificListRepository {
   //   }
   // }
 
-  Future<SingleProductIDModel> getSingleProductSpecificList(String productId) async {
+  Future<SingleProductIDModel> getSingleProductSpecificList(
+      String productId) async {
     var url = ApiMapping.getURI(apiEndPoint.single_product);
 
     try {
-      dynamic response = await _apiServices.getGetApiResponse(url+productId);
+      dynamic response = await _apiServices.getGetApiResponse(url + productId);
       return response = SingleProductIDModel.fromJson(response);
     } catch (e) {
       throw e;
@@ -57,38 +60,57 @@ class ProductSpecificListRepository {
     }
   }
 
+
   Future<FindByFMCGCodeScannerModel> getSingleProductScannerList(
-      String FMCGCode,BuildContext context) async {
-
-
+      String FMCGCode, BuildContext context) async {
     Map<String, String> fmcgData = {
       'fmcg_code': FMCGCode.toString(),
-
     };
-    print("getProductBy Query"+fmcgData.toString());
+    print("getProductBy Query" + fmcgData.toString());
     var url = '/product/findByFmcgCode';
     String queryString = Uri(queryParameters: fmcgData).query;
     var urls = ApiMapping.getURI(apiEndPoint.single_product_scanner);
-    var requestUrl = ApiMapping.baseAPI +url + '?' + queryString!;
+    var requestUrl = ApiMapping.baseAPI + url + '?' + queryString!;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
       print("ProductScanModel list: " + response.toString());
-
+      print("ProductScanModel list: " );
+      print("NOT_FOUND  "+response['status'].toString());
       final prefs = await SharedPreferences.getInstance();
-
-      print("ProductScanModel list: " + response['payload']['id'].toString());
-      prefs.setString('ScannedProductIDPref', response['payload']['id'].toString());
-
-      Navigator.of(context)
-          .pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => ProductDetailsActivity(
-            id: response['payload']['id'],
+      prefs.setString(
+          'ScannedProductIDPref', response['payload']['id'].toString());
+      if(response['status'] == 'NOT_FOUND'){
+        print("NOT_FOUND....");
+      }else{
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsActivity(
+              id: response['payload']['id'],
+            ),
           ),
-        ),
-      )
-       ;
+        );
+      }
+
+
+
+
+
+      // if(response['payload']['id']!=""||response['payload']['id']!=null ||response['payload']['id'].toString().isNotEmpty) {
+   //      Navigator.of(context).pushReplacement(
+   //        MaterialPageRoute(
+   //          builder: (context) => ProductDetailsActivity(
+   //            id: response['payload']['id'],
+   //          ),
+   //        ),
+   //      );
+   //    }else{
+   //   Utils.errorToast("no..match.....");
+   // }
+   // if(response['payload'].toString().isEmpty||response['payload'].toString()==''||response['payload'].toString()==null){
+   //      Utils.errorToast("no...record....");
+   //
+   //    }
 
       return response = FindByFMCGCodeScannerModel.fromJson(response);
     } catch (e) {

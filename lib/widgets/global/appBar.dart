@@ -497,7 +497,7 @@ Widget searchBar(BuildContext context) {
               // contentPadding:
               //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
               /* -- Text and Icon -- */
-              hintText: "Search for Products",
+              hintText: "Search",
               hintStyle: const TextStyle(
                 fontSize: 14,
                 color: ThemeApp.darkGreyTab,
@@ -720,8 +720,8 @@ Widget bottomNavBarItems(BuildContext context) {
             if (_currentIndex == 4) {
               // colors = ThemeApp.blackColor;
 
-//             StringConstant.BadgeCounterValue =  (preference.getString('setBadgeCountPref'))??'';
-// print("Badge,........"+ StringConstant.BadgeCounterValue);
+            StringConstant.BadgeCounterValue =  (preference.getString('setBadgeCountPrefs'))??'';
+print("Badge,........"+ StringConstant.BadgeCounterValue);
               if (kDebugMode) {}
               product.badgeFinalCount;
 
@@ -843,7 +843,7 @@ Widget bottomNavBarItems(BuildContext context) {
                             child: Image.asset('assets/icons/shopping-cart.png',
                                 height: 35),
                           ),
-                    StringConstant.BadgeCounterValue == ''
+                    StringConstant.BadgeCounterValue == '0'||StringConstant.BadgeCounterValue ==''
                         ? SizedBox()
                         : Positioned(
                             right: 0,
@@ -964,9 +964,13 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         proceedButton("Scan with Camera",
-                            ThemeApp.darkGreyColor, context, false, () {
+                            ThemeApp.darkGreyColor, context, false, () async {
                           // Navigator.of(context).pop();
+                              final prefs = await SharedPreferences.getInstance();
+
                           setState(() {
+                            StringConstant.ScannedProductId ='';
+                            prefs.setString('ScannedProductIDPref', '');
                             barcodeScanRes = '';
                           });
 
@@ -1024,20 +1028,31 @@ class _ScannerWidgetState extends State<ScannerWidget> {
 
       final prefs = await SharedPreferences.getInstance();
 
-      StringConstant.ScannedProductId =
-          (prefs.getString('ScannedProductIDPref')) ?? '';
+      // StringConstant.ScannedProductId =
+      //     (prefs.getString('ScannedProductIDPref')) ?? '';
 
       if (_scanBarcode == '-1') {
         Utils.flushBarErrorMessage("Please scan proper content", context);
       } else {
-        Utils.successToast(_scanBarcode);
+        // Utils.successToast(_scanBarcode);
       }
       print('_scanBarcode timer... : ' + _scanBarcode);
-      print('_scanBarcode timer... : ' + StringConstant.ScannedProductId);
+      print('_scanBarcode pref befor... : ' + StringConstant.ScannedProductId);
 
       getSingleProduct.getSingleProductScannerWithGet(
           barcodeScanRes.toString(), context);
+      StringConstant.ScannedProductId =
+          (prefs.getString('ScannedProductIDPref')) ?? '';
 
+      print('_scanBarcode pref after... : ' + StringConstant.ScannedProductId.toString());
+
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(
+      //     builder: (context) => ProductDetailsActivity(
+      //       id:int.parse(StringConstant.ScannedProductId,
+      //     ),
+      //   ),
+      //   ));
       if (!mounted) return;
 
       print('_scanBarcode : ' + _scanBarcode);

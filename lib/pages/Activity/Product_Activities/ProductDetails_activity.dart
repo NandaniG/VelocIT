@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
@@ -86,7 +87,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     setState(() {});
     final prefs = await SharedPreferences.getInstance();
     StringConstant.BadgeCounterValue =
-        (prefs.getString('setBadgeCountPref')) ?? '';
+        (prefs.getString('setBadgeCountPrefs')) ?? '';
   }
 
 // update cart list
@@ -126,17 +127,18 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       "qty": quantity.toString()
     };
     print("update cart DATA" + data.toString());
+    setState(() {});
     CartRepository().updateCartPostRequest(data, context);
 
     Utils.successToast('Added Successfully!');
     cartListView.cartSpecificIDWithGet(context, StringConstant.UserCartID);
     setState(() {
-      prefs.setString(
-        'setBadgeCountPref',
-        quantity.toString(),
-      );
+      // prefs.setString(
+      //   'setBadgeCountPref',
+      //   quantity.toString(),
+      // );
       StringConstant.BadgeCounterValue =
-          (prefs.getString('setBadgeCountPref')) ?? '';
+          (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
     });
   }
@@ -181,37 +183,35 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         child: Container(
             height: MediaQuery.of(context).size.height,
             // padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-            child: SingleChildScrollView(
-                child: ChangeNotifierProvider<ProductSpecificListViewModel>(
-                    create: (BuildContext context) =>
-                        productSpecificListViewModel,
-                    child: Consumer<ProductSpecificListViewModel>(
-                        builder: (context, productSubCategoryProvider, child) {
-                      switch (productSubCategoryProvider
-                          .singleproductSpecificList.status) {
-                        case Status.LOADING:
-                          print("Api load");
+            child: ChangeNotifierProvider<ProductSpecificListViewModel>(
+                create: (BuildContext context) => productSpecificListViewModel,
+                child: Consumer<ProductSpecificListViewModel>(
+                    builder: (context, productSubCategoryProvider, child) {
+                  switch (productSubCategoryProvider
+                      .singleproductSpecificList.status) {
+                    case Status.LOADING:
+                      print("Api load");
 
-                          return TextFieldUtils().circularBar(context);
-                        case Status.ERROR:
-                          print("Api error");
+                      return TextFieldUtils().circularBar(context);
+                    case Status.ERROR:
+                      print("Api error");
 
-                          return Text(productSubCategoryProvider
-                              .singleproductSpecificList.message
-                              .toString());
-                        case Status.COMPLETED:
-                          print("Api calll");
-                          SingleProductPayload? model =
-                              productSubCategoryProvider
-                                  .singleproductSpecificList.data!.payload;
-//                           List<SingleProductsubCategory>? subProductList;
-// var payLoadData= productSubCategoryProvider.singleproductSpecificList
-//     .data!.payload!;
+                      return Text(productSubCategoryProvider
+                          .singleproductSpecificList.message
+                          .toString());
+                    case Status.COMPLETED:
+                      print("Api calll");
+                      SingleProductPayload? model = productSubCategoryProvider
+                          .singleproductSpecificList.data!.payload;
 
-                          if (widget.id == model!.id) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      List<SingleModelMerchants>? merchants =
+                          productSubCategoryProvider.singleproductSpecificList
+                              .data!.payload!.merchants;
+
+                      if (widget.id == model!.id) {
+                        return ListView(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              // crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 productImage(model),
                                 Padding(
@@ -226,8 +226,17 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 SizedBox(
                                   height: height * .01,
                                 ),
+                                rattingBar(model),
+                                SizedBox(
+                                  height: height * .01,
+                                ),
+                                prices(model),
+                                SizedBox(
+                                  height: height * .01,
+                                ),
+                                merchantDetails(model),
                                 // Text("Merchant  "+model.merchants![0].merchantName.toString() ),
-                                model.merchants!.isNotEmpty
+                                /*    model.merchants!.isNotEmpty
                                     ? Padding(
                                         padding: const EdgeInsets.only(
                                           left: 20,
@@ -245,11 +254,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                         height: height * .01,
                                       )
                                     : SizedBox(),
-                                rattingBar(model),
-                                SizedBox(
-                                  height: height * .01,
-                                ),
-                                prices(model),
+*/
+                                // prices(model),
                                 SizedBox(
                                   height: height * .01,
                                 ),
@@ -272,139 +278,147 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 //similar product
 
                                 /*   SizedBox(
-                                  height: height * .03,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 20,
-                                    right: 20,
-                                  ),
-                                  child: TextFieldUtils()
-                                      .listHeadingTextField(
-                                      "Similar Products", context),
-                                ),
-                                SizedBox(
-                                  height: MediaQuery.of(context).size.height *
-                                      .02,
-                                ),
-                                similarProductList()*/
+                              height: height * .03,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 20,
+                                right: 20,
+                              ),
+                              child: TextFieldUtils()
+                                  .listHeadingTextField(
+                                  "Similar Products", context),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height *
+                                  .02,
+                            ),
+                            similarProductList()*/
                               ],
-                            );
-                          }
+                            ) ??
+                            SizedBox();
+                      } else {
+                        return Container(
+                          height: height * .8,
+                          alignment: Alignment.center,
+                          child: TextFieldUtils().dynamicText(
+                              'No Match found!',
+                              context,
+                              TextStyle(
+                                  color: ThemeApp.blackColor,
+                                  fontSize: height * .03,
+                                  fontWeight: FontWeight.bold)),
+                        );
                       }
-                      return Container(
-                        height: height * .8,
-                        alignment: Alignment.center,
-                        child: TextFieldUtils().dynamicText(
-                            'No Match found!',
-                            context,
-                            TextStyle(
-                                color: ThemeApp.blackColor,
-                                fontSize: height * .03,
-                                fontWeight: FontWeight.bold)),
-                      );
-                    }))
-
-                /*         Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  productImage(),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                    ),
-                    child: TextFieldUtils().homePageheadingTextField(
-                          subProductList.shortName!, context),
-                  ),
-                  SizedBox(
-                    height: height * .01,
-                  ),
-                    subProductList.merchants!.isNotEmpty?      Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                    ),
-                    child: TextFieldUtils().homePageTitlesTextFields(
-                          subProductList.merchants![0].merchantName!, context),
-                  ):SizedBox(),
-                    subProductList.merchants!.isNotEmpty? SizedBox(
-                    height: height * .01,
-                  ):SizedBox(),
-                  rattingBar(),
-                  SizedBox(
-                    height: height * .01,
-                  ),
-                  prices(),
-                  SizedBox(
-                    height: height * .01,
-                  ),
-                    subProductList.productVariants!.isNotEmpty ?    availableVariant():SizedBox(),
-                  SizedBox(
-                    height: height * .01,
-                  ),
-                  productDescription(),
-                  SizedBox(
-                    height: height * .01,
-                  ),
-                  addToCart(),
-                  SizedBox(
-                    height: height * .03,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                    ),
-                    child: TextFieldUtils()
-                        .listHeadingTextField("Similar Products", context),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .02,
-                  ),
-                  similarProductList()
-                ],
-              ),*/
-                )),
+                  }
+                  return Container(
+                    height: height * .8,
+                    alignment: Alignment.center,
+                    child: TextFieldUtils().dynamicText(
+                        'No Match found!',
+                        context,
+                        TextStyle(
+                            color: ThemeApp.blackColor,
+                            fontSize: height * .03,
+                            fontWeight: FontWeight.bold)),
+                  );
+                }))),
       ),
     );
   }
 
+  final CarouselController _carouselController = CarouselController();
+  int _currentIndex = 0;
+  int? _radioValue = 0;
+
   Widget productImage(SingleProductPayload? model) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 20,
-        right: 20,
-      ),
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       child: Stack(
         alignment: Alignment.bottomRight,
         children: [
-          Card(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            color: ThemeApp.whiteColor,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              child: model!.imageUrls![0].imageUrl!.isNotEmpty
-                  ? Image.network(
-                        // width: double.infinity,
-                        model!.imageUrls![imageVariantIndex].imageUrl! ?? '',
-                        fit: BoxFit.fill,
-                        width: width,
-                        height: height * .28,
-                      ) ??
-                      SizedBox()
-                  : SizedBox(
-                      height: height * .28,
-                      width: width,
-                      child: Icon(
-                        Icons.image_outlined,
-                        size: 50,
-                      )),
-            ),
+          Container(
+            height: height * .28,
+            child: CarouselSlider(
+                  carouselController: _carouselController,
+                  items: model!.imageUrls!.map<Widget>((e) {
+                        return Stack(
+                          children: [
+                            Container(
+                              height: height * .28,
+                              child: Card(
+                                    margin: EdgeInsets.zero,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    color: ThemeApp.whiteColor,
+                                    child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        child: Container(
+                                              width: width,
+                                              color: Colors.white,
+                                              child: Image.network(
+                                                    e.imageUrl ?? "",
+                                                    fit: BoxFit.fill,
+                                                    errorBuilder:
+                                                        (BuildContext context,
+                                                            Object exception,
+                                                            StackTrace?
+                                                                stackTrace) {
+                                                      return const Text('');
+                                                    },
+                                                  ) ??
+                                                  SizedBox(),
+                                            ) ??
+                                            SizedBox()),
+                                  ) ??
+                                  SizedBox(),
+                            ),
+                          ],
+                        );
+                      }).toList() ??
+                      [],
+                  options: CarouselOptions(
+                      onPageChanged: (index, reason) {
+                        index = _currentIndex;
+
+                        // _currentIndex = index;
+                        setState(() {});
+                      },
+                      autoPlay: true,
+                      viewportFraction: 1,
+                      height: height * .3),
+                ) ??
+                SizedBox(),
           ),
+
+          // Card(
+          //   shape: const RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.all(Radius.circular(10)),
+          //   ),
+          //   color: ThemeApp.whiteColor,
+          //   child: ClipRRect(
+          //     borderRadius: const BorderRadius.all(Radius.circular(10)),
+          //     child: model!.imageUrls![0].imageUrl!.isNotEmpty
+          //         ? Image.network(
+          //               // width: double.infinity,
+          //               model!.imageUrls![imageVariantIndex].imageUrl! ?? '',
+          //               fit: BoxFit.fill,
+          //               width: width,
+          //               height: height * .28,
+          //             ) ??
+          //             SizedBox()
+          //         : SizedBox(
+          //             height: height * .28,
+          //             width: width,
+          //             child: Icon(
+          //               Icons.image_outlined,
+          //               size: 50,
+          //             )),
+          //   ),
+          // ),
           variantImages(model),
         ],
       ),
@@ -413,22 +427,32 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
   Widget rattingBar(SingleProductPayload model) {
     return Container(
-      width: width * .7,
-      padding: const EdgeInsets.only(
-        left: 20,
-        right: 20,
-      ),
+        width: width * .7,
+        padding: const EdgeInsets.only(
+          left: 20,
+          right: 20,
+        ),
+        child: rattingBarWidget(model, 5, width * .7,4.5));
+  }
+
+  Widget rattingBarWidget(SingleProductPayload model, int count, double width,double  ratingValue) {
+    return Container(
+      width: width,
+      // padding: const EdgeInsets.only(
+      //   left: 20,
+      //   right: 20,
+      // ),
       child: Row(
         children: [
           RatingBar.builder(
             itemSize: height * .03,
             // initialRating: double.parse(widget.productList["productRatting"]),
-            initialRating: 4.5,
+            initialRating: ratingValue,
             minRating: 1,
             direction: Axis.horizontal,
             allowHalfRating: true,
-            itemCount: 5,
-            itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
+            itemCount: count,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 0.5),
             itemBuilder: (context, _) => const Icon(
               Icons.star,
               color: Colors.amber,
@@ -439,6 +463,221 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget merchantDetails(SingleProductPayload model) {
+    return Flexible(
+      // height: height * .22,
+      child: ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          itemCount: model.merchants!.length,
+          // itemCount: 5,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+                  // height: height*.02,
+                  padding: const EdgeInsets.only(left: 14, right: 20),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: width * .08,
+                            child: Radio(
+                              activeColor: ThemeApp.appColor,
+                              value: index,
+
+// contentPadding: EdgeInsets.zero,
+//                   dense: true,
+                              // visualDensity: const VisualDensity(horizontal: -4.0),
+                              visualDensity: const VisualDensity(
+                                horizontal: VisualDensity.minimumDensity,
+                                vertical: VisualDensity.minimumDensity,
+                              ),
+                              groupValue: _radioValue,
+                              onChanged: (value) {
+                                // _radioValue ==index;
+                                setState(() {
+                                  // _radioValue = value;
+                                  // print("_radioValue"+_radioValue.toString());
+                                });
+                              },
+                              // title: Padding(
+                              //   padding: const EdgeInsets.only(left: 0),
+                              //   child: Text(model.merchants![0].merchantName!,
+                              //       style: TextStyle(
+                              //           color: ThemeApp.blackColor,
+                              //           fontSize: MediaQuery.of(context).size.height * .02,
+                              //           fontWeight: FontWeight.w400)),
+                              // ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 0),
+                            child: Text(model.merchants![index].merchantName!,
+                                style: TextStyle(
+                                    color: ThemeApp.blackColor,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            .02,
+                                    fontWeight: FontWeight.w400)),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        // padding: const EdgeInsets.only(left: 15),
+                        child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: width * .08,
+                            ),
+                            Text(
+                                model.merchants![index].deliveryDays.toString() + " Day(s)",
+                                style: TextStyle(
+                                    color: ThemeApp.darkGreyColor,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            .018,
+                                    fontWeight: FontWeight.w400)),
+                            Container(
+                                padding:
+                                    const EdgeInsets.only(right: 10, left: 10),
+                                height: height * .02,
+                                child: TextFieldUtils().lineVertical()),
+                            model
+                                .merchants![index].unitOfferPrice!=null?   Text(
+                                indianRupeesFormat.format(double.parse(model
+                                    .merchants![index].unitOfferPrice
+                                    .toString())??0.0),
+                                style: TextStyle(
+                                    color: ThemeApp.darkGreyColor,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            .02,
+                                    fontWeight: FontWeight.w400)):Text(
+                                '0.0',
+                                style: TextStyle(
+                                    color: ThemeApp.darkGreyColor,
+                                    fontSize:
+                                    MediaQuery.of(context).size.height *
+                                        .02,
+                                    fontWeight: FontWeight.w400)),
+                            SizedBox(
+                              width: width * .02,
+                            ),
+                         /*   model.merchants![index].unitMrp!=null?  Text(
+                                indianRupeesFormat.format(
+                                    double.parse(model.merchants![index].unitMrp.toString()) ??
+                                        0.0)??'0.0',
+                                style: TextStyle(
+                                    decoration: TextDecoration.lineThrough,
+                                    color: ThemeApp.darkGreyColor,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            .02,
+                                    fontWeight: FontWeight.w400)):Text(
+                                indianRupeesFormat.format(
+                                    double.parse(model.merchants![index].unitMrp.toString()) ??
+                                        0.0)??'0.0',
+                                style: TextStyle(
+                                    decoration: TextDecoration.lineThrough,
+                                    color: ThemeApp.darkGreyColor,
+                                    fontSize:
+                                    MediaQuery.of(context).size.height *
+                                        .02,
+                                    fontWeight: FontWeight.w400)),*/
+                            Container(
+                                padding:
+                                    const EdgeInsets.only(right: 10, left: 10),
+                                height: height * .02,
+                                child: TextFieldUtils().lineVertical()),
+                            Text(model.merchants![index].unitDiscountPerc.toString() + "%",
+                                style: TextStyle(
+                                    color: ThemeApp.darkGreyColor,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            .02,
+                                    fontWeight: FontWeight.w400)),
+                            Container(
+                                padding:
+                                    const EdgeInsets.only(right: 10, left: 10),
+                                height: height * .02,
+                                child: TextFieldUtils().lineVertical()),
+                            rattingBarWidget(model, 5, width * .35, model.merchants![index].merchantRating!.toDouble())
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  /* Row(
+                  children: [
+                    RadioListTile(
+                      activeColor: ThemeApp.appColor,
+                      value: 0,
+
+                      dense: true,
+                      // visualDensity: const VisualDensity(horizontal: -4.0),
+                      visualDensity: const VisualDensity(
+                        horizontal: VisualDensity.minimumDensity,
+                        vertical: VisualDensity.minimumDensity,
+                      ),
+                      groupValue: _radioValue,
+                      onChanged: (value) {
+                        setState(() {
+                          _radioValue = value;
+                          StringConstant.sortByRadio = _radioValue!;
+                          print(StringConstant.sortedBy);
+                        });
+                      },
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 0),
+                        child: Text(model.merchants![0].merchantName!,
+                            style: TextStyle(
+                                color: ThemeApp.darkGreyColor,
+                                fontSize: MediaQuery.of(context).size.height * .02,
+                                fontWeight: FontWeight.w400)),
+                      ),
+                    ),    */ /* Container(      padding: const EdgeInsets.only(right: 10,left: 10),
+                        height: height*.02,
+
+                        child: TextFieldUtils().lineVertical()),*/ /*
+                    Text(
+                        indianRupeesFormat
+                            .format(double.parse(model.defaultSellPrice.toString())),
+                        style: TextStyle(
+                            color: ThemeApp.darkGreyColor,
+                            fontSize: MediaQuery.of(context).size.height * .02,
+                            fontWeight: FontWeight.w400)),
+                    SizedBox(
+                      width: width * .02,
+                    ),
+
+
+                    Text(
+                        indianRupeesFormat
+                            .format(double.parse(model.defaultMrp.toString()) ?? 0.0),
+                        style: TextStyle(
+                            decoration: TextDecoration.lineThrough,
+                            color: ThemeApp.darkGreyColor,
+                            fontSize: MediaQuery.of(context).size.height * .02,
+                            fontWeight: FontWeight.w400)),
+                    SizedBox(
+                      width: width * .02,
+                    ),
+                    Text(model.defaultDiscount.toString() + "%",
+                        style: TextStyle(
+                            color: ThemeApp.darkGreyColor,
+                            fontSize: MediaQuery.of(context).size.height * .02,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),*/
+                ) ??
+                SizedBox();
+          }),
     );
   }
 
@@ -536,6 +775,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
+  List<Widget> listSubImages = [];
+
+  Widget subImages(SingleProductPayload model) {
+    return Container();
+  }
+
   Widget variantImages(SingleProductPayload model) {
     return Container(
       height: height * .08,
@@ -549,27 +794,34 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                 InkWell(
                   onTap: () {
                     setState(() {});
-                    imageVariantIndex = index;
+                    // imageVariantIndex = index;
+                    index = _currentIndex;
                     print(imageVariantIndex);
                   },
                   child: Container(
-                    // width: width * 0.24,
-                    decoration: const BoxDecoration(
-                        color: ThemeApp.greenappcolor,
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      child: model.imageUrls![index].imageUrl!.isNotEmpty
-                          ? Image.network(
-                              // width: double.infinity,
-                              model.imageUrls![index].imageUrl!,
-                              fit: BoxFit.fill,
-                              height: MediaQuery.of(context).size.height * .05,
-                              width: width * .1,
-                            )
-                          : SizedBox(),
-                    ),
-                  ),
+                        // width: width * 0.24,
+                        decoration: const BoxDecoration(
+                            color: ThemeApp.greenappcolor,
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          child: Image.network(
+                                // width: double.infinity,
+                                model.imageUrls![index].imageUrl! ?? "",
+                                fit: BoxFit.fill,
+                                height:
+                                    MediaQuery.of(context).size.height * .05,
+                                width: width * .1,
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace? stackTrace) {
+                                  return const Text('');
+                                },
+                              ) ??
+                              SizedBox(),
+                        ),
+                      ) ??
+                      SizedBox(),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * .01,
@@ -760,7 +1012,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     Expanded(
                         flex: 1,
                         child: InkWell(
-                            onTap: () {
+                            onTap: () async {
                               /*    setState(() async {
                                 // counterPrice++;
                                 userId = 1;
@@ -793,8 +1045,19 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
 
                               }); */
-                              updateCart(model.merchants![0].id, counterPrice,
-                                  productProvider, model.productsubCategory);
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+
+                              setState(() {
+                                updateCart(model.merchants![0].id, counterPrice,
+                                    productProvider, model.productsubCategory);
+
+                                StringConstant.BadgeCounterValue =
+                                    (prefs.getString('setBadgeCountPrefs')) ??
+                                        '';
+                                print("Badge,........" +
+                                    StringConstant.BadgeCounterValue);
+                              });
                             },
                             child: Container(
                                 height: height * 0.06,
@@ -982,13 +1245,16 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           //     ),
                           //   )
                           // :
-                       final prefs = await SharedPreferences.getInstance();
-                          StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
+                          final prefs = await SharedPreferences.getInstance();
+                          StringConstant.isUserLoggedIn =
+                              (prefs.getInt('isUserLoggedIn')) ?? 0;
 
                           if (StringConstant.isUserLoggedIn != 0) {
-                            Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+                            Navigator.pushReplacementNamed(
+                                context, RoutesName.dashboardRoute);
                           } else {
-                            Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
+                            Navigator.pushReplacementNamed(
+                                context, RoutesName.signInRoute);
 
                             print("Not Logged in");
                             // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
@@ -996,7 +1262,6 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
                           // StringConstant.isUserLoggedIn == 0?'':     Navigator.pushNamed(
                           //       context, RoutesName.signInRoute);
-
 
                           /*    widget.productList["productTempCounter"] = counterPrice;
                               print("_________widget.productListtempCounter_" +
