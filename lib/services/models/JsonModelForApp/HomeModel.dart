@@ -1335,6 +1335,7 @@ class MyAddressList {
   String? myAddressAreaColony;
   String? myAddressState;
   String? myAddressCity;
+  String? myAddressPincode;
   String? myAddressTypeOfAddress;
 
   MyAddressList(
@@ -1344,6 +1345,7 @@ class MyAddressList {
         this.myAddressAreaColony,
         this.myAddressState,
         this.myAddressCity,
+        this.myAddressPincode,
         this.myAddressTypeOfAddress});
 
   MyAddressList.fromJson(Map<String, dynamic> json) {
@@ -1353,6 +1355,7 @@ class MyAddressList {
     myAddressAreaColony = json['myAddressAreaColony'];
     myAddressState = json['myAddressState'];
     myAddressCity = json['myAddressCity'];
+    myAddressPincode = json['myAddressPincode'];
     myAddressTypeOfAddress = json['myAddressTypeOfAddress'];
   }
 
@@ -1364,6 +1367,7 @@ class MyAddressList {
     data['myAddressAreaColony'] = this.myAddressAreaColony;
     data['myAddressState'] = this.myAddressState;
     data['myAddressCity'] = this.myAddressCity;
+    data['myAddressPincode'] = this.myAddressPincode;
     data['myAddressTypeOfAddress'] = this.myAddressTypeOfAddress;
     return data;
   }

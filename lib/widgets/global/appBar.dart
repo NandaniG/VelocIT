@@ -9,6 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/ProductCategoryModel.dart';
@@ -461,7 +464,9 @@ Widget searchBar(BuildContext context) {
                   );
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => SearchProductListScreen(searchText: StringConstant.controllerSpeechToText.text,),
+                      builder: (context) => SearchProductListScreen(
+                        searchText: StringConstant.controllerSpeechToText.text,
+                      ),
                     ),
                   );
               }
@@ -598,17 +603,26 @@ Widget addressWidget(BuildContext context, String addressString) {
             SizedBox(
               width: width * .02,
             ),
-            Icon(
-              Icons.not_listed_location_outlined,
-              color: ThemeApp.tealButtonColor,
-              size: MediaQuery.of(context).size.height * .028,
+            InkWell(
+              onTap: () async {
+                final prefs = await SharedPreferences.getInstance();
+                StringConstant.FINALPINCODE =
+                    (prefs.getString('CurrentPinCodePref') ?? '');
+                print("StringConstant.CurrentPinCode");
+                // controller.getCurrentLocation();
+              },
+              child: Icon(
+                Icons.not_listed_location_outlined,
+                color: ThemeApp.tealButtonColor,
+                size: MediaQuery.of(context).size.height * .028,
+              ),
             ),
             SizedBox(
               width: width * .01,
             ),
             SizedBox(
               child: TextFieldUtils().dynamicText(
-                  "Deliver to - $addressString ",
+                  "Deliver to - ${StringConstant.FINALPINCODE.toString()} ",
                   context,
                   TextStyle(
                       color: ThemeApp.tealButtonColor,
@@ -720,8 +734,9 @@ Widget bottomNavBarItems(BuildContext context) {
             if (_currentIndex == 4) {
               // colors = ThemeApp.blackColor;
 
-            StringConstant.BadgeCounterValue =  (preference.getString('setBadgeCountPrefs'))??'';
-print("Badge,........"+ StringConstant.BadgeCounterValue);
+              StringConstant.BadgeCounterValue =
+                  (preference.getString('setBadgeCountPrefs')) ?? '';
+              print("Badge,........" + StringConstant.BadgeCounterValue);
               if (kDebugMode) {}
               product.badgeFinalCount;
 
@@ -732,8 +747,8 @@ print("Badge,........"+ StringConstant.BadgeCounterValue);
                   context,
                   MaterialPageRoute(
                       builder: (context) => CartDetailsActivity(
-                          value: product,
-                          productList: provider.cartProductList)),
+                         /* value: product,
+                          productList: provider.cartProductList*/)),
                   (route) => false);
             }
           },
@@ -843,7 +858,8 @@ print("Badge,........"+ StringConstant.BadgeCounterValue);
                             child: Image.asset('assets/icons/shopping-cart.png',
                                 height: 35),
                           ),
-                    StringConstant.BadgeCounterValue == '0'||StringConstant.BadgeCounterValue ==''
+                    StringConstant.BadgeCounterValue == '0' ||
+                            StringConstant.BadgeCounterValue == ''
                         ? SizedBox()
                         : Positioned(
                             right: 0,
@@ -966,10 +982,10 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                         proceedButton("Scan with Camera",
                             ThemeApp.darkGreyColor, context, false, () async {
                           // Navigator.of(context).pop();
-                              final prefs = await SharedPreferences.getInstance();
+                          final prefs = await SharedPreferences.getInstance();
 
                           setState(() {
-                            StringConstant.ScannedProductId ='';
+                            StringConstant.ScannedProductId = '';
                             prefs.setString('ScannedProductIDPref', '');
                             barcodeScanRes = '';
                           });
@@ -1014,9 +1030,7 @@ class _ScannerWidgetState extends State<ScannerWidget> {
 
   Future<void> scanQR() async {
     barcodeScanRes = '';
-    setState(() {
-
-    });
+    setState(() {});
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
@@ -1044,7 +1058,8 @@ class _ScannerWidgetState extends State<ScannerWidget> {
       StringConstant.ScannedProductId =
           (prefs.getString('ScannedProductIDPref')) ?? '';
 
-      print('_scanBarcode pref after... : ' + StringConstant.ScannedProductId.toString());
+      print('_scanBarcode pref after... : ' +
+          StringConstant.ScannedProductId.toString());
 
       // Navigator.of(context).pushReplacement(
       //   MaterialPageRoute(
@@ -1091,5 +1106,56 @@ class _ScannerWidgetState extends State<ScannerWidget> {
           child: TextFieldUtils().usingPassTextFields(
               "Open Gallery", ThemeApp.whiteColor, context)),
     );
+  }
+}
+
+class LocationController extends GetxController {
+  Position? currentPosition;
+  var _isLoading = false.obs;
+
+  String? currentLocation;
+
+//if no permission ? ask
+
+  Future<Position> getPosition() async {
+    LocationPermission? permission;
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permission are denied');
+      }
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<void> getAddressFromLatLong(lat, long) async {
+    try {
+      List<Placemark> placemarcks = await placemarkFromCoordinates(lat, long);
+
+      Placemark place = placemarcks[0];
+      currentLocation = "${place.locality}${place.postalCode},${place.country}";
+      print("place.locality" + place.locality.toString());
+
+      update();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> getCurrentLocation() async {
+    try {
+      _isLoading(true);
+      update();
+      currentPosition = await getPosition();
+      getAddressFromLatLong(
+          currentPosition!.latitude, currentPosition!.longitude);
+      _isLoading(false);
+      update();
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

@@ -429,13 +429,14 @@ class ProductProvider with ChangeNotifier {
   TextEditingController areaColonyController = new TextEditingController();
   TextEditingController stateController = new TextEditingController();
   TextEditingController cityController = new TextEditingController();
+  TextEditingController pincodeController = new TextEditingController();
 
   addAddress(String fullName,
       mobile,
       houseBuilding,
       areaColony,
       state,
-      city, typeOfAddress) async {
+      city,pincode, typeOfAddress) async {
     addressList = <MyAddressList>[];
     addressList.add(MyAddressList(
         myAddressFullName: fullName,

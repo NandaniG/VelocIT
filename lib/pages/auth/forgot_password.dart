@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
+import 'package:velocit/utils/utils.dart';
 
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
@@ -117,12 +118,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           return ForgotSuccessDialog(text:  email.text);
                         });
                   } else {
-                    final snackBar = SnackBar(
-                      content: Text('Please enter valid Details.'),
-                      clipBehavior: Clip.antiAlias,
-                      backgroundColor: ThemeApp.greenappcolor,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Utils.errorToast('Please enter valid Details.');
+
                   }
                   // Navigator.of(context).push(
                   //   MaterialPageRoute(

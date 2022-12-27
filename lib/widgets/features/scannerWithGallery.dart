@@ -171,7 +171,7 @@ class BarcodeFinderController extends ChangeNotifier {
         path: file.path,
       ))!;
       _update(barcode);
-      Utils.successToast(barcode.toString());
+      // Utils.successToast(barcode.toString());
       print("scanned value is : barcode" + barcode.toString());
     } catch (_) {
       emit(

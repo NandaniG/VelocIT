@@ -1386,7 +1386,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     "OUT OF STOCK",
                     context,
                     TextStyle(
-                      color: ThemeApp.darkGreyTab,
+                      color: ThemeApp.redColor,
                       fontWeight: FontWeight.w500,
                       fontSize: height * .035,
                     )),

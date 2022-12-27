@@ -10,6 +10,7 @@ import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/styles.dart';
+import '../../../../utils/utils.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
@@ -40,15 +41,15 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-    preferredSize: Size.fromHeight(height * .09),
-    child: appBar_backWidget(
-        context, appTitle(context, "Add New Card"),SizedBox()),
+        preferredSize: Size.fromHeight(height * .09),
+        child: appBar_backWidget(
+            context, appTitle(context, "Add New Card"), SizedBox()),
       ),
       body: SafeArea(
         child: Container(
-    color: ThemeApp.appBackgroundColor,
-    width: width,
-    child: Padding(padding: const EdgeInsets.all(20), child: mainUI()),
+          color: ThemeApp.appBackgroundColor,
+          width: width,
+          child: Padding(padding: const EdgeInsets.all(20), child: mainUI()),
         ),
       ),
     );
@@ -114,16 +115,15 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                       setState(() {
                         if (val.isEmpty &&
                             value.cardNumberController.text.length < 19) {
-                         validateCardNumber = true;
+                          validateCardNumber = true;
                         } else {
-                         validateCardNumber = false;
+                          validateCardNumber = false;
                         }
                       });
                     },
                     validator: (value) {
-                      if (value.isEmpty &&
-                          value.length < 19) {
-                       validateCardNumber = true;
+                      if (value.isEmpty && value.length < 19) {
+                        validateCardNumber = true;
                       } else {
                         validateCardNumber = false;
                       }
@@ -184,9 +184,8 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                               color: ThemeApp.textFieldBorderColor, width: 1)),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ThemeApp.redColor,
-                              width: 1)),
+                          borderSide:
+                              BorderSide(color: ThemeApp.redColor, width: 1)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
@@ -197,14 +196,13 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                 SizedBox(
                   height: height * .04,
                 ),
-                proceedButton("Save", ThemeApp.blackColor, context, false,() {
+                proceedButton("Save", ThemeApp.blackColor, context, false, () {
                   value.creditCardList.add(MyCardList(
-                      myCardBankName: 'Kotak Mahindra',
-                      myCardType: 'Credit Card',
-                      myCardFullName: value.cardHolderNameController.text,
-                      myCardNumber: value.cardNumberController.text,
-                      myCardExpiryDate: value.ExpiryDateController.text,
-
+                    myCardBankName: 'Kotak Mahindra',
+                    myCardType: 'Credit Card',
+                    myCardFullName: value.cardHolderNameController.text,
+                    myCardNumber: value.cardNumberController.text,
+                    myCardExpiryDate: value.ExpiryDateController.text,
                   ));
 
                   print("value.creditCardList__________" +
@@ -223,13 +221,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                       builder: (context) => CardListManagePayments(),
                     ),
                   );
-
-                  final snackBar = SnackBar(
-                    content: Text('Card added successfully!'),
-                    clipBehavior: Clip.antiAlias,
-                    backgroundColor: ThemeApp.greenappcolor,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Utils.successToast('Card added successfully!');
                 })
               ],
             ),
@@ -240,19 +232,16 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
   }
 }
 
-
-
-
 class EditCardListScreen extends StatefulWidget {
   MyCardList cardList;
-   EditCardListScreen({Key? key,required this.cardList}) : super(key: key);
+
+  EditCardListScreen({Key? key, required this.cardList}) : super(key: key);
 
   @override
   State<EditCardListScreen> createState() => _EditCardListScreenState();
 }
 
 class _EditCardListScreenState extends State<EditCardListScreen> {
-
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
@@ -261,7 +250,6 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
   TextEditingController cardHolderNameController = new TextEditingController();
   TextEditingController cardNumberController = new TextEditingController();
   TextEditingController ExpiryDateController = new TextEditingController();
-
 
   @override
   void initState() {
@@ -282,9 +270,9 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
 
   @override
   void dispose() {
-   cardHolderNameController.dispose();
-   cardNumberController.dispose();
-   ExpiryDateController.dispose();
+    cardHolderNameController.dispose();
+    cardNumberController.dispose();
+    ExpiryDateController.dispose();
     super.dispose();
   }
 
@@ -336,7 +324,6 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
-
                 CharacterTextFormFieldsWidget(
                     errorText: StringUtils.cardHolderName,
                     textInputType: TextInputType.text,
@@ -379,8 +366,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                       });
                     },
                     validator: (value) {
-                      if (value.isEmpty &&
-                          value.length < 19) {
+                      if (value.isEmpty && value.length < 19) {
                         validateCardNumber = true;
                       } else {
                         validateCardNumber = false;
@@ -402,7 +388,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: TextFormField(
                     maxLength: 5,
-                    controller:ExpiryDateController,
+                    controller: ExpiryDateController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -426,7 +412,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                           color: ThemeApp.redColor,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
                       contentPadding:
-                      const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
@@ -442,9 +428,8 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                               color: ThemeApp.textFieldBorderColor, width: 1)),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ThemeApp.redColor,
-                              width: 1)),
+                          borderSide:
+                              BorderSide(color: ThemeApp.redColor, width: 1)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
@@ -455,21 +440,22 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                 SizedBox(
                   height: height * .04,
                 ),
-                proceedButton("Save", ThemeApp.blackColor, context,false, () {
+                proceedButton("Save", ThemeApp.blackColor, context, false, () {
+                  widget.cardList.myCardFullName =
+                      cardHolderNameController.text.toString();
+                  widget.cardList.myCardNumber =
+                      cardNumberController.text.toString();
+                  widget.cardList.myCardExpiryDate =
+                      ExpiryDateController.text.toString();
 
-                    widget.cardList.myCardFullName = cardHolderNameController.text.toString();
-                    widget.cardList.myCardNumber = cardNumberController.text.toString();
-                    widget.cardList.myCardExpiryDate = ExpiryDateController.text.toString();
-
-                    print( cardHolderNameController.text);
-                    print(  value.cardHolderNameController.text);
-
+                  print(cardHolderNameController.text);
+                  print(value.cardHolderNameController.text);
 
                   print("value.creditCardList__________" +
                       value.creditCardList.length.toString());
 
                   var copyOfAddressList =
-                  value.creditCardList.map((v) => v).toList();
+                      value.creditCardList.map((v) => v).toList();
                   String encodedMap = json.encode(copyOfAddressList);
                   StringConstant.prettyPrintJson(encodedMap.toString());
 
@@ -478,13 +464,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                       builder: (context) => CardListManagePayments(),
                     ),
                   );
-
-                  final snackBar = SnackBar(
-                    content: Text('Card update successfully!'),
-                    clipBehavior: Clip.antiAlias,
-                    backgroundColor: ThemeApp.greenappcolor,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Utils.successToast('Card update successfully!');
                 })
               ],
             ),

@@ -9,8 +9,10 @@ import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/utils.dart';
 import '../AppConstant/apiMapping.dart';
+import '../Model/CartModels/AddressListModel.dart';
 import '../Model/CartModels/CartCreateRetrieveModel.dart';
 import '../Model/CartModels/CartSpecificIdModel.dart';
+import '../Model/CartModels/SendCartForPaymentModel.dart';
 import '../Model/CartModels/updateCartModel.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
@@ -126,4 +128,74 @@ class CartRepository {
       throw e;
     }
   }
+
+  Future<SendCartForPaymentModel> getSendCartForPaymentList(String id) async {
+    var url = ApiMapping.getURI(apiEndPoint.send_Cart_For_Payment);
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url + id);
+      print(" SendCartForPaymentModel : " + response.toString());
+
+      // prefs.setString(
+      //   'setBadgeCountPrefs',
+      //   response['payload']['total_item_count'].toString(),
+      // );
+
+      return response = SendCartForPaymentModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<AddressListModel> getAddressList(String id) async {
+    var url = ApiMapping.getURI(apiEndPoint.address_list);
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url + id);
+      print(" AddressListModel : " + response.toString());
+
+      return response = AddressListModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+
+  Future createAddressApi(Map<String, Object?>  jsonMap, BuildContext context, int userId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    dynamic responseJson;
+    // var url = ApiMapping.getURI(apiEndPoint.add_address);
+
+
+    print("jsonMap"+jsonMap.toString());
+    print("userId"+userId.toString());
+    var url = '/address/user/' + userId.toString();
+    String queryString = Uri(queryParameters: jsonMap).query;
+
+    var requestUrl = ApiMapping.baseAPI +url + '?' + queryString!;
+
+
+
+    print("address url"+requestUrl.toString());
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(requestUrl));
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(jsonMap)));
+
+    HttpClientResponse response = await request.close();
+    // todo - you should check the response.statusCode
+    responseJson = await response.transform(utf8.decoder).join();
+    String rawJson = responseJson.toString();
+    print('createAddressApi');
+    print(responseJson.toString());
+
+
+
+
+    httpClient.close();
+    return responseJson;
+  }
+
 }

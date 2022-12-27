@@ -29,13 +29,13 @@ import '../Activity/Payment_Activities/payments_Activity.dart';
 import 'dashBoard.dart';
 
 class CartDetailsActivity extends StatefulWidget {
-  final dynamic productList;
+ /* final dynamic productList;
 
   // ProductDetailsModel model;
-  ProductProvider value;
+  ProductProvider value;*/
 
   CartDetailsActivity(
-      {Key? key, required this.value, required this.productList})
+      {Key? key,/* required this.value, required this.productLis*/t})
       : super(key: key);
 
   @override
@@ -290,7 +290,146 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       bottomNavigationBar: BottomAppBar(
         color: ThemeApp.appBackgroundColor,
         elevation: 0,
-        child: Consumer<ProductProvider>(builder: (context, value, child) {
+        child: ChangeNotifierProvider<CartViewModel>(
+            create: (BuildContext context) => cartListView,
+            child: Consumer<CartViewModel>(
+                builder: (context, cartProvider, child) {
+                  switch (cartProvider.cartSpecificID.status) {
+                    case Status.LOADING:
+                      print("Api load");
+
+                      return TextFieldUtils().circularBar(context);
+                    case Status.ERROR:
+                      print("Api error");
+
+                      return Text(cartProvider.cartSpecificID.message.toString());
+                    case Status.COMPLETED:
+                      print("Api calll");
+                      List<OrdersForPurchase>? orderPurchaseList = cartProvider
+                          .cartSpecificID.data!.payload!.ordersForPurchase;
+
+                      print("orderPurchaseList" +
+                          orderPurchaseList!.length.toString());
+                      return  cartProvider
+                          .cartSpecificID.data!.payload!.ordersForPurchase!.isEmpty
+                          ? bottomNavigationBarWidget(context)
+                          : Container(
+                        height: 144,
+                        width: width,
+                        decoration: const BoxDecoration(
+                          color: ThemeApp.appColor,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(15),
+                              topLeft: Radius.circular(15)),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                                right: 15,
+                                top: 10,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        TextFieldUtils().pricesLineThroughWhite(
+                                          indianRupeesFormat
+                                              .format(double.parse(cartProvider
+                                              .cartSpecificID.data!.payload!.totalMrp.toString())),
+                                          context,
+                                          MediaQuery.of(context).size.height * .021,
+                                        ),
+                                        TextFieldUtils()
+                                            .homePageheadingTextFieldWHITE(
+                                          indianRupeesFormat
+                                              .format(double.parse(cartProvider
+                                              .cartSpecificID.data!.payload!.totalPayable.toString())),
+                                          context,
+                                        ),
+                                      ]),
+                                  InkWell(
+                                      onTap: () async {
+
+
+                                        if (kDebugMode) {
+                                          print(StringConstant.isLogIn);
+                                        }
+                                        StringConstant.isLogIn == true
+                                            ? Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                OrderReviewSubActivity(
+                                                  cartId: cartProvider
+                                                        .cartSpecificID.data!.payload!.id!,
+                                                    ),
+                                          ),
+                                        )
+                                            : Navigator.pushNamed(
+                                            context, RoutesName.signInRoute);
+
+                                        // Prefs.instance.clear();
+                                        StringConstant.totalOriginalPrice =
+                                        (await Prefs.instance.getDoubleToken(
+                                            StringConstant
+                                                .totalOriginalPricePref))!;
+                                        if (kDebugMode) {
+                                          print(
+                                              'StringConstant.totalOriginalPrice${cartProvider
+                                                  .cartSpecificID.data!.payload!.totalMrp}');
+                                        }
+
+                                        StringConstant.totalFinalPrice =
+                                        (await Prefs.instance.getDoubleToken(
+                                            StringConstant.totalFinalPricePref))!;
+                                        if (kDebugMode) {
+                                          print(
+                                              'StringConstant.totalFinalPrice${StringConstant.totalFinalPrice}');
+                                        }
+                                      },
+                                      child: Container(
+                                          height: height * 0.05,
+                                          alignment: Alignment.center,
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                            color: ThemeApp.whiteColor,
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              left: 15, right: 15),
+                                          child: TextFieldUtils().usingPassTextFields(
+                                              "Place Order",
+                                              ThemeApp.blackColor,
+                                              context))),
+                                ],
+                              ),
+                            ),
+                            bottomNavigationBarWidget(context),
+                          ],
+                        ),
+                      );
+                  }
+                  return Container(
+                    height: height * .8,
+                    alignment: Alignment.center,
+                    child: TextFieldUtils().dynamicText(
+                        'No Match found!',
+                        context,
+                        TextStyle(
+                            color: ThemeApp.blackColor,
+                            fontSize: height * .03,
+                            fontWeight: FontWeight.bold)),
+                  );
+                }))),
+
+
+/*
+        Consumer<ProductProvider>(builder: (context, value, child) {
           return widget.value.cartList.isEmpty
               ? bottomNavigationBarWidget(context)
               : Container(
@@ -393,8 +532,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     ],
                   ),
                 );
-        }),
-      ),
+        }),*/
+      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
           child: ChangeNotifierProvider<CartViewModel>(

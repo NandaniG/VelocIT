@@ -360,12 +360,12 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SavedAddressDetails(),
-                                    ),
-                                  );
+                                  // Navigator.of(context).push(
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) =>
+                                  //         const SavedAddressDetails(cartForPaymentPayload: ),
+                                  //   ),
+                                  // );
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),

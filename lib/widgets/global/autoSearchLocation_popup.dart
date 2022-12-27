@@ -213,6 +213,8 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                             _city = placeDetails.city;
                             _zipCode = placeDetails.zipCode;
                             setState(() {
+
+
                               Prefs.instance.setToken(
                                   StringConstant.pinCodePref,
                                   placeDetails.zipCode.toString());

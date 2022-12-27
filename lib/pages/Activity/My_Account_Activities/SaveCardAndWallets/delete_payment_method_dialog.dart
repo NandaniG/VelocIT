@@ -7,6 +7,7 @@ import '../../../../services/models/CreditCardModel.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/styles.dart';
+import '../../../../utils/utils.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
 import 'CardList_manage_Payment_Activity.dart';
@@ -87,12 +88,8 @@ SizedBox(height: height*.02,),
                             setState(() {
                               print(widget.cardList.length);
 value.deleteCardMethod(widget.index);
-                              final snackBar = SnackBar(
-                                content: Text('Card delete successfully!'),
-                                clipBehavior: Clip.antiAlias,
-                                backgroundColor: ThemeApp.redColor,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+Utils.errorToast('Card delete successfully!');
+
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => CardListManagePayments(),

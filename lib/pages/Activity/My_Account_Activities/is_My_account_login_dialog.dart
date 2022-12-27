@@ -71,7 +71,7 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                       height: height * .05,
                     ),
                     TextFieldUtils().dynamicText(
-                        "Guest User, please Sign in!",
+                        "Guest user, please sign in!",
                         context,
                         TextStyle(
                             color: ThemeApp.blackColor,
@@ -91,9 +91,9 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                               ThemeApp.blackColor,
                               context, false,() {
 
-                            Navigator.of(context).push(
+                            Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (context) =>  SignUp(),
+                                builder: (context) =>  SignIn_Screen(),
                               ),
                             );
                           }),

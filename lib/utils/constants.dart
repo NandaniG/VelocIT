@@ -6,7 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class StringConstant {
-  static int isUserLoggedIn = 0;
+  static String CurrentPinCode = '';
+  static String FINALPINCODE = '';
+
+static int isUserLoggedIn = 0;
   static String UserLoginId = '';
   static String RandomUserLoginId = '';
   static String UserCartID = '';
@@ -168,6 +171,17 @@ class StringConstant {
     return double.tryParse(s) != null;
   }
 
+  String convertDateTimeDisplay(String date) {
+    // toISOString().replace('Z', '').replace('T', '')
+    final DateFormat displayFormater = DateFormat('yyyy-MM-ddTHH:mm:ssZ');
+
+    final DateFormat serverFormater =
+    DateFormat('E' + " " + 'd' + ' ' + 'MMM' + " " + 'y');
+    final DateTime displayDate = displayFormater.parse(date);
+    final String formatted = serverFormater.format(displayDate);
+    return formatted;
+  }
+
   static JsonDecoder decoder = const JsonDecoder();
   static JsonEncoder encoder = const JsonEncoder.withIndent('  ');
 
@@ -183,6 +197,8 @@ class StringConstant {
         print(element);}
     });
   }
+
+
   static void printObject(Object object) {
     // Encode your object and then decode your object to Map variable
     Map jsonMapped = json.decode(json.encode(object));

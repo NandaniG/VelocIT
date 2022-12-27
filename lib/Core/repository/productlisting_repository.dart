@@ -75,13 +75,14 @@ class ProductSpecificListRepository {
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
       print("ProductScanModel list: " + response.toString());
-      print("ProductScanModel list: " );
       print("NOT_FOUND  "+response['status'].toString());
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString(
-          'ScannedProductIDPref', response['payload']['id'].toString());
-      if(response['status'] == 'NOT_FOUND'){
+      // final prefs = await SharedPreferences.getInstance();
+      // prefs.setString(
+      //     'ScannedProductIDPref', response['payload']['id'].toString());
+      if(response['status'].toString() == 'NOT_FOUND'){
         print("NOT_FOUND....");
+        Navigator.pop(context);
+        Utils.flushBarErrorMessage("Please scan proper content", context);
       }else{
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(

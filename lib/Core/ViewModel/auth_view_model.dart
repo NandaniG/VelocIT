@@ -69,7 +69,7 @@ class AuthViewModel with ChangeNotifier {
       print("Login Api With Get: $_getOTP");
 
       Prefs.instance.setToken("otpKey", _getOTP);
-        Utils.successToast(value!["response"]["body"]["payload"].toString());
+        // Utils.successToast(value!["response"]["body"]["payload"].toString());
 
         Navigator.pushNamed(context, RoutesName.otpRoute);
         // Navigator.of(context).push(

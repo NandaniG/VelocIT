@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
+import '../../../Core/Model/CartModels/SendCartForPaymentModel.dart';
+import '../../../Core/repository/cart_repository.dart';
 import '../../../services/models/AddressListModel.dart';
 import '../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../services/providers/Products_provider.dart';
@@ -23,8 +25,8 @@ import 'OrderReviewScreen.dart';
 
 class AddNewDeliveryAddress extends StatefulWidget {
   final bool isSavedAddress;
-
-  const AddNewDeliveryAddress({Key? key, required this.isSavedAddress})
+  final CartForPaymentPayload cartForPaymentPayload;
+  const AddNewDeliveryAddress({Key? key, required this.isSavedAddress, required this. cartForPaymentPayload})
       : super(key: key);
 
   @override
@@ -109,7 +111,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
             padding: const EdgeInsets.all(20),
             child: Container(
               width: width,
-              alignment: Alignment.center,
+              // alignment: Alignment.center,
               decoration: const BoxDecoration(
                 color: ThemeApp.whiteColor,
                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -128,243 +130,284 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
     return Form(
       key: _formKey,
       child: Consumer<ProductProvider>(builder: (context, value, child) {
-        return ListView(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //Full Name
-            TextFieldUtils().dynamicText(
-                StringUtils.fullName,
-                context,
-                TextStyle(
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
-            CharacterTextFormFieldsWidget(
-                errorText: StringUtils.enterFullName,
-                textInputType: TextInputType.name,
-                controller: value.fullNameController,
-                autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: 'David Wong',
-                onChange: (val) {},
-                validator: (value) {
-                  return null;
-                }),
-            //Mobile Number
-            TextFieldUtils().dynamicText(
-                StringUtils.mobileNumber,
-                context,
-                TextStyle(
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
-            MobileNumberTextFormField(
-                controller: value.mobileController, enable: true),
-            SizedBox(
-              height: height * .02,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: TextFieldUtils().dynamicText(
-                      StringUtils.addressDetails,
-                      context,
-                      TextStyle(
-                          color: ThemeApp.blackColor,
-                          fontSize: height * .025,
-                          fontWeight: FontWeight.bold)),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: InkWell(
-                      onTap: () {
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AddNewCardScreen(),
-                        //   ),
-                        // );
-                      },
-                      child: Container(
-                        height: height * 0.05,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //Full Name
+              TextFieldUtils().dynamicText(
+                  StringUtils.fullName,
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w500)),
+              CharacterTextFormFieldsWidget(
+                  errorText: StringUtils.enterFullName,
+                  textInputType: TextInputType.name,
+                  controller: value.fullNameController,
+                  autoValidation: AutovalidateMode.onUserInteraction,
+                  hintText: 'David Wong',
+                  onChange: (val) {},
+                  validator: (value) {
+                    return null;
+                  }),
+              //Mobile Number
+              TextFieldUtils().dynamicText(
+                  StringUtils.mobileNumber,
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w500)),
+              MobileNumberTextFormField(
+                  controller: value.mobileController, enable: true),
+              SizedBox(
+                height: height * .02,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: TextFieldUtils().dynamicText(
+                        StringUtils.addressDetails,
+                        context,
+                        TextStyle(
+                            color: ThemeApp.blackColor,
+                            fontSize: height * .025,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: InkWell(
+                        onTap: () {
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => AddNewCardScreen(),
+                          //   ),
+                          // );
+                        },
+                        child: Container(
+                          height: height * 0.05,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            color: ThemeApp.blackColor,
                           ),
-                          color: ThemeApp.blackColor,
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: TextFieldUtils().dynamicText(
+                              StringUtils.useMyLocation,
+                              context,
+                              TextStyle(
+                                  color: ThemeApp.whiteColor,
+                                  fontSize: height * .021,
+                                  fontWeight: FontWeight.w500)),
+                        )),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: height * .02,
+              ),
+              TextFieldUtils().dynamicText(
+                  StringUtils.houseBuildingNo,
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w500)),
+              TextFormFieldsWidget(
+                  errorText: StringUtils.houseBuildingNo,
+                  textInputType: TextInputType.text,
+                  controller: value.houseBuildingController,
+                  autoValidation: AutovalidateMode.onUserInteraction,
+                  hintText: '305, Lokseva Apartments',
+                  onChange: (val) {},
+                  validator: (value) {
+                    return null;
+                  }),
+              TextFieldUtils().dynamicText(
+                  StringUtils.areaColonyName,
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w500)),
+              TextFormFieldsWidget(
+                  errorText: StringUtils.areaColonyName,
+                  textInputType: TextInputType.text,
+                  controller: value.areaColonyController,
+                  autoValidation: AutovalidateMode.onUserInteraction,
+                  hintText: 'Telecom Housing Society',
+                  onChange: (val) {},
+                  validator: (value) {
+                    return null;
+                  }),
+              TextFieldUtils().dynamicText(
+                  StringUtils.state,
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w500)),
+              TextFormFieldsWidget(
+                  errorText: StringUtils.state,
+                  textInputType: TextInputType.text,
+                  controller: value.stateController,
+                  autoValidation: AutovalidateMode.onUserInteraction,
+                  hintText: 'State',
+                  onChange: (val) {},
+                  validator: (value) {
+                    return null;
+                  }),
+              TextFieldUtils().dynamicText(
+                  StringUtils.city,
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w500)),
+              TextFormFieldsWidget(
+                  errorText: StringUtils.city,
+                  textInputType: TextInputType.text,
+                  controller: value.cityController,
+                  autoValidation: AutovalidateMode.onUserInteraction,
+                  hintText: 'Pune',
+                  onChange: (val) {},
+                  validator: (value) {
+                    return null;
+                  }),
+              SizedBox(
+                height: height * .02,
+              ),   TextFieldUtils().dynamicText(
+                  StringUtils.pincode,
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w500)),
+              TextFormFieldsWidget(
+                  errorText: StringUtils.pincode,
+                  textInputType: TextInputType.text,
+                  controller: value.pincodeController,
+                  autoValidation: AutovalidateMode.onUserInteraction,
+                  hintText: '365214',
+                  onChange: (val) {},
+                  validator: (value) {
+                    return null;
+                  }),
+              SizedBox(
+                height: height * .02,
+              ),
+              TextFieldUtils().dynamicText(
+                  StringUtils.typeOfAddress,
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .025,
+                      fontWeight: FontWeight.w500)),
+              SizedBox(
+                height: height * .02,
+              ),
+              typeOfAddress(),
+              SizedBox(
+                height: height * .02,
+              ),
+              proceedButton(StringUtils.addDeliveryAddress,
+                  ThemeApp.blackColor, context, false, () {
+                setState(() {
+                  if (_formKey.currentState!.validate() &&
+                      value.fullNameController.text.isNotEmpty &&
+                      value.mobileController.text.isNotEmpty &&
+                      value.houseBuildingController.text.isNotEmpty &&
+                      value.areaColonyController.text.isNotEmpty &&
+                      value.stateController.text.isNotEmpty &&
+                      value.cityController.text.isNotEmpty&&
+                      value.pincodeController.text.isNotEmpty) {
+                    if (widget.isSavedAddress == true) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => SavedAddressDetails(cartForPaymentPayload: widget.cartForPaymentPayload),
                         ),
-                        padding: const EdgeInsets.only(left: 15, right: 15),
-                        child: TextFieldUtils().dynamicText(
-                            StringUtils.useMyLocation,
-                            context,
-                            TextStyle(
-                                color: ThemeApp.whiteColor,
-                                fontSize: height * .021,
-                                fontWeight: FontWeight.w500)),
-                      )),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: height * .02,
-            ),
-            TextFieldUtils().dynamicText(
-                StringUtils.houseBuildingNo,
-                context,
-                TextStyle(
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
-                errorText: StringUtils.houseBuildingNo,
-                textInputType: TextInputType.text,
-                controller: value.houseBuildingController,
-                autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: '305, Lokseva Apartments',
-                onChange: (val) {},
-                validator: (value) {
-                  return null;
-                }),
-            TextFieldUtils().dynamicText(
-                StringUtils.areaColonyName,
-                context,
-                TextStyle(
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
-                errorText: StringUtils.areaColonyName,
-                textInputType: TextInputType.text,
-                controller: value.areaColonyController,
-                autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: 'Telecom Housing Society',
-                onChange: (val) {},
-                validator: (value) {
-                  return null;
-                }),
-            TextFieldUtils().dynamicText(
-                StringUtils.state,
-                context,
-                TextStyle(
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
-                errorText: StringUtils.state,
-                textInputType: TextInputType.text,
-                controller: value.stateController,
-                autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: 'State',
-                onChange: (val) {},
-                validator: (value) {
-                  return null;
-                }),
-            TextFieldUtils().dynamicText(
-                StringUtils.city,
-                context,
-                TextStyle(
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
-            TextFormFieldsWidget(
-                errorText: StringUtils.city,
-                textInputType: TextInputType.text,
-                controller: value.cityController,
-                autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: 'Pune',
-                onChange: (val) {},
-                validator: (value) {
-                  return null;
-                }),
-            SizedBox(
-              height: height * .02,
-            ),
-            TextFieldUtils().dynamicText(
-                StringUtils.typeOfAddress,
-                context,
-                TextStyle(
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .025,
-                    fontWeight: FontWeight.w500)),
-            SizedBox(
-              height: height * .02,
-            ),
-            typeOfAddress(),
-            SizedBox(
-              height: height * .02,
-            ),
-            proceedButton(StringUtils.addDeliveryAddress,
-                ThemeApp.blackColor, context, false, () {
-              setState(() {
-                if (_formKey.currentState!.validate() &&
-                    value.fullNameController.text.isNotEmpty &&
-                    value.mobileController.text.isNotEmpty &&
-                    value.houseBuildingController.text.isNotEmpty &&
-                    value.areaColonyController.text.isNotEmpty &&
-                    value.stateController.text.isNotEmpty &&
-                    value.cityController.text.isNotEmpty) {
-                  if (widget.isSavedAddress == true) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => SavedAddressDetails(),
-                      ),
-                    );
+                      );
+                    } else {
+                     /* Map<String, Object?> data = {
+                        "name": value.fullNameController.text,
+                        "address_line_1": value.houseBuildingController.text,
+                        "address_line_2": value.areaColonyController.text,
+                        "city_name": value.cityController.text,
+                        "state_name": value.stateController.text,
+                        "address_type": selectedAddressIs,
+                        "pincode": value.pincodeController.text,
+                        "contact_number":value.mobileController.text,
+
+                      };
+                      print("map address"+data.toString());
+                      print("widget.cartForPaymentPayload.userId!"+widget.cartForPaymentPayload.userId!.toString());
+                      CartRepository().createAddressApi(data, context,widget.cartForPaymentPayload.userId!);
+                      Utils.successToast("success");*/
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => OrderReviewSubActivity(
+                            cartId: widget.cartForPaymentPayload.userId!,
+                          ),
+                        ),
+                      );
+                    }
+                    StringConstant.selectedFullAddress =
+                    "${value.houseBuildingController.text}, ${value.areaColonyController.text}, ${value.cityController.text},\n ${value.stateController.text}";
+                    Prefs.instance.setToken(StringConstant.selectedFullAddressPref,
+                        StringConstant.selectedFullAddress);
+
+                    StringConstant.selectedFullName = value.fullNameController.text;
+                    Prefs.instance.setToken(StringConstant.selectedFullNamePref,
+                        StringConstant.selectedFullName);
+
+                    StringConstant.selectedMobile = value.mobileController.text;
+                    Prefs.instance.setToken(StringConstant.selectedMobilePref,
+                        StringConstant.selectedMobile);
+
+                    StringConstant.selectedTypeOfAddress = selectedAddressIs;
+                    Prefs.instance.setToken(
+                        StringConstant.selectedTypeOfAddressPref,
+                        StringConstant.selectedTypeOfAddress);
+                    value.addAddress(
+                        value.fullNameController.text,
+                        value.mobileController.text,
+                        value.houseBuildingController.text,
+                        value.areaColonyController.text,
+                        value.stateController.text,
+                        value.cityController.text,
+                        value.pincodeController.text,
+
+                        selectedAddressIs);
+                    print("value.addressList" +
+                        value.addressList.length.toString());
+
+                    value.fullNameController.clear();
+                    value.mobileController.clear();
+                    value.houseBuildingController.clear();
+                    value.areaColonyController.clear();
+                    value.stateController.clear();
+                    value.cityController.clear();
+                    value.pincodeController.clear();
+
+                    var copyOfAddressList =
+                        value.addressList.map((v) => v).toList();
+                    String encodedMap = json.encode(copyOfAddressList);
+                    StringConstant.prettyPrintJson(encodedMap.toString());
                   } else {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => OrderReviewSubActivity(
-                          value: value,
-                        ),
-                      ),
-                    );
-                  } StringConstant.selectedFullAddress =
-                  "${value.houseBuildingController.text}, ${value.areaColonyController.text}, ${value.cityController.text},\n ${value.stateController.text}";
-                  Prefs.instance.setToken(StringConstant.selectedFullAddressPref,
-                      StringConstant.selectedFullAddress);
+                    Utils.flushBarErrorMessage(
+                        "Please enter all details", context);
+                  }
 
-                  StringConstant.selectedFullName = value.fullNameController.text;
-                  Prefs.instance.setToken(StringConstant.selectedFullNamePref,
-                      StringConstant.selectedFullName);
-
-                  StringConstant.selectedMobile = value.mobileController.text;
-                  Prefs.instance.setToken(StringConstant.selectedMobilePref,
-                      StringConstant.selectedMobile);
-
-                  StringConstant.selectedTypeOfAddress = selectedAddressIs;
-                  Prefs.instance.setToken(
-                      StringConstant.selectedTypeOfAddressPref,
-                      StringConstant.selectedTypeOfAddress);
-                  value.addAddress(
-                      value.fullNameController.text,
-                      value.mobileController.text,
-                      value.houseBuildingController.text,
-                      value.areaColonyController.text,
-                      value.stateController.text,
-                      value.cityController.text,
-                      selectedAddressIs);
-                  print("value.addressList" +
-                      value.addressList.length.toString());
-
-                  value.fullNameController.clear();
-                  value.mobileController.clear();
-                  value.houseBuildingController.clear();
-                  value.areaColonyController.clear();
-                  value.stateController.clear();
-                  value.cityController.clear();
-
-                  var copyOfAddressList =
-                      value.addressList.map((v) => v).toList();
-                  String encodedMap = json.encode(copyOfAddressList);
-                  StringConstant.prettyPrintJson(encodedMap.toString());
-                } else {
-                  Utils.flushBarErrorMessage(
-                      "Please enter all details", context);
-                }
-
-              });
-            })
-          ],
+                });
+              })
+            ],
+          ),
         );
       }),
     );
@@ -395,9 +438,10 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
+                    Radius.circular(40),
                   ),
-                  color: isHome ? ThemeApp.lightGreyTab : ThemeApp.darkGreyTab,
+                  border: Border.all(color: ThemeApp.tealButtonColor),
+                  color: isHome ? ThemeApp.whiteColor : ThemeApp.tealButtonColor,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
                     StringUtils.home,
@@ -426,11 +470,12 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
+                    Radius.circular(40),
+                  ),                  border: Border.all(color: ThemeApp.tealButtonColor),
+
                   color: isHome == true
-                      ? ThemeApp.darkGreyTab
-                      : ThemeApp.lightGreyTab,
+                      ? ThemeApp.tealButtonColor
+                      : ThemeApp.whiteColor,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
                     StringUtils.office,
@@ -448,9 +493,9 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
 class EditDeliveryAddress extends StatefulWidget {
   final bool isSavedAddress;
   MyAddressList model;
-
+   CartForPaymentPayload? cartForPaymentPayload;
   EditDeliveryAddress(
-      {Key? key, required this.isSavedAddress, required this.model})
+      {Key? key, required this.isSavedAddress, required this.model,required this.cartForPaymentPayload})
       : super(key: key);
 
   @override
@@ -470,6 +515,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
   TextEditingController areaColonyController = new TextEditingController();
   TextEditingController stateController = new TextEditingController();
   TextEditingController cityController = new TextEditingController();
+  TextEditingController pincodeController = new TextEditingController();
 
   @override
   void initState() {
@@ -479,6 +525,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
     areaColonyController = TextEditingController();
     stateController = TextEditingController();
     cityController = TextEditingController();
+    pincodeController = TextEditingController();
 
     super.initState();
   }
@@ -491,6 +538,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
     areaColonyController.text = widget.model.myAddressAreaColony!;
     stateController.text = widget.model.myAddressState!;
     cityController.text = widget.model.myAddressCity!;
+    pincodeController.text = widget.model.myAddressPincode!;
     super.didChangeDependencies();
   }
 
@@ -502,6 +550,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
     areaColonyController.dispose();
     stateController.dispose();
     cityController.dispose();
+    pincodeController.dispose();
     super.dispose();
   }
 
@@ -556,7 +605,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
           padding: const EdgeInsets.all(20),
           child: Container(
             width: width,
-            alignment: Alignment.center,
+            // alignment: Alignment.center,
             decoration: const BoxDecoration(
               color: ThemeApp.whiteColor,
               borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -573,9 +622,9 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
   Widget mainUi() {
     return Form(
       child: Consumer<ProductProvider>(builder: (context, value, child) {
-        return ListView(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          // crossAxisAlignment: CrossAxisAlignment.start,
+        return SingleChildScrollView(child:  Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Full Name
             TextFieldUtils().dynamicText(
@@ -729,6 +778,26 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               height: height * .02,
             ),
             TextFieldUtils().dynamicText(
+                StringUtils.pincode,
+                context,
+                TextStyle(
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .02,
+                    fontWeight: FontWeight.w500)),
+            TextFormFieldsWidget(
+                errorText: StringUtils.pincode,
+                textInputType: TextInputType.text,
+                controller: pincodeController,
+                autoValidation: AutovalidateMode.onUserInteraction,
+                hintText: '365214',
+                onChange: (val) {},
+                validator: (value) {
+                  return null;
+                }),
+            SizedBox(
+              height: height * .02,
+            ),
+            TextFieldUtils().dynamicText(
                 StringUtils.typeOfAddress,
                 context,
                 TextStyle(
@@ -754,6 +823,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   areaColonyController.text.toString();
               widget.model.myAddressState = stateController.text.toString();
               widget.model.myAddressCity = cityController.text.toString();
+              widget.model.myAddressPincode = pincodeController.text.toString();
               print(fullNameController.text);
               print(value.fullNameController.text);
 
@@ -764,27 +834,25 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               StringConstant.prettyPrintJson(encodedMap.toString());
 
               if (widget.isSavedAddress == true) {
+
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => SavedAddressDetails(),
+                    builder: (context) => SavedAddressDetails(cartForPaymentPayload: widget.cartForPaymentPayload!),
                   ),
                 );
+Utils.successToast('Address update successfully!');
 
-                final snackBar = SnackBar(
-                  content: Text('Address update successfully!'),
-                  clipBehavior: Clip.antiAlias,
-                  backgroundColor: ThemeApp.greenappcolor,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               } else {
-                Navigator.of(context).push(
+         //comment because need to manage apis
+
+                /*       Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => OrderReviewSubActivity(value: value),
+                    builder: (context) => OrderReviewSubActivity(cartPayLoad: value),
                   ),
-                );
+                );*/
               }
             })
-          ],
+          ],)
         );
       }),
     );

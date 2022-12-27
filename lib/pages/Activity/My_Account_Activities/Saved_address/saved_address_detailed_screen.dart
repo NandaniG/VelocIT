@@ -2,8 +2,10 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../Core/Model/CartModels/SendCartForPaymentModel.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/styles.dart';
+import '../../../../utils/utils.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
@@ -14,7 +16,8 @@ import '../../Order_CheckOut_Activities/AddNewDeliveryAddress.dart';
 import 'delete_Address_dialog.dart';
 
 class SavedAddressDetails extends StatefulWidget {
-  const SavedAddressDetails({Key? key}) : super(key: key);
+  final CartForPaymentPayload cartForPaymentPayload;
+  const SavedAddressDetails({Key? key, required this.cartForPaymentPayload}) : super(key: key);
 
   @override
   _SavedAddressDetailsState createState() => _SavedAddressDetailsState();
@@ -88,16 +91,12 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) =>
-                            AddNewDeliveryAddress(isSavedAddress: isSavedAddress),
+                            AddNewDeliveryAddress(isSavedAddress: isSavedAddress,cartForPaymentPayload: widget.cartForPaymentPayload),
                       ),
                     );
                   }else{
-                    final snackBar = SnackBar(
-                      content: Text('You can add only 5 addresse'),
-                      clipBehavior: Clip.antiAlias,
-                      backgroundColor: ThemeApp.redColor,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Utils.errorToast('You can add only 5 addresse');
+
 
                   }
 
@@ -253,7 +252,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                                     .addressList[
                                                                 index],
                                                             isSavedAddress:
-                                                                isSavedAddress,
+                                                                isSavedAddress, cartForPaymentPayload: null,
                                                           ),
                                                         ),
                                                       );

@@ -106,6 +106,7 @@ class StringUtils {
   static String areaColonyName = "Area, Colony Name";
   static String state = "State";
   static String city = "City";
+  static String pincode = "Pincode";
   static String typeOfAddress = "Type of Address";
   static String home = "Home";
   static String office = "Office";
@@ -124,4 +125,8 @@ class StringUtils {
   static String addNewAddress = "Add New Address";
   static String edit = "Edit";
   static String deliverHere = "Deliver Here";
+  static String services = "Services";
+  static String name = "Name";
+  static String date = "Date";
+  static String time = "Time";
 }

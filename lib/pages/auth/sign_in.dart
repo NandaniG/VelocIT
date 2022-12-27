@@ -61,8 +61,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
     final authViewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
-        body: SingleChildScrollView(
-          child: Container(
+        body:  Container(
             padding:
                 const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 10),
             child: Column(
@@ -396,7 +395,7 @@ print(data);
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(top: 190, bottom: 10),
+                  padding: const EdgeInsets.only( bottom: 10),
                   alignment: Alignment.bottomCenter,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -428,6 +427,6 @@ print(data);
               ],
             ),
           ),
-        ));
+        );
   }
 }

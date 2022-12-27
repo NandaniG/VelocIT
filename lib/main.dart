@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'package:geocode/geocode.dart';
+import 'package:geolocator/geolocator.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -176,8 +179,8 @@ class MyApp extends StatelessWidget {
                 '/myOrdersActivity': (context) => const MyOrdersActivity(),
                 '/cardListManagePayments': (context) =>
                     const CardListManagePayments(),
-                '/savedAddressDetails': (context) =>
-                    const SavedAddressDetails(),
+                // '/savedAddressDetails': (context) =>
+                //     const SavedAddressDetails(),
                 '/customerSupportActivity': (context) =>
                     const CustomerSupportActivity(),
                 '/productListByCategoryActivity': (context) =>
@@ -185,10 +188,9 @@ class MyApp extends StatelessWidget {
                         productList: provider
                             .productList[provider.indexofSubProductList]),
                 // '/productDetailsActivity': (context) => ProductDetailsActivity(model: productsList[0], value: value),
-                '/cartScreen': (context) => CartDetailsActivity(
-                    value: value, productList: provider.cartProductList),
-                '/orderReviewSubActivity': (context) => OrderReviewSubActivity(
-                    value: value, cartListFromHome: provider.productList),
+                '/cartScreen': (context) => CartDetailsActivity(),
+                // '/orderReviewSubActivity': (context) => OrderReviewSubActivity(
+                //     cartPayLoad: value, cartListFromHome: provider.productList),
                 '/payment_Creditcard_debitcardScreen': (context) =>
                     const Payment_Creditcard_debitcardScreen(),
               },
@@ -211,7 +213,8 @@ class _SplashScreenState extends State<SplashScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<HomeProvider>(context, listen: false).loadJson();
     });
-    startTime();
+    // startTime();
+    getCurrentLocation();
   }
 
   startTime() async {    final prefs = await SharedPreferences.getInstance();
@@ -253,6 +256,55 @@ class _SplashScreenState extends State<SplashScreen> {
         // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
       }
     });
+  }
+
+  var locationMessage = "";
+  String addressPincode = "";
+
+
+  Future getCurrentLocation() async{
+
+    LocationPermission? permission;
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permission are denied');
+      }
+    }
+
+    var position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    var lastPosition =  await Geolocator.getLastKnownPosition();
+    print("lastPosition"+lastPosition.toString());
+    startTime();
+
+    setState(() {
+      locationMessage = "${position.latitude}, ${position.longitude}";
+      // getAddressFromLatLong(
+      //     position.latitude, position.longitude);
+    });
+
+    _getAddress(
+        position.latitude, position.longitude);
+
+  }
+  Future<String> _getAddress(double? lat, double? lang) async {
+    print("address.streetAddress");
+    if (lat == null || lang == null) return "";
+    GeoCode geoCode = GeoCode();
+    Address address =
+    await geoCode.reverseGeocoding(latitude: lat, longitude: lang);
+    addressPincode = address.postal.toString();
+    print("address.streetAddress"+address.streetAddress.toString());
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('CurrentPinCodePref', addressPincode.toString());
+
+    return "${address.streetAddress}, ${address.city}, ${address.countryName}, ${address.postal}";
   }
 
   @override
