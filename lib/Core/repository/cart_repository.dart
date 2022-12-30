@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
+import 'package:velocit/Core/Model/CartModels/CartSpecificIDForEmbeddedModel.dart';
+import 'package:velocit/utils/constants.dart';
 
 import '../../services/providers/Products_provider.dart';
 import '../../utils/utils.dart';
@@ -16,11 +18,14 @@ import '../Model/CartModels/SendCartForPaymentModel.dart';
 import '../Model/CartModels/updateCartModel.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
+import 'package:http/http.dart'as http;
 
 class CartRepository {
   BaseApiServices _apiServices = NetworkApiServices();
 
   CartCreateRetrieveModel modelResponse = CartCreateRetrieveModel();
+
+
 
   Future<CartCreateRetrieveModel> cartPostRequest(
       Map jsonMap, BuildContext context) async {
@@ -117,13 +122,27 @@ class CartRepository {
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
       print("Cart Specific Id : " + response.toString());
-
+      StringConstant.BadgeCounterValue = response['payload']['total_item_count'].toString();
       prefs.setString(
         'setBadgeCountPrefs',
         response['payload']['total_item_count'].toString(),
       );
 
       return response = CartSpecificIdModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<CartSpecificIDforEmbeddedModel> getCartSpecificIDEmbeddedList(String id) async {
+    var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url + id);
+      print("Cart cart_by_Embedded_ID Id : " + response.toString());
+
+      return response = CartSpecificIDforEmbeddedModel.fromJson(response);
     } catch (e) {
       throw e;
     }
@@ -163,7 +182,8 @@ class CartRepository {
   }
 
 
-  Future createAddressApi(Map<String, Object?>  jsonMap, BuildContext context, int userId) async {
+/*
+  Future createAddressApi(Map<String, dynamic> jsonMap, BuildContext context, int userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     dynamic responseJson;
     // var url = ApiMapping.getURI(apiEndPoint.add_address);
@@ -196,6 +216,75 @@ class CartRepository {
 
     httpClient.close();
     return responseJson;
+  }
+*/
+
+  Future createAddressPostAPI(Map data,  String userId) async {
+
+    print("userId"+userId.toString());
+    var url = '/address/user/' + userId.toString();
+    var requestUrl = ApiMapping.baseAPI +url;
+
+    String body = json.encode(data);
+    print("jsonMap"+body.toString());
+
+    dynamic reply;
+    http.Response response = await http.post(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
+    print("response post"+response.body.toString());
+    Utils.successToast(response.body.toString());
+    return reply;
+
+  }
+
+  Future putCartForPayment(dynamic data,int orderBasketID) async {
+    // var url = ApiMapping.getURI(apiEndPoint.put_carts);
+
+    print("userId"+orderBasketID.toString());
+    var url = '/order-basket/$orderBasketID/attempt_payment';
+
+    var requestUrl = ApiMapping.baseAPI +url;
+    print(requestUrl.toString());
+
+    String body = json.encode(data);
+    print("jsonMap"+body.toString());
+
+
+    try {
+      dynamic reply;
+      http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
+      print("response post"+response.body.toString());
+      Utils.successToast(response.body.toString());
+      return reply;
+
+      return response ;
+    } catch (e) {
+      throw e;
+    }
+  }
+  Future putCartForPaymentUpdate(dynamic data,int orderBasketID) async {
+    // var url = ApiMapping.getURI(apiEndPoint.put_carts);
+
+    print("userId"+orderBasketID.toString());
+    var url = '/order-basket/$orderBasketID/update_payment';
+
+    var requestUrl = ApiMapping.baseAPI +url;
+    print(requestUrl.toString());
+
+    String body = json.encode(data);
+    print("jsonMap"+body.toString());
+
+
+    try {
+      dynamic reply;
+      http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
+      print("response post"+response.body.toString());
+      Utils.successToast(response.body.toString());
+      return reply;
+
+      return response ;
+    } catch (e) {
+      throw e;
+    }
   }
 
 }

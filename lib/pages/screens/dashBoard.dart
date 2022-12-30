@@ -244,16 +244,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: ChangeNotifierProvider<DashboardViewModel>(
-          create: (BuildContext context) => dashboardViewModel,
+        body: ChangeNotifierProvider<DashboardViewModel>.value(
+
+          value: dashboardViewModel,
           child: Consumer<DashboardViewModel>(
               builder: (context, dashboardProvider, child) {
             // print('object-------------' + provider.jsonData.toString());
             return Consumer<HomeProvider>(builder: (context, provider, child) {
               var data = provider.loadJson();
               return SafeArea(
-                  child: provider.jsonData.isNotEmpty
-                      ? Container(
+                  child:Container(
                           // height: MediaQuery.of(context).size.height,
                           // padding: const EdgeInsets.only(
                           //   left: 20,
@@ -354,8 +354,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 budgetBuyList(),
                               ],
                             ),
-                          ))
-                      : TextFieldUtils().circularBar(context));
+                          )));
             });
           }),
         ));
@@ -504,8 +503,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget productList() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => productCategories,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  productCategories,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
           switch (productCategories.productCategoryList.status) {
@@ -594,8 +593,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget serviceList() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => productCategories,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  productCategories,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
           switch (productCategories.productCategoryList.status) {
@@ -730,8 +729,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget listOfShopByCategories() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => productCategories,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  productCategories,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
           switch (productCategories.productCategoryList.status) {
@@ -893,8 +892,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget listOfBookOurServices() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => productCategories,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  productCategories,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
           switch (productCategories.productCategoryList.status) {
@@ -1147,8 +1146,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget recommendedList() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => productListView,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
           switch (productCategories.productListingResponse.status) {
@@ -1240,14 +1239,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   topLeft: Radius.circular(10),
                                                 ),
                                                 child: serviceList[index]
-                                                        .imageUrls![0]
-                                                        .imageUrl!
-                                                        .isNotEmpty
-                                                    ? Image.network(
+                                                    .imageUrls![0]
+                                                    .imageUrl.toString().isNotEmpty? Image.network(
                                                         // width: double.infinity,
                                                         serviceList[index]
                                                             .imageUrls![0]
-                                                            .imageUrl!,
+                                                            .imageUrl.toString(),
                                                         fit: BoxFit.fill,
                                                         height: MediaQuery.of(
                                                                     context)
@@ -1255,7 +1252,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                                 .height *
                                                             .07,
                                                       )
-                                                    : SizedBox(
+                                                   :SizedBox(
                                                         // height: height * .28,
                                                         width: width,
                                                         child: Icon(
@@ -1360,7 +1357,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 /*
     return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => dashboardViewModel,
+        value:  dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, dashboardProvider, child) {
           return Consumer<DashboardViewModel>(
@@ -1510,8 +1507,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget merchantList() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => productListView,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
           switch (productCategories.productListingResponse.status) {
@@ -1590,7 +1587,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             ),
                                             child: serviceList[index]
                                                     .imageUrls![0]
-                                                    .imageUrl!
+                                                    .imageUrl.toString()
                                                     .isNotEmpty
                                                 ? Image.network(
                                                     // width: double.infinity,
@@ -1654,8 +1651,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           return Text("No Data found!");
         }));
 
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => productCategories,
+/*
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  productCategories,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
           switch (productCategories.productCategoryList.status) {
@@ -1783,10 +1781,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
           return Text("No Data found!");
         }));
+*/
 
 /*
     return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => dashboardViewModel,
+        value:  dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, dashboardProvider, child) {
           return Consumer<DashboardViewModel>(
@@ -1924,8 +1923,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget bestDealList() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => productListView,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
           switch (productCategories.productListingResponse.status) {
@@ -2099,7 +2098,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }));
 /*
     return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => dashboardViewModel,
+        value:  dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, dashboardProvider, child) {
           return Consumer<DashboardViewModel>(
@@ -2246,8 +2245,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget budgetBuyList() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => productListView,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
           switch (productCategories.productListingResponse.status) {
@@ -2393,7 +2392,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }));
 /*
     return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => dashboardViewModel,
+        value:  dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, dashboardProvider, child) {
           return Consumer<DashboardViewModel>(

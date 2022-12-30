@@ -11,8 +11,9 @@ import '../../../widgets/global/textFormFields.dart';
 import 'MyOrderDetails.dart';
 
 class OrderRatingReviewActivity extends StatefulWidget {
- // final MyOrdersModel values;
+  // final MyOrdersModel values;
   final dynamic values;
+
   OrderRatingReviewActivity({Key? key, required this.values}) : super(key: key);
 
   @override
@@ -33,16 +34,44 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
-      // appBar: PreferredSize(
-      //   preferredSize: Size.fromHeight(height * .09),
-      //   child: appBar_backWidget(
-      //       context, appTitle(context, "Review and Rating"), SizedBox()),
-      // ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(height * .09),
+        child: appBar_backWidget(
+            context, appTitle(context, "Review and Rating"), SizedBox()),
+      ),
       body: SafeArea(
         child: Container(
           color: ThemeApp.appBackgroundColor,
           // width: width,
-          child: mainUI(),
+          child: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: TextFieldUtils().dynamicText(
+                    widget.values["myOrderId"],
+                    context,
+                    TextStyle(
+                      color: ThemeApp.blackColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: height * .022,
+                    )),
+              ),
+              // SizedBox(
+              //   height: height * .01,
+              // ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: TextFieldUtils().dynamicText(
+                    widget.values["myOrderDate"],
+                    context,
+                    TextStyle(
+                      color: ThemeApp.darkGreyTab,
+                      fontSize: height * .018,
+                    )),
+              ),
+              mainUI(),
+            ],
+          ),
         ),
       ),
     );
@@ -50,272 +79,300 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
 
   Widget mainUI() {
     return Consumer<ProductProvider>(builder: (context, value, child) {
-      return Container(
-        width: width,
-        // padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: ThemeApp.whiteColor,
-          border: Border(
-            top: BorderSide(
-              color: ThemeApp.darkGreyTab,
-              width: 0.5,
-            ),
-            bottom: BorderSide(color: ThemeApp.darkGreyTab, width: 0.5),
-          ),
-        ),
-        child: ListView(
-          // physics: NeverScrollableScrollPhysics(),
-          // mainAxisAlignment: MainAxisAlignment.start,
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return Padding(
+        padding: const EdgeInsets.all(20),
+        child: /*Column(
+        children: [
+*/
+            SingleChildScrollView(
+          child: Container(
+            height: height * .85,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Column(
                 children: [
-                  TextFieldUtils().dynamicText(
-                      "Review and Rating",
-                      context,
-                      TextStyle(
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .028,
-                      )),
-                  InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.clear))
+                  Expanded(
+                    child: ListView.builder(
+
+                        // physics: NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.values["myOrderDetailList"].length,
+                        itemBuilder: (_, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: ThemeApp.whiteColor,
+                                  borderRadius: BorderRadius.circular(8)),
+                              width: width * .9,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: height * .12,
+                                              width: width * .25,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                child: Image.asset(
+                                                  widget.values[
+                                                          "myOrderDetailList"]
+                                                      [index]["productImage"],
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: width * .02,
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                  widget.values[
+                                                          "myOrderDetailList"]
+                                                      [index]["productDetails"],
+                                                  maxLines: 2,
+                                                  style: TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color: ThemeApp
+                                                          .primaryNavyBlackColor,
+                                                      fontSize: height * .02,
+                                                      letterSpacing: -0.25,
+                                                      fontWeight:
+                                                          FontWeight.w700)),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: height * .02,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 70.0,
+                                              height: 70.0,
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(100)),
+                                                  child: Icon(
+                                                    Icons
+                                                        .account_circle_outlined,
+                                                    size: 70,
+                                                  )),
+                                            ),
+                                            SizedBox(
+                                              width: width * .02,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextFieldUtils().dynamicText(
+                                                    'Product Review and Rating',
+                                                    context,
+                                                    TextStyle(
+                                                        color:
+                                                            ThemeApp.blackColor,
+                                                        fontSize: height * .02,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      letterSpacing: -0.25
+                                                    )),
+                                                SizedBox(
+                                                  height: height * .01,
+                                                ),
+                                                rattingBar(),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: height * .02,
+                                        ),
+                                        TextFormField(
+                                          // controller: doctoreNotesController,
+                                          style: TextStyle(
+                                            fontFamily: 'SegoeUi',
+                                            fontSize: height * .022,
+                                            color: ThemeApp.blackColor,
+                                          ),
+                                          validator: (value) {
+                                            return null;
+                                          },
+                                          maxLines: 4,
+
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: ThemeApp.whiteColor,
+                                            hintStyle: TextStyle(
+                                                color: ThemeApp.darkGreyTab,
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.02),
+                                            contentPadding: EdgeInsets.fromLTRB(
+                                                10.0, 10, 10.0, 10),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color:
+                                                        ThemeApp.darkGreyTab)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ThemeApp.darkGreyTab,
+                                                    width: 1)),
+                                            disabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ThemeApp.darkGreyTab,
+                                                    width: 1)),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ThemeApp.darkGreyTab,
+                                                    width: 1)),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ThemeApp.darkGreyTab,
+                                                    width: 1)),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: height * .02,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 70.0,
+                                              height: 70.0,
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(100)),
+                                                  child: Icon(
+                                                    Icons
+                                                        .account_circle_outlined,
+                                                    size: 70,
+                                                  )),
+                                            ),
+                                            SizedBox(
+                                              width: width * .02,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextFieldUtils().dynamicText(
+                                                    'Vendor Review and Rating',
+                                                    context,
+                                                    TextStyle(
+                                                        color:
+                                                            ThemeApp.blackColor,
+                                                        fontSize: height * .023,
+                                                        fontWeight:
+                                                        FontWeight.w700,
+                                                        letterSpacing: -0.25 )),
+                                                SizedBox(
+                                                  height: height * .01,
+                                                ),
+                                                rattingBar(),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        /*   TextFieldUtils().dynamicText(
+                                            'Vendor Review and Rating',
+                                            context,
+                                            TextStyle(
+                                                color: ThemeApp.blackColor,
+                                                fontSize: height * .023,
+                                                fontWeight: FontWeight.bold)),
+                                        SizedBox(
+                                          height: height * .01,
+                                        ),
+                                        rattingBar(),*/
+                                        SizedBox(
+                                          height: height * .02,
+                                        ),
+                                        TextFormField(
+                                          // controller: doctoreNotesController,
+                                          style: TextStyle(
+                                            fontFamily: 'SegoeUi',
+                                            fontSize: height * .02,
+                                            color: ThemeApp.blackColor,
+                                          ),
+                                          validator: (value) {
+                                            return null;
+                                          },
+                                          maxLines: 4,
+
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: ThemeApp.whiteColor,
+                                            hintStyle: TextStyle(
+                                                color: ThemeApp.darkGreyTab,
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.02),
+                                            contentPadding: EdgeInsets.fromLTRB(
+                                                10.0, 10, 10.0, 10),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color:
+                                                        ThemeApp.darkGreyTab)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ThemeApp.darkGreyTab,
+                                                    width: 1)),
+                                            disabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ThemeApp.darkGreyTab,
+                                                    width: 1)),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ThemeApp.darkGreyTab,
+                                                    width: 1)),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: ThemeApp.darkGreyTab,
+                                                    width: 1)),
+                                          ),
+                                        ),
+                                      ]),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                  proceedButton("Submit", ThemeApp.blackColor, context, false,
+                      () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MyOrderDetails(values: widget.values),
+                      ),
+                    );
+                  })
                 ],
               ),
             ),
-            TextFieldUtils().lineHorizontal(),
-            SizedBox(
-              height: height * .01,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextFieldUtils().dynamicText(
-                  widget.values["myOrderId"],
-                  context,
-                  TextStyle(
-                    color: ThemeApp.blackColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: height * .022,
-                  )),
-            ),
-            // SizedBox(
-            //   height: height * .01,
-            // ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: TextFieldUtils().dynamicText(
-                  widget.values["myOrderDate"],
-                  context,
-                  TextStyle(
-                    color: ThemeApp.darkGreyTab,
-                    fontSize: height * .018,
-                  )),
-            ),
-            SizedBox(
-              height: height * .01,
-            ),
-            TextFieldUtils().lineHorizontal(),
-            SizedBox(
-              height: height * .01,
-            ),
-            Container(
-              height: height * .65,
-              child: ListView.builder(
-                  // physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget.values["myOrderDetailList"].length,
-                  itemBuilder: (_, index) {
-                    return SingleChildScrollView(
-                      child: Container(
-                        width: width,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: Container(
-                                  height: height * .15,
-                                  width: width * .3,
-                                  child: Image(
-                                    image: AssetImage(
-                                      widget.values["myOrderDetailList"][index]
-                                          ["productImage"],
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: height * .02,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 30, right: 30),
-                                child: TextFieldUtils().dynamicText(
-                                    widget.values["myOrderDetailList"][index]
-                                    ["productDetails"],
-                                    context,
-                                    TextStyle(
-                                      color: ThemeApp.darkGreyColor,
-                                      fontSize: height * .023,
-                                    )),
-                              ),
-                              SizedBox(
-                                height: height * .02,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: TextFieldUtils().dynamicText(
-                                    'Product Review and Rating',
-                                    context,
-                                    TextStyle(
-                                        color: ThemeApp.blackColor,
-                                        fontSize: height * .023,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              SizedBox(
-                                height: height * .01,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                child: rattingBar(),
-                              ),
-                              SizedBox(
-                                height: height * .02,
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                width: width,
-                                child: TextFormField(
-                                  // controller: doctoreNotesController,
-                                  style: TextStyle(
-                                    fontFamily: 'SegoeUi',
-                                    fontSize: height * .022,
-                                    color: ThemeApp.blackColor,
-                                  ),
-                                  validator: (value) {
-                                    return null;
-                                  },
-                                  maxLines: 4,
-
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: ThemeApp.whiteColor,
-                                    hintStyle: TextStyle(
-                                        color: ThemeApp.darkGreyTab,
-                                        fontSize:
-                                            MediaQuery.of(context).size.height *
-                                                0.02),
-                                    contentPadding:
-                                        EdgeInsets.fromLTRB(10.0, 10, 10.0, 10),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab,
-                                            width: 1)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab,
-                                            width: 1)),
-                                    errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab,
-                                            width: 1)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab,
-                                            width: 1)),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: height * .02,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: TextFieldUtils().dynamicText(
-                                    'Vendor Review and Rating',
-                                    context,
-                                    TextStyle(
-                                        color: ThemeApp.blackColor,
-                                        fontSize: height * .023,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              SizedBox(
-                                height: height * .01,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: rattingBar(),
-                              ),
-                              SizedBox(
-                                height: height * .02,
-                              ),
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                width: width,
-                                child: TextFormField(
-                                  // controller: doctoreNotesController,
-                                  style: TextStyle(
-                                    fontFamily: 'SegoeUi',
-                                    fontSize: height * .022,
-                                    color: ThemeApp.blackColor,
-                                  ),
-                                  validator: (value) {
-                                    return null;
-                                  },
-                                  maxLines: 4,
-
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: ThemeApp.whiteColor,
-                                    hintStyle: TextStyle(
-                                        color: ThemeApp.darkGreyTab,
-                                        fontSize:
-                                            MediaQuery.of(context).size.height *
-                                                0.02),
-                                    contentPadding:
-                                        EdgeInsets.fromLTRB(10.0, 10, 10.0, 10),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab,
-                                            width: 1)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab,
-                                            width: 1)),
-                                    errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab,
-                                            width: 1)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: ThemeApp.darkGreyTab,
-                                            width: 1)),
-                                  ),
-                                ),
-                              ),
-                            ]),
-                      ),
-                    );
-                  }),
-            ),
-            SizedBox(
+          ),
+        ),
+        /*    SizedBox(
               height: height * .03,
             ),
             Container(
@@ -331,7 +388,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                   );
                 }))
           ],
-        ),
+        ),*/
       );
     });
   }

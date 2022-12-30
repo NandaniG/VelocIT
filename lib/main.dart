@@ -191,8 +191,7 @@ class MyApp extends StatelessWidget {
                 '/cartScreen': (context) => CartDetailsActivity(),
                 // '/orderReviewSubActivity': (context) => OrderReviewSubActivity(
                 //     cartPayLoad: value, cartListFromHome: provider.productList),
-                '/payment_Creditcard_debitcardScreen': (context) =>
-                    const Payment_Creditcard_debitcardScreen(),
+
               },
             );
             // });

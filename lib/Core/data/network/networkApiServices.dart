@@ -46,6 +46,25 @@ class NetworkApiServices extends BaseApiServices {
     return responseJson;
   }
 
+  @override
+  Future getPutApiResponse(String url, data) async {
+    dynamic responseJson;
+    try {
+      final client = http.Client();
+      String body = json.encode(data);
+
+      Response response = await client.put(Uri.parse(url), body: body,headers: {'content-type': 'application/json'}).timeout(
+          Duration(seconds: 30));
+
+      responseJson = returnResponse(response);
+      print("responseJson..$url........"+responseJson.toString());
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    }catch(e){
+      print("Error on put: " + e.toString());
+    }
+    return responseJson;
+  }
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
@@ -63,22 +82,4 @@ class NetworkApiServices extends BaseApiServices {
     }
   }
 
-  @override
-  Future getPutApiResponse(String url, data) async {
-    dynamic responseJson;
-    try {
-      final client = http.Client();
-
-      Response response = await client.put(Uri.parse(url), body: data).timeout(
-          Duration(seconds: 30));
-
-      responseJson = returnResponse(response);
-      print("responseJson..........");
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    }catch(e){
-      print("Error on put: " + e.toString());
-    }
-    return responseJson;
-  }
 }

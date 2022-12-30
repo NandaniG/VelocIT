@@ -131,12 +131,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     CartRepository().updateCartPostRequest(data, context);
 
     Utils.successToast('Added Successfully!');
-    cartListView.cartSpecificIDWithGet(context, StringConstant.UserCartID);
     setState(() {
       // prefs.setString(
       //   'setBadgeCountPref',
       //   quantity.toString(),
       // );
+      cartListView.cartSpecificIDWithGet(context, StringConstant.UserCartID).then((value) => setState((){}));
       StringConstant.BadgeCounterValue =
           (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
@@ -183,8 +183,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         child: Container(
             height: MediaQuery.of(context).size.height,
             // padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-            child: ChangeNotifierProvider<ProductSpecificListViewModel>(
-                create: (BuildContext context) => productSpecificListViewModel,
+            child: ChangeNotifierProvider<ProductSpecificListViewModel>.value(
+                value:  productSpecificListViewModel,
                 child: Consumer<ProductSpecificListViewModel>(
                     builder: (context, productSubCategoryProvider, child) {
                   switch (productSubCategoryProvider

@@ -79,6 +79,9 @@ static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
         case apiEndPoint.cart_by_ID:
         retVal = ConstructURI("/cart/");
         break;
+        case apiEndPoint.cart_by_Embedded_ID:
+        retVal = ConstructURI("/cart/embedded/");
+        break;
         case apiEndPoint.send_Cart_For_Payment:
         retVal = ConstructURI("/cart/sendCartForPayment/");
         break;

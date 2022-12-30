@@ -87,3 +87,27 @@ Widget kmAwayOnMerchantImage(String name, BuildContext context) {
         ),
       ));
 }
+
+Widget roundChipButton(String name,BuildContext context, VoidCallback onTap){
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.fromLTRB(10.0, 5, 10.0, 5),
+      decoration: BoxDecoration(
+        color: ThemeApp.appColor,
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Center(
+        child: Text(
+        name,
+
+       style:     TextStyle(
+                color:ThemeApp.whiteColor,
+                // fontWeight: FontWeight.w500,
+                fontSize: 16,
+
+                fontWeight: FontWeight.w500)),
+      ),
+    ),
+  );
+}

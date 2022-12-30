@@ -31,7 +31,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
+    return Scaffold(backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
     preferredSize: Size.fromHeight(height * .09),
@@ -41,7 +41,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
       body: SafeArea(
         child:Consumer<HomeProvider>(builder: (context, value, child) {
             return Container(
-    color: ThemeApp.whiteColor,
+    color: ThemeApp.appColor,
     width: width,
     child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -50,7 +50,8 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
                 stepperWidget(),
                 Icon(
                   Icons.check_circle_outlined,
-                  size: 100,
+                  size: 100,                        color: ThemeApp.whiteColor,
+
                 ),
                 SizedBox(
                   height: height * 0.02,
@@ -60,16 +61,19 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
                     StringUtils.orderPlacedSuccessfully,
                     context,
                     TextStyle(
-                        color: Colors.grey.shade700,
+                        color: ThemeApp.whiteColor,
                         fontSize: height * .035,
-                        fontWeight: FontWeight.w500)),
+                        fontWeight: FontWeight.w500)),   SizedBox(
+                  height: height * 0.02,
+                ),
+
                 TextFieldUtils().dynamicText(
                     StringUtils.thankyouForOrderingWithUs,
                     context,
                     TextStyle(
-                        color: ThemeApp.darkGreyTab,
-                        fontSize: height * .025,
-                        fontWeight: FontWeight.w500)),
+                        color: ThemeApp.whiteColor,
+                        fontSize: height * .022,
+                        fontWeight: FontWeight.w400)),
                 SizedBox(
                   height: height * 0.04,
                 ),
@@ -78,19 +82,21 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
                     '${StringUtils.orderId + ": ${value.orderCheckOutList[0]['orderCheckOutOrderID']}"}',
                     context,
                     TextStyle(
-                        color: Colors.grey.shade700,
+                        color: ThemeApp.whiteColor,
                         fontSize: height * .025,
                         fontWeight: FontWeight.w500)),
-                // SizedBox(height: height*0.01,),
+                SizedBox(
+                  height: height * 0.04,
+                ),
                 Image.asset(
                   value.orderCheckOutList[0]["orderCheckOutQRCode"],
-                  scale: 1.5,
+                  scale: 2,
                 ),
                 SizedBox(
-                  height: height * 0.02,
+                  height: height * 0.05,
                 ),
 
-                buttonsForOrderAndShippin(),
+                buttonsForOrderAndShipping(),
               ]),
             );
           }
@@ -104,7 +110,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
         height: height * .1,
         width: width,
         alignment: Alignment.center,
-        color: ThemeApp.whiteColor,
+        color: ThemeApp.appBackgroundColor,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -132,13 +138,13 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
     var list = <Widget>[];
     titles.asMap().forEach((i, icon) {
       var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
-          ? ThemeApp.darkGreyTab
-          : ThemeApp.lightGreyTab;
+          ? ThemeApp.tealButtonColor
+          : ThemeApp.appColor;
       var lineColor =
-          _curStep > i + 1 ? ThemeApp.darkGreyTab : ThemeApp.lightGreyTab;
+      (i == 0 || i == 1 || _curStep > i + 1) ? ThemeApp.tealButtonColor : ThemeApp.appColor;
       var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
-          ? ThemeApp.darkGreyTab
-          : ThemeApp.lightGreyTab;
+          ? ThemeApp.tealButtonColor
+          : ThemeApp.appColor;
 
       list.add(
         Container(
@@ -155,15 +161,15 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
           //   ),),
           child: (i == 0 || _curStep > i + 1)
               ? Icon(
-                  Icons.circle,
-                  color: iconColor,
-                  size: 18.0,
-                )
+            Icons.circle,
+            color: iconColor,
+            size: 18.0,
+          )
               : Icon(
-                  Icons.radio_button_checked_outlined,
-                  color: iconColor,
-                  size: 18.0,
-                ),
+            Icons.radio_button_checked_outlined,
+            color: iconColor,
+            size: 18.0,
+          ),
         ),
       );
 
@@ -171,9 +177,9 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
       if (i != titles.length - 1) {
         list.add(Expanded(
             child: Container(
-          height: 3.0,
-          color: lineColor,
-        )));
+              height: 3.0,
+              color: lineColor,
+            )));
       }
     });
 
@@ -186,25 +192,25 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
             ? TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    color: ThemeApp.darkGreyTab,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.bold))
+            text,
+            context,
+            TextStyle(
+                color: ThemeApp.blackColor,
+                fontSize: height * .018,
+                fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    color: ThemeApp.darkGreyTab,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.w400)),
+            text,
+            context,
+            TextStyle(
+                color: ThemeApp.blackColor,
+                fontSize: height * .018,
+                fontWeight: FontWeight.w400)),
       );
     });
     return list;
   }
 
-  Widget buttonsForOrderAndShippin() {
+  Widget buttonsForOrderAndShipping() {
     return Container(
       padding: EdgeInsets.only(left: 20,right: 20),
       child: Row(children: [
@@ -224,7 +230,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  color: Colors.grey.shade800,
+                  color: ThemeApp.tealButtonColor,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
                     "View My Orders", ThemeApp.whiteColor, context)),
@@ -250,10 +256,10 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  color: ThemeApp.appBackgroundColor,
+                  color: ThemeApp.whiteColor,
                 ),
                 child: TextFieldUtils().usingPassTextFields(
-                    "Continue Shopping ", ThemeApp.blackColor, context)),
+                    "Continue Shopping ", ThemeApp.tealButtonColor, context)),
           ),
         )
       ]),

@@ -675,10 +675,10 @@ class TextFieldUtils {
         color: ThemeApp.whiteColor,
         border: Border(
           top: BorderSide(
-            color: ThemeApp.darkGreyTab,
+            color: ThemeApp.separatedLineColor,
             width: 0.5,
           ),
-          bottom: BorderSide(color: ThemeApp.darkGreyTab, width: 0.5),
+          bottom: BorderSide(color: ThemeApp.separatedLineColor, width: 0.5),
         ),
       ),
     );
@@ -700,10 +700,10 @@ class TextFieldUtils {
         color: ThemeApp.blackColor,
         border: Border(
           right: BorderSide(
-            color: ThemeApp.darkGreyTab,
+            color: ThemeApp.separatedLineColor,
             width: 1,
           ),
-          left: BorderSide(color: ThemeApp.darkGreyTab, width: 1),
+          left: BorderSide(color: ThemeApp.separatedLineColor, width: 1),
         ),
       ),
     );
@@ -994,7 +994,7 @@ class TextFieldUtils {
       text,
       style: style,
       maxLines: 2,
-      textAlign: TextAlign.center,
+      // textAlign: TextAlign.center,
     );
   }
 }

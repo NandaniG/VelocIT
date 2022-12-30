@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -170,8 +171,8 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
   }
 
   Widget listOfMobileDevices() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => dashboardViewModel,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, productSearchProvider, child) {
           switch (productSearchProvider.productByTermResponse.status) {
@@ -375,8 +376,8 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
   }
 
   Widget productListView() {
-    return ChangeNotifierProvider<DashboardViewModel>(
-        create: (BuildContext context) => dashboardViewModel,
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value:  dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, productSearchProvider, child) {
           switch (productSearchProvider.productByTermResponse.status) {
@@ -642,7 +643,9 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
 
                     onChangeText(StringConstant.sortByRadio);
                   });
-                  Navigator.pop(context);
+                  Navigator.of(context).pop(true);
+
+                  // Navigator.pop(context);
                 })
               ],
             ),
@@ -651,6 +654,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
       );
     });
   }
+
 
   void onChangeText(int sortByRadio) {
     setState(() {});

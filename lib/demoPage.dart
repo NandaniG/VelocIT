@@ -203,8 +203,8 @@ class _HomePageState extends State<HomePage> {
   }
   Widget productListView() {
     return LayoutBuilder(builder: (context, constrains) {
-      return ChangeNotifierProvider<ProductSpecificListViewModel>(
-        create: (BuildContext context) => productSpecificListViewModel,
+      return ChangeNotifierProvider<ProductSpecificListViewModel>.value(
+        value:  productSpecificListViewModel,
         child: Consumer<ProductSpecificListViewModel>(
             builder: (context, productSubCategoryProvider, child) {
               switch (productSubCategoryProvider.productSubCategory.status) {

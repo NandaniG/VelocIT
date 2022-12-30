@@ -427,8 +427,8 @@ Widget searchBar(BuildContext context) {
   DashboardViewModel productCategories = DashboardViewModel();
   productCategories.productCategoryListingWithGet();
 
-  return ChangeNotifierProvider<DashboardViewModel>(
-    create: (BuildContext context) => productCategories,
+  return ChangeNotifierProvider<DashboardViewModel>.value(
+    value:  productCategories,
     child: Consumer<DashboardViewModel>(
         builder: (context, dashBoardProvider, child) {
       return Consumer<HomeProvider>(builder: (context, provider, child) {

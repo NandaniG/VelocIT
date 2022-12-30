@@ -15,6 +15,7 @@ static int isUserLoggedIn = 0;
   static String UserCartID = '';
   static String BadgeCounterValue = '';
   static String ScannedProductId = '';
+  static String ProfilePhoto = '';
 
   ////////////////////////old strings
   static bool isLogIn = true;

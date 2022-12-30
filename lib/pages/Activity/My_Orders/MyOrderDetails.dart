@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:velocit/pages/Activity/My_Orders/QR_download_popup.dart';
 
@@ -86,7 +87,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(20),
-                          ),
+                          ),border: Border.all( color: ThemeApp.blackColor,),
                           color: ThemeApp.whiteColor,
                         ),
                         child: TextFieldUtils().dynamicText(
@@ -94,8 +95,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                             context,
                             TextStyle(
                                 color: ThemeApp.blackColor,
-                                fontSize: height * .023,
-                                fontWeight: FontWeight.bold)),
+                                fontSize: height * .018,
+                                fontWeight: FontWeight.w700)),
                       ),
                     ],
                   ),
@@ -125,18 +126,21 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       ),
                       Container(
                         padding:
-                            const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                            const EdgeInsets.fromLTRB(10.0, 7.0, 10.0, 7.0),
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
-                            Radius.circular(5),
+                            Radius.circular(20),
                           ),
-                          color: ThemeApp.whiteColor,
+                          color: ThemeApp.appColor,
                         ),
                         child: Row(
                           children: [
-                            Icon(
-                              Icons.my_library_books_rounded,
-                              size: height * .02,
+                            SvgPicture.asset(
+                              'assets/appImages/downloadIcon.svg',
+                              color: ThemeApp.whiteColor,
+                              semanticsLabel: 'Acme Logo',
+
+                              height: height * .03,
                             ),
                             SizedBox(
                               width: width * .02,
@@ -145,9 +149,11 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                                 'Download Invoice',
                                 context,
                                 TextStyle(
-                                    color: ThemeApp.blackColor,
+                                    color: ThemeApp.whiteColor,
                                     fontSize: height * .018,
-                                    fontWeight: FontWeight.w500)),
+                                    fontWeight: FontWeight.w400,letterSpacing: -0.25
+
+                                )),
                           ],
                         ),
                       ),

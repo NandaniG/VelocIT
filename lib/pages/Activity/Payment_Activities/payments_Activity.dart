@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/Core/Model/CartModels/SendCartForPaymentModel.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 
+import '../../../Core/repository/cart_repository.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
@@ -32,8 +36,8 @@ enum DropSelections { upi, Wallets, creditCard, cashOnDelivery }
 
 class Payment_Creditcard_debitcardScreen extends StatefulWidget {
   final dynamic orderReview;
-
-  const Payment_Creditcard_debitcardScreen( {Key? key, this.orderReview, }) : super(key: key);
+  CartForPaymentPayload cartForPaymentPayload;
+   Payment_Creditcard_debitcardScreen( {Key? key, this.orderReview, required this.cartForPaymentPayload}) : super(key: key);
 
   @override
   State<Payment_Creditcard_debitcardScreen> createState() => _Payment_Creditcard_debitcardScreenState();
@@ -53,7 +57,9 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
   DropSelections paymentMode = DropSelections.upi;
   final focusNodeExpiryDate = FocusNode();
   final focusNodeCvv = FocusNode();
-
+  late Random rnd;
+  var min = 10000000;
+  int max = 1000000000;
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
     locale: 'en_IN',
@@ -85,7 +91,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
             height: height * .09,
             width: width,
             decoration: BoxDecoration(
-              color: ThemeApp.whiteColor,
+              color: ThemeApp.tealButtonColor,
               borderRadius: BorderRadius.only(
                   topRight: Radius.circular(15),
                   topLeft: Radius.circular(15)),
@@ -103,14 +109,14 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           '${indianRupeesFormat.format(2530)}',
                           context,
                           TextStyle(
-                              color: ThemeApp.blackColor,
+                              color: ThemeApp.whiteColor,
                               fontSize: height * .025,
                               fontWeight: FontWeight.bold)),
                       TextFieldUtils().dynamicText(
                           'View Price Details',
                           context,
                           TextStyle(
-                            color: ThemeApp.darkGreyTab,
+                            color: ThemeApp.whiteColor,
                             fontSize: height * .018,
                           ))
                     ]),
@@ -121,7 +127,25 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                       //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
                       //   ),
                       // );
-                      Navigator.of(context).push(
+                      rnd = new Random();
+
+                      var r = min + rnd.nextInt(max - min);
+
+                      print("$r is in the range of $min and $max");
+                     int UTRNumber = r;
+                      print("UTRNumber " + UTRNumber.toString());
+                          Map data={
+                                    "utr_number":UTRNumber,
+                                    "user_id": widget.cartForPaymentPayload.userId,
+                                    "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
+                                    "remark":"OK",
+                                    "is_successful":true
+                                  };
+
+                          CartRepository().putCartForPaymentUpdate(data,widget.cartForPaymentPayload.orderBasketId!);
+
+
+                          Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => OrderPlaceActivity(orderReview:  value.orderCheckOutDetails),
                         ),
@@ -134,14 +158,14 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                         borderRadius: const BorderRadius.all(
                           Radius.circular(10),
                         ),
-                        color: ThemeApp.blackColor,
+                        color: ThemeApp.whiteColor,
                       ),
                       padding: const EdgeInsets.only(left: 15, right: 15),
                       child: TextFieldUtils().dynamicText(
                           'Place Order',
                           context,
                           TextStyle(
-                              color: ThemeApp.whiteColor,
+                              color: ThemeApp.tealButtonColor,
                               fontSize: height * .022,
                               fontWeight: FontWeight.w500)),
                     )),
@@ -183,7 +207,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                               Radio(
                                 value: 1,
                                 groupValue: _radioSelected,
-                                activeColor: Colors.blue,
+                                activeColor: ThemeApp.appColor,
                                 onChanged: (value) {
                                   setState(() {
                                     _radioSelected = value as int;
@@ -192,7 +216,12 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   });
                                 },
                               ),
-                              const Text("UPI"),
+                              const Text("UPI",style:TextStyle(
+                                color: ThemeApp.blackColor,
+                                // fontSize: height * .016,
+                                fontWeight: FontWeight.w400,
+                                overflow: TextOverflow.ellipsis,
+                              )),
                             ],
                           ),
                           Row(
@@ -200,7 +229,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                               Radio(
                                 value: 2,
                                 groupValue: _radioSelected,
-                                activeColor: Colors.blue,
+                                activeColor: ThemeApp.appColor,
                                 onChanged: (value) {
                                   setState(() {
                                     _radioSelected = value as int;
@@ -209,7 +238,12 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   });
                                 },
                               ),
-                              const Text("Wallets"),
+                              const Text("Wallets",style:TextStyle(
+                                color: ThemeApp.blackColor,
+                                // fontSize: height * .016,
+                                fontWeight: FontWeight.w400,
+                                overflow: TextOverflow.ellipsis,
+                              )),
                             ],
                           ),
                           Row(
@@ -217,7 +251,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                               Radio(
                                 value: 3,
                                 groupValue: _radioSelected,
-                                activeColor: Colors.blue,
+                                activeColor: ThemeApp.appColor,
                                 onChanged: (value) {
                                   setState(() {
                                     _radioSelected = value as int;
@@ -226,7 +260,12 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   });
                                 },
                               ),
-                              const Text("Credit / Debit / ATM Card"),
+                              const Text("Credit / Debit / ATM Card",style:TextStyle(
+                                color: ThemeApp.blackColor,
+                                // fontSize: height * .016,
+                                fontWeight: FontWeight.w400,
+                                overflow: TextOverflow.ellipsis,
+                              )),
                             ],
                           ),
                           // _radioSelected==3? SizedBox(
@@ -444,7 +483,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                               Radio(
                                 value: 4,
                                 groupValue: _radioSelected,
-                                activeColor: Colors.blue,
+                                activeColor: ThemeApp.appColor,
                                 onChanged: (value) {
                                   setState(() {
                                     _radioSelected = value as int;
@@ -453,7 +492,12 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   });
                                 },
                               ),
-                              const Text("Cash on Delivery"),
+                              const Text("Cash on Delivery",style:TextStyle(
+                                color: ThemeApp.blackColor,
+                                // fontSize: height * .016,
+                                fontWeight: FontWeight.w400,
+                                overflow: TextOverflow.ellipsis,
+                              )),
                             ],
                           ),
                         ],
@@ -468,13 +512,12 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
       ),
     );
   }
-
   Widget stepperWidget() {
     return Container(
         height: height * .1,
         width: width,
         alignment: Alignment.center,
-        color: ThemeApp.whiteColor,
+        color: ThemeApp.appBackgroundColor,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -502,13 +545,13 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
     var list = <Widget>[];
     titles.asMap().forEach((i, icon) {
       var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
-          ? ThemeApp.darkGreyTab
-          : ThemeApp.lightGreyTab;
+          ? ThemeApp.tealButtonColor
+          : ThemeApp.appColor;
       var lineColor =
-          _curStep > i + 1 ? ThemeApp.darkGreyTab : ThemeApp.lightGreyTab;
+      (i == 0 || i == 1 || _curStep > i + 1) ? ThemeApp.tealButtonColor : ThemeApp.appColor;
       var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
-          ? ThemeApp.darkGreyTab
-          : ThemeApp.lightGreyTab;
+          ? ThemeApp.tealButtonColor
+          : ThemeApp.appColor;
 
       list.add(
         Container(
@@ -525,15 +568,15 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
           //   ),),
           child: (i == 0 || _curStep > i + 1)
               ? Icon(
-                  Icons.circle,
-                  color: iconColor,
-                  size: 18.0,
-                )
+            Icons.circle,
+            color: iconColor,
+            size: 18.0,
+          )
               : Icon(
-                  Icons.radio_button_checked_outlined,
-                  color: iconColor,
-                  size: 18.0,
-                ),
+            Icons.radio_button_checked_outlined,
+            color: iconColor,
+            size: 18.0,
+          ),
         ),
       );
 
@@ -541,9 +584,9 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
       if (i != titles.length - 1) {
         list.add(Expanded(
             child: Container(
-          height: 3.0,
-          color: lineColor,
-        )));
+              height: 3.0,
+              color: lineColor,
+            )));
       }
     });
 
@@ -556,19 +599,19 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
             ? TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    color: ThemeApp.darkGreyTab,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.bold))
+            text,
+            context,
+            TextStyle(
+                color: ThemeApp.blackColor,
+                fontSize: height * .018,
+                fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    color: ThemeApp.darkGreyTab,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.w400)),
+            text,
+            context,
+            TextStyle(
+                color: ThemeApp.blackColor,
+                fontSize: height * .018,
+                fontWeight: FontWeight.w400)),
       );
     });
     return list;

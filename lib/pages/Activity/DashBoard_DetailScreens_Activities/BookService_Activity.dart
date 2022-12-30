@@ -339,7 +339,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
 
 /*
     return ChangeNotifierProvider<ProductSpecificListViewModel>(
-        create: (BuildContext context) => productViewModel,
+        value:  productViewModel,
 
     child: Consumer<ProductSpecificListViewModel>(
     builder: (context, productSubCategories, child) {

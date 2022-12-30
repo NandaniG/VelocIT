@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../Model/CartModels/AddressListModel.dart';
 import '../Model/CartModels/CartCreateRetrieveModel.dart';
+import '../Model/CartModels/CartSpecificIDForEmbeddedModel.dart';
 import '../Model/CartModels/CartSpecificIdModel.dart';
 import '../Model/CartModels/SendCartForPaymentModel.dart';
 import '../data/responses/api_response.dart';
@@ -11,12 +12,17 @@ class CartViewModel with ChangeNotifier {
   final _myRepo = CartRepository();
 
   ApiResponse<CartSpecificIdModel> cartSpecificID = ApiResponse.loading();
+  ApiResponse<CartSpecificIDforEmbeddedModel> cartEmbeddedID = ApiResponse.loading();
   ApiResponse<SendCartForPaymentModel> sendCartForPayment =
       ApiResponse.loading();
   ApiResponse<AddressListModel> getAddress = ApiResponse.loading();
 
   setCartSpecificIDList(ApiResponse<CartSpecificIdModel> response) {
     cartSpecificID = response;
+    notifyListeners();
+  }
+  setCartSpecificIDEmbeddedList(ApiResponse<CartSpecificIDforEmbeddedModel> response) {
+    cartEmbeddedID = response;
     notifyListeners();
   }
 
@@ -37,6 +43,15 @@ class CartViewModel with ChangeNotifier {
       setCartSpecificIDList(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       setCartSpecificIDList(ApiResponse.error(error.toString()));
+    });
+  }
+  Future<void> cartSpecificIDEmbeddedWithGet(BuildContext context, String id) async {
+    setCartSpecificIDEmbeddedList(ApiResponse.loading());
+
+    _myRepo.getCartSpecificIDEmbeddedList(id).then((value) async {
+      setCartSpecificIDEmbeddedList(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      setCartSpecificIDEmbeddedList(ApiResponse.error(error.toString()));
     });
   }
 

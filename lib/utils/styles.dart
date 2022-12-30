@@ -13,6 +13,9 @@ class ThemeApp {
   static const redColor =  Color(0xfffe3a30);
   static const tealButtonColor =  Color(0xff056C84);
   static const packedButtonColor =  Color(0xff0DCCF0);
+  static const buttonBorderLightGreyColor =  Color(0xffEBF0FF);
+  static const buttonCounterFontColor =  Color(0xff223263);
+  static const separatedLineColor =  Color(0xffD9D9D9);
   static const activeOrderColor =  Color(0xff34C759);
   static const shippedOrderColor =  Color(0xffF59B40);
   static const blueColor =  Color(0xff3372F2);

@@ -78,14 +78,28 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                 // mainAxisAlignment: MainAxisAlignment.start,
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: TextFieldUtils().dynamicText(
-                        "OTP Verification",
-                        context,
-                        TextStyle(
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .025,
-                            fontWeight: FontWeight.bold)),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Center(
+                        child: TextFieldUtils().dynamicText(
+                            "OTP Verification",
+                            context,
+                            TextStyle(
+                                color: ThemeApp.primaryNavyBlackColor,
+                                fontSize: height * .025,
+                                fontWeight: FontWeight.w700)),
+                      ),
+                      Positioned(
+                          right: 0,
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Icon(
+                                Icons.close,
+                                size: 30,
+                              )))
+                    ],
                   ),
                   SizedBox(
                     height: height * .02,
@@ -94,9 +108,9 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                       "${StringUtils.otpSentTo} david@gmail.com",
                       context,
                       TextStyle(
-                          color: ThemeApp.blackColor,
-                          fontSize: height * .02,
-                          fontWeight: FontWeight.w600)),
+                          color: ThemeApp.primaryNavyBlackColor,
+                          fontSize: height * .019,
+                          fontWeight: FontWeight.w400)),
                   TextFormFieldsWidget(
                       errorText: StringUtils.otpSentTo,
                       textInputType: TextInputType.text,
@@ -111,9 +125,9 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                           padding: EdgeInsets.only(right: 10),
                           child: Text("Resend",
                               style: TextStyle(
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .016,
-                                  fontWeight: FontWeight.w600)),
+                                  color: ThemeApp.tealButtonColor,
+                                  fontSize: height * .018,
+                                  fontWeight: FontWeight.w400)),
                         ),
                       ),
                       onChange: (val) {},
@@ -127,9 +141,9 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                       "${StringUtils.otpSentTo} +91 5252634825",
                       context,
                       TextStyle(
-                          color: ThemeApp.blackColor,
-                          fontSize: height * .02,
-                          fontWeight: FontWeight.w600)),
+                          color: ThemeApp.primaryNavyBlackColor,
+                          fontSize: height * .019,
+                          fontWeight: FontWeight.w400)),
                   TextFormFieldsWidget(
                       errorText: StringUtils.otpSentTo,
                       textInputType: TextInputType.text,
@@ -144,9 +158,9 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                           padding: EdgeInsets.only(right: 10),
                           child: Text("Resend",
                               style: TextStyle(
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .016,
-                                  fontWeight: FontWeight.w600)),
+                                  color: ThemeApp.tealButtonColor,
+                                  fontSize: height * .018,
+                                  fontWeight: FontWeight.w400)),
                         ),
                       ),
                       onChange: (val) {},
@@ -156,13 +170,10 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                   SizedBox(
                     height: height * .01,
                   ),
-                  TextFieldUtils().dynamicText(
-                      "${StringUtils.password} *",
+                  TextFieldUtils().asteriskTextField(
+                      "${StringUtils.password}",
                       context,
-                      TextStyle(
-                          color: ThemeApp.blackColor,
-                          fontSize: height * .02,
-                          fontWeight: FontWeight.w600)),
+                     ),
                   PasswordTextFormFieldsWidget(
                       errorText: StringUtils.passwordError,
                       textInputType: TextInputType.text,

@@ -16,6 +16,7 @@ enum apiEndPoint {
   cart_create_retrive,
   cart_update,
   cart_by_ID,
+  cart_by_Embedded_ID,
   single_product_scanner,
   single_product,
   send_Cart_For_Payment,

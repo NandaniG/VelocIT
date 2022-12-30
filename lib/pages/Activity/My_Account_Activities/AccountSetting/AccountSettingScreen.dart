@@ -54,20 +54,21 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
                               context,
                               TextStyle(
                                 color: ThemeApp.blackColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: height * .025,
+                                fontWeight: FontWeight.w700,
+                                fontSize: height * .022,
+
                               )),
                           SizedBox(
                             width: width * .04,
                           ),
                           Transform.scale(
-                            scale: 1.3,
+                            scale: 1.1,
                             child: Switch(
                               // This bool value toggles the switch.
                               value: value.accountSettings["isPushNotifications"],
-                              activeColor: ThemeApp.darkGreyTab,
-                              inactiveTrackColor: ThemeApp.textFieldBorderColor,
-                              inactiveThumbColor: ThemeApp.darkGreyTab,
+                              activeColor: ThemeApp.appColor,
+                              inactiveTrackColor: ThemeApp.appColor,
+                              inactiveThumbColor: ThemeApp.whiteColor,
                               onChanged: (bool val) {
                                 // This is called when the user toggles the switch.
                                 setState(() {

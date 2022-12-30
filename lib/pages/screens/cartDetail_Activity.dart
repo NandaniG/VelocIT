@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,13 +30,13 @@ import '../Activity/Payment_Activities/payments_Activity.dart';
 import 'dashBoard.dart';
 
 class CartDetailsActivity extends StatefulWidget {
- /* final dynamic productList;
+  /* final dynamic productList;
 
   // ProductDetailsModel model;
   ProductProvider value;*/
 
   CartDetailsActivity(
-      {Key? key,/* required this.value, required this.productLis*/t})
+      {Key? key, /* required this.value, required this.productLis*/ t})
       : super(key: key);
 
   @override
@@ -288,12 +289,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         }),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: ThemeApp.appBackgroundColor,
-        elevation: 0,
-        child: ChangeNotifierProvider<CartViewModel>(
-            create: (BuildContext context) => cartListView,
-            child: Consumer<CartViewModel>(
-                builder: (context, cartProvider, child) {
+          color: ThemeApp.appBackgroundColor,
+          elevation: 0,
+          child: Container(
+            height: 144,
+            child: ChangeNotifierProvider<CartViewModel>.value(
+                value: cartListView,
+                child: Consumer<CartViewModel>(
+                    builder: (context, cartProvider, child) {
                   switch (cartProvider.cartSpecificID.status) {
                     case Status.LOADING:
                       print("Api load");
@@ -302,7 +305,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     case Status.ERROR:
                       print("Api error");
 
-                      return Text(cartProvider.cartSpecificID.message.toString());
+                      return Text(
+                          cartProvider.cartSpecificID.message.toString());
                     case Status.COMPLETED:
                       print("Api calll");
                       List<OrdersForPurchase>? orderPurchaseList = cartProvider
@@ -310,109 +314,140 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
                       print("orderPurchaseList" +
                           orderPurchaseList!.length.toString());
-                      return  cartProvider
-                          .cartSpecificID.data!.payload!.ordersForPurchase!.isEmpty
+
+
+                      return cartProvider.cartSpecificID.data!.payload!
+                              .ordersForPurchase!.isEmpty
+
+
                           ? bottomNavigationBarWidget(context)
                           : Container(
-                        height: 144,
-                        width: width,
-                        decoration: const BoxDecoration(
-                          color: ThemeApp.appColor,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15),
-                              topLeft: Radius.circular(15)),
-                        ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 15,
-                                right: 15,
-                                top: 10,
+                              height: 144,
+                              width: width,
+                              decoration: const BoxDecoration(
+                                color: ThemeApp.tealButtonColor,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15),
+                                    topLeft: Radius.circular(15)),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              child: Column(
                                 children: [
-                                  Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 15,
+                                      right: 15,
+                                      top: 10,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        TextFieldUtils().pricesLineThroughWhite(
-                                          indianRupeesFormat
-                                              .format(double.parse(cartProvider
-                                              .cartSpecificID.data!.payload!.totalMrp.toString())),
-                                          context,
-                                          MediaQuery.of(context).size.height * .021,
-                                        ),
-                                        TextFieldUtils()
-                                            .homePageheadingTextFieldWHITE(
-                                          indianRupeesFormat
-                                              .format(double.parse(cartProvider
-                                              .cartSpecificID.data!.payload!.totalPayable.toString())),
-                                          context,
-                                        ),
-                                      ]),
-                                  InkWell(
-                                      onTap: () async {
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextFieldUtils()
+                                                  .pricesLineThroughWhite(
+                                                indianRupeesFormat.format(
+                                                    double.parse(cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .totalMrp
+                                                        .toString())),
+                                                context,
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .021,
+                                              ),
+                                              TextFieldUtils()
+                                                  .homePageheadingTextFieldWHITE(
+                                                indianRupeesFormat.format(
+                                                    double.parse(cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .totalPayable
+                                                        .toString())),
+                                                context,
+                                              ),
+                                            ]),
+                                        InkWell(
+                                            onTap: () async {
+                                              final prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
 
+                                              StringConstant.isUserLoggedIn =
+                                                  (prefs.getInt(
+                                                          'isUserLoggedIn')) ??
+                                                      0;
+                                              print(
+                                                  "IS USER LOGGEDIN ..............." +
+                                                      StringConstant
+                                                          .isUserLoggedIn
+                                                          .toString());
 
-                                        if (kDebugMode) {
-                                          print(StringConstant.isLogIn);
-                                        }
-                                        StringConstant.isLogIn == true
-                                            ? Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                OrderReviewSubActivity(
-                                                  cartId: cartProvider
-                                                        .cartSpecificID.data!.payload!.id!,
+                                              if (kDebugMode) {
+                                                print(StringConstant
+                                                    .isUserLoggedIn);
+                                              }
+                                              if (StringConstant
+                                                      .isUserLoggedIn ==
+                                                  1) {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OrderReviewActivity(
+                                                      cartId: cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .id!,
                                                     ),
-                                          ),
-                                        )
-                                            : Navigator.pushNamed(
-                                            context, RoutesName.signInRoute);
+                                                  ),
+                                                );
+                                              } else {
+                                                cartListView
+                                                    .cartSpecificIDEmbeddedWithGet(
+                                                        context,
+                                                        StringConstant
+                                                            .UserCartID)
+                                                    .then((value) =>
+                                                        setState(() {}));
 
-                                        // Prefs.instance.clear();
-                                        StringConstant.totalOriginalPrice =
-                                        (await Prefs.instance.getDoubleToken(
-                                            StringConstant
-                                                .totalOriginalPricePref))!;
-                                        if (kDebugMode) {
-                                          print(
-                                              'StringConstant.totalOriginalPrice${cartProvider
-                                                  .cartSpecificID.data!.payload!.totalMrp}');
-                                        }
-
-                                        StringConstant.totalFinalPrice =
-                                        (await Prefs.instance.getDoubleToken(
-                                            StringConstant.totalFinalPricePref))!;
-                                        if (kDebugMode) {
-                                          print(
-                                              'StringConstant.totalFinalPrice${StringConstant.totalFinalPrice}');
-                                        }
-                                      },
-                                      child: Container(
-                                          height: height * 0.05,
-                                          alignment: Alignment.center,
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(10),
-                                            ),
-                                            color: ThemeApp.whiteColor,
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              left: 15, right: 15),
-                                          child: TextFieldUtils().usingPassTextFields(
-                                              "Place Order",
-                                              ThemeApp.blackColor,
-                                              context))),
+                                                Navigator.pushNamed(context,
+                                                    RoutesName.signInRoute);
+                                              }
+                                            },
+                                            child: Container(
+                                                height: height * 0.05,
+                                                alignment: Alignment.center,
+                                                decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10),
+                                                  ),
+                                                  color: ThemeApp.whiteColor,
+                                                ),
+                                                padding: const EdgeInsets.only(
+                                                    left: 15, right: 15),
+                                                child: TextFieldUtils()
+                                                    .usingPassTextFields(
+                                                        "Place Order",
+                                                        ThemeApp
+                                                            .tealButtonColor,
+                                                        context))),
+                                      ],
+                                    ),
+                                  ),
+                                  bottomNavigationBarWidget(context),
                                 ],
                               ),
-                            ),
-                            bottomNavigationBarWidget(context),
-                          ],
-                        ),
-                      );
+                            );
                   }
                   return Container(
                     height: height * .8,
@@ -425,8 +460,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                             fontSize: height * .03,
                             fontWeight: FontWeight.bold)),
                   );
-                }))),
-
+                })),
+          )),
 
 /*
         Consumer<ProductProvider>(builder: (context, value, child) {
@@ -536,8 +571,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-          child: ChangeNotifierProvider<CartViewModel>(
-              create: (BuildContext context) => cartListView,
+          child: ChangeNotifierProvider<CartViewModel>.value(
+              value: cartListView,
               child: Consumer<CartViewModel>(
                   builder: (context, cartProvider, child) {
                 switch (cartProvider.cartSpecificID.status) {
@@ -603,16 +638,17 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
     return Container(
-        height: orderPurchaseList!.length == 1
-            ? MediaQuery.of(context).size.height * .5
-            : MediaQuery.of(context).size.height * .6,
+        // height: orderPurchaseList!.length == 1
+        //     ? MediaQuery.of(context).size.height * .5
+        //     : MediaQuery.of(context).size.height * .6,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            physics: orderPurchaseList.length == 1
-                ? NeverScrollableScrollPhysics()
-                : ScrollPhysics(),
-            itemCount: orderPurchaseList.length,
+            // physics: orderPurchaseList.length == 1
+            //     ? NeverScrollableScrollPhysics()
+            //     : ScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: orderPurchaseList!.length,
             itemBuilder: (BuildContext context, int index) {
               return orderPurchaseList.isEmpty
                   ? const Center(
@@ -674,9 +710,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                 .itemName
                                                 .toString(),
                                             context),
-                                        SizedBox(
-                                          height: height * .01,
-                                        ),
+                                        // SizedBox(
+                                        //   height: height * .005,
+                                        // ),
                                         rattingBar(
                                             orderPurchaseList[index], index),
                                         SizedBox(
@@ -688,16 +724,24 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                         ),
                                         Row(
                                           children: [
-                                            TextFieldUtils()
-                                                .subHeadingTextFields(
-                                                    'Delivery by ', context),
-                                            TextFieldUtils()
-                                                .subHeadingTextFields(
-                                                    convertDateTimeDisplay(
-                                                        orderPurchaseList[index]
-                                                            .deliveryDate
-                                                            .toString()),
-                                                    context),
+                                            Text('Delivery by ',
+                                                style: TextStyle(
+                                                    color:
+                                                        ThemeApp.lightFontColor,
+                                                    fontSize: height * .019,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                            Text(
+                                                convertDateTimeDisplay(
+                                                    orderPurchaseList[index]
+                                                        .deliveryDate
+                                                        .toString()),
+                                                style: TextStyle(
+                                                    color:
+                                                        ThemeApp.lightFontColor,
+                                                    fontSize: height * .019,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
                                           ],
                                         ),
                                       ],
@@ -709,19 +753,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                           ),
                         ),
                         Container(
-                          width: width,
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                color: Colors.grey,
-                                width: 0.5,
-                              ),
-                              bottom:
-                                  BorderSide(color: Colors.grey, width: 0.5),
-                            ),
-                          ),
-                        ),
-                        Container(
                           decoration: const BoxDecoration(
                             color: ThemeApp.whiteColor,
                             borderRadius: BorderRadius.only(
@@ -729,7 +760,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                 bottomLeft: Radius.circular(10)),
                           ),
                           padding: const EdgeInsets.only(
-                              top: 10, left: 15, right: 15, bottom: 10),
+                              top: 5, left: 15, right: 20, bottom: 20),
                           child: aadToCartCounter(orderPurchaseList, index),
                         ),
                         SizedBox(
@@ -779,21 +810,40 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextFieldUtils().homePageheadingTextField(
+          Text(
               "${indianRupeesFormat.format(double.parse(value.itemOfferPrice.toString()))}",
-              context),
+              style: TextStyle(
+                  color:
+                  ThemeApp.blackColor,
+                  fontSize: height * .028,
+                  letterSpacing: 0.2,
+                  fontWeight:
+                  FontWeight.w700)),
           SizedBox(
             width: width * .02,
           ),
-          TextFieldUtils().homePageheadingTextFieldLineThrough(
+          Text(
               indianRupeesFormat
                   .format(double.parse(value.itemMrpPrice.toString())),
-              context),
+              style: TextStyle(
+                  color:
+                  ThemeApp.lightFontColor,
+                  fontSize: height * .022,
+                  decoration: TextDecoration.lineThrough,
+                  letterSpacing: 0.2,
+                  fontWeight:
+                  FontWeight.w700)),
           SizedBox(
             width: width * .02,
           ),
-          TextFieldUtils().homePageTitlesTextFields(
-              value.itemDiscountPercent.toString() + "%", context),
+          Text(
+              value.itemDiscountPercent.toString() + "% Off", style: TextStyle(
+              color:
+              ThemeApp.blackColor,
+              fontSize: height * .02,
+              letterSpacing: 0.2,
+              fontWeight:
+              FontWeight.w500)),
         ],
       ),
     );
@@ -804,133 +854,129 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Text(value.lst[index].totalOriginalPrice.toString()),
-        Expanded(
-          flex: 1,
-          child: Container(
-            height: height * 0.06,
-            width: width * .2,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
+        Container(
+          height: height * 0.06,
+          // width: width * .2,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
-                Radius.circular(10),
+                Radius.circular(5),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        // minusQuantity(value![index], index);
-                        if (value![index].itemQty > 1) {
-                          value![index].itemQty--;
-                          updateCart(
-                              value,
-                              value[index].merchantId,
-                              value[index].itemQty,
-                              value[index].productItemId.toString());
-                          StringConstant.BadgeCounterValue =
-                              value!.length.toString() +
-                                  value![index].itemQty.toString();
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return ConfirmDialog(
-                                  text:
-                                      "Are you sure, you want to remove product from cart list?",
-                                  tap: () {
-                                    setState(() {
-                                      print("value[index].merchantId" +
-                                          value[index].merchantId.toString());
-
-                                      updateCart(value, value[index].merchantId, 0,
-                                          value[index].productItemId.toString());
-
-
-                                      value.removeAt(index);
-                                      Navigator.pop(context);
-
-                                    });
-                                  },
-                                );
-                              });
-                        }
-                      });
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: ThemeApp.lightGreyTab,
-                      ),
-                      child: const Icon(
-                        Icons.remove,
-                        // size: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8.0, right: 8, top: 0, bottom: 0),
-                    child: Text(
-                      value![index].itemQty.toString().padLeft(2, '0'),
-                      style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.height * .016,
-                          fontWeight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis,
-                          color: Colors.black),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        value![index].itemQty++;
-                        // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
+              border: Border.all(
+                  color: ThemeApp.buttonBorderLightGreyColor, width: 1.5)),
+          child: Padding(
+            padding: const EdgeInsets.all(0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      // minusQuantity(value![index], index);
+                      if (value![index].itemQty > 1) {
+                        value![index].itemQty--;
                         updateCart(
                             value,
                             value[index].merchantId,
                             value[index].itemQty,
                             value[index].productItemId.toString());
-                      });
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: ThemeApp.lightGreyTab,
-                      ),
-                      child: const Icon(
-                        Icons.add,
+                        StringConstant.BadgeCounterValue =
+                            value!.length.toString() +
+                                value![index].itemQty.toString();
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ConfirmDialog(
+                                text:
+                                    "Are you sure, you want to remove product from cart list?",
+                                tap: () {
+                                  setState(() {
+                                    print("value[index].merchantId" +
+                                        value[index].merchantId.toString());
+
+                                    updateCart(
+                                        value,
+                                        value[index].merchantId,
+                                        0,
+                                        value[index].productItemId.toString());
+
+                                    value.removeAt(index);
+                                    Navigator.pop(context);
+                                  });
+                                },
+                              );
+                            });
+                      }
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: const Icon(Icons.remove,
                         // size: 20,
-                        color: Colors.black,
-                      ),
-                    ),
+                        color: ThemeApp.buttonCounterFontColor),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  height: height * 0.06,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    0,
+                    20,
+                    0,
+                  ),
+                  color: ThemeApp.buttonBorderLightGreyColor,
+                  child: Text(
+                    value![index].itemQty.toString().padLeft(2, '0'),
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * .016,
+                        fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis,
+                        color: ThemeApp.buttonCounterFontColor),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      value![index].itemQty++;
+                      // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
+                      updateCart(
+                          value,
+                          value[index].merchantId,
+                          value[index].itemQty,
+                          value[index].productItemId.toString());
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: const Icon(Icons.add,
+                        // size: 20,
+                        color: ThemeApp.buttonCounterFontColor),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-        Expanded(
-          flex: 1,
-          child: InkWell(
-            onTap: () {
-              setState(() {});
-              print("value[index].merchantId" +
-                  value[index].merchantId.toString());
-              updateCart(value, value[index].merchantId, 0,
-                  value[index].productItemId.toString());
-              value.removeAt(index);
-            },
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Icon(Icons.delete_rounded),
-                TextFieldUtils().subHeadingTextFields('Remove', context),
-              ],
+        InkWell(
+          onTap: () {
+            setState(() {});
+            print(
+                "value[index].merchantId" + value[index].merchantId.toString());
+            updateCart(value, value[index].merchantId, 0,
+                value[index].productItemId.toString());
+            value.removeAt(index);
+          },
+          child: SvgPicture.asset(
+            'assets/appImages/deleteIcon.svg',
+            color: ThemeApp.lightFontColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+              currentColor: ThemeApp.lightFontColor,
             ),
+            height: height * .035,
           ),
         )
       ],
@@ -938,73 +984,165 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   }
 
   Widget priceDetails(CartPayLoad payload) {
-    return Column(
+    return /*Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: [*/
         Container(
-          height: height * 0.16,
-          width: width,
-          decoration: const BoxDecoration(
-            color: ThemeApp.whiteColor,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(
-              15,
+      // height: height * 0.25,
+      width: width,
+      decoration: const BoxDecoration(
+        color: ThemeApp.whiteColor,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Price Details',
+                style: TextStyle(
+                    color: ThemeApp.primaryNavyBlackColor,
+                    fontSize: height * .025,
+                    fontWeight: FontWeight.w400)),
+            SizedBox(
+              height: height * .01,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextFieldUtils().appBarTextField("Price Details", context),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextFieldUtils().homePageTitlesTextFields(
-                        "Price (${payload.ordersForPurchase!.length.toString()} items)",
-                        context),
-                    TextFieldUtils().homePageTitlesTextFields(
-                        indianRupeesFormat
-                            .format(double.parse(payload.totalMrp.toString())),
-                        context)
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextFieldUtils()
+                Text('Price',
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                // TextFieldUtils().homePageTitlesTextFields(
+                //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
+                //     context),
+                Text(
+                    indianRupeesFormat
+                        .format(double.parse(payload.totalMrp.toString())),
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                // TextFieldUtils().homePageTitlesTextFields(
+                //     indianRupeesFormat
+                //         .format(double.parse(payload.totalMrp.toString())),
+                //     context)
+              ],
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Discount',
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                Text(
+                    "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                /*   TextFieldUtils()
                         .homePageTitlesTextFields("Discount", context),
                     TextFieldUtils().homePageTitlesTextFields(
                         "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
-                        context),
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextFieldUtils()
+                        context),*/
+              ],
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Delivery charges',
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                Text(
+                    indianRupeesFormat.format(
+                        double.parse(payload.totalDeliveryCharges.toString())),
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                /* TextFieldUtils()
                         .homePageTitlesTextFields("Delivery charges", context),
                     TextFieldUtils().homePageTitlesTextFields(
                         indianRupeesFormat.format(double.parse(
                             payload.totalDeliveryCharges.toString())),
-                        context),
-                  ],
-                ),
+                        context),*/
               ],
             ),
-          ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Container(
+              width: width,
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: ThemeApp.separatedLineColor,
+                    width: 0.5,
+                  ),
+                  bottom: BorderSide(color: Colors.grey, width: 0.5),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Container(
+              // width: width,
+              // decoration: const BoxDecoration(
+              //   color: ThemeApp.whiteColor,
+              //   borderRadius: BorderRadius.only(
+              //       bottomRight: Radius.circular(10),
+              //       bottomLeft: Radius.circular(10)),
+              // ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total Amount',
+                      style: TextStyle(
+                          color: ThemeApp.blackColor,
+                          fontSize: height * .019,
+                          fontWeight: FontWeight.w400)),
+                  Text("${indianRupeesFormat.format(payload.totalPayable)} ",
+                      style: TextStyle(
+                          color: ThemeApp.appColor,
+                          fontSize: height * .025,
+                          fontWeight: FontWeight.w700)),
+                  /* TextFieldUtils().titleTextFields("Total Amount", context),
+                      TextFieldUtils().titleTextFields(
+                          "${indianRupeesFormat.format(payload.totalPayable)} ",
+                          context),*/
+                ],
+              ),
+            ),
+          ],
         ),
-        Container(
+      ),
+    );
+    /*  Container(
           width: width,
           decoration: const BoxDecoration(
             border: Border(
               top: BorderSide(
-                color: Colors.grey,
+                color: ThemeApp.separatedLineColor,
                 width: 0.5,
               ),
               bottom: BorderSide(color: Colors.grey, width: 0.5),
@@ -1034,9 +1172,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         ),
         SizedBox(
           height: height * .02,
-        )
-      ],
-    );
+        )*/
+    /* ],
+    );*/
   }
 }
 
@@ -1093,7 +1231,8 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
                           fontSize: 16,
                           fontWeight: FontWeight.w400)),
                 ),
-                proceedButton('Ok', ThemeApp.blackColor, context, false, widget.tap),
+                proceedButton(
+                    'Ok', ThemeApp.blackColor, context, false, widget.tap),
               ],
             ),
           ),

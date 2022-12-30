@@ -62,13 +62,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Transform.scale(
-                  scale: 1.3,
+                  scale: 1.1,
                   child: Switch(
                     // This bool value toggles the switch.
                     value: isGridView,
-                    activeColor: ThemeApp.darkGreyTab,
-                    inactiveTrackColor: ThemeApp.textFieldBorderColor,
-                    inactiveThumbColor: ThemeApp.darkGreyTab,
+                    activeColor: ThemeApp.appColor,
+                    inactiveTrackColor: ThemeApp.appColor,
+                    inactiveThumbColor: ThemeApp.whiteColor,
                     onChanged: (bool val) {
                       // This is called when the user toggles the switch.
                       setState(() {
@@ -84,9 +84,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     StringUtils.offersOnly,
                     context,
                     TextStyle(
-                      color: ThemeApp.darkGreyColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: height * .025,
+                      color: ThemeApp.blackColor,
+                      fontWeight: FontWeight.w400,
+                      fontSize: height * .024,
                     )),
               ],
             ),
@@ -101,8 +101,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     context,
                     TextStyle(
                       color: ThemeApp.blackColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: height * .028,
+                      fontWeight: FontWeight.w700,
+                      fontSize: height * .022,
                     )),
                 SizedBox(
                   width: width * .04,
@@ -110,15 +110,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: ThemeApp.darkGreyTab),
-                  padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                      color: ThemeApp.whiteColor
+                  ,border: Border.all(color: ThemeApp.appColor)),
+
+                  padding: EdgeInsets.fromLTRB(20, 4, 20, 4),
                   child: TextFieldUtils().dynamicText(
                       '02',
                       context,
                       TextStyle(
-                        color: ThemeApp.whiteColor,
+                        color: ThemeApp.appColor,
                         fontWeight: FontWeight.w500,
-                        fontSize: height * .025,
+                        fontSize: height * .018,
+                        letterSpacing: -0.08
                       )),
                 )
               ],
@@ -153,12 +156,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               padding: const EdgeInsets.all(10),
                               child: Row(
                                 children: [
-                                  Expanded(
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(8.0,8,15,8),
                                     child: Container(
-                                        width: 60.0,
+                                        width:60.0,
                                         height: 60.0,
                                         decoration: new BoxDecoration(
-                                            shape: BoxShape.circle,
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.circular(10),
                                             image: new DecorationImage(
                                                 fit: BoxFit.fill,
                                                 image: new AssetImage(
@@ -179,22 +184,23 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             context,
                                             TextStyle(
                                                 color: ThemeApp.blackColor,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: height * .023,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: height * .022,
                                                 overflow:
                                                 TextOverflow.ellipsis)),
+                                        SizedBox(height: height*.01,),
                                         TextFieldUtils().dynamicText(
                                             value.notificationDataList[index]
                                             ["notificationDetails"]!,
                                             context,
                                             TextStyle(
-                                                color: ThemeApp.darkGreyTab,
+                                                color: ThemeApp.blackColor,
                                                 fontWeight: FontWeight.w400,
-                                                fontSize: height * .02,
+                                                fontSize: height * .018,
                                                 overflow:
                                                 TextOverflow.ellipsis)),
                                         SizedBox(
-                                          height: height * .02,
+                                          height: height * .01,
                                         ),
                                         TextFieldUtils().dynamicText(
                                             value.notificationDataList[index]
@@ -202,7 +208,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             context,
                                             TextStyle(
                                               color: ThemeApp
-                                                  .textFieldBorderColor,
+                                                  .lightFontColor,
                                               fontWeight: FontWeight.w400,
                                               fontSize: height * .02,
                                             )),
@@ -240,12 +246,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               padding: const EdgeInsets.all(10),
                               child: Row(
                                 children: [
-                                  Expanded(
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(8.0,8,15,8),
                                     child: Container(
-                                        width: 60.0,
+                                        width:60.0,
                                         height: 60.0,
                                         decoration: new BoxDecoration(
-                                            shape: BoxShape.circle,
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.circular(10),
                                             image: new DecorationImage(
                                                 fit: BoxFit.fill,
                                                 image: new AssetImage(
@@ -262,34 +270,35 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       children: [
                                         TextFieldUtils().dynamicText(
                                             value.notificationDataList[index]
-                                                ["notificationTitle"]!,
+                                            ["notificationTitle"]!,
                                             context,
                                             TextStyle(
                                                 color: ThemeApp.blackColor,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: height * .023,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: height * .022,
                                                 overflow:
                                                 TextOverflow.ellipsis)),
+                                        SizedBox(height: height*.01,),
                                         TextFieldUtils().dynamicText(
                                             value.notificationDataList[index]
-                                                ["notificationDetails"]!,
+                                            ["notificationDetails"]!,
                                             context,
                                             TextStyle(
-                                                color: ThemeApp.darkGreyTab,
+                                                color: ThemeApp.blackColor,
                                                 fontWeight: FontWeight.w400,
-                                                fontSize: height * .02,
+                                                fontSize: height * .018,
                                                 overflow:
                                                 TextOverflow.ellipsis)),
                                         SizedBox(
-                                          height: height * .02,
+                                          height: height * .01,
                                         ),
                                         TextFieldUtils().dynamicText(
                                             value.notificationDataList[index]
-                                                ["notificationTime"]!,
+                                            ["notificationTime"]!,
                                             context,
                                             TextStyle(
                                               color: ThemeApp
-                                                  .textFieldBorderColor,
+                                                  .lightFontColor,
                                               fontWeight: FontWeight.w400,
                                               fontSize: height * .02,
                                             )),

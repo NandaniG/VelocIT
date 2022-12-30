@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +7,8 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import 'package:velocit/utils/StringUtils.dart';
-
+import 'package:http/http.dart'as http;
+import '../../../Core/AppConstant/apiMapping.dart';
 import '../../../Core/Model/CartModels/SendCartForPaymentModel.dart';
 import '../../../Core/repository/cart_repository.dart';
 import '../../../services/models/AddressListModel.dart';
@@ -38,12 +40,13 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
   double height = 0.0;
   double width = 0.0;
 
-  // TextEditingController fullNameController = TextEditingController();
-  // TextEditingController mobileController = TextEditingController();
-  // TextEditingController houseBuildingController = TextEditingController();
-  // TextEditingController areaColonyController = TextEditingController();
-  // TextEditingController stateController = TextEditingController();
-  // TextEditingController cityController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController houseBuildingController = TextEditingController();
+  TextEditingController areaColonyController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController pincodeController = TextEditingController();
 
   bool _validateFullName = false;
   bool _validateMobile = false;
@@ -136,17 +139,14 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //Full Name
-              TextFieldUtils().dynamicText(
+              TextFieldUtils().asteriskTextField(
+
                   StringUtils.fullName,
-                  context,
-                  TextStyle(
-                      color: ThemeApp.blackColor,
-                      fontSize: height * .02,
-                      fontWeight: FontWeight.w500)),
+                  context),
               CharacterTextFormFieldsWidget(
                   errorText: StringUtils.enterFullName,
                   textInputType: TextInputType.name,
-                  controller: value.fullNameController,
+                  controller: fullNameController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: 'David Wong',
                   onChange: (val) {},
@@ -154,15 +154,11 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     return null;
                   }),
               //Mobile Number
-              TextFieldUtils().dynamicText(
+              TextFieldUtils().asteriskTextField(
                   StringUtils.mobileNumber,
-                  context,
-                  TextStyle(
-                      color: ThemeApp.blackColor,
-                      fontSize: height * .02,
-                      fontWeight: FontWeight.w500)),
+                  context),
               MobileNumberTextFormField(
-                  controller: value.mobileController, enable: true),
+                  controller: mobileController, enable: true),
               SizedBox(
                 height: height * .02,
               ),
@@ -191,18 +187,17 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                         child: Container(
                           height: height * 0.05,
                           alignment: Alignment.center,
-                          decoration: const BoxDecoration(
+                          decoration:  BoxDecoration(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            color: ThemeApp.blackColor,
+                              Radius.circular(20),
+                            ),border: Border.all(color: ThemeApp.appColor)
                           ),
                           padding: const EdgeInsets.only(left: 15, right: 15),
                           child: TextFieldUtils().dynamicText(
                               StringUtils.useMyLocation,
                               context,
                               TextStyle(
-                                  color: ThemeApp.whiteColor,
+                                  color: ThemeApp.appColor,
                                   fontSize: height * .021,
                                   fontWeight: FontWeight.w500)),
                         )),
@@ -212,68 +207,52 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               SizedBox(
                 height: height * .02,
               ),
-              TextFieldUtils().dynamicText(
+              TextFieldUtils().asteriskTextField(
                   StringUtils.houseBuildingNo,
-                  context,
-                  TextStyle(
-                      color: ThemeApp.blackColor,
-                      fontSize: height * .02,
-                      fontWeight: FontWeight.w500)),
+                  context),
               TextFormFieldsWidget(
                   errorText: StringUtils.houseBuildingNo,
                   textInputType: TextInputType.text,
-                  controller: value.houseBuildingController,
+                  controller: houseBuildingController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: '305, Lokseva Apartments',
                   onChange: (val) {},
                   validator: (value) {
                     return null;
                   }),
-              TextFieldUtils().dynamicText(
+              TextFieldUtils().asteriskTextField(
                   StringUtils.areaColonyName,
-                  context,
-                  TextStyle(
-                      color: ThemeApp.blackColor,
-                      fontSize: height * .02,
-                      fontWeight: FontWeight.w500)),
+                  context),
               TextFormFieldsWidget(
                   errorText: StringUtils.areaColonyName,
                   textInputType: TextInputType.text,
-                  controller: value.areaColonyController,
+                  controller: areaColonyController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: 'Telecom Housing Society',
                   onChange: (val) {},
                   validator: (value) {
                     return null;
                   }),
-              TextFieldUtils().dynamicText(
+              TextFieldUtils().asteriskTextField(
                   StringUtils.state,
-                  context,
-                  TextStyle(
-                      color: ThemeApp.blackColor,
-                      fontSize: height * .02,
-                      fontWeight: FontWeight.w500)),
+                  context),
               TextFormFieldsWidget(
                   errorText: StringUtils.state,
                   textInputType: TextInputType.text,
-                  controller: value.stateController,
+                  controller: stateController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: 'State',
                   onChange: (val) {},
                   validator: (value) {
                     return null;
                   }),
-              TextFieldUtils().dynamicText(
+              TextFieldUtils().asteriskTextField(
                   StringUtils.city,
-                  context,
-                  TextStyle(
-                      color: ThemeApp.blackColor,
-                      fontSize: height * .02,
-                      fontWeight: FontWeight.w500)),
+                  context),
               TextFormFieldsWidget(
                   errorText: StringUtils.city,
                   textInputType: TextInputType.text,
-                  controller: value.cityController,
+                  controller: cityController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: 'Pune',
                   onChange: (val) {},
@@ -282,17 +261,12 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   }),
               SizedBox(
                 height: height * .02,
-              ),   TextFieldUtils().dynamicText(
-                  StringUtils.pincode,
-                  context,
-                  TextStyle(
-                      color: ThemeApp.blackColor,
-                      fontSize: height * .02,
-                      fontWeight: FontWeight.w500)),
+              ), TextFieldUtils().asteriskTextField(
+                  StringUtils.pincode,context),
               TextFormFieldsWidget(
                   errorText: StringUtils.pincode,
                   textInputType: TextInputType.text,
-                  controller: value.pincodeController,
+                  controller: pincodeController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: '365214',
                   onChange: (val) {},
@@ -319,14 +293,15 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               proceedButton(StringUtils.addDeliveryAddress,
                   ThemeApp.blackColor, context, false, () {
                 setState(() {
-                  if (_formKey.currentState!.validate() &&
-                      value.fullNameController.text.isNotEmpty &&
-                      value.mobileController.text.isNotEmpty &&
-                      value.houseBuildingController.text.isNotEmpty &&
-                      value.areaColonyController.text.isNotEmpty &&
-                      value.stateController.text.isNotEmpty &&
-                      value.cityController.text.isNotEmpty&&
-                      value.pincodeController.text.isNotEmpty) {
+                  if (_formKey.currentState!.validate()
+                      && fullNameController.text.isNotEmpty &&
+                      mobileController.text.isNotEmpty &&
+                      houseBuildingController.text.isNotEmpty &&
+                      areaColonyController.text.isNotEmpty &&
+                      stateController.text.isNotEmpty &&
+                      cityController.text.isNotEmpty&&
+                      pincodeController.text.isNotEmpty) {
+
                     if (widget.isSavedAddress == true) {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
@@ -334,25 +309,33 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                         ),
                       );
                     } else {
-                     /* Map<String, Object?> data = {
-                        "name": value.fullNameController.text,
-                        "address_line_1": value.houseBuildingController.text,
-                        "address_line_2": value.areaColonyController.text,
-                        "city_name": value.cityController.text,
-                        "state_name": value.stateController.text,
-                        "address_type": selectedAddressIs,
-                        "pincode": value.pincodeController.text,
-                        "contact_number":value.mobileController.text,
-
+                      Map data = {
+                        "name": fullNameController.text,
+                        "address_line_1": houseBuildingController.text,
+                        "address_line_2":areaColonyController.text,
+                        "city_name":cityController.text,
+                        "state_name":stateController.text,
+                        "address_type":selectedAddressIs,
+                        "pincode": pincodeController.text,
+                        "contact_number":mobileController.text,
+                        "latitude":24.2342525,
+                        "longitude":52.2342523
                       };
                       print("map address"+data.toString());
                       print("widget.cartForPaymentPayload.userId!"+widget.cartForPaymentPayload.userId!.toString());
-                      CartRepository().createAddressApi(data, context,widget.cartForPaymentPayload.userId!);
-                      Utils.successToast("success");*/
+                      // postAPi(data, widget.cartForPaymentPayload.userId!.toString());
+
+                      // apiRequest(data, widget.cartForPaymentPayload.userId!.toString());
+
+                      CartRepository().createAddressPostAPI(data, widget.cartForPaymentPayload.userId!.toString());
+
+
+
+                      Utils.successToast("success");
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => OrderReviewSubActivity(
-                            cartId: widget.cartForPaymentPayload.userId!,
+                          builder: (context) => OrderReviewActivity(
+                            cartId: widget.cartForPaymentPayload.cartId!,
                           ),
                         ),
                       );
@@ -374,18 +357,8 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     Prefs.instance.setToken(
                         StringConstant.selectedTypeOfAddressPref,
                         StringConstant.selectedTypeOfAddress);
-                    value.addAddress(
-                        value.fullNameController.text,
-                        value.mobileController.text,
-                        value.houseBuildingController.text,
-                        value.areaColonyController.text,
-                        value.stateController.text,
-                        value.cityController.text,
-                        value.pincodeController.text,
 
-                        selectedAddressIs);
-                    print("value.addressList" +
-                        value.addressList.length.toString());
+
 
                     value.fullNameController.clear();
                     value.mobileController.clear();
@@ -395,10 +368,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     value.cityController.clear();
                     value.pincodeController.clear();
 
-                    var copyOfAddressList =
-                        value.addressList.map((v) => v).toList();
-                    String encodedMap = json.encode(copyOfAddressList);
-                    StringConstant.prettyPrintJson(encodedMap.toString());
+
                   } else {
                     Utils.flushBarErrorMessage(
                         "Please enter all details", context);
@@ -826,12 +796,12 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               widget.model.myAddressPincode = pincodeController.text.toString();
               print(fullNameController.text);
               print(value.fullNameController.text);
-
-              print("value.addressList" + value.addressList.length.toString());
-
-              var copyOfAddressList = value.addressList.map((v) => v).toList();
-              String encodedMap = json.encode(copyOfAddressList);
-              StringConstant.prettyPrintJson(encodedMap.toString());
+              //
+              // print("value.addressList" + value.addressList.length.toString());
+              //
+              // var copyOfAddressList = value.addressList.map((v) => v).toList();
+              // String encodedMap = json.encode(copyOfAddressList);
+              // StringConstant.prettyPrintJson(encodedMap.toString());
 
               if (widget.isSavedAddress == true) {
 

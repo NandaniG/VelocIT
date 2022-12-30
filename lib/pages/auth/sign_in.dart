@@ -64,9 +64,9 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
         body:  Container(
             padding:
                 const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Form(
                   key: _formKey,
@@ -393,7 +393,7 @@ print(data);
                       }),
                     ],
                   ),
-                ),
+                ),SizedBox(height: 30,),
                 Container(
                   padding: const EdgeInsets.only( bottom: 10),
                   alignment: Alignment.bottomCenter,
