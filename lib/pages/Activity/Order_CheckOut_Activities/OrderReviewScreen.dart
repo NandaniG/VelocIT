@@ -58,6 +58,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     symbol: '₹',
   );
   CartViewModel cartListView = CartViewModel();
+  bool isSelfPickUp = false;
 
   @override
   void initState() {
@@ -150,7 +151,9 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                         padding: const EdgeInsets.only(
                           left: 15,
                           right: 15,
-                          top: 10,),                        child: Row(
+                          top: 10,
+                        ),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -350,227 +353,350 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                 padding: const EdgeInsets.all(20),
                                 child: Column(
                                   children: [
-                                    Container(
-                                      // height: height * 0.5,
-                                      width: width,
-                                      padding: const EdgeInsets.all(20),
-                                      decoration: const BoxDecoration(
-                                        color: ThemeApp.whiteColor,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Text(
-                                                    StringUtils.deliveryDetails,
-                                                    style: TextStyle(
-                                                        color:
-                                                        ThemeApp.blackColor,
-                                                        fontSize: height * .025,
-                                                        letterSpacing: -0.25 ,
-                                                        fontWeight:
-                                                        FontWeight.w700)),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: InkWell(
-                                                    onTap: () {
-                                                      // Navigator.of(context).push(
-                                                      //   MaterialPageRoute(
-                                                      //     builder: (context) => AddNewDeliveryAddress(),
-                                                      //   ),
-                                                      // );
-                                                      showModalBottomSheet(
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        60.0),
-                                                          ),
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          context:
-                                                              scaffoldGlobalKey
-                                                                  .currentContext!,
-                                                          builder: (context) {
-                                                            return ChangeAddressBottomSheet(
-                                                                cartForPaymentPayload:
-                                                                    cartForPaymentPayload);
-                                                          });
-                                                    },
-                                                    child: Container(
-                                                      height: height * 0.05,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      decoration:
-                                                           BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(20),
-                                                        ),
-                                                        border: Border.all(color: ThemeApp.appColor)
-                                                        // color:
-                                                        //     ThemeApp.blackColor,
-                                                      ),
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 15,
-                                                              right: 15),
-                                                      child: TextFieldUtils()
-                                                          .dynamicText(
-                                                              StringUtils
-                                                                  .changeAddress,
-                                                              context,
-                                                          TextStyle(
-                                                              color:
-                                                              ThemeApp.appColor,
-                                                              fontSize: height * .02,
-                                                              letterSpacing: -0.08 ,
-                                                              fontWeight:
-                                                              FontWeight.w700)),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                isSelfPickUp = true;
+                                                isSelfPickUp = !isSelfPickUp;
 
-                                                    )),
-                                              ),
-                                            ],
+                                                // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
+                                              });
+                                            },
+                                            child: Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 15.0, 0, 15.0),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(100),
+                                                    bottomLeft:
+                                                        Radius.circular(100),
+                                                  ),
+                                                  color: isSelfPickUp
+                                                      ? Colors.white
+                                                      : ThemeApp.appColor,
+                                                ),
+                                                child: Center(
+                                                  child: Text('Home delivery',
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: isSelfPickUp
+                                                              ? ThemeApp
+                                                                  .blackColor
+                                                              : Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          letterSpacing:
+                                                              -0.08)),
+                                                )),
                                           ),
-                                          SizedBox(
-                                            height: height * .03,
-                                          ),
-                                          cartForPaymentPayload
-                                                      .isAddressPresent ==
-                                                  true
-                                              ? Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        TextFieldUtils().dynamicText(
-                                                            StringConstant
-                                                                .selectedFullName,
-                                                            context,
-                                                            TextStyle(
-                                                                fontSize: height * .021,
-                                                                letterSpacing: -0.08 ,
-                                                                fontWeight:
-                                                                FontWeight.w400,
-                                                                color: ThemeApp
-                                                                    .blackColor,
-                                                            )),
-                                                        SizedBox(
-                                                          width: width * .02,
-                                                        ),
-                                                        Container(
-                                                          // height: height * 0.05,
-
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  5),
-                                                            ),
-                                                            color: ThemeApp
-                                                                .tealButtonColor,
-                                                          ),
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 10,
-                                                                  right: 10,
-                                                                  top: 5,
-                                                                  bottom: 5),
-                                                          child: Text(
-                                                              StringConstant
-                                                                  .selectedTypeOfAddress,
-                                                              style: TextStyle(
-                                                                  color: ThemeApp
-                                                                      .whiteColor,
-                                                                  fontSize:
-                                                                      height *
-                                                                          .02,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                        ),
-                                                      ],
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  isSelfPickUp = true;
+                                                });
+                                              },
+                                              child: Container(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          0, 15.0, 0, 15.0),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                      topRight:
+                                                          Radius.circular(100),
+                                                      bottomRight:
+                                                          Radius.circular(100),
                                                     ),
-                                                    SizedBox(
-                                                      height: height * .02,
-                                                    ),
-                                                    Text(
-                                                        // provider.orderCheckOutDetails[0]
-                                                        //     ["orderCheckOutDeliveryAddress"],
-                                                        StringConstant
-                                                            .selectedFullAddress,
+                                                    color: isSelfPickUp
+                                                        ? ThemeApp.appColor
+                                                        : ThemeApp.whiteColor,
+                                                  ),
+                                                  child: Center(
+                                                    child: Text('Self Pick-up',
                                                         style: TextStyle(
-
-                                                            fontSize: height * .019,
-                                                            letterSpacing: -0.08 ,
-                                                            fontWeight:
-                                                            FontWeight.w400,
-                                                            color: ThemeApp
-                                                                .blackColor,
-                                                          )),
-
-                                                    SizedBox(
-                                                      height: height * .03,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          'assets/appImages/callIcon.svg',
-                                                          color:
-                                                          ThemeApp.appColor,
-                                                          semanticsLabel:
-                                                          'Acme Logo',
-                                                          theme: SvgTheme(
-                                                            currentColor:
-                                                            ThemeApp
-                                                                .appColor,
-                                                          ),
-                                                          height: height * .025,
-                                                        ),
-                                                        SizedBox(
-                                                          width: width * .03,
-                                                        ),
-                                                        TextFieldUtils().dynamicText(
-                                                            "${StringConstant.selectedMobile}",
-                                                            context,
-                                                            TextStyle(
-                                                                color: ThemeApp
+                                                            fontSize: 14,
+                                                            color: isSelfPickUp
+                                                                ? ThemeApp
+                                                                    .whiteColor
+                                                                : ThemeApp
                                                                     .blackColor,
-                                                                fontSize:
-                                                                height *
-                                                                    .019,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w700)),
-                                                      ],
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            letterSpacing:
+                                                                -0.08)),
+                                                  ))),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 18,
+                                    ),
+                                    isSelfPickUp != true
+                                        ? Container(
+                                            // height: height * 0.5,
+                                            width: width,
+                                            padding: const EdgeInsets.all(20),
+                                            decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                          StringUtils
+                                                              .deliveryDetails,
+                                                          style: TextStyle(
+                                                              color: ThemeApp
+                                                                  .blackColor,
+                                                              fontSize:
+                                                                  height * .025,
+                                                              letterSpacing:
+                                                                  -0.25,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700)),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: InkWell(
+                                                          onTap: () {
+                                                            // Navigator.of(context).push(
+                                                            //   MaterialPageRoute(
+                                                            //     builder: (context) => AddNewDeliveryAddress(),
+                                                            //   ),
+                                                            // );
+                                                            showModalBottomSheet(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              60.0),
+                                                                ),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                context:
+                                                                    scaffoldGlobalKey
+                                                                        .currentContext!,
+                                                                builder:
+                                                                    (context) {
+                                                                  return ChangeAddressBottomSheet(
+                                                                      cartForPaymentPayload:
+                                                                          cartForPaymentPayload);
+                                                                });
+                                                          },
+                                                          child: Container(
+                                                            height:
+                                                                height * 0.05,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .all(
+                                                                      Radius.circular(
+                                                                          20),
+                                                                    ),
+                                                                    border: Border.all(
+                                                                        color: ThemeApp
+                                                                            .appColor)
+                                                                    // color:
+                                                                    //     ThemeApp.blackColor,
+                                                                    ),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 15,
+                                                                    right: 15),
+                                                            child: TextFieldUtils().dynamicText(
+                                                                StringUtils
+                                                                    .changeAddress,
+                                                                context,
+                                                                TextStyle(
+                                                                    color: ThemeApp
+                                                                        .appColor,
+                                                                    fontSize:
+                                                                        height *
+                                                                            .02,
+                                                                    letterSpacing:
+                                                                        -0.08,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700)),
+                                                          )),
                                                     ),
                                                   ],
-                                                )
-                                              : TextFieldUtils().dynamicText(
-                                                  'No Address found',
-                                                  context,
-                                                  TextStyle(
-                                                      color:
-                                                          ThemeApp.darkGreyTab,
-                                                      fontSize: height * .021,
-                                                      fontWeight:
-                                                          FontWeight.w400)),
-                                        ],
-                                      ),
-                                    ),
+                                                ),
+                                                SizedBox(
+                                                  height: height * .03,
+                                                ),
+                                                cartForPaymentPayload
+                                                            .isAddressPresent ==
+                                                        true
+                                                    ? Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              TextFieldUtils()
+                                                                  .dynamicText(
+                                                                      StringConstant
+                                                                          .selectedFullName,
+                                                                      context,
+                                                                      TextStyle(
+                                                                        fontSize:
+                                                                            height *
+                                                                                .021,
+                                                                        letterSpacing:
+                                                                            -0.08,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: ThemeApp
+                                                                            .blackColor,
+                                                                      )),
+                                                              SizedBox(
+                                                                width:
+                                                                    width * .02,
+                                                              ),
+                                                              Container(
+                                                                // height: height * 0.05,
+
+                                                                decoration:
+                                                                    const BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .all(
+                                                                    Radius
+                                                                        .circular(
+                                                                            5),
+                                                                  ),
+                                                                  color: ThemeApp
+                                                                      .tealButtonColor,
+                                                                ),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            10,
+                                                                        right:
+                                                                            10,
+                                                                        top: 5,
+                                                                        bottom:
+                                                                            5),
+                                                                child: Text(
+                                                                    StringConstant
+                                                                        .selectedTypeOfAddress,
+                                                                    style: TextStyle(
+                                                                        color: ThemeApp
+                                                                            .whiteColor,
+                                                                        fontSize:
+                                                                            height *
+                                                                                .02,
+                                                                        fontWeight:
+                                                                            FontWeight.w400)),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height:
+                                                                height * .02,
+                                                          ),
+                                                          Text(
+                                                              // provider.orderCheckOutDetails[0]
+                                                              //     ["orderCheckOutDeliveryAddress"],
+                                                              StringConstant
+                                                                  .selectedFullAddress,
+                                                              style: TextStyle(
+                                                                fontSize:
+                                                                    height *
+                                                                        .019,
+                                                                letterSpacing:
+                                                                    -0.08,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: ThemeApp
+                                                                    .blackColor,
+                                                              )),
+                                                          SizedBox(
+                                                            height:
+                                                                height * .03,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                'assets/appImages/callIcon.svg',
+                                                                color: ThemeApp
+                                                                    .appColor,
+                                                                semanticsLabel:
+                                                                    'Acme Logo',
+                                                                theme: SvgTheme(
+                                                                  currentColor:
+                                                                      ThemeApp
+                                                                          .appColor,
+                                                                ),
+                                                                height: height *
+                                                                    .025,
+                                                              ),
+                                                              SizedBox(
+                                                                width:
+                                                                    width * .03,
+                                                              ),
+                                                              TextFieldUtils().dynamicText(
+                                                                  "${StringConstant.selectedMobile}",
+                                                                  context,
+                                                                  TextStyle(
+                                                                      color: ThemeApp
+                                                                          .blackColor,
+                                                                      fontSize:
+                                                                          height *
+                                                                              .019,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700)),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : TextFieldUtils()
+                                                        .dynamicText(
+                                                            'No Address found',
+                                                            context,
+                                                            TextStyle(
+                                                                color: ThemeApp
+                                                                    .darkGreyTab,
+                                                                fontSize:
+                                                                    height *
+                                                                        .021,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                              ],
+                                            ),
+                                          )
+                                        : SizedBox(),
                                     SizedBox(
                                       height: height * .02,
                                     ),
@@ -764,17 +890,15 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                   children: [
                                     TextFieldUtils().dynamicText(
                                         cartOrderPurchase![index]
-                                            .itemName
+                                            .oneliner
                                             .toString(),
                                         context,
                                         TextStyle(
-
-                                            color: ThemeApp.blackColor,
-                                            fontSize: height * .02,
-                                            overflow: TextOverflow.ellipsis,
-                                            fontWeight: FontWeight.w500,
-                                            letterSpacing: -0.25,
-
+                                          color: ThemeApp.blackColor,
+                                          fontSize: height * .02,
+                                          overflow: TextOverflow.ellipsis,
+                                          fontWeight: FontWeight.w500,
+                                          letterSpacing: -0.25,
                                         )),
                                     SizedBox(
                                       height: height * .01,
@@ -797,9 +921,11 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                           fontSize: height * .016,
                                           fontWeight: FontWeight.w400,
                                           overflow: TextOverflow.ellipsis,
-                                        )),   SizedBox(
+                                        )),
+                                    SizedBox(
                                       height: height * .02,
-                                    ),aadToCartCounter(cartOrderPurchase, index),
+                                    ),
+                                    aadToCartCounter(cartOrderPurchase, index),
                                   ],
                                 ),
                               ),
@@ -809,7 +935,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                       ),
                     ),
 
-             /*       Container(
+                    /*       Container(
                       decoration: const BoxDecoration(
                         color: ThemeApp.whiteColor,
                         borderRadius: BorderRadius.only(
@@ -823,9 +949,14 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                   ],
                 );
               }
-            },  separatorBuilder: (context, index) {
-      return Divider(color: ThemeApp.separatedLineColor,thickness: 1,);
-    },)
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                color: ThemeApp.separatedLineColor,
+                thickness: 1,
+              );
+            },
+          )
         : const CircularProgressIndicator();
   }
 
@@ -834,31 +965,32 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextFieldUtils().dynamicText(
-              indianRupeesFormat.format(double.parse(
-                  cartOrderPurchase![index].itemOfferPrice.toString())),
-              context,
-              TextStyle(
-                color: ThemeApp.blackColor,
-                fontSize: height * .026,
-                overflow: TextOverflow.ellipsis,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.2,
-
-              )),
+          cartOrderPurchase![index].offer.toString().isNotEmpty
+              ? TextFieldUtils().dynamicText(
+                  indianRupeesFormat.format(double.parse(
+                              cartOrderPurchase![index].offer.toString()) ??
+                          0.0) ??
+                      "0.0",
+                  context,
+                  TextStyle(
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .026,
+                    overflow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.2,
+                  ))
+              : SizedBox(),
           SizedBox(
             width: width * .02,
           ),
           TextFieldUtils().dynamicText(
-              indianRupeesFormat.format(double.parse(
-                  cartOrderPurchase![index].itemMrpPrice.toString())),
+              indianRupeesFormat.format(
+                  double.parse(cartOrderPurchase![index].mrp.toString())),
               context,
               TextStyle(
-
                 overflow: TextOverflow.ellipsis,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.2,
-
                 fontSize: height * .023,
                 color: ThemeApp.lightFontColor,
                 decoration: TextDecoration.lineThrough,
@@ -868,10 +1000,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
             width: width * .01,
           ),
           TextFieldUtils().dynamicText(
-              cartOrderPurchase![index]
-                      .itemDiscountPercent
-                      .toString()
-                      .toString() +
+              cartOrderPurchase![index].discountPercent.toString().toString() +
                   " % Off",
               context,
               TextStyle(
@@ -958,7 +1087,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
             ),
           ),
         ),
-      /*  InkWell(
+        /*  InkWell(
           onTap: () {
             setState(() {});
             cartOrderPurchase!.removeAt(index);
@@ -1308,153 +1437,157 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [*/
-      Container(
-        // height: height * 0.25,
-        width: width,
-        decoration: const BoxDecoration(
-          color: ThemeApp.whiteColor,
-          borderRadius: BorderRadius.all( Radius.circular(10)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-              15,15,15,15
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              Text(
-                  'Price Details',
-                  style: TextStyle(
-                      color: ThemeApp.primaryNavyBlackColor,
-                      fontSize: height * .025,
-                      fontWeight: FontWeight.w400)),
-              SizedBox(height: height* .01,),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                      'Price',
-                      style: TextStyle(
-                          color: ThemeApp.lightFontColor,
-                          fontSize: height * .019,
-                          fontWeight: FontWeight.w400)),
-                  // TextFieldUtils().homePageTitlesTextFields(
-                  //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
-                  //     context),
-                  Text(
-                      indianRupeesFormat.format(double.parse(
-                          cartForPaymentPayload.cart!.totalPayable
-                              .toString())),   style: TextStyle(
-                          color: ThemeApp.lightFontColor,
-                          fontSize: height * .019,
-                          fontWeight: FontWeight.w400)),
-                  // TextFieldUtils().homePageTitlesTextFields(
-                  //     indianRupeesFormat
-                  //         .format(double.parse(payload.totalMrp.toString())),
-                  //     context)
-                ],
-              ),                SizedBox(height: height* .01,),
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                      'Discount',  style: TextStyle(
-                      color: ThemeApp.lightFontColor,
-                      fontSize: height * .019,
-                      fontWeight: FontWeight.w400)),
-
-                  Text(
-                      "- ${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalDiscountAmount.toString()))}",
-                      style: TextStyle(
-                          color: ThemeApp.lightFontColor,
-                          fontSize: height * .019,
-                          fontWeight: FontWeight.w400)),
-                  /*   TextFieldUtils()
+        Container(
+      // height: height * 0.25,
+      width: width,
+      decoration: const BoxDecoration(
+        color: ThemeApp.whiteColor,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Price Details',
+                style: TextStyle(
+                    color: ThemeApp.primaryNavyBlackColor,
+                    fontSize: height * .025,
+                    fontWeight: FontWeight.w400)),
+            SizedBox(
+              height: height * .01,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Price',
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                // TextFieldUtils().homePageTitlesTextFields(
+                //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
+                //     context),
+                Text(
+                    indianRupeesFormat.format(double.parse(
+                        cartForPaymentPayload.cart!.totalPayable.toString())),
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                // TextFieldUtils().homePageTitlesTextFields(
+                //     indianRupeesFormat
+                //         .format(double.parse(payload.totalMrp.toString())),
+                //     context)
+              ],
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Discount',
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                Text(
+                    "- ${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalDiscountAmount.toString()))}",
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                /*   TextFieldUtils()
                         .homePageTitlesTextFields("Discount", context),
                     TextFieldUtils().homePageTitlesTextFields(
                         "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
                         context),*/
-                ],
-              ),                SizedBox(height: height* .01,),
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                      'Delivery charges',  style: TextStyle(
-                      color: ThemeApp.lightFontColor,
-                      fontSize: height * .019,
-                      fontWeight: FontWeight.w400)),
-                  Text(
-                      indianRupeesFormat.format(double.parse(
-                          cartForPaymentPayload.cart!.totalDeliveryCharges
-                              .toString())),
-                      style: TextStyle(
-                          color: ThemeApp.lightFontColor,
-                          fontSize: height * .019,
-                          fontWeight: FontWeight.w400)),
-                  /* TextFieldUtils()
+              ],
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Delivery charges',
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                Text(
+                    indianRupeesFormat.format(double.parse(cartForPaymentPayload
+                        .cart!.totalDeliveryCharges
+                        .toString())),
+                    style: TextStyle(
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                /* TextFieldUtils()
                         .homePageTitlesTextFields("Delivery charges", context),
                     TextFieldUtils().homePageTitlesTextFields(
                         indianRupeesFormat.format(double.parse(
                             payload.totalDeliveryCharges.toString())),
                         context),*/
-                ],
-              ),                SizedBox(height: height* .01,),
-
-              Container(
-                width: width,
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: ThemeApp.separatedLineColor,
-                      width: 0.5,
-                    ),
-                    bottom: BorderSide(color: Colors.grey, width: 0.5),
+              ],
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Container(
+              width: width,
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: ThemeApp.separatedLineColor,
+                    width: 0.5,
                   ),
+                  bottom: BorderSide(color: Colors.grey, width: 0.5),
                 ),
-              ),                SizedBox(height: height* .01,),
-
-              Container(
-                // width: width,
-                // decoration: const BoxDecoration(
-                //   color: ThemeApp.whiteColor,
-                //   borderRadius: BorderRadius.only(
-                //       bottomRight: Radius.circular(10),
-                //       bottomLeft: Radius.circular(10)),
-                // ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                        'Total Amount',  style: TextStyle(
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
-                    Text(
-                        "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalPayable.toString()))} ",
-                        style: TextStyle(
-                            color: ThemeApp.appColor,
-                            fontSize: height * .025,
-                            fontWeight: FontWeight.w700)),
-                    /* TextFieldUtils().titleTextFields("Total Amount", context),
+              ),
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Container(
+              // width: width,
+              // decoration: const BoxDecoration(
+              //   color: ThemeApp.whiteColor,
+              //   borderRadius: BorderRadius.only(
+              //       bottomRight: Radius.circular(10),
+              //       bottomLeft: Radius.circular(10)),
+              // ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total Amount',
+                      style: TextStyle(
+                          color: ThemeApp.blackColor,
+                          fontSize: height * .019,
+                          fontWeight: FontWeight.w400)),
+                  Text(
+                      "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalPayable.toString()))} ",
+                      style: TextStyle(
+                          color: ThemeApp.appColor,
+                          fontSize: height * .025,
+                          fontWeight: FontWeight.w700)),
+                  /* TextFieldUtils().titleTextFields("Total Amount", context),
                       TextFieldUtils().titleTextFields(
                           "${indianRupeesFormat.format(payload.totalPayable)} ",
                           context),*/
-                  ],
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
     /*  Container(
           width: width,
           decoration: const BoxDecoration(
@@ -1494,6 +1627,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     /* ],
     );*/
   }
+
 /*
   Widget priceDetails(List<CartOrdersForPurchase> cartOrderPurchase,
       CartForPaymentPayload cartForPaymentPayload) {
@@ -1599,7 +1733,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
         )
       ],
     );
-  }*//*
+  }*/ /*
   Widget priceDetails(List<CartOrdersForPurchase> cartOrderPurchase,
       CartForPaymentPayload cartForPaymentPayload) {
     return Column(
@@ -1741,8 +1875,9 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
       var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var lineColor =
-      (i == 0 || i == 1 || _curStep > i + 1) ? ThemeApp.tealButtonColor : ThemeApp.appColor;
+      var lineColor = (i == 0 || i == 1 || _curStep > i + 1)
+          ? ThemeApp.tealButtonColor
+          : ThemeApp.appColor;
       var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
@@ -2023,11 +2158,10 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                       itemCount: addressList.length,
                                       itemBuilder: (_, index) {
                                         return InkWell(
-
                                           onTap: () {
                                             setState(() {});
                                             StringConstant.selectedFullName =
-                                            addressList[index].name!;
+                                                addressList[index].name!;
                                             StringConstant.selectedFullAddress =
                                                 "${addressList[index].addressLine1!}, ${addressList[index].addressLine2}, ${addressList[index].stateName},\n ${addressList[index].cityName}, ${addressList[index].pincode}";
                                           },
@@ -2043,7 +2177,9 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                           Radius.circular(
                                                               10.0))),
                                               child: Padding(
-                                                padding: const EdgeInsets.fromLTRB(10,10,20,20),
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 20, 20),
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
@@ -2058,7 +2194,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
 
                                                         // padding: EdgeInsets.symmetric(
                                                         //     horizontal: 10, vertical: 7),
-                                                        decoration: BoxDecoration(
+                                                        decoration:
+                                                            BoxDecoration(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(10),
@@ -2072,8 +2209,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                 value: index,
                                                                 groupValue:
                                                                     _value2,
-                                                                onChanged:
-                                                                    (int? value) {
+                                                                onChanged: (int?
+                                                                    value) {
                                                                   setState(() {
                                                                     _value2 =
                                                                         value!;
@@ -2106,11 +2243,10 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                             height *
                                                                                 .022,
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w400)),
+                                                                            FontWeight.w400)),
                                                                 SizedBox(
-                                                                  width:
-                                                                      width * .02,
+                                                                  width: width *
+                                                                      .02,
                                                                 ),
                                                                 Container(
                                                                   // height: height * 0.05,
@@ -2129,16 +2265,13 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                     color: ThemeApp
                                                                         .appColor,
                                                                   ),
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .only(
-                                                                          left:
-                                                                              10,
-                                                                          right:
-                                                                              10,
-                                                                          top: 5,
-                                                                          bottom:
-                                                                              5),
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 10,
+                                                                      right: 10,
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          5),
                                                                   child: TextFieldUtils().dynamicText(
                                                                       addressList[
                                                                               index]
@@ -2147,9 +2280,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                       TextStyle(
                                                                           color: ThemeApp
                                                                               .whiteColor,
-                                                                          fontSize:
-                                                                              height *
-                                                                                  .02,
+                                                                          fontSize: height *
+                                                                              .02,
                                                                           fontWeight:
                                                                               FontWeight.w400)),
                                                                 ),
@@ -2188,8 +2320,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                         children: [
                                                           SvgPicture.asset(
                                                             'assets/appImages/callIcon.svg',
-                                                            color:
-                                                                ThemeApp.appColor,
+                                                            color: ThemeApp
+                                                                .appColor,
                                                             semanticsLabel:
                                                                 'Acme Logo',
                                                             theme: SvgTheme(
@@ -2197,7 +2329,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                   ThemeApp
                                                                       .appColor,
                                                             ),
-                                                            height: height * .025,
+                                                            height:
+                                                                height * .025,
                                                           ),
                                                           SizedBox(
                                                             width: width * .03,
@@ -2216,28 +2349,46 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                           .w400)),
                                                         ],
                                                       ),
-                                                    ),SizedBox(height: height*.02,),
-                                                    Row( crossAxisAlignment: CrossAxisAlignment.end,
-                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                    ),
+                                                    SizedBox(
+                                                      height: height * .02,
+                                                    ),
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
                                                       children: [
-                                                      InkWell(
-                                                        onTap:(){ setState(() {
-                                                          addressList.removeAt(index);
-                                                        });},
-                                                        child: SvgPicture.asset(
-                                                          'assets/appImages/deleteIcon.svg',
-                                                          color: ThemeApp.lightFontColor,
-                                                          semanticsLabel: 'Acme Logo',
-                                                          theme: SvgTheme(
-                                                            currentColor: ThemeApp.appColor,
+                                                        InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              addressList
+                                                                  .removeAt(
+                                                                      index);
+                                                            });
+                                                          },
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            'assets/appImages/deleteIcon.svg',
+                                                            color: ThemeApp
+                                                                .lightFontColor,
+                                                            semanticsLabel:
+                                                                'Acme Logo',
+                                                            theme: SvgTheme(
+                                                              currentColor:
+                                                                  ThemeApp
+                                                                      .appColor,
+                                                            ),
+                                                            height:
+                                                                height * .03,
                                                           ),
-                                                          height: height * .03,
                                                         ),
-                                                      ),    SizedBox(
-                                                        width: width * .03,
-                                                      ),InkWell(
-
-                                                          onTap:(){
+                                                        SizedBox(
+                                                          width: width * .03,
+                                                        ),
+                                                        InkWell(
+                                                          onTap: () {
                                                             // Navigator.of(context).push(
                                                             //   MaterialPageRoute(
                                                             //     builder: (context) =>
@@ -2247,18 +2398,25 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                             //         ),
                                                             //   ),
                                                             // );
-                                        },
-                                                        child: SvgPicture.asset(
-                                                          'assets/appImages/editIcon.svg',
-                                                          color: ThemeApp.appColor,
-                                                          semanticsLabel: 'Acme Logo',
-                                                          theme: SvgTheme(
-                                                            currentColor: ThemeApp.appColor,
+                                                          },
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            'assets/appImages/editIcon.svg',
+                                                            color: ThemeApp
+                                                                .appColor,
+                                                            semanticsLabel:
+                                                                'Acme Logo',
+                                                            theme: SvgTheme(
+                                                              currentColor:
+                                                                  ThemeApp
+                                                                      .appColor,
+                                                            ),
+                                                            height:
+                                                                height * .03,
                                                           ),
-                                                          height: height * .03,
                                                         ),
-                                                      ),
-                                                    ],)
+                                                      ],
+                                                    )
                                                   ],
                                                 ),
                                               ),

@@ -231,7 +231,7 @@ class CartRepository {
     dynamic reply;
     http.Response response = await http.post(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
     print("response post"+response.body.toString());
-    Utils.successToast(response.body.toString());
+    // Utils.successToast(response.body.toString());
     return reply;
 
   }
@@ -253,7 +253,7 @@ class CartRepository {
       dynamic reply;
       http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
       print("response post"+response.body.toString());
-      Utils.successToast(response.body.toString());
+      // Utils.successToast(response.body.toString());
       return reply;
 
       return response ;
@@ -278,7 +278,7 @@ class CartRepository {
       dynamic reply;
       http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
       print("response post"+response.body.toString());
-      Utils.successToast(response.body.toString());
+      // Utils.successToast(response.body.toString());
       return reply;
 
       return response ;

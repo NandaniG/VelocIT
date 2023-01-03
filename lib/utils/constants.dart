@@ -2,10 +2,20 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/utils/utils.dart';
+
+import '../Core/ViewModel/product_listing_view_model.dart';
 
 class StringConstant {
+
+  static String apiOrderBasket_submitRatings = '/order-basket/submitRatings';
+
+
   static String CurrentPinCode = '';
   static String FINALPINCODE = '';
 
@@ -19,6 +29,7 @@ static int isUserLoggedIn = 0;
 
   ////////////////////////old strings
   static bool isLogIn = true;
+  static String isUserNavigateFromDetailScreen = '';
   static String userId = 'userId';
   static String userIdPref = 'userIdPref';
   static String testId = 'testIdPref';
@@ -219,6 +230,59 @@ static int isUserLoggedIn = 0;
     decimalDigits: 0, // change it to get decimal places
     symbol: '₹ ',
   );
+  String barcodeScanRes = '';
+  String _scanBarcode = 'Please scan proper content';
+  ProductSpecificListViewModel getSingleProduct =
+  ProductSpecificListViewModel();
+
+  Future<void> scanQR(BuildContext context) async {
+    barcodeScanRes = '';
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+      _scanBarcode = barcodeScanRes;
+      print('_scanBarcode : ' + barcodeScanRes);
+      print('_scanBarcode : ' + _scanBarcode);
+      // getSingleProduct.getSingleProductScannerWithGet(_scanBarcode.toString());
+
+      final prefs = await SharedPreferences.getInstance();
+
+      // StringConstant.ScannedProductId =
+      //     (prefs.getString('ScannedProductIDPref')) ?? '';
+
+      if (_scanBarcode == '-1') {
+        Utils.flushBarErrorMessage("Please scan proper content", context);
+      } else {
+        // Utils.successToast(_scanBarcode);
+      }
+      print('_scanBarcode timer... : ' + _scanBarcode);
+      print('_scanBarcode pref befor... : ' + StringConstant.ScannedProductId);
+
+      getSingleProduct.getSingleProductScannerWithGet(
+          barcodeScanRes.toString(), context);
+      StringConstant.ScannedProductId =
+          (prefs.getString('ScannedProductIDPref')) ?? '';
+
+      print('_scanBarcode pref after... : ' +
+          StringConstant.ScannedProductId.toString());
+
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(
+      //     builder: (context) => ProductDetailsActivity(
+      //       id:int.parse(StringConstant.ScannedProductId,
+      //     ),
+      //   ),
+      //   ));
+      // if (!mounted) return;
+
+      print('_scanBarcode : ' + _scanBarcode);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+//barcode scanner flutter ant
+  }
+
 }
 
 class SizeConfig {

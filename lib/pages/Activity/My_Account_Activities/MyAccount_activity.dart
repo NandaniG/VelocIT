@@ -123,15 +123,30 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                 ),
               ),
               titleSpacing: 0,
-              leading: IconButton(
-                  icon:
-                      const Icon(Icons.arrow_back, color: ThemeApp.blackColor),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/dashBoardScreen');
-                  }),
+              leading: InkWell(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, '/dashBoardScreen');
+                  // Provider.of<ProductProvider>(context, listen: false);
+                },
+                child: Transform.scale(
+                  scale: 0.7,
+                  child: Image.asset(
+                    'assets/appImages/backArrow.png',
+                    color: ThemeApp.primaryNavyBlackColor,
+                    // height: height*.001,
+                  ),
+                ),
+              ),
 
               // leadingWidth: width * .06,
-              title: Text("My Account"),
+              title: TextFieldUtils().dynamicText(
+                  'My Account',
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      // fontWeight: FontWeight.w500,
+                      fontSize: MediaQuery.of(context).size.height * .022,
+                      fontWeight: FontWeight.w500)),
               // Row
             ),
           ),
@@ -168,75 +183,82 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                               children: [
                                 Center(
                                   child: Container(
-                                      width: 130.0,
-                                      height: 130.0,
-                                      decoration: new BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Colors.grey.shade600,
-                                                spreadRadius: 1,
-                                                blurRadius: 15)
-                                          ],
-                                          border: Border.all(
-                                              color: ThemeApp.whiteColor,
-                                              width: 7),
-                                          shape: BoxShape.circle,
-                                       /*   image: new DecorationImage(
+                                    width: 130.0,
+                                    height: 130.0,
+                                    decoration: new BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: ThemeApp.appBackgroundColor,
+                                            spreadRadius: 1,
+                                            blurRadius: 15)
+                                      ],
+                                      border: Border.all(
+                                          color: ThemeApp.whiteColor, width: 7),
+                                      shape: BoxShape.circle,
+                                      /*   image: new DecorationImage(
                                               fit: BoxFit.fill,
                                               image: new AssetImage(
                                                 'assets/images/laptopImage.jpg',
-                                              ))*/),
-                                    child:   ClipRRect(
-                                      borderRadius:
-                                      const BorderRadius.all(Radius.circular(100)),
-                                      child: Image.file(
-
-                                      File(  StringConstant.ProfilePhoto ??""),
-                                      fit: BoxFit.fill,
-                                      width: 130.0,
-                                      height: 130.0,
+                                              ))*/
+                                    ),
+                                    child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(100)),
+                                          child: StringConstant
+                                                  .ProfilePhoto.isNotEmpty
+                                              ? Image.file(
+                                                    File(StringConstant
+                                                            .ProfilePhoto ??
+                                                        ""),
+                                                    fit: BoxFit.fill,
+                                                    width: 130.0,
+                                                    height: 130.0,
+                                                  ) ??
+                                                  Container()
+                                              : SizedBox(),
+                                        ) ??
+                                        SizedBox(),
                                   ),
-                                    ),),
                                 ),
                                 Positioned(
                                   bottom: 0, right: width * .32,
                                   // width: 130.0,
 
                                   // height: 40.0,
-                                  child: InkWell(  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                        const EditAccountActivity(),
-                                      ),
-                                    );
-                                  },
-                                    child:Container(
-                                      height: height * .06,
-                                      width: width * .11,
+                                  child: InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EditAccountActivity(),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: height * .06,
+                                        width: width * .11,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            color: ThemeApp.appColor),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(7),
+                                          child: SvgPicture.asset(
+                                            'assets/appImages/editIcon.svg',
+                                            color: ThemeApp.whiteColor,
+                                            semanticsLabel: 'Acme Logo',
 
-                                      decoration: BoxDecoration(
-
-                                          borderRadius: BorderRadius.circular(30),
-                                          color: ThemeApp.appColor),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(7),
-                                        child: SvgPicture.asset(
-                                          'assets/appImages/editIcon.svg',
-                                          color: ThemeApp.whiteColor,
-                                          semanticsLabel: 'Acme Logo',
-
-                                          // height: height * .03,
+                                            // height: height * .03,
+                                          ),
                                         ),
-                                      ),
-                                    )/*; Container(
+                                      ) /*; Container(
                                       // alignment: Alignment.bottomCenter,
                                       color: ThemeApp.primaryNavyBlackColor,
                                       alignment: const Alignment(-2, -0.1),
                                       child: iconsUtils(
                                           'assets/appImages/editIcon.svg'),
                                     ),*/
-                                  ),
+                                      ),
                                 ),
                               ],
                             ),
@@ -360,72 +382,70 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 ),
                               ),
                             ),
-                InkWell(
-                  onTap: () {
-                    ChangeNotifierProvider<CartViewModel>.value(
-                      value: cartListView,
-                      child: Consumer<CartViewModel>(
-                          builder: (context, cartProvider, child) {
-                            switch (
-                            cartProvider.sendCartForPayment.status) {
-                              case Status.LOADING:
-                                print("Api load");
+                            ChangeNotifierProvider<CartViewModel>.value(
+                              value: cartListView,
+                              child: Consumer<CartViewModel>(
+                                  builder: (context, cartProvider, child) {
+                                switch (
+                                    cartProvider.sendCartForPayment.status) {
+                                  case Status.LOADING:
+                                    print("Api load");
 
-                                return TextFieldUtils()
-                                    .circularBar(context);
-                              case Status.ERROR:
-                                print("Api error");
+                                    return TextFieldUtils()
+                                        .circularBar(context);
+                                  case Status.ERROR:
+                                    print("Api error");
 
-                                return Text(cartProvider
-                                    .sendCartForPayment.message
-                                    .toString());
-                              case Status.COMPLETED:
-                                print("Api calll");
-                                CartForPaymentPayload
-                                cartForPaymentPayload = cartProvider
-                                    .sendCartForPayment.data!.payload!;
+                                    return Text(cartProvider
+                                        .sendCartForPayment.message
+                                        .toString());
+                                  case Status.COMPLETED:
+                                    print("Api calll");
+                                    CartForPaymentPayload
+                                        cartForPaymentPayload = cartProvider
+                                            .sendCartForPayment.data!.payload!;
 
-                                List<CartOrdersForPurchase>
-                                cartOrderPurchase = cartProvider
-                                    .sendCartForPayment
-                                    .data!
-                                    .payload!
-                                    .cart!
-                                    .ordersForPurchase!;
-                                return    SavedAddressDetails(
-                                    cartForPaymentPayload:
-                                    cartProvider
-                                        .sendCartForPayment
-                                        .data!
-                                        .payload!);
-                            }
-                            return SizedBox();
-                          }),
-                    );
-
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        iconsUtils(
-                            'assets/appImages/savedAddressIcon.svg'),
-                        SizedBox(
-                          width: width * .05,
-                        ),
-                        TextFieldUtils().dynamicText(
-                            'Saved Addresses',
-                            context,
-                            TextStyle(
-                                color: ThemeApp.blackColor,
-                                fontWeight: FontWeight.w700,
-                                fontSize: height * .022,
-                                letterSpacing: -0.25)),
-                      ],
-                    ),
-                  ),
-                ),
-
+                                    List<CartOrdersForPurchase>
+                                        cartOrderPurchase = cartProvider
+                                            .sendCartForPayment
+                                            .data!
+                                            .payload!
+                                            .cart!
+                                            .ordersForPurchase!;
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                             SavedAddressDetails(cartForPaymentPayload: cartForPaymentPayload),
+                                          ),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            iconsUtils(
+                                                'assets/appImages/savedAddressIcon.svg'),
+                                            SizedBox(
+                                              width: width * .05,
+                                            ),
+                                            TextFieldUtils().dynamicText(
+                                                'Saved Addresses',
+                                                context,
+                                                TextStyle(
+                                                    color: ThemeApp.blackColor,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: height * .022,
+                                                    letterSpacing: -0.25)),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                }
+                                return SizedBox();
+                              }),
+                            ),
                             InkWell(
                               onTap: () {
                                 Navigator.of(context).push(
@@ -559,7 +579,10 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 final prefs =
                                     await SharedPreferences.getInstance();
                                 prefs.setInt('isUserLoggedIn', 0);
-
+                                final pref =
+                                    await SharedPreferences.getInstance();
+                                Utils.errorToast('You are sign out');
+                                await pref.clear();
                                 Navigator.pushReplacementNamed(
                                     context, RoutesName.dashboardRoute);
                               },

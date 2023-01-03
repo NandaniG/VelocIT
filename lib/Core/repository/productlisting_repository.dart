@@ -81,7 +81,7 @@ class ProductSpecificListRepository {
       //     'ScannedProductIDPref', response['payload']['id'].toString());
       if(response['status'].toString() == 'NOT_FOUND'){
         print("NOT_FOUND....");
-        Navigator.pop(context);
+        // Navigator.pop(context);
         Utils.flushBarErrorMessage("Please scan proper content", context);
       }else{
         Navigator.of(context).pushReplacement(

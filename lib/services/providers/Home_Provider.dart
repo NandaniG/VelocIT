@@ -9,11 +9,18 @@ import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import '../../../utils/ApiMapping.dart';
 import '../../Core/AppConstant/apiMapping.dart';
 
+import '../../Core/Model/Orders/ActiveOrdersBasketModel.dart';
+import '../../Core/Model/Orders/OrderBasketModel.dart';
+import '../../Core/data/network/baseApiServices.dart';
+import '../../Core/data/network/networkApiServices.dart';
+import '../../Core/repository/OrderBasket_repository.dart';
 import '../../utils/constants.dart';
+import '../../utils/utils.dart';
 import '../models/JsonModelForApp/HomeModel.dart';
 
 class HomeProvider with ChangeNotifier {
   Map<dynamic, dynamic> jsonData = {};
+  Map<dynamic, dynamic> jsonDatass = {};
 
   //---------------------------------------------------------
   //--------------------load json file------------------------
@@ -27,9 +34,9 @@ class HomeProvider with ChangeNotifier {
       // // StringConstant.printObject(jsonData);
 
       homeImageSliderService();
-      shopByCategoryService();
-      bookOurServicesService();
-      recommendedListService();
+      // shopByCategoryService();
+      // bookOurServicesService();
+      // recommendedListService();
       merchantNearYouListService();
       bestDealListService();
       cartProductListService();
@@ -45,6 +52,79 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
+  loadJsonss() async {
+    try {
+      getOrderBasketApi();
+
+      // reviewPostAPI();
+      print("____________loadJson__________________jsonDatass_");
+      print(jsonDatass);
+      // // StringConstant.printObject(jsonData);
+      notifyListeners();
+    } catch (e) {
+      // print("Error in loadJson: $e");
+    }
+  }
+
+  BaseApiServices _apiServices = NetworkApiServices();
+  dynamic orderBasketData;
+
+  Future<ActiveOrderBasketModel> getOrderBasketApi() async {
+    var url = ApiMapping.BASEAPI + ApiMapping.consumerBasket;
+    print(url.toString());
+
+    try {
+      Map data = {
+        "user_id": 669250095,
+        "IsActiveOrderList": true,
+        "from_days_in_past": 0
+      };
+      dynamic response =
+          await _apiServices.getGetApiResponseWithBody(url, data);
+      orderBasketData = response.toString();
+      jsonDatass = json.decode(response);
+
+      print("getOrderBasketApisccscsscs" + response.toString());
+      return response = ActiveOrderBasketModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+
+
+    /////////
+
+  }
+  Map<dynamic, dynamic> reviewPostAPIData = {};
+ Future reviewPostAPI(jsonMap) async {
+/*    Map jsonMap = {
+      "user_id": 3,
+      "order_id": 45,
+      "product_item_id": 31,
+      "merchant_comments": "adsadf",
+      "merchant_rating": 4,
+      "product_comments": "a asdfa f",
+      "product_rating": 3
+    };*/
+ try {
+   var requestUrl = ApiMapping.baseAPI +
+       StringConstant.apiOrderBasket_submitRatings;
+
+   String body = json.encode(jsonMap);
+   print("reviewPostAPI jsonMap" + body.toString());
+
+   dynamic reply;
+   http.Response response = await http.post(Uri.parse(requestUrl),
+
+       body: body, headers: {'content-type': 'application/json'});
+   reviewPostAPIData = reply;
+   print("reviewPostAPI response post" + response.body.toString());
+   // Utils.successToast(response.body.toString());
+
+   return reply;
+ }catch(e){
+
+ }
+  }
 
   //---------------------------------------------------------
   //----------------- home slider service--------------------
@@ -75,21 +155,20 @@ class HomeProvider with ChangeNotifier {
     for (int i = 0; i <= shopByCategoryList.length; i++) {
       indexofSubProductList = i;
 
-      productList =
-      shopByCategoryList[i]["subShopByCategoryList"];
+      productList = shopByCategoryList[i]["subShopByCategoryList"];
       // // print("-------------shopByCategoryList Data-subProductListproductList------------");
       // // print(productList.toString());
-      for (int j = 0; j <=
-          shopByCategoryList[i]["subShopByCategoryList"].length; j++) {
+      for (int j = 0;
+          j <= shopByCategoryList[i]["subShopByCategoryList"].length;
+          j++) {
         subProductList =
-        shopByCategoryList[i]["subShopByCategoryList"][j]['productsList'];
+            shopByCategoryList[i]["subShopByCategoryList"][j]['productsList'];
         // print(
         //     "-------------shopByCategoryList Data-subProductList------------");
         // print(shopByCategoryList[i]["subShopByCategoryList"][j]['productsList']
         //     .toString());
       }
     }
-
 
     // return shopByCategoryList;
   }
@@ -289,7 +368,8 @@ class HomeProvider with ChangeNotifier {
     // print("-------------notificationsList Data-------------");
     // // print(notificationDataList.toString());
 
-    return notificationDataList.map((e) => NotificationsList.fromJson(e))
+    return notificationDataList
+        .map((e) => NotificationsList.fromJson(e))
         .toList();
   }
 
@@ -313,7 +393,6 @@ class HomeProvider with ChangeNotifier {
     return mycardsList.map((e) => MyAddressList.fromJson(e)).toList();
   }
 
-
   //---------------------------------------------------------
   //----------------- My offers--------------------
   var offerList;
@@ -331,12 +410,10 @@ class HomeProvider with ChangeNotifier {
     offerByType = offerList["offerByType"];
     // print("-------------offerList Data-------------");
 
-
     for (int i = 0; i <= offerByType.length; i++) {
       offerByTypeImagesList = offerByType[i]["offerImages"];
       // // print("-------------offerImages Dataaaaaaaa$offerByTypeImagesList");
     }
-
 
     // // print(offerByType.toString());
     return offerList.map((e) => OffersData.fromJson(e)).toList();

@@ -1248,10 +1248,15 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           final prefs = await SharedPreferences.getInstance();
                           StringConstant.isUserLoggedIn =
                               (prefs.getInt('isUserLoggedIn')) ?? 0;
+                          final navigator = Navigator.of(context); // <- Add this
 
+                          prefs.setString('isUserNavigateFromDetailScreen', 'Yes');
                           if (StringConstant.isUserLoggedIn != 0) {
-                            Navigator.pushReplacementNamed(
-                                context, RoutesName.dashboardRoute);
+                            navigator
+                                .push(MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    OrderReviewActivity(cartId: int.parse(StringConstant.UserCartID))))
+                                .then((value) => setState(() {}));
                           } else {
                             Navigator.pushReplacementNamed(
                                 context, RoutesName.signInRoute);

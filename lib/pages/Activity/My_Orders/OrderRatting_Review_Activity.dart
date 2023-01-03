@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 
 import '../../../services/models/MyOrdersModel.dart';
+import '../../../services/providers/Home_Provider.dart';
 import '../../../services/providers/Products_provider.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/textFormFields.dart';
 import 'MyOrderDetails.dart';
@@ -23,8 +27,18 @@ class OrderRatingReviewActivity extends StatefulWidget {
 
 class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
+  TextEditingController productReviewController = TextEditingController();
+  TextEditingController vendorReviewController = TextEditingController();
+
   double height = 0.0;
   double width = 0.0;
+  var data;
+
+  @override
+  void initState() {
+    // data = Provider.of<HomeProvider>(context, listen: false).loadJsonss();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,42 +57,53 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
         child: Container(
           color: ThemeApp.appBackgroundColor,
           // width: width,
-          child: ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: TextFieldUtils().dynamicText(
-                    widget.values["myOrderId"],
-                    context,
-                    TextStyle(
-                      color: ThemeApp.blackColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: height * .022,
-                    )),
-              ),
-              // SizedBox(
-              //   height: height * .01,
-              // ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: TextFieldUtils().dynamicText(
-                    widget.values["myOrderDate"],
-                    context,
-                    TextStyle(
-                      color: ThemeApp.darkGreyTab,
-                      fontSize: height * .018,
-                    )),
-              ),
-              mainUI(),
-            ],
-          ),
+          child: data == ''
+              ? CircularProgressIndicator()
+              : Consumer<HomeProvider>(builder: (context, value, child) {
+                  return (value.jsonData.isNotEmpty &&
+                          value.jsonData['error'] == null)
+                      ? ListView(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              child: TextFieldUtils().dynamicText(
+                                  widget.values["myOrderId"],
+                                  context,
+                                  TextStyle(
+                                    color: ThemeApp.blackColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: height * .022,
+                                  )),
+                            ),
+                            // SizedBox(
+                            //   height: height * .01,
+                            // ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20),
+                              child: TextFieldUtils().dynamicText(
+                                  widget.values["myOrderDate"],
+                                  context,
+                                  TextStyle(
+                                    color: ThemeApp.darkGreyTab,
+                                    fontSize: height * .018,
+                                  )),
+                            ),
+                            mainUI(value),
+                          ],
+                        )
+                      : value.jsonData['error'] != null
+                          ? Container()
+                          : Center(child: CircularProgressIndicator());
+                }),
         ),
       ),
     );
   }
 
-  Widget mainUI() {
-    return Consumer<ProductProvider>(builder: (context, value, child) {
+  Widget mainUI(HomeProvider value) {
+    return Consumer<HomeProvider>(builder: (context, valuess, child) {
       return Padding(
         padding: const EdgeInsets.all(20),
         child: /*Column(
@@ -158,7 +183,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                         ),
                                         Row(
                                           children: [
-                                            Container(
+                                            /*      Container(
                                               width: 70.0,
                                               height: 70.0,
                                               child: ClipRRect(
@@ -173,7 +198,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                             ),
                                             SizedBox(
                                               width: width * .02,
-                                            ),
+                                            ),*/
                                             Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
@@ -189,8 +214,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                                         fontSize: height * .02,
                                                         fontWeight:
                                                             FontWeight.w700,
-                                                      letterSpacing: -0.25
-                                                    )),
+                                                        letterSpacing: -0.25)),
                                                 SizedBox(
                                                   height: height * .01,
                                                 ),
@@ -203,7 +227,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                           height: height * .02,
                                         ),
                                         TextFormField(
-                                          // controller: doctoreNotesController,
+                                          controller: productReviewController,
                                           style: TextStyle(
                                             fontFamily: 'SegoeUi',
                                             fontSize: height * .022,
@@ -213,7 +237,6 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                             return null;
                                           },
                                           maxLines: 4,
-
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: ThemeApp.whiteColor,
@@ -252,7 +275,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                         ),
                                         Row(
                                           children: [
-                                            Container(
+                                            /*      Container(
                                               width: 70.0,
                                               height: 70.0,
                                               child: ClipRRect(
@@ -267,7 +290,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                             ),
                                             SizedBox(
                                               width: width * .02,
-                                            ),
+                                            ),*/
                                             Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
@@ -282,8 +305,8 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                                             ThemeApp.blackColor,
                                                         fontSize: height * .023,
                                                         fontWeight:
-                                                        FontWeight.w700,
-                                                        letterSpacing: -0.25 )),
+                                                            FontWeight.w700,
+                                                        letterSpacing: -0.25)),
                                                 SizedBox(
                                                   height: height * .01,
                                                 ),
@@ -307,7 +330,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                           height: height * .02,
                                         ),
                                         TextFormField(
-                                          // controller: doctoreNotesController,
+                                          controller: vendorReviewController,
                                           style: TextStyle(
                                             fontFamily: 'SegoeUi',
                                             fontSize: height * .02,
@@ -317,7 +340,6 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                             return null;
                                           },
                                           maxLines: 4,
-
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: ThemeApp.whiteColor,
@@ -359,13 +381,33 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                         }),
                   ),
                   proceedButton("Submit", ThemeApp.blackColor, context, false,
-                      () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            MyOrderDetails(values: widget.values),
-                      ),
-                    );
+                      () async {
+                    final prefs = await SharedPreferences.getInstance();
+
+                    StringConstant.UserLoginId =
+                        (prefs.getString('isUserId')) ?? '';
+
+                    print("USER LOGIN ID..............." +
+                        StringConstant.UserLoginId.toString());
+                    Map jsonMap = {
+                      "user_id": StringConstant.UserLoginId,
+                      "order_id": 45,
+                      "product_item_id": 31,
+                      "merchant_comments": vendorReviewController.text ?? "",
+                      "merchant_rating": 4,
+                      "product_comments": productReviewController.text,
+                      "product_rating": 3
+                    };
+                    value.reviewPostAPI(jsonMap);
+                    if (value.jsonData.isNotEmpty &&
+                        value.jsonData['error'] == null) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MyOrderDetails(values: widget.values),
+                        ),
+                      );
+                    }
                   })
                 ],
               ),

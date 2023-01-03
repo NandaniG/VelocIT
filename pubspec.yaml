@@ -89,6 +89,7 @@ flutter:
   assets:
     - assets/images/
     - assets/appImages/
+    - assets/appImages/bottomApp/
     - assets/icons/
     - assets/jsonData.json
 

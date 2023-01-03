@@ -176,7 +176,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     _start != 0
                         ? Center(
                       child: Text(
-                        _start.toString(),
+                    formatHHMMSS(  _start),
                         style: TextStyle(
                             color: ThemeApp.primaryNavyBlackColor,
                             fontWeight: FontWeight.w400,
@@ -189,7 +189,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         child: InkWell(
                           onTap: () {
                             setState(() {
-                              _start = 90;
+                              _start = 120;
                               isLoading = true;
                               startTimer();
                             });
@@ -244,7 +244,17 @@ class _OTPScreenState extends State<OTPScreen> {
           ),
         ));
   }
+  String formatHHMMSS(int seconds) {
+    // int hours = (seconds / 3600).truncate();
+    seconds = (seconds % 3600).truncate();
+    int minutes = (seconds / 60).truncate();
 
+    // String hoursStr = (hours).toString().padLeft(2, '0');
+    String minutesStr = (minutes).toString().padLeft(2, '0');
+    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+
+    return "$minutesStr:$secondsStr";
+  }
   void startTimer() {
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(

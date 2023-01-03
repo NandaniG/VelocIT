@@ -187,7 +187,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       "qty": quantity.toString()
     };
     print("update cart DATA" + data.toString());
-    CartRepository().updateCartPostRequest(data, context);
 
     for (int i = 0; i < value!.length; i++) {
       StringConstant.BadgeCounterValue =
@@ -195,7 +194,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       print("Badge,.......in for." + StringConstant.BadgeCounterValue);
     }
     setState(() {
-      StringConstant.BadgeCounterValue =
+      CartRepository().updateCartPostRequest(data, context);
+      getCartId();
+    StringConstant.BadgeCounterValue =
           (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
     });
@@ -252,7 +253,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     ),
                   ),
                 )
-              : PreferredSize(
+              :
+
+          appBar_backWidget(
+              context, appTitle(context, "My Cart"), SizedBox()) /* PreferredSize(
                   preferredSize: Size.fromHeight(height * .09),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -285,7 +289,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       // Row
                     ),
                   ),
-                );
+                )*/;
         }),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -437,7 +441,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                     left: 15, right: 15),
                                                 child: TextFieldUtils()
                                                     .usingPassTextFields(
-                                                        "Place Order",
+                                                        "Checkout",
                                                         ThemeApp
                                                             .tealButtonColor,
                                                         context))),
@@ -614,7 +618,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    cartProductList(orderPurchaseList),
+                                    cartProductList(orderPurchaseList),SizedBox(height: 10,),
                                     priceDetails(cartProvider
                                         .cartSpecificID.data!.payload!),
                                   ],
@@ -638,16 +642,16 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
     return Container(
-        // height: orderPurchaseList!.length == 1
-        //     ? MediaQuery.of(context).size.height * .5
-        //     : MediaQuery.of(context).size.height * .6,
+        height: orderPurchaseList!.length == 1
+            ? MediaQuery.of(context).size.height * .45
+            : MediaQuery.of(context).size.height * .6,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            // physics: orderPurchaseList.length == 1
-            //     ? NeverScrollableScrollPhysics()
-            //     : ScrollPhysics(),
-            physics: NeverScrollableScrollPhysics(),
+            physics: orderPurchaseList.length == 1
+                ? NeverScrollableScrollPhysics()
+                : ScrollPhysics(),
+            // physics: NeverScrollableScrollPhysics(),
             itemCount: orderPurchaseList!.length,
             itemBuilder: (BuildContext context, int index) {
               return orderPurchaseList.isEmpty
@@ -707,14 +711,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                       children: [
                                         TextFieldUtils().appBarTextField(
                                             orderPurchaseList[index]
-                                                .itemName
+                                                .oneliner
                                                 .toString(),
                                             context),
                                         // SizedBox(
                                         //   height: height * .005,
                                         // ),
-                                        rattingBar(
-                                            orderPurchaseList[index], index),
+                                      /*  rattingBar(
+                                            orderPurchaseList[index], index),*/
                                         SizedBox(
                                           height: height * .01,
                                         ),
@@ -781,7 +785,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           children: [
             RatingBar.builder(
               itemSize: height * .022,
-              initialRating: value.itemRating!,
+              initialRating: value.productRating!,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
@@ -810,21 +814,26 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-              "${indianRupeesFormat.format(double.parse(value.itemOfferPrice.toString()))}",
+          value.offer.toString().isNotEmpty?   Text(
+              "${indianRupeesFormat.format(double.parse(value.offer.toString())??0.0)??"0.0"}",
               style: TextStyle(
                   color:
                   ThemeApp.blackColor,
                   fontSize: height * .028,
                   letterSpacing: 0.2,
                   fontWeight:
-                  FontWeight.w700)),
+                  FontWeight.w700)):Text('0.0', style: TextStyle(
+          color:
+          ThemeApp.blackColor,
+          fontSize: height * .028,
+          letterSpacing: 0.2,
+          fontWeight:
+          FontWeight.w700)),
           SizedBox(
             width: width * .02,
           ),
-          Text(
-              indianRupeesFormat
-                  .format(double.parse(value.itemMrpPrice.toString())),
+          value.mrp.toString().isNotEmpty?  Text(
+              "${indianRupeesFormat.format(double.parse(value.mrp.toString())??0.0)??"0.0"}",
               style: TextStyle(
                   color:
                   ThemeApp.lightFontColor,
@@ -832,12 +841,19 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   decoration: TextDecoration.lineThrough,
                   letterSpacing: 0.2,
                   fontWeight:
-                  FontWeight.w700)),
+                  FontWeight.w700)):Text('0.0', style: TextStyle(
+              color:
+              ThemeApp.lightFontColor,
+              fontSize: height * .022,
+              decoration: TextDecoration.lineThrough,
+              letterSpacing: 0.2,
+              fontWeight:
+              FontWeight.w700)),
           SizedBox(
             width: width * .02,
           ),
           Text(
-              value.itemDiscountPercent.toString() + "% Off", style: TextStyle(
+              value.discountPercent.toString() + "% Off", style: TextStyle(
               color:
               ThemeApp.blackColor,
               fontSize: height * .02,
@@ -874,13 +890,16 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   onTap: () {
                     setState(() {
                       // minusQuantity(value![index], index);
-                      if (value![index].itemQty > 1) {
-                        value![index].itemQty--;
+                      if (value![index].itemQty! > 1) {
+
+                        value[index].itemQty=(value[index].itemQty! -1);
+                        // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
                         updateCart(
                             value,
                             value[index].merchantId,
                             value[index].itemQty,
-                            value[index].productItemId.toString());
+                            value[index].productId.toString());
+
                         StringConstant.BadgeCounterValue =
                             value!.length.toString() +
                                 value![index].itemQty.toString();
@@ -900,7 +919,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                         value,
                                         value[index].merchantId,
                                         0,
-                                        value[index].productItemId.toString());
+                                        value[index].productId.toString());
 
                                     value.removeAt(index);
                                     Navigator.pop(context);
@@ -940,13 +959,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      value![index].itemQty++;
+                      value![index].itemQty=value![index].itemQty! +1;
                       // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
                       updateCart(
                           value,
                           value[index].merchantId,
                           value[index].itemQty,
-                          value[index].productItemId.toString());
+                          value[index].productId.toString());
                     });
                   },
                   child: Padding(
@@ -966,7 +985,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             print(
                 "value[index].merchantId" + value[index].merchantId.toString());
             updateCart(value, value[index].merchantId, 0,
-                value[index].productItemId.toString());
+                value[index].productId.toString());
             value.removeAt(index);
           },
           child: SvgPicture.asset(

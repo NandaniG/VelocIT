@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/Core/data/network/baseApiServices.dart';
 import 'package:velocit/Core/data/network/networkApiServices.dart';
+import 'package:velocit/pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
+import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 
 import '../../pages/screens/dashBoard.dart';
 import '../../utils/constants.dart';
@@ -69,6 +71,7 @@ class AuthRepository {
 
     Map<String, dynamic> map = jsonDecode(rawJson);
     int id = map['id'];
+    String message = map['message'];
 
     if (response.statusCode == 200) {
       print(responseJson.toString());
@@ -87,12 +90,29 @@ class AuthRepository {
       StringConstant.isLogIn = true;
       Utils.successToast(id.toString());
 
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => DashboardScreen()));
-    } else {
-      Utils.errorToast("System is busy, Please try after sometime.");
-    }
 
+   StringConstant.isUserNavigateFromDetailScreen= (prefs.getString('isUserNavigateFromDetailScreen'))??"";
+      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+      
+      if(StringConstant.isUserNavigateFromDetailScreen=='Yes') {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => OrderReviewActivity(cartId: int.parse(StringConstant.UserCartID))));
+        print("StringConstant.isUserNavigateFromDetailScreen"+StringConstant.isUserNavigateFromDetailScreen);
+
+      }else{
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => DashboardScreen()));
+        print("StringConstant.isUserNavigateFromDetailScreen"+StringConstant.isUserNavigateFromDetailScreen);
+      }
+    } else {
+      Utils.errorToast("Please enter valid details.");
+
+      // Utils.errorToast("System is busy, Please try after sometime.");
+    }
+    // if(message == "Bad credentials"){
+    //   // Utils.errorToast("Please enter valid Details.");
+    //
+    // }
     httpClient.close();
     return responseJson;
   }

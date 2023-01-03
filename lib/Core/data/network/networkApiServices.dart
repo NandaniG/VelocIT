@@ -15,11 +15,11 @@ class NetworkApiServices extends BaseApiServices {
     try {
       final client = http.Client();
       final response =
-      await client.get(Uri.parse(url)).timeout(Duration(seconds: 30));
+          await client.get(Uri.parse(url)).timeout(Duration(seconds: 30));
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
-    }catch(e){
+    } catch (e) {
       print("Error on Get : " + e.toString());
     }
     return responseJson;
@@ -30,17 +30,17 @@ class NetworkApiServices extends BaseApiServices {
     dynamic responseJson;
     try {
       final client = http.Client();
-       const Map<String, String> _JSON_HEADERS = {
-        "content-type": "application/json"
-      };
-      Response response = await client.post(Uri.parse(url), body: data, headers: _JSON_HEADERS).timeout(
-          Duration(seconds: 30));
+      var headers = {'Content-Type': 'application/json'};
+
+      Response response = await client.post(Uri.parse(url),
+          body: data,
+          headers:headers).timeout(Duration(seconds: 30));
 
       responseJson = returnResponse(response);
       print("get data");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
-    }catch(e){
+    } catch (e) {
       print("Error on post: " + e.toString());
     }
     return responseJson;
@@ -53,18 +53,22 @@ class NetworkApiServices extends BaseApiServices {
       final client = http.Client();
       String body = json.encode(data);
 
-      Response response = await client.put(Uri.parse(url), body: body,headers: {'content-type': 'application/json'}).timeout(
-          Duration(seconds: 30));
+      Response response = await client.put(Uri.parse(url),
+          body: body,
+          headers: {
+            'content-type': 'application/json'
+          }).timeout(Duration(seconds: 30));
 
       responseJson = returnResponse(response);
-      print("responseJson..$url........"+responseJson.toString());
+      print("responseJson..$url........" + responseJson.toString());
     } on SocketException {
       throw FetchDataException('No Internet Connection');
-    }catch(e){
+    } catch (e) {
       print("Error on put: " + e.toString());
     }
     return responseJson;
   }
+
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
@@ -77,9 +81,36 @@ class NetworkApiServices extends BaseApiServices {
       // throw  Utils.errorToast("System is busy, Please try after sometime.");
 
       default:
-        throw  Utils.errorToast("System is busy, Please try after sometime.");
-
+        throw Utils.errorToast("System is busy, Please try after sometime.");
     }
   }
 
+  @override
+  Future getGetApiResponseWithBody(String url, jsonMap) async {
+    // TODO: implement getGetApiResponseWithBody
+
+    dynamic responseJson;
+    try {
+      var headers = {'Content-Type': 'application/json'};
+      final request = http.Request('GET', Uri.parse(url));
+      request.body = json.encode(jsonMap);
+      request.headers.addAll(headers);
+      final response = await request.send();
+      switch (response.statusCode) {
+        case 200:
+          var responseJson = await response.stream.bytesToString();
+          return responseJson;
+        case 400:
+          throw Utils.errorToast("System is busy, Please try after sometime.");
+        case 500:
+        case 404:
+          throw Utils.errorToast("System is busy, Please try after sometime.");
+        default:
+          throw Utils.errorToast("System is busy, Please try after sometime.");
+      }
+    } on SocketException {
+      throw Utils.errorToast("System is busy, Please try after sometime.");
+    }
+    throw UnimplementedError();
+  }
 }

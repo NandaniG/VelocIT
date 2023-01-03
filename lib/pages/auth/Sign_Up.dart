@@ -43,7 +43,7 @@ class _SignUpState extends State<SignUp> {
   bool _validateConfirmPassword = false;
   double height = 0.0;
   double width = 0.0;
-
+   bool isTermSelected = false;
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -208,7 +208,25 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .02,
                     ),
-
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: isTermSelected,
+                          onChanged: (values) {
+                            setState(() {
+                              isTermSelected= values!;
+                            });
+                          },
+                        ),
+                        TextFieldUtils().dynamicText(
+                         'Accept terms of use',
+                            context,
+                            TextStyle(
+                                color:ThemeApp.blackColor,
+                                fontSize: height * .018,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .02,
                     ),

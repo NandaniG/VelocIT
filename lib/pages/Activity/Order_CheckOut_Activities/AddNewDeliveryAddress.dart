@@ -87,10 +87,8 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 height: height * .11,
                 width: width,
                 decoration: const BoxDecoration(
-                  color: ThemeApp.whiteColor,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15)),
+                  color: ThemeApp.appBackgroundColor,
+
                 ),
               ),
               leading: Transform.scale(
@@ -101,17 +99,21 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                       })),
 
               leadingWidth: 10,
-              title: Container(
-                  alignment: Alignment.centerLeft,
-                  child: TextFieldUtils().textFieldHeightThree(
-                      "Add New Delivery Address", context)),
+              title: TextFieldUtils().dynamicText(
+                  "Add New Delivery Address",
+                  context,
+                  TextStyle(
+                      color: ThemeApp.blackColor,
+                      // fontWeight: FontWeight.w500,
+                      fontSize:14,
+                      fontWeight: FontWeight.w700))
               // Row
             ),
           ),
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 40),
             child: Container(
               width: width,
               // alignment: Alignment.center,
@@ -120,7 +122,6 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               padding: const EdgeInsets.all(20),
-              // padding: const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 40),
               child: mainUi(),
             ),
           ),
@@ -158,7 +159,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   StringUtils.mobileNumber,
                   context),
               MobileNumberTextFormField(
-                  controller: mobileController, enable: true),
+                  controller: mobileController, enable: true,),
               SizedBox(
                 height: height * .02,
               ),
@@ -317,7 +318,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                         "state_name":stateController.text,
                         "address_type":selectedAddressIs,
                         "pincode": pincodeController.text,
-                        "contact_number":mobileController.text,
+                        "contact_number":"+91 " +mobileController.text,
                         "latitude":24.2342525,
                         "longitude":52.2342523
                       };

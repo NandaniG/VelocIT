@@ -108,7 +108,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                       height: height * .02,
                     ),
                     TextFieldUtils()
-                        .listHeadingTextField('Book our Services', context),
+                        .listHeadingTextField('Shop by Categories', context),
                     SizedBox(
                       height: height * .02,
                     ),
@@ -268,7 +268,149 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
               : const Center(child: CircularProgressIndicator());
         });
   }
+  Widget subListOfCategories(ProductList productList) {
+    return Container(
+        height: 100,
+        alignment: Alignment.center,
+        color: ThemeApp.whiteColor,
+        child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: productList!.simpleSubCats!.length,
+          itemBuilder: (BuildContext context, int index) {
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProductListByCategoryActivity(
+                      productList: productList!.simpleSubCats![index]),
+                ));
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+                child: Container(
+                    width: width * .25,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: ThemeApp.containerColor, width: 1.5),
+                        color: ThemeApp.containerColor),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(productList
+                                .simpleSubCats![index].imageUrl!),
+                          ) ??
+                              SizedBox(),
+                          /* ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(50)),
+                          child: Image.network(
+                            productList.simpleSubCats![index]
+                                .imageUrl! ??
+                                '',
+                            fit: BoxFit.fill,
+                            height:
+                            MediaQuery.of(context).size.height *
+                                .07,
+                          )??SizedBox(),
+                        ),*/
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: TextFieldUtils().dynamicText(
+                                productList.simpleSubCats![index].name!,
+                                context,
+                                TextStyle(
+                                  color: ThemeApp.blackColor,
+                                  // fontWeight: FontWeight.w500,
+                                  fontSize: height * .02,
+                                )),
+                          ),
+                        )
+                      ],
+                    )),
+              ),
+            );
+          },
+        ));
 
+    /*Container(
+        height: 200,
+        alignment: Alignment.center,color: ThemeApp.whiteColor,
+        child: GridView.builder(
+          itemCount: productList!.simpleSubCats!.length,
+          physics: const AlwaysScrollableScrollPhysics(),
+          gridDelegate:
+          const SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1.5,
+            crossAxisCount: 3,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProductListByCategoryActivity(
+                      productList: productList!.simpleSubCats![index]),
+                ));
+              },
+              child: Container(
+                  padding: const EdgeInsets.all(3.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: ThemeApp.containerColor,
+                        width: 1.5),color: ThemeApp.containerColor
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(50)),
+                          child: Image.network(
+                            productList.simpleSubCats![index]
+                                .imageUrl! ??
+                                '',
+                            fit: BoxFit.fill,
+                            height:
+                            MediaQuery.of(context).size.height *
+                                .07,
+                          )??SizedBox(),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: TextFieldUtils().dynamicText(
+                              productList.simpleSubCats![index].name!,
+                              context,
+                              TextStyle(
+                                color: ThemeApp.blackColor,
+                                // fontWeight: FontWeight.w500,
+                                fontSize: height * .02,
+                              )),
+                        ),
+                      )
+                    ],
+                  )),
+            );
+          },
+        ));*/
+  }
+
+/*
   Widget subListOfCategories(ProductList productList) {
     return Container(
         height: 230,
@@ -337,6 +479,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
           },
         ));
 
+*/
 /*
     return ChangeNotifierProvider<ProductSpecificListViewModel>(
         value:  productViewModel,
@@ -410,7 +553,9 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                                       // fontWeight: FontWeight.w500,
                                       fontSize: height * .02,
                                     )),
-                                */
+                                *//*
+
+*/
 /*  Expanded(
                                         flex: 1,
                                         child: Container(
@@ -440,7 +585,9 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                                               // fontWeight: FontWeight.w500,
                                               fontSize: height * .02,
                                             )),
-                                      )*/ /*
+                                      )*//*
+ */
+/*
 
                               ],
                             ),
@@ -451,6 +598,8 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
           }
     )
     );
-*/
+*//*
+
   }
+*/
 }

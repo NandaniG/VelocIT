@@ -10,6 +10,9 @@ import 'package:another_flushbar/flushbar_route.dart';
 import 'package:velocit/utils/styles.dart';
 
 class Utils {
+
+
+
   static void fieldFocusChange(
       BuildContext context, FocusNode current, FocusNode nextFocus) {
     current.unfocus();

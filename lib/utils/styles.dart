@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ThemeApp {
   static const appColor =  Color(0xff00A7BF);
+  static const appLightColor =  Color(0xff75E4ED);
   static const appBackgroundColor =  Color(0xffE3FCFF);
   static const innerBoxesColor =  Color(0xffCFF9FF);
   static const primaryNavyBlackColor =  Color(0xff0C1A30);
@@ -45,18 +46,18 @@ class ThemeApp {
 }
 Map<int, Color> materialColors =
 {
-  50:Color.fromRGBO(135, 134, 134, 1),
-  100:Color.fromRGBO(135, 134, 134, 1),
-  200:Color.fromRGBO(135, 134, 134, 1),
-  300:Color.fromRGBO(135, 134, 134, 1),
-  400:Color.fromRGBO(135, 134, 134, 1),
-  500:Color.fromRGBO(135, 134, 134, 1),
-  600:Color.fromRGBO(135, 134, 134, 1),
-  700:Color.fromRGBO(135, 134, 134, 1),
-  800:Color.fromRGBO(135, 134, 134, 1),
-  900:Color.fromRGBO(135, 134, 134, 1),
+  50:Color.fromRGBO(0, 167, 191, 1),
+  100:Color.fromRGBO(0, 167, 191, 1),
+  200:Color.fromRGBO(0, 167, 191, 1),
+  300:Color.fromRGBO(0, 167, 191, 1),
+  400:Color.fromRGBO(0, 167, 191, 1),
+  500:Color.fromRGBO(0, 167, 191, 1),
+  600:Color.fromRGBO(0, 167, 191, 1),
+  700:Color.fromRGBO(0, 167, 191, 1),
+  800:Color.fromRGBO(0, 167, 191, 1),
+  900:Color.fromRGBO(0, 167, 191, 1),
 };
-MaterialColor colorCustomForMaterialApp = MaterialColor(0xFF0eded, materialColors);
+MaterialColor colorCustomForMaterialApp = MaterialColor(0xff00A7BF, materialColors);
 
 
 titlefontSize(BuildContext context) {

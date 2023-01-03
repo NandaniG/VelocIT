@@ -25,6 +25,7 @@ import '../../Core/ViewModel/dashboard_view_model.dart';
 import '../../Core/ViewModel/product_listing_view_model.dart';
 import '../../Core/data/responses/status.dart';
 import '../../Core/repository/cart_repository.dart';
+import '../../pages/Activity/Merchant_Near_Activities/merchant_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
@@ -386,7 +387,8 @@ Widget appBar_backWidget(
               color: ThemeApp.appBackgroundColor,
             ),
           ),
-          titleSpacing: 10,
+
+          titleSpacing: 1,
           leading: InkWell(
             onTap: () {
               Navigator.of(context).pop();
@@ -414,8 +416,16 @@ Widget appBar_backWidget(
 
 Widget appTitle(BuildContext context, String text) {
   return Container(
-      alignment: Alignment.centerLeft,
-      child: TextFieldUtils().textFieldHeightThree(text, context));
+    alignment: Alignment.centerLeft,
+    child: TextFieldUtils().dynamicText(
+        text,
+        context,
+        TextStyle(
+            color: ThemeApp.blackColor,
+            // fontWeight: FontWeight.w500,
+            fontSize: MediaQuery.of(context).size.height * .022,
+            fontWeight: FontWeight.w500)),
+  );
 }
 
 //codeElan.velocIT
@@ -428,7 +438,7 @@ Widget searchBar(BuildContext context) {
   productCategories.productCategoryListingWithGet();
 
   return ChangeNotifierProvider<DashboardViewModel>.value(
-    value:  productCategories,
+    value: productCategories,
     child: Consumer<DashboardViewModel>(
         builder: (context, dashBoardProvider, child) {
       return Consumer<HomeProvider>(builder: (context, provider, child) {
@@ -608,7 +618,10 @@ Widget addressWidget(BuildContext context, String addressString) {
                 final prefs = await SharedPreferences.getInstance();
                 StringConstant.FINALPINCODE =
                     (prefs.getString('CurrentPinCodePref') ?? '');
-                print("StringConstant.CurrentPinCode");
+                print("StringConstant.CurrentPinCode" +
+                    StringConstant.FINALPINCODE);
+                print("StringConstant.CurrentPinCode" +
+                    StringConstant.CurrentPinCode);
                 // controller.getCurrentLocation();
               },
               child: Icon(
@@ -622,12 +635,12 @@ Widget addressWidget(BuildContext context, String addressString) {
             ),
             SizedBox(
               child: TextFieldUtils().dynamicText(
-                  "Deliver to - ${StringConstant.FINALPINCODE.toString()} ",
+                  "Deliver to - ${StringConstant.FINALPINCODE.toString().isEmpty ? StringConstant.CurrentPinCode.toString() : StringConstant.FINALPINCODE} ",
                   context,
                   TextStyle(
                       color: ThemeApp.tealButtonColor,
-                      fontSize: height * .022,
-                      fontWeight: FontWeight.bold)),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400)),
             ),
             //Text(StringConstant.placesFromCurrentLocation),
             SizedBox(
@@ -646,23 +659,6 @@ Widget addressWidget(BuildContext context, String addressString) {
   );
 }
 
-final List _tabIcons = List.unmodifiable([
-  {'icon': 'assets/icons/home.png'},
-  {'icon': 'assets/icons/percentage.png'},
-  {'icon': 'assets/icons/percentage.png'},
-  {'icon': 'assets/icons/shop.png'},
-  {'icon': 'assets/icons/shopping-cart.png'},
-]);
-
-final List<Widget> _tabs = List.unmodifiable([
-  // SearchList(),
-  const DashboardScreen(),
-  const OfferActivity(),
-  Container(),
-  Container(),
-  Container(),
-]);
-
 Widget bottomNavBarItems(BuildContext context) {
   (() {
     final dashBoardData =
@@ -678,6 +674,8 @@ Widget bottomNavBarItems(BuildContext context) {
       return Consumer<DashboardViewModel>(
           builder: (context, productCategories, child) {
         return BottomNavigationBar(
+
+
           backgroundColor: ThemeApp.whiteColor,
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
@@ -706,11 +704,19 @@ Widget bottomNavBarItems(BuildContext context) {
             }
             if (_currentIndex == 3) {
               // final dashBoardData = Provider.of<DashboardViewModel>(context, listen: false).productCategoryList;
-              List<ProductList>? serviceListss;
+              // List<ProductList>? serviceListss;
               // colors = ThemeApp.blackColor;
-              List<ProductList>? serviceList =
-                  productCategories.productCategoryList.data!.productList;
+              // List<ProductList>? serviceList =
+              //     productCategories.productCategoryList.data!.productList;
               Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MerchantActvity(
+                        merchantList: provider.merchantNearYouList[1]),
+                  ),
+                  (route) => false);
+
+              /*    Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ShopByCategoryActivity(
@@ -719,7 +725,7 @@ Widget bottomNavBarItems(BuildContext context) {
                         // provider.jsonData["shopByCategoryList"],
                         shopByCategorySelected: 0),
                   ),
-                  (route) => false);
+                  (route) => false);*/
             }
             /*      if (_currentIndex == 4) {
               if (StringConstant.isLogIn == true) {
@@ -743,42 +749,79 @@ Widget bottomNavBarItems(BuildContext context) {
               provider.isBottomAppCart = true;
               provider.isHome = true;
 
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CartDetailsActivity(
-                         /* value: product,
-                          productList: provider.cartProductList*/)),
-                  (route) => false);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CartDetailsActivity(
+                        /* value: product,
+                          productList: provider.cartProductList*/
+                        )),
+              );
             }
           },
+
           items: [
             BottomNavigationBarItem(
                 backgroundColor: Colors.white,
                 icon: _currentIndex == 0
                     ? Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/home.png', height: 30),
-                      )
+                      padding: const EdgeInsets.only(bottom: 3),
+                      child: SvgPicture.asset(
+                  'assets/appImages/bottomApp/homeIcon.svg',
+                  color: ThemeApp.appColor,
+                  semanticsLabel: 'Acme Logo',
+                  theme: SvgTheme(
+                      currentColor: ThemeApp.appColor,
+                  ),
+                  height: 21,
+                  width: 21,
+                ),
+                    )
                     : Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/home.png', height: 30),
-                      ),
-                label: ''),
+                  padding: const EdgeInsets.only(bottom: 3),
+                      child: SvgPicture.asset(
+                  'assets/appImages/bottomApp/homeIcon.svg',
+                  color: ThemeApp.appColor,
+                  semanticsLabel: 'Acme Logo',
+                  theme: SvgTheme(
+                      currentColor: ThemeApp.appColor,
+                  ),
+                  height: 21,
+                  width: 21,
+                ),
+                    ),
+                label:'HOME',
+            ),
             BottomNavigationBarItem(
                 backgroundColor: Colors.white,
                 icon: _currentIndex == 1
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/percentage.png',
-                            height: 30),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/percentage.png',
-                            height: 30),
-                      ),
-                label: ''),
+                    ?  Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                      child: SvgPicture.asset(
+                  'assets/appImages/bottomApp/offerIcon.svg',
+                  color: ThemeApp.appColor,
+                  semanticsLabel: 'Acme Logo',
+                  theme: SvgTheme(
+                      currentColor: ThemeApp.appColor,
+                  ),
+                  height: 21,
+                  width: 21,
+                ),
+                    )
+                    :   Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                      child: SvgPicture.asset(
+                  'assets/appImages/bottomApp/offerIcon.svg',
+                  color: ThemeApp.appColor,
+                  semanticsLabel: 'Acme Logo',
+                  theme: SvgTheme(
+                      currentColor: ThemeApp.appColor,
+                  ),
+                  height: 21,
+                  width: 21,
+                ),
+                    ),
+                label: 'OFFER',),
             BottomNavigationBarItem(
                 backgroundColor: Colors.white,
                 icon: _currentIndex == 2
@@ -794,70 +837,56 @@ Widget bottomNavBarItems(BuildContext context) {
             BottomNavigationBarItem(
                 backgroundColor: Colors.white,
                 icon: _currentIndex == 3
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/shop.png', height: 30),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Image.asset('assets/icons/shop.png', height: 30),
-                      ),
-                label: ''),
+                    ?   Padding(
+                      padding: const EdgeInsets.only(bottom: 3),
+                      child: SvgPicture.asset(
+            'assets/appImages/bottomApp/shopIcon.svg',
+            color: ThemeApp.appColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+            currentColor: ThemeApp.appColor,
+            ),
+            height: 21,
+            width: 21,
+            ),
+                    )
+                    :  SvgPicture.asset(
+                  'assets/appImages/bottomApp/shopIcon.svg',
+                  color: ThemeApp.appColor,
+                  semanticsLabel: 'Acme Logo',
+                  theme: SvgTheme(
+                    currentColor: ThemeApp.appColor,
+                  ),
+                  height: 21,
+                  width: 21,
+                ),
+                label: 'SHOP'),
             BottomNavigationBarItem(
                 backgroundColor: Colors.white,
-                icon: /*_currentIndex == 4
-                    ?  Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(100),
-                          ),
-                          child: */ /*Icon(Icons.account_circle_rounded,
-                              size:
-                                  40) */ /*
-                          Container(
-                      alignment: Alignment.center,
-                      child: Image.asset(
-                        'assets/appImages/shoppingCart.png',
-                        // width: double.infinity,
-                        // height: height * .11,
-                        color: ThemeApp.primaryNavyBlackColor,
-                        fit: BoxFit.fill,
-                      ),)
-                          ,
-                        ),
-                      )
-                    :  Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(100),
-                          ),
-                          child:*/ /* Icon(Icons.account_circle_rounded,
-                              size:
-                                  40) */ /*Image.asset(
-                                    'assets/appImages/shoppingCart.png',
-                                    // width: double.infinity,
-                                    // height: height * .11,
-                                    color: ThemeApp.primaryNavyBlackColor,
-                                    fit: BoxFit.fill,
-                                  ),
-
-                        ),
-                      ),*/
+                icon:
                     Stack(
                   children: <Widget>[
                     _currentIndex == 4
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Image.asset('assets/icons/shopping-cart.png',
-                                height: 35),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Image.asset('assets/icons/shopping-cart.png',
-                                height: 35),
-                          ),
+                        ? SvgPicture.asset(
+            'assets/appImages/bottomApp/cartIcons.svg',
+            color: ThemeApp.appColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+            currentColor: ThemeApp.appColor,
+            ),
+            height: 21,
+            width: 21,
+            )
+                        : SvgPicture.asset(
+                      'assets/appImages/bottomApp/cartIcons.svg',
+                      color: ThemeApp.appColor,
+                      semanticsLabel: 'Acme Logo',
+                      theme: SvgTheme(
+                        currentColor: ThemeApp.appColor,
+                      ),
+                      height: 21,
+                      width: 21,
+                    ),
                     StringConstant.BadgeCounterValue == '0' ||
                             StringConstant.BadgeCounterValue == ''
                         ? SizedBox()
@@ -891,7 +920,7 @@ Widget bottomNavBarItems(BuildContext context) {
                           )
                   ],
                 ),
-                label: ''),
+                label: 'CART'),
           ],
         );
       });
@@ -902,6 +931,7 @@ Widget bottomNavBarItems(BuildContext context) {
 Widget bottomNavigationBarWidget(BuildContext context) {
   final controller = BarcodeFinderController();
   return Stack(
+    // alignment: const FractionalOffset(.5, 1.0),
     alignment: const FractionalOffset(.5, 1.0),
     children: [
       bottomNavBarItems(context),
@@ -913,6 +943,7 @@ Widget bottomNavigationBarWidget(BuildContext context) {
           child: FloatingActionButton(
             backgroundColor: ThemeApp.appColor,
             onPressed: () {
+              StringConstant().scanQR(context);
               // scanQRCode();
               // scanFile();
               // Navigator.of(context).push(
@@ -920,12 +951,13 @@ Widget bottomNavigationBarWidget(BuildContext context) {
               //     builder: (context) => StepperScreen(),
               //   ),
               // );
-              showModalBottomSheet(
-                  isDismissible: true,
-                  context: context,
-                  builder: (context) {
-                    return ScannerWidget(state: controller.state);
-                  });
+
+              // showModalBottomSheet(
+              //     isDismissible: true,
+              //     context: context,
+              //     builder: (context) {
+              //       return ScannerWidget(state: controller.state);
+              //     });
             },
             child: const Icon(Icons.document_scanner_outlined,
                 color: ThemeApp.whiteColor),

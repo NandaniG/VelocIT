@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -167,88 +168,9 @@ class _MerchantActvityState extends State<MerchantActvity> {
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-    preferredSize: Size.fromHeight(height * .19),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        appBarWidget(context, searchBar(context), addressWidget(context,StringConstant.placesFromCurrentLocation),
-            setState(() {})),
-        Container(
-          color: ThemeApp.whiteColor,
-          width: width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 20,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      child: TextFieldUtils().titleTextFields(
-                          StringUtils.gridView, context),
-                    ),
-                    Transform.scale(
-                      scale: 1.3,
-                      child: Switch(
-                        // This bool value toggles the switch.
-                        value: isGridView,
-                        activeColor: ThemeApp.darkGreyTab,
-                        inactiveTrackColor: ThemeApp.textFieldBorderColor,
-                        inactiveThumbColor: ThemeApp.darkGreyTab,
-                        onChanged: (bool value) {
-                          // This is called when the user toggles the switch.
-                          setState(() {
-                            isGridView = value;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                      child: TextFieldUtils().titleTextFields(
-                          StringUtils.mapView, context),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                height: height * .07,
-                child: IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const VerticalDivider(
-                        color: ThemeApp.textFieldBorderColor,
-                        thickness: 1,
-                      ),
-                      InkWell(
-                        onTap: (){
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const Merchant_FilterScreen(),
-                            ),
-                          );
-
-                        },
-                        child: Container(
-                            padding: const EdgeInsets.only(
-                              left: 20,
-                              right: 20,
-                            ),
-                            child: const Icon(Icons.filter_alt_outlined, size: 30)),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        )
-      ],
-    ),
+    preferredSize: Size.fromHeight(height * .12),
+    child: appBarWidget(context, searchBar(context), addressWidget(context,StringConstant.placesFromCurrentLocation),
+        setState(() {})),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -256,9 +178,92 @@ class _MerchantActvityState extends State<MerchantActvity> {
       body: SafeArea(
         child: Container(
         height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        child: Stack(
-          children: [
+        child: ListView(
+          children: [    Container(
+            color: ThemeApp.whiteColor,
+            width: width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                  ),
+                  child: Row(
+                    children: [
+                      TextFieldUtils().dynamicText(
+                          StringUtils.gridView,
+                          context,
+                          TextStyle(
+                            color: ThemeApp.blackColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: height * .02,
+                          )),
+                      Transform.scale(
+                        scale: 1.1,
+                        child: Switch(
+                          // This bool value toggles the switch.
+                          value: isGridView, activeColor: ThemeApp.appColor,
+                          inactiveTrackColor: ThemeApp.appColor,
+
+                          inactiveThumbColor: ThemeApp.whiteColor,
+                          onChanged: (bool value) {
+                            // This is called when the user toggles the switch.
+                            setState(() {
+                              isGridView = value;
+                            });
+                          },
+                        ),
+                      ),   TextFieldUtils().dynamicText(
+                          StringUtils.mapView,
+                          context,
+                          TextStyle(
+                            color: ThemeApp.blackColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: height * .02,
+                          )),
+
+                    ],
+                  ),
+                ),
+                Container(
+                  height: height * .07,
+                  child: IntrinsicHeight(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const VerticalDivider(
+                          color: ThemeApp.textFieldBorderColor,
+                          thickness: 1,
+                        ),
+                        InkWell(
+                            onTap: (){
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const Merchant_FilterScreen(),
+                                ),
+                              );
+
+                            },
+                            child:  Padding(
+                              padding: const EdgeInsets.fromLTRB(10,2,10,2),
+                              child: SvgPicture.asset(
+                                'assets/appImages/filterIcon.svg',
+                                color: ThemeApp.primaryNavyBlackColor,
+                                semanticsLabel: 'Acme Logo',
+                                theme: SvgTheme(
+                                  currentColor: ThemeApp.primaryNavyBlackColor,
+                                ),
+                                height: height * .03,
+                              ),))
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
             !isGridView ? budgetBuyList() : mapView(),            SizedBox(
               height: MediaQuery.of(context).size.height * .02,
             ),
@@ -272,134 +277,148 @@ class _MerchantActvityState extends State<MerchantActvity> {
     var orientation =
         (MediaQuery.of(context).orientation == Orientation.landscape);
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: Container(        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
 
-          // Text(servicestatus? "GPS is Enabled": "GPS is disabled."),
-          // Text(haspermission? "GPS is Enabled": "GPS is disabled."),
-          //
-          // Text("Longitude: $long", style:TextStyle(fontSize: 20)),
-          // Text("Latitude: $lat", style: TextStyle(fontSize: 20),),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-          TextFieldUtils().listHeadingTextField(
-              StringUtils.merchantNearYou, context),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * .02,
-          ),
+            // Text(servicestatus? "GPS is Enabled": "GPS is disabled."),
+            // Text(haspermission? "GPS is Enabled": "GPS is disabled."),
+            //
+            // Text("Longitude: $long", style:TextStyle(fontSize: 20)),
+            // Text("Latitude: $lat", style: TextStyle(fontSize: 20),),
+            TextFieldUtils().dynamicText(
+                StringUtils.merchantNearYou,
+                context,
+                TextStyle(
+                  color: ThemeApp.blackColor,
+                  fontWeight: FontWeight.w400,
+                  fontSize: height * .025,
+                )),
 
-                Container(
-                        height: MediaQuery.of(context).size.height,
-                        // padding: EdgeInsets.all(12.0),
-                        child: GridView.builder(
-                          itemCount: widget.merchantList["subMerchantList"].length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  // childAspectRatio: 3 / 3.1,
-                                  childAspectRatio: orientation
-                                      ? width * 3.2 / height * 0.5
-                                      : width * 2 / height * 1,
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10),
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                                height:
-                                    orientation ? height * 26 : height * .17,
-                                // MediaQuery.of(context).size.height * .26,
-                                width: MediaQuery.of(context).size.width * .45,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.darkGreyTab,
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10))),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Stack(
-                                      alignment: Alignment.topRight,
-                                      children: [
-                                        Container(
-                                          height: orientation
-                                              ? height * .25
-                                              : MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .17,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          decoration: const BoxDecoration(
-                                              color: ThemeApp.whiteColor,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .02,
+            ),
+
+                  Container(
+                          height: MediaQuery.of(context).size.height,
+                          // padding: EdgeInsets.all(12.0),
+                          child: GridView.builder(
+                            itemCount: widget.merchantList["subMerchantList"].length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    // childAspectRatio: 3 / 3.1,
+                                    childAspectRatio: orientation
+                                        ? width * 3.2 / height * 0.5
+                                        : width * 2 / height * 1,
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10),
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                  height:
+                                      orientation ? height * 26 : height * .17,
+                                  // MediaQuery.of(context).size.height * .26,
+                                  width: MediaQuery.of(context).size.width * .45,
+                                  decoration: const BoxDecoration(
+                                      color: ThemeApp.tealButtonColor,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Stack(
+                                        alignment: Alignment.topRight,
+                                        children: [
+                                          Container(
+                                            height: orientation
+                                                ? height * .25
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .17,
+                                            width:
+                                                MediaQuery.of(context).size.width,
+                                            decoration: const BoxDecoration(
+                                                color: ThemeApp.whiteColor,
+                                                borderRadius:
+                                                    BorderRadius.only(
+                                                  topRight: Radius.circular(10),
+                                                  topLeft: Radius.circular(10),
+                                                )),
+                                            child: ClipRRect(
                                               borderRadius:
-                                                  BorderRadius.only(
+                                                  const BorderRadius.only(
                                                 topRight: Radius.circular(10),
                                                 topLeft: Radius.circular(10),
-                                              )),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10),
-                                            ),
-                                            child: Image.asset(
-                                              // width: double.infinity,
-                                              widget.merchantList["subMerchantList"][index]["subMerchantNearYouImage"],
-                                              fit: BoxFit.fill,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .07,
+                                              ),
+                                              child: Image.asset(
+                                                // width: double.infinity,
+                                                widget.merchantList["subMerchantList"][index]["subMerchantNearYouImage"],
+                                                fit: BoxFit.fill,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .07,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 7, right: 7),
-                                          child: kmAwayOnMerchantImage(
-                                            widget.merchantList["subMerchantList"][index]["subMerchantNearYoukmAWAY"],
-                                            context,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(7),
-                                      child: TextFieldUtils()
-                                          .homePageTitlesTextFieldsWHITE(
-                                          widget.merchantList["subMerchantList"][index]["subMerchantNearYouName"],
-                                              context),
-                                    ),
-                                  ],
-                                ));
-                          },
-                        ))
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 7, right: 7),
+                                            child: kmAwayOnMerchantImage(
+                                              widget.merchantList["subMerchantList"][index]["subMerchantNearYoukmAWAY"],
+                                              context,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(7),
+                                        child: TextFieldUtils()
+                                            .homePageTitlesTextFieldsWHITE(
+                                            widget.merchantList["subMerchantList"][index]["subMerchantNearYouName"],
+                                                context),
+                                      ),
+                                    ],
+                                  ));
+                            },
+                          ))
 
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget mapView() {
-    return GoogleMap(
-      zoomGesturesEnabled: true,
-      //enable Zoom in, out on map
-      initialCameraPosition: const CameraPosition(
-        //innital position in map
-        target: showLocation, //initial position
-        zoom: 15.0, //initial zoom level
+    return Container(height: height*.9,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: GoogleMap(
+          zoomGesturesEnabled: true,
+          //enable Zoom in, out on map
+          initialCameraPosition: const CameraPosition(
+            //innital position in map
+            target: showLocation, //initial position
+            zoom: 15.0, //initial zoom level
+          ),
+          markers: getmarkers(),
+          //markers to show on map
+          mapType: MapType.normal,
+          //map type
+          onMapCreated: (controller) {
+            //method called when map is created
+            setState(() {
+              mapController = controller;
+            });
+          },
+        ),
       ),
-      markers: getmarkers(),
-      //markers to show on map
-      mapType: MapType.normal,
-      //map type
-      onMapCreated: (controller) {
-        //method called when map is created
-        setState(() {
-          mapController = controller;
-        });
-      },
     );
   }
 }

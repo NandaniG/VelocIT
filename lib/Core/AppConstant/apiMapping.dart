@@ -21,7 +21,19 @@ static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
         path;
   }
 
+
+
+  static String BASEAPI = baseProtocol +
+      "://" +
+      baseDomain +
+      ":" +
+      basePort +
+      "/" +
+      apiVersion;
 //https://velocitapiqa.fulgorithmapi.com:443/v1/IAM/authenticate
+
+ static String consumerBasket = '/consumerbasket/findby_consumer';
+
   static String getURI(apiEndPoint ep) {
     String retVal = "";
 

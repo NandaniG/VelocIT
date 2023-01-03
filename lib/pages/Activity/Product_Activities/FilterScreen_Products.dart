@@ -88,7 +88,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   TextStyle(
                       color: ThemeApp.darkGreyTab,
                       fontSize: height * .02,
-                      fontWeight: FontWeight.bold)),
+                      fontWeight: FontWeight.w700)),
             ),
             Expanded(
               flex: 3,
@@ -104,7 +104,7 @@ class _FilterScreenState extends State<FilterScreen> {
                       TextStyle(
                           color: ThemeApp.blackColor,
                           fontSize: height * .022,
-                          fontWeight: FontWeight.bold)),
+                          fontWeight: FontWeight.w400)),
                 ),
               ),
             ),
@@ -353,9 +353,9 @@ class _FilterScreenState extends State<FilterScreen> {
     );
   }
 
-  Widget _bottomBar() {
-    return Container(color: ThemeApp.appBackgroundColor,
-      padding: EdgeInsets.only(left: 20, right: 20),
+  Widget _bottomBar(){
+    return Container(
+      padding: EdgeInsets.only(left: 20,right: 20),
       child: Row(children: [
         Expanded(
           flex: 1,
@@ -366,54 +366,57 @@ class _FilterScreenState extends State<FilterScreen> {
               //     builder: (context) => Home(),
               //   ),
               // );
-
               Navigator.pop(context);
             },
             child: Container(
-                padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
-                decoration: BoxDecoration(
+              padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
+              decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
+                    Radius.circular(30),
                   ),
-                  color: ThemeApp.tealButtonColor,
-                ),
-                child: TextFieldUtils().usingPassTextFields(
-                    "Cancel", ThemeApp.whiteColor, context)),
-          ),
-        ),
+                  color: ThemeApp.whiteColor,border: Border.all(color: ThemeApp.tealButtonColor)
+              ),
+              child: Text(
+                  "Cancel",
+                  textAlign: TextAlign.center,
+                  style:   TextStyle(
+                      color:ThemeApp.tealButtonColor,
+                      fontSize: height * .022,
+                      fontWeight: FontWeight.w700)),
+            ),
+          ),),
         SizedBox(
           width: width * 0.03,
         ),
         Expanded(
-          flex: 1,
-          child: InkWell(
-            onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => Home(),
-              //   ),
-              // );
-              Navigator.pop(context);
-            },
-            child: Container(
+            flex: 1,
+            child: InkWell(
+              onTap: () {
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => Home(),
+                //   ),
+                // );
+
+                Navigator.pop(context);
+              },
+              child:Container(
                 padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  color: ThemeApp.whiteColor,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(30),
+                    ),
+                    color: ThemeApp.tealButtonColor,border: Border.all(color: ThemeApp.tealButtonColor)
                 ),
-                child:Text(
-                  'Apply',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * .021,
-                    fontWeight: FontWeight.w500,
-                    overflow: TextOverflow.ellipsis,
-                    color: ThemeApp.blackColor,),
-                ),
-          ),)
-        )
+                child: Text(
+                    "Apply",
+                    textAlign: TextAlign.center,
+                    style:   TextStyle(
+                        color:ThemeApp.whiteColor,
+                        fontSize: height * .022,
+                        fontWeight: FontWeight.w700)),
+              ),
+            ))
       ]),
     );
   }

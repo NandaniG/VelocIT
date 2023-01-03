@@ -347,7 +347,7 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
   }
 
   Widget submitButton() {
-    return proceedButton('Submit', ThemeApp.tealButtonColor,
+    return proceedButton('Make Payment', ThemeApp.tealButtonColor,
         context, false, () {
           showDialog(
               context: context,
