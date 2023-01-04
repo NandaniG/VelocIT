@@ -433,18 +433,19 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                 decoration: const BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.all(
-                                                    Radius.circular(10),
+                                                    Radius.circular(100),
                                                   ),
                                                   color: ThemeApp.whiteColor,
                                                 ),
                                                 padding: const EdgeInsets.only(
                                                     left: 15, right: 15),
-                                                child: TextFieldUtils()
-                                                    .usingPassTextFields(
-                                                        "Checkout",
-                                                        ThemeApp
-                                                            .tealButtonColor,
-                                                        context))),
+                                                child:  TextFieldUtils().dynamicText(
+                                                    "Checkout",
+                                                    context,
+                                                    TextStyle(
+                                                        color: ThemeApp.tealButtonColor,
+                                                        fontSize: 12,
+                                                        fontWeight: FontWeight.w700)))),
                                       ],
                                     ),
                                   ),
@@ -596,34 +597,32 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     print("orderPurchaseList" +
                         orderPurchaseList!.length.toString());
                     return Container(
-                        height: MediaQuery.of(context).size.height,
+                        // height: MediaQuery.of(context).size.height,
                         padding: const EdgeInsets.all(10),
-                        child: SingleChildScrollView(
-                          child: cartProvider.cartSpecificID.data!.payload!
-                                      .ordersForPurchase!.length <=
-                                  0
-                              ? Container(
-                                  height: height * .5,
-                                  alignment: Alignment.center,
-                                  child: TextFieldUtils().dynamicText(
-                                      "Cart is Empty",
-                                      context,
-                                      TextStyle(
-                                          color: ThemeApp.blackColor,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: height * .03,
-                                          overflow: TextOverflow.ellipsis)),
-                                )
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    cartProductList(orderPurchaseList),SizedBox(height: 10,),
-                                    priceDetails(cartProvider
-                                        .cartSpecificID.data!.payload!),
-                                  ],
-                                ),
-                        ));
+                        child: cartProvider.cartSpecificID.data!.payload!
+                                    .ordersForPurchase!.length <=
+                                0
+                            ? Container(
+                                height: height * .5,
+                                alignment: Alignment.center,
+                                child: TextFieldUtils().dynamicText(
+                                    "Cart is Empty",
+                                    context,
+                                    TextStyle(
+                                        color: ThemeApp.blackColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: height * .03,
+                                        overflow: TextOverflow.ellipsis)),
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  cartProductList(orderPurchaseList),
+                                  priceDetails(cartProvider
+                                      .cartSpecificID.data!.payload!),
+                                ],
+                              ));
                 }
                 return Container(
                   height: height * .8,
@@ -642,15 +641,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
     return Container(
-        height: orderPurchaseList!.length == 1
-            ? MediaQuery.of(context).size.height * .45
-            : MediaQuery.of(context).size.height * .6,
+        height:250,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            physics: orderPurchaseList.length == 1
-                ? NeverScrollableScrollPhysics()
-                : ScrollPhysics(),
+            physics:  ScrollPhysics(),
             // physics: NeverScrollableScrollPhysics(),
             itemCount: orderPurchaseList!.length,
             itemBuilder: (BuildContext context, int index) {
@@ -664,7 +659,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: height * 0.2,
+                          // height: height * 0.2,
                           width: width,
                           decoration: const BoxDecoration(
                             color: ThemeApp.whiteColor,
@@ -693,7 +688,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                           .toString(),
                                       fit: BoxFit.fill,
                                       // width: width*.18,
-                                      height: height * .18,
+                                      height: 79,
+                                      width: 79,
                                     ),
                                   ),
                                 ),
@@ -709,11 +705,16 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        TextFieldUtils().appBarTextField(
+                                        TextFieldUtils().dynamicText(
                                             orderPurchaseList[index]
                                                 .oneliner
                                                 .toString(),
-                                            context),
+                                            context,
+                                            TextStyle(
+                                                color: ThemeApp.primaryNavyBlackColor,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w700)),
+
                                         // SizedBox(
                                         //   height: height * .005,
                                         // ),
@@ -766,10 +767,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                           padding: const EdgeInsets.only(
                               top: 5, left: 15, right: 20, bottom: 20),
                           child: aadToCartCounter(orderPurchaseList, index),
-                        ),
-                        SizedBox(
-                          height: height * .02,
-                        )
+                        ),SizedBox(height: 10,)
+
                       ],
                     );
             }));
@@ -871,7 +870,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       children: [
         // Text(value.lst[index].totalOriginalPrice.toString()),
         Container(
-          height: height * 0.06,
+          height: height * 0.05,
           // width: width * .2,
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -995,7 +994,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             theme: SvgTheme(
               currentColor: ThemeApp.lightFontColor,
             ),
-            height: height * .035,
+            height: 19.5,
+            width: 18,
           ),
         )
       ],
@@ -1015,7 +1015,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+        padding: const EdgeInsets.fromLTRB(20, 11, 10, 45),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1023,10 +1023,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             Text('Price Details',
                 style: TextStyle(
                     color: ThemeApp.primaryNavyBlackColor,
-                    fontSize: height * .025,
-                    fontWeight: FontWeight.w400)),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,)),
             SizedBox(
-              height: height * .01,
+              height: 10,
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1035,8 +1035,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 Text('Price',
                     style: TextStyle(
                         color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500)),
                 // TextFieldUtils().homePageTitlesTextFields(
                 //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
                 //     context),
@@ -1045,8 +1045,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         .format(double.parse(payload.totalMrp.toString())),
                     style: TextStyle(
                         color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500)),
                 // TextFieldUtils().homePageTitlesTextFields(
                 //     indianRupeesFormat
                 //         .format(double.parse(payload.totalMrp.toString())),
@@ -1054,7 +1054,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               ],
             ),
             SizedBox(
-              height: height * .01,
+              height: 16,
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1063,14 +1063,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 Text('Discount',
                     style: TextStyle(
                         color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500)),
                 Text(
                     "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
                     style: TextStyle(
                         color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500)),
                 /*   TextFieldUtils()
                         .homePageTitlesTextFields("Discount", context),
                     TextFieldUtils().homePageTitlesTextFields(
@@ -1079,7 +1079,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               ],
             ),
             SizedBox(
-              height: height * .01,
+              height: 16,
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1106,7 +1106,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               ],
             ),
             SizedBox(
-              height: height * .01,
+              height: 16,
             ),
             Container(
               width: width,
@@ -1138,12 +1138,12 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   Text('Total Amount',
                       style: TextStyle(
                           color: ThemeApp.blackColor,
-                          fontSize: height * .019,
-                          fontWeight: FontWeight.w400)),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700)),
                   Text("${indianRupeesFormat.format(payload.totalPayable)} ",
                       style: TextStyle(
                           color: ThemeApp.appColor,
-                          fontSize: height * .025,
+                          fontSize: 20,
                           fontWeight: FontWeight.w700)),
                   /* TextFieldUtils().titleTextFields("Total Amount", context),
                       TextFieldUtils().titleTextFields(

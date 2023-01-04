@@ -95,7 +95,8 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   scale: 0,
                   child: IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () {
+                      onPressed: () {                        FocusManager.instance.primaryFocus?.unfocus();
+
                       })),
 
               leadingWidth: 10,
@@ -292,8 +293,9 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 height: height * .02,
               ),
               proceedButton(StringUtils.addDeliveryAddress,
-                  ThemeApp.blackColor, context, false, () {
-                setState(() {
+                  ThemeApp.blackColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                  setState(() {
                   if (_formKey.currentState!.validate()
                       && fullNameController.text.isNotEmpty &&
                       mobileController.text.isNotEmpty &&
@@ -558,7 +560,8 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                 scale: 0,
                 child: IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white,size: 10),
-                    onPressed: () {
+                    onPressed: () {                        FocusManager.instance.primaryFocus?.unfocus();
+
                     })),
 
 
@@ -783,8 +786,9 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               height: height * .02,
             ),
             proceedButton(StringUtils.addDeliveryAddress,
-                ThemeApp.blackColor, context, false, () {
-              widget.model.myAddressFullName =
+                ThemeApp.blackColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                widget.model.myAddressFullName =
                   fullNameController.text.toString();
               widget.model.myAddressPhoneNumber =
                   mobileController.text.toString();

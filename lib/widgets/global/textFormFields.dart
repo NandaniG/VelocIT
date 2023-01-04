@@ -710,6 +710,44 @@ class TextFieldUtils {
     );
   }
 
+
+  //for all headings
+  Widget headingTextField(String text, BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontSize: 20,
+          overflow: TextOverflow.ellipsis,
+          fontWeight: FontWeight.w400),
+    );
+  }
+
+  // for dashboard and all list of products name
+  Widget listNameHeadingTextField(String text, BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontSize: 14,
+          overflow: TextOverflow.ellipsis,
+          fontWeight: FontWeight.w500,letterSpacing: 0.2,color: ThemeApp.whiteColor
+      ),
+    );
+  }
+  // for dashboard and all list of products price
+  Widget listPriceHeadingTextField(String text, BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontSize: 12,
+          overflow: TextOverflow.ellipsis,
+          fontWeight: FontWeight.w700,letterSpacing: 0.2,color: ThemeApp.whiteColor
+      ),
+    );
+  }
+
+
+
+  /////
   Widget appBarTextField(String text, BuildContext context) {
     return Text(
       text,
@@ -940,7 +978,7 @@ class TextFieldUtils {
 
   Widget stepperTextFields(String text, BuildContext context, Color color) {
     return Text(
-      text,
+      text,maxLines: 2,
       style: TextStyle(
           fontSize: MediaQuery.of(context).size.height * .013,
           fontWeight: FontWeight.w500,
@@ -969,15 +1007,6 @@ class TextFieldUtils {
     );
   }
 
-  Widget listHeadingTextField(String text, BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          fontSize: MediaQuery.of(context).size.height * .025,
-          overflow: TextOverflow.ellipsis,
-          fontWeight: FontWeight.bold),
-    );
-  }
 
   Widget textFieldTwoFiveGrey(String text, BuildContext context) {
     return Text(

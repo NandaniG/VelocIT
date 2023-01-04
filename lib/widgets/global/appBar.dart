@@ -674,8 +674,6 @@ Widget bottomNavBarItems(BuildContext context) {
       return Consumer<DashboardViewModel>(
           builder: (context, productCategories, child) {
         return BottomNavigationBar(
-
-
           backgroundColor: ThemeApp.whiteColor,
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
@@ -759,69 +757,69 @@ Widget bottomNavBarItems(BuildContext context) {
               );
             }
           },
-
           items: [
             BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                icon: _currentIndex == 0
-                    ? Padding(
-                      padding: const EdgeInsets.only(bottom: 3),
+              backgroundColor: Colors.white,
+              icon: _currentIndex == 0
+                  ? Padding(
+                padding: const EdgeInsets.only(top: 8.0, ),
                       child: SvgPicture.asset(
-                  'assets/appImages/bottomApp/homeIcon.svg',
-                  color: ThemeApp.appColor,
-                  semanticsLabel: 'Acme Logo',
-                  theme: SvgTheme(
-                      currentColor: ThemeApp.appColor,
-                  ),
-                  height: 21,
-                  width: 21,
-                ),
+                        'assets/appImages/bottomApp/homeIcon.svg',
+                        color: ThemeApp.appColor,
+                        semanticsLabel: 'Acme Logo',
+                        theme: SvgTheme(
+                          currentColor: ThemeApp.appColor,
+                        ),
+                        height: 25,
+                        width: 25,
+                      ),
                     )
-                    : Padding(
-                  padding: const EdgeInsets.only(bottom: 3),
+                  : Padding(
+                padding: const EdgeInsets.only(top: 8.0, ),
                       child: SvgPicture.asset(
-                  'assets/appImages/bottomApp/homeIcon.svg',
-                  color: ThemeApp.appColor,
-                  semanticsLabel: 'Acme Logo',
-                  theme: SvgTheme(
-                      currentColor: ThemeApp.appColor,
-                  ),
-                  height: 21,
-                  width: 21,
-                ),
+                        'assets/appImages/bottomApp/homeIcon.svg',
+                        color: ThemeApp.appColor,
+                        semanticsLabel: 'Acme Logo',
+                        theme: SvgTheme(
+                          currentColor: ThemeApp.appColor,
+                        ),
+                        height: 25,
+                        width: 25,
+                      ),
                     ),
-                label:'HOME',
+              label: 'HOME',
             ),
             BottomNavigationBarItem(
-                backgroundColor: Colors.white,
-                icon: _currentIndex == 1
-                    ?  Padding(
-                  padding: const EdgeInsets.only(bottom: 3),
+              backgroundColor: Colors.white,
+              icon: _currentIndex == 1
+                  ? Padding(
+                padding: const EdgeInsets.only(top: 8.0, ),
                       child: SvgPicture.asset(
-                  'assets/appImages/bottomApp/offerIcon.svg',
-                  color: ThemeApp.appColor,
-                  semanticsLabel: 'Acme Logo',
-                  theme: SvgTheme(
-                      currentColor: ThemeApp.appColor,
-                  ),
-                  height: 21,
-                  width: 21,
-                ),
+                        'assets/appImages/bottomApp/offerIcon.svg',
+                        color: ThemeApp.appColor,
+                        semanticsLabel: 'Acme Logo',
+                        theme: SvgTheme(
+                          currentColor: ThemeApp.appColor,
+                        ),
+                        height: 25,
+                        width: 25,
+                      ),
                     )
-                    :   Padding(
-                  padding: const EdgeInsets.only(bottom: 3),
+                  : Padding(
+                padding: const EdgeInsets.only(top: 8.0, ),
                       child: SvgPicture.asset(
-                  'assets/appImages/bottomApp/offerIcon.svg',
-                  color: ThemeApp.appColor,
-                  semanticsLabel: 'Acme Logo',
-                  theme: SvgTheme(
-                      currentColor: ThemeApp.appColor,
-                  ),
-                  height: 21,
-                  width: 21,
-                ),
+                        'assets/appImages/bottomApp/offerIcon.svg',
+                        color: ThemeApp.appColor,
+                        semanticsLabel: 'Acme Logo',
+                        theme: SvgTheme(
+                          currentColor: ThemeApp.appColor,
+                        ),
+                        height: 25,
+                        width: 25,
+                      ),
                     ),
-                label: 'OFFER',),
+              label: 'OFFER',
+            ),
             BottomNavigationBarItem(
                 backgroundColor: Colors.white,
                 icon: _currentIndex == 2
@@ -837,83 +835,97 @@ Widget bottomNavBarItems(BuildContext context) {
             BottomNavigationBarItem(
                 backgroundColor: Colors.white,
                 icon: _currentIndex == 3
-                    ?   Padding(
-                      padding: const EdgeInsets.only(bottom: 3),
+                    ? Padding(
+                  padding: const EdgeInsets.only(top: 8.0, ),
+                        child: SvgPicture.asset(
+                          'assets/appImages/bottomApp/shopIcon.svg',
+                          color: ThemeApp.appColor,
+                          semanticsLabel: 'Acme Logo',
+                          theme: SvgTheme(
+                            currentColor: ThemeApp.appColor,
+                          ),
+                          height: 25,
+                          width: 25,
+                        ),
+                      )
+                    : Padding(
+                  padding: const EdgeInsets.only(top: 8.0, ),
                       child: SvgPicture.asset(
-            'assets/appImages/bottomApp/shopIcon.svg',
-            color: ThemeApp.appColor,
-            semanticsLabel: 'Acme Logo',
-            theme: SvgTheme(
-            currentColor: ThemeApp.appColor,
-            ),
-            height: 21,
-            width: 21,
-            ),
-                    )
-                    :  SvgPicture.asset(
-                  'assets/appImages/bottomApp/shopIcon.svg',
-                  color: ThemeApp.appColor,
-                  semanticsLabel: 'Acme Logo',
-                  theme: SvgTheme(
-                    currentColor: ThemeApp.appColor,
-                  ),
-                  height: 21,
-                  width: 21,
-                ),
+                          'assets/appImages/bottomApp/shopIcon.svg',
+                          color: ThemeApp.appColor,
+                          semanticsLabel: 'Acme Logo',
+                          theme: SvgTheme(
+                            currentColor: ThemeApp.appColor,
+                          ),
+                        height: 25,
+                        width: 25,
+                        ),
+                    ),
                 label: 'SHOP'),
             BottomNavigationBarItem(
                 backgroundColor: Colors.white,
-                icon:
-                    Stack(
+                icon: Stack(
                   children: <Widget>[
                     _currentIndex == 4
-                        ? SvgPicture.asset(
-            'assets/appImages/bottomApp/cartIcons.svg',
-            color: ThemeApp.appColor,
-            semanticsLabel: 'Acme Logo',
-            theme: SvgTheme(
-            currentColor: ThemeApp.appColor,
-            ),
-            height: 21,
-            width: 21,
-            )
-                        : SvgPicture.asset(
-                      'assets/appImages/bottomApp/cartIcons.svg',
-                      color: ThemeApp.appColor,
-                      semanticsLabel: 'Acme Logo',
-                      theme: SvgTheme(
-                        currentColor: ThemeApp.appColor,
-                      ),
-                      height: 21,
-                      width: 21,
-                    ),
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 8.0, right: 8),
+                            child: SvgPicture.asset(
+                              'assets/appImages/bottomApp/cartIcons.svg',
+                              color: ThemeApp.appColor,
+                              semanticsLabel: 'Acme Logo',
+                              theme: SvgTheme(
+                                currentColor: ThemeApp.appColor,
+                              ),
+                              height: 25,
+                              width: 25,
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(top: 8.0, right: 8),
+                            child: SvgPicture.asset(
+                              'assets/appImages/bottomApp/cartIcons.svg',
+                              color: ThemeApp.appColor,
+                              semanticsLabel: 'Acme Logo',
+                              theme: SvgTheme(
+                                currentColor: ThemeApp.appColor,
+                              ),
+                              height: 25,
+                              width: 25,
+                            ),
+                          ),
                     StringConstant.BadgeCounterValue == '0' ||
                             StringConstant.BadgeCounterValue == ''
                         ? SizedBox()
                         : Positioned(
                             right: 0,
                             top: 0,
-                            child: Container(
-                              padding: EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              constraints: BoxConstraints(
-                                  minWidth: 22,
-                                  minHeight: 10,
-                                  maxHeight: 25,
-                                  maxWidth: 25),
-                              child: Padding(
-                                padding: const EdgeInsets.all(1),
-                                child: Text(
-                                  // CartRepository().badgeLength.toString(),
-                                  '${StringConstant.BadgeCounterValue}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
+                            child: ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(100)),
+                              child: Container(
+                                width: 20.0,
+                                height: 20.0,
+                                padding: EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                // constraints: BoxConstraints(
+                                //     minWidth: 15,
+                                //     minHeight: 15,
+                                //     maxHeight: 18,
+                                //     maxWidth: 18),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(1),
+                                  child: Text(
+                                    // CartRepository().badgeLength.toString(),
+                                    '${StringConstant.BadgeCounterValue}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),

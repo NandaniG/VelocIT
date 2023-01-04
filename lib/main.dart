@@ -147,8 +147,6 @@ class MyApp extends StatelessWidget {
           // ChangeNotifierProvider(create: (_) => ProductsVM(),),
         ],
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
-          var data = provider.loadJson();
-          var dataa = provider.loadJsonss();
 
           return Consumer<ProductProvider>(builder: (context, value, child) {
             // return Consumer<LocaleProvider>(
@@ -221,9 +219,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<HomeProvider>(context, listen: false).loadJson();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   Provider.of<HomeProvider>(context, listen: false).loadJson();
+    // });
     // startTime();
     getCurrentLocation();
   }

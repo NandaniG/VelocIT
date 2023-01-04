@@ -81,17 +81,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var ID;
   var url = ApiMapping.BASEAPI + ApiMapping.consumerBasket;
 
-  Map data = {
-    "user_id": 669250095,
-    "IsActiveOrderList": true,
-    "from_days_in_past": 0
-  };
+  var data;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // addCartList();
+    data = Provider.of<HomeProvider>(context, listen: false).loadJson();
 
 /*  Map data=      {
       "user_id":669250095,
@@ -273,41 +270,45 @@ print("box"+box.toString());*/
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: ChangeNotifierProvider<DashboardViewModel>.value(
-          value: dashboardViewModel,
-          child: Consumer<DashboardViewModel>(
-              builder: (context, dashboardProvider, child) {
-            // print('object-------------' + provider.jsonData.toString());
-            return Consumer<HomeProvider>(builder: (context, provider, child) {
-              var data = provider.loadJson();
-              return      (provider.jsonDatass.isNotEmpty && provider.jsonDatass['error'] == null)?
-              SafeArea(
-                  child: Container(
-                      // height: MediaQuery.of(context).size.height,
-                      // padding: const EdgeInsets.only(
-                      //   left: 20,
-                      //   right: 20,
-                      // ),
-                      padding: const EdgeInsets.all(10),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            productServiceChip(),
-                            SizedBox(
-                              height: height * .02,
-                            ),
-                            productList(),
-                            SizedBox(
-                              height: height * .02,
-                            ),
-                            imageLists(provider),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
-                            ),
+        body: data == ''
+            ? CircularProgressIndicator()
+            : ChangeNotifierProvider<DashboardViewModel>.value(
+                value: dashboardViewModel,
+                child: Consumer<DashboardViewModel>(
+                    builder: (context, dashboardProvider, child) {
+                  // print('object-------------' + provider.jsonData.toString());
+                  return Consumer<HomeProvider>(
+                      builder: (context, provider, child) {
+                    return (provider.jsonData.isNotEmpty &&
+                            provider.jsonData['error'] == null)
+                        ? SafeArea(
+                            child: Container(
+                                // height: MediaQuery.of(context).size.height,
+                                // padding: const EdgeInsets.only(
+                                //   left: 20,
+                                //   right: 20,
+                                // ),
+                                padding: const EdgeInsets.all(10),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      productServiceChip(),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      productList(),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      imageLists(provider),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
 
-                            /*    listOfShopByCategories(),
+                                      /*    listOfShopByCategories(),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * .02,
@@ -318,20 +319,19 @@ print("box"+box.toString());*/
                                   height:
                                       MediaQuery.of(context).size.height * .02,
                                 ),*/
-                            stepperOfDelivery(provider),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
-                            ),
-                            TextFieldUtils().listHeadingTextField(
-                                StringUtils.recommendedForYou, context),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
-                            ),
-                            recommendedList(),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
-                            ),
-                            /*     Row(
+                                      stepperOfDelivery(provider),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      TextFieldUtils().headingTextField(
+                                          StringUtils.recommendedForYou,
+                                          context),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      recommendedList(),
+
+                                      /*     Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -355,32 +355,33 @@ print("box"+box.toString());*/
                                       MediaQuery.of(context).size.height * .02,
                                 ),      merchantList(),*/
 
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
-                            ),
-                            TextFieldUtils().listHeadingTextField(
-                                StringUtils.bestDeal, context),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
-                            ),
-                            bestDealList(),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
-                            ),
-                            TextFieldUtils().listHeadingTextField(
-                                StringUtils.budgetBuys, context),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .02,
-                            ),
-                            budgetBuyList(),
-                          ],
-                        ),
-                      )))  : provider.jsonData['error'] != null
-                  ? Container()
-                  : Center(child: CircularProgressIndicator());
-            });
-          }),
-        ));
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      TextFieldUtils().headingTextField(
+                                          StringUtils.bestDeal, context),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      bestDealList(),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      TextFieldUtils().headingTextField(
+                                          StringUtils.budgetBuys, context),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      budgetBuyList(),
+                                    ],
+                                  ),
+                                )))
+                        : provider.jsonData['error'] != null
+                            ? Container()
+                            : Center(child: CircularProgressIndicator());
+                  });
+                }),
+              ));
   }
 
   Widget productServiceChip() {
@@ -1077,103 +1078,106 @@ print("box"+box.toString());*/
           return Text("No Data found!");
         }));
   }*/
+  int indexForItems = 0;
 
-  Widget stepperOfDelivery(HomeProvider provider) {
-    print("dsdsffds${provider.jsonDatass["payload"]['basket_group_id']}");
-    var basketList;
-    for (int i = 0;
-        i < provider.jsonDatass["payload"]['consumer_baskets'].length;
-        i++) {
-      basketList =
-          provider.jsonDatass["payload"]['consumer_baskets'][i]['orders'];
-    }
-    return (provider.jsonDatass.isNotEmpty && provider.jsonDatass['error'] == null)
-
+  Widget stepperOfDelivery(HomeProvider value) {
+    return (value.jsonData.length > 0 && value.jsonData['status'] == 'OK')
         ? Container(
             // height: 300,
             height: 161,
             child: ListView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-                itemCount: basketList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: Container(
-                        // width: 300,
-                        width: width * 0.85,
-                        padding: const EdgeInsets.all(15),
-                        decoration: const BoxDecoration(
-                            color: ThemeApp.whiteColor,
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(50)),
-                                  child:
-                                      basketList[index]['image_url'].isNotEmpty
-                                          ? Image.network(
-                                              // width: double.infinity,
-                                              basketList[index]['image_url'],
-                                              fit: BoxFit.fill,
+                itemCount: value.jsonData['payload']['consumer_baskets'].length,
+                itemBuilder: (_, index) {
+                  //
+                  // List orderList = value
+                  //     .jsonData['payload']['consumer_baskets'].values
+                  //     .toList();
+                  // Map order = orderList[index];
+                  // DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
+                  // DateTime date =
+                  // DateTime.parse(order['earliest_delivery_date']);
+                  // var earliest_delivery_date = format.format(date);
 
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .055,
-                                            )
-                                          : SizedBox(
-                                              // height: height * .28,
-                                              width: width,
-                                              child: Icon(
-                                                Icons.image_outlined,
-                                                size: 50,
-                                              )),
-                                ),
-                                SizedBox(
-                                  width:
-                                      9,
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    basketList[index]['oneliner'],
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        letterSpacing: -0.25 ,
-                                        fontWeight: FontWeight.w700),
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: value
+                          .jsonData['payload']['consumer_baskets'][index]
+                              ['orders']
+                          .length,
+                      itemBuilder: (context, indexOrderDetails) {
+                        indexForItems = indexOrderDetails;
+
+                        Map subOrders = value.jsonData['payload']
+                                ['consumer_baskets'][index]['orders']
+                            [indexForItems];
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Container(
+                              // width: 300,
+                              width: width * 0.85,
+                              padding: const EdgeInsets.all(15),
+                              decoration: const BoxDecoration(
+                                  color: ThemeApp.whiteColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8))),
+                              child: Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(50)),
+                                          child: Image.network(
+                                            // width: double.infinity,
+                                            subOrders['image_url'] ?? "",
+                                            fit: BoxFit.fill,
+                                            errorBuilder:
+                                                ((context, error, stackTrace) {
+                                              return Icon(Icons.image_outlined);
+                                            }),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .055,
+                                          )),
+                                      SizedBox(
+                                        width: 9,
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          "${subOrders["short_name"]}",
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.start,
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              letterSpacing: -0.25,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            stepperWidget( provider),
-                          ],
-                        )),
-                  );
+                                  stepperWidget(subOrders),
+                                ],
+                              )),
+                        );
+                      });
                 }),
           )
-        : provider.jsonDatass['error'] != null
-        ? Container()
-        : Center(child: CircularProgressIndicator());
+        : value.jsonData['error'] != null
+            ? Container()
+            : Center(child: CircularProgressIndicator());
   }
 
-  Widget stepperWidget(HomeProvider provider) {
-    var basketList;
-    for (int i = 0;
-    i < provider.jsonDatass["payload"]['consumer_baskets'].length;
-    i++) {
-      basketList =
-      provider.jsonDatass["payload"]['consumer_baskets'][i]['orders'];
-    }
+  Widget stepperWidget(Map subOrders) {
     return Container(
         height: height * .1,
         width: width,
@@ -1182,24 +1186,18 @@ print("box"+box.toString());*/
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Row(
-              children: _iconViews(),
-            ),
+            Flexible(child: _iconViews(context, subOrders)),
             const SizedBox(
               height: 8,
             ),
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: _titleViews(context,basketList),
-              ),
-            ),
-            Flexible(
+            Flexible(child: _titleViews(context, subOrders)),
+            Flexible(child: _stepsViews(context, subOrders)),
+            /*  Flexible(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: _stepsViews(context),
               ),
-            ),
+            ),*/
           ],
         ));
   }
@@ -1232,7 +1230,7 @@ print("box"+box.toString());*/
                   .productListingResponse.data!.payload!.content;
 
               return Container(
-                height: MediaQuery.of(context).size.height * .35,
+                height: 228,
                 child: serviceList!.isNotEmpty
                     ? ListView.builder(
                         shrinkWrap: true,
@@ -1255,152 +1253,102 @@ print("box"+box.toString());*/
                                         ),
                                       );
                                     },
-                                    child: Container(
-                                        // height: MediaQuery.of(context).size.height * .3,
-
-                                        // width: 200,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .45,
-                                        decoration: const BoxDecoration(
-                                            color: ThemeApp.tealButtonColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .26,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  .45,
-                                              decoration: const BoxDecoration(
-                                                  color: ThemeApp
-                                                      .textFieldBorderColor,
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    topRight:
-                                                        Radius.circular(10),
-                                                    topLeft:
-                                                        Radius.circular(10),
-                                                  )),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                  topRight: Radius.circular(10),
-                                                  topLeft: Radius.circular(10),
-                                                ),
-                                                child: serviceList[index]
-                                                        .imageUrls![0]
-                                                        .imageUrl
-                                                        .toString()
-                                                        .isNotEmpty
-                                                    ? Image.network(
-                                                        // width: double.infinity,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 163,
+                                          width: 191,
+                                          decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              )),
+                                          child: ClipRRect(
+                                              child: Image.network(
+                                            // width: double.infinity,
+                                            serviceList[index]
+                                                    .imageUrls![0]
+                                                    .imageUrl
+                                                    .toString() ??
+                                                "",
+                                            fit: BoxFit.scaleDown,
+                                            errorBuilder:
+                                                ((context, error, stackTrace) {
+                                              return Icon(Icons.image_outlined);
+                                            }),
+                                          )),
+                                        ),
+                                        Container(
+                                          color: ThemeApp.tealButtonColor,
+                                          width: 191,
+                                          height: 65,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 9, 21, 4),
+                                                child: TextFieldUtils()
+                                                    .listNameHeadingTextField(
                                                         serviceList[index]
-                                                            .imageUrls![0]
-                                                            .imageUrl
-                                                            .toString(),
-                                                        fit: BoxFit.fill,
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            .07,
-                                                      )
-                                                    : SizedBox(
-                                                        // height: height * .28,
-                                                        width: width,
-                                                        child: Icon(
-                                                          Icons.image_outlined,
-                                                          size: 50,
-                                                        )),
+                                                            .shortName!,
+                                                        context) /*Text(
+                                                    serviceList[index].shortName!,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        fontSize: height * .022,
+                                                        fontWeight:
+                                                            FontWeight.bold))*/
+                                                ,
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .01,
-                                            ),
-                                            Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, right: 10),
-                                              child: Text(
-                                                  serviceList[index].shortName!,
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      color:
-                                                          ThemeApp.whiteColor,
-                                                      fontSize: height * .022,
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                            ),
-                                            SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .01,
-                                            ),
-                                            Flexible(
-                                              child: Container(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10, right: 10),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 0, 21, 9),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
                                                     //discount
-                                                    Text(
-                                                        indianRupeesFormat
-                                                            .format(serviceList[
-                                                                        index]
-                                                                    .defaultSellPrice ??
-                                                                0.0),
-                                                        style: TextStyle(
-                                                            color: ThemeApp
-                                                                .whiteColor,
-                                                            fontSize:
-                                                                height * .022,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500)),
-                                                    //priginal
-                                                    TextFieldUtils().dynamicText(
-                                                        indianRupeesFormat
-                                                            .format(serviceList[
-                                                                        index]
-                                                                    .defaultMrp ??
-                                                                0.0),
-                                                        context,
-                                                        TextStyle(
-                                                            color: ThemeApp
-                                                                .whiteColor,
-                                                            fontSize:
-                                                                height * .02,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .lineThrough,
-                                                            decorationThickness:
-                                                                1.5)),
+                                                    TextFieldUtils()
+                                                        .listPriceHeadingTextField(
+                                                            indianRupeesFormat
+                                                                .format(serviceList[
+                                                                            index]
+                                                                        .defaultSellPrice ??
+                                                                    0.0),
+                                                            context),
+
+                                                    TextFieldUtils()
+                                                        .listPriceHeadingTextField(
+                                                            indianRupeesFormat
+                                                                .format(serviceList[
+                                                                            index]
+                                                                        .defaultMrp ??
+                                                                    0.0),
+                                                            context),
                                                   ],
                                                 ),
-                                              ),
-                                            )
-                                          ],
-                                        )),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(
                                     width:
@@ -1644,36 +1592,27 @@ print("box"+box.toString());*/
                                                 topLeft: Radius.circular(10),
                                               )),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10),
-                                            ),
-                                            child: serviceList[index]
-                                                    .imageUrls![0]
-                                                    .imageUrl
-                                                    .toString()
-                                                    .isNotEmpty
-                                                ? Image.network(
-                                                    // width: double.infinity,
-                                                    serviceList[index]
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              ),
+                                              child: Image.network(
+                                                // width: double.infinity,
+                                                serviceList[index]
                                                         .imageUrls![0]
-                                                        .imageUrl!,
-                                                    fit: BoxFit.fill,
-
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            .07,
-                                                  )
-                                                : SizedBox(
-                                                    // height: height * .28,
-                                                    width: width,
-                                                    child: Icon(
-                                                      Icons.image_outlined,
-                                                      size: 50,
-                                                    )),
-                                          ),
+                                                        .imageUrl! ??
+                                                    "",
+                                                fit: BoxFit.fill,
+                                                errorBuilder: ((context, error,
+                                                    stackTrace) {
+                                                  return Icon(
+                                                      Icons.image_outlined);
+                                                }),
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .07,
+                                              )),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
@@ -2014,147 +1953,136 @@ print("box"+box.toString());*/
                   .productListingResponse.data!.payload!.content;
 
               return Container(
-                height: MediaQuery.of(context).size.height * .35,
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: serviceList!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetailsActivity(
-                                    id: serviceList[index].id,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                                // height: MediaQuery.of(context).size.height * .3,
-
-                                // width: 200,
-                                width: MediaQuery.of(context).size.width * .45,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.tealButtonColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .26,
-                                      width: MediaQuery.of(context).size.width *
-                                          .45,
-                                      decoration: const BoxDecoration(
-                                          color: ThemeApp.textFieldBorderColor,
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            topLeft: Radius.circular(10),
-                                          )),
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
+                height: 228,
+                child: serviceList!.isNotEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: serviceList!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProductDetailsActivity(
+                                            id: serviceList[index].id,
+                                            // productList: subProductList[index],
+                                            // productSpecificListViewModel:
+                                            //     productSpecificListViewModel,
+                                          ),
                                         ),
-                                        child: serviceList[index]
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 163,
+                                          width: 191,
+                                          decoration: const BoxDecoration(
+                                              color:
+                                                  ThemeApp.textFieldBorderColor,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              )),
+                                          child: ClipRRect(
+                                              child: Image.network(
+                                            // width: double.infinity,
+                                            serviceList[index]
                                                 .imageUrls![0]
-                                                .imageUrl!
-                                                .isNotEmpty
-                                            ? Image.network(
-                                                // width: double.infinity,
-                                                serviceList[index]
-                                                    .imageUrls![0]
-                                                    .imageUrl!,
-                                                fit: BoxFit.fill,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    .07,
-                                              )
-                                            : SizedBox(
-                                                // height: height * .28,
-                                                width: width,
-                                                child: Icon(
-                                                  Icons.image_outlined,
-                                                  size: 50,
-                                                )),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 10),
-                                      child: Text(serviceList[index].shortName!,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color: ThemeApp.whiteColor,
-                                              fontSize: height * .022,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                    ),
-                                    Flexible(
-                                      child: Container(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, right: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            //discount
-                                            Text(
-                                                indianRupeesFormat.format(
-                                                    serviceList[index]
-                                                            .defaultSellPrice ??
-                                                        0.0),
-                                                style: TextStyle(
-                                                    color: ThemeApp.whiteColor,
-                                                    fontSize: height * .022,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                            //priginal
-                                            TextFieldUtils().dynamicText(
-                                                indianRupeesFormat.format(
-                                                    serviceList[index]
-                                                            .defaultMrp ??
-                                                        0.0),
-                                                context,
-                                                TextStyle(
-                                                    color: ThemeApp.whiteColor,
-                                                    fontSize: height * .02,
-                                                    fontWeight: FontWeight.w400,
-                                                    decoration: TextDecoration
-                                                        .lineThrough,
-                                                    decorationThickness: 1.5)),
-                                          ],
+                                                .imageUrl
+                                                .toString(),
+                                            errorBuilder:
+                                                ((context, error, stackTrace) {
+                                              return Icon(Icons.image_outlined);
+                                            }),
+                                            fit: BoxFit.fill,
+                                          )),
                                         ),
-                                      ),
-                                    )
-                                  ],
-                                )),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * .03,
-                          )
-                        ],
-                      );
-                    }),
-              );
+                                        Container(
+                                          color: ThemeApp.tealButtonColor,
+                                          width: 191,
+                                          height: 65,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 9, 21, 4),
+                                                child: TextFieldUtils()
+                                                    .listNameHeadingTextField(
+                                                        serviceList[index]
+                                                            .shortName!,
+                                                        context) /*Text(
+                                                    serviceList[index].shortName!,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        fontSize: height * .022,
+                                                        fontWeight:
+                                                            FontWeight.bold))*/
+                                                ,
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 0, 21, 9),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    //discount
+                                                    TextFieldUtils()
+                                                        .listPriceHeadingTextField(
+                                                            indianRupeesFormat
+                                                                .format(serviceList[
+                                                                            index]
+                                                                        .defaultSellPrice ??
+                                                                    0.0),
+                                                            context),
 
+                                                    TextFieldUtils()
+                                                        .listPriceHeadingTextField(
+                                                            indianRupeesFormat
+                                                                .format(serviceList[
+                                                                            index]
+                                                                        .defaultMrp ??
+                                                                    0.0),
+                                                            context),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .03,
+                                  )
+                                ],
+                              ) ??
+                              SizedBox();
+                        })
+                    : SizedBox(),
+              );
             default:
               return Text("No Data found!");
           }
@@ -2336,7 +2264,7 @@ print("box"+box.toString());*/
                   .productListingResponse.data!.payload!.content;
 
               return Container(
-                  height: serviceList!.length > 2 ? 580 : 260,
+                  height: serviceList!.length > 2 ? 480 : 240,
                   // width: MediaQuery.of(context).size.width,
                   // padding: EdgeInsets.all(12.0),
                   child: GridView.builder(
@@ -2345,10 +2273,10 @@ print("box"+box.toString());*/
                     scrollDirection: Axis.vertical,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 20,
-                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 0.5,
+                      crossAxisSpacing: 0.5,
                       // width / height: fixed for *all* items
-                      childAspectRatio: 0.75,
+                      childAspectRatio: 0.85,
 
                       crossAxisCount: 2,
                     ),
@@ -2364,12 +2292,92 @@ print("box"+box.toString());*/
                           );
                         },
                         child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            decoration: const BoxDecoration(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 163,
+                                width: 191,
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.textFieldBorderColor,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      topLeft: Radius.circular(10),
+                                    )),
+                                child: ClipRRect(
+                                    child: Image.network(
+                                  // width: double.infinity,
+                                  serviceList[index]
+                                      .imageUrls![0]
+                                      .imageUrl
+                                      .toString(),
+                                  fit: BoxFit.fill,
+                                  errorBuilder: ((context, error, stackTrace) {
+                                    return Icon(Icons.image_outlined);
+                                  }),
+                                )),
+                              ),
+                              Container(
                                 color: ThemeApp.tealButtonColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Column(
+                                width: 191,
+                                height: 65,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          21, 9, 21, 4),
+                                      child: TextFieldUtils()
+                                          .listNameHeadingTextField(
+                                              serviceList[index].shortName!,
+                                              context) /*Text(
+                                                    serviceList[index].shortName!,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        fontSize: height * .022,
+                                                        fontWeight:
+                                                            FontWeight.bold))*/
+                                      ,
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          21, 0, 21, 9),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          //discount
+                                          TextFieldUtils()
+                                              .listPriceHeadingTextField(
+                                                  indianRupeesFormat.format(
+                                                      serviceList[index]
+                                                              .defaultSellPrice ??
+                                                          0.0),
+                                                  context),
+
+                                          TextFieldUtils()
+                                              .listPriceHeadingTextField(
+                                                  indianRupeesFormat.format(
+                                                      serviceList[index]
+                                                              .defaultMrp ??
+                                                          0.0),
+                                                  context),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          /* Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -2445,7 +2453,8 @@ print("box"+box.toString());*/
                                   ),
                                 )
                               ],
-                            )),
+                            )*/
+                        ),
                       );
                     },
                   ));
@@ -2593,87 +2602,443 @@ print("box"+box.toString());*/
 */
   }
 
-  List<Widget> _iconViews() {
-    var list = <Widget>[];
-    titles.asMap().forEach((i, icon) {
-      var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
-          ? ThemeApp.darkGreyTab
-          : ThemeApp.lightGreyTab;
-      var lineColor =
-          _curStep > i + 1 ? ThemeApp.appColor : ThemeApp.containerColor;
-      var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
-          ? ThemeApp.appColor
-          : ThemeApp.containerColor;
+  // List<Widget> _iconViews() {
+  //   var list = <Widget>[];
+  //   titles.asMap().forEach((i, icon) {
+  //     var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
+  //         ? ThemeApp.darkGreyTab
+  //         : ThemeApp.lightGreyTab;
+  //     var lineColor =
+  //         _curStep > i + 1 ? ThemeApp.appColor : ThemeApp.containerColor;
+  //     var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
+  //         ? ThemeApp.appColor
+  //         : ThemeApp.containerColor;
+  //
+  //     list.add(
+  //       Container(
+  //         width: 20.0,
+  //         height: 20.0,
+  //         padding: const EdgeInsets.all(0),
+  //         // decoration:(i == 0 || _curStep > i + 1) ? new  BoxDecoration(
+  //         //
+  //         // ):BoxDecoration(   /* color: circleColor,*/
+  //         //   borderRadius: new BorderRadius.all(new Radius.circular(22.0)),
+  //         //   border: new Border.all(
+  //         //     color: circleColor,
+  //         //     width: 2.0,
+  //         //   ),),
+  //         child: (i == 0 || i == 1 || _curStep > i + 1)
+  //             ? Icon(
+  //                 Icons.circle,
+  //                 color: iconColor,
+  //                 size: 15.0,
+  //               )
+  //             : Icon(
+  //                 Icons.radio_button_checked_outlined,
+  //                 color: iconColor,
+  //                 size: 15.0,
+  //               ),
+  //       ),
+  //     );
+  //
+  //     //line between icons
+  //     if (i != titles.length - 1) {
+  //       list.add(Expanded(
+  //           child: Container(
+  //         height: 3.0,
+  //         color: lineColor,
+  //       )));
+  //     }
+  //   });
+  //
+  //   return list;
+  // }
 
-      list.add(
+  Widget _iconViews(
+    BuildContext context,
+    Map subOrders,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
         Container(
-          width: 20.0,
-          height: 20.0,
-          padding: const EdgeInsets.all(0),
-          // decoration:(i == 0 || _curStep > i + 1) ? new  BoxDecoration(
-          //
-          // ):BoxDecoration(   /* color: circleColor,*/
-          //   borderRadius: new BorderRadius.all(new Radius.circular(22.0)),
-          //   border: new Border.all(
-          //     color: circleColor,
-          //     width: 2.0,
-          //   ),),
-          child: (i == 0 || i == 1 || _curStep > i + 1)
+          child: subOrders['is_order_placed'] == true
               ? Icon(
                   Icons.circle,
-                  color: iconColor,
-                  size: 15.0,
+                  color: subOrders['is_order_placed'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
                 )
               : Icon(
                   Icons.radio_button_checked_outlined,
-                  color: iconColor,
-                  size: 15.0,
+                  color: subOrders['is_order_placed'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
                 ),
         ),
-      );
-
-      //line between icons
-      if (i != titles.length - 1) {
-        list.add(Expanded(
+        Expanded(
             child: Container(
           height: 3.0,
-          color: lineColor,
-        )));
-      }
-    });
-
-    return list;
-  }
-
-  List<Widget> _titleViews(BuildContext context, basketList) {
-
+          color: subOrders['is_order_placed'] == true
+              ? ThemeApp.appColor
+              : ThemeApp.inactiveStepperColor,
+        )),
+        Container(
+          child: subOrders['is_packed'] == true
+              ? Icon(
+                  Icons.circle,
+                  color: subOrders['is_packed'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                )
+              : Icon(
+                  Icons.radio_button_checked_outlined,
+                  color: subOrders['is_packed'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                ),
+        ),
+        Expanded(
+            child: Container(
+          height: 3.0,
+          color: subOrders['is_packed'] == true
+              ? ThemeApp.appColor
+              : ThemeApp.inactiveStepperColor,
+        )),
+        Container(
+          child: subOrders['is_shipped'] == true
+              ? Icon(
+                  Icons.circle,
+                  color: subOrders['is_shipped'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                )
+              : Icon(
+                  Icons.radio_button_checked_outlined,
+                  color: subOrders['is_shipped'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                ),
+        ),
+        Expanded(
+            child: Container(
+          height: 3.0,
+          color: subOrders['is_shipped'] == true
+              ? ThemeApp.appColor
+              : ThemeApp.inactiveStepperColor,
+        )),
+        Container(
+          child: subOrders['is_delivered'] == true
+              ? Icon(
+                  Icons.circle,
+                  color: subOrders['is_delivered'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                )
+              : Icon(
+                  Icons.radio_button_checked_outlined,
+                  color: subOrders['is_delivered'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size:20,
+                ),
+        ),
+      ],
+    );
+/*
     var list = <Widget>[];
     Color color = ThemeApp.darkGreyTab;
     titles.asMap().forEach((i, text) {
-/*print("basketList..."+basketList['']);
-     if(text== 'Order Placed'){
-       color = ThemeApp.blackColor;
-     }else  if(text== 'Packed'){
-       color = ThemeApp.blackColor;
-     }else  if(text== 'Shipped'){
-       color = ThemeApp.blackColor;
-     } else if(text== 'Delivered'){
-       color = ThemeApp.blackColor;
-     }else{
-       color = ThemeApp.darkGreyTab;
+      print("is_accepted..." + subOrders['is_order_placed'].toString());
+      if (i == 0) {
+      } else if (subOrders['is_order_placed'] == true) {
+        print("  if (titles[i] == 0) {");
 
-     }*/
-          list.add(
+        color = ThemeApp.blackColor;
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      TextFieldUtils().stepperTextFields(text, context, color);
+      if (text == 'Packed') {
+        if (subOrders['is_packed'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      if (text == 'Shipped') {
+        if (subOrders['is_shipped'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      if (text == 'Delivered') {
+        if (subOrders['is_delivered'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+
+   */
+/*   list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
-            ? TextFieldUtils()
-                .stepperTextFields(text, context, color)
-            : TextFieldUtils()
-                .stepperTextFields(text, context, color),
-      );
+            ?
+        TextFieldUtils().stepperTextFields(text, context, color)
+            : TextFieldUtils().stepperTextFields(text, context, color),
+      );*/ /*
+
     });
-    return list;
+*/
   }
 
+/*
+  List<Widget> _titleViews(
+    BuildContext context,
+    Map subOrders,
+  ) {
+    var list = <Widget>[];
+    Color color = ThemeApp.darkGreyTab;
+    titles.asMap().forEach((i, text) {
+      print("is_accepted..." + subOrders['is_order_placed'].toString());
+      if (i == 0) {
+      } else if (subOrders['is_order_placed'] == true) {
+        print("  if (titles[i] == 0) {");
+
+        color = ThemeApp.blackColor;
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      if (text == 'Packed') {
+        if (subOrders['is_packed'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      if (text == 'Shipped') {
+        if (subOrders['is_shipped'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      if (text == 'Delivered') {
+        if (subOrders['is_delivered'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+
+      list.add(
+            (i == 0 || i == 1 || _curStep > i + 1)
+            ?
+          TextFieldUtils().stepperTextFields(text, context, color)
+            : TextFieldUtils().stepperTextFields(text, context, color),
+          );
+    });
+    return list;
+  }*/
+
+  Widget _titleViews(
+    BuildContext context,
+    Map subOrders,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: 50,
+          child: TextFieldUtils().stepperTextFields(
+              'Order Placed',
+              context,
+              subOrders['is_order_placed'] == true
+                  ? ThemeApp.blackColor
+                  : ThemeApp.lightFontColor),
+        ),
+        Container(
+          width: 50,
+          child: TextFieldUtils().stepperTextFields(
+              'Packed',
+              context,
+              subOrders['is_packed'] == true
+                  ? ThemeApp.blackColor
+                  : ThemeApp.lightFontColor),
+        ),
+        Container(
+          width: 50,
+          child: TextFieldUtils().stepperTextFields(
+              'Shipped',
+              context,
+              subOrders['is_shipped'] == true
+                  ? ThemeApp.blackColor
+                  : ThemeApp.lightFontColor),
+        ),
+        Container(
+          width: 50,
+          child: TextFieldUtils().stepperTextFields(
+              'Delivered',
+              context,
+              subOrders['is_delivered'] == true
+                  ? ThemeApp.blackColor
+                  : ThemeApp.lightFontColor),
+        ),
+      ],
+    );
+/*
+    var list = <Widget>[];
+    Color color = ThemeApp.darkGreyTab;
+    titles.asMap().forEach((i, text) {
+      print("is_accepted..." + subOrders['is_order_placed'].toString());
+      if (i == 0) {
+      } else if (subOrders['is_order_placed'] == true) {
+        print("  if (titles[i] == 0) {");
+
+        color = ThemeApp.blackColor;
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      TextFieldUtils().stepperTextFields(text, context, color);
+      if (text == 'Packed') {
+        if (subOrders['is_packed'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      if (text == 'Shipped') {
+        if (subOrders['is_shipped'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      if (text == 'Delivered') {
+        if (subOrders['is_delivered'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+
+   */
+/*   list.add(
+        (i == 0 || i == 1 || _curStep > i + 1)
+            ?
+        TextFieldUtils().stepperTextFields(text, context, color)
+            : TextFieldUtils().stepperTextFields(text, context, color),
+      );*/ /*
+
+    });
+*/
+  }
+
+  Widget _stepsViews(
+    BuildContext context,
+    Map subOrders,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: 50,
+          child: TextFieldUtils().stepperTextFields(
+              '',
+              context,
+              subOrders['is_order_placed'] == true
+                  ? ThemeApp.blackColor
+                  : ThemeApp.lightFontColor),
+        ),
+        Container(
+          width: 50,
+          child: TextFieldUtils().stepperTextFields(
+              '3/3',
+              context,
+              subOrders['is_packed'] == true
+                  ? ThemeApp.blackColor
+                  : ThemeApp.lightFontColor),
+        ),
+        Container(
+          width: 50,
+          child: TextFieldUtils().stepperTextFields(
+              '2/3',
+              context,
+              subOrders['is_shipped'] == true
+                  ? ThemeApp.blackColor
+                  : ThemeApp.lightFontColor),
+        ),
+        Container(
+          width: 50,
+          child: TextFieldUtils().stepperTextFields(
+              '1/3',
+              context,
+              subOrders['is_delivered'] == true
+                  ? ThemeApp.blackColor
+                  : ThemeApp.lightFontColor),
+        ),
+      ],
+    );
+/*
+    var list = <Widget>[];
+    Color color = ThemeApp.darkGreyTab;
+    titles.asMap().forEach((i, text) {
+      print("is_accepted..." + subOrders['is_order_placed'].toString());
+      if (i == 0) {
+      } else if (subOrders['is_order_placed'] == true) {
+        print("  if (titles[i] == 0) {");
+
+        color = ThemeApp.blackColor;
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      TextFieldUtils().stepperTextFields(text, context, color);
+      if (text == 'Packed') {
+        if (subOrders['is_packed'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      if (text == 'Shipped') {
+        if (subOrders['is_shipped'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+      if (text == 'Delivered') {
+        if (subOrders['is_delivered'] == true) {
+          color = ThemeApp.blackColor;
+        }
+      } else {
+        color = ThemeApp.darkGreyTab;
+      }
+
+   */
+/*   list.add(
+        (i == 0 || i == 1 || _curStep > i + 1)
+            ?
+        TextFieldUtils().stepperTextFields(text, context, color)
+            : TextFieldUtils().stepperTextFields(text, context, color),
+      );*/ /*
+
+    });
+*/
+  }
+
+/*
   List<Widget> _stepsViews(BuildContext context) {
     var list = <Widget>[];
     titles.asMap().forEach((i, text) {
@@ -2690,5 +3055,78 @@ print("box"+box.toString());*/
       );
     });
     return list;
+  }
+*/
+
+}
+
+class StepperWidget extends StatefulWidget {
+  @override
+  _StepperWidgetState createState() => _StepperWidgetState();
+}
+
+class _StepperWidgetState extends State<StepperWidget> {
+  int _currentStep = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Stepper(
+            currentStep: _currentStep,
+            onStepContinue: () {
+              if (_currentStep >= 4) return;
+              setState(() {
+                _currentStep += 1;
+              });
+            },
+            onStepCancel: () {
+              if (_currentStep <= 0) return;
+              setState(() {
+                _currentStep -= 1;
+              });
+            },
+            steps: const <Step>[
+              Step(
+                title: Text('Step 1'),
+                content: SizedBox(
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+              Step(
+                title: Text('Step 2'),
+                content: SizedBox(
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+              Step(
+                title: Text('Step 3'),
+                content: SizedBox(
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+              Step(
+                title: Text('Step 4'),
+                content: SizedBox(
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+              Step(
+                title: Text('Step 5'),
+                content: SizedBox(
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

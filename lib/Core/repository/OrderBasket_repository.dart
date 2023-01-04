@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 
@@ -15,6 +16,20 @@ class OrderBasketRepository {
 
   BaseApiServices _apiServices = NetworkApiServices();
   dynamic orderBasketData;
+
+
+  Future postApiRequest(Map jsonMap) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('jwt_token') ?? '';
+    // dynamic responseJson;
+    var url = ApiMapping.ConstructURI(ApiMapping.consumerBasket);
+
+    dynamic responseJson = await _apiServices.getGetApiResponseWithBody(url, jsonMap);
+
+    String rawJson = responseJson.toString();
+    print(responseJson.toString());
+    return responseJson;
+  }
 
   Future<ActiveOrderBasketModel> getOrderBasketApi(
       dynamic data) async {

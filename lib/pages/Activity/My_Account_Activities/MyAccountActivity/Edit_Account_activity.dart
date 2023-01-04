@@ -471,6 +471,8 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
   Widget updateButton(ProductProvider provider) {
     return proceedButton(
         StringUtils.update, ThemeApp.tealButtonColor, context, false, () {
+      FocusManager.instance.primaryFocus?.unfocus();
+
       print("provider.creditCardList__________" +
           provider.userAccountDetailList.length.toString());
       initializeFilter(provider);

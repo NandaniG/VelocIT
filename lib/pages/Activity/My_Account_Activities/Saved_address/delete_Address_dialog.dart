@@ -82,8 +82,9 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                       Expanded(
                         flex: 1,
                         child: proceedButton(StringUtils.no,
-                            ThemeApp.whiteColor, context, false,() {
-                          Navigator.pop(context);
+                            ThemeApp.whiteColor, context, false,() {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                            Navigator.pop(context);
                         }),
                       ),
                       SizedBox(
@@ -94,8 +95,9 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                         child: Consumer<ProductProvider>(
                             builder: (context, value, child) {
                           return proceedButton(StringUtils.yes,
-                              ThemeApp.blackColor, context,false, () {
-                            setState(() {
+                              ThemeApp.blackColor, context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                              setState(() {
                               print(widget.addressList.length);
                               value.deleteAddress(widget.index);
                               Navigator.pushReplacementNamed(context, '/myAccountActivity');

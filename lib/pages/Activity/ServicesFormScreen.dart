@@ -348,8 +348,9 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
 
   Widget submitButton() {
     return proceedButton('Make Payment', ThemeApp.tealButtonColor,
-        context, false, () {
-          showDialog(
+        context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+        showDialog(
               context: context,
               builder: (BuildContext context) {
                 return submitDialog(

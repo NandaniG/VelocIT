@@ -2435,8 +2435,9 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                             alignment: FractionalOffset.bottomCenter,
                             padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                             child: proceedButton(StringUtils.deliverHere,
-                                ThemeApp.blackColor, context, false, () {
-                              setState(() {
+                                ThemeApp.blackColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                                setState(() {
                                 StringConstant.selectedFullAddress =
                                     "${addressList[_value2].addressLine1!}, ${addressList[_value2].addressLine2}, ${addressList[_value2].stateName},\n ${addressList[_value2].cityName}, ${addressList[_value2].pincode}";
                                 Prefs.instance.setToken(
@@ -2892,8 +2893,9 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                 ),
               ),
               IconButton(
-                  onPressed: () {
-                    setState(() {
+                  onPressed: () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                  setState(() {
                       allMessages.add(_textEditingController.text);
                       _textEditingController.text = "";
                     });

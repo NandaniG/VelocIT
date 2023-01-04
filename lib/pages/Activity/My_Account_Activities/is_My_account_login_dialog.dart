@@ -90,6 +90,7 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                               'Sign In',
                               ThemeApp.blackColor,
                               context, false,() {
+                            FocusManager.instance.primaryFocus?.unfocus();
 
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(

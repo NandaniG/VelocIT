@@ -108,7 +108,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                       height: height * .02,
                     ),
                     TextFieldUtils()
-                        .listHeadingTextField('Shop by Categories', context),
+                        .headingTextField('Shop by Categories', context),
                     SizedBox(
                       height: height * .02,
                     ),
@@ -173,7 +173,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                                       SizedBox(
                                         width: width * .03,
                                       ),
-                                      TextFieldUtils().homePageheadingTextField(
+                                      categoryListFont(
                                           widget
                                               .shopByCategoryList![index].name!,
                                           context)
@@ -195,6 +195,26 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
             );
           }),
         ),
+      ),
+    );
+  }
+  Widget categoryListFont(String text, BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontSize: 16,
+          overflow: TextOverflow.ellipsis,
+          fontWeight: FontWeight.w700,letterSpacing:-0.25 ,color: ThemeApp.primaryNavyBlackColor
+      ),
+    );
+  }
+  Widget subCategoryListFont(String text, BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontSize: 13,
+          overflow: TextOverflow.ellipsis,
+          fontWeight: FontWeight.w500,letterSpacing:-0.25 ,color: ThemeApp.primaryNavyBlackColor
       ),
     );
   }
@@ -238,33 +258,6 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                         height: height * .3),
                   ))
 
-              /*Container(
-                  height: height * 0.23,
-                  child: CarouselSlider(
-                    items: snapshot.data?.map((e) {
-                      return Card(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        color: ThemeApp.whiteColor,
-                        child: ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            child: */ /*Image.network(
-                            // width: double.infinity,
-                            e.sponsorlogo,
-                            fit: BoxFit.fill,
-                          ),*/ /*
-                                Image.asset(
-                              e.sponsorlogo,
-                              fit: BoxFit.fill,
-                            )),
-                      );
-                    }).toList(),
-                    options: CarouselOptions(
-
-                    ),
-                  ))*/
               : const Center(child: CircularProgressIndicator());
         });
   }
@@ -324,14 +317,9 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                         Expanded(
                           flex: 1,
                           child: Center(
-                            child: TextFieldUtils().dynamicText(
+                            child: subCategoryListFont(
                                 productList.simpleSubCats![index].name!,
-                                context,
-                                TextStyle(
-                                  color: ThemeApp.blackColor,
-                                  // fontWeight: FontWeight.w500,
-                                  fontSize: height * .02,
-                                )),
+                                context),
                           ),
                         )
                       ],

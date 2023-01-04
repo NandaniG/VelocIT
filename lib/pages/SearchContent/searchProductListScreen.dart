@@ -236,6 +236,9 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                               searchProductList[index]
                                                   .imageUrls![0]
                                                   .imageUrl!,
+                                              errorBuilder: ((context, error, stackTrace) {
+                                                return Icon(Icons.image_outlined);
+                                              }),
                                               fit: BoxFit.fill,
 
                                               height: MediaQuery.of(context)
@@ -481,6 +484,9 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                                 .imageUrls![0]
                                                 .imageUrl!,
                                             fit: BoxFit.fill,
+                                            errorBuilder: ((context, error, stackTrace) {
+                                              return Icon(Icons.image_outlined);
+                                            }),
                                             height: (MediaQuery.of(context)
                                                         .orientation ==
                                                     Orientation.landscape)

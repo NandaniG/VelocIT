@@ -27,7 +27,17 @@ class HomeProvider with ChangeNotifier {
   //----------------------------------------------------------
   loadJson() async {
     try {
-      String jsonContent = await rootBundle.loadString("assets/jsonData.json");
+
+        String jsonContents = await OrderBasketRepository().postApiRequest({
+          "user_id": 669250095,
+          "IsActiveOrderList": true,
+          "from_days_in_past": 3
+        });
+        homeImageSliderService();
+        jsonData = json.decode(jsonContents);
+        notifyListeners();
+      ///////
+   /*   String jsonContent = await rootBundle.loadString("assets/jsonData.json");
       jsonData = json.decode(jsonContent);
       // // print("____________loadJson______________________");
       // // print(jsonData["stepperOfDeliveryList"]);
@@ -46,9 +56,11 @@ class HomeProvider with ChangeNotifier {
       customerSupportService();
       accountSettingService();
       notificationsListService();
-      offersListService();
+      offersListService();*/
     } catch (e) {
-      // print("Error in loadJson: $e");
+      print("Error in loadJson: $e");
+      return {};
+
     }
   }
 
@@ -77,7 +89,7 @@ class HomeProvider with ChangeNotifier {
       Map data = {
         "user_id": 669250095,
         "IsActiveOrderList": true,
-        "from_days_in_past": 0
+        "from_days_in_past": 3
       };
       dynamic response =
           await _apiServices.getGetApiResponseWithBody(url, data);

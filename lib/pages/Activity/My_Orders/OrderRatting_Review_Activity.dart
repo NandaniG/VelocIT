@@ -381,8 +381,9 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                         }),
                   ),
                   proceedButton("Submit", ThemeApp.blackColor, context, false,
-                      () async {
-                    final prefs = await SharedPreferences.getInstance();
+                      () async {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                      final prefs = await SharedPreferences.getInstance();
 
                     StringConstant.UserLoginId =
                         (prefs.getString('isUserId')) ?? '';

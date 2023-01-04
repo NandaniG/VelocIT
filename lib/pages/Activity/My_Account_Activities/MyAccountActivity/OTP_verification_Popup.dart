@@ -212,8 +212,9 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                       Expanded(
                         flex: 1,
                         child: whiteProceedButton(
-                            StringUtils.cancel, context, () {
-                          // Navigator.of(context).push(
+                            StringUtils.cancel, context, () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                        // Navigator.of(context).push(
                           //   MaterialPageRoute(
                           //     builder: (context) => AddNewCardActivity(),
                           //   ),
@@ -229,8 +230,9 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                         child: proceedButton(
                             StringUtils.update,
                             ThemeApp.blackColor,
-                            context, false,() {
-                          setState(() {
+                            context, false,() {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                        setState(() {
                             value.userAccountDetailList.add(UserAccountList(
                                 userId: 1,userImage: value.images.toString(),
                                 userName: value.userNameController.text,

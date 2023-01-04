@@ -76,15 +76,17 @@ SizedBox(height: height*.02,),
                   child: Row(
                     children: [
                       Expanded(flex: 1,
-                        child: proceedButton(StringUtils.no, ThemeApp.whiteColor,context,false, () {
-                          Navigator.pop(context);
+                        child: proceedButton(StringUtils.no, ThemeApp.whiteColor,context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                        Navigator.pop(context);
                         }),
                       ),
                       SizedBox(width: width*.03,),
                       Expanded(flex: 1,
                         child: Consumer<ProductProvider>(builder: (context, value, child) {
 
-                            return proceedButton(StringUtils.yes, ThemeApp.blackColor,context,false, () {
+                            return proceedButton(StringUtils.yes, ThemeApp.blackColor,context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+
                             setState(() {
                               print(widget.cardList.length);
 value.deleteCardMethod(widget.index);

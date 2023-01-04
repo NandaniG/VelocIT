@@ -59,7 +59,7 @@ class _OfferActivityState extends State<OfferActivity> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
                         ),
-                        TextFieldUtils().listHeadingTextField(
+                        TextFieldUtils().headingTextField(
                             StringUtils.lowerPriceOfTheDay,
                             context),
                         SizedBox(
@@ -69,7 +69,7 @@ class _OfferActivityState extends State<OfferActivity> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
                         ),
-                        TextFieldUtils().listHeadingTextField(
+                        TextFieldUtils().headingTextField(
                             StringUtils.appliances, context),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,

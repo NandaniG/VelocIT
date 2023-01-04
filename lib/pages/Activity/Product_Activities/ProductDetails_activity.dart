@@ -7,10 +7,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:velocit/Core/Model/FindProductBySubCategoryModel.dart';
 import 'package:velocit/utils/utils.dart';
-import '../../../Core/Model/CartModels/updateCartModel.dart';
-import '../../../Core/Model/productSpecificListModel.dart';
 import '../../../Core/Model/scannerModel/SingleProductModel.dart';
 import '../../../Core/ViewModel/cart_view_model.dart';
 import '../../../Core/ViewModel/product_listing_view_model.dart';
@@ -136,7 +133,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       //   'setBadgeCountPref',
       //   quantity.toString(),
       // );
-      cartListView.cartSpecificIDWithGet(context, StringConstant.UserCartID).then((value) => setState((){}));
+      cartListView
+          .cartSpecificIDWithGet(context, StringConstant.UserCartID)
+          .then((value) => setState(() {}));
       StringConstant.BadgeCounterValue =
           (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
@@ -184,7 +183,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             height: MediaQuery.of(context).size.height,
             // padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: ChangeNotifierProvider<ProductSpecificListViewModel>.value(
-                value:  productSpecificListViewModel,
+                value: productSpecificListViewModel,
                 child: Consumer<ProductSpecificListViewModel>(
                     builder: (context, productSubCategoryProvider, child) {
                   switch (productSubCategoryProvider
@@ -219,12 +218,11 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     left: 20,
                                     right: 20,
                                   ),
-                                  child: TextFieldUtils()
-                                      .homePageheadingTextField(
-                                          model!.shortName!, context),
+                                  child: TextFieldUtils().headingTextField(
+                                      model!.shortName!, context),
                                 ),
                                 SizedBox(
-                                  height: height * .01,
+                                  height: 10,
                                 ),
                                 rattingBar(model),
                                 SizedBox(
@@ -262,9 +260,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 model.productVariants!.isNotEmpty
                                     ? availableVariant(model)
                                     : SizedBox(),
-                                SizedBox(
+                                model.productVariants!.isNotEmpty
+                                    ?  SizedBox(
                                   height: height * .01,
-                                ),
+                                ):SizedBox(),
                                 productDescription(model),
                                 SizedBox(
                                   height: height * .01,
@@ -360,16 +359,13 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                               width: width,
                                               color: Colors.white,
                                               child: Image.network(
-                                                    e.imageUrl ?? "",
-                                                    fit: BoxFit.fill,
-                                                    errorBuilder:
-                                                        (BuildContext context,
-                                                            Object exception,
-                                                            StackTrace?
-                                                                stackTrace) {
-                                                      return const Text('');
-                                                    },
-                                                  ) ??
+                                                      e.imageUrl ?? "",
+                                                      fit: BoxFit.fill,
+                                                      errorBuilder: ((context,
+                                                          error, stackTrace) {
+                                                    return Icon(
+                                                        Icons.image_outlined);
+                                                  })) ??
                                                   SizedBox(),
                                             ) ??
                                             SizedBox()),
@@ -432,10 +428,11 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           left: 20,
           right: 20,
         ),
-        child: rattingBarWidget(model, 5, width * .7,4.5));
+        child: rattingBarWidget(model, 5, width * .7, 4.5));
   }
 
-  Widget rattingBarWidget(SingleProductPayload model, int count, double width,double  ratingValue) {
+  Widget rattingBarWidget(
+      SingleProductPayload model, int count, double width, double ratingValue) {
     return Container(
       width: width,
       // padding: const EdgeInsets.only(
@@ -466,69 +463,73 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
+  bool isMerchantfive = false;
+
   Widget merchantDetails(SingleProductPayload model) {
-    return Flexible(
-      // height: height * .22,
-      child: ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          scrollDirection: Axis.vertical,
-          itemCount: model.merchants!.length,
-          // itemCount: 5,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-                  // height: height*.02,
-                  padding: const EdgeInsets.only(left: 14, right: 20),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: width * .08,
-                            child: Radio(
-                              activeColor: ThemeApp.appColor,
-                              value: index,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            itemCount: isMerchantfive == false && model.merchants.length < 5
+                ? model.merchants.length
+                : isMerchantfive == true
+                    ? model.merchants.length
+                    : 5,
+            // itemCount: 5,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                    // height: height*.02,
+                    padding: const EdgeInsets.only(left: 14, right: 20),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: width * .08,
+                              child: Radio(
+                                activeColor: ThemeApp.appColor,
+                                value: index,
 
 // contentPadding: EdgeInsets.zero,
 //                   dense: true,
-                              // visualDensity: const VisualDensity(horizontal: -4.0),
-                              visualDensity: const VisualDensity(
-                                horizontal: VisualDensity.minimumDensity,
-                                vertical: VisualDensity.minimumDensity,
+                                // visualDensity: const VisualDensity(horizontal: -4.0),
+                                visualDensity: const VisualDensity(
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
+                                ),
+                                groupValue: _radioValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _radioValue = value;
+                                    // print("_radioValue"+_radioValue.toString());
+                                  });
+                                },
+                                // title: Padding(
+                                //   padding: const EdgeInsets.only(left: 0),
+                                //   child: Text(model.merchants![0].merchantName!,
+                                //       style: TextStyle(
+                                //           color: ThemeApp.blackColor,
+                                //           fontSize: MediaQuery.of(context).size.height * .02,
+                                //           fontWeight: FontWeight.w400)),
+                                // ),
                               ),
-                              groupValue: _radioValue,
-                              onChanged: (value) {
-                                // _radioValue ==index;
-                                setState(() {
-                                  // _radioValue = value;
-                                  // print("_radioValue"+_radioValue.toString());
-                                });
-                              },
-                              // title: Padding(
-                              //   padding: const EdgeInsets.only(left: 0),
-                              //   child: Text(model.merchants![0].merchantName!,
-                              //       style: TextStyle(
-                              //           color: ThemeApp.blackColor,
-                              //           fontSize: MediaQuery.of(context).size.height * .02,
-                              //           fontWeight: FontWeight.w400)),
-                              // ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 0),
-                            child: Text(model.merchants![index].merchantName!,
-                                style: TextStyle(
-                                    color: ThemeApp.blackColor,
-                                    fontSize:
-                                        MediaQuery.of(context).size.height *
-                                            .02,
-                                    fontWeight: FontWeight.w400)),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        // padding: const EdgeInsets.only(left: 15),
-                        child: Row(
+                            Padding(
+                              padding: const EdgeInsets.only(left: 0),
+                              child: Text(
+                                      model.merchants[index].merchantName ?? "",
+                                      style: TextStyle(
+                                          color: ThemeApp.blackColor,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500)) ??
+                                  SizedBox(),
+                            ),
+                          ],
+                        ),
+                        Row(
                           // mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -536,40 +537,37 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               width: width * .08,
                             ),
                             Text(
-                                model.merchants![index].deliveryDays.toString() + " Day(s)",
+                                model.merchants![index].deliveryDays
+                                        .toString() +
+                                    " Day(s)",
                                 style: TextStyle(
                                     color: ThemeApp.darkGreyColor,
-                                    fontSize:
-                                        MediaQuery.of(context).size.height *
-                                            .018,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400)),
                             Container(
                                 padding:
                                     const EdgeInsets.only(right: 10, left: 10),
                                 height: height * .02,
                                 child: TextFieldUtils().lineVertical()),
-                            model
-                                .merchants![index].unitOfferPrice!=null?   Text(
-                                indianRupeesFormat.format(double.parse(model
-                                    .merchants![index].unitOfferPrice
-                                    .toString())??0.0),
-                                style: TextStyle(
-                                    color: ThemeApp.darkGreyColor,
-                                    fontSize:
-                                        MediaQuery.of(context).size.height *
-                                            .02,
-                                    fontWeight: FontWeight.w400)):Text(
-                                '0.0',
-                                style: TextStyle(
-                                    color: ThemeApp.darkGreyColor,
-                                    fontSize:
-                                    MediaQuery.of(context).size.height *
-                                        .02,
-                                    fontWeight: FontWeight.w400)),
+                            model.merchants![index].unitOfferPrice != null
+                                ? Text(
+                                    indianRupeesFormat.format(double.parse(model
+                                            .merchants![index].unitOfferPrice
+                                            .toString()) ??
+                                        0.0),
+                                    style: TextStyle(
+                                        color: ThemeApp.darkGreyColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400))
+                                : Text('0.0',
+                                    style: TextStyle(
+                                        color: ThemeApp.darkGreyColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400)),
                             SizedBox(
                               width: width * .02,
                             ),
-                         /*   model.merchants![index].unitMrp!=null?  Text(
+                            /*   model.merchants![index].unitMrp!=null?  Text(
                                 indianRupeesFormat.format(
                                     double.parse(model.merchants![index].unitMrp.toString()) ??
                                         0.0)??'0.0',
@@ -595,89 +593,135 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     const EdgeInsets.only(right: 10, left: 10),
                                 height: height * .02,
                                 child: TextFieldUtils().lineVertical()),
-                            Text(model.merchants![index].unitDiscountPerc.toString() + "%",
+                            Text(
+                                model.merchants![index].unitDiscountPerc
+                                        .toString() +
+                                    "%",
                                 style: TextStyle(
                                     color: ThemeApp.darkGreyColor,
-                                    fontSize:
-                                        MediaQuery.of(context).size.height *
-                                            .02,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400)),
                             Container(
                                 padding:
                                     const EdgeInsets.only(right: 10, left: 10),
                                 height: height * .02,
                                 child: TextFieldUtils().lineVertical()),
-                            rattingBarWidget(model, 5, width * .35, model.merchants![index].merchantRating!.toDouble())
+                            Flexible(
+                                child: rattingBarWidget(
+                                    model,
+                                    5,
+                                    width * .3,
+                                    model.merchants![index].merchantRating!
+                                        .toDouble()))
                           ],
                         ),
+                      ],
+                    ),
+                    /* Row(
+                    children: [
+                      RadioListTile(
+                        activeColor: ThemeApp.appColor,
+                        value: 0,
+
+                        dense: true,
+                        // visualDensity: const VisualDensity(horizontal: -4.0),
+                        visualDensity: const VisualDensity(
+                          horizontal: VisualDensity.minimumDensity,
+                          vertical: VisualDensity.minimumDensity,
+                        ),
+                        groupValue: _radioValue,
+                        onChanged: (value) {
+                          setState(() {
+                            _radioValue = value;
+                            StringConstant.sortByRadio = _radioValue!;
+                            print(StringConstant.sortedBy);
+                          });
+                        },
+                        title: Padding(
+                          padding: const EdgeInsets.only(left: 0),
+                          child: Text(model.merchants![0].merchantName!,
+                              style: TextStyle(
+                                  color: ThemeApp.darkGreyColor,
+                                  fontSize: MediaQuery.of(context).size.height * .02,
+                                  fontWeight: FontWeight.w400)),
+                        ),
+                      ),    */ /* Container(      padding: const EdgeInsets.only(right: 10,left: 10),
+                          height: height*.02,
+
+                          child: TextFieldUtils().lineVertical()),*/ /*
+                      Text(
+                          indianRupeesFormat
+                              .format(double.parse(model.defaultSellPrice.toString())),
+                          style: TextStyle(
+                              color: ThemeApp.darkGreyColor,
+                              fontSize: MediaQuery.of(context).size.height * .02,
+                              fontWeight: FontWeight.w400)),
+                      SizedBox(
+                        width: width * .02,
                       ),
+
+
+                      Text(
+                          indianRupeesFormat
+                              .format(double.parse(model.defaultMrp.toString()) ?? 0.0),
+                          style: TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                              color: ThemeApp.darkGreyColor,
+                              fontSize: MediaQuery.of(context).size.height * .02,
+                              fontWeight: FontWeight.w400)),
+                      SizedBox(
+                        width: width * .02,
+                      ),
+                      Text(model.defaultDiscount.toString() + "%",
+                          style: TextStyle(
+                              color: ThemeApp.darkGreyColor,
+                              fontSize: MediaQuery.of(context).size.height * .02,
+                              fontWeight: FontWeight.w400)),
                     ],
-                  ),
-                  /* Row(
-                  children: [
-                    RadioListTile(
-                      activeColor: ThemeApp.appColor,
-                      value: 0,
-
-                      dense: true,
-                      // visualDensity: const VisualDensity(horizontal: -4.0),
-                      visualDensity: const VisualDensity(
-                        horizontal: VisualDensity.minimumDensity,
-                        vertical: VisualDensity.minimumDensity,
-                      ),
-                      groupValue: _radioValue,
-                      onChanged: (value) {
-                        setState(() {
-                          _radioValue = value;
-                          StringConstant.sortByRadio = _radioValue!;
-                          print(StringConstant.sortedBy);
-                        });
-                      },
-                      title: Padding(
-                        padding: const EdgeInsets.only(left: 0),
-                        child: Text(model.merchants![0].merchantName!,
-                            style: TextStyle(
-                                color: ThemeApp.darkGreyColor,
-                                fontSize: MediaQuery.of(context).size.height * .02,
-                                fontWeight: FontWeight.w400)),
-                      ),
-                    ),    */ /* Container(      padding: const EdgeInsets.only(right: 10,left: 10),
-                        height: height*.02,
-
-                        child: TextFieldUtils().lineVertical()),*/ /*
-                    Text(
-                        indianRupeesFormat
-                            .format(double.parse(model.defaultSellPrice.toString())),
-                        style: TextStyle(
-                            color: ThemeApp.darkGreyColor,
-                            fontSize: MediaQuery.of(context).size.height * .02,
-                            fontWeight: FontWeight.w400)),
-                    SizedBox(
-                      width: width * .02,
-                    ),
+                  ),*/
+                  ) ??
+                  SizedBox();
+            }),
+        Container(
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
+          child: model.merchants!.length > 5 && isMerchantfive == false
+              ? InkWell(
+                  onTap: () {
+                    setState(() {
+                      isMerchantfive = !isMerchantfive;
+                    });
+                  },
+                  child: TextFieldUtils().dynamicText(
+                      '+ View More',
+                      context,
+                      TextStyle(
+                          color: ThemeApp.tealButtonColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
+                )
+              : Container(),
+        ),
+        Container(                   padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
 
 
-                    Text(
-                        indianRupeesFormat
-                            .format(double.parse(model.defaultMrp.toString()) ?? 0.0),
-                        style: TextStyle(
-                            decoration: TextDecoration.lineThrough,
-                            color: ThemeApp.darkGreyColor,
-                            fontSize: MediaQuery.of(context).size.height * .02,
-                            fontWeight: FontWeight.w400)),
-                    SizedBox(
-                      width: width * .02,
-                    ),
-                    Text(model.defaultDiscount.toString() + "%",
-                        style: TextStyle(
-                            color: ThemeApp.darkGreyColor,
-                            fontSize: MediaQuery.of(context).size.height * .02,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),*/
-                ) ??
-                SizedBox();
-          }),
+          child: isMerchantfive == true
+              ? InkWell(
+                  onTap: () {
+                    setState(() {
+                      isMerchantfive = !isMerchantfive;
+                    });
+                  },
+                  child: TextFieldUtils().dynamicText(
+                      '- View Less',
+                      context,
+                      TextStyle(
+                          color: ThemeApp.tealButtonColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
+                )
+              : Container(),
+        )
+      ],
     );
   }
 
@@ -687,26 +731,42 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         left: 20,
         right: 20,
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          TextFieldUtils().textFieldHeightFour(
-              indianRupeesFormat
-                  .format(double.parse(model.defaultSellPrice.toString())),
-              context),
-          SizedBox(
-            width: width * .02,
-          ),
-          TextFieldUtils().pricesLineThrough(
-              indianRupeesFormat
-                  .format(double.parse(model.defaultMrp.toString()) ?? 0.0),
-              context),
-          SizedBox(
-            width: width * .02,
-          ),
-          TextFieldUtils().textFieldTwoFiveGrey(
-              model.defaultDiscount.toString() + "%", context),
-        ],
+      child: Container(  padding: const EdgeInsets.fromLTRB(20, 27, 20, 26),
+        color: ThemeApp.priceContainerColor,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TextFieldUtils().dynamicText(
+                indianRupeesFormat
+                    .format(double.parse(model.defaultSellPrice.toString())??'0.0'),
+                context,
+                TextStyle(
+                    color: ThemeApp.blackColor,
+                    fontSize: 34,letterSpacing: 0.2 ,
+                    fontWeight: FontWeight.w700)),
+            SizedBox(
+              width: 20,
+            ), TextFieldUtils().dynamicText(
+                indianRupeesFormat
+                    .format(double.parse(model.defaultMrp.toString())??'0.0'),
+                context,
+                TextStyle(
+                    color: ThemeApp.lightFontColor,
+                    decoration: TextDecoration.lineThrough,letterSpacing: 0.2 ,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700)),
+
+            SizedBox(
+              width: 9,
+            ), TextFieldUtils().dynamicText(
+                model.defaultDiscount.toString() + "%",
+                context,
+                TextStyle(
+                    color: ThemeApp.blackColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500)),
+          ],
+        ),
       ),
     );
   }
@@ -758,16 +818,16 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             Text("Product Description",
                 style: TextStyle(
                     color: ThemeApp.blackColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: height * .022)),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16)),
             SizedBox(
               height: height * .01,
             ),
             Text(model.oneliner!,
                 style: TextStyle(
-                  color: ThemeApp.darkGreyColor,
+                  color: ThemeApp.lightFontColor,
                   // fontWeight: FontWeight.w500,
-                  fontSize: height * .02,
+                  fontSize: 14,
                 )),
           ],
         ),
@@ -807,17 +867,15 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
                           child: Image.network(
-                                // width: double.infinity,
-                                model.imageUrls![index].imageUrl! ?? "",
-                                fit: BoxFit.fill,
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                width: width * .1,
-                                errorBuilder: (BuildContext context,
-                                    Object exception, StackTrace? stackTrace) {
-                                  return const Text('');
-                                },
-                              ) ??
+                                  // width: double.infinity,
+                                  model.imageUrls![index].imageUrl! ?? "",
+                                  fit: BoxFit.fill,
+                                  height:
+                                      MediaQuery.of(context).size.height * .05,
+                                  width: width * .1,
+                                  errorBuilder: ((context, error, stackTrace) {
+                                return Icon(Icons.image_outlined);
+                              })) ??
                               SizedBox(),
                         ),
                       ) ??
@@ -1248,14 +1306,18 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           final prefs = await SharedPreferences.getInstance();
                           StringConstant.isUserLoggedIn =
                               (prefs.getInt('isUserLoggedIn')) ?? 0;
-                          final navigator = Navigator.of(context); // <- Add this
+                          final navigator =
+                              Navigator.of(context); // <- Add this
 
-                          prefs.setString('isUserNavigateFromDetailScreen', 'Yes');
+                          prefs.setString(
+                              'isUserNavigateFromDetailScreen', 'Yes');
                           if (StringConstant.isUserLoggedIn != 0) {
                             navigator
                                 .push(MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    OrderReviewActivity(cartId: int.parse(StringConstant.UserCartID))))
+                                    builder: (BuildContext context) =>
+                                        OrderReviewActivity(
+                                            cartId: int.parse(
+                                                StringConstant.UserCartID))))
                                 .then((value) => setState(() {}));
                           } else {
                             Navigator.pushReplacementNamed(

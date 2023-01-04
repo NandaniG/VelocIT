@@ -348,8 +348,9 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
 
   Widget submitButton() {
     return proceedButton('Submit', ThemeApp.tealButtonColor,
-        context, false, () {
-          showDialog(
+        context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+        showDialog(
               context: context,
               builder: (BuildContext context) {
                 return submitDialog(
@@ -431,6 +432,7 @@ class _submitDialogState extends State<submitDialog> {
                         fontWeight: FontWeight.w400)),
 
                 proceedButton(
+
                     widget.buttonText, ThemeApp.blackColor, context, false,
                     widget.onTap),
               ],

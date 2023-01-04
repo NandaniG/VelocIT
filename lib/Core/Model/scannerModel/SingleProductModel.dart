@@ -243,7 +243,7 @@ class SingleProductPayload {
   List<ImageUrls>? imageUrls;
   List? productCategory;
   List<SingleProductsubCategory>? productsubCategory;
-  List<SingleModelMerchants>? merchants;
+  List<SingleModelMerchants> merchants=[];
   List? productVariants;
   int? id;
   String? productCode;
@@ -262,11 +262,11 @@ class SingleProductPayload {
   var brandCode;
   var brandName;
 
-  SingleProductPayload(
+  SingleProductPayload(        this.merchants,
+
       {this.imageUrls,
         this.productCategory,
         this.productsubCategory,
-        this.merchants,
         this.productVariants,
         this.id,
         this.productCode,
@@ -421,7 +421,7 @@ class SingleProductsubCategory {
 class SingleModelMerchants {
   int? id;
   String? merchantCode;
-  String? merchantName;
+  String merchantName='';
  double? unitMrp;
  double? unitOfferPrice;
   var deliveryChargesPerOrder;
@@ -430,10 +430,10 @@ class SingleModelMerchants {
   int? productItemId;
   int? unitDiscountPerc;
 
-  SingleModelMerchants(
+  SingleModelMerchants(   this.merchantName,
       {this.id,
         this.merchantCode,
-        this.merchantName,
+
         this.unitMrp,
         this.unitOfferPrice,
         this.deliveryChargesPerOrder,

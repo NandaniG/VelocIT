@@ -286,8 +286,8 @@ class _ProductListByCategoryActivityState
                 context,
                 TextStyle(
                   color: ThemeApp.lightFontColor,
-                  // fontWeight: FontWeight.w500,
-                  fontSize: height * .02,
+                fontWeight: FontWeight.w400,
+                  fontSize: 12,letterSpacing: -0.08
                 )),
             InkWell(
               onTap: () {
@@ -302,8 +302,8 @@ class _ProductListByCategoryActivityState
                   context,
                   TextStyle(
                     color: ThemeApp.blackColor,
-                    // fontWeight: FontWeight.w500,
-                    fontSize: height * .022,
+                   fontWeight: FontWeight.w400,
+                    fontSize: 12,letterSpacing: -0.08
                   )),
             ),
             const Icon(Icons.keyboard_arrow_down)
@@ -324,8 +324,8 @@ class _ProductListByCategoryActivityState
                     context,
                     TextStyle(
                       color: ThemeApp.blackColor,
-                      // fontWeight: FontWeight.w500,
-                      fontSize: height * .022,
+                     fontWeight: FontWeight.w400,
+                      fontSize:12,
                     )),
                 Padding(
                   padding: const EdgeInsets.all(2),
@@ -387,10 +387,10 @@ class _ProductListByCategoryActivityState
                     // physics:  AlwaysScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 30,
-                      crossAxisSpacing: 10,
-                      // width / height: fixed for *all* items
-                      childAspectRatio: 0.75,
+                          mainAxisSpacing: 0.5,
+                          crossAxisSpacing: 0.5,
+                          // width / height: fixed for *all* items
+                          childAspectRatio: 0.85,
 
                       crossAxisCount: 2,
                     ),
@@ -427,20 +427,18 @@ class _ProductListByCategoryActivityState
                                     );
                                   },
                                   child: Container(
-                                      decoration: const BoxDecoration(
-                                          color: ThemeApp.tealButtonColor,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
+
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Expanded(
+                                       /*   Expanded(
                                             flex: 2,
-                                            child: Container(
-                                              height: SizeConfig.orientations !=
+                                            child:*/ Container(
+                                              height: 163,
+                                              width: 191, /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
                                                           .size
@@ -452,22 +450,12 @@ class _ProductListByCategoryActivityState
                                                       .1,
                                               width: MediaQuery.of(context)
                                                   .size
-                                                  .width,
+                                                  .width,*/
                                               decoration: const BoxDecoration(
                                                   color: ThemeApp.whiteColor,
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    topRight:
-                                                        Radius.circular(10),
-                                                    topLeft:
-                                                        Radius.circular(10),
-                                                  )),
+                                                 ),
                                               child: ClipRRect(
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                  topRight: Radius.circular(10),
-                                                  topLeft: Radius.circular(10),
-                                                ),
+
                                                 child: subProductList[index]
                           .imageUrls![0]
                           .imageUrl!.isNotEmpty?Image.network(
@@ -496,10 +484,10 @@ class _ProductListByCategoryActivityState
                                                     )),
                                               ),
                                             ),
-                                          ),
-                                          Expanded(
-                                            // flex: 1,
-                                            child: Container(
+                                          // ),
+                                         Container(      color: ThemeApp.tealButtonColor,
+                                           width: 191,
+                                           height: 65,
                                               padding: const EdgeInsets.only(
                                                   left: 12, right: 12),
                                               child: Column(
@@ -509,60 +497,35 @@ class _ProductListByCategoryActivityState
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
+                                                  TextFieldUtils()
+                                                      .listNameHeadingTextField(
                                                       subProductList[index]
-                                                          .shortName!,
-                                                      style: TextStyle(
-                                                          color: ThemeApp
-                                                              .whiteColor,
-                                                          fontSize:
-                                                              height * .022,
-                                                          fontWeight:
-                                                              FontWeight.w400)),
+                                                          .shortName!,context),
                                                   Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      TextFieldUtils().dynamicText(
+                                                      TextFieldUtils().listPriceHeadingTextField(
                                                           indianRupeesFormat
                                                               .format(subProductList[
                                                                           index]
                                                                       .defaultSellPrice ??
                                                                   0.0),
-                                                          context,
-                                                          TextStyle(
-                                                              color: ThemeApp
-                                                                  .whiteColor,
-                                                              fontSize:
-                                                                  height * .023,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500)),
-                                                      TextFieldUtils().dynamicText(
+                                                          context),
+                                                      TextFieldUtils().listPriceHeadingTextField(
                                                           indianRupeesFormat.format(
                                                               subProductList[
                                                                           index]
                                                                       .defaultMrp ??
                                                                   0.0),
-                                                          context,
-                                                          TextStyle(
-                                                              color: ThemeApp
-                                                                  .whiteColor,
-                                                              decoration:
-                                                                  TextDecoration
-                                                                      .lineThrough,
-                                                              fontSize:
-                                                                  height * .022,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
+                                                          context)
                                                     ],
                                                   )
                                                 ],
                                               ),
                                             ),
-                                          )
+
                                         ],
                                       )),
                                 ),
@@ -677,8 +640,9 @@ class _ProductListByCategoryActivityState
                 ),
                 proceedButton(
                     "Sort Now", ThemeApp.darkGreyColor, context, false, () {
-                  setState(() {
-                    StringConstant.sortByRadio == 1
+                  setState(() {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                  StringConstant.sortByRadio == 1
                         ? StringConstant.sortedBy = "High to Low"
                         : 'Low to High';
 

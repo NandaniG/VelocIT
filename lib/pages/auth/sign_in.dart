@@ -35,6 +35,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
   bool _validateEmail = false;
   bool _validateMobile = false;
   bool _validatePassword = false;
+  final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
 
   @override
   void initState() {
@@ -257,8 +258,33 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                           height: 0,
                         ),
                   !_usingPassVisible
-                      ? TextFieldUtils()
-                          .asteriskTextField(StringUtils.password, context)
+                      ? Row(
+                          children: [
+                            TextFieldUtils().asteriskTextField(
+                                StringUtils.password, context),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Tooltip(
+                              key: tooltipkey,
+                              message:
+                                  'Enter Password that must be\n(i) 8-16 characters long\n(ii) Must contain a number\n(iii) Must contain a capital and small letter\n(iv)Must contain a special character',
+                              padding: const EdgeInsets.all(30),
+                              margin: const EdgeInsets.only(
+                                  top: 30, left: 30, right: 30),
+                               triggerMode: TooltipTriggerMode.tap,
+                              showDuration: const Duration(seconds:2),
+                              decoration: BoxDecoration(
+                                  color: Colors.redAccent,
+                                  borderRadius: BorderRadius.circular(22)),
+                              textStyle: const TextStyle(
+                                  fontSize: 16,letterSpacing: 1.2,
+                                  fontStyle: FontStyle.italic,fontWeight: FontWeight.w700,
+                                  color: Colors.white),
+                              child: Icon(Icons.info_outline),
+                            )
+                          ],
+                        )
                       : const SizedBox(
                           height: 0,
                         ),
@@ -302,7 +328,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                       ? Container(
                           alignment: Alignment.centerRight,
                           child: InkWell(
-                            onTap: () {
+                            onTap: () {    FocusManager.instance.primaryFocus?.unfocus();
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) =>
@@ -330,6 +356,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                       ThemeApp.tealButtonColor,
                       context,
                       authViewModel.loadingWithGet, () async {
+                        FocusManager.instance.primaryFocus?.unfocus();
                     setState(() {
                       Prefs.instance
                           .setToken(StringConstant.emailPref, email.text);

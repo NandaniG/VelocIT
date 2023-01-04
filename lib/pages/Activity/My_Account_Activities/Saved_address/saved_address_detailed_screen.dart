@@ -1002,8 +1002,9 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                 ),
               ),
               IconButton(
-                  onPressed: () {
-                    setState(() {
+                  onPressed: () {                        FocusManager.instance.primaryFocus?.unfocus();
+
+                  setState(() {
                       allAddress.add(_textEditingController.text);
                       _textEditingController.text = "";
                     });

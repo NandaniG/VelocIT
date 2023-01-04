@@ -34,6 +34,8 @@ class _SignUpState extends State<SignUp> {
   TextEditingController emailOtp = new TextEditingController();
   TextEditingController password = new TextEditingController();
   TextEditingController confirmPassword = new TextEditingController();
+  final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
+
   FocusNode focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   bool _validateName = false;
@@ -137,8 +139,32 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .02,
                     ),
-                    TextFieldUtils().asteriskTextField(
-                        StringUtils.password, context),
+                    Row(
+                      children: [
+                        TextFieldUtils().asteriskTextField(
+                            StringUtils.password, context),  SizedBox(
+                          width: 5,
+                        ),
+                        Tooltip(
+                          key: tooltipkey,
+                          message:
+                          'Enter Password that must be\n(i) 8-16 characters long\n(ii) Must contain a number\n(iii) Must contain a capital and small letter\n(iv)Must contain a special character',
+                          padding: const EdgeInsets.all(30),
+                          margin: const EdgeInsets.only(
+                              top: 30, left: 30, right: 30),
+                          triggerMode: TooltipTriggerMode.tap,
+                          showDuration: const Duration(seconds:2),
+                          decoration: BoxDecoration(
+                              color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(22)),
+                          textStyle: const TextStyle(
+                              fontSize: 16,letterSpacing: 1.2,
+                              fontStyle: FontStyle.italic,fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                          child: Icon(Icons.info_outline),
+                        )
+                      ],
+                    ),
                     PasswordTextFormFieldsWidget(
                         errorText: StringUtils.passwordError,
                         textInputType: TextInputType.text,
@@ -237,6 +263,8 @@ class _SignUpState extends State<SignUp> {
                           ThemeApp.tealButtonColor,
                           context,
                           authViewModel.loadingWithAuthUSerPost, () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+
                         if (_formKey.currentState!.validate()) {
                           Map data = {
                             "username": businessNameController.text,
