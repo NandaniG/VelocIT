@@ -103,7 +103,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                           //     ? 'Where are you from'
                           //     : 'From',
                           // errorText: "Wrong Choice",
-                          // errorStyle: TextStyle(
+                          // errorStyle: TextStyle(fontFamily: 'Roboto',
                           //     color: Colors.redAccent, fontSize: 16.0),
                           border: OutlineInputBorder(
                               borderRadius:
@@ -121,7 +121,6 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
-                              fontFamily: 'Roboto',
                             ),
                           ),
                           items: bankDataList
@@ -425,7 +424,7 @@ class _submitDialogState extends State<submitDialog> {
                 TextFieldUtils().dynamicText(
                     widget.subHeading,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         // fontWeight: FontWeight.w500,
                         fontSize: MediaQuery.of(context).size.height * .022,
@@ -433,7 +432,7 @@ class _submitDialogState extends State<submitDialog> {
 
                 proceedButton(
 
-                    widget.buttonText, ThemeApp.blackColor, context, false,
+                    widget.buttonText, ThemeApp.tealButtonColor, context, false,
                     widget.onTap),
               ],
             ),

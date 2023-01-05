@@ -11,20 +11,28 @@ Widget proceedButton(String name, Color color, BuildContext context,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
-            Radius.circular(10),
+            Radius.circular(100),
           ),
           border: Border.all(
-              color:ThemeApp.tealButtonColor
+              color: color== ThemeApp.tealButtonColor?ThemeApp.tealButtonColor: ThemeApp.whiteColor,
           ),
-          color: ThemeApp.tealButtonColor,
+          color: color== ThemeApp.tealButtonColor?ThemeApp.tealButtonColor: ThemeApp.whiteColor,
         ),
         child: loading
             ? Center(
-              child: CircularProgressIndicator(color: ThemeApp.tealButtonColor),
+              child: CircularProgressIndicator(color:color== ThemeApp.tealButtonColor?ThemeApp.whiteColor: ThemeApp.tealButtonColor),
             )
-            : TextFieldUtils().usingPassTextFields(
-                name, ThemeApp.whiteColor,
-                context)),
+            : Text(
+          name,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontFamily: 'Roboto',
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              overflow: TextOverflow.ellipsis,
+              color: color== ThemeApp.tealButtonColor?ThemeApp.whiteColor: ThemeApp.tealButtonColor,
+              letterSpacing: -0.25
+          ),
+        )),
   );
 }
 
@@ -60,7 +68,7 @@ Widget viewMoreButton(String name, BuildContext context, VoidCallback onTap) {
         child: TextFieldUtils().dynamicText(
            name,
             context,
-            TextStyle(
+            TextStyle(fontFamily: 'Roboto',
               color: ThemeApp.tealButtonColor,
               fontWeight: FontWeight.w500,
               fontSize: MediaQuery.of(context).size.height  * .02,
@@ -79,7 +87,7 @@ Widget kmAwayOnMerchantImage(String name, BuildContext context) {
       ),
       child: Text(
         name,
-        style: TextStyle(
+        style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .020,
           color: ThemeApp.whiteColor,
           fontWeight: FontWeight.bold,
@@ -101,7 +109,7 @@ Widget roundChipButton(String name,BuildContext context, VoidCallback onTap){
         child: Text(
         name,
 
-       style:     TextStyle(
+       style:     TextStyle(fontFamily: 'Roboto',
                 color:ThemeApp.whiteColor,
                 // fontWeight: FontWeight.w500,
                 fontSize: 16,

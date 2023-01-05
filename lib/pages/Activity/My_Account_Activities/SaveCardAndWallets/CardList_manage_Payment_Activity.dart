@@ -90,7 +90,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                                     value.creditCardList[index]
                                                         .myCardFullName!,
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                       color:
                                                           ThemeApp.blackColor,
                                                       fontWeight:
@@ -104,7 +104,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                                     value.creditCardList[index]
                                                         .myCardType!,
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                       color:
                                                           ThemeApp.darkGreyTab,
                                                       fontSize: height * .018,
@@ -116,7 +116,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                                     value.creditCardList[index]
                                                         .myCardNumber!,
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                       color:
                                                           ThemeApp.darkGreyTab,
                                                       fontSize: height * .018,
@@ -151,7 +151,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                                           .dynamicText(
                                                               'Expires Feb 2027',
                                                               context,
-                                                              TextStyle(
+                                                              TextStyle(fontFamily: 'Roboto',
                                                                 color: ThemeApp
                                                                     .darkGreyTab,
                                                                 fontSize:
@@ -193,7 +193,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                             TextFieldUtils().dynamicText(
                                                 'Primary method payment',
                                                 context,
-                                                TextStyle(
+                                                TextStyle(fontFamily: 'Roboto',
                                                     color: ThemeApp.darkGreyTab,
                                                     fontSize: height * .02,
                                                     fontWeight:
@@ -274,7 +274,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                     TextFieldUtils().dynamicText(
                                         'Kotak Mahindra',
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
                                           fontWeight: FontWeight.bold,
                                           fontSize: height * .022,
@@ -285,7 +285,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                     TextFieldUtils().dynamicText(
                                         'Credit Card',
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                           color: ThemeApp.darkGreyTab,
                                           fontSize: height * .018,
                                         )),
@@ -295,7 +295,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                     TextFieldUtils().dynamicText(
                                         '**** **** **** 2531',
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                           color: ThemeApp.darkGreyTab,
                                           fontSize: height * .018,
                                         )),
@@ -329,7 +329,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                           TextFieldUtils().dynamicText(
                                               'Expires Feb 2027',
                                               context,
-                                              TextStyle(
+                                              TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.darkGreyTab,
                                                 fontSize: height * .018,
                                               )),
@@ -366,7 +366,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                 TextFieldUtils().dynamicText(
                                     'Primary method payment',
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyTab,
                                         fontSize: height * .02,
                                         fontWeight: FontWeight.w400)),
@@ -443,7 +443,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                               child: TextFieldUtils().dynamicText(
                                   StringUtils.addNewCard,
                                   context,
-                                  TextStyle(
+                                  TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.blackColor,
                                       fontSize: height * .023,
                                       fontWeight: FontWeight.w500)),
@@ -473,7 +473,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                         TextFieldUtils().dynamicText(
                             StringUtils.upi,
                             context,
-                            TextStyle(
+                            TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.blackColor,
                                 fontSize: height * .02,
                                 fontWeight: FontWeight.w400)),
@@ -512,7 +512,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                     TextFieldUtils().dynamicText(
                                         StringUtils.googlePay,
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                             color: ThemeApp.blackColor,
                                             fontSize: height * .018,
                                             fontWeight: FontWeight.w400)),
@@ -550,7 +550,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                     TextFieldUtils().dynamicText(
                                         StringUtils.payTm,
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                             color: ThemeApp.blackColor,
                                             fontSize: height * .018,
                                             fontWeight: FontWeight.w400)),
@@ -588,7 +588,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                     TextFieldUtils().dynamicText(
                                         StringUtils.phonePay,
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                             color: ThemeApp.blackColor,
                                             fontSize: height * .018,
                                             fontWeight: FontWeight.w400)),
@@ -644,7 +644,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                         value
                                             .creditCardList[index].cardName,
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
                                           fontWeight: FontWeight.bold,
                                           fontSize: height * .022,
@@ -656,7 +656,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                         value
                                             .creditCardList[index].cardType,
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                           color: ThemeApp.darkGreyTab,
                                           fontSize: height * .018,
                                         )),
@@ -667,7 +667,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                         value.creditCardList[index]
                                             .cardNumber,
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                           color: ThemeApp.darkGreyTab,
                                           fontSize: height * .018,
                                         )),
@@ -681,7 +681,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                 TextFieldUtils().dynamicText(
                                     'Kotak Mahindar Bank',
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.blackColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: height * .022,
@@ -692,7 +692,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                 TextFieldUtils().dynamicText(
                                     'Credit Card',
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.darkGreyTab,
                                       fontSize: height * .018,
                                     )),
@@ -702,7 +702,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                 TextFieldUtils().dynamicText(
                                     '**** **** **** 6782',
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.blackColor,
                                       fontSize: height * .025,
                                     )),
@@ -730,7 +730,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                                 TextFieldUtils().dynamicText(
                                     'Expires Feb 2027',
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.darkGreyTab,
                                       fontSize: height * .018,
                                     )),
@@ -767,7 +767,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                       TextFieldUtils().dynamicText(
                           'Primary method payment',
                           context,
-                          TextStyle(
+                          TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.darkGreyTab,
                               fontSize: height * .02,
                               fontWeight: FontWeight.w400)),
@@ -834,7 +834,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
                           child: TextFieldUtils().dynamicText(
                               StringUtils.addNewAddress,
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.blackColor,
                                   fontSize: height * .023,
                                   fontWeight: FontWeight.w500)),

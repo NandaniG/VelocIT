@@ -19,30 +19,30 @@ class FlutterLocalizationDemo extends StatelessWidget {
         case 'en':
           return Text(
             'English',
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontFamily: 'Roboto',fontSize: 16.0),
           );
         case 'id':
           return Text(
             'Indonesia',
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontFamily: 'Roboto',fontSize: 16.0),
           );
 
         case 'hi':
           return Text(
             'Hindi',
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontFamily: 'Roboto',fontSize: 16.0),
           );
 
         case 'it':
           return Text(
             'Italian',
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontFamily: 'Roboto',fontSize: 16.0),
           );
 
         default:
           return Text(
             'English',
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontFamily: 'Roboto',fontSize: 16.0),
           );
       }
     }
@@ -85,7 +85,7 @@ class FlutterLocalizationDemo extends StatelessWidget {
             children: [
               Text(
                 StringUtils.login,
-                style: TextStyle(
+                style: TextStyle(fontFamily: 'Roboto',
                   fontSize: 20.0,
                   fontWeight: FontWeight.w500,
                 ),

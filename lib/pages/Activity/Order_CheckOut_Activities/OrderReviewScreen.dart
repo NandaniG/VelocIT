@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/repository/cart_repository.dart';
 import 'package:velocit/pages/homePage.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
@@ -211,21 +212,26 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                   //   ),
                                   // );
                                 },
-                                child: Container(
-                                    height: height * 0.05,
-                                    alignment: Alignment.center,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      color: ThemeApp.whiteColor,
-                                    ),
-                                    padding: const EdgeInsets.only(
-                                        left: 15, right: 15),
-                                    child: TextFieldUtils().usingPassTextFields(
-                                        "Pay Now",
-                                        ThemeApp.tealButtonColor,
-                                        context))),
+
+                                    child: Container(
+                                        height: height * 0.05,
+                                        alignment: Alignment.center,
+                                        decoration: const BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.all(
+                                            Radius.circular(100),
+                                          ),
+                                          color: ThemeApp.whiteColor,
+                                        ),
+                                        padding: const EdgeInsets.only(
+                                            left: 21, right: 21),
+                                        child:  TextFieldUtils().dynamicText(
+                                            "Pay now",
+                                            context,
+                                            TextStyle(fontFamily: 'Roboto',
+                                                color: ThemeApp.tealButtonColor,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w700)))),
                           ],
                         ),
                       );
@@ -236,7 +242,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                     child: TextFieldUtils().dynamicText(
                         'No Match found!',
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: height * .03,
                             fontWeight: FontWeight.bold)),
@@ -384,7 +390,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                 ),
                                                 child: Center(
                                                   child: Text('Home delivery',
-                                                      style: TextStyle(
+                                                      style: TextStyle(fontFamily: 'Roboto',
                                                           fontSize: 14,
                                                           color: isSelfPickUp
                                                               ? ThemeApp
@@ -423,7 +429,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                   ),
                                                   child: Center(
                                                     child: Text('Self Pick-up',
-                                                        style: TextStyle(
+                                                        style: TextStyle(fontFamily: 'Roboto',
                                                             fontSize: 14,
                                                             color: isSelfPickUp
                                                                 ? ThemeApp
@@ -445,7 +451,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                         ? Container(
                                             // height: height * 0.5,
                                             width: width,
-                                            padding: const EdgeInsets.all(20),
+                                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 13),
                                             decoration: const BoxDecoration(
                                               color: ThemeApp.whiteColor,
                                               borderRadius: BorderRadius.all(
@@ -454,98 +460,90 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                             child: Column(
                                               children: [
                                                 Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: Text(
-                                                          StringUtils
-                                                              .deliveryDetails,
-                                                          style: TextStyle(
-                                                              color: ThemeApp
-                                                                  .blackColor,
-                                                              fontSize:
-                                                                  height * .025,
-                                                              letterSpacing:
-                                                                  -0.25,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700)),
-                                                    ),
-                                                    Expanded(
-                                                      flex: 1,
-                                                      child: InkWell(
-                                                          onTap: () {
-                                                            // Navigator.of(context).push(
-                                                            //   MaterialPageRoute(
-                                                            //     builder: (context) => AddNewDeliveryAddress(),
-                                                            //   ),
-                                                            // );
-                                                            showModalBottomSheet(
-                                                                shape:
-                                                                    RoundedRectangleBorder(
+                                                    Text(
+                                                        StringUtils
+                                                            .deliveryDetails,
+                                                        style: TextStyle(fontFamily: 'Roboto',
+                                                            color: ThemeApp
+                                                                .blackColor,
+                                                            fontSize: 16,
+                                                            letterSpacing:
+                                                                -0.25,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w700)),
+                                                    InkWell(
+                                                        onTap: () {
+                                                          // Navigator.of(context).push(
+                                                          //   MaterialPageRoute(
+                                                          //     builder: (context) => AddNewDeliveryAddress(),
+                                                          //   ),
+                                                          // );
+                                                          showModalBottomSheet(
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            60.0),
+                                                              ),
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              context:
+                                                                  scaffoldGlobalKey
+                                                                      .currentContext!,
+                                                              builder:
+                                                                  (context) {
+                                                                return ChangeAddressBottomSheet(
+                                                                    cartForPaymentPayload:
+                                                                        cartForPaymentPayload);
+                                                              });
+                                                        },
+                                                        child: Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          decoration:
+                                                              BoxDecoration(
                                                                   borderRadius:
                                                                       BorderRadius
-                                                                          .circular(
-                                                                              60.0),
-                                                                ),
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .transparent,
-                                                                context:
-                                                                    scaffoldGlobalKey
-                                                                        .currentContext!,
-                                                                builder:
-                                                                    (context) {
-                                                                  return ChangeAddressBottomSheet(
-                                                                      cartForPaymentPayload:
-                                                                          cartForPaymentPayload);
-                                                                });
-                                                          },
-                                                          child: Container(
-                                                            height:
-                                                                height * 0.05,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .all(
-                                                                      Radius.circular(
-                                                                          20),
-                                                                    ),
-                                                                    border: Border.all(
-                                                                        color: ThemeApp
-                                                                            .appColor)
-                                                                    // color:
-                                                                    //     ThemeApp.blackColor,
-                                                                    ),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 15,
-                                                                    right: 15),
-                                                            child: TextFieldUtils().dynamicText(
-                                                                StringUtils
-                                                                    .changeAddress,
-                                                                context,
-                                                                TextStyle(
-                                                                    color: ThemeApp
-                                                                        .appColor,
-                                                                    fontSize:
-                                                                        height *
-                                                                            .02,
-                                                                    letterSpacing:
-                                                                        -0.08,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700)),
-                                                          )),
-                                                    ),
+                                                                          .all(
+                                                                    Radius
+                                                                        .circular(
+                                                                            20),
+                                                                  ),
+                                                                  border: Border.all(
+                                                                      color: ThemeApp
+                                                                          .appColor)
+                                                                  // color:
+                                                                  //     ThemeApp.blackColor,
+                                                                  ),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  10, 5, 10, 5),
+                                                          child: TextFieldUtils().dynamicText(
+                                                              StringUtils
+                                                                  .changeAddress,
+                                                              context,
+                                                              TextStyle(fontFamily: 'Roboto',
+                                                                  color: ThemeApp
+                                                                      .appColor,
+                                                                  fontSize: 10,
+                                                                  letterSpacing:
+                                                                      -0.08,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700)),
+                                                        )),
                                                   ],
                                                 ),
                                                 SizedBox(
-                                                  height: height * .03,
+                                                  height:15,
                                                 ),
                                                 cartForPaymentPayload
                                                             .isAddressPresent ==
@@ -565,10 +563,9 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                                       StringConstant
                                                                           .selectedFullName,
                                                                       context,
-                                                                      TextStyle(
+                                                                      TextStyle(fontFamily: 'Roboto',
                                                                         fontSize:
-                                                                            height *
-                                                                                .021,
+                                                                          14,
                                                                         letterSpacing:
                                                                             -0.08,
                                                                         fontWeight:
@@ -577,8 +574,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                                             .blackColor,
                                                                       )),
                                                               SizedBox(
-                                                                width:
-                                                                    width * .02,
+                                                                width:10,
                                                               ),
                                                               Container(
                                                                 // height: height * 0.05,
@@ -590,7 +586,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                                           .all(
                                                                     Radius
                                                                         .circular(
-                                                                            5),
+                                                                            100),
                                                                   ),
                                                                   color: ThemeApp
                                                                       .tealButtonColor,
@@ -608,12 +604,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                                 child: Text(
                                                                     StringConstant
                                                                         .selectedTypeOfAddress,
-                                                                    style: TextStyle(
+                                                                    style: TextStyle(fontFamily: 'Roboto',
                                                                         color: ThemeApp
                                                                             .whiteColor,
-                                                                        fontSize:
-                                                                            height *
-                                                                                .02,
+                                                                        fontSize:14,
                                                                         fontWeight:
                                                                             FontWeight.w400)),
                                                               ),
@@ -621,28 +615,26 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                           ),
                                                           SizedBox(
                                                             height:
-                                                                height * .02,
+                                                              5,
                                                           ),
                                                           Text(
                                                               // provider.orderCheckOutDetails[0]
                                                               //     ["orderCheckOutDeliveryAddress"],
                                                               StringConstant
                                                                   .selectedFullAddress,
-                                                              style: TextStyle(
-                                                                fontSize:
-                                                                    height *
-                                                                        .019,
+                                                              style: TextStyle(fontFamily: 'Roboto',
+                                                                fontSize:12,
                                                                 letterSpacing:
                                                                     -0.08,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w400,
                                                                 color: ThemeApp
-                                                                    .blackColor,
+                                                                    .blackColor,height: 2
                                                               )),
                                                           SizedBox(
                                                             height:
-                                                                height * .03,
+                                                             20,
                                                           ),
                                                           Row(
                                                             children: [
@@ -667,12 +659,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                               TextFieldUtils().dynamicText(
                                                                   "${StringConstant.selectedMobile}",
                                                                   context,
-                                                                  TextStyle(
+                                                                  TextStyle(fontFamily: 'Roboto',
                                                                       color: ThemeApp
                                                                           .blackColor,
-                                                                      fontSize:
-                                                                          height *
-                                                                              .019,
+                                                                      fontSize:12,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w700)),
@@ -684,7 +674,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                         .dynamicText(
                                                             'No Address found',
                                                             context,
-                                                            TextStyle(
+                                                            TextStyle(fontFamily: 'Roboto',
                                                                 color: ThemeApp
                                                                     .darkGreyTab,
                                                                 fontSize:
@@ -703,7 +693,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                     Container(
                                         // height: height * 0.6,
                                         width: width,
-                                        padding: const EdgeInsets.all(20),
+                                        padding: const EdgeInsets.fromLTRB(15,12,15,20),
                                         decoration: const BoxDecoration(
                                           color: ThemeApp.whiteColor,
                                           borderRadius: BorderRadius.all(
@@ -716,7 +706,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                             // TextFieldUtils().dynamicText(
                                             //     StringUtils.orderSummary,
                                             //     context,
-                                            //     TextStyle(
+                                            //     TextStyle(fontFamily: 'Roboto',
                                             //         color: Colors.grey.shade700,
                                             //         fontSize: height * .023,
                                             //         fontWeight:
@@ -743,7 +733,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                 TextFieldUtils().dynamicText(
                                     StringUtils.applyPromoCode,
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
                                         fontSize: height * .023,
                                         fontWeight: FontWeight.bold)),
@@ -794,7 +784,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                 StringUtils
                                                     .apply,
                                                 context,
-                                                TextStyle(
+                                                TextStyle(fontFamily: 'Roboto',
                                                     color: ThemeApp.whiteColor,
                                                     fontSize: height * .021,
                                                     fontWeight:
@@ -808,7 +798,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                     SizedBox(
                                       height: height * .02,
                                     ),
-                                    priceDetails(cartOrderPurchase,
+                                    priceDetails(
                                         cartForPaymentPayload),
                                   ],
                                 ),
@@ -822,7 +812,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                     child: TextFieldUtils().dynamicText(
                         'No Match found!',
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: height * .03,
                             fontWeight: FontWeight.bold)),
@@ -857,81 +847,79 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10)),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 15, bottom: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                child: Image.network(
-                                  // width: double.infinity,
-                                  // snapshot.data![index].serviceImage,
-                                  cartOrderPurchase![index].imageUrl.toString(),
-                                  fit: BoxFit.fill,
-                                  // width: width*.18,
-                                  height: height * .1,
-                                ),
-                              ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [   Expanded(
+                          flex: 1,
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                                Radius.circular(10)),
+                            child: Image.network(
+                              // width: double.infinity,
+                              // snapshot.data![index].serviceImage,
+                                cartOrderPurchase[index]
+                                    .imageUrl
+                                    .toString(),
+                                fit: BoxFit.fill,
+                                // width: width*.18,
+                                height: 79,
+                                width: 79,  errorBuilder: ((context,
+                                error, stackTrace) {
+                              return Icon(
+                                  Icons.image_outlined);
+                            })
                             ),
-                            Expanded(
-                              flex: 3,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 15,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextFieldUtils().dynamicText(
-                                        cartOrderPurchase![index]
-                                            .oneliner
-                                            .toString(),
-                                        context,
-                                        TextStyle(
-                                          color: ThemeApp.blackColor,
-                                          fontSize: height * .02,
-                                          overflow: TextOverflow.ellipsis,
-                                          fontWeight: FontWeight.w500,
-                                          letterSpacing: -0.25,
-                                        )),
-                                    SizedBox(
-                                      height: height * .01,
-                                    ),
-                                    SizedBox(
-                                      height: height * .01,
-                                    ),
-                                    prices(cartOrderPurchase, index),
-                                    SizedBox(
-                                      height: height * .01,
-                                    ),
-                                    TextFieldUtils().dynamicText(
-                                        StringConstant().convertDateTimeDisplay(
-                                            cartOrderPurchase![index]
-                                                .deliveryDate
-                                                .toString()),
-                                        context,
-                                        TextStyle(
-                                          color: ThemeApp.lightFontColor,
-                                          fontSize: height * .016,
-                                          fontWeight: FontWeight.w400,
-                                          overflow: TextOverflow.ellipsis,
-                                        )),
-                                    SizedBox(
-                                      height: height * .02,
-                                    ),
-                                    aadToCartCounter(cartOrderPurchase, index),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
+                          Expanded(
+                            flex: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [     TextFieldUtils().dynamicText(
+                                    cartOrderPurchase[index]
+                                        .oneliner
+                                        .toString(),
+                                    context,
+                                    TextStyle(fontFamily: 'Roboto',
+                                        color: ThemeApp.primaryNavyBlackColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700)),
+
+
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  prices(cartOrderPurchase, index),
+                                  SizedBox(
+                                    height:11,
+                                  ),
+                                  TextFieldUtils().dynamicText(
+                                      StringConstant().convertDateTimeDisplay(
+                                          cartOrderPurchase![index]
+                                              .deliveryDate
+                                              .toString()),
+                                      context,
+                                      TextStyle(fontFamily: 'Roboto',
+                                        color: ThemeApp.lightFontColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        overflow: TextOverflow.ellipsis,
+                                      )),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  aadToCartCounter(cartOrderPurchase, index),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
@@ -960,6 +948,55 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
         : const CircularProgressIndicator();
   }
 
+  updateCart(List<CartOrdersForPurchase>? value, var merchantId, int quantity,
+      String productId) async {
+    final prefs = await SharedPreferences.getInstance();
+    var userId = '';
+
+    StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+    StringConstant.RandomUserLoginId =
+        (prefs.getString('isRandomUserId')) ?? '';
+
+    StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+
+    var prefUserId = await Prefs.instance.getToken(
+      Prefs.prefRandomUserId,
+    );
+    print("cartId from Pref" + StringConstant.UserCartID.toString());
+    print("prefUserId from Pref" + prefUserId.toString());
+
+    if (StringConstant.UserLoginId.toString() == '' ||
+        StringConstant.UserLoginId.toString() == null) {
+      userId = StringConstant.RandomUserLoginId;
+    } else {
+      userId = StringConstant.UserLoginId;
+    }
+    Map<String, String> data = {
+      // "cartId": StringConstant.UserCartID.toString(),
+      "cartId": StringConstant.UserCartID.toString(),
+      "userId": userId,
+      "productId": productId,
+      "merchantId": merchantId.toString(),
+      "qty": quantity.toString()
+    };
+    print("update cart DATA" + data.toString());
+    setState(() {
+
+    });
+    await  CartRepository().updateCartPostRequest(data, context);
+
+/*    for (int i = 0; i < value!.length; i++) {
+      StringConstant.BadgeCounterValue =
+          value!.length.toString() + value[i].itemQty.toString();
+      print("Badge,.......in for." + StringConstant.BadgeCounterValue);
+    }*/
+/*    setState(() {
+    StringConstant.BadgeCounterValue =
+          (prefs.getString('setBadgeCountPrefs')) ?? '';
+      print("Badge,........" + StringConstant.BadgeCounterValue);
+    });      getCartId();*/
+
+  }
   Widget prices(List<CartOrdersForPurchase> cartOrderPurchase, int index) {
     return Container(
       child: Row(
@@ -972,7 +1009,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                           0.0) ??
                       "0.0",
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .026,
                     overflow: TextOverflow.ellipsis,
@@ -987,7 +1024,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
               indianRupeesFormat.format(
                   double.parse(cartOrderPurchase![index].mrp.toString())),
               context,
-              TextStyle(
+              TextStyle(fontFamily: 'Roboto',
                 overflow: TextOverflow.ellipsis,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.2,
@@ -1003,7 +1040,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
               cartOrderPurchase![index].discountPercent.toString().toString() +
                   " % Off",
               context,
-              TextStyle(
+              TextStyle(fontFamily: 'Roboto',
                 fontSize: height * .02,
                 color: ThemeApp.blackColor,
                 fontWeight: FontWeight.w500,
@@ -1014,8 +1051,125 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
       ),
     );
   }
+  Widget aadToCartCounter(List<CartOrdersForPurchase>? value, int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Text(value.lst[index].totalOriginalPrice.toString()),
+        Container(
+          height: height * 0.05,
+          // width: width * .2,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
+              ),
+              border: Border.all(
+                  color: ThemeApp.buttonBorderLightGreyColor, width: 1.5)),
+          child: Padding(
+            padding: const EdgeInsets.all(0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    // setState(() {
+                    // minusQuantity(value![index], index);
+                    if (value![index].itemQty! > 1) {
 
-  Widget aadToCartCounter(
+                      value[index].itemQty=(value[index].itemQty! -1);
+                      // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
+                      updateCart(
+                          value,
+                          value[index].merchantId,
+                          value[index].itemQty!,
+                          value[index].productId.toString());
+
+                      StringConstant.BadgeCounterValue =
+                          value!.length.toString() +
+                              value![index].itemQty.toString();
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ConfirmDialog(
+                              text:
+                              "Are you sure, you want to remove product from cart list?",
+                              tap: () {
+                                setState(() {
+                                  print("value[index].merchantId" +
+                                      value[index].merchantId.toString());
+
+                                  updateCart(
+                                      value,
+                                      value[index].merchantId,
+                                      0,
+                                      value[index].productId.toString());
+
+                                  value.removeAt(index);
+                                  Navigator.pop(context);
+                                });
+                              },
+                            );
+                          });
+                    }
+                    // });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: const Icon(Icons.remove,
+                        // size: 20,
+                        color: ThemeApp.buttonCounterFontColor),
+                  ),
+                ),
+                Container(
+                  height: height * 0.06,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    0,
+                    20,
+                    0,
+                  ),
+                  color: ThemeApp.buttonBorderLightGreyColor,
+                  child: Text(
+                    value![index].itemQty.toString().padLeft(2, '0'),
+                    style: TextStyle(fontFamily: 'Roboto',
+                        fontSize: MediaQuery.of(context).size.height * .016,
+                        fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis,
+                        color: ThemeApp.buttonCounterFontColor),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      value![index].itemQty=value![index].itemQty! +1;
+                      // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
+                      updateCart(
+                          value,
+                          value[index].merchantId,
+                          value[index].itemQty!,
+                          value[index].productId.toString());
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    child: const Icon(Icons.add,
+                        // size: 20,
+                        color: ThemeApp.buttonCounterFontColor),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+/*  Widget aadToCartCounter(
       List<CartOrdersForPurchase> cartOrderPurchase, int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1063,7 +1217,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                   color: ThemeApp.buttonBorderLightGreyColor,
                   child: Text(
                     cartOrderPurchase![index].itemQty.toString(),
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         fontSize: MediaQuery.of(context).size.height * .016,
                         fontWeight: FontWeight.w400,
                         overflow: TextOverflow.ellipsis,
@@ -1087,7 +1241,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
             ),
           ),
         ),
-        /*  InkWell(
+        *//*  InkWell(
           onTap: () {
             setState(() {});
             cartOrderPurchase!.removeAt(index);
@@ -1105,10 +1259,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
             ),
             height: height * .03,
           ),
-        )*/
+        )*//*
       ],
     );
-  }
+  }*/
 
   /*void addQuantity(ProductProvider value, int index) {
     print("maxCounter counter ${value.cartList[index].cartProductsMaxCounter}");
@@ -1431,163 +1585,160 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     );
   }
 */
-  Widget priceDetails(List<CartOrdersForPurchase> cartOrderPurchase,
-      CartForPaymentPayload cartForPaymentPayload) {
+  Widget priceDetails(CartForPaymentPayload payload) {
     return /*Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [*/
-        Container(
-      // height: height * 0.25,
-      width: width,
-      decoration: const BoxDecoration(
-        color: ThemeApp.whiteColor,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Price Details',
-                style: TextStyle(
+      Container(
+        // height: height * 0.25,
+        width: width,
+        decoration: const BoxDecoration(
+          color: ThemeApp.whiteColor,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 11, 10, 45),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Price Details',
+                  style: TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.primaryNavyBlackColor,
-                    fontSize: height * .025,
-                    fontWeight: FontWeight.w400)),
-            SizedBox(
-              height: height * .01,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Price',
-                    style: TextStyle(
-                        color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
-                // TextFieldUtils().homePageTitlesTextFields(
-                //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
-                //     context),
-                Text(
-                    indianRupeesFormat.format(double.parse(
-                        cartForPaymentPayload.cart!.totalPayable.toString())),
-                    style: TextStyle(
-                        color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
-                // TextFieldUtils().homePageTitlesTextFields(
-                //     indianRupeesFormat
-                //         .format(double.parse(payload.totalMrp.toString())),
-                //     context)
-              ],
-            ),
-            SizedBox(
-              height: height * .01,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Discount',
-                    style: TextStyle(
-                        color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
-                Text(
-                    "- ${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalDiscountAmount.toString()))}",
-                    style: TextStyle(
-                        color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
-                /*   TextFieldUtils()
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,)),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Price',
+                      style: TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  // TextFieldUtils().homePageTitlesTextFields(
+                  //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
+                  //     context),
+                  Text(
+                      indianRupeesFormat
+                          .format(double.parse(payload.cart!.totalMrp.toString()??'')),
+                      style: TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  // TextFieldUtils().homePageTitlesTextFields(
+                  //     indianRupeesFormat
+                  //         .format(double.parse(payload.totalMrp.toString())),
+                  //     context)
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Discount',
+                      style: TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  Text(
+                      "- ${indianRupeesFormat.format(double.parse(payload.cart!.totalDiscountAmount.toString()))}",
+                      style: TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  /*   TextFieldUtils()
                         .homePageTitlesTextFields("Discount", context),
                     TextFieldUtils().homePageTitlesTextFields(
                         "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
                         context),*/
-              ],
-            ),
-            SizedBox(
-              height: height * .01,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Delivery charges',
-                    style: TextStyle(
-                        color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
-                Text(
-                    indianRupeesFormat.format(double.parse(cartForPaymentPayload
-                        .cart!.totalDeliveryCharges
-                        .toString())),
-                    style: TextStyle(
-                        color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
-                /* TextFieldUtils()
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Delivery charges',
+                      style: TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: height * .019,
+                          fontWeight: FontWeight.w400)),
+                  Text(
+                      indianRupeesFormat.format(
+                          double.parse(payload.cart!.totalDeliveryCharges.toString())),
+                      style: TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: height * .019,
+                          fontWeight: FontWeight.w400)),
+                  /* TextFieldUtils()
                         .homePageTitlesTextFields("Delivery charges", context),
                     TextFieldUtils().homePageTitlesTextFields(
                         indianRupeesFormat.format(double.parse(
                             payload.totalDeliveryCharges.toString())),
                         context),*/
-              ],
-            ),
-            SizedBox(
-              height: height * .01,
-            ),
-            Container(
-              width: width,
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: ThemeApp.separatedLineColor,
-                    width: 0.5,
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Container(
+                width: width,
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: ThemeApp.separatedLineColor,
+                      width: 0.5,
+                    ),
+                    bottom: BorderSide(color: Colors.grey, width: 0.5),
                   ),
-                  bottom: BorderSide(color: Colors.grey, width: 0.5),
                 ),
               ),
-            ),
-            SizedBox(
-              height: height * .01,
-            ),
-            Container(
-              // width: width,
-              // decoration: const BoxDecoration(
-              //   color: ThemeApp.whiteColor,
-              //   borderRadius: BorderRadius.only(
-              //       bottomRight: Radius.circular(10),
-              //       bottomLeft: Radius.circular(10)),
-              // ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Total Amount',
-                      style: TextStyle(
-                          color: ThemeApp.blackColor,
-                          fontSize: height * .019,
-                          fontWeight: FontWeight.w400)),
-                  Text(
-                      "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalPayable.toString()))} ",
-                      style: TextStyle(
-                          color: ThemeApp.appColor,
-                          fontSize: height * .025,
-                          fontWeight: FontWeight.w700)),
-                  /* TextFieldUtils().titleTextFields("Total Amount", context),
+              SizedBox(
+                height: height * .01,
+              ),
+              Container(
+                // width: width,
+                // decoration: const BoxDecoration(
+                //   color: ThemeApp.whiteColor,
+                //   borderRadius: BorderRadius.only(
+                //       bottomRight: Radius.circular(10),
+                //       bottomLeft: Radius.circular(10)),
+                // ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total Amount',
+                        style: TextStyle(fontFamily: 'Roboto',
+                            color: ThemeApp.blackColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700)),
+                    Text("${indianRupeesFormat.format(payload.cart!.totalPayable)} ",
+                        style: TextStyle(fontFamily: 'Roboto',
+                            color: ThemeApp.appColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700)),
+                    /* TextFieldUtils().titleTextFields("Total Amount", context),
                       TextFieldUtils().titleTextFields(
                           "${indianRupeesFormat.format(payload.totalPayable)} ",
                           context),*/
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
     /*  Container(
           width: width,
           decoration: const BoxDecoration(
@@ -1627,6 +1778,203 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     /* ],
     );*/
   }
+
+ /* Widget priceDetails(
+      CartForPaymentPayload cartForPaymentPayload) {
+    return *//*Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [*//*
+        Container(
+      // height: height * 0.25,
+      width: width,
+      decoration: const BoxDecoration(
+        color: ThemeApp.whiteColor,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Price Details',
+                style: TextStyle(fontFamily: 'Roboto',
+                    color: ThemeApp.primaryNavyBlackColor,
+                    fontSize: height * .025,
+                    fontWeight: FontWeight.w400)),
+            SizedBox(
+              height: height * .01,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Price',
+                    style: TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                // TextFieldUtils().homePageTitlesTextFields(
+                //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
+                //     context),
+                Text(
+                    indianRupeesFormat.format(double.parse(
+                        cartForPaymentPayload.cart!.totalPayable.toString())),
+                    style: TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                // TextFieldUtils().homePageTitlesTextFields(
+                //     indianRupeesFormat
+                //         .format(double.parse(payload.totalMrp.toString())),
+                //     context)
+              ],
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Discount',
+                    style: TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                Text(
+                    "- ${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalDiscountAmount.toString()))}",
+                    style: TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                *//*   TextFieldUtils()
+                        .homePageTitlesTextFields("Discount", context),
+                    TextFieldUtils().homePageTitlesTextFields(
+                        "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
+                        context),*//*
+              ],
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Delivery charges',
+                    style: TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                Text(
+                    indianRupeesFormat.format(double.parse(cartForPaymentPayload
+                        .cart!.totalDeliveryCharges
+                        .toString())),
+                    style: TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.lightFontColor,
+                        fontSize: height * .019,
+                        fontWeight: FontWeight.w400)),
+                *//* TextFieldUtils()
+                        .homePageTitlesTextFields("Delivery charges", context),
+                    TextFieldUtils().homePageTitlesTextFields(
+                        indianRupeesFormat.format(double.parse(
+                            payload.totalDeliveryCharges.toString())),
+                        context),*//*
+              ],
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Container(
+              width: width,
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: ThemeApp.separatedLineColor,
+                    width: 0.5,
+                  ),
+                  bottom: BorderSide(color: Colors.grey, width: 0.5),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: height * .01,
+            ),
+            Container(
+              // width: width,
+              // decoration: const BoxDecoration(
+              //   color: ThemeApp.whiteColor,
+              //   borderRadius: BorderRadius.only(
+              //       bottomRight: Radius.circular(10),
+              //       bottomLeft: Radius.circular(10)),
+              // ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total Amount',
+                      style: TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: height * .019,
+                          fontWeight: FontWeight.w400)),
+                  Text(
+                      "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalPayable.toString()))} ",
+                      style: TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.appColor,
+                          fontSize: height * .025,
+                          fontWeight: FontWeight.w700)),
+                  *//* TextFieldUtils().titleTextFields("Total Amount", context),
+                      TextFieldUtils().titleTextFields(
+                          "${indianRupeesFormat.format(payload.totalPayable)} ",
+                          context),*//*
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    *//*  Container(
+          width: width,
+          decoration: const BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: ThemeApp.separatedLineColor,
+                width: 0.5,
+              ),
+              bottom: BorderSide(color: Colors.grey, width: 0.5),
+            ),
+          ),
+        ),
+        Container(
+          width: width,
+          decoration: const BoxDecoration(
+            color: ThemeApp.whiteColor,
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(10),
+                bottomLeft: Radius.circular(10)),
+          ),
+          padding:
+              const EdgeInsets.only(top: 10, left: 15, right: 15, bottom: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextFieldUtils().titleTextFields("Total Amount", context),
+              TextFieldUtils().titleTextFields(
+                  "${indianRupeesFormat.format(payload.totalPayable)} ",
+                  context),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: height * .02,
+        )*//*
+    *//* ],
+    );*//*
+  }*/
 
 /*
   Widget priceDetails(List<CartOrdersForPurchase> cartOrderPurchase,
@@ -1930,14 +2278,14 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
             ? TextFieldUtils().dynamicText(
                 text,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .018,
                     fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
                 text,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .018,
                     fontWeight: FontWeight.w400)),
@@ -2027,7 +2375,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 40),
-                    child: Container(
+                    child: Container(                            padding: const EdgeInsets.fromLTRB(16, 20, 24, 0),
+
                       decoration: const BoxDecoration(
                           color: ThemeApp.whiteColor,
                           borderRadius: BorderRadius.only(
@@ -2036,64 +2385,59 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: TextFieldUtils().dynamicText(
-                                      StringUtils.deliveryAddress,
-                                      context,
-                                      TextStyle(
-                                          color: ThemeApp.blackColor,
-                                          fontSize: height * .025,
-                                          fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: TextFieldUtils().dynamicText(
+                                    StringUtils.deliveryAddress,
+                                    context,
+                                    TextStyle(fontFamily: 'Roboto',
+                                        color: ThemeApp.blackColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700)),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddNewDeliveryAddress(
+                                              isSavedAddress: false,
+                                        /*      cartForPaymentPayload: widget
+                                                  .cartForPaymentPayload!*/),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      15.0, 5, 15.0, 5),
+                                  decoration: BoxDecoration(
+                                    color: ThemeApp.appColor,
+                                    borderRadius:
+                                        BorderRadius.circular(30),
+                                  ),
+                                  child: Center(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          color: ThemeApp.whiteColor,
+                                        ),
+                                        Text(StringUtils.addNewAddress,
+                                            style: TextStyle(fontFamily: 'Roboto',
+                                                color:
+                                                    ThemeApp.whiteColor,
+                                                // fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                                fontWeight:
+                                                    FontWeight.w500)),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                                Expanded(
-                                    flex: 1,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AddNewDeliveryAddress(
-                                                    isSavedAddress: false,
-                                                    cartForPaymentPayload: widget
-                                                        .cartForPaymentPayload!),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10.0, 5, 10.0, 5),
-                                        decoration: BoxDecoration(
-                                          color: ThemeApp.appColor,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                        ),
-                                        child: Center(
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.add,
-                                                color: ThemeApp.whiteColor,
-                                              ),
-                                              Text(StringUtils.addNewAddress,
-                                                  style: TextStyle(
-                                                      color:
-                                                          ThemeApp.whiteColor,
-                                                      // fontWeight: FontWeight.w500,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w500)),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ))
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                           /*   Container(
                             width: width,
@@ -2139,7 +2483,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                     child: TextFieldUtils().dynamicText(
                                         StringUtils.addNewAddress,
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                             color: ThemeApp.blackColor,
                                             fontSize: height * .023,
                                             fontWeight: FontWeight.w400)),
@@ -2150,7 +2494,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                           ),
 */
                           SizedBox(
-                            height: height * .02,
+                            height: 11,
                           ),
                           addressList.isNotEmpty
                               ? Expanded(
@@ -2161,12 +2505,12 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                           onTap: () {
                                             setState(() {});
                                             StringConstant.selectedFullName =
-                                                addressList[index].name!;
+                                                "${addressList[index].name!}";
                                             StringConstant.selectedFullAddress =
                                                 "${addressList[index].addressLine1!}, ${addressList[index].addressLine2}, ${addressList[index].stateName},\n ${addressList[index].cityName}, ${addressList[index].pincode}";
                                           },
                                           child: Padding(
-                                            padding: const EdgeInsets.all(10),
+                                            padding: const EdgeInsets.only(bottom: 15),
                                             child: Container(
                                               decoration: BoxDecoration(
                                                   border: Border.all(
@@ -2236,17 +2580,15 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                             index]
                                                                         .name!,
                                                                     context,
-                                                                    TextStyle(
+                                                                    TextStyle(fontFamily: 'Roboto',
                                                                         color: ThemeApp
                                                                             .blackColor,
                                                                         fontSize:
-                                                                            height *
-                                                                                .022,
+                                                                           14,
                                                                         fontWeight:
                                                                             FontWeight.w400)),
                                                                 SizedBox(
-                                                                  width: width *
-                                                                      .02,
+                                                                  width:23,
                                                                 ),
                                                                 Container(
                                                                   // height: height * 0.05,
@@ -2260,7 +2602,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                             .all(
                                                                       Radius
                                                                           .circular(
-                                                                              5),
+                                                                              100),
                                                                     ),
                                                                     color: ThemeApp
                                                                         .appColor,
@@ -2277,11 +2619,10 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                               index]
                                                                           .addressType!,
                                                                       context,
-                                                                      TextStyle(
+                                                                      TextStyle(fontFamily: 'Roboto',
                                                                           color: ThemeApp
                                                                               .whiteColor,
-                                                                          fontSize: height *
-                                                                              .02,
+                                                                          fontSize: 14,
                                                                           fontWeight:
                                                                               FontWeight.w400)),
                                                                 ),
@@ -2300,15 +2641,14 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                           .dynamicText(
                                                               "${addressList[index].addressLine1!}, ${addressList[index].addressLine2}, ${addressList[index].stateName},\n ${addressList[index].cityName}, ${addressList[index].pincode}",
                                                               context,
-                                                              TextStyle(
+                                                              TextStyle(fontFamily: 'Roboto',
                                                                   color: ThemeApp
                                                                       .blackColor,
                                                                   fontSize:
-                                                                      height *
-                                                                          .02,
+                                                                 12,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w400)),
+                                                                          .w400,letterSpacing: -0.25 ,height: 1.5)),
                                                     ),
                                                     Padding(
                                                       padding:
@@ -2329,8 +2669,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                   ThemeApp
                                                                       .appColor,
                                                             ),
-                                                            height:
-                                                                height * .025,
+                                                            height:12,width: 12,
                                                           ),
                                                           SizedBox(
                                                             width: width * .03,
@@ -2338,20 +2677,18 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                           TextFieldUtils().dynamicText(
                                                               "${StringConstant.selectedMobile}",
                                                               context,
-                                                              TextStyle(
+                                                              TextStyle(fontFamily: 'Roboto',
                                                                   color: ThemeApp
                                                                       .blackColor,
-                                                                  fontSize:
-                                                                      height *
-                                                                          .021,
+                                                                  fontSize:12,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w400)),
+                                                                          .w700)),
                                                         ],
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      height: height * .02,
+                                                      height:21,
                                                     ),
                                                     Row(
                                                       crossAxisAlignment:
@@ -2381,7 +2718,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                       .appColor,
                                                             ),
                                                             height:
-                                                                height * .03,
+                                                                19,width: 17.54,
                                                           ),
                                                         ),
                                                         SizedBox(
@@ -2412,7 +2749,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                       .appColor,
                                                             ),
                                                             height:
-                                                                height * .03,
+                                                                16.72,  width:
+                                                                16.72,
                                                           ),
                                                         ),
                                                       ],
@@ -2427,7 +2765,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                               : TextFieldUtils().dynamicText(
                                   'No Address found',
                                   context,
-                                  TextStyle(
+                                  TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.whiteColor,
                                       fontSize: height * .02,
                                       fontWeight: FontWeight.w400)),
@@ -2435,9 +2773,10 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                             alignment: FractionalOffset.bottomCenter,
                             padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                             child: proceedButton(StringUtils.deliverHere,
-                                ThemeApp.blackColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+                                ThemeApp.tealButtonColor, context, false, () {
+                              FocusManager.instance.primaryFocus?.unfocus();
 
-                                setState(() {
+                              setState(() {
                                 StringConstant.selectedFullAddress =
                                     "${addressList[_value2].addressLine1!}, ${addressList[_value2].addressLine2}, ${addressList[_value2].stateName},\n ${addressList[_value2].cityName}, ${addressList[_value2].pincode}";
                                 Prefs.instance.setToken(
@@ -2511,7 +2850,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
             child: TextFieldUtils().dynamicText(
                 'No Match found!',
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .03,
                     fontWeight: FontWeight.bold)),
@@ -2530,7 +2869,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     child: TextFieldUtils().dynamicText(
     StringUtils.deliveryAddress,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .03,
     fontWeight: FontWeight.bold)),
@@ -2574,7 +2913,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     child: TextFieldUtils().dynamicText(
     StringUtils.addNewAddress,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .023,
     fontWeight: FontWeight.w400)),
@@ -2644,7 +2983,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     value.addressList[index]
         .myAddressFullName!,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color:
     ThemeApp.blackColor,
     fontSize: height * .023,
@@ -2672,7 +3011,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     value.addressList[index]
         .myAddressTypeOfAddress!,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color:
     ThemeApp.whiteColor,
     fontSize: height * .02,
@@ -2691,7 +3030,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     child: TextFieldUtils().dynamicText(
     "${value.addressList[index].myAddressHouseNoBuildingName!}, ${value.addressList[index].myAddressAreaColony}, ${value.addressList[index].myAddressCity},\n ${value.addressList[index].myAddressState}",
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.darkGreyTab,
     fontSize: height * .021,
     fontWeight: FontWeight.w400)),
@@ -2702,7 +3041,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     child: TextFieldUtils().dynamicText(
     "${'${StringUtils.contactNumber} : ' + StringConstant.selectedMobile}",
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .021,
     fontWeight: FontWeight.w400)),
@@ -2740,7 +3079,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     TextFieldUtils().dynamicText(
     StringConstant.selectedFullName,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .023,
     fontWeight: FontWeight.w400)),
@@ -2764,7 +3103,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     child: TextFieldUtils().dynamicText(
     StringConstant.selectedTypeOfAddress,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.whiteColor,
     fontSize: height * .02,
     fontWeight: FontWeight.w400)),
@@ -2780,7 +3119,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     child: TextFieldUtils().dynamicText(
     'Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India - 380021',
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     overflow: TextOverflow.ellipsis,
     color: ThemeApp.darkGreyTab,
     fontSize: height * .021,
@@ -2792,7 +3131,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     child: TextFieldUtils().dynamicText(
     "${'${StringUtils.contactNumber} : ${StringConstant.selectedMobile}'}",
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .021,
     fontWeight: FontWeight.w400)),
@@ -2893,9 +3232,10 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                 ),
               ),
               IconButton(
-                  onPressed: () {                        FocusManager.instance.primaryFocus?.unfocus();
+                  onPressed: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
 
-                  setState(() {
+                    setState(() {
                       allMessages.add(_textEditingController.text);
                       _textEditingController.text = "";
                     });

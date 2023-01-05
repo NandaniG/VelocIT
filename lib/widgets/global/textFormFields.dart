@@ -68,11 +68,11 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
               minWidth: MediaQuery.of(context).size.width * .3),
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(
+          hintStyle: TextStyle(fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: MediaQuery.of(context).size.height * 0.020),
+              fontSize: 14,fontWeight: FontWeight.w400),
           hintText: widget.hintText,
-          errorStyle: TextStyle(
+          errorStyle: TextStyle(fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           errorMaxLines: 2,
@@ -174,11 +174,11 @@ class _CharacterTextFormFieldsWidgetState
               minWidth: MediaQuery.of(context).size.width * .3),
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(
+          hintStyle: TextStyle(fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: MediaQuery.of(context).size.height * 0.020),
+              fontSize: 14,fontWeight: FontWeight.w400),
           hintText: widget.hintText,
-          errorStyle: TextStyle(
+          errorStyle: TextStyle(fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           errorMaxLines: 2,
@@ -273,11 +273,11 @@ class _PasswordTextFormFieldsWidgetState
           prefixIcon: widget.icon,
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(
+          hintStyle: TextStyle(fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: MediaQuery.of(context).size.height * 0.020),
+              fontSize: 14,fontWeight: FontWeight.w400),
           hintText: widget.hintText,
-          errorStyle: TextStyle(
+          errorStyle: TextStyle(fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -391,11 +391,11 @@ class _CardCVVTextFormFieldWidgetState
           prefixIcon: widget.icon,
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(
+          hintStyle: TextStyle(fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: MediaQuery.of(context).size.height * 0.020),
+              fontSize: 14,fontWeight: FontWeight.w400),
           hintText: widget.hintText,
-          errorStyle: TextStyle(
+          errorStyle: TextStyle(fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -478,7 +478,7 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(10),
         ],
-        style: TextStyle(color: ThemeApp.darkGreyColor),
+        style: TextStyle(fontFamily: 'Roboto',color: ThemeApp.darkGreyColor),
         decoration: InputDecoration(
           hintText: 'Do not enter country code',
           counterText: "",
@@ -490,10 +490,10 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
             padding: EdgeInsets.fromLTRB(0, 0, 10.0, 0),
           ),
           fillColor: Colors.white,
-          hintStyle: TextStyle(
+          hintStyle: TextStyle(fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: MediaQuery.of(context).size.height * 0.015),
-          errorStyle: TextStyle(
+              fontSize: 14,fontWeight: FontWeight.w400),
+          errorStyle: TextStyle(fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -606,11 +606,10 @@ class _CardNumberTextFormFieldsWidgetState
           prefixIcon: widget.icon,
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(
+          hintStyle: TextStyle(fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: MediaQuery.of(context).size.height * 0.020),
-          hintText: widget.hintText,
-          errorStyle: TextStyle(
+              fontSize: 14,fontWeight: FontWeight.w400),  hintText: widget.hintText,
+          errorStyle: TextStyle(fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -686,7 +685,7 @@ class TextFieldUtils {
   }
   Widget circularBar(BuildContext context){
     return  Container(
-      height: MediaQuery.of(context).size.height*.8,
+      height: MediaQuery.of(context).size.height*.5,
       alignment: Alignment.center,
       child: CircularProgressIndicator(
         color: ThemeApp.appColor,
@@ -715,7 +714,7 @@ class TextFieldUtils {
   Widget headingTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: 20,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w400),
@@ -726,7 +725,7 @@ class TextFieldUtils {
   Widget listNameHeadingTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: 14,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w500,letterSpacing: 0.2,color: ThemeApp.whiteColor
@@ -737,21 +736,32 @@ class TextFieldUtils {
   Widget listPriceHeadingTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: 12,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w700,letterSpacing: 0.2,color: ThemeApp.whiteColor
       ),
     );
   }
-
+  Widget listScratchPriceHeadingTextField(String text, BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(fontFamily: 'Roboto',
+          fontSize: 12,
+          overflow: TextOverflow.ellipsis,
+          decoration: TextDecoration.lineThrough,
+          decorationThickness: 1.5,
+          fontWeight: FontWeight.w700,letterSpacing: 0.2,color: ThemeApp.whiteColor
+      ),
+    );
+  }
 
 
   /////
   Widget appBarTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .028,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w500),
@@ -761,7 +771,7 @@ class TextFieldUtils {
   Widget textFieldHeightThree(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .03,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.bold,
@@ -772,7 +782,7 @@ class TextFieldUtils {
   Widget textFieldHeightFour(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .04,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.bold),
@@ -783,7 +793,7 @@ class TextFieldUtils {
     return Text(
       text,
       maxLines: 2,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: 16,
           fontWeight: FontWeight.w400,
           overflow: TextOverflow.ellipsis,
@@ -794,7 +804,7 @@ class TextFieldUtils {
   Widget titleTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           overflow: TextOverflow.ellipsis,
           fontSize: MediaQuery.of(context).size.height * .021,
           fontWeight: FontWeight.w500,
@@ -817,7 +827,7 @@ class TextFieldUtils {
               text: text,
               style: SafeGoogleFont(
                 'Roboto',
-                fontSize: MediaQuery.of(context).size.height * .021,
+                fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: ThemeApp.primaryNavyBlackColor,
               ),
@@ -840,7 +850,7 @@ class TextFieldUtils {
   Widget hyperLinkTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           shadows: [
             const Shadow(color: ThemeApp.tealButtonColor, offset: Offset(0, -5))
           ],
@@ -858,7 +868,7 @@ class TextFieldUtils {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .021,
           fontWeight: FontWeight.w500,
           overflow: TextOverflow.ellipsis,
@@ -869,7 +879,7 @@ class TextFieldUtils {
   Widget errorTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .021,
           color: ThemeApp.redColor,
           overflow: TextOverflow.ellipsis,
@@ -882,7 +892,7 @@ class TextFieldUtils {
       String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .025,
           color: ThemeApp.darkGreyTab,
           fontWeight: FontWeight.bold,
@@ -896,7 +906,7 @@ class TextFieldUtils {
   Widget pricesLineThrough(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .03,
           color: ThemeApp.darkGreyTab,
           overflow: TextOverflow.ellipsis,
@@ -909,7 +919,7 @@ class TextFieldUtils {
       String text, BuildContext context, double fontSize) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: fontSize,
           color: ThemeApp.whiteColor,
           overflow: TextOverflow.ellipsis,
@@ -921,7 +931,7 @@ class TextFieldUtils {
   Widget homePageheadingTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
         fontSize: MediaQuery.of(context).size.height * .025,
         fontWeight: FontWeight.w500,
         overflow: TextOverflow.ellipsis,
@@ -932,7 +942,7 @@ class TextFieldUtils {
   Widget homePageTitlesTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
         fontSize: MediaQuery.of(context).size.height * .021,
         color: ThemeApp.darkGreyTab,
         fontWeight: FontWeight.w500,
@@ -944,7 +954,7 @@ class TextFieldUtils {
   Widget homePageTitlesTextFieldsWHITE(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
         fontSize: MediaQuery.of(context).size.height * .020,
         color: ThemeApp.whiteColor,
         fontWeight: FontWeight.w500,
@@ -956,7 +966,7 @@ class TextFieldUtils {
   Widget homePageheadingTextFieldWHITE(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .025,
           color: ThemeApp.whiteColor,
           overflow: TextOverflow.ellipsis,
@@ -967,7 +977,7 @@ class TextFieldUtils {
   Widget subHeadingTextFieldsWhite(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
         fontSize: MediaQuery.of(context).size.height * .02,
         fontWeight: FontWeight.w400,
         color: ThemeApp.whiteColor,
@@ -979,7 +989,7 @@ class TextFieldUtils {
   Widget stepperTextFields(String text, BuildContext context, Color color) {
     return Text(
       text,maxLines: 2,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .013,
           fontWeight: FontWeight.w500,
           overflow: TextOverflow.ellipsis,
@@ -990,7 +1000,7 @@ class TextFieldUtils {
   Widget stepperHeadingTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .016,
           fontWeight: FontWeight.w400,
           color: Colors.grey),
@@ -1000,7 +1010,7 @@ class TextFieldUtils {
   Widget appliancesTitleTextFields(String text, BuildContext context) {
     return Text(
       text,maxLines: 2,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           overflow: TextOverflow.ellipsis,
           fontSize: MediaQuery.of(context).size.height * .020,
           fontWeight: FontWeight.w400),
@@ -1011,7 +1021,7 @@ class TextFieldUtils {
   Widget textFieldTwoFiveGrey(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .025,
           overflow: TextOverflow.ellipsis,
           color: ThemeApp.darkGreyTab,
@@ -1236,7 +1246,7 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
     var list = <Widget>[];
     titles.asMap().forEach((i, icon) {
       var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
-          ? ThemeApp.darkGreyTab
+          ? ThemeApp.tealButtonColor
           : ThemeApp.lightGreyTab;
       var lineColor =
           _curStep > i + 1 ? ThemeApp.darkGreyTab : ThemeApp.lightGreyTab;
@@ -1292,16 +1302,16 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
             ? TextFieldUtils().dynamicText(
                 text,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.darkGreyColor,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.bold))
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
                 text,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.darkGreyColor,
-                    fontSize: height * .018,
+                    fontSize: 12,
                     fontWeight: FontWeight.w400)),
       );
     });
@@ -1316,14 +1326,14 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
             ? TextFieldUtils().dynamicText(
                 text,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.darkGreyTab,
                     fontSize: height * .016,
                     fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
                 text,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.darkGreyTab,
                     fontSize: height * .016,
                     fontWeight: FontWeight.w400)),

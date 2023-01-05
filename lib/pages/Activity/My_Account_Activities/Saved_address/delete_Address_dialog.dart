@@ -59,7 +59,7 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                 TextFieldUtils().dynamicText(
                     'Delete Address',
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .025,
                         fontWeight: FontWeight.w500)),
@@ -67,7 +67,7 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                   child: TextFieldUtils().dynamicText(
                       "Are you sure about deleting\n selected Address.",
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyTab,
                           fontSize: height * .018,
                           fontWeight: FontWeight.w400)),
@@ -82,7 +82,7 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                       Expanded(
                         flex: 1,
                         child: proceedButton(StringUtils.no,
-                            ThemeApp.whiteColor, context, false,() {                        FocusManager.instance.primaryFocus?.unfocus();
+                            ThemeApp.tealButtonColor, context, false,() {                        FocusManager.instance.primaryFocus?.unfocus();
 
                             Navigator.pop(context);
                         }),
@@ -95,7 +95,7 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                         child: Consumer<ProductProvider>(
                             builder: (context, value, child) {
                           return proceedButton(StringUtils.yes,
-                              ThemeApp.blackColor, context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+                              ThemeApp.tealButtonColor, context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
 
                               setState(() {
                               print(widget.addressList.length);

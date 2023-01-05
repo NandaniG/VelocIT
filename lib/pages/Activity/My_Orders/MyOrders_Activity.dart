@@ -171,7 +171,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                             value
                                                 .myOrdersList[index]["myOrderId"],
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp.primaryNavyBlackColor,
                                               fontWeight: FontWeight.w700,
                                               fontSize: height * .02,
@@ -184,7 +184,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                             value
                                                 .myOrdersList[index]["myOrderDate"],
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp.lightFontColor,
                                               fontSize: height * .018,
                                             )),
@@ -298,7 +298,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                       "- ${value
                                                           .myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
                                                       context,
-                                                      TextStyle(
+                                                      TextStyle(fontFamily: 'Roboto',
                                                           color: ThemeApp
                                                               .darkGreyTab,
                                                           fontSize:
@@ -319,7 +319,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                       "- ${value
                                                           .myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
                                                       context,
-                                                      TextStyle(
+                                                      TextStyle(fontFamily: 'Roboto',
                                                           color: ThemeApp
                                                               .darkGreyTab,
                                                           fontSize:
@@ -340,7 +340,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                       "- ${value
                                                           .myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
                                                       context,
-                                                      TextStyle(
+                                                      TextStyle(fontFamily: 'Roboto',
                                                           color: ThemeApp
                                                               .darkGreyTab,
                                                           fontSize:
@@ -373,7 +373,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                             int.parse(value
                                                 .myOrdersList[index]["myOrderPrice"])),
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                             color:
                                             ThemeApp.blackColor,
                                             fontSize: height * .02,
@@ -398,7 +398,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           value
                                               .myOrdersList[index]["myOrderStatus"],
                                           context,
-                                          TextStyle(
+                                          TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp
                                                   .activeOrderColor,
                                               fontSize:
@@ -437,7 +437,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           .dynamicText(
                                           '+ View More',
                                           context,
-                                          TextStyle(
+                                          TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp
                                                   .blackColor,
                                               fontSize:
@@ -457,7 +457,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           .dynamicText(
                                           '- View Less',
                                           context,
-                                          TextStyle(
+                                          TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp
                                                   .blackColor,
                                               fontSize:
@@ -533,7 +533,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           value.myOrdersList[index]
                                           ["myOrderProgress"],
                                           context,
-                                          TextStyle(
+                                          TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp.darkGreyTab,
                                               fontSize: height * .02,
                                               fontWeight:
@@ -576,7 +576,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                             TextFieldUtils().dynamicText(
                                                 "Reorder",
                                                 context,
-                                                TextStyle(
+                                                TextStyle(fontFamily: 'Roboto',
                                                     color: ThemeApp
                                                         .whiteColor,
                                                     fontSize:
@@ -622,7 +622,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                           TextFieldUtils().dynamicText(
                               'Kotak Mahindra',
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.blackColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: height * .022,
@@ -633,7 +633,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                           TextFieldUtils().dynamicText(
                               'Credit Card',
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.darkGreyTab,
                                 fontSize: height * .018,
                               )),
@@ -643,7 +643,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                           TextFieldUtils().dynamicText(
                               '**** **** **** 2531',
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.darkGreyTab,
                                 fontSize: height * .018,
                               )),
@@ -676,7 +676,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                 TextFieldUtils().dynamicText(
                                     'Expires Feb 2027',
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.darkGreyTab,
                                       fontSize: height * .018,
                                     )),
@@ -713,7 +713,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                       TextFieldUtils().dynamicText(
                           'Primary method payment',
                           context,
-                          TextStyle(
+                          TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.darkGreyTab,
                               fontSize: height * .02,
                               fontWeight: FontWeight.w400)),
@@ -879,7 +879,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                         TextFieldUtils().dynamicText(
                             'New Order',
                             context,
-                            TextStyle(
+                            TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.whiteColor,
                                 fontSize: height * .032,
                                 fontWeight: FontWeight.bold)),
@@ -909,7 +909,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                 Flexible(
                                   child: Text(
                                       "${value.myOrdersList[1]["myOrderDetailList"][1]["productDetails"]}",
-                                      style: TextStyle(
+                                      style: TextStyle(fontFamily: 'Roboto',
                                           color:
                                           ThemeApp.whiteColor,
                                           fontSize: height * .022,
@@ -921,7 +921,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                 TextFieldUtils().dynamicText(
                                     "* 3",
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                         color: ThemeApp.blackColor,
                                         fontSize: height * .022,
                                         fontWeight: FontWeight.w400,
@@ -951,7 +951,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                           child: TextFieldUtils().dynamicText(
                               "View",
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp
                                       .primaryNavyBlackColor,
                                   fontSize: height * .023,
@@ -995,7 +995,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
         // TextFieldUtils().dynamicText(
         //     "Show",
         //     context,
-        //     TextStyle(
+        //     TextStyle(fontFamily: 'Roboto',
         //         color: ThemeApp.blackColor,
         //         fontSize: height * .022,
         //         fontWeight: FontWeight.w500,
@@ -1027,7 +1027,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
               contentPadding:
                   EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             ),
-            style: TextStyle(
+            style: TextStyle(fontFamily: 'Roboto',
                 color: ThemeApp.lightFontColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w400,
@@ -1045,7 +1045,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                 child: TextFieldUtils().dynamicText(
                     items,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w400,
@@ -1072,7 +1072,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
         // TextFieldUtils().dynamicText(
         //     "Show",
         //     context,
-        //     TextStyle(
+        //     TextStyle(fontFamily: 'Roboto',
         //         color: ThemeApp.blackColor,
         //         fontSize: height * .022,
         //         fontWeight: FontWeight.w500,
@@ -1104,7 +1104,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
               contentPadding:
                   EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             ),
-            style: TextStyle(
+            style: TextStyle(fontFamily: 'Roboto',
                 color: ThemeApp.lightFontColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w400,
@@ -1122,7 +1122,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                 child: TextFieldUtils().dynamicText(
                     items,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w400,
@@ -1142,13 +1142,543 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
     );
   }
 
+/*
+  Widget activeOrderList(HomeProvider value) {
+    return (value.jsonData.length > 0 && value.jsonData['status'] == 'OK')
+        ? Expanded(
+            child: ListView.builder(
+                itemCount: value.jsonData['payload']['consumer_baskets'].length,
+                itemBuilder: (_, index) {
+                  // List orderList = value
+                  //     .jsonData['payload']['consumer_baskets'].values
+                  //     .toList();
+                  // Map order = orderList[index];
+                  var order =
+                      value.jsonData['payload']['consumer_baskets'][index];
+                  DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
+                  DateTime date =
+                      DateTime.parse(order['earliest_delivery_date']);
+                  var earliest_delivery_date = format.format(date);
+                  Color colorsStatus = ThemeApp.appColor;
+                  if (order["overall_status"] == "Acceptance Pending") {
+                    colorsStatus = ThemeApp.redColor;
+                  }
+                  if (order["overall_status"] == "Shipped") {
+                    colorsStatus = ThemeApp.shippedOrderColor;
+                  }
+                  if (order["overall_status"] == "Completed") {
+                    colorsStatus = ThemeApp.activeOrderColor;
+                  }
+
+                  return Container( height: height * .05,
+                    width: width * .55,
+                    child: ListView.builder(
+                        itemCount: order['orders'].length,
+                        itemBuilder: (_, index) {
+
+                          var subOrders= order['orders'][index];
+                        return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => OrderRatingReviewActivity(
+                                      values: value.myOrdersList[index])));
+                            },
+                            child: Builder(
+                              builder: (context) {
+                                return Padding(
+                                    padding: const EdgeInsets.only(right: 10, bottom: 20),
+                                    child: Container(
+                                        padding: EdgeInsets.only(
+                                          right: 10,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(8),
+                                          ),
+                                          color: colorsStatus,
+                                        ),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(15),
+
+                                          // height: height * 0.12,
+                                          // width: width * .8,
+                                          alignment: Alignment.center,
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(8),
+                                              bottomLeft: Radius.circular(8),
+                                            ),
+                                            color: ThemeApp.whiteColor,
+                                          ),
+                                          child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                //image grid
+                                                Container(
+                                                  decoration: const BoxDecoration(
+                                                    borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(8),
+                                                      topRight: Radius.circular(8),
+                                                    ),
+                                                    color: ThemeApp.whiteColor,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                    children: [
+                                                      Container(
+                                                        height: height * .08,
+                                                        width: width * .15,
+                                                        decoration: const BoxDecoration(
+                                                          borderRadius: BorderRadius.all(
+                                                            Radius.circular(8),
+                                                          ),
+                                                        ),
+                                                        child: GridView.builder(
+                                                          gridDelegate:
+                                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                                            crossAxisSpacing: 0,
+                                                            mainAxisSpacing: 0,
+                                                            crossAxisCount: 2,
+                                                            // childAspectRatio: 4/7
+                                                          ),
+                                                          itemCount: order['orders'].length,
+                                                          itemBuilder:
+                                                              (context, indexOrderList) {
+                                                                indexForItems = indexOrderList;
+                                                                // Map subOrders = (order['orders'][indexForItems]);
+
+                                                            return Container(
+                                                              decoration: BoxDecoration(
+                                                                  border: Border.all(
+                                                                      color: ThemeApp
+                                                                          .darkGreyTab)),
+                                                              child: FractionallySizedBox(
+                                                                // width: 50.0,
+                                                                // height: 50.0,
+                                                                  widthFactor:
+                                                                  width * .0025,
+                                                                  heightFactor:
+                                                                  height * .0018,
+                                                                  child: Container(
+                                                                    decoration: BoxDecoration(
+                                                                        border: Border.all(
+                                                                            color: ThemeApp.darkGreyTab)),
+                                                                    child: FittedBox(
+                                                                      child: Image(
+                                                                        image: NetworkImage(
+                                                                            subOrders['image_url'] ?? ''),
+                                                                        fit: BoxFit.fill,
+                                                                        height: 50,
+                                                                        width: 50,   errorBuilder: (context, error, stackTrace) {
+                                                                        return Icon(Icons.image_outlined);
+                                                                      },
+                                                                      ),
+                                                                    ),
+                                                                  ),),
+                                                            );
+
+                                                            // Item rendering
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: width * .03,
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.center,
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          TextFieldUtils().dynamicText(
+                                                              order['id'].toString(),
+                                                              context,
+                                                              TextStyle(fontFamily: 'Roboto',
+                                                                color: ThemeApp
+                                                                    .primaryNavyBlackColor,
+                                                                fontWeight:
+                                                                FontWeight.bold,
+                                                                fontSize: height * .025,
+                                                              )),
+                                                          SizedBox(
+                                                            height: height * .01,
+                                                          ),
+                                                          TextFieldUtils().dynamicText(
+                                                              earliest_delivery_date,
+                                                              context,
+                                                              TextStyle(fontFamily: 'Roboto',
+                                                                color: ThemeApp
+                                                                    .lightFontColor,
+                                                                fontSize: height * .022,
+                                                              )),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+*/
+/*
+                                                Container(
+                                                    height: height * .08,
+                                                    // width: width * .63,
+                                                    child: ListView.builder(
+                                                      physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                      itemCount: value
+                                                          .myOrdersList[index][
+                                                      "myOrderDetailList"]
+                                                          .length >
+                                                          2
+                                                          ? !viewMore
+                                                          ? 2
+                                                          : value
+                                                          .myOrdersList[index][
+                                                      "myOrderDetailList"]
+                                                          .length
+                                                          : value
+                                                          .myOrdersList[index]
+                                                      ["myOrderDetailList"]
+                                                          .length,
+                                                      itemBuilder:
+                                                          (context, indexOrderDetails) {
+                                                        return (value
+                                                            .myOrdersList[index][
+                                                        "myOrderDetailList"]
+                                                            .length >=
+                                                            2)
+                                                            ? !viewMore
+                                                            ? Container(
+                                                            child: Padding(
+                                                              padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  top: 8.0),
+                                                              child: Text(
+                                                                  "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
+                                                                  style: TextStyle(fontFamily: 'Roboto',
+                                                                      color: ThemeApp
+                                                                          .blackColor,
+                                                                      fontSize:
+                                                                      height *
+                                                                          .02,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                      letterSpacing:
+                                                                      -0.25,
+                                                                      overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis)),
+                                                            ))
+                                                            : Container(
+                                                            child: Padding(
+                                                              padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  top: 8.0),
+                                                              child: Text(
+                                                                  "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
+                                                                  style: TextStyle(fontFamily: 'Roboto',
+                                                                      color: ThemeApp
+                                                                          .blackColor,
+                                                                      fontSize:
+                                                                      height *
+                                                                          .02,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                      letterSpacing:
+                                                                      -0.25,
+                                                                      overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis)),
+                                                            ))
+                                                            :  Container(
+                                                            child: Padding(
+                                                              padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  top: 8.0),
+                                                              child: Text(
+                                                                  "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
+                                                                  style: TextStyle(fontFamily: 'Roboto',
+                                                                      color: ThemeApp
+                                                                          .blackColor,
+                                                                      fontSize:
+                                                                      height *
+                                                                          .02,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                      letterSpacing:
+                                                                      -0.25,
+                                                                      overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis)),
+                                                            ));
+                                                      },
+                                                    )),
+
+                                                Row(
+                                                  children: [
+
+                                                    value
+                                                        .myOrdersList[index]
+                                                    ["myOrderDetailList"]
+                                                        .length >
+                                                        2
+                                                        ? !viewMore
+                                                        ? InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          viewMore = !viewMore;
+                                                        });
+                                                      },
+                                                      child: TextFieldUtils()
+                                                          .dynamicText(
+                                                          '+ View More',
+                                                          context,
+                                                          TextStyle(fontFamily: 'Roboto',
+                                                              color: ThemeApp
+                                                                  .tealButtonColor,
+                                                              fontSize:
+                                                              height *
+                                                                  .02,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w400)),
+                                                    )
+                                                        : InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          viewMore = !viewMore;
+                                                        });
+                                                      },
+                                                      child: TextFieldUtils()
+                                                          .dynamicText(
+                                                          '- View Less',
+                                                          context,
+                                                          TextStyle(fontFamily: 'Roboto',
+                                                              color: ThemeApp
+                                                                  .tealButtonColor,
+                                                              fontSize:
+                                                              height *
+                                                                  .02,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w400)),
+                                                    )
+                                                        : SizedBox(),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: height * .02,
+                                                ),
+                                                Container(
+                                                  alignment: Alignment.centerLeft,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      TextFieldUtils().dynamicText(
+                                                          indianRupeesFormat.format(
+                                                              int.parse(value
+                                                                  .myOrdersList[
+                                                              index]
+                                                              ["myOrderPrice"])),
+                                                          context,
+                                                          TextStyle(fontFamily: 'Roboto',
+                                                              color:
+                                                              ThemeApp.blackColor,
+                                                              fontSize: height * .024,
+                                                              fontWeight:
+                                                              FontWeight.w700,
+                                                              letterSpacing: 0.2
+                                                          )),
+                                                      Row(
+                                                        children: [
+                                                          value.myOrdersList[index]
+                                                          ["myOrderStatus"] ==
+                                                              "Acceptance Pending"
+                                                              ? SizedBox()
+                                                              : Container(
+                                                            child: TextFieldUtils()
+                                                                .dynamicText(
+                                                                "Change Status to:",
+                                                                context,
+                                                                TextStyle(fontFamily: 'Roboto',
+                                                                    color:
+                                                                    ThemeApp
+                                                                        .blackColor,
+                                                                    fontSize:
+                                                                    height *
+                                                                        .018,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                          ),
+                                                          SizedBox(
+                                                            width: width * .02,
+                                                          ),
+
+                                                          Container(
+                                                            padding: const EdgeInsets
+                                                                .fromLTRB(10, 8, 10, 8),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                              BorderRadius.all(
+                                                                Radius.circular(30),
+                                                              ),
+                                                              // border: Border.all(
+                                                              //     color: colorsStatus),
+                                                              color:
+                                                              ThemeApp.whiteColor,
+                                                            ),
+                                                            child: TextFieldUtils()
+                                                                .dynamicText(
+                                                                value.myOrdersList[
+                                                                index][
+                                                                "myOrderStatus"],
+                                                                context,
+                                                                TextStyle(fontFamily: 'Roboto',
+                                                                    color:
+                                                                    colorsStatus,
+                                                                    fontSize:
+                                                                    height *
+                                                                        .02,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w500)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: height * .01,
+                                                ),
+                                                TextFieldUtils().lineHorizontal(),
+                                                stepperWidget(),
+                                                TextFieldUtils().lineHorizontal(),
+                                                SizedBox(
+                                                  height: height * .02,
+                                                ),
+                                                Container(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                      children: [
+
+                                                        value.myOrdersList[index]
+                                                        ["myOrderStatus"] !=
+                                                            'Delivered'
+                                                            ? InkWell(
+                                                            onTap: () {
+                                                              // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OrderRatingReviewActivity(values:  value.myOrderList[index])));
+                                                            },
+                                                            child: rattingBar())
+                                                            :   TextFieldUtils().dynamicText(
+                                                            value.myOrdersList[index]
+                                                            ["myOrderProgress"],
+                                                            context,
+                                                            TextStyle(fontFamily: 'Roboto',
+                                                                color: ThemeApp
+                                                                    .darkGreyTab,
+                                                                fontSize: height * .02,
+                                                                fontWeight:
+                                                                FontWeight.w400)),
+                                                        value.myOrdersList[index]
+                                                        ["myOrderStatus"] !=
+                                                            'Delivered'
+                                                            ? Container(
+                                                          padding:
+                                                          const EdgeInsets
+                                                              .fromLTRB(
+                                                              15.0,
+                                                              7.0,
+                                                              15.0,
+                                                              7.0),
+                                                          decoration:
+                                                          BoxDecoration(
+                                                            borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                              Radius.circular(20),
+                                                            ),
+                                                            color: ThemeApp
+                                                                .tealButtonColor,
+                                                          ),
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                  Icons
+                                                                      .refresh_sharp,
+                                                                  color: ThemeApp
+                                                                      .whiteColor,
+                                                                  size: height *
+                                                                      .02),
+                                                              SizedBox(
+                                                                width:
+                                                                width * .01,
+                                                              ),
+                                                              TextFieldUtils().dynamicText(
+                                                                  "Reorder",
+                                                                  context,
+                                                                  TextStyle(fontFamily: 'Roboto',
+                                                                      color: ThemeApp
+                                                                          .whiteColor,
+                                                                      fontSize:
+                                                                      height *
+                                                                          .018,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w500)),
+                                                            ],
+                                                          ),
+                                                        )
+                                                            : SizedBox(),
+                                                      ],
+                                                    )),*/ /*
+
+                                              ]),
+                                        )));
+                              }
+                            ));
+                      }
+                    ),
+                  );
+                }),
+          )
+        : Center(
+            child: TextFieldUtils().dynamicText(
+                'No data found',
+                context,
+                TextStyle(fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .02,
+                    fontWeight: FontWeight.w400,
+                    overflow: TextOverflow.ellipsis)),
+          );
+  }
+*/
+
   Widget activeOrderList(HomeProvider value) {
     return value.myOrdersList.length > 0
         ? Expanded(
             child: ListView.builder(
                 itemCount: value.myOrdersList.length,
                 itemBuilder: (_, index) {
-                  Color colorsStatus = ThemeApp.appColor;
+                  Color colorsStatus = ThemeApp.activeOrderColor;
                   if (value.myOrdersList[index]["myOrderStatus"] ==
                       "Acceptance Pending") {
                     colorsStatus = ThemeApp.redColor;
@@ -1280,12 +1810,12 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                     value.myOrdersList[index]
                                                         ["myOrderId"],
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                       color: ThemeApp
                                                           .primaryNavyBlackColor,
                                                       fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: height * .025,
+                                                          FontWeight.w700,
+                                                      fontSize: 12,
                                                     )),
                                                 SizedBox(
                                                   height: height * .01,
@@ -1294,17 +1824,18 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                     value.myOrdersList[index]
                                                         ["myOrderDate"],
                                                     context,
-                                                    TextStyle(
-                                                      color: ThemeApp
-                                                          .lightFontColor,
-                                                      fontSize: height * .022,
-                                                    )),
+                                                    TextStyle(fontFamily: 'Roboto',
+                                                        color: ThemeApp
+                                                            .lightFontColor,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400)),
                                               ],
                                             ),
                                           ],
                                         ),
                                       ),
-                                      /*  Padding(
+/*  Padding(
                                         padding:
                                             const EdgeInsets.only(right: 10),
                                         child: Container(
@@ -1327,7 +1858,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                   Flexible(
                                                     child: Text(
                                                         "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
-                                                        style: TextStyle(
+                                                        style: TextStyle(fontFamily: 'Roboto',
                                                             color: ThemeApp
                                                                 .blackColor,
                                                             fontSize:
@@ -1344,7 +1875,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                   TextFieldUtils().dynamicText(
                                                       "* 3",
                                                       context,
-                                                      TextStyle(
+                                                      TextStyle(fontFamily: 'Roboto',
                                                           color: ThemeApp
                                                               .blackColor,
                                                           fontSize:
@@ -1359,6 +1890,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           ),
                                         ),
                                       ),*/
+
                                       Container(
                                           height: height * .08,
                                           // width: width * .63,
@@ -1390,73 +1922,66 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                   ? !viewMore
                                                       ? Container(
                                                           child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 8.0),
-                                                            child: Text(
-                                                                "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
-                                                                style: TextStyle(
-                                                                    color: ThemeApp
-                                                                        .blackColor,
-                                                                    fontSize:
-                                                                        height *
-                                                                            .02,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                    letterSpacing:
-                                                                        -0.25,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis)),
-                                                          ))
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 8.0),
+                                                          child: Text(
+                                                              "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
+                                                              style: TextStyle(fontFamily: 'Roboto',
+                                                                  color: ThemeApp
+                                                                      .blackColor,
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  letterSpacing:
+                                                                      -0.25,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis)),
+                                                        ))
                                                       : Container(
-                                                  child: Padding(
-                                                    padding:
-                                                    const EdgeInsets
-                                                        .only(
-                                                        top: 8.0),
-                                                    child: Text(
-                                                        "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
-                                                        style: TextStyle(
-                                                            color: ThemeApp
-                                                                .blackColor,
-                                                            fontSize:
-                                                            height *
-                                                                .02,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .w400,
-                                                            letterSpacing:
-                                                            -0.25,
-                                                            overflow:
-                                                            TextOverflow
-                                                                .ellipsis)),
-                                                  ))
-                                                  :  Container(
-                                                  child: Padding(
-                                                    padding:
-                                                    const EdgeInsets
-                                                        .only(
-                                                        top: 8.0),
-                                                    child: Text(
-                                                        "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
-                                                        style: TextStyle(
-                                                            color: ThemeApp
-                                                                .blackColor,
-                                                            fontSize:
-                                                            height *
-                                                                .02,
-                                                            fontWeight:
-                                                            FontWeight
-                                                                .w400,
-                                                            letterSpacing:
-                                                            -0.25,
-                                                            overflow:
-                                                            TextOverflow
-                                                                .ellipsis)),
-                                                  ));
+                                                          child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 8.0),
+                                                          child: Text(
+                                                              "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
+                                                              style: TextStyle(fontFamily: 'Roboto',
+                                                                  color: ThemeApp
+                                                                      .blackColor,
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  letterSpacing:
+                                                                      -0.25,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis)),
+                                                        ))
+                                                  : Container(
+                                                      child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 8.0),
+                                                      child: Text(
+                                                          "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
+                                                          style: TextStyle(fontFamily: 'Roboto',
+                                                              color: ThemeApp
+                                                                  .blackColor,
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              letterSpacing:
+                                                                  -0.25,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis)),
+                                                    ));
                                             },
                                           )),
 
@@ -1465,7 +1990,6 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                       // ),
                                       Row(
                                         children: [
-
                                           value
                                                       .myOrdersList[index]
                                                           ["myOrderDetailList"]
@@ -1482,12 +2006,10 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                           .dynamicText(
                                                               '+ View More',
                                                               context,
-                                                              TextStyle(
+                                                              TextStyle(fontFamily: 'Roboto',
                                                                   color: ThemeApp
                                                                       .tealButtonColor,
-                                                                  fontSize:
-                                                                      height *
-                                                                          .02,
+                                                                  fontSize: 12,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400)),
@@ -1502,15 +2024,13 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                           .dynamicText(
                                                               '- View Less',
                                                               context,
-                                                              TextStyle(
+                                                              TextStyle(fontFamily: 'Roboto',
                                                                   color: ThemeApp
                                                                       .tealButtonColor,
-                                                                  fontSize:
-                                                                  height *
-                                                                      .02,
+                                                                  fontSize: 12,
                                                                   fontWeight:
-                                                                  FontWeight
-                                                                      .w400)),
+                                                                      FontWeight
+                                                                          .w400)),
                                                     )
                                               : SizedBox(),
                                         ],
@@ -1529,68 +2049,60 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                             TextFieldUtils().dynamicText(
                                                 indianRupeesFormat.format(
                                                     int.parse(value
-                                                                .myOrdersList[
-                                                            index]
+                                                            .myOrdersList[index]
                                                         ["myOrderPrice"])),
                                                 context,
-                                                TextStyle(
-                                                    color:
-                                                        ThemeApp.blackColor,
-                                                    fontSize: height * .024,
-                                                    fontWeight:
-                                                        FontWeight.w700,
-                                                letterSpacing: 0.2
-                                                )),
+                                                TextStyle(fontFamily: 'Roboto',
+                                                    color: ThemeApp.blackColor,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    letterSpacing: 0.2)),
                                             Row(
                                               children: [
-                                                /*  value.myOrdersList[index]
-                                                      ["myOrderStatus"] ==
-                                                  "Acceptance Pending"
-                                              ? SizedBox()
-                                              : Container(
-                                                  child: TextFieldUtils()
-                                                      .dynamicText(
-                                                          "Change Status to:",
-                                                          context,
-                                                          TextStyle(
-                                                              color:
-                                                                  ThemeApp
-                                                                      .blackColor,
-                                                              fontSize:
-                                                                  height *
-                                                                      .018,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400)),
+                                               /* value.myOrdersList[index]
+                                                            ["myOrderStatus"] ==
+                                                        "Acceptance Pending"
+                                                    ? SizedBox()
+                                                    : Container(
+                                                        child: TextFieldUtils().dynamicText(
+                                                            "Change Status to:",
+                                                            context,
+                                                            TextStyle(fontFamily: 'Roboto',
+                                                                color: ThemeApp
+                                                                    .blackColor,
+                                                                fontSize:
+                                                                    height *
+                                                                        .018,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                      ),*/
+                                                SizedBox(
+                                                  width: width * .02,
                                                 ),
-                                          SizedBox(
-                                            width: width * .02,
-                                          ),*/
                                                 Container(
-                                                  padding: const EdgeInsets
-                                                      .fromLTRB(10, 8, 10, 8),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          10, 8, 10, 8),
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.all(
                                                       Radius.circular(30),
                                                     ),
-                                                    // border: Border.all(
-                                                    //     color: colorsStatus),
-                                                    color:
-                                                        ThemeApp.whiteColor,
+                                                    border: Border.all(
+                                                        color: colorsStatus),
+                                                    color: ThemeApp.whiteColor,
                                                   ),
                                                   child: TextFieldUtils()
                                                       .dynamicText(
                                                           value.myOrdersList[
-                                                                  index][
-                                                              "myOrderStatus"],
+                                                                  index]
+                                                              ["myOrderStatus"],
                                                           context,
-                                                          TextStyle(
+                                                          TextStyle(fontFamily: 'Roboto',
                                                               color:
                                                                   colorsStatus,
-                                                              fontSize:
-                                                                  height *
-                                                                      .02,
+                                                              fontSize: 10,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500)),
@@ -1601,13 +2113,13 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: height * .01,
+                                        height: 19,
                                       ),
                                       TextFieldUtils().lineHorizontal(),
                                       stepperWidget(),
                                       TextFieldUtils().lineHorizontal(),
                                       SizedBox(
-                                        height: height * .02,
+                                        height: 19,
                                       ),
                                       Container(
                                           alignment: Alignment.centerLeft,
@@ -1615,10 +2127,8 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-
                                               value.myOrdersList[index]
                                                           ["myOrderStatus"] !=
                                                       'Delivered'
@@ -1627,29 +2137,25 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                         // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OrderRatingReviewActivity(values:  value.myOrderList[index])));
                                                       },
                                                       child: rattingBar())
-                                                  :   TextFieldUtils().dynamicText(
-                                                  value.myOrdersList[index]
-                                                  ["myOrderProgress"],
-                                                  context,
-                                                  TextStyle(
-                                                      color: ThemeApp
-                                                          .darkGreyTab,
-                                                      fontSize: height * .02,
-                                                      fontWeight:
-                                                      FontWeight.w400)),
+                                                  : TextFieldUtils().dynamicText(
+                                                      value.myOrdersList[index]
+                                                          ["myOrderProgress"],
+                                                      context,
+                                                      TextStyle(fontFamily: 'Roboto',
+                                                          color: ThemeApp
+                                                              .darkGreyTab,
+                                                          fontSize:
+                                                              height * .02,
+                                                          fontWeight:
+                                                              FontWeight.w400)),
                                               value.myOrdersList[index]
                                                           ["myOrderStatus"] !=
                                                       'Delivered'
                                                   ? Container(
-                                                      padding:
-                                                          const EdgeInsets
-                                                                  .fromLTRB(
-                                                              15.0,
-                                                              7.0,
-                                                              15.0,
-                                                              7.0),
-                                                      decoration:
-                                                          BoxDecoration(
+                                                      padding: const EdgeInsets
+                                                              .fromLTRB(
+                                                          15.0, 7.0, 15.0, 7.0),
+                                                      decoration: BoxDecoration(
                                                         borderRadius:
                                                             const BorderRadius
                                                                 .all(
@@ -1665,24 +2171,21 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                                   .refresh_sharp,
                                                               color: ThemeApp
                                                                   .whiteColor,
-                                                              size: height *
-                                                                  .02),
+                                                              size:
+                                                                  height * .02),
                                                           SizedBox(
-                                                            width:
-                                                                width * .01,
+                                                            width: width * .01,
                                                           ),
                                                           TextFieldUtils().dynamicText(
                                                               "Reorder",
                                                               context,
-                                                              TextStyle(
+                                                              TextStyle(fontFamily: 'Roboto',
                                                                   color: ThemeApp
                                                                       .whiteColor,
-                                                                  fontSize:
-                                                                      height *
-                                                                          .018,
+                                                                  fontSize:10,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w500)),
+                                                                          .w700)),
                                                         ],
                                                       ),
                                                     )
@@ -1697,7 +2200,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
             child: TextFieldUtils().dynamicText(
                 'No data found',
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w400,
@@ -1736,32 +2239,31 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
     );
   }
 
-
   Widget stepperWidget() {
     return Container(
-        height: height * .1,
-        width: width,
-        alignment: Alignment.center,
-        color: ThemeApp.whiteColor,
-        child:  Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                children: _iconViews(),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: _titleViews(context),
-                ),
-              ),
-            ],
+      height: height * .1,
+      width: width,
+      alignment: Alignment.center,
+      color: ThemeApp.whiteColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            children: _iconViews(),
           ),
-        );
+          const SizedBox(
+            height: 8,
+          ),
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: _titleViews(context),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   List<Widget> _iconViews() {
@@ -1770,8 +2272,9 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var lineColor =
-      (i == 0 || i == 1 || _curStep > i + 1) ? ThemeApp.tealButtonColor : ThemeApp.appColor;
+      var lineColor = (i == 0 || i == 1 || _curStep > i + 1)
+          ? ThemeApp.tealButtonColor
+          : ThemeApp.appColor;
       var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
@@ -1791,15 +2294,15 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
           //   ),),
           child: (i == 0 || _curStep > i + 1)
               ? Icon(
-            Icons.circle,
-            color: iconColor,
-            size: 18.0,
-          )
+                  Icons.circle,
+                  color: iconColor,
+                  size: 18.0,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: iconColor,
-            size: 18.0,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: iconColor,
+                  size: 18.0,
+                ),
         ),
       );
 
@@ -1807,9 +2310,9 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       if (i != titles.length - 1) {
         list.add(Expanded(
             child: Container(
-              height: 3.0,
-              color: lineColor,
-            )));
+          height: 3.0,
+          color: lineColor,
+        )));
       }
     });
 
@@ -1822,19 +2325,19 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
             ? TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(
-                color: ThemeApp.blackColor,
-                fontSize: height * .018,
-                fontWeight: FontWeight.w400))
+                text,
+                context,
+                TextStyle(fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(
-                color: ThemeApp.blackColor,
-                fontSize: height * .018,
-                fontWeight: FontWeight.w400)),
+                text,
+                context,
+                TextStyle(fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400)),
       );
     });
     return list;

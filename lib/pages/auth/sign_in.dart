@@ -129,7 +129,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               ),
                               child: Center(
                                 child: Text(StringUtils.usingPass,
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: 'Roboto',
                                         fontSize: 13,
                                         color: _usingPassVisible
                                             ? ThemeApp.blackColor
@@ -162,7 +162,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 ),
                                 child: Center(
                                   child: Text(StringUtils.usingOTP,
-                                      style: TextStyle(
+                                      style: TextStyle(fontFamily: 'Roboto',
                                           fontSize: 13,
                                           color: _usingPassVisible
                                               ? ThemeApp.whiteColor
@@ -277,7 +277,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               decoration: BoxDecoration(
                                   color: Colors.redAccent,
                                   borderRadius: BorderRadius.circular(22)),
-                              textStyle: const TextStyle(
+                              textStyle: const TextStyle(fontFamily: 'Roboto',
                                   fontSize: 16,letterSpacing: 1.2,
                                   fontStyle: FontStyle.italic,fontWeight: FontWeight.w700,
                                   color: Colors.white),
@@ -430,7 +430,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                 children: [
                   Text(
                     "Don't have an account? ",
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.primaryNavyBlackColor,
                         fontSize: 18,
                         fontWeight: FontWeight.w400),
@@ -442,7 +442,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     },
                     child: Text(
                       "Sign Up",
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
                           fontSize: 18,
                           fontWeight: FontWeight.bold),

@@ -76,7 +76,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                 TextFieldUtils().dynamicText(
                     StringUtils.cardHolderName,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
@@ -96,7 +96,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                 TextFieldUtils().dynamicText(
                     StringUtils.cardNumber,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
@@ -135,7 +135,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                 TextFieldUtils().dynamicText(
                     StringUtils.expiryDate,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
@@ -161,10 +161,10 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                       hintText: 'MM / YY',
                       filled: true,
                       fillColor: Colors.white,
-                      hintStyle: TextStyle(
+                      hintStyle: TextStyle(fontFamily: 'Roboto',
                           color: Colors.grey,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
-                      errorStyle: TextStyle(
+                      errorStyle: TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.redColor,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
                       contentPadding:
@@ -196,7 +196,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                 SizedBox(
                   height: height * .04,
                 ),
-                proceedButton("Save", ThemeApp.blackColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+                proceedButton("Save", ThemeApp.tealButtonColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
 
                 value.creditCardList.add(MyCardList(
                     myCardBankName: 'Kotak Mahindra',
@@ -321,7 +321,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                 TextFieldUtils().dynamicText(
                     StringUtils.cardHolderName,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
@@ -341,7 +341,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                 TextFieldUtils().dynamicText(
                     StringUtils.cardNumber,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
@@ -380,7 +380,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                 TextFieldUtils().dynamicText(
                     StringUtils.expiryDate,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w500)),
@@ -406,10 +406,10 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                       hintText: 'MM / YY',
                       filled: true,
                       fillColor: Colors.white,
-                      hintStyle: TextStyle(
+                      hintStyle: TextStyle(fontFamily: 'Roboto',
                           color: Colors.grey,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
-                      errorStyle: TextStyle(
+                      errorStyle: TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.redColor,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
                       contentPadding:
@@ -441,7 +441,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                 SizedBox(
                   height: height * .04,
                 ),
-                proceedButton("Save", ThemeApp.blackColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+                proceedButton("Save", ThemeApp.tealButtonColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
 
                 widget.cardList.myCardFullName =
                       cardHolderNameController.text.toString();

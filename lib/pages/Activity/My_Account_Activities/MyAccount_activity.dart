@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/CustomerSupport/CustomerSupportActivity.dart';
+import 'package:velocit/services/providers/Home_Provider.dart';
 
 import '../../../Core/Model/CartModels/SendCartForPaymentModel.dart';
 import '../../../Core/ViewModel/cart_view_model.dart';
@@ -42,13 +43,14 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
   double height = 0.0;
   double width = 0.0;
   CartViewModel cartListView = CartViewModel();
-
+var data;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getCartId();
-    getPreference();
+ data = Provider.of<HomeProvider>(context, listen: false).loadCartForPaymentJson();
+
   }
 
   getCartId() async {
@@ -142,7 +144,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
               title: TextFieldUtils().dynamicText(
                   'My Account',
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       // fontWeight: FontWeight.w500,
                       fontSize: MediaQuery.of(context).size.height * .022,
@@ -153,8 +155,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: SafeArea(
-          child: Consumer<ProductProvider>(builder: (context, value, child) {
+        body: data == '' ? CircularProgressIndicator() :SafeArea(
+          child: Consumer<HomeProvider>(builder: (context, value, child) {
             return Container(
               color: ThemeApp.appBackgroundColor,
               width: width,
@@ -164,9 +166,9 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        height: height * 0.3,
+                        height: 227,
                         alignment: Alignment.center,
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.fromLTRB(0, 25, 0, 25),
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(20),
@@ -183,14 +185,14 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                               children: [
                                 Center(
                                   child: Container(
-                                    width: 130.0,
-                                    height: 130.0,
+                                    width: 100.0,
+                                    height: 100.0,
                                     decoration: new BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
                                             color: ThemeApp.appBackgroundColor,
                                             spreadRadius: 1,
-                                            blurRadius: 15)
+                                            blurRadius: 20)
                                       ],
                                       border: Border.all(
                                           color: ThemeApp.whiteColor, width: 7),
@@ -202,26 +204,31 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                               ))*/
                                     ),
                                     child: ClipRRect(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(100)),
-                                          child: StringConstant
-                                                  .ProfilePhoto.isNotEmpty
-                                              ? Image.file(
-                                                    File(StringConstant
-                                                            .ProfilePhoto ??
-                                                        ""),
-                                                    fit: BoxFit.fill,
-                                                    width: 130.0,
-                                                    height: 130.0,
-                                                  ) ??
-                                                  Container()
-                                              : SizedBox(),
-                                        ) ??
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(100)),
+                                            child: Image.file(
+                                                  File(StringConstant
+                                                          .ProfilePhoto ??
+                                                      ""),
+                                                  fit: BoxFit.fill,
+                                                  width: 100.0,
+                                                  height: 100.0,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Icon(
+                                                      Icons.image,
+                                                      color:
+                                                          ThemeApp.whiteColor,
+                                                    );
+                                                  },
+                                                ) ??
+                                                Container()) ??
                                         SizedBox(),
                                   ),
                                 ),
                                 Positioned(
-                                  bottom: 0, right: width * .32,
+                                  bottom: 0, right: 160,
                                   // width: 130.0,
 
                                   // height: 40.0,
@@ -235,8 +242,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                         );
                                       },
                                       child: Container(
-                                        height: height * .06,
-                                        width: width * .11,
+                                        height: 32,
+                                        width: 32,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(30),
@@ -263,93 +270,36 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                               ],
                             ),
                             SizedBox(
-                              height: height * .01,
+                              height: 20,
                             ),
                             TextFieldUtils().dynamicText(
                                 // StringConstant.userAccountName,
                                 'Dawid John',
                                 context,
-                                TextStyle(
-                                  color: ThemeApp.blackColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: height * .022,
-                                )),
+                                TextStyle(fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                    letterSpacing: -0.25)),
                             SizedBox(
-                              height: height * .01,
+                              height: 3,
                             ),
                             TextFieldUtils().dynamicText(
                                 // StringConstant.userAccountEmail,
                                 'dawid@gmail.com',
                                 context,
-                                TextStyle(
-                                  color: ThemeApp.darkGreyTab,
-                                  fontSize: height * .018,
-                                )),
-                            /*          SizedBox(
-                              height: height * .01,
-                            ),
-                            TextFieldUtils().dynamicText(
-                              // StringConstant.userAccountMobile,
-                                '+91 8787965428',
-                                context,
-                                TextStyle(
-                                  color: ThemeApp.darkGreyTab,
-                                  fontSize: height * .018,
-                                )),*/
-                            /* Expanded(
-                                flex: 1,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const EditAccountActivity(),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.topRight,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Icon(Icons.edit,
-                                            size: height * .02),
-                                        SizedBox(
-                                          width: width * .01,
-                                        ),
-                                        TextFieldUtils().dynamicText(
-                                            'Edit',
-                                            context,
-                                            TextStyle(
-                                              color: ThemeApp.darkGreyTab,
-                                              fontSize: height * .018,
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                            SizedBox(
-                              height: height * .01,
-                            ),*/
+                                TextStyle(fontFamily: 'Roboto',
+                                    color: ThemeApp.lightFontColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: 0.5)),
                           ],
                         ),
                       ),
                       SizedBox(
-                        height: height * .03,
+                        height: 20,
                       ),
                       Container(
-                        // height: height * 0.12,
-                        // alignment: Alignment.center,
-                        // // padding: const EdgeInsets.all(10),
-                        // decoration: const BoxDecoration(
-                        //   borderRadius: BorderRadius.all(
-                        //     Radius.circular(8),
-                        //   ),
-                        //   color: ThemeApp.appBackgroundColor,
-                        // ),
                         child: Column(
                           children: [
                             InkWell(
@@ -368,21 +318,15 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                     iconsUtils(
                                         'assets/appImages/myOrderIcon.svg'),
                                     SizedBox(
-                                      width: width * .05,
+                                      width: 10,
                                     ),
-                                    TextFieldUtils().dynamicText(
-                                        'My Orders',
-                                        context,
-                                        TextStyle(
-                                            color: ThemeApp.blackColor,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: height * .022,
-                                            letterSpacing: -0.25)),
+                                    accountTextList('My Orders'),
+
                                   ],
                                 ),
                               ),
                             ),
-                            ChangeNotifierProvider<CartViewModel>.value(
+                          /*  ChangeNotifierProvider<CartViewModel>.value(
                               value: cartListView,
                               child: Consumer<CartViewModel>(
                                   builder: (context, cartProvider, child) {
@@ -417,7 +361,9 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                             SavedAddressDetails(cartForPaymentPayload: cartForPaymentPayload),
+                                                SavedAddressDetails(
+                                                    cartForPaymentPayload:
+                                                        cartForPaymentPayload),
                                           ),
                                         );
                                       },
@@ -428,16 +374,9 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                             iconsUtils(
                                                 'assets/appImages/savedAddressIcon.svg'),
                                             SizedBox(
-                                              width: width * .05,
+                                              width: 10,
                                             ),
-                                            TextFieldUtils().dynamicText(
-                                                'Saved Addresses',
-                                                context,
-                                                TextStyle(
-                                                    color: ThemeApp.blackColor,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: height * .022,
-                                                    letterSpacing: -0.25)),
+                                            accountTextList('Saved Addresses'),
                                           ],
                                         ),
                                       ),
@@ -445,6 +384,31 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 }
                                 return SizedBox();
                               }),
+                            ),*/
+
+                            InkWell(
+                              onTap: () {
+
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SavedAddressDetails(),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    iconsUtils(
+                                        'assets/appImages/savedAddressIcon.svg'),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    accountTextList('Saved Addresses'),
+                                  ],
+                                ),
+                              ),
                             ),
                             InkWell(
                               onTap: () {
@@ -462,16 +426,10 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                     iconsUtils(
                                         'assets/appImages/headPhoneIcon.svg'),
                                     SizedBox(
-                                      width: width * .05,
+                                      width: 10,
                                     ),
-                                    TextFieldUtils().dynamicText(
-                                        'Customer Support',
-                                        context,
-                                        TextStyle(
-                                            color: ThemeApp.blackColor,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: height * .022,
-                                            letterSpacing: -0.25)),
+                                    accountTextList('Customer Support'),
+
                                   ],
                                 ),
                               ),
@@ -500,16 +458,9 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                     iconsUtils(
                                         'assets/appImages/settingIcon.svg'),
                                     SizedBox(
-                                      width: width * .05,
+                                      width: 10,
                                     ),
-                                    TextFieldUtils().dynamicText(
-                                        'Account Settings',
-                                        context,
-                                        TextStyle(
-                                            color: ThemeApp.blackColor,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: height * .022,
-                                            letterSpacing: -0.25)),
+                                    accountTextList('Account Settings'),
                                   ],
                                 ),
                               ),
@@ -530,16 +481,9 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                     iconsUtils(
                                         'assets/appImages/settingIcon.svg'),
                                     SizedBox(
-                                      width: width * .05,
+                                      width: 10,
                                     ),
-                                    TextFieldUtils().dynamicText(
-                                        'Notifications',
-                                        context,
-                                        TextStyle(
-                                            color: ThemeApp.blackColor,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: height * .022,
-                                            letterSpacing: -0.25)),
+                                    accountTextList('Notifications'),
                                   ],
                                 ),
                               ),
@@ -560,16 +504,9 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                     iconsUtils(
                                         'assets/appImages/settingIcon.svg'),
                                     SizedBox(
-                                      width: width * .05,
+                                      width: 10,
                                     ),
-                                    TextFieldUtils().dynamicText(
-                                        'Change Password',
-                                        context,
-                                        TextStyle(
-                                            color: ThemeApp.blackColor,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: height * .022,
-                                            letterSpacing: -0.25)),
+                                    accountTextList('Change Password'),
                                   ],
                                 ),
                               ),
@@ -593,16 +530,9 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                     iconsUtils(
                                         'assets/appImages/signOutIcon.svg'),
                                     SizedBox(
-                                      width: width * .05,
+                                      width: 10,
                                     ),
-                                    TextFieldUtils().dynamicText(
-                                        'Sign Out',
-                                        context,
-                                        TextStyle(
-                                            color: ThemeApp.blackColor,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: height * .022,
-                                            letterSpacing: -0.25)),
+                                    accountTextList('Sign Out'),
                                   ],
                                 ),
                               ),
@@ -621,12 +551,12 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
 
   Widget iconsUtils(String svgIcon) {
     return Container(
-      height: height * .05,
-      width: width * .1,
+      height: 32,
+      width: 32,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5), color: ThemeApp.appColor),
       child: Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(7),
         child: SvgPicture.asset(
           svgIcon,
           color: ThemeApp.whiteColor,
@@ -636,5 +566,16 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
         ),
       ),
     );
+  }
+
+  Widget accountTextList(String text) {
+    return TextFieldUtils().dynamicText(
+        text,
+        context,
+        TextStyle(fontFamily: 'Roboto',
+            color: ThemeApp.blackColor,
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+            letterSpacing: -0.25));
   }
 }

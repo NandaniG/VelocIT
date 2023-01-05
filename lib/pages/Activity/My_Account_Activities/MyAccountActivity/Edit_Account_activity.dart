@@ -398,7 +398,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
         TextFieldUtils().dynamicText(
             StringUtils.fullName,
             context,
-            TextStyle(
+            TextStyle(fontFamily: 'Roboto',
                 color: ThemeApp.blackColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w600)),
@@ -424,7 +424,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
         TextFieldUtils().dynamicText(
             StringUtils.mobileNumber,
             context,
-            TextStyle(
+            TextStyle(fontFamily: 'Roboto',
                 color: ThemeApp.blackColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w600)),
@@ -441,7 +441,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
         TextFieldUtils().dynamicText(
             StringUtils.email,
             context,
-            TextStyle(
+            TextStyle(fontFamily: 'Roboto',
                 color: ThemeApp.blackColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w600)),

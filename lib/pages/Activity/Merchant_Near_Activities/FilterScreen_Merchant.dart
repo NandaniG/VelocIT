@@ -74,7 +74,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
               child: TextFieldUtils().dynamicText(
                   StringUtils.filter,
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontSize: height * .022,
                       fontWeight: FontWeight.bold)),
@@ -87,7 +87,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
               child: TextFieldUtils().dynamicText(
                   '145 products found',
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.darkGreyTab,
                       fontSize: height * .02,
                       fontWeight: FontWeight.w700)),
@@ -99,7 +99,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                 child: TextFieldUtils().dynamicText(
                     StringUtils.clearFilter,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w400)),
@@ -160,7 +160,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                                         MerchantFilterData
                                             .merchantFilterList[index].name,
                                         textDirection: TextDirection.rtl,
-                                        style: TextStyle(
+                                        style: TextStyle(fontFamily: 'Roboto',
                                             color: ThemeApp.whiteColor,
                                             fontSize: height * .018,
                                             fontWeight: FontWeight.w700)),
@@ -210,7 +210,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                                         TextFieldUtils().dynamicText(
                                             model.filterDetailList[index1].name,
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                                 color: tappedIndex == index1
                                                     ? ThemeApp.blackColor
                                                     : ThemeApp.blackColor,
@@ -291,7 +291,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                   border: Border.all(color: ThemeApp.tealButtonColor)),
               child: Text("Cancel",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.tealButtonColor,
                       fontSize: height * .022,
                       fontWeight: FontWeight.w700)),
@@ -323,7 +323,7 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                     border: Border.all(color: ThemeApp.tealButtonColor)),
                 child: Text("Apply",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.whiteColor,
                         fontSize: height * .022,
                         fontWeight: FontWeight.w700)),

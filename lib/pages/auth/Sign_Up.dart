@@ -157,7 +157,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: BoxDecoration(
                               color: Colors.redAccent,
                               borderRadius: BorderRadius.circular(22)),
-                          textStyle: const TextStyle(
+                          textStyle: const TextStyle(fontFamily: 'Roboto',
                               fontSize: 16,letterSpacing: 1.2,
                               fontStyle: FontStyle.italic,fontWeight: FontWeight.w700,
                               color: Colors.white),
@@ -247,7 +247,7 @@ class _SignUpState extends State<SignUp> {
                         TextFieldUtils().dynamicText(
                          'Accept terms of use',
                             context,
-                            TextStyle(
+                            TextStyle(fontFamily: 'Roboto',
                                 color:ThemeApp.blackColor,
                                 fontSize: height * .018,
                                 fontWeight: FontWeight.w500)),
@@ -286,7 +286,7 @@ class _SignUpState extends State<SignUp> {
                         children: [
                           Text(
                             "Already have an account? ",
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.primaryNavyBlackColor,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w400),
@@ -298,7 +298,7 @@ class _SignUpState extends State<SignUp> {
                             },
                             child: Text(
                               "Sign In",
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.primaryNavyBlackColor,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold),
@@ -318,7 +318,7 @@ class _SignUpState extends State<SignUp> {
               //     child: Center(
               //       child: Text(
               //         "Don't have an account? Create Account",
-              //         style: TextStyle(
+              //         style: TextStyle(fontFamily: 'Roboto',
               //             color: Color(0xffF6C37F),
               //             fontSize: 18,
               //             fontWeight: FontWeight.w400),

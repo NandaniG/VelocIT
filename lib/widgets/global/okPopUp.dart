@@ -48,7 +48,7 @@ class _OkDialogState extends State<OkDialog> {
                 Flexible(
                     child: TextFieldUtils()
                         .homePageheadingTextField(widget.text, context)),
-                proceedButton('Ok', ThemeApp.blackColor,context, false,() {
+                proceedButton('Ok', ThemeApp.tealButtonColor,context, false,() {
                   Navigator.pop(context);
                 })
               ],

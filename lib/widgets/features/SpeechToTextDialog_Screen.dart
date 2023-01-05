@@ -34,10 +34,10 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
   final Map<String, HighlightedWord> highlightWords = {
     "flutter": HighlightedWord(
         textStyle:
-            TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+            TextStyle(fontFamily: 'Roboto',color: Colors.redAccent, fontWeight: FontWeight.bold)),
     "developer": HighlightedWord(
         textStyle:
-            TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+            TextStyle(fontFamily: 'Roboto',color: Colors.redAccent, fontWeight: FontWeight.bold)),
   };
 
   void startTimer(DashboardViewModel dashboardViewModel) {
@@ -111,7 +111,8 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
     super.initState();
     // startTimer();
     speech = speechToText.SpeechToText();
-    isListen = false;  productCategories.productCategoryListingWithGet();
+    isListen = false;
+    productCategories.productCategoryListingWithGet();
 
   }
 
@@ -154,7 +155,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                 // Container(
                 //   child: Text(
                 //     "Confidence: ${(confidence * 100.0).toStringAsFixed(1)}%",
-                //     style: TextStyle(
+                //     style: TextStyle(fontFamily: 'Roboto',
                 //         fontSize: 20.0,
                 //         fontWeight: FontWeight.bold,
                 //         color: Colors.red),
@@ -165,7 +166,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                   child: TextHighlight(
                     text: textString,
                     words: highlightWords,
-                    textStyle: TextStyle(
+                    textStyle: TextStyle(fontFamily: 'Roboto',
                         fontSize: 25.0,
                         color: Colors.grey,
                         fontWeight: FontWeight.bold),

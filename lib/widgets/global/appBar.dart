@@ -334,7 +334,7 @@ Widget appBarWidget(
                                     padding: const EdgeInsets.all(1),
                                     child: Text(
                                       '${product.badgeFinalCount}',
-                                      style: TextStyle(
+                                      style: TextStyle(fontFamily: 'Roboto',
                                         color: Colors.white,
                                         fontSize: 15,
                                       ),
@@ -420,7 +420,7 @@ Widget appTitle(BuildContext context, String text) {
     child: TextFieldUtils().dynamicText(
         text,
         context,
-        TextStyle(
+        TextStyle(fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             // fontWeight: FontWeight.w500,
             fontSize: MediaQuery.of(context).size.height * .022,
@@ -467,7 +467,7 @@ Widget searchBar(BuildContext context) {
 
                   List<ProductList>? serviceList =
                       productCategories.productCategoryList.data!.productList;
-                  productCategories.getProductBySearchTermsWithGet(
+                /*  productCategories.getProductBySearchTermsWithGet(
                     0,
                     10,
                     StringConstant.controllerSpeechToText.text.toString(),
@@ -477,6 +477,17 @@ Widget searchBar(BuildContext context) {
                       builder: (context) => SearchProductListScreen(
                         searchText: StringConstant.controllerSpeechToText.text,
                       ),
+                    ),
+                  );*/
+
+                  productCategories.getProductBySearchTermsWithGet(
+                    0,
+                    10,
+                    StringConstant.controllerSpeechToText.text.toString(),
+                  );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SearchProductListScreen( searchText: StringConstant.controllerSpeechToText.text, ),
                     ),
                   );
               }
@@ -513,7 +524,7 @@ Widget searchBar(BuildContext context) {
               //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
               /* -- Text and Icon -- */
               hintText: "Search",
-              hintStyle: const TextStyle(
+              hintStyle: const TextStyle(fontFamily: 'Roboto',
                 fontSize: 14,
                 color: ThemeApp.darkGreyTab,
               ),
@@ -637,7 +648,7 @@ Widget addressWidget(BuildContext context, String addressString) {
               child: TextFieldUtils().dynamicText(
                   "Deliver to - ${StringConstant.FINALPINCODE.toString().isEmpty ? StringConstant.CurrentPinCode.toString() : StringConstant.FINALPINCODE} ",
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.tealButtonColor,
                       fontSize: 12,
                       fontWeight: FontWeight.w400)),
@@ -905,10 +916,8 @@ Widget bottomNavBarItems(BuildContext context) {
                               child: Container(
                                 width: 20.0,
                                 height: 20.0,
-                                padding: EdgeInsets.all(2),
                                 decoration: BoxDecoration(
                                   color: Colors.red,
-                                  borderRadius: BorderRadius.circular(100),
                                 ),
                                 // constraints: BoxConstraints(
                                 //     minWidth: 15,
@@ -917,14 +926,16 @@ Widget bottomNavBarItems(BuildContext context) {
                                 //     maxWidth: 18),
                                 child: Padding(
                                   padding: const EdgeInsets.all(1),
-                                  child: Text(
-                                    // CartRepository().badgeLength.toString(),
-                                    '${StringConstant.BadgeCounterValue}',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
+                                  child: Center(
+                                    child: Text(
+                                      // CartRepository().badgeLength.toString(),
+                                      '${StringConstant.BadgeCounterValue}',
+                                      style: TextStyle(fontFamily: 'Roboto',
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
@@ -1024,7 +1035,7 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         proceedButton("Scan with Camera",
-                            ThemeApp.darkGreyColor, context, false, () async {
+                            ThemeApp.tealButtonColor, context, false, () async {
                           // Navigator.of(context).pop();
                           final prefs = await SharedPreferences.getInstance();
 
@@ -1202,4 +1213,181 @@ class LocationController extends GetxController {
       print(e.toString());
     }
   }
+}
+
+class searchBarWidget extends StatefulWidget {
+  const searchBarWidget({Key? key}) : super(key: key);
+
+  @override
+  State<searchBarWidget> createState() => _searchBarWidgetState();
+}
+
+class _searchBarWidgetState extends State<searchBarWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return searchBar(context);
+  }Widget searchBar(BuildContext context) {
+    double height = 0.0;
+    double width = 0.0;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    DashboardViewModel productCategories = DashboardViewModel();
+    productCategories.productCategoryListingWithGet();
+
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+      value: productCategories,
+      child: Consumer<DashboardViewModel>(
+          builder: (context, dashBoardProvider, child) {
+            return Consumer<HomeProvider>(builder: (context, provider, child) {
+              return Container(
+                width: width,
+                height: height * .1,
+                // color: ThemeApp.redColor,
+                padding: const EdgeInsets.only(top: 10, left: 0),
+                alignment: Alignment.center,
+                child: TextFormField(
+                  textInputAction: TextInputAction.search,
+
+                  controller: StringConstant.controllerSpeechToText,
+                  onFieldSubmitted: (value) {
+                    print("Getting Value" +
+                        productCategories
+                            .productCategoryList.data!.productList![0].name
+                            .toString());
+                    switch (dashBoardProvider.productCategoryList.status) {
+                      case Status.LOADING:
+                        return print("Getting Value");
+                      case Status.COMPLETED:
+                        if (kDebugMode) {
+                          print("Api calll");
+                        }
+
+                        List<ProductList>? serviceList =
+                            productCategories.productCategoryList.data!.productList;
+                        /*  productCategories.getProductBySearchTermsWithGet(
+                    0,
+                    10,
+                    StringConstant.controllerSpeechToText.text.toString(),
+                  );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SearchProductListScreen(
+                        searchText: StringConstant.controllerSpeechToText.text,
+                      ),
+                    ),
+                  );*/
+
+                        productCategories.getProductBySearchTermsWithGet(
+                          0,
+                          10,
+                          StringConstant.controllerSpeechToText.text.toString(),
+                        );
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SearchProductListScreen( searchText: StringConstant.controllerSpeechToText.text, ),
+                          ),
+                        );
+                    }
+                    /*  Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductListByCategoryActivity(
+                      productList: productCategories.),
+                ),
+              );*/
+                    if (kDebugMode) {
+                      print("search.........");
+                    } // showDialog(
+                    //     context: context,
+                    //     builder: (BuildContext context) {
+                    //       return OkDialog(text: StringConstant.controllerSpeechToText.text);
+                    //     });
+                  },
+                  onChanged: (val) {
+                    // print("StringConstant.speechToText..." +
+                    //     StringConstant.speechToText);
+                    // (() {
+                    //   if (val.isEmpty) {
+                    //     val = StringConstant.speechToText;
+                    //   } else {
+                    //     StringConstant.speechToText = StringConstant.controllerSpeechToText.text;
+                    //   }
+                    // });
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: ThemeApp.whiteColor,
+                    isDense: true,
+                    // contentPadding:
+                    //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                    /* -- Text and Icon -- */
+                    hintText: "Search",
+                    hintStyle: const TextStyle(fontFamily: 'Roboto',
+                      fontSize: 14,
+                      color: ThemeApp.darkGreyTab,
+                    ),
+                    prefixIconColor: ThemeApp.primaryNavyBlackColor,
+                    prefixIcon: /*const Icon(
+                  Icons.search,
+                  size: 26,
+                  color: Colors.black54,
+                ),*/
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: SvgPicture.asset(
+                        'assets/appImages/searchIcon.svg',
+                        color: ThemeApp.primaryNavyBlackColor,
+                        semanticsLabel: 'Acme Logo',
+                        theme: SvgTheme(
+                          currentColor: ThemeApp.primaryNavyBlackColor,
+                        ),
+                        height: height * .001,
+                      ),
+                    ),
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return SpeechToTextDialog();
+                            });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: SvgPicture.asset(
+                          'assets/appImages/miceIcon.svg',
+                          color: ThemeApp.primaryNavyBlackColor,
+                          semanticsLabel: 'Acme Logo',
+                          theme: SvgTheme(
+                            currentColor: ThemeApp.primaryNavyBlackColor,
+                          ),
+                          height: height * .001,
+                        ),
+                      ), /*const Icon(
+                    Icons.mic,
+                    size: 26,
+                    color: Colors.black54,
+                  ),*/
+                    ),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide:
+                        const BorderSide(color: ThemeApp.redColor, width: 1)),
+                    // OutlineInputBorder
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                            color: ThemeApp.appBackgroundColor, width: 1)),
+                    // OutlineInputBorder
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                            color: ThemeApp.appBackgroundColor, width: 1)),
+                  ), // InputDecoration
+                ),
+              );
+            });
+          }),
+    );
+  }
+
 }

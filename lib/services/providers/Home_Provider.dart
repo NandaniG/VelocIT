@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 
 import '../../../utils/ApiMapping.dart';
@@ -14,6 +15,7 @@ import '../../Core/Model/Orders/OrderBasketModel.dart';
 import '../../Core/data/network/baseApiServices.dart';
 import '../../Core/data/network/networkApiServices.dart';
 import '../../Core/repository/OrderBasket_repository.dart';
+import '../../Core/repository/cart_repository.dart';
 import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 import '../models/JsonModelForApp/HomeModel.dart';
@@ -21,6 +23,7 @@ import '../models/JsonModelForApp/HomeModel.dart';
 class HomeProvider with ChangeNotifier {
   Map<dynamic, dynamic> jsonData = {};
   Map<dynamic, dynamic> jsonDatass = {};
+  Map<dynamic, dynamic> jsonOrdersData = {};
 
   //---------------------------------------------------------
   //--------------------load json file------------------------
@@ -34,20 +37,22 @@ class HomeProvider with ChangeNotifier {
           "from_days_in_past": 3
         });
         homeImageSliderService();
-        jsonData = json.decode(jsonContents);
+        jsonData = json.decode(jsonContents);   print("____________loadJson______________________");
+        print(jsonData["payload"]['consumer_baskets'].toString());
         notifyListeners();
-      ///////
-   /*   String jsonContent = await rootBundle.loadString("assets/jsonData.json");
-      jsonData = json.decode(jsonContent);
-      // // print("____________loadJson______________________");
-      // // print(jsonData["stepperOfDeliveryList"]);
+        merchantNearYouListService();
+
+        ///////
+      // String jsonContent = await rootBundle.loadString("assets/jsonData.json");
+      // jsonData = json.decode(jsonContent);
+      print("____________loadJson______________________");
+      print(jsonData["payload"].toString());
       // // StringConstant.printObject(jsonData);
 
       homeImageSliderService();
       // shopByCategoryService();
       // bookOurServicesService();
       // recommendedListService();
-      merchantNearYouListService();
       bestDealListService();
       cartProductListService();
       orderCheckOutListService();
@@ -56,7 +61,24 @@ class HomeProvider with ChangeNotifier {
       customerSupportService();
       accountSettingService();
       notificationsListService();
-      offersListService();*/
+      offersListService();
+    } catch (e) {
+      print("Error in loadJson: $e");
+      return {};
+
+    }
+  }
+  loadOrderJson(Map jsonMap,int basketId) async {
+    try {
+      String jsonContents = await   putCartForPaymentUpdate(jsonMap,basketId);
+
+
+      jsonData = json.decode(jsonContents);
+      print("____________loadJson__putCartForPaymentUpdate____________________");
+      print(jsonData.toString());
+
+      notifyListeners();
+
     } catch (e) {
       print("Error in loadJson: $e");
       return {};
@@ -64,48 +86,56 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  loadJsonss() async {
+  loadCartForPaymentJson() async {
     try {
-      getOrderBasketApi();
+      final prefs = await SharedPreferences.getInstance();
 
-      // reviewPostAPI();
-      print("____________loadJson__________________jsonDatass_");
-      print(jsonDatass);
-      // // StringConstant.printObject(jsonData);
+      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+
+      String jsonContents = await CartRepository()
+          .getSendCartForPaymentLists(StringConstant.UserCartID);
+
+      jsonData = json.decode(jsonContents);
+      print("____________loadJson__putCartForPaymentUpdate____________________");
+      print(jsonData.toString());
+
       notifyListeners();
     } catch (e) {
-      // print("Error in loadJson: $e");
+      print("Error in loadJson: $e");
+      return {};
+    }
+  }
+
+  Future putCartForPaymentUpdate(dynamic data,int orderBasketID) async {
+    // var url = ApiMapping.getURI(apiEndPoint.put_carts);
+
+    print("userId"+orderBasketID.toString());
+    var url = '/order-basket/$orderBasketID/update_payment';
+
+    var requestUrl = ApiMapping.baseAPI +url;
+    print(requestUrl.toString());
+
+    String body = json.encode(data);
+    print("jsonMapbvcbvbcvbcv"+body.toString());
+
+
+    try {
+      dynamic reply;
+      http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
+      print("response postputCartForPaymentUpdate"+response.body.toString());
+      jsonData = json.decode(response.body);
+      return reply;
+
+      return response ;
+    } catch (e) {
+      throw e;
     }
   }
 
   BaseApiServices _apiServices = NetworkApiServices();
   dynamic orderBasketData;
 
-  Future<ActiveOrderBasketModel> getOrderBasketApi() async {
-    var url = ApiMapping.BASEAPI + ApiMapping.consumerBasket;
-    print(url.toString());
 
-    try {
-      Map data = {
-        "user_id": 669250095,
-        "IsActiveOrderList": true,
-        "from_days_in_past": 3
-      };
-      dynamic response =
-          await _apiServices.getGetApiResponseWithBody(url, data);
-      orderBasketData = response.toString();
-      jsonDatass = json.decode(response);
-
-      print("getOrderBasketApisccscsscs" + response.toString());
-      return response = ActiveOrderBasketModel.fromJson(response);
-    } catch (e) {
-      throw e;
-    }
-
-
-    /////////
-
-  }
   Map<dynamic, dynamic> reviewPostAPIData = {};
  Future reviewPostAPI(jsonMap) async {
 /*    Map jsonMap = {
@@ -287,12 +317,12 @@ class HomeProvider with ChangeNotifier {
     orderCheckOutList = json.decode(jsondata);
     orderCheckOutList = orderCheckOutList["orderCheckOut"];
 
-    // print("-------------orderCheckOutDetails Data-------------");
-    // // print(orderCheckOutList.toString());
+    print("-------------orderCheckOutDetails Data-------------");
+    print(orderCheckOutList.toString());
 
     for (int i = 0; i <= orderCheckOutList.length; i++) {
       orderCheckOutDetails = orderCheckOutList[i]["orderCheckOutDetails"];
-      // // print("-------------orderCheckOutDetails Dataaaaaaaa$orderCheckOutDetails");
+      print("-------------orderCheckOutDetails Dataaaaaaaa$orderCheckOutDetails");
     }
     // // print(orderCheckOutList.toString());
     return orderCheckOutList.map((e) => OrderCheckOut.fromJson(e)).toList();

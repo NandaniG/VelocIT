@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/Core/Model/CartModels/SendCartForPaymentModel.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
+import 'package:velocit/widgets/global/proceedButtons.dart';
 
 import '../../../services/providers/Home_Provider.dart';
 import '../../../utils/styles.dart';
@@ -13,9 +18,9 @@ import '../../homePage.dart';
 import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
 
 class OrderPlaceActivity extends StatefulWidget {
-  final dynamic orderReview;
-
-  const OrderPlaceActivity({Key? key, this.orderReview, }) : super(key: key);
+  Map data;
+  CartForPaymentPayload cartForPaymentPayload;
+   OrderPlaceActivity({Key? key, required this.data,required this.cartForPaymentPayload}) : super(key: key);
 
   @override
   State<OrderPlaceActivity> createState() => _OrderPlaceActivityState();
@@ -25,7 +30,12 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
-
+  @override
+  void initState() {
+    // TODO: implement initState
+// print("orderData vdnvkd"+orderData.toString());
+  super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -38,9 +48,10 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
     child: appBar_backWidget(
         context, appTitle(context, "Order Checkout"), SizedBox()),
       ),
-      body: SafeArea(
+      body:SafeArea(
         child:Consumer<HomeProvider>(builder: (context, value, child) {
-            return Container(
+            return  (value.jsonData.isNotEmpty &&
+                value.jsonData['error'] == null) ?Container(
     color: ThemeApp.appColor,
     width: width,
     child: Column(
@@ -48,57 +59,68 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 stepperWidget(),
-                Icon(
-                  Icons.check_circle_outlined,
-                  size: 100,                        color: ThemeApp.whiteColor,
+SizedBox(height: 64,),
+                SvgPicture.asset(
+                  'assets/appImages/successIcon.svg',
+                  color: ThemeApp
+                      .whiteColor,
+                  semanticsLabel:
+                  'Acme Logo',
 
+                  height: 68,
                 ),
                 SizedBox(
-                  height: height * 0.02,
+                  height: 30,
                 ),
 
                 TextFieldUtils().dynamicText(
                     StringUtils.orderPlacedSuccessfully,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.whiteColor,
-                        fontSize: height * .035,
-                        fontWeight: FontWeight.w500)),   SizedBox(
-                  height: height * 0.02,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,letterSpacing: -0.25 )),
+                SizedBox(
+                  height: 5,
                 ),
 
                 TextFieldUtils().dynamicText(
                     StringUtils.thankyouForOrderingWithUs,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.whiteColor,
-                        fontSize: height * .022,
+                        fontSize:14,
                         fontWeight: FontWeight.w400)),
                 SizedBox(
-                  height: height * 0.04,
+                  height: 32,
                 ),
 
                 TextFieldUtils().dynamicText(
-                    '${StringUtils.orderId + ": ${value.orderCheckOutList[0]['orderCheckOutOrderID']}"}',
-                    context,
-                    TextStyle(
+                    '${StringUtils.orderId + ": ${value.jsonData['payload']['invoice_no'].toString()}"}',
+                context,
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.whiteColor,
-                        fontSize: height * .025,
-                        fontWeight: FontWeight.w500)),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700)),
                 SizedBox(
                   height: height * 0.04,
                 ),
-                Image.asset(
-                  value.orderCheckOutList[0]["orderCheckOutQRCode"],
-                  scale: 2,
+                Container(
+                  height: 137,
+                  width: 137,
+                  child: Image.asset(
+                    'assets/images/qr_test_image.png',
+                    // scale: 2,
+
+                  ),
                 ),
                 SizedBox(
-                  height: height * 0.05,
+                  height: 32,
                 ),
 
                 buttonsForOrderAndShipping(),
               ]),
-            );
+            ):SizedBox();
           }
         ),
       ),
@@ -194,14 +216,14 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
             ? TextFieldUtils().dynamicText(
             text,
             context,
-            TextStyle(
+            TextStyle(fontFamily: 'Roboto',
                 color: ThemeApp.blackColor,
                 fontSize: height * .018,
                 fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
             text,
             context,
-            TextStyle(
+            TextStyle(fontFamily: 'Roboto',
                 color: ThemeApp.blackColor,
                 fontSize: height * .018,
                 fontWeight: FontWeight.w400)),
@@ -213,55 +235,20 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
   Widget buttonsForOrderAndShipping() {
     return Container(
       padding: EdgeInsets.only(left: 20,right: 20),
-      child: Row(children: [
-        Expanded(
-          flex: 1,
-          child: InkWell(
-            onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => OrderReviewSubActivity(productList: widget.productList),
-              //   ),
-              // );
-            },
-            child: Container(
-                padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  color: ThemeApp.tealButtonColor,
-                ),
-                child: TextFieldUtils().usingPassTextFields(
-                    "View My Orders", ThemeApp.whiteColor, context)),
-          ),
-        ),
-        SizedBox(
-          width: width * 0.03,
-        ),
-        Expanded(
-          flex: 1,
-          child: InkWell(
-            onTap: () {
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(
-              //     builder: (context) => DashboardScreen(),
-              //   ),
-              // );
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
-            },
-            child: Container(
-                padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  color: ThemeApp.whiteColor,
-                ),
-                child: TextFieldUtils().usingPassTextFields(
-                    "Continue Shopping ", ThemeApp.tealButtonColor, context)),
-          ),
-        )
+      child: Column(children: [
+proceedButton("Continue Shopping ", ThemeApp.tealButtonColor, context, false, () {
+  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
+
+}),
+        SizedBox(height: 21,),
+        proceedButton("View my orders", ThemeApp.tealButtonColor, context, false, () {  // Navigator.of(context).pushReplacement(
+    //   MaterialPageRoute(
+    //     builder: (context) => DashboardScreen(),
+    //   ),
+    // );
+    }),
+
+
       ]),
     );
   }

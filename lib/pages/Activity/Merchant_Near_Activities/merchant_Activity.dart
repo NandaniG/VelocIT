@@ -194,7 +194,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                       TextFieldUtils().dynamicText(
                           StringUtils.gridView,
                           context,
-                          TextStyle(
+                          TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontWeight: FontWeight.w600,
                             fontSize: height * .02,
@@ -217,7 +217,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                       ),   TextFieldUtils().dynamicText(
                           StringUtils.mapView,
                           context,
-                          TextStyle(
+                          TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontWeight: FontWeight.w600,
                             fontSize: height * .02,
@@ -287,12 +287,12 @@ class _MerchantActvityState extends State<MerchantActvity> {
             // Text(servicestatus? "GPS is Enabled": "GPS is disabled."),
             // Text(haspermission? "GPS is Enabled": "GPS is disabled."),
             //
-            // Text("Longitude: $long", style:TextStyle(fontSize: 20)),
-            // Text("Latitude: $lat", style: TextStyle(fontSize: 20),),
+            // Text("Longitude: $long", style:TextStyle(fontFamily: 'Roboto',fontSize: 20)),
+            // Text("Latitude: $lat", style: TextStyle(fontFamily: 'Roboto',fontSize: 20),),
             TextFieldUtils().dynamicText(
                 StringUtils.merchantNearYou,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                   color: ThemeApp.blackColor,
                   fontWeight: FontWeight.w400,
                   fontSize: height * .025,

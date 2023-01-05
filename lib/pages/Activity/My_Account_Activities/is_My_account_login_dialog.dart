@@ -64,7 +64,7 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                     TextFieldUtils().dynamicText(
                         "Log in",
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: height * .03,
                             fontWeight: FontWeight.w600)),   SizedBox(
@@ -73,7 +73,7 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                     TextFieldUtils().dynamicText(
                         "Guest user, please sign in!",
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: height * .025,
                             fontWeight: FontWeight.w500)),
@@ -88,7 +88,7 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                           flex: 1,
                           child: proceedButton(
                               'Sign In',
-                              ThemeApp.blackColor,
+                              ThemeApp.tealButtonColor,
                               context, false,() {
                             FocusManager.instance.primaryFocus?.unfocus();
 

@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import 'package:velocit/utils/StringUtils.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 import '../../../Core/AppConstant/apiMapping.dart';
 import '../../../Core/Model/CartModels/SendCartForPaymentModel.dart';
 import '../../../Core/repository/cart_repository.dart';
@@ -27,8 +28,12 @@ import 'OrderReviewScreen.dart';
 
 class AddNewDeliveryAddress extends StatefulWidget {
   final bool isSavedAddress;
-  final CartForPaymentPayload cartForPaymentPayload;
-  const AddNewDeliveryAddress({Key? key, required this.isSavedAddress, required this. cartForPaymentPayload})
+  // final CartForPaymentPayload cartForPaymentPayload;
+
+  const AddNewDeliveryAddress(
+      {Key? key,
+      required this.isSavedAddress,
+/*      required this.cartForPaymentPayload*/})
       : super(key: key);
 
   @override
@@ -74,7 +79,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
       child: Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
-        appBar: PreferredSize(
+        /*  appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -103,7 +108,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               title: TextFieldUtils().dynamicText(
                   "Add New Delivery Address",
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       // fontWeight: FontWeight.w500,
                       fontSize:14,
@@ -111,10 +116,21 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               // Row
             ),
           ),
+        ), */
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(height * .09),
+          child: appBar_backWidget(
+              context,
+              appTitle(
+                context,
+                "Add New Delivery Address",
+              ),
+              const SizedBox()),
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 40),
+            padding:
+                const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 40),
             child: Container(
               width: width,
               // alignment: Alignment.center,
@@ -141,10 +157,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //Full Name
-              TextFieldUtils().asteriskTextField(
-
-                  StringUtils.fullName,
-                  context),
+              TextFieldUtils().asteriskTextField(StringUtils.fullName, context),
               CharacterTextFormFieldsWidget(
                   errorText: StringUtils.enterFullName,
                   textInputType: TextInputType.name,
@@ -156,11 +169,12 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     return null;
                   }),
               //Mobile Number
-              TextFieldUtils().asteriskTextField(
-                  StringUtils.mobileNumber,
-                  context),
+              TextFieldUtils()
+                  .asteriskTextField(StringUtils.mobileNumber, context),
               MobileNumberTextFormField(
-                  controller: mobileController, enable: true,),
+                controller: mobileController,
+                enable: true,
+              ),
               SizedBox(
                 height: height * .02,
               ),
@@ -171,47 +185,43 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     child: TextFieldUtils().dynamicText(
                         StringUtils.addressDetails,
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
-                            fontSize: height * .025,
-                            fontWeight: FontWeight.bold)),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700)),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: InkWell(
-                        onTap: () {
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) => AddNewCardScreen(),
-                          //   ),
-                          // );
-                        },
-                        child: Container(
-                          height: height * 0.05,
-                          alignment: Alignment.center,
-                          decoration:  BoxDecoration(
+                  InkWell(
+                      onTap: () {
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) => AddNewCardScreen(),
+                        //   ),
+                        // );
+                      },
+                      child: Container(
+                        // height: height * 0.05,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(
                               Radius.circular(20),
-                            ),border: Border.all(color: ThemeApp.appColor)
-                          ),
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: TextFieldUtils().dynamicText(
-                              StringUtils.useMyLocation,
-                              context,
-                              TextStyle(
-                                  color: ThemeApp.appColor,
-                                  fontSize: height * .021,
-                                  fontWeight: FontWeight.w500)),
-                        )),
-                  ),
+                            ),
+                            border: Border.all(color: ThemeApp.appColor)),
+                        padding: const EdgeInsets.fromLTRB(13, 5, 13, 5),
+                        child: TextFieldUtils().dynamicText(
+                            StringUtils.useMyLocation,
+                            context,
+                            TextStyle(fontFamily: 'Roboto',
+                                color: ThemeApp.appColor,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700)),
+                      )),
                 ],
               ),
               SizedBox(
                 height: height * .02,
               ),
-              TextFieldUtils().asteriskTextField(
-                  StringUtils.houseBuildingNo,
-                  context),
+              TextFieldUtils()
+                  .asteriskTextField(StringUtils.houseBuildingNo, context),
               TextFormFieldsWidget(
                   errorText: StringUtils.houseBuildingNo,
                   textInputType: TextInputType.text,
@@ -222,9 +232,8 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   validator: (value) {
                     return null;
                   }),
-              TextFieldUtils().asteriskTextField(
-                  StringUtils.areaColonyName,
-                  context),
+              TextFieldUtils()
+                  .asteriskTextField(StringUtils.areaColonyName, context),
               TextFormFieldsWidget(
                   errorText: StringUtils.areaColonyName,
                   textInputType: TextInputType.text,
@@ -235,9 +244,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   validator: (value) {
                     return null;
                   }),
-              TextFieldUtils().asteriskTextField(
-                  StringUtils.state,
-                  context),
+              TextFieldUtils().asteriskTextField(StringUtils.state, context),
               TextFormFieldsWidget(
                   errorText: StringUtils.state,
                   textInputType: TextInputType.text,
@@ -248,9 +255,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   validator: (value) {
                     return null;
                   }),
-              TextFieldUtils().asteriskTextField(
-                  StringUtils.city,
-                  context),
+              TextFieldUtils().asteriskTextField(StringUtils.city, context),
               TextFormFieldsWidget(
                   errorText: StringUtils.city,
                   textInputType: TextInputType.text,
@@ -263,8 +268,8 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   }),
               SizedBox(
                 height: height * .02,
-              ), TextFieldUtils().asteriskTextField(
-                  StringUtils.pincode,context),
+              ),
+              TextFieldUtils().asteriskTextField(StringUtils.pincode, context),
               TextFormFieldsWidget(
                   errorText: StringUtils.pincode,
                   textInputType: TextInputType.text,
@@ -281,10 +286,11 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               TextFieldUtils().dynamicText(
                   StringUtils.typeOfAddress,
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
-                      fontSize: height * .025,
-                      fontWeight: FontWeight.w500)),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.25)),
               SizedBox(
                 height: height * .02,
               ),
@@ -292,63 +298,99 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               SizedBox(
                 height: height * .02,
               ),
-              proceedButton(StringUtils.addDeliveryAddress,
-                  ThemeApp.blackColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+              proceedButton(StringUtils.addDeliveryAddress, ThemeApp.tealButtonColor,
+                  context, false, () async {
+                FocusManager.instance.primaryFocus?.unfocus();
+                final prefs = await SharedPreferences.getInstance();
 
-                  setState(() {
-                  if (_formKey.currentState!.validate()
-                      && fullNameController.text.isNotEmpty &&
+                setState(() {
+
+                  StringConstant.UserLoginId =
+                    (prefs.getString('isUserId')) ?? '';
+                  StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+
+                  var userId;
+                  if (StringConstant.UserLoginId.toString() == '' ||
+                      StringConstant.UserLoginId.toString() == null) {
+                    userId = StringConstant.RandomUserLoginId;
+                  } else {
+                    userId = StringConstant.UserLoginId;
+                  }
+
+                  print("USER LOGIN ID..............." +
+                    StringConstant.UserLoginId.toString());
+                  if (_formKey.currentState!.validate() &&
+                      fullNameController.text.isNotEmpty &&
                       mobileController.text.isNotEmpty &&
                       houseBuildingController.text.isNotEmpty &&
                       areaColonyController.text.isNotEmpty &&
                       stateController.text.isNotEmpty &&
-                      cityController.text.isNotEmpty&&
+                      cityController.text.isNotEmpty &&
                       pincodeController.text.isNotEmpty) {
-
                     if (widget.isSavedAddress == true) {
+                      Map data = {
+                        "name": fullNameController.text,
+                        "address_line_1": houseBuildingController.text,
+                        "address_line_2": areaColonyController.text,
+                        "city_name": cityController.text,
+                        "state_name": stateController.text,
+                        "address_type": selectedAddressIs,
+                        "pincode": pincodeController.text,
+                        "contact_number": "+91 " + mobileController.text,
+                        "latitude": 24.2342525,
+                        "longitude": 52.2342523
+                      };
+                      print("map address" + data.toString());
+
+                      CartRepository().createAddressPostAPI(data,
+                          userId.toString());
+
+                      Utils.successToast("success");
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => SavedAddressDetails(cartForPaymentPayload: widget.cartForPaymentPayload),
+                          builder: (context) => SavedAddressDetails(
+                        /*      cartForPaymentPayload:
+                                  widget.cartForPaymentPayload*/),
                         ),
                       );
                     } else {
                       Map data = {
                         "name": fullNameController.text,
                         "address_line_1": houseBuildingController.text,
-                        "address_line_2":areaColonyController.text,
-                        "city_name":cityController.text,
-                        "state_name":stateController.text,
-                        "address_type":selectedAddressIs,
+                        "address_line_2": areaColonyController.text,
+                        "city_name": cityController.text,
+                        "state_name": stateController.text,
+                        "address_type": selectedAddressIs,
                         "pincode": pincodeController.text,
-                        "contact_number":"+91 " +mobileController.text,
-                        "latitude":24.2342525,
-                        "longitude":52.2342523
+                        "contact_number": "+91 " + mobileController.text,
+                        "latitude": 24.2342525,
+                        "longitude": 52.2342523
                       };
-                      print("map address"+data.toString());
-                      print("widget.cartForPaymentPayload.userId!"+widget.cartForPaymentPayload.userId!.toString());
-                      // postAPi(data, widget.cartForPaymentPayload.userId!.toString());
-
-                      // apiRequest(data, widget.cartForPaymentPayload.userId!.toString());
-
-                      CartRepository().createAddressPostAPI(data, widget.cartForPaymentPayload.userId!.toString());
+                      print("map address" + data.toString());
+                      print("widget.cartForPaymentPayload.userId!" +
+                          userId.toString());
 
 
+                      CartRepository().createAddressPostAPI(data,
+                          userId.toString());
 
                       Utils.successToast("success");
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => OrderReviewActivity(
-                            cartId: widget.cartForPaymentPayload.cartId!,
+                            cartId:int.parse(  StringConstant.UserCartID),
                           ),
                         ),
                       );
                     }
                     StringConstant.selectedFullAddress =
-                    "${value.houseBuildingController.text}, ${value.areaColonyController.text}, ${value.cityController.text},\n ${value.stateController.text}";
-                    Prefs.instance.setToken(StringConstant.selectedFullAddressPref,
+                        "${value.houseBuildingController.text}, ${value.areaColonyController.text}, ${value.cityController.text},\n ${value.stateController.text}";
+                    Prefs.instance.setToken(
+                        StringConstant.selectedFullAddressPref,
                         StringConstant.selectedFullAddress);
 
-                    StringConstant.selectedFullName = value.fullNameController.text;
+                    StringConstant.selectedFullName =
+                        value.fullNameController.text;
                     Prefs.instance.setToken(StringConstant.selectedFullNamePref,
                         StringConstant.selectedFullName);
 
@@ -361,8 +403,6 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                         StringConstant.selectedTypeOfAddressPref,
                         StringConstant.selectedTypeOfAddress);
 
-
-
                     value.fullNameController.clear();
                     value.mobileController.clear();
                     value.houseBuildingController.clear();
@@ -370,13 +410,10 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     value.stateController.clear();
                     value.cityController.clear();
                     value.pincodeController.clear();
-
-
                   } else {
                     Utils.flushBarErrorMessage(
                         "Please enter all details", context);
                   }
-
                 });
               })
             ],
@@ -395,32 +432,41 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
         Expanded(
           flex: 1,
           child: InkWell(
-            onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => OrderReviewSubActivity(),
-              //   ),
-              // );
-              setState(() {
-                isHome = true;
-                isHome = !isHome;
-                selectedAddressIs = StringUtils.home;
-              });
-            },
-            child: Container(
-                padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(40),
+              onTap: () {
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => OrderReviewSubActivity(),
+                //   ),
+                // );
+                setState(() {
+                  isHome = true;
+                  isHome = !isHome;
+                  selectedAddressIs = StringUtils.home;
+                });
+              },
+              child: Container(
+                  padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(40),
+                    ),
+                    border: Border.all(color: ThemeApp.tealButtonColor),
+                    color:
+                        isHome ? ThemeApp.whiteColor : ThemeApp.tealButtonColor,
                   ),
-                  border: Border.all(color: ThemeApp.tealButtonColor),
-                  color: isHome ? ThemeApp.whiteColor : ThemeApp.tealButtonColor,
-                ),
-                child: TextFieldUtils().usingPassTextFields(
+                  child: Text(
                     StringUtils.home,
-                    isHome == true ? ThemeApp.blackColor : ThemeApp.whiteColor,
-                    context)),
-          ),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Roboto',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      overflow: TextOverflow.ellipsis,
+                      color: isHome == true
+                          ? ThemeApp.blackColor
+                          : ThemeApp.whiteColor,
+                      letterSpacing: -0.25
+                    ),
+                  ))),
         ),
         SizedBox(
           width: width * 0.03,
@@ -444,16 +490,23 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
                     Radius.circular(40),
-                  ),                  border: Border.all(color: ThemeApp.tealButtonColor),
-
+                  ),
+                  border: Border.all(color: ThemeApp.tealButtonColor),
                   color: isHome == true
                       ? ThemeApp.tealButtonColor
                       : ThemeApp.whiteColor,
                 ),
-                child: TextFieldUtils().usingPassTextFields(
-                    StringUtils.office,
-                    isHome == true ? ThemeApp.whiteColor : ThemeApp.blackColor,
-                    context)),
+                child:Text(
+                  StringUtils.office,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: 'Roboto',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      overflow: TextOverflow.ellipsis,
+                      color:  isHome == true ? ThemeApp.whiteColor : ThemeApp.blackColor,
+                      letterSpacing: -0.25
+                  ),
+                ) ),
           ),
         )
       ]),
@@ -466,9 +519,13 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
 class EditDeliveryAddress extends StatefulWidget {
   final bool isSavedAddress;
   MyAddressList model;
-   CartForPaymentPayload? cartForPaymentPayload;
+  // CartForPaymentPayload? cartForPaymentPayload;
+
   EditDeliveryAddress(
-      {Key? key, required this.isSavedAddress, required this.model,required this.cartForPaymentPayload})
+      {Key? key,
+      required this.isSavedAddress,
+      required this.model,
+     /* required this.cartForPaymentPayload*/})
       : super(key: key);
 
   @override
@@ -540,7 +597,6 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
           width: MediaQuery.of(context).size.width,
           color: ThemeApp.whiteColor,
           child: AppBar(
-
             centerTitle: false,
             elevation: 0,
             backgroundColor: ThemeApp.appBackgroundColor,
@@ -559,17 +615,16 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             leading: Transform.scale(
                 scale: 0,
                 child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.white,size: 10),
-                    onPressed: () {                        FocusManager.instance.primaryFocus?.unfocus();
-
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.white, size: 10),
+                    onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
                     })),
-
-
 
             title: Container(
                 alignment: Alignment.centerLeft,
-                child: TextFieldUtils().textFieldHeightThree(
-                    "Edit Delivery Address", context)),
+                child: TextFieldUtils()
+                    .textFieldHeightThree("Edit Delivery Address", context)),
             // Row
           ),
         ),
@@ -596,7 +651,8 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
   Widget mainUi() {
     return Form(
       child: Consumer<ProductProvider>(builder: (context, value, child) {
-        return SingleChildScrollView(child:  Column(
+        return SingleChildScrollView(
+            child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -604,7 +660,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFieldUtils().dynamicText(
                 StringUtils.fullName,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
@@ -623,7 +679,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFieldUtils().dynamicText(
                 StringUtils.mobileNumber,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
@@ -641,7 +697,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   child: TextFieldUtils().dynamicText(
                       StringUtils.addressDetails,
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
                           fontSize: height * .025,
                           fontWeight: FontWeight.bold)),
@@ -669,7 +725,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                         child: TextFieldUtils().dynamicText(
                             StringUtils.useMyLocation,
                             context,
-                            TextStyle(
+                            TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.whiteColor,
                                 fontSize: height * .021,
                                 fontWeight: FontWeight.w500)),
@@ -683,7 +739,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFieldUtils().dynamicText(
                 StringUtils.houseBuildingNo,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
@@ -700,7 +756,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFieldUtils().dynamicText(
                 StringUtils.areaColonyName,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
@@ -717,7 +773,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFieldUtils().dynamicText(
                 StringUtils.state,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
@@ -734,7 +790,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFieldUtils().dynamicText(
                 StringUtils.city,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
@@ -754,7 +810,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFieldUtils().dynamicText(
                 StringUtils.pincode,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .02,
                     fontWeight: FontWeight.w500)),
@@ -774,7 +830,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             TextFieldUtils().dynamicText(
                 StringUtils.typeOfAddress,
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .025,
                     fontWeight: FontWeight.w500)),
@@ -785,10 +841,28 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             SizedBox(
               height: height * .02,
             ),
-            proceedButton(StringUtils.addDeliveryAddress,
-                ThemeApp.blackColor, context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+            proceedButton(StringUtils.addDeliveryAddress, ThemeApp.tealButtonColor,
+                context, false, () async {
 
-                widget.model.myAddressFullName =
+
+                  final prefs = await SharedPreferences.getInstance();
+
+
+                    StringConstant.UserLoginId =
+                        (prefs.getString('isUserId')) ?? '';
+                    StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+
+                    var userId;
+                    if (StringConstant.UserLoginId.toString() == '' ||
+                        StringConstant.UserLoginId.toString() == null) {
+                      userId = StringConstant.RandomUserLoginId;
+                    } else {
+                      userId = StringConstant.UserLoginId;
+                    }
+
+                    FocusManager.instance.primaryFocus?.unfocus();
+
+              widget.model.myAddressFullName =
                   fullNameController.text.toString();
               widget.model.myAddressPhoneNumber =
                   mobileController.text.toString();
@@ -809,16 +883,51 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
               // StringConstant.prettyPrintJson(encodedMap.toString());
 
               if (widget.isSavedAddress == true) {
+                Map data = {
+                  "name": fullNameController.text,
+                  "address_line_1": houseBuildingController.text,
+                  "address_line_2": areaColonyController.text,
+                  "city_name": cityController.text,
+                  "state_name": stateController.text,
+                  "address_type": selectedAddressIs,
+                  "pincode": pincodeController.text,
+                  "contact_number": "+91 " + mobileController.text,
+                  "latitude": 24.2342525,
+                  "longitude": 52.2342523
+                };
+                print("map address" + data.toString());
 
+                CartRepository().createAddressPostAPI(data,
+                    userId.toString());
+
+                Utils.successToast("success");
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => SavedAddressDetails(cartForPaymentPayload: widget.cartForPaymentPayload!),
+                    builder: (context) => SavedAddressDetails(
+                     /*   cartForPaymentPayload: widget.cartForPaymentPayload!*/),
                   ),
                 );
-Utils.successToast('Address update successfully!');
-
+                Utils.successToast('Address update successfully!');
               } else {
-         //comment because need to manage apis
+                Map data = {
+                  "name": fullNameController.text,
+                  "address_line_1": houseBuildingController.text,
+                  "address_line_2": areaColonyController.text,
+                  "city_name": cityController.text,
+                  "state_name": stateController.text,
+                  "address_type": selectedAddressIs,
+                  "pincode": pincodeController.text,
+                  "contact_number": "+91 " + mobileController.text,
+                  "latitude": 24.2342525,
+                  "longitude": 52.2342523
+                };
+                print("map address" + data.toString());
+
+                CartRepository().createAddressPostAPI(data,
+                    userId.toString());
+
+                Utils.successToast("success");
+                //comment because need to manage apis
 
                 /*       Navigator.of(context).push(
                   MaterialPageRoute(
@@ -827,8 +936,8 @@ Utils.successToast('Address update successfully!');
                 );*/
               }
             })
-          ],)
-        );
+          ],
+        ));
       }),
     );
   }

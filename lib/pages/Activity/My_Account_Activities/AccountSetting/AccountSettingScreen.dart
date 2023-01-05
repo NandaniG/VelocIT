@@ -30,62 +30,64 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .09),
+          preferredSize: Size.fromHeight(height * .08),
           child: appBar_backWidget(
               context, appTitle(context, "Account Setting"), SizedBox()),
         ),
         body: SafeArea(
             child: Consumer<HomeProvider>(builder: (context, value, child) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Container(
-          decoration: BoxDecoration(
-                      color: ThemeApp.whiteColor,
-                      borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextFieldUtils().dynamicText(
-                              StringUtils.pushNotifications,
-                              context,
-                              TextStyle(
-                                color: ThemeApp.blackColor,
-                                fontWeight: FontWeight.w700,
-                                fontSize: height * .022,
-
-                              )),
-                          SizedBox(
-                            width: width * .04,
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: ThemeApp.whiteColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextFieldUtils().dynamicText(
+                            StringUtils.pushNotifications,
+                            context,
+                            TextStyle(fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            )),
+                        SizedBox(
+                          width: width * .04,
+                        ),
+                        Transform.scale(
+                          scale: 1.1,
+                          child: Switch(
+                            // This bool value toggles the switch.
+                            value: value.accountSettings["isPushNotifications"],
+                            activeColor: ThemeApp.appColor,
+                            inactiveTrackColor: ThemeApp.appColor,
+                            inactiveThumbColor: ThemeApp.whiteColor,
+                            onChanged: (bool val) {
+                              // This is called when the user toggles the switch.
+                              setState(() {
+                                value.accountSettings["isPushNotifications"] =
+                                    val;
+                                print(value
+                                    .accountSettings["isPushNotifications"]
+                                    .toString());
+                              });
+                            },
                           ),
-                          Transform.scale(
-                            scale: 1.1,
-                            child: Switch(
-                              // This bool value toggles the switch.
-                              value: value.accountSettings["isPushNotifications"],
-                              activeColor: ThemeApp.appColor,
-                              inactiveTrackColor: ThemeApp.appColor,
-                              inactiveThumbColor: ThemeApp.whiteColor,
-                              onChanged: (bool val) {
-                                // This is called when the user toggles the switch.
-                                setState(() {
-                                  value.accountSettings["isPushNotifications"] = val;
-                                  print(value.accountSettings["isPushNotifications"].toString());
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-          ),
-        ),
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              }
-            )));
+                  ),
+                ),
+              ),
+            ],
+          );
+        })));
   }
 }

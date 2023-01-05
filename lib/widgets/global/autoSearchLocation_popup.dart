@@ -161,7 +161,7 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                       ),
                       filled: true,
                       fillColor: Colors.white,
-                      hintStyle: TextStyle(
+                      hintStyle: TextStyle(fontFamily: 'Roboto',
                           color: Colors.grey,
                           fontSize: MediaQuery.of(context).size.height * 0.020),
                       contentPadding:
@@ -250,7 +250,7 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                     },
                   ),
                 ),
-                proceedButton("Cancel", ThemeApp.blackColor, context, false,
+                proceedButton("Cancel", ThemeApp.tealButtonColor, context, false,
                     () {
                   Navigator.pop(context);
                 })
@@ -410,7 +410,7 @@ class _AutosearchState extends State<Autosearch> {
                   ),
                   filled: true,
                   fillColor: Colors.white,
-                  hintStyle: const TextStyle(
+                  hintStyle: const TextStyle(fontFamily: 'Roboto',
                     fontSize: 14,
                     color: ThemeApp.darkGreyTab,
                   ),

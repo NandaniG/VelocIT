@@ -55,11 +55,11 @@ class _dynamicDialogState extends State<dynamicDialog> {
                     Expanded(
                       flex: 1,
                       child: proceedButton(
-                          'Yes', ThemeApp.blackColor, context, false, widget.onTapForYes),
+                          'Yes', ThemeApp.tealButtonColor, context, false, widget.onTapForYes),
                     ),
                     Expanded(
                       flex: 1,
-                      child: proceedButton('No', ThemeApp.blackColor, context, false,
+                      child: proceedButton('No', ThemeApp.tealButtonColor, context, false,
                           () {
                         Navigator.pop(context);
                       }),

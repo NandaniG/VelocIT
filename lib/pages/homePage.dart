@@ -145,11 +145,11 @@ class _HomeState extends State<Home> {
           //   _text(
           //     '${state.code}',
           //   ),
-          proceedButton("Scan with Camera", ThemeApp.darkGreyColor, context,false,
+          proceedButton("Scan with Camera", ThemeApp.tealButtonColor, context,false,
               () {
             scanQRCode();
           }),
-          proceedButton("Scan with Gallery", ThemeApp.darkGreyColor, context,false,
+          proceedButton("Scan with Gallery", ThemeApp.tealButtonColor, context,false,
               () {
             _startScanFileButton(state);
           }),

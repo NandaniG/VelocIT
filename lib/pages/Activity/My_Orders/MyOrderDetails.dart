@@ -8,6 +8,7 @@ import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
+
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
@@ -24,20 +25,21 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
-@override
+
+  @override
   void initState() {
     // TODO: implement initState
-  totalAmount;
-  super.initState();
-  totalAmount = 0;
-  for (int i = 0; i < widget.values["myOrderDetailList"].length; i++) {
-    totalAmount = int.parse(
-        widget.values["myOrderDetailList"][i]["price"].toString()) +
-        totalAmount;
-    print(totalAmount);
+    totalAmount;
+    super.initState();
+    totalAmount = 0;
+    for (int i = 0; i < widget.values["myOrderDetailList"].length; i++) {
+      totalAmount =
+          int.parse(widget.values["myOrderDetailList"][i]["price"].toString()) +
+              totalAmount;
+      print(totalAmount);
+    }
   }
 
-  }
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -47,9 +49,9 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .09),
+        preferredSize: Size.fromHeight(height * .08),
         child: appBar_backWidget(
-            context, appTitle(context, "Order Details"),SizedBox()),
+            context, appTitle(context, "Order Details"), SizedBox()),
       ),
       body: SafeArea(child: mainUI()),
     );
@@ -57,7 +59,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
 
   Widget mainUI() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(15.0, 10, 15.0, 5.0),
       child: SingleChildScrollView(
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,12 +76,12 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       TextFieldUtils().dynamicText(
                           widget.values["myOrderId"],
                           context,
-                          TextStyle(
+                          TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
-                              fontSize: height * .023,
-                              fontWeight: FontWeight.bold)),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700)),
                       SizedBox(
-                        height: height * .01,
+                        height: 4,
                       ),
                       Container(
                         padding:
@@ -87,15 +89,18 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(20),
-                          ),border: Border.all( color: ThemeApp.blackColor,),
+                          ),
+                          border: Border.all(
+                            color: ThemeApp.blackColor,
+                          ),
                           color: ThemeApp.whiteColor,
                         ),
                         child: TextFieldUtils().dynamicText(
                             widget.values["myOrderStatus"],
                             context,
-                            TextStyle(
+                            TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.blackColor,
-                                fontSize: height * .018,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w700)),
                       ),
                     ],
@@ -111,8 +116,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                               });
                         },
                         child: Container(
-                            width: 40.0,
-                            height: 40.0,
+                            width: 20.0,
+                            height: 20.0,
                             decoration: new BoxDecoration(
                                 shape: BoxShape.rectangle,
                                 image: new DecorationImage(
@@ -139,8 +144,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                               'assets/appImages/downloadIcon.svg',
                               color: ThemeApp.whiteColor,
                               semanticsLabel: 'Acme Logo',
-
-                              height: height * .03,
+                              height: 16.29,
+                              width: 8.77,
                             ),
                             SizedBox(
                               width: width * .02,
@@ -148,12 +153,11 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                             TextFieldUtils().dynamicText(
                                 'Download Invoice',
                                 context,
-                                TextStyle(
+                                TextStyle(fontFamily: 'Roboto',
                                     color: ThemeApp.whiteColor,
-                                    fontSize: height * .018,
-                                    fontWeight: FontWeight.w400,letterSpacing: -0.25
-
-                                )),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: -0.25)),
                           ],
                         ),
                       ),
@@ -162,25 +166,24 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                 ],
               ),
               SizedBox(
-                height: height * .02,
+                height: 10,
               ),
               stepperOfDelivery(),
               SizedBox(
-                height: height * .02,
+                height: 10,
               ),
               deliveryDetails(),
               SizedBox(
-                height: height * .02,
+                height: 10,
               ),
               invoiceDetails(),
               SizedBox(
-                height: height * .02,
+                height: 10,
               ),
               proofOfDeliverDetails(),
               SizedBox(
-                height: height * .02,
+                height: 15,
               ),
-              cancelReturnOrdersWidget()
             ]),
       ),
     );
@@ -210,42 +213,43 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                           children: [
                             Flexible(
                               child: TextFieldUtils().dynamicText(
                                   widget.values["myOrderDetailList"][index]
                                       ["productDetails"],
                                   context,
-                                  TextStyle(
+                                  TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.blackColor,
-                                      fontSize: height * .023,
-                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
                                       overflow: TextOverflow.ellipsis)),
                             ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * .03,
                             ),
                             Container(
-                                width: 60.0,
-                                height: 60.0,
+                                width: 62.0,
+                                height: 62.0,
                                 decoration: new BoxDecoration(
-                                    shape: BoxShape.circle,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    shape: BoxShape.rectangle,
                                     image: new DecorationImage(
                                         fit: BoxFit.fill,
                                         image: new AssetImage(
-                                          widget.values["myOrderDetailList"][index]
-                                          ["productImage"],
+                                          widget.values["myOrderDetailList"]
+                                              [index]["productImage"],
                                         )))),
                           ],
                         ),
                         TextFieldUtils().dynamicText(
                             widget.values["myOrderDetailList"][index]
-                            ["vendorDetails"],
+                                ["vendorDetails"],
                             context,
-                            TextStyle(
+                            TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.darkGreyTab,
-                                fontSize: height * .02,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 overflow: TextOverflow.ellipsis)),
                         StepperGlobalWidget()
@@ -268,41 +272,44 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
           color: ThemeApp.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(10))),
+          borderRadius: const BorderRadius.all(Radius.circular(8))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFieldUtils().dynamicText(
               StringUtils.deliveryDetails,
               context,
-              TextStyle(
-                  color: ThemeApp.darkGreyTab,
-                  fontSize: height * .028,
-                  fontWeight: FontWeight.bold)),
+              TextStyle(fontFamily: 'Roboto',
+                  color: ThemeApp.primaryNavyBlackColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.25)),
           SizedBox(
-            height: height * .02,
+            height: 5,
           ),
           TextFieldUtils().lineHorizontal(),
           SizedBox(
-            height: height * .02,
+            height: 10,
           ),
           TextFieldUtils().dynamicText(
               widget.values["myOrderPerson"],
               context,
-              TextStyle(
+              TextStyle(fontFamily: 'Roboto',
                   color: ThemeApp.blackColor,
-                  fontSize: height * .024,
-                  fontWeight: FontWeight.bold)),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400)),
           SizedBox(
             height: height * .02,
           ),
           TextFieldUtils().dynamicText(
               widget.values["myOrderDeliveryAddress"],
               context,
-              TextStyle(
-                  color: ThemeApp.darkGreyColor,
-                  fontSize: height * .021,
-                  fontWeight: FontWeight.w400)),
+              TextStyle(fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: -0.25,
+                  height: 1.5)),
         ],
       ),
     );
@@ -324,16 +331,16 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           TextFieldUtils().dynamicText(
               StringUtils.invoice,
               context,
-              TextStyle(
-                  color: ThemeApp.darkGreyTab,
-                  fontSize: height * .028,
-                  fontWeight: FontWeight.bold)),
+              TextStyle(fontFamily: 'Roboto',
+                  color: ThemeApp.primaryNavyBlackColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700)),
           SizedBox(
-            height: height * .02,
+            height: 5,
           ),
           TextFieldUtils().lineHorizontal(),
           SizedBox(
-            height: height * .02,
+            height: 10,
           ),
           ListView.builder(
               shrinkWrap: true,
@@ -344,34 +351,36 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                   children: [
                     Flexible(
                       child: TextFieldUtils().dynamicText(
-                          widget.values["myOrderDetailList"][index]["productDetails"],
+                          widget.values["myOrderDetailList"][index]
+                              ["productDetails"],
                           context,
-                          TextStyle(
-                              color: ThemeApp.darkGreyColor,
-                              fontSize: height * .02,
+                          TextStyle(fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              overflow: TextOverflow.ellipsis)),
+                              overflow: TextOverflow.ellipsis,
+                              letterSpacing: -0.25)),
                     ),
                     SizedBox(
                       width: width * .1,
                     ),
                     TextFieldUtils().dynamicText(
-                        indianRupeesFormat.format(int.parse(
-                            widget.values["myOrderDetailList"][index]["price"])),
+                        indianRupeesFormat.format(int.parse(widget
+                            .values["myOrderDetailList"][index]["price"])),
                         context,
-                        TextStyle(
-                            color: ThemeApp.darkGreyColor,
-                            fontSize: height * .02,
-                            fontWeight: FontWeight.w400)),
+                        TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          overflow: TextOverflow.ellipsis,
+                        )),
                   ],
                 );
               }),
-          SizedBox(
-            height: height * .02,
-          ),
+          SizedBox(height: 4),
           TextFieldUtils().lineHorizontal(),
           SizedBox(
-            height: height * .02,
+            height: 16,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -379,17 +388,19 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
               TextFieldUtils().dynamicText(
                   "Total Amount",
                   context,
-                  TextStyle(
-                      color: ThemeApp.darkGreyColor,
-                      fontSize: height * .021,
-                      fontWeight: FontWeight.bold)),
+                  TextStyle(fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.2)),
               TextFieldUtils().dynamicText(
                   indianRupeesFormat.format(int.parse(totalAmount.toString())),
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.darkGreyColor,
-                      fontSize: height * .021,
-                      fontWeight: FontWeight.bold)),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.2)),
             ],
           ),
         ],
@@ -411,17 +422,19 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           TextFieldUtils().dynamicText(
               StringUtils.proofOfDelivery,
               context,
-              TextStyle(
+              TextStyle(fontFamily: 'Roboto',
                   color: ThemeApp.darkGreyTab,
-                  fontSize: height * .028,
-                  fontWeight: FontWeight.bold)),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.25)),
           SizedBox(
-            height: height * .02,
+            height: 5,
           ),
           TextFieldUtils().lineHorizontal(),
           SizedBox(
-            height: height * .02,
+            height: 15,
           ),
+          cancelReturnOrdersWidget()
         ],
       ),
     );
@@ -443,10 +456,10 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           child: TextFieldUtils().dynamicText(
               StringUtils.returnItems,
               context,
-              TextStyle(
+              TextStyle(fontFamily: 'Roboto',
                   color: ThemeApp.blackColor,
-                  fontSize: height * .021,
-                  fontWeight: FontWeight.w400)),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700)),
         ),
         InkWell(
           onTap: () {
@@ -461,10 +474,10 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           child: TextFieldUtils().dynamicText(
               StringUtils.cancelOrder,
               context,
-              TextStyle(
+              TextStyle(fontFamily: 'Roboto',
                   color: ThemeApp.blackColor,
-                  fontSize: height * .021,
-                  fontWeight: FontWeight.w400)),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700)),
         ),
       ]),
     );
@@ -500,7 +513,273 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
     return Wrap(children: [mainUI()]);
   }
 
+
   Widget mainUI() {
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.85,
+        width: width,
+        padding: EdgeInsets.all(20),
+        decoration: new BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            returnOrderTitle(),
+            SizedBox(
+              height: height * .02,
+            ),
+            /*   chooseProductToReturn(),
+            SizedBox(
+              height: height * .01,
+            ),*/
+            Container(
+              padding: const EdgeInsets.only(right: 20),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: ThemeApp.lightBorderColor,
+                  ),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    chooseProductToReturn(),
+                    SizedBox(
+                      height: height * .01,
+                    ),
+                    itemCancelDetails(),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: height * .02,
+            ),
+            Container(
+                padding: const EdgeInsets.only(right: 20),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: ThemeApp.lightBorderColor,
+                    ),
+                    borderRadius: BorderRadius.circular(8)),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,children: [
+                    cancelText(),  SizedBox(
+                      height: height * .01,
+                    ),
+                    whyItemCancelDetails(),
+                  ],
+                  ),)
+            ), SizedBox(
+              height: 5,
+            ),
+            commentText(),
+            SizedBox(
+              height: height * .02,
+            ),
+            commentOrderReturn(),
+            SizedBox(
+              height: height * .02,
+            ),
+            returnOrderButton()
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget returnOrderTitle() {
+    return TextFieldUtils().dynamicText(
+        StringUtils.cancelOrder,
+        context,
+        TextStyle(fontFamily: 'Roboto',
+            color: ThemeApp.primaryNavyBlackColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w700));
+  }
+
+  Widget chooseProductToReturn() {
+    return TextFieldUtils().dynamicText(
+        StringUtils.chooseItemYouWantToCancel,
+        context,
+        TextStyle(fontFamily: 'Roboto',
+            color: ThemeApp.blackColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w400));
+  }
+
+  Widget itemCancelDetails() {
+    return Container(
+      // width: width * .4,
+      height: 150,
+      color: ThemeApp.whiteColor,
+      child: ListView.builder(
+          // physics: NeverScrollableScrollPhysics(),
+          itemCount: widget.values["myOrderCancelList"].length,
+          itemBuilder: (context, index) {
+            return SizedBox(
+              height: height * .034,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Checkbox(
+                    value: widget.values["myOrderCancelList"][index]
+                    ["isCancelProductFor"],
+                    onChanged: (values) {
+                      setState(() {
+                        widget.values["myOrderCancelList"][index]
+                        ["isCancelProductFor"] = values!;
+                      });
+                    },
+                  ),
+                  Flexible(
+                    child: TextFieldUtils().dynamicText(
+                        widget.values["myOrderCancelList"][index]
+                        ["whyCancelProduct"],
+                        context,
+                        TextStyle(fontFamily: 'Roboto',
+                            color: ThemeApp.blackColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            overflow: TextOverflow.ellipsis)),
+                  ),
+                ],
+              ),
+            );
+          }),
+    );
+  }
+
+  Widget cancelText() {
+    return TextFieldUtils().dynamicText(
+        StringUtils.whyYouWantToCancel,
+        context,
+        TextStyle(fontFamily: 'Roboto',
+            color: ThemeApp.blackColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w400));
+  }
+
+  var valuesGroup = '';
+
+  Widget whyItemCancelDetails() {
+    return Container(
+      // width: width * .4,
+      height: 150,
+      color: ThemeApp.whiteColor,
+      child: ListView.builder(
+          // physics: NeverScrollableScrollPhysics(),
+          itemCount: widget.values["myOrderCancelList"].length,
+          itemBuilder: (context, index) {
+            return SizedBox(
+              height: height * .032,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Radio(
+                    value: widget.values["myOrderCancelList"][index]
+                    ["whyCancelProduct"],
+                    groupValue: valuesGroup,
+                    onChanged: (d) {
+                      setState(() {
+                        valuesGroup = widget.values["myOrderCancelList"]
+                        [index]["whyCancelProduct"];
+                      });
+                      print("-----tapped canceled reason-----------" +
+                          widget.values["myOrderCancelList"][index]
+                          ["whyCancelProduct"]);
+                    },
+                    toggleable: true,
+                  ),
+                  Flexible(
+                    child: TextFieldUtils().dynamicText(
+                        widget.values["myOrderCancelList"][index]
+                        ["whyCancelProduct"],
+                        context,
+                        TextStyle(fontFamily: 'Roboto',
+                            color: ThemeApp.blackColor,
+                            fontSize:12,
+                            fontWeight: FontWeight.w400,
+                            overflow: TextOverflow.ellipsis)),
+                  ),
+                ],
+              ),
+            );
+          }),
+    );
+  }
+  Widget commentText() {
+    return TextFieldUtils().dynamicText(
+        'Comments',
+        context,
+        TextStyle(fontFamily: 'Roboto',
+            color: ThemeApp.blackColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w400));
+  }
+
+  Widget commentOrderReturn() {
+    return Container(
+      width: width,
+      child: TextFormField(
+        // controller: doctoreNotesController,
+        style: TextStyle(fontFamily: 'Roboto',
+
+          fontSize: height * .022,
+          color: ThemeApp.blackColor,
+        ),
+        validator: (value) {
+          return null;
+        },
+        maxLines: 3,
+
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: ThemeApp.whiteColor,
+          hintStyle: TextStyle(fontFamily: 'Roboto',
+              color: ThemeApp.darkGreyTab,
+              fontSize: MediaQuery.of(context).size.height * 0.02),
+          contentPadding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 10),
+          border: OutlineInputBorder(
+              borderSide: BorderSide(color: ThemeApp.darkGreyTab)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: ThemeApp.darkGreyTab, width: 1)),
+          disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: ThemeApp.darkGreyTab, width: 1)),
+          errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: ThemeApp.darkGreyTab, width: 1)),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: ThemeApp.darkGreyTab, width: 1)),
+        ),
+      ),
+    );
+  }
+
+  Widget returnOrderButton() {
+    return Container(
+        height: kToolbarHeight,
+        alignment: Alignment.bottomCenter,
+        child: proceedButton(
+            StringUtils.returnnn, ThemeApp.tealButtonColor, context, false, () {
+          FocusManager.instance.primaryFocus?.unfocus();
+
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MyOrderDetails(values: widget.values),
+            ),
+          );
+        }));
+  } /* Widget mainUI() {
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height * 0.8,
@@ -548,7 +827,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.cancelOrder,
         context,
-        TextStyle(
+        TextStyle(fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             fontSize: height * .03,
             fontWeight: FontWeight.bold));
@@ -558,7 +837,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.chooseItemYouWantToCancel,
         context,
-        TextStyle(
+        TextStyle(fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             fontSize: height * .025,
             fontWeight: FontWeight.w500));
@@ -581,20 +860,21 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Checkbox(
-                      value:
-                      widget.values["myOrderCancelList"][index]["isCancelProductFor"],
+                      value: widget.values["myOrderCancelList"][index]
+                          ["isCancelProductFor"],
                       onChanged: (values) {
                         setState(() {
-                          widget.values["myOrderCancelList"][index]["isCancelProductFor"] =
-                              values!;
+                          widget.values["myOrderCancelList"][index]
+                              ["isCancelProductFor"] = values!;
                         });
                       },
                     ),
                     Flexible(
                       child: TextFieldUtils().dynamicText(
-                          widget.values["myOrderCancelList"][index]["whyCancelProduct"],
+                          widget.values["myOrderCancelList"][index]
+                              ["whyCancelProduct"],
                           context,
-                          TextStyle(
+                          TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.darkGreyColor,
                               fontSize: height * .02,
                               fontWeight: FontWeight.w400,
@@ -612,7 +892,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.whyYouWantToCancel,
         context,
-        TextStyle(
+        TextStyle(fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             fontSize: height * .025,
             fontWeight: FontWeight.w500));
@@ -644,23 +924,26 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Radio(
-                      value:
-                      widget.values["myOrderCancelList"][index]["whyCancelProduct"],
+                      value: widget.values["myOrderCancelList"][index]
+                          ["whyCancelProduct"],
                       groupValue: valuesGroup,
                       onChanged: (d) {
                         setState(() {
-                          valuesGroup = widget.values["myOrderCancelList"][index]["whyCancelProduct"];
+                          valuesGroup = widget.values["myOrderCancelList"]
+                              [index]["whyCancelProduct"];
                         });
                         print("-----tapped canceled reason-----------" +
-                            widget.values["myOrderCancelList"][index]["whyCancelProduct"]);
+                            widget.values["myOrderCancelList"][index]
+                                ["whyCancelProduct"]);
                       },
                       toggleable: true,
                     ),
                     Flexible(
                       child: TextFieldUtils().dynamicText(
-                          widget.values["myOrderCancelList"][index]["whyCancelProduct"],
+                          widget.values["myOrderCancelList"][index]
+                              ["whyCancelProduct"],
                           context,
-                          TextStyle(
+                          TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.darkGreyColor,
                               fontSize: height * .02,
                               fontWeight: FontWeight.w400,
@@ -680,7 +963,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
       width: width,
       child: TextFormField(
         // controller: doctoreNotesController,
-        style: TextStyle(
+        style: TextStyle(fontFamily: 'Roboto',
           fontFamily: 'SegoeUi',
           fontSize: height * .022,
           color: ThemeApp.blackColor,
@@ -693,7 +976,7 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
         decoration: InputDecoration(
           filled: true,
           fillColor: ThemeApp.whiteColor,
-          hintStyle: TextStyle(
+          hintStyle: TextStyle(fontFamily: 'Roboto',
               color: ThemeApp.darkGreyTab,
               fontSize: MediaQuery.of(context).size.height * 0.02),
           contentPadding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 10),
@@ -717,16 +1000,17 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
         height: kToolbarHeight,
         alignment: Alignment.bottomCenter,
         padding: EdgeInsets.only(left: 20, right: 20),
-        child: proceedButton(StringUtils.cancelOrder,
-            ThemeApp.blackColor, context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+        child: proceedButton(
+            StringUtils.cancelOrder, ThemeApp.blackColor, context, false, () {
+          FocusManager.instance.primaryFocus?.unfocus();
 
-            Navigator.of(context).push(
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => MyOrderDetails(values: widget.values),
             ),
           );
         }));
-  }
+  }*/
 }
 
 class ReturnOrderBottomSheet extends StatefulWidget {
@@ -754,7 +1038,7 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
   Widget mainUI() {
     return SingleChildScrollView(
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.8,
+        height: MediaQuery.of(context).size.height * 0.85,
         width: width,
         padding: EdgeInsets.all(20),
         decoration: new BoxDecoration(
@@ -768,26 +1052,65 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
             SizedBox(
               height: height * .02,
             ),
-            chooseProductToReturn(),
+            /*   chooseProductToReturn(),
             SizedBox(
               height: height * .01,
+            ),*/
+            Container(
+              padding: const EdgeInsets.only(right: 20),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: ThemeApp.lightBorderColor,
+                  ),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    chooseProductToReturn(),
+                    SizedBox(
+                      height: height * .01,
+                    ),
+                    itemCancelDetails(),
+                  ],
+                ),
+              ),
             ),
-            itemCancelDetails(),
             SizedBox(
               height: height * .02,
             ),
-            cancelText(),
-            SizedBox(
-              height: height * .01,
+        Container(
+          padding: const EdgeInsets.only(right: 20),
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: ThemeApp.lightBorderColor,
+              ),
+              borderRadius: BorderRadius.circular(8)),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,children: [
+                  cancelText(),  SizedBox(
+                    height: height * .01,
+                  ),
+                  whyItemCancelDetails(),
+                ],
+              ),)
+            ),SizedBox(
+              height: 5,
             ),
-            whyItemCancelDetails(),
+            commentText(),
             SizedBox(
               height: height * .02,
             ),
             commentOrderReturn(),
             SizedBox(
               height: height * .02,
-            ),returnOrderButton()
+            ),
+            returnOrderButton()
           ],
         ),
       ),
@@ -798,63 +1121,62 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.returnOrder,
         context,
-        TextStyle(
-            color: ThemeApp.blackColor,
-            fontSize: height * .03,
-            fontWeight: FontWeight.bold));
+        TextStyle(fontFamily: 'Roboto',
+            color: ThemeApp.primaryNavyBlackColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w700));
   }
 
   Widget chooseProductToReturn() {
     return TextFieldUtils().dynamicText(
         StringUtils.chooseItemYouWantToReturn,
         context,
-        TextStyle(
+        TextStyle(fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
-            fontSize: height * .025,
-            fontWeight: FontWeight.w500));
+            fontSize: 16,
+            fontWeight: FontWeight.w400));
   }
 
   Widget itemCancelDetails() {
-    return Expanded(
-      child: Container(
-        // width: width * .4,
-        height: height * .04,
-        color: ThemeApp.whiteColor,
-        child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.values["myOrderReturnList"].length,
-            itemBuilder: (context, index) {
-              return SizedBox(
-                height: height * .035,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                      value:
-                      widget.values["myOrderReturnList"][index]["isReturnProductFor"],
-                      onChanged: (values) {
-                        setState(() {
-                          widget.values["myOrderReturnList"][index]["isReturnProductFor"] =
-                              values!;
-                        });
-                      },
-                    ),
-                    Flexible(
-                      child: TextFieldUtils().dynamicText(
-                          widget.values["myOrderReturnList"][index]["whyReturnProduct"],
-                          context,
-                          TextStyle(
-                              color: ThemeApp.darkGreyColor,
-                              fontSize: height * .02,
-                              fontWeight: FontWeight.w400,
-                              overflow: TextOverflow.ellipsis)),
-                    ),
-                  ],
-                ),
-              );
-            }),
-      ),
+    return Container(
+      // width: width * .4,
+      height: 150,
+      color: ThemeApp.whiteColor,
+      child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: widget.values["myOrderReturnList"].length,
+          itemBuilder: (context, index) {
+            return SizedBox(
+              height: height * .034,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Checkbox(
+                    value: widget.values["myOrderReturnList"][index]
+                        ["isReturnProductFor"],
+                    onChanged: (values) {
+                      setState(() {
+                        widget.values["myOrderReturnList"][index]
+                            ["isReturnProductFor"] = values!;
+                      });
+                    },
+                  ),
+                  Flexible(
+                    child: TextFieldUtils().dynamicText(
+                        widget.values["myOrderReturnList"][index]
+                            ["whyReturnProduct"],
+                        context,
+                        TextStyle(fontFamily: 'Roboto',
+                            color: ThemeApp.blackColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            overflow: TextOverflow.ellipsis)),
+                  ),
+                ],
+              ),
+            );
+          }),
     );
   }
 
@@ -862,79 +1184,90 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.whyYouWantToReturn,
         context,
-        TextStyle(
+        TextStyle(fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
-            fontSize: height * .025,
-            fontWeight: FontWeight.w500));
+            fontSize: 16,
+            fontWeight: FontWeight.w400));
   }
-var valuesGroup='';
+
+  var valuesGroup = '';
+
   Widget whyItemCancelDetails() {
-    return Expanded(
-      child: Container(
-        // width: width * .4,
-        height: height * .04,
-        color: ThemeApp.whiteColor,
-        child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.values["myOrderReturnList"].length,
-            itemBuilder: (context, index) {
-              return SizedBox(
-                height: height * .035,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Radio(
-                      value:
-                      widget.values["myOrderReturnList"][index]["whyReturnProduct"],
-                      groupValue: valuesGroup,
-                      onChanged: (d) {
-                        setState(() {
-                          valuesGroup = widget.values["myOrderReturnList"][index]["whyReturnProduct"];
-                        });
-                        print("-----tapped canceled reason-----------" +
-                            widget.values["myOrderReturnList"][index]["whyReturnProduct"]);
-                      },
-                      toggleable: true,
-                    ),
-                    Flexible(
-                      child: TextFieldUtils().dynamicText(
-                          widget.values["myOrderReturnList"][index]["whyReturnProduct"],
-                          context,
-                          TextStyle(
-                              color: ThemeApp.darkGreyColor,
-                              fontSize: height * .02,
-                              fontWeight: FontWeight.w400,
-                              overflow: TextOverflow.ellipsis)),
-                    ),
-                  ],
-                ),
-              );
-            }),
-      ),
+    return Container(
+      // width: width * .4,
+      height: 150,
+      color: ThemeApp.whiteColor,
+      child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: widget.values["myOrderReturnList"].length,
+          itemBuilder: (context, index) {
+            return SizedBox(
+              height: height * .034,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Radio(
+                    value: widget.values["myOrderReturnList"][index]
+                        ["whyReturnProduct"],
+                    groupValue: valuesGroup,
+                    onChanged: (d) {
+                      setState(() {
+                        valuesGroup = widget.values["myOrderReturnList"]
+                            [index]["whyReturnProduct"];
+                      });
+                      print("-----tapped canceled reason-----------" +
+                          widget.values["myOrderReturnList"][index]
+                              ["whyReturnProduct"]);
+                    },
+                    toggleable: true,
+                  ),
+                  Flexible(
+                    child: TextFieldUtils().dynamicText(
+                        widget.values["myOrderReturnList"][index]
+                            ["whyReturnProduct"],
+                        context,
+                        TextStyle(fontFamily: 'Roboto',
+                            color: ThemeApp.blackColor,
+                            fontSize:12,
+                            fontWeight: FontWeight.w400,
+                            overflow: TextOverflow.ellipsis)),
+                  ),
+                ],
+              ),
+            );
+          }),
     );
+  }
+  Widget commentText() {
+    return TextFieldUtils().dynamicText(
+     'Comments',
+        context,
+        TextStyle(fontFamily: 'Roboto',
+            color: ThemeApp.blackColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w400));
   }
 
   Widget commentOrderReturn() {
     return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20),
       width: width,
       child: TextFormField(
         // controller: doctoreNotesController,
         style: TextStyle(
-          fontFamily: 'SegoeUi',
+
           fontSize: height * .022,
           color: ThemeApp.blackColor,
         ),
         validator: (value) {
           return null;
         },
-        maxLines: 4,
+        maxLines: 3,
 
         decoration: InputDecoration(
           filled: true,
           fillColor: ThemeApp.whiteColor,
-          hintStyle: TextStyle(
+          hintStyle: TextStyle(fontFamily: 'Roboto',
               color: ThemeApp.darkGreyTab,
               fontSize: MediaQuery.of(context).size.height * 0.02),
           contentPadding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 10),
@@ -952,20 +1285,20 @@ var valuesGroup='';
       ),
     );
   }
+
   Widget returnOrderButton() {
     return Container(
         height: kToolbarHeight,
         alignment: Alignment.bottomCenter,
-        padding: EdgeInsets.only(left: 20, right: 20),
-        child: proceedButton(StringUtils.returnnn,
-            ThemeApp.blackColor, context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+        child: proceedButton(
+            StringUtils.returnnn, ThemeApp.tealButtonColor, context, false, () {
+          FocusManager.instance.primaryFocus?.unfocus();
 
-            Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => MyOrderDetails(values: widget.values),
-                ),
-              );
-            }));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MyOrderDetails(values: widget.values),
+            ),
+          );
+        }));
   }
-
 }

@@ -138,7 +138,7 @@ class _BottomAppBarItemState extends State<BottomAppBarItem> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Icon(widget.iconItem, color: Colors.white),
-          Text(widget.nameItem, style: TextStyle(color: Colors.white)),
+          Text(widget.nameItem, style: TextStyle(fontFamily: 'Roboto',color: Colors.white)),
         ],
       ),
     );

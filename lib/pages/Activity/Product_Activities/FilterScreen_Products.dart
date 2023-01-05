@@ -72,7 +72,7 @@ class _FilterScreenState extends State<FilterScreen> {
               child: TextFieldUtils().dynamicText(
                   StringUtils.filter,
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontSize: height * .022,
                       fontWeight: FontWeight.bold)),
@@ -85,7 +85,7 @@ class _FilterScreenState extends State<FilterScreen> {
               child: TextFieldUtils().dynamicText(
                   '145 products found',
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.darkGreyTab,
                       fontSize: height * .02,
                       fontWeight: FontWeight.w700)),
@@ -101,7 +101,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   child: TextFieldUtils().dynamicText(
                       StringUtils.clearFilter,
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
                           fontSize: height * .022,
                           fontWeight: FontWeight.w400)),
@@ -204,7 +204,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     child: TextFieldUtils().dynamicText(
                         initializeList[index].name,
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: tappedIndex == index
                                 ? ThemeApp.whiteColor
                                 : ThemeApp.darkGreyTab,
@@ -263,7 +263,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                     child: TextFieldUtils().dynamicText(
                                         initializeList[index].name,
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                             color: tappedIndex == index
                                                 ? ThemeApp.whiteColor
                                                 : ThemeApp.primaryNavyBlackColor,
@@ -311,7 +311,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                   TextFieldUtils().dynamicText(
                                       model.filterDetailList[index1].name,
                                       context,
-                                      TextStyle(
+                                      TextStyle(fontFamily: 'Roboto',
                                           color: tappedIndex == index1
                                               ? ThemeApp.blackColor
                                               : ThemeApp.blackColor,
@@ -379,7 +379,7 @@ class _FilterScreenState extends State<FilterScreen> {
               child: Text(
                   "Cancel",
                   textAlign: TextAlign.center,
-                  style:   TextStyle(
+                  style:   TextStyle(fontFamily: 'Roboto',
                       color:ThemeApp.tealButtonColor,
                       fontSize: height * .022,
                       fontWeight: FontWeight.w700)),
@@ -411,7 +411,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 child: Text(
                     "Apply",
                     textAlign: TextAlign.center,
-                    style:   TextStyle(
+                    style:   TextStyle(fontFamily: 'Roboto',
                         color:ThemeApp.whiteColor,
                         fontSize: height * .022,
                         fontWeight: FontWeight.w700)),

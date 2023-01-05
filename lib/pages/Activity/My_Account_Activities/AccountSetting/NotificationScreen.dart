@@ -83,15 +83,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 TextFieldUtils().dynamicText(
                     StringUtils.offersOnly,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontWeight: FontWeight.w400,
-                      fontSize: height * .024,
+                      fontSize: 14,
                     )),
               ],
             ),
             SizedBox(
-              height: height * .01,
+              height: 16,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -99,13 +99,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 TextFieldUtils().dynamicText(
                     'New',
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontWeight: FontWeight.w700,
-                      fontSize: height * .022,
+                      fontSize: 14,
                     )),
                 SizedBox(
-                  width: width * .04,
+                  width: 10,
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -113,21 +113,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       color: ThemeApp.whiteColor
                   ,border: Border.all(color: ThemeApp.appColor)),
 
-                  padding: EdgeInsets.fromLTRB(20, 4, 20, 4),
+                  padding: EdgeInsets.fromLTRB(12, 4, 12, 4),
                   child: TextFieldUtils().dynamicText(
                       '02',
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.appColor,
                         fontWeight: FontWeight.w500,
-                        fontSize: height * .018,
+                        fontSize: 10,
                         letterSpacing: -0.08
                       )),
                 )
               ],
             ),
             SizedBox(
-              height: height * .02,
+              height: 10,
             ),
             isGridView == true
                 ? Expanded(
@@ -150,17 +150,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: ThemeApp.whiteColor,
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(5),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(10),
-                              child: Row(
+                              child: Row(              mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment:CrossAxisAlignment.start ,
+
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(8.0,8,15,8),
+                                    padding: const EdgeInsets.fromLTRB(8.0,0,15,8),
                                     child: Container(
-                                        width:60.0,
-                                        height: 60.0,
+                                        width:47.0,
+                                        height: 47.0,
                                         decoration: new BoxDecoration(
                                             shape: BoxShape.rectangle,
                                             borderRadius: BorderRadius.circular(10),
@@ -176,16 +177,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                      MainAxisAlignment.start,
                                       children: [
                                         TextFieldUtils().dynamicText(
                                             value.notificationDataList[index]
                                             ["notificationTitle"]!,
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.blackColor,
                                                 fontWeight: FontWeight.w400,
-                                                fontSize: height * .022,
+                                                fontSize:16,
                                                 overflow:
                                                 TextOverflow.ellipsis)),
                                         SizedBox(height: height*.01,),
@@ -193,10 +194,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             value.notificationDataList[index]
                                             ["notificationDetails"]!,
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.blackColor,
                                                 fontWeight: FontWeight.w400,
-                                                fontSize: height * .018,
+                                                fontSize: 12,letterSpacing: -0.25 ,
                                                 overflow:
                                                 TextOverflow.ellipsis)),
                                         SizedBox(
@@ -206,11 +207,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             value.notificationDataList[index]
                                             ["notificationTime"]!,
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp
                                                   .lightFontColor,
                                               fontWeight: FontWeight.w400,
-                                              fontSize: height * .02,
+                                              fontSize: 12,
                                             )),
                                       ],
                                     ),
@@ -226,7 +227,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 child: ListView.builder(
                     itemCount: value.notificationDataList.length,
                     itemBuilder: (_, index) {
-                      return InkWell(
+                      return
+                  InkWell(
+
                         onTap: (){
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -240,17 +243,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: ThemeApp.whiteColor,
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(5),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(10),
-                              child: Row(
+                              child: Row(              mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment:CrossAxisAlignment.start ,
+
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(8.0,8,15,8),
+                                    padding: const EdgeInsets.fromLTRB(8.0,0,15,8),
                                     child: Container(
-                                        width:60.0,
-                                        height: 60.0,
+                                        width:47.0,
+                                        height: 47.0,
                                         decoration: new BoxDecoration(
                                             shape: BoxShape.rectangle,
                                             borderRadius: BorderRadius.circular(10),
@@ -266,16 +270,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                      MainAxisAlignment.start,
                                       children: [
                                         TextFieldUtils().dynamicText(
                                             value.notificationDataList[index]
                                             ["notificationTitle"]!,
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.blackColor,
                                                 fontWeight: FontWeight.w400,
-                                                fontSize: height * .022,
+                                                fontSize:16,
                                                 overflow:
                                                 TextOverflow.ellipsis)),
                                         SizedBox(height: height*.01,),
@@ -283,10 +287,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             value.notificationDataList[index]
                                             ["notificationDetails"]!,
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.blackColor,
                                                 fontWeight: FontWeight.w400,
-                                                fontSize: height * .018,
+                                                fontSize: 12,letterSpacing: -0.25 ,
                                                 overflow:
                                                 TextOverflow.ellipsis)),
                                         SizedBox(
@@ -296,11 +300,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             value.notificationDataList[index]
                                             ["notificationTime"]!,
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp
                                                   .lightFontColor,
                                               fontWeight: FontWeight.w400,
-                                              fontSize: height * .02,
+                                              fontSize: 12,
                                             )),
                                       ],
                                     ),

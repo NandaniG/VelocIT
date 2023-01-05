@@ -230,7 +230,7 @@ class StepProgressView extends StatelessWidget {
 //                           children: <Widget>[
 //                             Text(
 //                               processCard[index].title,
-//                               style: TextStyle(
+//                               style: TextStyle(fontFamily: 'Roboto',
 //                                 fontSize: 20,
 //                                 fontWeight: FontWeight.bold,
 //                                 color: colors[(index + 1) % 4],

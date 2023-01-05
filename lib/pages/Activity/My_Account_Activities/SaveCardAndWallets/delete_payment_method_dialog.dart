@@ -57,7 +57,7 @@ class _DeletePaymentMethodDialogState extends State<DeletePaymentMethodDialog> {
                 TextFieldUtils().dynamicText(
                     StringUtils.deletePaymentMethod,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .025,
                         fontWeight: FontWeight.w500)),
@@ -65,7 +65,7 @@ class _DeletePaymentMethodDialogState extends State<DeletePaymentMethodDialog> {
                   child: TextFieldUtils().dynamicText(
                     "Are you sure about deleting\n selected payment method.",
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyTab,
                           fontSize: height * .018,
                           fontWeight: FontWeight.w400)),
@@ -76,7 +76,7 @@ SizedBox(height: height*.02,),
                   child: Row(
                     children: [
                       Expanded(flex: 1,
-                        child: proceedButton(StringUtils.no, ThemeApp.whiteColor,context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+                        child: proceedButton(StringUtils.no,  ThemeApp.tealButtonColor,context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
 
                         Navigator.pop(context);
                         }),
@@ -85,7 +85,7 @@ SizedBox(height: height*.02,),
                       Expanded(flex: 1,
                         child: Consumer<ProductProvider>(builder: (context, value, child) {
 
-                            return proceedButton(StringUtils.yes, ThemeApp.blackColor,context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+                            return proceedButton(StringUtils.yes, ThemeApp.tealButtonColor,context,false, () {                        FocusManager.instance.primaryFocus?.unfocus();
 
                             setState(() {
                               print(widget.cardList.length);

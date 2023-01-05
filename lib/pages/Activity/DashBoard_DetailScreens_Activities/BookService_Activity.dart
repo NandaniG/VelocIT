@@ -201,7 +201,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
   Widget categoryListFont(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: 16,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w700,letterSpacing:-0.25 ,color: ThemeApp.primaryNavyBlackColor
@@ -211,7 +211,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
   Widget subCategoryListFont(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
+      style: TextStyle(fontFamily: 'Roboto',
           fontSize: 13,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w500,letterSpacing:-0.25 ,color: ThemeApp.primaryNavyBlackColor
@@ -384,7 +384,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                           child: TextFieldUtils().dynamicText(
                               productList.simpleSubCats![index].name!,
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.blackColor,
                                 // fontWeight: FontWeight.w500,
                                 fontSize: height * .02,
@@ -454,7 +454,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                           child: TextFieldUtils().dynamicText(
                               productList.simpleSubCats![index].name!,
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.darkGreyColor,
                                 // fontWeight: FontWeight.w500,
                                 fontSize: height * .02,
@@ -536,7 +536,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                                 ),TextFieldUtils().dynamicText(
                                     widget.shopByCategoryList![index].name!,
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.darkGreyColor,
                                       // fontWeight: FontWeight.w500,
                                       fontSize: height * .02,
@@ -568,7 +568,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                                             widget
                                                 .shopByCategoryList![index].name!,
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp.darkGreyColor,
                                               // fontWeight: FontWeight.w500,
                                               fontSize: height * .02,

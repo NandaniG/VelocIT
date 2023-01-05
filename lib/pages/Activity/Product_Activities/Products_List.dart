@@ -146,7 +146,7 @@ class _ProductListByCategoryActivityState
         body: SafeArea(
           child: Container(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-            child: ListView(
+            child: Column(
               // mainAxisAlignment: MainAxisAlignment.start,
               // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -158,7 +158,7 @@ class _ProductListByCategoryActivityState
             ),*/
                 filterWidgets(productsList),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * .02,
+                  height: 10,
                 ),
                 productListView()
               ],
@@ -235,7 +235,7 @@ class _ProductListByCategoryActivityState
                                       child: TextFieldUtils().dynamicText(
                                           subProductList[index].shortName!,
                                           context,
-                                          TextStyle(
+                                          TextStyle(fontFamily: 'Roboto',
                                             color: ThemeApp.darkGreyColor,
                                             // fontWeight: FontWeight.w500,
                                             fontSize: height * .02,
@@ -259,7 +259,7 @@ class _ProductListByCategoryActivityState
             child: TextFieldUtils().dynamicText(
                 'No Match found!',
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .03,
                     fontWeight: FontWeight.bold)),
@@ -284,7 +284,7 @@ class _ProductListByCategoryActivityState
             TextFieldUtils().dynamicText(
                 'Sort By  ',
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                   color: ThemeApp.lightFontColor,
                 fontWeight: FontWeight.w400,
                   fontSize: 12,letterSpacing: -0.08
@@ -300,7 +300,7 @@ class _ProductListByCategoryActivityState
               child: TextFieldUtils().dynamicText(
                   StringConstant.sortedBy,
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                    fontWeight: FontWeight.w400,
                     fontSize: 12,letterSpacing: -0.08
@@ -322,7 +322,7 @@ class _ProductListByCategoryActivityState
                 TextFieldUtils().dynamicText(
                     'Filters',
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                      fontWeight: FontWeight.w400,
                       fontSize:12,
@@ -357,8 +357,8 @@ class _ProductListByCategoryActivityState
   }
 
   Widget productListView() {
-    return LayoutBuilder(builder: (context, constrains) {
-      return ChangeNotifierProvider<ProductSpecificListViewModel>.value(
+    return/* LayoutBuilder(builder: (context, constrains) {
+      return*/ ChangeNotifierProvider<ProductSpecificListViewModel>.value(
           value:  productSpecificListViewModel,
           child: Consumer<ProductSpecificListViewModel>(
               builder: (context, productSubCategoryProvider, child) {
@@ -378,13 +378,13 @@ class _ProductListByCategoryActivityState
                 List<Content>? subProductList = productSubCategoryProvider
                     .productSubCategory.data!.payload!.content;
                 print("subProductList length.......${subProductList!.length}");
-                return Container(
-                  height: height,
+                return Expanded(
+
                   // width: MediaQuery.of(context).size.width,
                   child: GridView.builder(
                     controller: scrollController,
                     itemCount: subProductList!.length,
-                    // physics:  AlwaysScrollableScrollPhysics(),
+                    physics:  AlwaysScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           mainAxisSpacing: 0.5,
@@ -399,7 +399,7 @@ class _ProductListByCategoryActivityState
                         children: [
                           index == subProductList!.length
                               ? Container(
-                                  width: constrains.minWidth,
+                                  // width: constrains.minWidth,
                                   height: 20,
                                   // height: MediaQuery.of(context).size.height * .08,
                                   // alignment: Alignment.center,
@@ -513,7 +513,7 @@ class _ProductListByCategoryActivityState
                                                                       .defaultSellPrice ??
                                                                   0.0),
                                                           context),
-                                                      TextFieldUtils().listPriceHeadingTextField(
+                                                      TextFieldUtils().listScratchPriceHeadingTextField(
                                                           indianRupeesFormat.format(
                                                               subProductList[
                                                                           index]
@@ -531,7 +531,7 @@ class _ProductListByCategoryActivityState
                                 ),
                           index == subProductList!.length
                               ? Container(
-                                  width: constrains.minWidth,
+                                  // width: constrains.minWidth,
                                   height: 20,
                                   // height: MediaQuery.of(context).size.height * .08,
                                   // alignment: Alignment.center,
@@ -553,7 +553,7 @@ class _ProductListByCategoryActivityState
                           child: TextFieldUtils().dynamicText(
                               'Nothing more to load',
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.blackColor,
                                   fontSize: height * .03,
                                   fontWeight: FontWeight.bold)),
@@ -569,13 +569,13 @@ class _ProductListByCategoryActivityState
               child: TextFieldUtils().dynamicText(
                   'No Match found!',
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontSize: height * .03,
                       fontWeight: FontWeight.bold)),
             );
           }));
-    });
+    // });
   }
 
   int? _radioValue = 0;
@@ -600,7 +600,7 @@ class _ProductListByCategoryActivityState
                 TextFieldUtils().dynamicText(
                     StringUtils.sortByPrice,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: MediaQuery.of(context).size.height * .025,
                         fontWeight: FontWeight.w600)),
@@ -616,7 +616,7 @@ class _ProductListByCategoryActivityState
                     });
                   },
                   title: Text("Low to High",
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),
@@ -633,13 +633,13 @@ class _ProductListByCategoryActivityState
                     });
                   },
                   title: Text("High to Low",
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),
                 ),
                 proceedButton(
-                    "Sort Now", ThemeApp.darkGreyColor, context, false, () {
+                    "Sort Now", ThemeApp.tealButtonColor, context, false, () {
                   setState(() {                        FocusManager.instance.primaryFocus?.unfocus();
 
                   StringConstant.sortByRadio == 1

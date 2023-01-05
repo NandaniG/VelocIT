@@ -390,7 +390,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(status,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontFamily: 'Roboto',fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             Expanded(
               child: status!='No records found' ?ListView.builder(

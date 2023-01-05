@@ -101,7 +101,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                     TextFieldUtils().dynamicText(
                         StringUtils.shopByCategories,
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
                           fontWeight: FontWeight.w400,
                           fontSize: height * .03,
@@ -184,7 +184,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                 TextFieldUtils().dynamicText(
                                     widget.shopByCategoryList![index].name!,
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                       color: ThemeApp.primaryNavyBlackColor,
                                       fontWeight: FontWeight.w700,
                                       fontSize: height * .025,
@@ -348,7 +348,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                             child: TextFieldUtils().dynamicText(
                                 productList.simpleSubCats![index].name!,
                                 context,
-                                TextStyle(
+                                TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.blackColor,
                                   // fontWeight: FontWeight.w500,
                                   fontSize: height * .02,
@@ -417,7 +417,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                           child: TextFieldUtils().dynamicText(
                               productList.simpleSubCats![index].name!,
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.blackColor,
                                 // fontWeight: FontWeight.w500,
                                 fontSize: height * .02,

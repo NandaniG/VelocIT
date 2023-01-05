@@ -13,6 +13,7 @@ class ThemeApp {
   static const primaryNavyBlackColor =  Color(0xff0C1A30);
   static const subIconColor =  Color(0xff79757F);
   static const lightFontColor =  Color(0xff8C8C8C);
+  static const lightBorderColor =  Color(0xffDADADA);
   static const redColor =  Color(0xfffe3a30);
   static const tealButtonColor =  Color(0xff056C84);
   static const packedButtonColor =  Color(0xff0DCCF0);

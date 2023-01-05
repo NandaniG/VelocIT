@@ -197,7 +197,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                       child: TextFieldUtils().dynamicText(
                           'No Match found!',
                           context,
-                          TextStyle(
+                          TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
                               fontSize: height * .03,
                               fontWeight: FontWeight.bold)),
@@ -258,7 +258,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                                 searchProductList[index]
                                                     .shortName!,
                                                 context,
-                                                TextStyle(
+                                                TextStyle(fontFamily: 'Roboto',
                                                   color: ThemeApp.darkGreyColor,
                                                   // fontWeight: FontWeight.w500,
                                                   fontSize: height * .02,
@@ -282,7 +282,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
             child: TextFieldUtils().dynamicText(
                 'No Match found!',
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .03,
                     fontWeight: FontWeight.bold)),
@@ -306,7 +306,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
             TextFieldUtils().dynamicText(
                 'Sort By  ',
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                   color: ThemeApp.lightFontColor,
                   // fontWeight: FontWeight.w500,
                   fontSize: height * .02,
@@ -322,7 +322,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
               child: TextFieldUtils().dynamicText(
                   StringConstant.sortedBy,
                   context,
-                  TextStyle(
+                  TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     // fontWeight: FontWeight.w500,
                     fontSize: height * .022,
@@ -344,7 +344,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                 TextFieldUtils().dynamicText(
                     'Filters',
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       // fontWeight: FontWeight.w500,
                       fontSize: height * .022,
@@ -413,7 +413,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                       child: TextFieldUtils().dynamicText(
                           'No Match found!',
                           context,
-                          TextStyle(
+                          TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.darkGreyTab,
                               fontSize: height * .03,
                               fontWeight: FontWeight.bold)),
@@ -516,7 +516,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                             Text(
                                                 searchProductList[index]
                                                     .shortName!,
-                                                style: TextStyle(
+                                                style: TextStyle(fontFamily: 'Roboto',
                                                     color: ThemeApp.whiteColor,
                                                     fontSize: height * .022,
                                                     fontWeight:
@@ -532,7 +532,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                                                 .defaultSellPrice ??
                                                             0.0),
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                         color:
                                                             ThemeApp.whiteColor,
                                                         fontSize: height * .023,
@@ -544,7 +544,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                                                 .defaultMrp ??
                                                             0.0),
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                         color:
                                                             ThemeApp.whiteColor,
                                                         decoration:
@@ -572,7 +572,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
             child: TextFieldUtils().dynamicText(
                 'No Match found!',
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .03,
                     fontWeight: FontWeight.bold)),
@@ -602,7 +602,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                 TextFieldUtils().dynamicText(
                     StringUtils.sortByPrice,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: MediaQuery.of(context).size.height * .025,
                         fontWeight: FontWeight.w600)),
@@ -618,7 +618,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                     });
                   },
                   title: Text("Low to High",
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),
@@ -635,13 +635,13 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                     });
                   },
                   title: Text("High to Low",
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),
                 ),
                 proceedButton(
-                    "Sort Now", ThemeApp.darkGreyColor, context, false, () {
+                    "Sort Now", ThemeApp.tealButtonColor, context, false, () {
                   setState(() {
                     StringConstant.sortByRadio == 1
                         ? StringConstant.sortedBy = "High to Low"

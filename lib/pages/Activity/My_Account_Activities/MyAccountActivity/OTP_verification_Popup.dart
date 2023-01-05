@@ -84,7 +84,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                         child: TextFieldUtils().dynamicText(
                             "OTP Verification",
                             context,
-                            TextStyle(
+                            TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.primaryNavyBlackColor,
                                 fontSize: height * .025,
                                 fontWeight: FontWeight.w700)),
@@ -107,7 +107,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                   TextFieldUtils().dynamicText(
                       "${StringUtils.otpSentTo} david@gmail.com",
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
                           fontSize: height * .019,
                           fontWeight: FontWeight.w400)),
@@ -124,7 +124,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                           width: width * .1,
                           padding: EdgeInsets.only(right: 10),
                           child: Text("Resend",
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.tealButtonColor,
                                   fontSize: height * .018,
                                   fontWeight: FontWeight.w400)),
@@ -140,7 +140,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                   TextFieldUtils().dynamicText(
                       "${StringUtils.otpSentTo} +91 5252634825",
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
                           fontSize: height * .019,
                           fontWeight: FontWeight.w400)),
@@ -157,7 +157,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                           width: width * .1,
                           padding: EdgeInsets.only(right: 10),
                           child: Text("Resend",
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.tealButtonColor,
                                   fontSize: height * .018,
                                   fontWeight: FontWeight.w400)),
@@ -229,7 +229,7 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                         flex: 1,
                         child: proceedButton(
                             StringUtils.update,
-                            ThemeApp.blackColor,
+                            ThemeApp.tealButtonColor,
                             context, false,() {                        FocusManager.instance.primaryFocus?.unfocus();
 
                         setState(() {

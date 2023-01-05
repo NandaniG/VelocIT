@@ -109,7 +109,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   child: TextFieldUtils().dynamicText(
                       '+91 78945612352',
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
                           fontSize:22,
                           fontWeight: FontWeight.bold)),
@@ -151,7 +151,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   wrapAlignment: WrapAlignment.spaceAround,
                   pinBoxDecoration:
                       ProvidedPinBoxDecoration.defaultPinBoxDecoration,
-                  pinTextStyle: TextStyle(fontSize: 22.0),
+                  pinTextStyle: TextStyle(fontFamily: 'Roboto',fontSize: 22.0),
                   pinTextAnimatedSwitcherTransition:
                       ProvidedPinBoxTextAnimation.scalingTransition,
                   pinBoxRadius: 10,
@@ -177,7 +177,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         ? Center(
                       child: Text(
                     formatHHMMSS(  _start),
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.primaryNavyBlackColor,
                             fontWeight: FontWeight.w400,
                             fontSize: 19),
@@ -196,7 +196,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           },
                           child: Text(
                             StringUtils.resendOTP,
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: 'Roboto',
                                 color: ThemeApp.tealButtonColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize:

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,25 +8,18 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/ViewModel/cart_view_model.dart';
 import 'package:velocit/utils/routes/routes.dart';
-
 import '../../Core/Model/CartModels/CartSpecificIdModel.dart';
 import '../../Core/data/responses/status.dart';
 import '../../Core/repository/cart_repository.dart';
-import '../../services/models/CartModel.dart';
-import '../../services/models/ProductDetailModel.dart';
 import '../../services/providers/Home_Provider.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/appBar.dart';
-import '../../widgets/global/dynamicPopUp.dart';
-import '../../widgets/global/okPopUp.dart';
 import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
 import '../Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
-import '../Activity/Payment_Activities/payments_Activity.dart';
-import 'dashBoard.dart';
 
 class CartDetailsActivity extends StatefulWidget {
   /* final dynamic productList;
@@ -145,8 +137,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     StringConstant.RandomUserLoginId =
         (prefs.getString('isRandomUserId')) ?? '';
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+setState(() {
 
-    cartListView.cartSpecificIDWithGet(context, StringConstant.UserCartID);
+});
+  await cartListView.cartSpecificIDWithGet(context, StringConstant.UserCartID);
   }
 
   @override
@@ -187,19 +181,23 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       "qty": quantity.toString()
     };
     print("update cart DATA" + data.toString());
+    setState(() {
 
-    for (int i = 0; i < value!.length; i++) {
+    });
+    await  CartRepository().updateCartPostRequest(data, context);
+    getCartId();
+
+/*    for (int i = 0; i < value!.length; i++) {
       StringConstant.BadgeCounterValue =
           value!.length.toString() + value[i].itemQty.toString();
       print("Badge,.......in for." + StringConstant.BadgeCounterValue);
-    }
-    setState(() {
-      CartRepository().updateCartPostRequest(data, context);
-      getCartId();
+    }*/
+/*    setState(() {
     StringConstant.BadgeCounterValue =
           (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
-    });
+    });      getCartId();*/
+
   }
 
   @override
@@ -210,11 +208,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .09),
+        preferredSize: Size.fromHeight(height * .08),
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
           return provider.isBottomAppCart == false
               ? PreferredSize(
-                  preferredSize: Size.fromHeight(height * .09),
+                  preferredSize: Size.fromHeight(height * .08),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     color: ThemeApp.darkGreyTab,
@@ -442,7 +440,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                 child:  TextFieldUtils().dynamicText(
                                                     "Checkout",
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                         color: ThemeApp.tealButtonColor,
                                                         fontSize: 12,
                                                         fontWeight: FontWeight.w700)))),
@@ -460,7 +458,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     child: TextFieldUtils().dynamicText(
                         'No Match found!',
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: height * .03,
                             fontWeight: FontWeight.bold)),
@@ -608,14 +606,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                 child: TextFieldUtils().dynamicText(
                                     "Cart is Empty",
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                         color: ThemeApp.blackColor,
                                         fontWeight: FontWeight.w500,
                                         fontSize: height * .03,
                                         overflow: TextOverflow.ellipsis)),
                               )
                             : Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   cartProductList(orderPurchaseList),
@@ -630,7 +628,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   child: TextFieldUtils().dynamicText(
                       'No Match found!',
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
                           fontSize: height * .03,
                           fontWeight: FontWeight.bold)),
@@ -641,7 +639,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
     return Container(
-        height:250,
+        height:370,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
@@ -689,7 +687,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                       fit: BoxFit.fill,
                                       // width: width*.18,
                                       height: 79,
-                                      width: 79,
+                                      width: 79,  errorBuilder: ((context,
+                                        error, stackTrace) {
+                                      return Icon(
+                                          Icons.image_outlined);
+                                    })
                                     ),
                                   ),
                                 ),
@@ -710,7 +712,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                 .oneliner
                                                 .toString(),
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.primaryNavyBlackColor,
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w700)),
@@ -730,10 +732,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                         Row(
                                           children: [
                                             Text('Delivery by ',
-                                                style: TextStyle(
+                                                style: TextStyle(fontFamily: 'Roboto',
                                                     color:
                                                         ThemeApp.lightFontColor,
-                                                    fontSize: height * .019,
+                                                    fontSize: 12,
                                                     fontWeight:
                                                         FontWeight.w500)),
                                             Text(
@@ -741,10 +743,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                     orderPurchaseList[index]
                                                         .deliveryDate
                                                         .toString()),
-                                                style: TextStyle(
+                                                style: TextStyle(fontFamily: 'Roboto',
                                                     color:
                                                         ThemeApp.lightFontColor,
-                                                    fontSize: height * .019,
+                                                    fontSize: 12,
                                                     fontWeight:
                                                         FontWeight.w500)),
                                           ],
@@ -815,13 +817,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         children: [
           value.offer.toString().isNotEmpty?   Text(
               "${indianRupeesFormat.format(double.parse(value.offer.toString())??0.0)??"0.0"}",
-              style: TextStyle(
+              style: TextStyle(fontFamily: 'Roboto',
                   color:
                   ThemeApp.blackColor,
                   fontSize: height * .028,
                   letterSpacing: 0.2,
                   fontWeight:
-                  FontWeight.w700)):Text('0.0', style: TextStyle(
+                  FontWeight.w700)):Text('0.0', style: TextStyle(fontFamily: 'Roboto',
           color:
           ThemeApp.blackColor,
           fontSize: height * .028,
@@ -833,14 +835,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           ),
           value.mrp.toString().isNotEmpty?  Text(
               "${indianRupeesFormat.format(double.parse(value.mrp.toString())??0.0)??"0.0"}",
-              style: TextStyle(
+              style: TextStyle(fontFamily: 'Roboto',
                   color:
                   ThemeApp.lightFontColor,
                   fontSize: height * .022,
                   decoration: TextDecoration.lineThrough,
                   letterSpacing: 0.2,
                   fontWeight:
-                  FontWeight.w700)):Text('0.0', style: TextStyle(
+                  FontWeight.w700)):Text('0.0', style: TextStyle(fontFamily: 'Roboto',
               color:
               ThemeApp.lightFontColor,
               fontSize: height * .022,
@@ -852,7 +854,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             width: width * .02,
           ),
           Text(
-              value.discountPercent.toString() + "% Off", style: TextStyle(
+              value.discountPercent.toString() + "% Off", style: TextStyle(fontFamily: 'Roboto',
               color:
               ThemeApp.blackColor,
               fontSize: height * .02,
@@ -887,7 +889,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               children: [
                 InkWell(
                   onTap: () {
-                    setState(() {
+                    // setState(() {
                       // minusQuantity(value![index], index);
                       if (value![index].itemQty! > 1) {
 
@@ -927,7 +929,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                               );
                             });
                       }
-                    });
+                    // });
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0, right: 8),
@@ -948,7 +950,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   color: ThemeApp.buttonBorderLightGreyColor,
                   child: Text(
                     value![index].itemQty.toString().padLeft(2, '0'),
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         fontSize: MediaQuery.of(context).size.height * .016,
                         fontWeight: FontWeight.w400,
                         overflow: TextOverflow.ellipsis,
@@ -1015,13 +1017,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 11, 10, 45),
+        padding: const EdgeInsets.fromLTRB(20, 11, 10, 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Price Details',
-                style: TextStyle(
+                style: TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.primaryNavyBlackColor,
                     fontSize: 20,
                     fontWeight: FontWeight.w400,)),
@@ -1033,7 +1035,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Price',
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
@@ -1043,7 +1045,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 Text(
                     indianRupeesFormat
                         .format(double.parse(payload.totalMrp.toString())),
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
@@ -1061,13 +1063,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Discount',
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
                 Text(
                     "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
@@ -1086,17 +1088,17 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Delivery charges',
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500)),
                 Text(
                     indianRupeesFormat.format(
                         double.parse(payload.totalDeliveryCharges.toString())),
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
-                        fontSize: height * .019,
-                        fontWeight: FontWeight.w400)),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500)),
                 /* TextFieldUtils()
                         .homePageTitlesTextFields("Delivery charges", context),
                     TextFieldUtils().homePageTitlesTextFields(
@@ -1136,12 +1138,12 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Total Amount',
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w700)),
                   Text("${indianRupeesFormat.format(payload.totalPayable)} ",
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.appColor,
                           fontSize: 20,
                           fontWeight: FontWeight.w700)),
@@ -1243,7 +1245,7 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
                   child: TextFieldUtils().dynamicText(
                       widget.text,
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
 
                           // fontWeight: FontWeight.w500,
@@ -1251,7 +1253,7 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
                           fontWeight: FontWeight.w400)),
                 ),
                 proceedButton(
-                    'Ok', ThemeApp.blackColor, context, false, widget.tap),
+                    'Ok', ThemeApp.tealButtonColor, context, false, widget.tap),
               ],
             ),
           ),

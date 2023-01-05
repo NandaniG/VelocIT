@@ -185,7 +185,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                           .size
                           .height * .025,
                     ),
-                    proceedButton('Change Password',ThemeApp.blackColor, context, false,() async{                        FocusManager.instance.primaryFocus?.unfocus();
+                    proceedButton('Change Password',ThemeApp.tealButtonColor, context, false,() async{                        FocusManager.instance.primaryFocus?.unfocus();
 
                     if (_formKey.currentState!.validate() &&
                           _currentPass.text.isNotEmpty &&

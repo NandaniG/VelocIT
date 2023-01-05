@@ -2,6 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../Core/Model/CartModels/AddressListModel.dart';
 import '../../../../Core/Model/CartModels/SendCartForPaymentModel.dart';
@@ -22,9 +23,9 @@ import '../../Order_CheckOut_Activities/AddNewDeliveryAddress.dart';
 import 'delete_Address_dialog.dart';
 
 class SavedAddressDetails extends StatefulWidget {
-  final CartForPaymentPayload cartForPaymentPayload;
+  // final CartForPaymentPayload cartForPaymentPayload;
 
-  SavedAddressDetails({Key? key, required this.cartForPaymentPayload})
+  SavedAddressDetails({Key? key, /*required this.cartForPaymentPayload*/})
       : super(key: key);
 
   @override
@@ -44,10 +45,23 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
   @override
   void initState() {
     // TODO: implement initState
-    cartViewModel.sendAddressWithGet(
-        context, widget.cartForPaymentPayload!.userId.toString());
+    cartforPayments();
 
     super.initState();
+  }
+
+  cartforPayments() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+
+      StringConstant.UserLoginId =
+          (prefs.getString('isUserId')) ?? '';
+      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+      cartViewModel.sendAddressWithGet(
+          context, StringConstant.UserLoginId.toString());
+  });
+
   }
 
   @override
@@ -79,7 +93,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                 child: TextFieldUtils().dynamicText(
                     StringUtils.deliveryAddress,
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .03,
                         fontWeight: FontWeight.bold)),
@@ -124,7 +138,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                     child: TextFieldUtils().dynamicText(
                         "+ ${StringUtils.addNewAddress}",
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.whiteColor,
                             fontSize: height * .023,
                             fontWeight: FontWeight.w400)),
@@ -181,7 +195,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                       value.addressList[index]
                                                           .myAddressFullName!,
                                                       context,
-                                                      TextStyle(
+                                                      TextStyle(fontFamily: 'Roboto',
                                                           color: ThemeApp
                                                               .blackColor,
                                                           fontSize:
@@ -216,7 +230,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                                     index]
                                                                 .myAddressTypeOfAddress!,
                                                             context,
-                                                            TextStyle(
+                                                            TextStyle(fontFamily: 'Roboto',
                                                                 color: ThemeApp
                                                                     .whiteColor,
                                                                 fontSize:
@@ -286,7 +300,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                       TextFieldUtils().dynamicText(
                                           fullAddress,
                                           context,
-                                          TextStyle(
+                                          TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp.darkGreyTab,
                                               fontSize: height * .021,
                                               fontWeight: FontWeight.w400)),
@@ -296,7 +310,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                       TextFieldUtils().dynamicText(
                                           "${StringUtils.contactNumber + ' : ' + value.addressList[index].myAddressPhoneNumber!}",
                                           context,
-                                          TextStyle(
+                                          TextStyle(fontFamily: 'Roboto',
                                               color: ThemeApp.blackColor,
                                               fontSize: height * .021,
                                               fontWeight: FontWeight.w400)),
@@ -310,7 +324,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                     child: TextFieldUtils().dynamicText(
                     'No data found',
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.darkGreyTab,
                         fontSize: height * .03,
                         fontWeight: FontWeight.w400)),
@@ -362,8 +376,8 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                 MaterialPageRoute(
                                   builder: (context) => AddNewDeliveryAddress(
                                       isSavedAddress: isSavedAddress,
-                                      cartForPaymentPayload:
-                                          widget.cartForPaymentPayload!),
+                                     /* cartForPaymentPayload:
+                                          widget.cartForPaymentPayload!*/),
                                 ),
                               );
                             },
@@ -380,7 +394,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                     color: ThemeApp.whiteColor,
                                   ),
                                   Text(StringUtils.addNewAddress,
-                                      style: TextStyle(
+                                      style: TextStyle(fontFamily: 'Roboto',
                                           color: ThemeApp.whiteColor,
                                           // fontWeight: FontWeight.w500,
                                           fontSize: 14,
@@ -448,7 +462,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                             addressList[index]
                                                                 .name!,
                                                             context,
-                                                            TextStyle(
+                                                            TextStyle(fontFamily: 'Roboto',
                                                                 color: ThemeApp
                                                                     .blackColor,
                                                                 fontSize: 14,
@@ -485,7 +499,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                               addressList[index]
                                                                   .addressType!,
                                                               context,
-                                                              TextStyle(
+                                                              TextStyle(fontFamily: 'Roboto',
                                                                   color: ThemeApp
                                                                       .packedButtonColor,
                                                                   fontSize: 10,
@@ -500,7 +514,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                 TextFieldUtils().dynamicText(
                                                     "${addressList[index].addressLine1!}, ${addressList[index].addressLine2}, ${addressList[index].stateName},\n ${addressList[index].cityName}, ${addressList[index].pincode}",
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                         color:
                                                             ThemeApp.blackColor,
                                                         fontSize: 12,
@@ -528,7 +542,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                     TextFieldUtils().dynamicText(
                                                         "${addressList[index].contactNumber}",
                                                         context,
-                                                        TextStyle(
+                                                        TextStyle(fontFamily: 'Roboto',
                                                             color: ThemeApp
                                                                 .blackColor,
                                                             fontSize:12,
@@ -605,7 +619,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                           : TextFieldUtils().dynamicText(
                               'No Address found',
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.whiteColor,
                                   fontSize: height * .02,
                                   fontWeight: FontWeight.w400)),
@@ -620,7 +634,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
             child: TextFieldUtils().dynamicText(
                 'No Match found!',
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .03,
                     fontWeight: FontWeight.bold)),
@@ -639,7 +653,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     child: TextFieldUtils().dynamicText(
     StringUtils.deliveryAddress,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .03,
     fontWeight: FontWeight.bold)),
@@ -683,7 +697,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     child: TextFieldUtils().dynamicText(
     StringUtils.addNewAddress,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .023,
     fontWeight: FontWeight.w400)),
@@ -753,7 +767,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     value.addressList[index]
         .myAddressFullName!,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color:
     ThemeApp.blackColor,
     fontSize: height * .023,
@@ -781,7 +795,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     value.addressList[index]
         .myAddressTypeOfAddress!,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color:
     ThemeApp.whiteColor,
     fontSize: height * .02,
@@ -800,7 +814,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     child: TextFieldUtils().dynamicText(
     "${value.addressList[index].myAddressHouseNoBuildingName!}, ${value.addressList[index].myAddressAreaColony}, ${value.addressList[index].myAddressCity},\n ${value.addressList[index].myAddressState}",
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.darkGreyTab,
     fontSize: height * .021,
     fontWeight: FontWeight.w400)),
@@ -811,7 +825,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     child: TextFieldUtils().dynamicText(
     "${'${StringUtils.contactNumber} : ' + StringConstant.selectedMobile}",
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .021,
     fontWeight: FontWeight.w400)),
@@ -849,7 +863,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     TextFieldUtils().dynamicText(
     StringConstant.selectedFullName,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .023,
     fontWeight: FontWeight.w400)),
@@ -873,7 +887,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     child: TextFieldUtils().dynamicText(
     StringConstant.selectedTypeOfAddress,
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.whiteColor,
     fontSize: height * .02,
     fontWeight: FontWeight.w400)),
@@ -889,7 +903,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     child: TextFieldUtils().dynamicText(
     'Maninagar BRTS stand, Punit Maharaj Road, Maninagar, Ahmedabad, Gujarat, India - 380021',
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     overflow: TextOverflow.ellipsis,
     color: ThemeApp.darkGreyTab,
     fontSize: height * .021,
@@ -901,7 +915,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     child: TextFieldUtils().dynamicText(
     "${'${StringUtils.contactNumber} : ${StringConstant.selectedMobile}'}",
     context,
-    TextStyle(
+    TextStyle(fontFamily: 'Roboto',
     color: ThemeApp.blackColor,
     fontSize: height * .021,
     fontWeight: FontWeight.w400)),

@@ -190,7 +190,7 @@ class _ForgotSuccessDialogState extends State<ForgotSuccessDialog> {
                     TextFieldUtils().dynamicText(
                         'Password Reset Successfully',
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
                           fontWeight: FontWeight.w500,
                           fontSize: MediaQuery.of(context).size.height * .028,
@@ -202,7 +202,7 @@ class _ForgotSuccessDialogState extends State<ForgotSuccessDialog> {
                     Center(
                       child: Text(
                           'We have sent a temporary password to your registered email address "${widget.text}"',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             // fontWeight: FontWeight.w400,
                             fontSize: MediaQuery.of(context).size.height * .022,
@@ -213,7 +213,7 @@ class _ForgotSuccessDialogState extends State<ForgotSuccessDialog> {
                       height: MediaQuery.of(context).size.height * .07,
                     ),
                     proceedButton(
-                        'Sign In Now', ThemeApp.blackColor, context, false, () {
+                        'Sign In Now', ThemeApp.tealButtonColor, context, false, () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>

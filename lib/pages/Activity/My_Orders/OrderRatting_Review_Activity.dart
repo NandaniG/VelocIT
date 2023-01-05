@@ -70,10 +70,10 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                               child: TextFieldUtils().dynamicText(
                                   widget.values["myOrderId"],
                                   context,
-                                  TextStyle(
+                                  TextStyle(fontFamily: 'Roboto',
                                     color: ThemeApp.blackColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: height * .022,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12,
                                   )),
                             ),
                             // SizedBox(
@@ -85,9 +85,9 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                               child: TextFieldUtils().dynamicText(
                                   widget.values["myOrderDate"],
                                   context,
-                                  TextStyle(
+                                  TextStyle(fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyTab,
-                                    fontSize: height * .018,
+                                    fontSize: 12,fontWeight: FontWeight.w400
                                   )),
                             ),
                             mainUI(value),
@@ -111,7 +111,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
 */
             SingleChildScrollView(
           child: Container(
-            height: height * .85,
+            height: height * .65,
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: Column(
@@ -129,7 +129,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                               decoration: BoxDecoration(
                                   color: ThemeApp.whiteColor,
                                   borderRadius: BorderRadius.circular(8)),
-                              width: width * .9,
+                              width: width * .85,
                               child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: SingleChildScrollView(
@@ -142,8 +142,8 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                         Row(
                                           children: [
                                             Container(
-                                              height: height * .12,
-                                              width: width * .25,
+                                              height:79,
+                                              width: 79,
                                               child: ClipRRect(
                                                 borderRadius:
                                                     const BorderRadius.all(
@@ -158,7 +158,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                               ),
                                             ),
                                             SizedBox(
-                                              width: width * .02,
+                                              width: 12,
                                             ),
                                             Flexible(
                                               child: Text(
@@ -166,12 +166,12 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                                           "myOrderDetailList"]
                                                       [index]["productDetails"],
                                                   maxLines: 2,
-                                                  style: TextStyle(
+                                                  style: TextStyle(fontFamily: 'Roboto',
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       color: ThemeApp
                                                           .primaryNavyBlackColor,
-                                                      fontSize: height * .02,
+                                                      fontSize: 12,
                                                       letterSpacing: -0.25,
                                                       fontWeight:
                                                           FontWeight.w700)),
@@ -179,7 +179,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                           ],
                                         ),
                                         SizedBox(
-                                          height: height * .02,
+                                          height: 17,
                                         ),
                                         Row(
                                           children: [
@@ -208,15 +208,15 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                                 TextFieldUtils().dynamicText(
                                                     'Product Review and Rating',
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                         color:
                                                             ThemeApp.blackColor,
-                                                        fontSize: height * .02,
+                                                        fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                         letterSpacing: -0.25)),
                                                 SizedBox(
-                                                  height: height * .01,
+                                                  height: 8,
                                                 ),
                                                 rattingBar(),
                                               ],
@@ -224,13 +224,13 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                           ],
                                         ),
                                         SizedBox(
-                                          height: height * .02,
+                                          height:16,
                                         ),
                                         TextFormField(
                                           controller: productReviewController,
-                                          style: TextStyle(
-                                            fontFamily: 'SegoeUi',
-                                            fontSize: height * .022,
+                                          style: TextStyle(fontFamily: 'Roboto',
+
+                                            fontSize: 12,
                                             color: ThemeApp.blackColor,
                                           ),
                                           validator: (value) {
@@ -240,12 +240,9 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: ThemeApp.whiteColor,
-                                            hintStyle: TextStyle(
+                                            hintStyle: TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.darkGreyTab,
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.02),
+                                                fontSize:12),
                                             contentPadding: EdgeInsets.fromLTRB(
                                                 10.0, 10, 10.0, 10),
                                             border: OutlineInputBorder(
@@ -271,7 +268,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                           ),
                                         ),
                                         SizedBox(
-                                          height: height * .02,
+                                          height: 23,
                                         ),
                                         Row(
                                           children: [
@@ -300,15 +297,15 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                                 TextFieldUtils().dynamicText(
                                                     'Vendor Review and Rating',
                                                     context,
-                                                    TextStyle(
+                                                    TextStyle(fontFamily: 'Roboto',
                                                         color:
                                                             ThemeApp.blackColor,
-                                                        fontSize: height * .023,
+                                                        fontSize:12,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                         letterSpacing: -0.25)),
                                                 SizedBox(
-                                                  height: height * .01,
+                                                  height: 8,
                                                 ),
                                                 rattingBar(),
                                               ],
@@ -318,7 +315,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                         /*   TextFieldUtils().dynamicText(
                                             'Vendor Review and Rating',
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.blackColor,
                                                 fontSize: height * .023,
                                                 fontWeight: FontWeight.bold)),
@@ -327,13 +324,13 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                         ),
                                         rattingBar(),*/
                                         SizedBox(
-                                          height: height * .02,
+                                          height: 16,
                                         ),
                                         TextFormField(
                                           controller: vendorReviewController,
-                                          style: TextStyle(
-                                            fontFamily: 'SegoeUi',
-                                            fontSize: height * .02,
+                                          style: TextStyle(fontFamily: 'Roboto',
+
+                                            fontSize: 12,
                                             color: ThemeApp.blackColor,
                                           ),
                                           validator: (value) {
@@ -343,12 +340,9 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: ThemeApp.whiteColor,
-                                            hintStyle: TextStyle(
+                                            hintStyle: TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.darkGreyTab,
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.02),
+                                                fontSize: 12),
                                             contentPadding: EdgeInsets.fromLTRB(
                                                 10.0, 10, 10.0, 10),
                                             border: OutlineInputBorder(
@@ -379,8 +373,8 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                             ),
                           );
                         }),
-                  ),
-                  proceedButton("Submit", ThemeApp.blackColor, context, false,
+                  ),SizedBox(height: 14,),
+                  proceedButton("Submit", ThemeApp.tealButtonColor, context, false,
                       () async {                        FocusManager.instance.primaryFocus?.unfocus();
 
                       final prefs = await SharedPreferences.getInstance();

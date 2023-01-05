@@ -98,7 +98,7 @@ class CartRepository {
     print(userData.payload!.id.toString());
 
     print(userData.payload!.ordersForPurchase![0].itemQuantity);
-    badgeLength = userData.payload!.ordersForPurchase![0].itemQuantity!;
+    badgeLength = userData.payload!.ordersForPurchase![0].itemQuantity;
 
     print("userData.payload!.id");
     print(responseJson.toString());
@@ -166,7 +166,24 @@ class CartRepository {
       throw e;
     }
   }
+  Future getSendCartForPaymentLists(String id) async {
+    var url = ApiMapping.getURI(apiEndPoint.send_Cart_For_Payment);
+    final prefs = await SharedPreferences.getInstance();
 
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url + id);
+      print(" SendCartForPaymentModel : " + response.toString());
+
+      // prefs.setString(
+      //   'setBadgeCountPrefs',
+      //   response['payload']['total_item_count'].toString(),
+      // );
+
+      return response = SendCartForPaymentModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
   Future<AddressListModel> getAddressList(String id) async {
     var url = ApiMapping.getURI(apiEndPoint.address_list);
     final prefs = await SharedPreferences.getInstance();
@@ -261,6 +278,7 @@ class CartRepository {
       throw e;
     }
   }
+  Map<dynamic, dynamic> orderDetails = {};
   Future putCartForPaymentUpdate(dynamic data,int orderBasketID) async {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
 
@@ -277,7 +295,7 @@ class CartRepository {
     try {
       dynamic reply;
       http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
-      print("response post"+response.body.toString());
+      print("response postputCartForPaymentUpdate"+response.body.toString());
       // Utils.successToast(response.body.toString());
       return reply;
 

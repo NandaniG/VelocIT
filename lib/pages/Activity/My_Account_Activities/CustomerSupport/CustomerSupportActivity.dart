@@ -63,8 +63,9 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
                                             image: new AssetImage(
                                               value.customerSupportList["queryImage"],
                                             )))),*/
-                              Container(height: height*.05,
-                                width: width*.1,
+                              Container(
+                                height:32,
+                                width:32,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                     color: ThemeApp.appColor),
@@ -88,7 +89,7 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
                                   // TextFieldUtils().dynamicText(
                                   //     StringUtils.customerCareNumber,
                                   //     context,
-                                  //     TextStyle(
+                                  //     TextStyle(fontFamily: 'Roboto',
                                   //       color: ThemeApp.darkGreyTab,
                                   //       fontWeight: FontWeight.w500,
                                   //       fontSize: height * .022,
@@ -97,10 +98,10 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
                                       value.customerSupportList[
                                           "customerCareNumber"],
                                       context,
-                                      TextStyle(
+                                      TextStyle(fontFamily: 'Roboto',
                                         color: ThemeApp.blackColor,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: height * .022,
+                                        fontSize: 16,
                                       )),
                                 ],
                               ),
@@ -109,7 +110,7 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
                         ),
                       ),
                     ),
-                    SizedBox(height: height * .02),
+                    SizedBox(height:10),
                     InkWell(
                       onTap: () {},
                       child: Container(
@@ -121,8 +122,8 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
                           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                           child: Row(
                             children: [
-                              Container(height: height*.05,
-                                width: width*.1,
+                              Container(     height:32,
+                                width:32,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                     color: ThemeApp.appColor),
@@ -146,7 +147,7 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
                                   // TextFieldUtils().dynamicText(
                                   //     StringUtils.writeYourQueryAt,
                                   //     context,
-                                  //     TextStyle(
+                                  //     TextStyle(fontFamily: 'Roboto',
                                   //       color: ThemeApp.darkGreyTab,
                                   //       fontWeight: FontWeight.w500,
                                   //       fontSize: height * .022,
@@ -155,10 +156,10 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
                                       value
                                           .customerSupportList["emailForQuery"],
                                       context,
-                                      TextStyle(
+                                      TextStyle(fontFamily: 'Roboto',
                                         color: ThemeApp.blackColor,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: height * .022,
+                                        fontSize: 16,
                                       )),
                                 ],
                               ),

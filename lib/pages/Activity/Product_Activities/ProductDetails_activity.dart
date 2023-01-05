@@ -126,16 +126,15 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     print("update cart DATA" + data.toString());
     setState(() {});
     CartRepository().updateCartPostRequest(data, context);
-
+    cartListView
+        .cartSpecificIDWithGet(context, StringConstant.UserCartID);
     Utils.successToast('Added Successfully!');
     setState(() {
       // prefs.setString(
       //   'setBadgeCountPref',
       //   quantity.toString(),
       // );
-      cartListView
-          .cartSpecificIDWithGet(context, StringConstant.UserCartID)
-          .then((value) => setState(() {}));
+
       StringConstant.BadgeCounterValue =
           (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
@@ -303,7 +302,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           child: TextFieldUtils().dynamicText(
                               'No Match found!',
                               context,
-                              TextStyle(
+                              TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.blackColor,
                                   fontSize: height * .03,
                                   fontWeight: FontWeight.bold)),
@@ -316,7 +315,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     child: TextFieldUtils().dynamicText(
                         'No Match found!',
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: height * .03,
                             fontWeight: FontWeight.bold)),
@@ -510,7 +509,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 // title: Padding(
                                 //   padding: const EdgeInsets.only(left: 0),
                                 //   child: Text(model.merchants![0].merchantName!,
-                                //       style: TextStyle(
+                                //       style: TextStyle(fontFamily: 'Roboto',
                                 //           color: ThemeApp.blackColor,
                                 //           fontSize: MediaQuery.of(context).size.height * .02,
                                 //           fontWeight: FontWeight.w400)),
@@ -521,7 +520,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               padding: const EdgeInsets.only(left: 0),
                               child: Text(
                                       model.merchants[index].merchantName ?? "",
-                                      style: TextStyle(
+                                      style: TextStyle(fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500)) ??
@@ -540,7 +539,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 model.merchants![index].deliveryDays
                                         .toString() +
                                     " Day(s)",
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400)),
@@ -555,12 +554,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                             .merchants![index].unitOfferPrice
                                             .toString()) ??
                                         0.0),
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400))
                                 : Text('0.0',
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400)),
@@ -571,7 +570,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 indianRupeesFormat.format(
                                     double.parse(model.merchants![index].unitMrp.toString()) ??
                                         0.0)??'0.0',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: 'Roboto',
                                     decoration: TextDecoration.lineThrough,
                                     color: ThemeApp.darkGreyColor,
                                     fontSize:
@@ -581,7 +580,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 indianRupeesFormat.format(
                                     double.parse(model.merchants![index].unitMrp.toString()) ??
                                         0.0)??'0.0',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: 'Roboto',
                                     decoration: TextDecoration.lineThrough,
                                     color: ThemeApp.darkGreyColor,
                                     fontSize:
@@ -597,7 +596,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 model.merchants![index].unitDiscountPerc
                                         .toString() +
                                     "%",
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400)),
@@ -640,7 +639,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         title: Padding(
                           padding: const EdgeInsets.only(left: 0),
                           child: Text(model.merchants![0].merchantName!,
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.darkGreyColor,
                                   fontSize: MediaQuery.of(context).size.height * .02,
                                   fontWeight: FontWeight.w400)),
@@ -652,7 +651,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       Text(
                           indianRupeesFormat
                               .format(double.parse(model.defaultSellPrice.toString())),
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.darkGreyColor,
                               fontSize: MediaQuery.of(context).size.height * .02,
                               fontWeight: FontWeight.w400)),
@@ -664,7 +663,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       Text(
                           indianRupeesFormat
                               .format(double.parse(model.defaultMrp.toString()) ?? 0.0),
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: 'Roboto',
                               decoration: TextDecoration.lineThrough,
                               color: ThemeApp.darkGreyColor,
                               fontSize: MediaQuery.of(context).size.height * .02,
@@ -673,7 +672,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         width: width * .02,
                       ),
                       Text(model.defaultDiscount.toString() + "%",
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.darkGreyColor,
                               fontSize: MediaQuery.of(context).size.height * .02,
                               fontWeight: FontWeight.w400)),
@@ -682,8 +681,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   ) ??
                   SizedBox();
             }),
-        Container(
+        Container(alignment: Alignment.centerRight,
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
+          decoration: BoxDecoration(
+          ),
           child: model.merchants!.length > 5 && isMerchantfive == false
               ? InkWell(
                   onTap: () {
@@ -692,16 +693,19 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     });
                   },
                   child: TextFieldUtils().dynamicText(
-                      '+ View More',
+                      'View more',
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.tealButtonColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold)),
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        decorationThickness: 3,
+                      )),
                 )
               : Container(),
         ),
-        Container(                   padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
+        Container(           alignment: Alignment.centerRight,        padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
 
 
           child: isMerchantfive == true
@@ -712,12 +716,15 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     });
                   },
                   child: TextFieldUtils().dynamicText(
-                      '- View Less',
+                      'View less',
                       context,
-                      TextStyle(
-                          color: ThemeApp.tealButtonColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold)),
+                      TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.tealButtonColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        decorationThickness: 3,
+                      )),
                 )
               : Container(),
         )
@@ -740,7 +747,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                 indianRupeesFormat
                     .format(double.parse(model.defaultSellPrice.toString())??'0.0'),
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: 34,letterSpacing: 0.2 ,
                     fontWeight: FontWeight.w700)),
@@ -750,7 +757,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                 indianRupeesFormat
                     .format(double.parse(model.defaultMrp.toString())??'0.0'),
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.lightFontColor,
                     decoration: TextDecoration.lineThrough,letterSpacing: 0.2 ,
                     fontSize: 20,
@@ -761,7 +768,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             ), TextFieldUtils().dynamicText(
                 model.defaultDiscount.toString() + "%",
                 context,
-                TextStyle(
+                TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: 12,
                     fontWeight: FontWeight.w500)),
@@ -787,7 +794,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Available variants",
-                style: TextStyle(
+                style: TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontWeight: FontWeight.w500,
                     fontSize: height * .022)),
@@ -816,7 +823,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Product Description",
-                style: TextStyle(
+                style: TextStyle(fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 16)),
@@ -824,7 +831,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
               height: height * .01,
             ),
             Text(model.oneliner!,
-                style: TextStyle(
+                style: TextStyle(fontFamily: 'Roboto',
                   color: ThemeApp.lightFontColor,
                   // fontWeight: FontWeight.w500,
                   fontSize: 14,
@@ -902,7 +909,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   child: TextFieldUtils().dynamicText(
                       'Quantity : ',
                       context,
-                      TextStyle(
+                      TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
                           // fontWeight: FontWeight.w500,
                           fontSize: height * .023,
@@ -960,7 +967,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 left: 8.0, right: 8, top: 0, bottom: 0),
                             child: Text(
                               counterPrice.toString().padLeft(2, '0'),
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: 'Roboto',
                                   fontSize:
                                       MediaQuery.of(context).size.height * .016,
                                   fontWeight: FontWeight.w400,
@@ -1128,7 +1135,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 ),
                                 child: Text(
                                   "Add to Cart",
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: 'Roboto',
                                     fontSize:
                                         MediaQuery.of(context).size.height *
                                             .021,
@@ -1192,7 +1199,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                           bottom: 0),
                                       child: Text(
                                         counterPrice.toString().padLeft(2, '0'),
-                                        style: TextStyle(
+                                        style: TextStyle(fontFamily: 'Roboto',
                                             fontSize: MediaQuery.of(context)
                                                     .size
                                                     .height *
@@ -1452,7 +1459,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                 child: TextFieldUtils().dynamicText(
                     "OUT OF STOCK",
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.redColor,
                       fontWeight: FontWeight.w500,
                       fontSize: height * .035,

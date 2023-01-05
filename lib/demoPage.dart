@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Your news', style: TextStyle(color: Colors.white),),
+          title: const Text('Your news', style: TextStyle(fontFamily: 'Roboto',color: Colors.white),),
         ),
         body:_isFirstLoadRunning?const Center(
           child: CircularProgressIndicator(),
@@ -341,7 +341,7 @@ class _HomePageState extends State<HomePage> {
                                                 Text(
                                                     subProductList[index]
                                                         .shortName!,
-                                                    style: TextStyle(
+                                                    style: TextStyle(fontFamily: 'Roboto',
                                                         color: ThemeApp
                                                             .whiteColor,
                                                         fontSize:
@@ -361,7 +361,7 @@ class _HomePageState extends State<HomePage> {
                                                                 .defaultSellPrice ??
                                                                 0.0),
                                                         context,
-                                                        TextStyle(
+                                                        TextStyle(fontFamily: 'Roboto',
                                                             color: ThemeApp
                                                                 .whiteColor,
                                                             fontSize:
@@ -377,7 +377,7 @@ class _HomePageState extends State<HomePage> {
                                                                 .defaultMrp ??
                                                                 0.0),
                                                         context,
-                                                        TextStyle(
+                                                        TextStyle(fontFamily: 'Roboto',
                                                             color: ThemeApp
                                                                 .whiteColor,
                                                             decoration:
@@ -407,7 +407,7 @@ class _HomePageState extends State<HomePage> {
                                 child: TextFieldUtils().dynamicText(
                                     'Nothing more to load',
                                     context,
-                                    TextStyle(
+                                    TextStyle(fontFamily: 'Roboto',
                                         color: ThemeApp.blackColor,
                                         fontSize:        MediaQuery.of(context).size.height * .03,
                                         fontWeight: FontWeight.bold)),
@@ -427,7 +427,7 @@ class _HomePageState extends State<HomePage> {
                 child: TextFieldUtils().dynamicText(
                     'No Match found!',
                     context,
-                    TextStyle(
+                    TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize:       MediaQuery.of(context).size. height * .03,
                         fontWeight: FontWeight.bold)),

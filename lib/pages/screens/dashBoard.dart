@@ -90,15 +90,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // addCartList();
     data = Provider.of<HomeProvider>(context, listen: false).loadJson();
 
-/*  Map data=      {
-      "user_id":669250095,
-    "IsActiveOrderList":true,
-    "from_days_in_past":0
-    };
-
-    final box =  Provider.of<OrderBasketViewModel>(context, listen: false).getOrderBasketView(context,data);
-print("box"+box.toString());*/
-
     print(url.toString());
     final datassss = basketRepo.getOrderBasketApi(data);
     print('datassss.toString()');
@@ -119,7 +110,6 @@ print("box"+box.toString());*/
     getPincode();
     StringConstant.controllerSpeechToText.clear();
     Provider.of<HomeProvider>(context, listen: false).loadJson();
-    Provider.of<HomeProvider>(context, listen: false).loadJsonss();
   }
 
   String finalId = '';
@@ -264,20 +254,20 @@ print("box"+box.toString());*/
           preferredSize: Size.fromHeight(height * .12),
           child: appBarWidget(
               context,
-              searchBar(context),
+              searchBarWidget(),
               addressWidget(context, StringConstant.placesFromCurrentLocation),
               setState(() {})),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: data == ''
-            ? CircularProgressIndicator()
-            : ChangeNotifierProvider<DashboardViewModel>.value(
+        body:ChangeNotifierProvider<DashboardViewModel>.value(
                 value: dashboardViewModel,
-                child: Consumer<DashboardViewModel>(
+                child:  Consumer<DashboardViewModel>(
                     builder: (context, dashboardProvider, child) {
                   // print('object-------------' + provider.jsonData.toString());
-                  return Consumer<HomeProvider>(
+                  return data == ''
+                      ? CircularProgressIndicator()
+                      : Consumer<HomeProvider>(
                       builder: (context, provider, child) {
                     return (provider.jsonData.isNotEmpty &&
                             provider.jsonData['error'] == null)
@@ -376,9 +366,9 @@ print("box"+box.toString());*/
                                     ],
                                   ),
                                 )))
-                        : provider.jsonData['error'] != null
+                        : /*provider.jsonData['error'] != null
                             ? Container()
-                            : Center(child: CircularProgressIndicator());
+                            :*/ Center(child: CircularProgressIndicator());
                   });
                 }),
               ));
@@ -427,7 +417,7 @@ print("box"+box.toString());*/
                     child: TextFieldUtils().dynamicText(
                         'Products',
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: _isProductListChip
                                 ? ThemeApp.whiteColor
                                 : ThemeApp.blackColor,
@@ -469,7 +459,7 @@ print("box"+box.toString());*/
                     child: TextFieldUtils().dynamicText(
                         'Services',
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: _isServiceListChip
                                 ? ThemeApp.whiteColor
                                 : ThemeApp.blackColor,
@@ -509,7 +499,7 @@ print("box"+box.toString());*/
                     child: TextFieldUtils().dynamicText(
                         'CRM',
                         context,
-                        TextStyle(
+                        TextStyle(fontFamily: 'Roboto',
                             color: _isCRMListChip
                                 ? ThemeApp.whiteColor
                                 : ThemeApp.blackColor,
@@ -586,7 +576,7 @@ print("box"+box.toString());*/
                                     child: TextFieldUtils().dynamicText(
                                         serviceList[index].name!,
                                         context,
-                                        TextStyle(
+                                        TextStyle(fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
                                           // fontWeight: FontWeight.w500,
                                           fontSize: 13,
@@ -675,7 +665,7 @@ print("box"+box.toString());*/
                               child: TextFieldUtils().dynamicText(
                                   serviceList[index].name!,
                                   context,
-                                  TextStyle(
+                                  TextStyle(fontFamily: 'Roboto',
                                     color: ThemeApp.blackColor,
                                     // fontWeight: FontWeight.w500,
                                     fontSize: height * .02,
@@ -737,6 +727,9 @@ print("box"+box.toString());*/
                                   child: Image.asset(
                                     e["homeSliderImage"],
                                     fit: BoxFit.fill,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(Icons.image_outlined);
+                                    },
                                   ),
                                 )),
                           );
@@ -889,7 +882,7 @@ print("box"+box.toString());*/
                                             child: TextFieldUtils().dynamicText(
                                                 serviceList[index].name!,
                                                 context,
-                                                TextStyle(
+                                                TextStyle(fontFamily: 'Roboto',
                                                   color: ThemeApp.blackColor,
                                                   // fontWeight: FontWeight.w500,
                                                   fontSize: height * .02,
@@ -1052,7 +1045,7 @@ print("box"+box.toString());*/
                                             child: TextFieldUtils().dynamicText(
                                                 serviceList[index].name!,
                                                 context,
-                                                TextStyle(
+                                                TextStyle(fontFamily: 'Roboto',
                                                   color: ThemeApp.blackColor,
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: height * .021,
@@ -1081,7 +1074,7 @@ print("box"+box.toString());*/
   int indexForItems = 0;
 
   Widget stepperOfDelivery(HomeProvider value) {
-    return (value.jsonData.length > 0 && value.jsonData['status'] == 'OK')
+    return (value.jsonData.length > 0 && value.jsonData['status'] == 'OK'||value.jsonData.isNotEmpty)
         ? Container(
             // height: 300,
             height: 161,
@@ -1157,7 +1150,7 @@ print("box"+box.toString());*/
                                           overflow: TextOverflow.ellipsis,
                                           textAlign: TextAlign.start,
                                           maxLines: 2,
-                                          style: TextStyle(
+                                          style: TextStyle(fontFamily: 'Roboto',
                                               fontSize: 12,
                                               letterSpacing: -0.25,
                                               fontWeight: FontWeight.w700),
@@ -1304,7 +1297,7 @@ print("box"+box.toString());*/
                                                         context) /*Text(
                                                     serviceList[index].shortName!,
                                                     maxLines: 1,
-                                                    style: TextStyle(
+                                                    style: TextStyle(fontFamily: 'Roboto',
                                                         overflow:
                                                             TextOverflow.ellipsis,
                                                         color:
@@ -1477,7 +1470,7 @@ print("box"+box.toString());*/
                                                             .scrappedPrice ??
                                                         0.0),
                                                 context,
-                                                TextStyle(
+                                                TextStyle(fontFamily: 'Roboto',
                                                     color: ThemeApp.primaryNavyBlackColor
                                                     fontSize: height * .022,
                                                     fontWeight:
@@ -1488,7 +1481,7 @@ print("box"+box.toString());*/
                                                             .currentPrice ??
                                                         0.0),
                                                 context,
-                                                TextStyle(
+                                                TextStyle(fontFamily: 'Roboto',
                                                     color: ThemeApp.darkGreyTab,
                                                     fontSize: height * .02,
                                                     fontWeight: FontWeight.w500,
@@ -2027,7 +2020,7 @@ print("box"+box.toString());*/
                                                         context) /*Text(
                                                     serviceList[index].shortName!,
                                                     maxLines: 1,
-                                                    style: TextStyle(
+                                                    style: TextStyle(fontFamily: 'Roboto',
                                                         overflow:
                                                             TextOverflow.ellipsis,
                                                         color:
@@ -2198,7 +2191,7 @@ print("box"+box.toString());*/
                                                           .scrappedPrice ??
                                                       0.0),
                                               context,
-                                              TextStyle(
+                                              TextStyle(fontFamily: 'Roboto',
                                                   color: ThemeApp.primaryNavyBlackColor
                                                   fontSize: height * .022,
                                                   fontWeight: FontWeight.bold)),
@@ -2208,7 +2201,7 @@ print("box"+box.toString());*/
                                                           .currentPrice ??
                                                       0.0),
                                               context,
-                                              TextStyle(
+                                              TextStyle(fontFamily: 'Roboto',
                                                   color: ThemeApp.darkGreyTab,
                                                   fontSize: height * .02,
                                                   fontWeight: FontWeight.w500,
@@ -2336,7 +2329,7 @@ print("box"+box.toString());*/
                                               context) /*Text(
                                                     serviceList[index].shortName!,
                                                     maxLines: 1,
-                                                    style: TextStyle(
+                                                    style: TextStyle(fontFamily: 'Roboto',
                                                         overflow:
                                                             TextOverflow.ellipsis,
                                                         color:
@@ -2444,7 +2437,7 @@ print("box"+box.toString());*/
                                         TextFieldUtils().dynamicText(
                                             "under 9532",
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.whiteColor,
                                                 fontSize: height * .022,
                                                 fontWeight: FontWeight.bold)),
@@ -2581,7 +2574,7 @@ print("box"+box.toString());*/
                                                 productListing[index]
                                                     .currentPrice),
                                             context,
-                                            TextStyle(
+                                            TextStyle(fontFamily: 'Roboto',
                                                 color: ThemeApp.whiteColor,
                                                 fontSize: height * .022,
                                                 fontWeight: FontWeight.bold)),
