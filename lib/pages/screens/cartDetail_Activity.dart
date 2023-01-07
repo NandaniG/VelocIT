@@ -59,6 +59,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     // getListFromPref();
     getCartId();
     // dateFormat();
@@ -397,6 +398,8 @@ setState(() {
                                                 print(StringConstant
                                                     .isUserLoggedIn);
                                               }
+
+                                              
                                               if (StringConstant
                                                       .isUserLoggedIn ==
                                                   1) {
@@ -639,7 +642,7 @@ setState(() {
 
   Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
     return Container(
-        height:370,
+        height:300,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,

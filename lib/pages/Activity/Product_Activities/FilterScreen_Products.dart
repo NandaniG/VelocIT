@@ -127,7 +127,7 @@ class _FilterScreenState extends State<FilterScreen> {
     initializeList.add(
       FilterModel(
           id: 1,
-          name: "Merchants",
+          name: "Near by Merchants",
           isSelected: true,
           filterDetailList: [
             FilterDetailModel(id: 1, name: "Merchants 1", isSelected: false),

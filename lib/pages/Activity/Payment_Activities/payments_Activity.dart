@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/Core/Model/CartModels/SendCartForPaymentModel.dart';
@@ -70,7 +71,6 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
   int? _radioSelected = 3;
   String _radioVal = "";
   CardType cardType = CardType.Invalid;
-  Map<dynamic, dynamic> jsonData = {};
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -135,14 +135,31 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                       print("$r is in the range of $min and $max");
                      int UTRNumber = r;
                       print("UTRNumber " + UTRNumber.toString());
-                          Map data={
-                                    "utr_number":UTRNumber,
-                                    "user_id": widget.cartForPaymentPayload.userId,
-                                    "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
-                                    "remark":"OK",
-                                    "is_successful":true
-                                  };
-                          value.loadOrderJson(data,widget.cartForPaymentPayload.orderBasketId!);
+                      print("UTRNumber " + value.jsonData['payload']['payment_attempt_id'].toString());
+                          // Map data={
+                          //           "utr_number":UTRNumber,
+                          //           "user_id": widget.cartForPaymentPayload.userId,
+                          //           "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
+                          //           "remark":"OK",
+                          //           "is_successful":true
+                          //         };
+
+                      Map data={
+                          "payment_attempt_id":value.jsonData['payload']['payment_attempt_id'].toString(),
+                          "order_basket_id":widget.cartForPaymentPayload.orderBasketId,
+                          "utr_number":UTRNumber,
+                          "user_id":widget.cartForPaymentPayload.userId,
+                          "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
+                          "remark":"yes",
+                          "is_successful":true,
+                          "error_message":"",
+                          "payment_received_from_pg":DateTime.now().toString(),
+                          "payment_sent_to_pg":DateTime.now().toString(),
+                          "payment_status":"OK",
+                          "pg_selected":"RazorPay"
+
+                              };
+                              value.putCartForPayment(data,widget.cartForPaymentPayload.orderBasketId!);
 
                       // String jsonContents = await   CartRepository().putCartForPaymentUpdate(data,widget.cartForPaymentPayload.orderBasketId!);
 

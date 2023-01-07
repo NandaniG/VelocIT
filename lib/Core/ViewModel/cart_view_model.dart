@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/constants.dart';
+import '../AppConstant/apiMapping.dart';
 import '../Model/CartModels/AddressListModel.dart';
 import '../Model/CartModels/CartCreateRetrieveModel.dart';
 import '../Model/CartModels/CartSpecificIDForEmbeddedModel.dart';
@@ -11,7 +12,7 @@ import '../Model/CartModels/CartSpecificIdModel.dart';
 import '../Model/CartModels/SendCartForPaymentModel.dart';
 import '../data/responses/api_response.dart';
 import '../repository/cart_repository.dart';
-
+import 'package:http/http.dart'as http;
 class CartViewModel with ChangeNotifier {
   final _myRepo = CartRepository();
 
@@ -86,4 +87,49 @@ class CartViewModel with ChangeNotifier {
       getAddressForPayment(ApiResponse.error(error.toString()));
     });
   }
+  ///
+  Map<dynamic, dynamic> jsonChangeAddressData = {};
+
+  loadAddressJson(String consumerUID, String addressId) async {
+    try {
+      String jsonContents = await setSecondDefaultAddress(consumerUID, addressId);
+
+      jsonChangeAddressData = jsonContents as Map;
+      print(
+          "___________.loadAddressJson____________________");
+      print(jsonChangeAddressData.toString());
+
+      notifyListeners();
+    } catch (e) {
+      print("Error in loadJson: $e");
+      return {};
+    }
+  }
+  Future setSecondDefaultAddress(String consumerUID, String addressId) async {
+
+
+    // var url = "/user/130/defaultAddress?addressid=42";
+    var url = "/user/$consumerUID/defaultAddress?addressid=$addressId";
+
+    var requestUrl = ApiMapping.baseAPI + url;
+
+    print("setSecondDefaultAddress" + requestUrl.toString());
+
+    // String body = json.encode(data);
+    // print("setSecondDefaultAddress" + body.toString());
+
+    try {
+      dynamic reply;
+      http.Response response = await http.post(Uri.parse(requestUrl),
+          headers: {'content-type': 'application/json'});
+      print("response setSecondDefaultAddress" + response.body.toString());
+      jsonChangeAddressData = json.decode(response.body);
+      return reply;
+
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
 }

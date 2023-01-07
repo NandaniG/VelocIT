@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
@@ -80,7 +81,17 @@ class _OTPScreenState extends State<OTPScreen> {
                 const EdgeInsets.only(left: 30, right: 30, top: 0, bottom: 40),
             child: ListView(
               children: [
-                Container(
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(122,50,121,46),
+                  child: SvgPicture.asset(
+                    'assets/appImages/new_app_icon.svg',
+                    // color: ThemeApp.primaryNavyBlackColor,
+                    semanticsLabel: 'Acme Logo',
+
+                    height:40,width: 132,
+                  ),
+                ),
+           /*     Container(
                   // group796Z38 (213:207)
 
                   width: double.infinity,
@@ -90,10 +101,8 @@ class _OTPScreenState extends State<OTPScreen> {
                     width: double.infinity,
                     height: 70,
                   ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * .04,
-                ),
+                ),*/
+
                 TextFieldUtils().textFieldHeightThree(
                     StringUtils.verification, context),
                 const SizedBox(

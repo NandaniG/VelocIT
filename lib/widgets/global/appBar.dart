@@ -982,8 +982,16 @@ Widget bottomNavigationBarWidget(BuildContext context) {
               //       return ScannerWidget(state: controller.state);
               //     });
             },
-            child: const Icon(Icons.document_scanner_outlined,
-                color: ThemeApp.whiteColor),
+            child:  SvgPicture.asset(
+              'assets/appImages/bottomApp/scanIcon.svg',
+              color: ThemeApp.whiteColor,
+              semanticsLabel: 'Acme Logo',
+              width: 29,
+              height: 29,
+
+              // height: height * .03,
+            ),/*   child: const Icon(Icons.document_scanner_outlined,
+                color: ThemeApp.whiteColor),*/
           ),
         ),
       ),

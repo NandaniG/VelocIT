@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +30,7 @@ import '../../../widgets/global/textFormFields.dart';
 import '../../screens/dashBoard.dart';
 import '../../screens/cartDetail_Activity.dart';
 import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
+import 'ImageZoomWidget.dart';
 
 class ProductDetailsActivity extends StatefulWidget {
   // List<ProductList>? productList;
@@ -357,15 +359,18 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                         child: Container(
                                               width: width,
                                               color: Colors.white,
-                                              child: Image.network(
-                                                      e.imageUrl ?? "",
-                                                      fit: BoxFit.fill,
-                                                      errorBuilder: ((context,
-                                                          error, stackTrace) {
-                                                    return Icon(
-                                                        Icons.image_outlined);
-                                                  })) ??
-                                                  SizedBox(),
+                                              child: InstaImageViewer(
+
+                                                child: Image.network(
+                                                        e.imageUrl ?? "",
+                                                        fit: BoxFit.fill,
+                                                        errorBuilder: ((context,
+                                                            error, stackTrace) {
+                                                      return Icon(
+                                                          Icons.image_outlined);
+                                                    })) ??
+                                                    SizedBox(),
+                                              ),
                                             ) ??
                                             SizedBox()),
                                   ) ??
@@ -868,14 +873,14 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   child: Container(
                         // width: width * 0.24,
                         decoration: const BoxDecoration(
-                            color: ThemeApp.greenappcolor,
+                            color: ThemeApp.whiteColor,
                             borderRadius: BorderRadius.all(Radius.circular(8))),
                         child: ClipRRect(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
                           child: Image.network(
                                   // width: double.infinity,
-                                  model.imageUrls![index].imageUrl! ?? "",
+                                  model.imageUrls![index].imageUrl ?? "",
                                   fit: BoxFit.fill,
                                   height:
                                       MediaQuery.of(context).size.height * .05,

@@ -7,6 +7,7 @@ import 'package:velocit/utils/routes/routes.dart';
 
 import '../../pages/auth/Sign_Up.dart';
 import '../../pages/auth/sign_in.dart';
+import '../../pages/screens/launch_Screen.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {

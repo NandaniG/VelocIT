@@ -263,13 +263,21 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
   }
   Widget subListOfCategories(ProductList productList) {
     return Container(
-        height: 100,
+        height: 300, width: double.infinity,
         alignment: Alignment.center,
         color: ThemeApp.whiteColor,
-        child: ListView.builder(
+        child: /*ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
+          itemCount: productList!.simpleSubCats!.length,*/
+        GridView.builder(
           itemCount: productList!.simpleSubCats!.length,
+          scrollDirection: Axis.vertical,
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 150,
+              childAspectRatio: 3 / 2.5,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20),
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
               onTap: () {
@@ -281,7 +289,8 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0, bottom: 8),
                 child: Container(
-                    width: width * .25,
+                    // width: width * .25,
+                    width: 98,height: 59,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),

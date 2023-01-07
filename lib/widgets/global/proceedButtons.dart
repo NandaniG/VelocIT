@@ -8,7 +8,7 @@ Widget proceedButton(String name, Color color, BuildContext context,
     onTap: onTap,
     child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
             Radius.circular(100),

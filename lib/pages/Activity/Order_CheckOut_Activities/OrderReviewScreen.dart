@@ -134,6 +134,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                       print("Api calll");
                       CartForPaymentPayload cartForPaymentPayload =
                           cartProvider.sendCartForPayment.data!.payload!;
+                      print("cartForPaymentPayload "+cartForPaymentPayload.toString());
 
                       List<CartOrdersForPurchase> cartOrderPurchase =
                           cartProvider.sendCartForPayment.data!.payload!.cart!
@@ -354,7 +355,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                             // mainAxisAlignment: MainAxisAlignment.start,
                             // crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              stepperWidget(),
+                              StepperGlobalWidget(),
+                              // stepperWidget(),
                               Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Column(
@@ -2508,6 +2510,9 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                 "${addressList[index].name!}";
                                             StringConstant.selectedFullAddress =
                                                 "${addressList[index].addressLine1!}, ${addressList[index].addressLine2}, ${addressList[index].stateName},\n ${addressList[index].cityName}, ${addressList[index].pincode}";
+
+                                            // cartViewModel.loadAddressJson(widget.cartForPaymentPayload!.userId.toString(), addressList[index].id.toString());
+                                            cartViewModel.loadAddressJson('130', '42');
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.only(bottom: 15),
@@ -2808,7 +2813,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                     MaterialPageRoute(
                                       builder: (context) => OrderReviewActivity(
                                         cartId: widget
-                                            .cartForPaymentPayload!.cartId!,
+                                            .cartForPaymentPayload!.cartId??0,
                                       ),
                                     ),
                                   )
@@ -2973,7 +2978,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
         .selectedFullAddress);
 
     print("selected Address " +
-    StringConstant
+    StringConstantF
         .selectedFullAddress);
     });
     }),

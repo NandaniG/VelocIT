@@ -184,7 +184,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                     width: 70,
                     child: FloatingActionButton(
                       child: Icon(isListen ? Icons.mic : Icons.mic_none,
-                          color: isListen ? Colors.redAccent : Colors.black,
+                          color: isListen ? Colors.redAccent : Colors.white,
                           size: 50),
                       onPressed: () {
                         listen(dashboardViewModel);

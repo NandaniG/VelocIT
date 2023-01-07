@@ -21,6 +21,7 @@ import 'package:velocit/pages/Activity/Product_Activities/Products_List.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
+import 'package:velocit/pages/screens/launch_Screen.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 import 'package:velocit/services/providers/cart_Provider.dart';
 import 'package:velocit/utils/constants.dart';
@@ -210,7 +211,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class SplashScreen extends StatefulWidget {
+/*class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -327,7 +328,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: TextFieldUtils().circularBar(context)),
     );
   }
-}
+}*/
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 

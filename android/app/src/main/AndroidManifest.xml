@@ -23,7 +23,7 @@
         android:requestLegacyExternalStorage="true"
         android:label="velocit"
         android:name="${applicationName}"
-        android:icon="@mipmap/img">
+        android:icon="@mipmap/velocit_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -39,7 +39,10 @@
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
-              />
+              />    <meta-data
+            android:name="io.flutter.embedding.android.SplashScreenDrawable"
+            android:resource="@drawable/launch_background"
+            />
             <!-- App Links -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
@@ -18,9 +19,11 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  TextEditingController email = TextEditingController();
+  TextEditingController registerEmail = TextEditingController();
   bool _validateEmail = false;
   final _formKey = GlobalKey<FormState>();
+  TextEditingController email = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             key: _formKey,
             child: ListView(
               children: [
-                Container(
+                /*   Container(
                   // group796Z38 (213:207)
 
                   width: double.infinity,
@@ -53,31 +56,94 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     width: double.infinity,
                     height: 70,
                   ),
+                ),*/
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(122, 3, 121, 36),
+                  child: SvgPicture.asset(
+                    'assets/appImages/new_app_icon.svg',
+                    // color: ThemeApp.primaryNavyBlackColor,
+                    semanticsLabel: 'Acme Logo',
+
+                    height: 40, width: 132,
+                  ),
+                ),
+                // SizedBox(
+                //   height: MediaQuery.of(context).size.height * .04,
+                // ),
+
+                Text(
+                  StringUtils.forgotPassword,
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 20,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.w400,
+                      color: ThemeApp.primaryNavyBlackColor),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * .04,
+                  height: 8,
                 ),
-                TextFieldUtils()
-                    .textFieldHeightThree(StringUtils.forgotPassword, context),
-                const SizedBox(
-                  height: 5,
+                // Text(StringUtils!.helloWorld);
+                Text(
+                  StringUtils.forgotPasswordSubHeading,
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 14,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.w400,
+                      color: ThemeApp.primaryNavyBlackColor),
                 ),
-                TextFieldUtils().subHeadingTextFields(
-                    StringUtils.forgotPasswordSubHeading, context),
+
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * .1,
+                  height:81,
                 ),
-                TextFieldUtils().asteriskTextField(
-                    StringUtils.registeredEmailAddress, context),
+        /*        TextFieldUtils().asteriskTextField("Email ID", context),
                 TextFormFieldsWidget(
                     errorText: StringUtils.emailError,
                     textInputType: TextInputType.emailAddress,
                     controller: email,
                     autoValidation: AutovalidateMode.onUserInteraction,
-                    hintText: StringUtils.email,
+                    hintText: StringUtils.emailAddress,
                     onChange: (val) {
                       setState(() {
                         if (val.isEmpty && email.text.isEmpty) {
+                          _validateEmail = true;
+                        } else if (!StringConstant().isEmail(val)) {
+                          _validateEmail = true;
+                        } else {
+                          _validateEmail = false;
+                        }
+                      });
+                    },
+                    validator: (value) {
+                      if (value.isEmpty && email.text.isEmpty) {
+                        _validateEmail = true;
+                        return StringUtils.emailError;
+                      } else if (!StringConstant().isEmail(value)) {
+                        _validateEmail = true;
+                        return StringUtils.emailError;
+                      } else {
+                        _validateEmail = false;
+                      }
+                      return null;
+                    }),*/
+               /* TextFieldUtils()
+                    .asteriskTextField(StringUtils.mobileNumber, context),
+                MobileNumberTextFormField(
+                  controller: mobileController,
+                  enable: true,
+                ),*/
+                TextFieldUtils().asteriskTextField(
+                    StringUtils.registeredEmailAddress, context),
+                TextFormFieldsWidget(
+                    errorText: StringUtils.emailError,
+                    textInputType: TextInputType.emailAddress,
+                    controller: registerEmail,
+                    autoValidation: AutovalidateMode.onUserInteraction,
+                    hintText: StringUtils.email,
+                    onChange: (val) {
+                      setState(() {
+                        if (val.isEmpty && registerEmail.text.isEmpty) {
                           _validateEmail = true;
                         } else if (!StringConstant().isEmail(val) &&
                             !StringConstant().isPhone(val)) {
@@ -88,7 +154,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       });
                     },
                     validator: (value) {
-                      if (value.isEmpty && email.text.isEmpty) {
+                      if (value.isEmpty && registerEmail.text.isEmpty) {
                         _validateEmail = true;
                         return StringUtils.validateRegisteredEmail;
                       } else if (!StringConstant().isEmail(value) &&
@@ -106,7 +172,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 proceedButton(StringUtils.resetPassword,
                     ThemeApp.tealButtonColor, context, false, () {
                   if (_formKey.currentState!.validate() &&
-                      email.text.isNotEmpty) {
+                      registerEmail.text.isNotEmpty) {
                     // Navigator.of(context).push(
                     //   MaterialPageRoute(
                     //     builder: (context) => SignIn_Screen(),
@@ -115,11 +181,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return ForgotSuccessDialog(text:  email.text);
+                          return ForgotSuccessDialog(text: registerEmail.text);
                         });
                   } else {
                     Utils.errorToast('Please enter valid Details.');
-
                   }
                   // Navigator.of(context).push(
                   //   MaterialPageRoute(
@@ -138,7 +203,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
 class ForgotSuccessDialog extends StatefulWidget {
   final String text;
-  ForgotSuccessDialog({required this.text });
+
+  ForgotSuccessDialog({required this.text});
 
   @override
   State<ForgotSuccessDialog> createState() => _ForgotSuccessDialogState();
@@ -149,9 +215,9 @@ class _ForgotSuccessDialogState extends State<ForgotSuccessDialog> {
     {
       return ConstrainedBox(
         constraints: BoxConstraints(
-          minHeight: 70.0,
-          maxHeight: 420.0,
-          maxWidth: MediaQuery.of(context).size.width,
+          minHeight: 300.0,
+          maxHeight: 350.0,
+          maxWidth: 330,
         ),
         child: Container(
           padding: EdgeInsets.all(20),
@@ -177,48 +243,47 @@ class _ForgotSuccessDialogState extends State<ForgotSuccessDialog> {
                   children: [
                     // SizedBox(height: MediaQuery.of(context).size.height * .025,),
                     Container(
-                      // group796Z38 (213:207)
-
-                      width: double.infinity,
+                      width: 97,
                       // height: 70,
                       child: Image.asset(
                         'assets/appImages/passwordResetIcon.png',
                         width: double.infinity,
-                        height: 100,
+                        height: 97,
                       ),
                     ),
-                    TextFieldUtils().dynamicText(
-                        'Password Reset Successfully',
-                        context,
-                        TextStyle(fontFamily: 'Roboto',
+                    SizedBox(
+                      height: 11,
+                    ),
+                    Text('Password Reset Successfully',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: MediaQuery.of(context).size.height * .028,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
                         )),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .02,
+                      height: 8,
                     ),
-
                     Center(
                       child: Text(
                           'We have sent a temporary password to your registered email address "${widget.text}"',
-                          style: TextStyle(fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            // fontWeight: FontWeight.w400,
-                            fontSize: MediaQuery.of(context).size.height * .022,
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            color: ThemeApp.primaryNavyBlackColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
                           ),
                           textAlign: TextAlign.center),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .07,
+                      height: 40,
                     ),
                     proceedButton(
-                        'Sign In Now', ThemeApp.tealButtonColor, context, false, () {
+                        'Sign In Now', ThemeApp.tealButtonColor, context, false,
+                        () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) =>
-                          SignIn_Screen()
-                        ),
+                            builder: (context) => SignIn_Screen()),
                       );
                     })
                   ],

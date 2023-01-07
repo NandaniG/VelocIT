@@ -59,7 +59,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 stepperWidget(),
-SizedBox(height: 64,),
+SizedBox(height: 44,),
                 SvgPicture.asset(
                   'assets/appImages/successIcon.svg',
                   color: ThemeApp
@@ -96,7 +96,7 @@ SizedBox(height: 64,),
                 ),
 
                 TextFieldUtils().dynamicText(
-                    '${StringUtils.orderId + ": ${value.jsonData['payload']['invoice_no'].toString()}"}',
+                    '${StringUtils.orderId + ": ${value.jsonData['payload']['order_basket_id'].toString()}"}',
                 context,
                     TextStyle(fontFamily: 'Roboto',
                         color: ThemeApp.whiteColor,

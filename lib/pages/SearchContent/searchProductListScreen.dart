@@ -482,7 +482,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                           child: Image.network(
                                             searchProductList[index]
                                                 .imageUrls![0]
-                                                .imageUrl!,
+                                                .imageUrl!??"",
                                             fit: BoxFit.fill,
                                             errorBuilder: ((context, error, stackTrace) {
                                               return Icon(Icons.image_outlined);

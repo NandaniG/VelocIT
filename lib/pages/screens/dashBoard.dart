@@ -26,6 +26,7 @@ import '../../Core/repository/cart_repository.dart';
 import '../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../services/models/demoModel.dart';
 import '../../services/providers/Home_Provider.dart';
+import '../../services/providers/Products_provider.dart';
 import '../../utils/StringUtils.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
@@ -40,6 +41,7 @@ import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart
 import '../Activity/Merchant_Near_Activities/merchant_Activity.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
 import '../Activity/Product_Activities/ProductDetails_activity.dart';
+import '../Activity/Product_Activities/Products_List.dart';
 import '../Activity/ServicesFormScreen.dart';
 import 'offers_Activity.dart';
 
@@ -152,7 +154,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       } else {
         print("RandomUserLoginId empty");
         // ID = StringConstant.UserLoginId;
-        ID = StringConstant.RandomUserLoginId;
+        ID = StringConstant.UserLoginId;
       }
       // 715223688
       finalId = ID.toString();
@@ -289,15 +291,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       SizedBox(
                                         height: height * .02,
                                       ),
-                                      productList(),
+                                    /*  productList(),
                                       SizedBox(
                                         height: height * .02,
-                                      ),
+                                      ),*/
                                       imageLists(provider),
                                       SizedBox(
                                         height: height * .02,
                                       ),
-
+                                      stepperOfDelivery(provider),
+                                      SizedBox(
+                                        height: 20,
+                                      ),   productDetailsUI(),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
                                       /*    listOfShopByCategories(),
                                 SizedBox(
                                   height:
@@ -309,10 +317,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   height:
                                       MediaQuery.of(context).size.height * .02,
                                 ),*/
-                                      stepperOfDelivery(provider),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
+
                                       TextFieldUtils().headingTextField(
                                           StringUtils.recommendedForYou,
                                           context),
@@ -604,7 +609,308 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       child: Text("sakdjsak"),
     );
+  }  int selected = 0;
+
+  Widget productDetailsUI(){
+
+ return ChangeNotifierProvider<DashboardViewModel>.value(
+     value: productCategories,
+     child: Consumer<DashboardViewModel>(
+         builder: (context, productCategories, child) {
+           switch (productCategories.productCategoryList.status) {
+             case Status.LOADING:
+               if (kDebugMode) {
+                 print("Api load");
+               }
+               return ProgressIndicatorLoader(true);
+
+             case Status.ERROR:
+               if (kDebugMode) {
+                 print("Api error");
+               }
+               return Text(
+                   productCategories.productCategoryList.message.toString());
+
+             case Status.COMPLETED:
+               if (kDebugMode) {
+                 print("Api calll");
+               }
+
+               List<ProductList>? serviceList =
+                   productCategories.productCategoryList.data!.productList;
+
+               return Container(
+       // padding: const EdgeInsets.all(10),
+       child: Column(
+           mainAxisAlignment: MainAxisAlignment.start,
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+
+             TextFieldUtils()
+                 .headingTextField('Shop by Categories', context),
+             SizedBox(
+               height: height * .02,
+             ),
+             ListView.builder(
+               key: Key('builder ${selected.toString()}'),
+               shrinkWrap: true,
+               physics: const NeverScrollableScrollPhysics(),
+               itemCount: serviceList!.length,
+               itemBuilder: (context, index) {
+                 return Card(
+                   shape: RoundedRectangleBorder(
+                     borderRadius: BorderRadius.circular(10),
+                   ),
+                   margin: const EdgeInsets.symmetric(
+                       horizontal: 5, vertical: 5),
+                   child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.center,
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: <Widget>[
+                         ExpansionTile(
+                           key: Key(index.toString()),
+                           onExpansionChanged: ((newState) {
+                             if (newState) {
+                               setState(() {
+                                 const Duration(seconds: 20000);
+                                 selected = index;
+                               });
+                             } else {
+                               setState(() {
+                                 selected = -1;
+                               });
+                             }
+                           }),
+                           initiallyExpanded: index == selected,
+                           trailing:index == selected?Icon(
+                             Icons.arrow_drop_up,
+                             color: ThemeApp.textFieldBorderColor,
+                             size: height * .05,
+                           ): Icon(
+                             Icons.arrow_drop_down,
+                             color: ThemeApp.textFieldBorderColor,
+                             size: height * .05,
+                           ),
+                           tilePadding: const EdgeInsets.symmetric(
+                               horizontal: 20, vertical: 2),
+                           childrenPadding: const EdgeInsets.symmetric(
+                               horizontal: 20, vertical: 10),
+                           textColor: Colors.black,
+                           title: Row(
+                             children: [
+                               CircleAvatar(
+                                 child: ClipRRect(
+                                   borderRadius: const BorderRadius.all(
+                                       Radius.circular(50)),
+                                   child: Image.network(
+                                     serviceList[index]
+                                         .productCategoryImageId!,
+                                     fit: BoxFit.fill,
+                                     height: MediaQuery.of(context)
+                                         .size
+                                         .height *
+                                         .07,
+                                   ),
+                                 ),
+                               ),
+                               SizedBox(
+                                 width: width * .03,
+                               ),
+                               categoryListFont(
+                                   serviceList[index].name!,
+                                   context)
+                             ],
+                           ),
+                           expandedAlignment: Alignment.centerLeft,
+                           expandedCrossAxisAlignment:
+                           CrossAxisAlignment.start,
+                           children: [
+                             subListOfCategories(
+                                 serviceList[index])
+                           ],
+                         ),
+                       ]),
+                 );
+               },
+             )
+           ]),
+     );
+             default:
+               return Text("No Data found!");
+           }
+           return Text("No Data found!");
+         }));}
+
+  Widget categoryListFont(String text, BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(fontFamily: 'Roboto',
+          fontSize: 16,
+          overflow: TextOverflow.ellipsis,
+          fontWeight: FontWeight.w700,letterSpacing:-0.25 ,color: ThemeApp.primaryNavyBlackColor
+      ),
+    );
   }
+
+  Widget subCategoryListFont(String text, BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(fontFamily: 'Roboto',
+          fontSize: 13,
+          overflow: TextOverflow.ellipsis,
+          fontWeight: FontWeight.w500,letterSpacing:-0.25 ,color: ThemeApp.primaryNavyBlackColor
+      ),
+    );
+  }
+
+  Widget subListOfCategories(ProductList productList) {
+    return Container(
+        height: 200,
+        // height: 200,
+        width: double.infinity,
+        alignment: Alignment.center,
+        color: ThemeApp.whiteColor,
+        child: /*ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: productList!.simpleSubCats!.length,*/
+        GridView.builder(
+          itemCount: productList!.simpleSubCats!.length,
+          scrollDirection: Axis.vertical,
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 150,
+              childAspectRatio: 3 / 2.5,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20),
+          itemBuilder: (BuildContext context, int index) {
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProductListByCategoryActivity(
+                      productList: productList!.simpleSubCats![index]),
+                ));
+              },
+              // child: Padding(
+                // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+                child: Container(
+                  // width: width * .25,
+                    width: 98,height: 59,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: ThemeApp.containerColor, width: 1.5),
+                        color: ThemeApp.containerColor),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(productList
+                                .simpleSubCats![index].imageUrl!),
+                          ) ??
+                              SizedBox(),
+                          /* ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(50)),
+                          child: Image.network(
+                            productList.simpleSubCats![index]
+                                .imageUrl! ??
+                                '',
+                            fit: BoxFit.fill,
+                            height:
+                            MediaQuery.of(context).size.height *
+                                .07,
+                          )??SizedBox(),
+                        ),*/
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: subCategoryListFont(
+                                productList.simpleSubCats![index].name!,
+                                context),
+                          ),
+                        )
+                      ],
+                    )),
+              // ),
+            );
+          },
+        ));
+
+    /*Container(
+        height: 200,
+        alignment: Alignment.center,color: ThemeApp.whiteColor,
+        child: GridView.builder(
+          itemCount: productList!.simpleSubCats!.length,
+          physics: const AlwaysScrollableScrollPhysics(),
+          gridDelegate:
+          const SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1.5,
+            crossAxisCount: 3,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProductListByCategoryActivity(
+                      productList: productList!.simpleSubCats![index]),
+                ));
+              },
+              child: Container(
+                  padding: const EdgeInsets.all(3.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: ThemeApp.containerColor,
+                        width: 1.5),color: ThemeApp.containerColor
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(50)),
+                          child: Image.network(
+                            productList.simpleSubCats![index]
+                                .imageUrl! ??
+                                '',
+                            fit: BoxFit.fill,
+                            height:
+                            MediaQuery.of(context).size.height *
+                                .07,
+                          )??SizedBox(),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: TextFieldUtils().dynamicText(
+                              productList.simpleSubCats![index].name!,
+                              context,
+                              TextStyle(fontFamily: 'Roboto',
+                                color: ThemeApp.blackColor,
+                                // fontWeight: FontWeight.w500,
+                                fontSize: height * .02,
+                              )),
+                        ),
+                      )
+                    ],
+                  )),
+            );
+          },
+        ));*/
+  }
+
 
   Widget serviceList() {
     return ChangeNotifierProvider<DashboardViewModel>.value(
@@ -695,11 +1001,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget imageLists(HomeProvider provider) {
-    return provider.jsonData.isNotEmpty
-        ? FutureBuilder(
+    return data == ''
+        ? CircularProgressIndicator(): FutureBuilder(
             future: provider.homeImageSliderService(),
             builder: (context, snapShot) {
-              return Container(
+              return (provider.homeSliderList !=null)
+                  ? Container(
                   height: (MediaQuery.of(context).orientation ==
                           Orientation.landscape)
                       ? height * .5
@@ -733,16 +1040,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 )),
                           );
-                        }).toList(),
+                        }).toList()??'',
                         options: CarouselOptions(
                             autoPlay: false,
                             viewportFraction: 1,
                             height: height * .3),
                       ),
                     ],
-                  ));
+                  )):SizedBox();
             })
-        : TextFieldUtils().circularBar(context);
+        ;
   }
 
 /*
@@ -1327,7 +1634,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                             context),
 
                                                     TextFieldUtils()
-                                                        .listPriceHeadingTextField(
+                                                        .listScratchPriceHeadingTextField(
                                                             indianRupeesFormat
                                                                 .format(serviceList[
                                                                             index]
@@ -2050,7 +2357,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                             context),
 
                                                     TextFieldUtils()
-                                                        .listPriceHeadingTextField(
+                                                        .listScratchPriceHeadingTextField(
                                                             indianRupeesFormat
                                                                 .format(serviceList[
                                                                             index]
@@ -2356,7 +2663,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   context),
 
                                           TextFieldUtils()
-                                              .listPriceHeadingTextField(
+                                              .listScratchPriceHeadingTextField(
                                                   indianRupeesFormat.format(
                                                       serviceList[index]
                                                               .defaultMrp ??

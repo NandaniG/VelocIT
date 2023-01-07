@@ -72,6 +72,7 @@ class AuthRepository {
     Map<String, dynamic> map = jsonDecode(rawJson);
     int id = map['id'];
     String message = map['message'];
+    Utils.successToast(rawJson.toString());
 
     if (response.statusCode == 200) {
       print(responseJson.toString());
