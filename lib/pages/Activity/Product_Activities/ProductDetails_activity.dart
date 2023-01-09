@@ -101,7 +101,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
     StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
     StringConstant.RandomUserLoginId =
-        (prefs.getString('isRandomUserId')) ?? '';
+        (prefs.getString('RandomUserId')) ?? '';
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
 
@@ -130,16 +130,17 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     CartRepository().updateCartPostRequest(data, context);
     cartListView
         .cartSpecificIDWithGet(context, StringConstant.UserCartID);
+
     Utils.successToast('Added Successfully!');
     setState(() {
       // prefs.setString(
       //   'setBadgeCountPref',
       //   quantity.toString(),
       // );
-
       StringConstant.BadgeCounterValue =
           (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
+
     });
   }
 

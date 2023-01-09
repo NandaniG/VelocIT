@@ -7,6 +7,7 @@ import 'package:velocit/Core/Model/CartModels/SendCartForPaymentModel.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 
+import '../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../services/providers/Home_Provider.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
@@ -35,7 +36,8 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
     // TODO: implement initState
 // print("orderData vdnvkd"+orderData.toString());
   super.initState();
-  }
+  }  DashboardViewModel dashboardViewModel = DashboardViewModel();
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -49,79 +51,81 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
         context, appTitle(context, "Order Checkout"), SizedBox()),
       ),
       body:SafeArea(
-        child:Consumer<HomeProvider>(builder: (context, value, child) {
-            return  (value.jsonData.isNotEmpty &&
-                value.jsonData['error'] == null) ?Container(
+        child:ChangeNotifierProvider<DashboardViewModel>.value(
+          value: dashboardViewModel,
+          child: Consumer<HomeProvider>(builder: (context, value, child) {
+              return  (value.jsonData['payload']!=null) ?Container(
     color: ThemeApp.appColor,
     width: width,
     child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                stepperWidget(),
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  stepperWidget(),
 SizedBox(height: 44,),
-                SvgPicture.asset(
-                  'assets/appImages/successIcon.svg',
-                  color: ThemeApp
-                      .whiteColor,
-                  semanticsLabel:
-                  'Acme Logo',
+                  SvgPicture.asset(
+                    'assets/appImages/successIcon.svg',
+                    color: ThemeApp
+                        .whiteColor,
+                    semanticsLabel:
+                    'Acme Logo',
 
-                  height: 68,
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-
-                TextFieldUtils().dynamicText(
-                    StringUtils.orderPlacedSuccessfully,
-                    context,
-                    TextStyle(fontFamily: 'Roboto',
-                        color: ThemeApp.whiteColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,letterSpacing: -0.25 )),
-                SizedBox(
-                  height: 5,
-                ),
-
-                TextFieldUtils().dynamicText(
-                    StringUtils.thankyouForOrderingWithUs,
-                    context,
-                    TextStyle(fontFamily: 'Roboto',
-                        color: ThemeApp.whiteColor,
-                        fontSize:14,
-                        fontWeight: FontWeight.w400)),
-                SizedBox(
-                  height: 32,
-                ),
-
-                TextFieldUtils().dynamicText(
-                    '${StringUtils.orderId + ": ${value.jsonData['payload']['order_basket_id'].toString()}"}',
-                context,
-                    TextStyle(fontFamily: 'Roboto',
-                        color: ThemeApp.whiteColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700)),
-                SizedBox(
-                  height: height * 0.04,
-                ),
-                Container(
-                  height: 137,
-                  width: 137,
-                  child: Image.asset(
-                    'assets/images/qr_test_image.png',
-                    // scale: 2,
-
+                    height: 68,
                   ),
-                ),
-                SizedBox(
-                  height: 32,
-                ),
+                  SizedBox(
+                    height: 30,
+                  ),
 
-                buttonsForOrderAndShipping(),
-              ]),
-            ):SizedBox();
-          }
+                  TextFieldUtils().dynamicText(
+                      StringUtils.orderPlacedSuccessfully,
+                      context,
+                      TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.whiteColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,letterSpacing: -0.25 )),
+                  SizedBox(
+                    height: 5,
+                  ),
+
+                  TextFieldUtils().dynamicText(
+                      StringUtils.thankyouForOrderingWithUs,
+                      context,
+                      TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.whiteColor,
+                          fontSize:14,
+                          fontWeight: FontWeight.w400)),
+                  SizedBox(
+                    height: 32,
+                  ),
+
+                  TextFieldUtils().dynamicText(
+                      '${StringUtils.orderId + ": ${value.jsonData['payload']['order_basket_id'].toString()??''}"}',
+                  context,
+                      TextStyle(fontFamily: 'Roboto',
+                          color: ThemeApp.whiteColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700)),
+                  SizedBox(
+                    height: height * 0.04,
+                  ),
+                  Container(
+                    height: 137,
+                    width: 137,
+                    child: Image.asset(
+                      'assets/images/qr_test_image.png',
+                      // scale: 2,
+
+                    ),
+                  ),
+                  SizedBox(
+                    height: 32,
+                  ),
+
+                  buttonsForOrderAndShipping(),
+                ]),
+              ):SizedBox();
+            }
+          ),
         ),
       ),
     );

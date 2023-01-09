@@ -85,7 +85,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                     textInputType: TextInputType.text,
                     controller: value.cardHolderNameController,
                     autoValidation: AutovalidateMode.onUserInteraction,
-                    hintText: 'David Wong',
+                    hintText: 'Type your name',
                     onChange: (val) {},
                     validator: (value) {
                       return null;
@@ -330,7 +330,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                     textInputType: TextInputType.text,
                     controller: cardHolderNameController,
                     autoValidation: AutovalidateMode.onUserInteraction,
-                    hintText: 'David Wong',
+                    hintText: 'Type your name',
                     onChange: (val) {},
                     validator: (value) {
                       return null;

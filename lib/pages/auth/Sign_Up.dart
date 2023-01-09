@@ -20,6 +20,7 @@ import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/textFormFields.dart';
 import 'forgot_password.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -41,12 +42,14 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   bool _validateName = false;
   bool _validateEmail = false;
+  bool _validateMobile = false;
   bool _validateEmailOtp = false;
   bool _validatePassword = false;
   bool _validateConfirmPassword = false;
   double height = 0.0;
   double width = 0.0;
   bool isTermSelected = false;
+  var isTermError = '';
 
   @override
   Widget build(BuildContext context) {
@@ -102,17 +105,18 @@ class _SignUpState extends State<SignUp> {
                             color: ThemeApp.primaryNavyBlackColor),
                       ),
                       SizedBox(
-                        height: 8,
+                        height: 9,
                       ),
                       // Text(StringUtils!.helloWorld);
-            Text(
-              'Signup to continue',
-              style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 14,
-                  overflow: TextOverflow.ellipsis,
-                  fontWeight: FontWeight.w400,
-                  color: ThemeApp.primaryNavyBlackColor),),
+                      Text(
+                        'Signup to continue',
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 14,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: FontWeight.w400,
+                            color: ThemeApp.primaryNavyBlackColor),
+                      ),
                       SizedBox(
                         height: 33,
                       ),
@@ -120,15 +124,12 @@ class _SignUpState extends State<SignUp> {
                       SizedBox(
                         height: 20,
                       ),
-                      mobileNumber(),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .02,
-                      ),
+
                       TextFieldUtils()
                           .asteriskTextField(StringUtils.emailAddress, context),
 
-                      TextFormFieldsWidget(
-                          errorText: StringUtils.emailError,
+                      EmailTextFormFieldsWidget(
+                          errorText: StringUtils.validEmailError,
                           textInputType: TextInputType.emailAddress,
                           controller: email,
                           autoValidation: AutovalidateMode.onUserInteraction,
@@ -156,13 +157,14 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           }),
-
-                      const SizedBox(
-                        height: 0,
-                      ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * .02,
+                        height: 20,
                       ),
+                      mobileNumber(),
+                      SizedBox(
+                        height: 20,
+                      ),
+
                       Row(
                         children: [
                           TextFieldUtils()
@@ -173,20 +175,19 @@ class _SignUpState extends State<SignUp> {
                           Tooltip(
                             key: tooltipkey,
                             message:
-                                'Enter Password that must be\n(i) 8-16 characters long\n(ii) Must contain a number\n(iii) Must contain a capital and small letter\n(iv)Must contain a special character',
+                                'Enter Password that must be\no 8-16 characters long\no Must contain a number\no Must contain a capital and small letter\no Must contain a special character',
                             padding: const EdgeInsets.all(30),
                             margin: const EdgeInsets.only(
                                 top: 30, left: 30, right: 30),
                             triggerMode: TooltipTriggerMode.tap,
                             showDuration: const Duration(seconds: 2),
                             decoration: BoxDecoration(
-                                color: Colors.redAccent,
+                                color: ThemeApp.appColor,
                                 borderRadius: BorderRadius.circular(22)),
                             textStyle: const TextStyle(
                                 fontFamily: 'Roboto',
                                 fontSize: 16,
                                 letterSpacing: 1.2,
-                                fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white),
                             child: Icon(Icons.info_outline),
@@ -200,15 +201,17 @@ class _SignUpState extends State<SignUp> {
                           autoValidation: AutovalidateMode.onUserInteraction,
                           hintText: StringUtils.password,
                           onChange: (val) {
-                            setState(() {
-                              if (val.isEmpty && password.text.isEmpty) {
-                                _validatePassword = true;
-                              } else if (!StringConstant().isPass(val)) {
-                                _validatePassword = true;
-                              } else {
-                                _validatePassword = false;
-                              }
-                            });
+                            _checkPassword(val);
+
+                            // setState(() {
+                            //     if (val.isEmpty && password.text.isEmpty) {
+                            //       _validatePassword = true;
+                            //     } else if (!StringConstant().isPass(val)) {
+                            //       _validatePassword = true;
+                            //     } else {
+                            //       _validatePassword = false;
+                            //     }
+                            //   });
                           },
                           validator: (value) {
                             if (value.isEmpty && password.text.isEmpty) {
@@ -222,14 +225,35 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           }),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .02,
+                      const SizedBox(
+                        height: 10,
                       ),
+                      // The strength indicator bar
+                      password.text.length > 0
+                          ? LinearProgressIndicator(
+                              value: _strength,
+                              backgroundColor: Colors.grey[300],
+                              color: _strength <= 1 / 4
+                                  ? Colors.red
+                                  : _strength == 2 / 4
+                                      ? Colors.yellow
+                                      : _strength == 3 / 4
+                                          ? Colors.blue
+                                          : Colors.green,
+                              minHeight: 5,
+                            )
+                          : SizedBox(),
+                  /*    SizedBox(height: 20),
+                      Text(
+                        _displayText,
+                        style: const TextStyle(fontSize: 18),
+                      ),*/
+                      SizedBox(height: 20),
                       TextFieldUtils().asteriskTextField(
                           StringUtils.confirmPassword, context),
 
                       PasswordTextFormFieldsWidget(
-                          errorText: StringUtils.passwordError,
+                          errorText: StringUtils.confirmPasswordError,
                           textInputType: TextInputType.text,
                           controller: confirmPassword,
                           autoValidation: AutovalidateMode.onUserInteraction,
@@ -248,45 +272,16 @@ class _SignUpState extends State<SignUp> {
                           validator: (value) {
                             if (value.isEmpty && password.text.isEmpty) {
                               _validateConfirmPassword = true;
-                              return StringUtils.passwordError;
+                              return StringUtils.confirmPasswordError;
                             } else if (confirmPassword.text != password.text) {
                               _validateConfirmPassword = true;
-                              return StringUtils.validPasswordError;
+                              return StringUtils.validConfirmPasswordError;
                             } else {
                               _validateConfirmPassword = false;
                             }
                             return null;
                           }),
-
-                      SizedBox(
-                        height: 53,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: proceedButton(
-                            'Create an Account',
-                            ThemeApp.tealButtonColor,
-                            context,
-                            authViewModel.loadingWithAuthUSerPost, () {
-                          FocusManager.instance.primaryFocus?.unfocus();
-
-                          if (_formKey.currentState!.validate()&&isTermSelected==true) {
-                            Map data = {
-                              "username": businessNameController.text,
-                              "password": password.text.trim(),
-                              "email": email.text,
-                              "mobile": mobileNumberController.text,
-                            };
-                            apiRequest(data);
-                            // authViewModel.authSignUpUsingPost(data, context);
-                          }else{
-                            Utils.errorToast("Please enter all details");
-                          }
-                        }),
-                      ),
-                      SizedBox(
-                        height: 14,
-                      ),
+                      SizedBox(height: 20),
                       Row(
                         children: [
                           Checkbox(
@@ -297,16 +292,145 @@ class _SignUpState extends State<SignUp> {
                               });
                             },
                           ),
-                          TextFieldUtils().dynamicText(
-                              'I agree with Terms and Conditions',
-                              context,
-                              TextStyle(
-                                  fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .018,
-                                  fontWeight: FontWeight.w500)),
+                          Row(
+                            children: [
+                              TextFieldUtils().dynamicText(
+                                  'I agree with ',
+                                  context,
+                                  TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    fontSize: height * .018,
+                                    fontWeight: FontWeight.w500,
+                                  )),
+                              InkWell(
+                                onTap: () {
+                                  _launchURL();
+                                },
+                                child: TextFieldUtils().dynamicText(
+                                    'Terms and Conditions',
+                                    context,
+                                    TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.tealButtonColor,
+                                      fontSize: height * .018,
+                                      fontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.underline,
+                                      decorationThickness: 3,
+                                    )),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
+                      isTermSelected == false
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Text(
+                                isTermError,
+                                style: TextStyle(color: ThemeApp.redColor),
+                              ),
+                            )
+                          : Text(''),
+                      SizedBox(
+                        height: 45,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: proceedButton(
+                            'Create an Account',
+                            ThemeApp.tealButtonColor,
+                            context,
+                            authViewModel.loadingWithAuthUSerPost, () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          if (isTermSelected == false) {
+                            setState(() {
+                              isTermError =
+                                  'Please accept the terms and conditions.';
+                            });
+                          } else {
+                            setState(() {
+                              isTermError = '';
+                            });
+                          }
+                          if (_formKey.currentState!.validate() &&
+                              isTermSelected == true) {
+                            Map data = {
+                              "username": businessNameController.text,
+                              "password": password.text.trim(),
+                              "email": email.text,
+                              "mobile": mobileNumberController.text,
+                            };
+                            apiRequest(data);
+                            // authViewModel.authSignUpUsingPost(data, context);
+                          } else {
+                            Utils.errorToast("Please enter all details");
+                          }
+                        }),
+                      ),
+                      SizedBox(
+                        height: 14,
+                      ),
+                      /*     Row(
+                        children: [
+                          Checkbox(
+                            value: isTermSelected,
+                            onChanged: (values) {
+                              setState(() {
+                                isTermSelected = values!;
+                                isTermError = 'Please select';
+                              });
+                            },
+                          ),
+                          Row(
+                            children: [
+                              TextFieldUtils().dynamicText(
+                                  'I agree with ',
+                                  context,
+                                  TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    fontSize: height * .018,
+                                    fontWeight: FontWeight.w500,
+                                  )),
+                              InkWell(
+                                onTap: () {
+                                  _launchURL();
+                                },
+                                child: TextFieldUtils().dynamicText(
+                                    'Terms and Conditions',
+                                    context,
+                                    TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.tealButtonColor,
+                                      fontSize: height * .018,
+                                      fontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.underline,
+                                      decorationThickness: 3,
+                                    )),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),*/
+                      /*       CheckboxListTile(
+                value: isTermSelected,
+                onChanged: (val) {
+                  setState(() => isTermSelected = val!
+                  );},
+                subtitle: !isTermSelected
+                    ? Text(
+                  isTermError,
+                  style: TextStyle(color: Colors.red),
+                )
+                    : null,
+                title: new Text(
+                  'I agree.',
+                  style: TextStyle(fontSize: 14.0),
+                ),
+                controlAffinity: ListTileControlAffinity.leading,
+                activeColor: Colors.green,
+              ),*/
                       Container(
                         padding: const EdgeInsets.only(top: 20, bottom: 10),
                         alignment: Alignment.bottomCenter,
@@ -364,6 +488,156 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  late String _password;
+  double _strength = 0;
+
+  RegExp numReg = RegExp(r".*[0-9].*");
+  RegExp letterReg = RegExp(r".*[A-Za-z].*");
+
+  String _displayText = 'Please enter a password';
+
+  void _checkPassword(String value) {
+    _password = value.trim();
+
+    if (_password.isEmpty && password.text.isEmpty) {
+      print("strength 1");
+    } else if (!StringConstant().isPass(_password)) {
+      //if password not match with regex show red bar
+      print("strength 2");
+      setState(() {
+        _strength = 1 / 4;
+        _displayText = 'Your password is too short';
+      });
+    }/* else if (StringConstant().isPass(_password)) {
+      print("strength 3");
+
+      setState(() {
+        _strength = 2 / 4;
+        _displayText = 'Your password is acceptable but not strong';
+      });
+    }  */else if (_password.length > 7&& _password.length<12) {
+      // password match with regex and greater than 7 to 12 then show yellow bar
+      setState(() {
+        _strength = 2 / 4;
+        _displayText = 'Your password is acceptable but not strong';
+      });
+    }else if(_password.length>11){
+
+      if (!letterReg.hasMatch(_password) || !numReg.hasMatch(_password)) {
+        setState(() {
+          // Password length >= 8
+          // But doesn't contain both letter and digit characters
+          _strength = 3 / 4;
+          _displayText = 'Your password is strong';
+        });
+      } else {
+        //password match and greater than 11 , show green bar
+        // Password length >= 8
+        // Password contains both letter and digit characters
+        setState(() {
+          _strength = 1;
+          _displayText = 'Your password is great';
+        });
+      }
+    }
+
+
+  }
+
+/*  void _checkPassword(String value) {
+    _password = value.trim();
+
+    if (value.isEmpty && password.text.isEmpty) {
+      setState(() {
+        _validatePassword = true;
+        _strength = 0;
+        _displayText = 'Please enter you password';
+      });
+    } else if (!StringConstant().isPass(value)) {
+      setState(() {
+        _validatePassword = true;
+        _strength = 1 / 16;
+        _displayText = 'Your password is not acceptable';
+      });
+    } else if (StringConstant().isPass(value)) {
+      setState(() {
+        _strength = 8 / 16;
+        _displayText = 'Your password is acceptable but not strong';
+
+        _validatePassword = false;
+      });
+    } else {
+      // if (!letterReg.hasMatch(_password) || !numReg.hasMatch(_password)) {
+      if (_strength>9) {
+        setState(() {
+          // Password length >= 8
+          // But doesn't contain both letter and digit characters
+          _strength = 8/ 16;
+          _displayText = 'Your password is strong';
+        });
+      } else {
+        // Password length >= 8
+        // Password contains both letter and digit characters
+        setState(() {
+          _strength = 1;
+          _displayText = 'Your password is great';
+        });
+      }
+    }
+
+    */ /* if (_password.isEmpty) {
+      setState(() {
+        _strength = 0;
+        _displayText = 'Please enter you password';
+      });
+    } else if (_password.length < 8) {
+      setState(() {
+        _strength = 1 / 4;
+        _displayText = 'Your password is acceptable but not strong';
+      });
+    } else if (_password.length < 9) {
+      setState(() {
+        if (value.isEmpty && password.text.isEmpty) {
+          _validatePassword = true;
+          _strength = 2 / 4;
+          _displayText = 'Your password is acceptable but not strong';
+        } else if (!StringConstant().isPass(value)) {
+          _validatePassword = true;
+          _strength = 2 / 4;
+          _displayText = 'Your password is acceptable but not strong';
+        } else {
+          _validatePassword = false;
+        }
+        // _strength = 2 / 4;
+        // _displayText = 'Your password is acceptable but not strong';
+      });
+    } else {
+      if (!letterReg.hasMatch(_password) || !numReg.hasMatch(_password)) {
+        setState(() {
+          // Password length >= 8
+          // But doesn't contain both letter and digit characters
+          if (value.isEmpty && password.text.isEmpty) {
+            _validatePassword = true;
+          } else if (!StringConstant().isPass(value)) {
+            _validatePassword = true;
+          } else {
+            _strength = 3 / 4;
+            _displayText = 'Your password is strong';
+
+            _validatePassword = false;
+          }
+        });
+      } else {
+        // Password length >= 8
+        // Password contains both letter and digit characters
+        setState(() {
+          _strength = 1;
+          _displayText = 'Your password is great';
+        });
+      }
+    }*/ /*
+  }*/
+
   Widget fullName() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,7 +648,7 @@ class _SignUpState extends State<SignUp> {
             textInputType: TextInputType.name,
             controller: businessNameController,
             autoValidation: AutovalidateMode.onUserInteraction,
-            hintText: 'David Wong',
+            hintText: 'Type your name',
             onChange: (val) {
               setState(() {
                 if (val.isEmpty && businessNameController.text.isEmpty) {
@@ -389,10 +663,10 @@ class _SignUpState extends State<SignUp> {
             validator: (value) {
               if (value.isEmpty && businessNameController.text.isEmpty) {
                 _validateName = true;
-                return StringUtils.fullName;
+                return StringUtils.enterFullName;
               } else if (businessNameController.text.length < 4) {
                 _validateName = true;
-                return StringUtils.fullName;
+                return StringUtils.enterFullName;
               } else {
                 _validateName = false;
               }
@@ -408,11 +682,33 @@ class _SignUpState extends State<SignUp> {
       children: [
         TextFieldUtils().asteriskTextField(StringUtils.mobileNumber, context),
         MobileNumberTextFormField(
-          controller: mobileNumberController,
-          enable: true,
-        ),
+            errorText: StringUtils.enterMobileNumber,
+            controller: mobileNumberController,
+            enable: false,
+            validator: (value) {
+              if (value.isEmpty && mobileNumberController.text.isEmpty) {
+                _validateMobile = true;
+                return StringUtils.enterMobileNumber;
+              } else if (mobileNumberController.text.length < 10) {
+                _validateMobile = true;
+                return StringUtils.enterMobileNumber;
+              } else {
+                _validateMobile = false;
+              }
+              return null;
+            }),
       ],
     );
+  }
+
+  _launchURL() async {
+    const url = 'https://codeelan.com';
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Future apiRequest(Map jsonMap) async {
@@ -429,7 +725,7 @@ class _SignUpState extends State<SignUp> {
     // todo - you should check the response.statusCode
     dynamic reply = await response.transform(utf8.decoder).join();
     String rawJson = reply.toString();
-    Utils.successToast(rawJson.toString());
+    // Utils.successToast(rawJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
     String name = map['message'];

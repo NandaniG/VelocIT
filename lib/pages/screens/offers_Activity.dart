@@ -226,7 +226,7 @@ class _OfferActivityState extends State<OfferActivity> {
                         child: Container(
                           width: width,
                           decoration: BoxDecoration(
-                              color: ThemeApp.darkGreyTab,
+                              color: ThemeApp.tealButtonColor,
                               borderRadius: const BorderRadius.only(
                                 bottomRight: Radius.circular(10),
                                 bottomLeft: Radius.circular(10),
@@ -279,9 +279,9 @@ class _OfferActivityState extends State<OfferActivity> {
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               color: ThemeApp.whiteColor,
-                              borderRadius: const BorderRadius.all(
+                           /*   borderRadius: const BorderRadius.all(
                                 Radius.circular(10),
-                              )),
+                              ),*/border: Border.all(color: ThemeApp.tealButtonColor)),
                           child: ClipRRect(
                             borderRadius: const BorderRadius.all(
                               Radius.circular(10),

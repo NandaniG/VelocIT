@@ -163,7 +163,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   textInputType: TextInputType.name,
                   controller: fullNameController,
                   autoValidation: AutovalidateMode.onUserInteraction,
-                  hintText: 'David Wong',
+                  hintText: 'Type your name',
                   onChange: (val) {},
                   validator: (value) {
                     return null;
@@ -173,7 +173,18 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   .asteriskTextField(StringUtils.mobileNumber, context),
               MobileNumberTextFormField(
                 controller: mobileController,
-                enable: true,
+                enable: true,  validator: (value) {
+                if (value.isEmpty && mobileController.text.isEmpty) {
+                  _validateMobile = true;
+                  return StringUtils.enterMobileNumber;
+                } else if (mobileController.text.length < 10) {
+                  _validateMobile = true;
+                  return StringUtils.enterMobileNumber;
+                } else {
+                  _validateMobile = false;
+                }
+                return null;
+              }
               ),
               SizedBox(
                 height: height * .02,
@@ -670,7 +681,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                 textInputType: TextInputType.name,
                 controller: fullNameController,
                 autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: 'David Wong',
+                hintText: 'Type your name',
                 onChange: (val) {},
                 validator: (value) {
                   return null;
@@ -685,8 +696,19 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     fontWeight: FontWeight.w500)),
             MobileNumberTextFormField(
               controller: mobileController,
-              enable: true,
-            ),
+              enable: true,  validator: (value) {
+              // if (value.isEmpty && mobileController.text.isEmpty) {
+              //   _validateMobile = true;
+              //   return StringUtils.enterMobileNumber;
+              // } else if (mobileController.text.length < 10) {
+              //   _validateMobile = true;
+              //   return StringUtils.enterMobileNumber;
+              // } else {
+              //   _validateMobile = false;
+              // }
+              return null;
+            }),
+
             SizedBox(
               height: height * .02,
             ),

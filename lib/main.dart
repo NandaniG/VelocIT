@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -211,7 +212,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/*class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -242,6 +243,9 @@ class _SplashScreenState extends State<SplashScreen> {
     _loadCounter();
     // Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
   }
+  late Random rnd;
+  var min = 100000000;
+  int max = 1000000000; var ID;  String finalId = '';
 
   Future<void> _loadCounter() async {
 
@@ -253,10 +257,35 @@ class _SplashScreenState extends State<SplashScreen> {
           StringConstant.isUserLoggedIn.toString());
 
       StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-
+      StringConstant.RandomUserLoginId =
+          (prefs.getString('RandomUserId')) ?? '';
       print("USER LOGIN ID..............." +
           StringConstant.UserLoginId.toString());
 
+if(StringConstant.UserLoginId==''){
+      if ((StringConstant.RandomUserLoginId == '' ||
+          StringConstant.RandomUserLoginId == null)) {
+        print("RandomUserLoginId empty");
+        rnd = new Random();
+        var r = min + rnd.nextInt(max - min);
+
+        print("$r is in the range of $min and $max");
+        ID = r;
+        print("cartId empty" + ID.toString());
+      } else {
+        print("RandomUserLoginId empty");
+        // ID = StringConstant.UserLoginId;
+        ID = StringConstant.UserLoginId.toString();
+      }}else {
+  print("RandomUserLoginId empty");
+  // ID = StringConstant.UserLoginId;
+  ID = StringConstant.UserLoginId.toString();
+}
+      // 715223688
+      finalId = ID.toString();
+      prefs.setString('RandomUserId', finalId.toString());
+
+      print('finalId  RandomUserLoginId' + finalId);
       if (StringConstant.isUserLoggedIn != 0) {
         Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
       } else {
@@ -321,14 +350,49 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-          height: MediaQuery.of(context).size.height,
-          color: ThemeApp.appBackgroundColor,
-          child: TextFieldUtils().circularBar(context)),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: FractionalOffset.topCenter,
+                end: FractionalOffset.bottomCenter,
+              // end: Alignment(0.8, 1),
+              colors: <Color>[
+                Color(0xff95EAF1),
+                Color(0xff75E4ED),
+                Color(0xff02D3E3),
+                Color(0xff00A7BF),
+                Color(0xff007896),
+                // Color(0xff3AA17E),
+                // Color(0xff3AA17E),
+              ], // Gradient from https://learnui.design/tools/gradient-generator.html
+              tileMode: TileMode.mirror,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Center(
+                child: Image.asset(
+                  'assets/appImages/splashScreen.png',
+                  alignment: Alignment.center,
+                  height: 173,
+                  width: 253,
+                  // height: 300,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
-}*/
+}
+
+
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 

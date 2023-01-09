@@ -31,20 +31,20 @@ class OrderBasketRepository {
     return responseJson;
   }
 
-  Future<ActiveOrderBasketModel> getOrderBasketApi(
-      dynamic data) async {
-    var url = ApiMapping.BASEAPI +ApiMapping.consumerBasket;
-      print(url.toString());
-
-    try {
-      dynamic response = await _apiServices.getGetApiResponseWithBody(url,data);
-      orderBasketData = response.toString();
-      print("getOrderBasketApi"+response.toString());
-      return response = ActiveOrderBasketModel.fromJson(response);
-    } catch (e) {
-      throw e;
-    }
-  }
+  // Future<ActiveOrderBasketModel> getOrderBasketApi(
+  //     dynamic data) async {
+  //   var url = ApiMapping.BASEAPI +ApiMapping.consumerBasket;
+  //     print(url.toString());
+  //
+  //   try {
+  //     dynamic response = await _apiServices.getGetApiResponseWithBody(url,data);
+  //     orderBasketData = response.toString();
+  //     print("getOrderBasketApi"+response.toString());
+  //     return response = ActiveOrderBasketModel.fromJson(response);
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  // }
   Future orderBasket_submitRatingsPostApiRequest(Map jsonMap) async {
     // dynamic responseJson;
     var url = ApiMapping.ConstructURI(StringConstant.apiOrderBasket_submitRatings);

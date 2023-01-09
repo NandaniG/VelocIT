@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
@@ -44,6 +45,10 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
+    DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
+    DateTime date =
+    DateTime.parse( widget.values['earliest_delivery_date']);
+    var earliest_delivery_date = format.format(date);
 
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
@@ -59,16 +64,16 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
           // width: width,
           child: data == ''
               ? CircularProgressIndicator()
-              : Consumer<HomeProvider>(builder: (context, value, child) {
-                  return (value.jsonData.isNotEmpty &&
-                          value.jsonData['error'] == null)
+              : Consumer<HomeProvider>(builder: (context, provider, child) {
+                  return (provider.jsonData.isNotEmpty &&
+                      provider.jsonData['error'] == null)
                       ? ListView(
                           children: [
                             Padding(
                               padding:
                                   const EdgeInsets.only(left: 20, right: 20),
                               child: TextFieldUtils().dynamicText(
-                                  widget.values["myOrderId"],
+                                  widget.values["id"].toString(),
                                   context,
                                   TextStyle(fontFamily: 'Roboto',
                                     color: ThemeApp.blackColor,
@@ -83,17 +88,17 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                               padding:
                                   const EdgeInsets.only(left: 20, right: 20),
                               child: TextFieldUtils().dynamicText(
-                                  widget.values["myOrderDate"],
+                                  earliest_delivery_date,
                                   context,
                                   TextStyle(fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyTab,
                                     fontSize: 12,fontWeight: FontWeight.w400
                                   )),
                             ),
-                            mainUI(value),
+                            mainUI( provider),
                           ],
                         )
-                      : value.jsonData['error'] != null
+                      : provider.jsonData['error'] != null
                           ? Container()
                           : Center(child: CircularProgressIndicator());
                 }),
@@ -103,8 +108,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
   }
 
   Widget mainUI(HomeProvider value) {
-    return Consumer<HomeProvider>(builder: (context, valuess, child) {
-      return Padding(
+    return  Padding(
         padding: const EdgeInsets.all(20),
         child: /*Column(
         children: [
@@ -121,8 +125,10 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
 
                         // physics: NeverScrollableScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-                        itemCount: widget.values["myOrderDetailList"].length,
+                        itemCount: widget.values["orders"].length,
                         itemBuilder: (_, index) {
+                          Map orders = widget.values["orders"][index];
+
                           return Padding(
                             padding: const EdgeInsets.only(right: 20),
                             child: Container(
@@ -149,11 +155,12 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                                     const BorderRadius.all(
                                                   Radius.circular(10),
                                                 ),
-                                                child: Image.asset(
-                                                  widget.values[
-                                                          "myOrderDetailList"]
-                                                      [index]["productImage"],
-                                                  fit: BoxFit.fill,
+                                                child: Image.network(
+                                                  orders['image_url']??"",
+                                                  fit: BoxFit.fill,  errorBuilder: ((context, error, stackTrace) {
+                                                  return Container( height:79,
+                                                      width: 79,child: Icon(Icons.image_outlined));
+                                                })
                                                 ),
                                               ),
                                             ),
@@ -162,9 +169,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                             ),
                                             Flexible(
                                               child: Text(
-                                                  widget.values[
-                                                          "myOrderDetailList"]
-                                                      [index]["productDetails"],
+                                                  orders["oneliner"],
                                                   maxLines: 2,
                                                   style: TextStyle(fontFamily: 'Roboto',
                                                       overflow:
@@ -218,7 +223,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                                 SizedBox(
                                                   height: 8,
                                                 ),
-                                                rattingBar(),
+                                                vendorRattingBar(),
                                               ],
                                             ),
                                           ],
@@ -307,7 +312,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                                 SizedBox(
                                                   height: 8,
                                                 ),
-                                                rattingBar(),
+                                                productRattingBar(),
                                               ],
                                             ),
                                           ],
@@ -389,9 +394,9 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                       "order_id": 45,
                       "product_item_id": 31,
                       "merchant_comments": vendorReviewController.text ?? "",
-                      "merchant_rating": 4,
+                      "merchant_rating": vendortRating,
                       "product_comments": productReviewController.text,
-                      "product_rating": 3
+                      "product_rating": productRating
                     };
                     value.reviewPostAPI(jsonMap);
                     if (value.jsonData.isNotEmpty &&
@@ -427,15 +432,16 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
           ],
         ),*/
       );
-    });
-  }
 
-  Widget rattingBar() {
+  }
+var vendortRating = 0.0;
+var productRating = 0.0;
+  Widget vendorRattingBar() {
     return Row(
       children: [
         RatingBar.builder(
           itemSize: height * .04,
-          initialRating: 0,
+          initialRating: vendortRating,
           minRating: 1,
           unratedColor: ThemeApp.appBackgroundColor,
           direction: Axis.horizontal,
@@ -447,6 +453,31 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
             color: Colors.yellow,
           ),
           onRatingUpdate: (rating) {
+            vendortRating = rating;
+            print(rating);
+          },
+        ),
+      ],
+    );
+  }
+  Widget productRattingBar() {
+    return Row(
+      children: [
+        RatingBar.builder(
+          itemSize: height * .04,
+          initialRating: productRating,
+          minRating: 1,
+          unratedColor: ThemeApp.appBackgroundColor,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          itemPadding: EdgeInsets.only(left: 0),
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.yellow,
+          ),
+          onRatingUpdate: (rating) {
+            productRating = rating;
             print(rating);
           },
         ),

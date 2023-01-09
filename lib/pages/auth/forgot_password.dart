@@ -86,6 +86,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 // Text(StringUtils!.helloWorld);
                 Text(
                   StringUtils.forgotPasswordSubHeading,
+                  maxLines: 4,
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 14,
@@ -99,7 +100,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
         /*        TextFieldUtils().asteriskTextField("Email ID", context),
                 TextFormFieldsWidget(
-                    errorText: StringUtils.emailError,
+                    errorText: StringUtils.validEmailError,
                     textInputType: TextInputType.emailAddress,
                     controller: email,
                     autoValidation: AutovalidateMode.onUserInteraction,
@@ -118,10 +119,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     validator: (value) {
                       if (value.isEmpty && email.text.isEmpty) {
                         _validateEmail = true;
-                        return StringUtils.emailError;
+                        return StringUtils.validEmailError;
                       } else if (!StringConstant().isEmail(value)) {
                         _validateEmail = true;
-                        return StringUtils.emailError;
+                        return StringUtils.validEmailError;
                       } else {
                         _validateEmail = false;
                       }
@@ -135,12 +136,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),*/
                 TextFieldUtils().asteriskTextField(
                     StringUtils.registeredEmailAddress, context),
-                TextFormFieldsWidget(
-                    errorText: StringUtils.emailError,
+                EmailTextFormFieldsWidget(
+                    errorText: StringUtils.validEmailError,
                     textInputType: TextInputType.emailAddress,
                     controller: registerEmail,
                     autoValidation: AutovalidateMode.onUserInteraction,
-                    hintText: StringUtils.email,
+                    hintText: StringUtils.emailAddress,
                     onChange: (val) {
                       setState(() {
                         if (val.isEmpty && registerEmail.text.isEmpty) {
@@ -254,7 +255,7 @@ class _ForgotSuccessDialogState extends State<ForgotSuccessDialog> {
                     SizedBox(
                       height: 11,
                     ),
-                    Text('Password Reset Successfully',
+                    Text('Password sent successfully',
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,

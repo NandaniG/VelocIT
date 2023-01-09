@@ -352,8 +352,8 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
               return Text(cartProvider.getAddress.message.toString());
             case Status.COMPLETED:
               print("Api calll");
-              List<AddressPayload>? addressList =
-                  cartProvider.getAddress.data!.payload!;
+              List<AddressContent>? addressList =
+                  cartProvider.getAddress.data!.payload!.content;
 
               print("addressList" + addressList!.length.toString());
               return Padding(

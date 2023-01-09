@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/Core/Model/CartModels/CartSpecificIDForEmbeddedModel.dart';
+import 'package:velocit/Core/ViewModel/cart_view_model.dart';
 import 'package:velocit/utils/constants.dart';
 
 import '../../services/providers/Products_provider.dart';
@@ -14,6 +15,7 @@ import '../AppConstant/apiMapping.dart';
 import '../Model/CartModels/AddressListModel.dart';
 import '../Model/CartModels/CartCreateRetrieveModel.dart';
 import '../Model/CartModels/CartSpecificIdModel.dart';
+import '../Model/CartModels/MergeCartModel.dart';
 import '../Model/CartModels/SendCartForPaymentModel.dart';
 import '../Model/CartModels/updateCartModel.dart';
 import '../data/network/baseApiServices.dart';
@@ -45,7 +47,7 @@ class CartRepository {
     // todo - you should check the response.statusCode
     responseJson = await response.transform(utf8.decoder).join();
     String rawJson = responseJson.toString();
-    print("Cart response11");
+    print("Cart response1111");
     print(responseJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
@@ -106,10 +108,12 @@ class CartRepository {
     final preference = await SharedPreferences.getInstance();
 
     prefs.setBadgeToken(badgeLength.toString());
+    StringConstant.BadgeCounterValue =
+        (preference.getString('setBadgeCountPrefs')) ?? '';
+    print("Badge,........" + StringConstant.BadgeCounterValue);
+    await  getCartSpecificIDList(userData.payload!.id.toString());
 
-    // } else {
-    //   Utils.errorToast("System is busy, Please try after sometime.");
-    // }
+
 
     httpClient.close();
     return responseJson = UpdateCartModel.fromJson(map);
@@ -141,8 +145,27 @@ class CartRepository {
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
       print("Cart cart_by_Embedded_ID Id : " + response.toString());
-
+      print("Cart cart_by_Embedded_ID Id orders_for_purchase: " + response['orders_for_purchase'].toString());
+      await prefs.setString('CartIdPref',response);
       return response = CartSpecificIDforEmbeddedModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<MergeCartModel> mergeCartList(String oldId,String newId,dynamic json) async {
+
+    // var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);
+    var url = ApiMapping.baseAPI+'/cart/merge_cart/$oldId?newid=$newId';
+    print(url);
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      dynamic response = await _apiServices.getPutApiResponse(url, json);
+      print("Cart MergeCartModel Id : " + response.toString());
+      print("Cart MergeCartModel Id orders_for_purchase: " + response['orders_for_purchase'].toString());
+      await prefs.setString('CartIdPref',response);
+      return response = MergeCartModel.fromJson(response);
     } catch (e) {
       throw e;
     }
@@ -151,6 +174,8 @@ class CartRepository {
   Future<SendCartForPaymentModel> getSendCartForPaymentList(String id) async {
     var url = ApiMapping.getURI(apiEndPoint.send_Cart_For_Payment);
     final prefs = await SharedPreferences.getInstance();
+    print(" SendCartForPaymentModel url: " + url + id.toString());
+    print(" SendCartForPaymentModel id: " + id.toString());
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
@@ -185,11 +210,18 @@ class CartRepository {
     }
   }
   Future<AddressListModel> getAddressList(String id) async {
-    var url = ApiMapping.getURI(apiEndPoint.address_list);
+    // var url = ApiMapping.getURI(apiEndPoint.address_list);
+    https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
+
+    var requestUrl = ApiMapping.baseAPI +'/user/'+id + '/address?page=0&size=10';
+
+    print(requestUrl.toString());
+    print( 'https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10');
+    print(id.toString());
     final prefs = await SharedPreferences.getInstance();
 
     try {
-      dynamic response = await _apiServices.getGetApiResponse(url + id);
+      dynamic response = await _apiServices.getGetApiResponse(requestUrl);
       print(" AddressListModel : " + response.toString());
 
       return response = AddressListModel.fromJson(response);

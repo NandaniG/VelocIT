@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -138,10 +137,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     StringConstant.RandomUserLoginId =
         (prefs.getString('isRandomUserId')) ?? '';
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-setState(() {
-
-});
-  await cartListView.cartSpecificIDWithGet(context, StringConstant.UserCartID);
+    setState(() {});
+    await cartListView.cartSpecificIDWithGet(
+        context, StringConstant.UserCartID);
   }
 
   @override
@@ -156,8 +154,7 @@ setState(() {
     var userId = '';
 
     StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-    StringConstant.RandomUserLoginId =
-        (prefs.getString('isRandomUserId')) ?? '';
+    StringConstant.RandomUserLoginId = (prefs.getString('RandomUserId')) ?? '';
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
 
@@ -182,10 +179,8 @@ setState(() {
       "qty": quantity.toString()
     };
     print("update cart DATA" + data.toString());
-    setState(() {
-
-    });
-    await  CartRepository().updateCartPostRequest(data, context);
+    setState(() {});
+    await CartRepository().updateCartPostRequest(data, context);
     getCartId();
 
 /*    for (int i = 0; i < value!.length; i++) {
@@ -198,7 +193,6 @@ setState(() {
           (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
     });      getCartId();*/
-
   }
 
   @override
@@ -212,50 +206,48 @@ setState(() {
         preferredSize: Size.fromHeight(height * .08),
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
           return provider.isBottomAppCart == false
-              ? PreferredSize(
-                  preferredSize: Size.fromHeight(height * .08),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    color: ThemeApp.darkGreyTab,
-                    child: AppBar(
-                      centerTitle: false,
-                      elevation: 0,
-                      backgroundColor: ThemeApp.appBackgroundColor,
-                      flexibleSpace: Container(
-                        height: height * .11,
-                        width: width,
-                        decoration: const BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15)),
+                  ? PreferredSize(
+                      preferredSize: Size.fromHeight(height * .08),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        color: ThemeApp.darkGreyTab,
+                        child: AppBar(
+                          centerTitle: false,
+                          elevation: 0,
+                          backgroundColor: ThemeApp.appBackgroundColor,
+                          flexibleSpace: Container(
+                            height: height * .11,
+                            width: width,
+                            decoration: const BoxDecoration(
+                              color: ThemeApp.whiteColor,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15),
+                                  bottomRight: Radius.circular(15)),
+                            ),
+                          ),
+                          leadingWidth: 40,
+                          leading: Center(
+                            child: IconButton(
+                                icon: const Icon(
+                                  Icons.arrow_back,
+                                  color: ThemeApp.blackColor,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  // Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  // Navigator.pushReplacementNamed(context, '/productDetailsActivity').then((_) => setState(() {}));
+                                }),
+                          ),
+
+                          // leadingWidth: width * .06,
+                          title: Text("My Cart"),
+                          // Row
                         ),
                       ),
-                      leadingWidth: 40,
-                      leading: Center(
-                        child: IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              color: ThemeApp.blackColor,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              // Navigator.pop(context);
-                              Navigator.pop(context);
-                              // Navigator.pushReplacementNamed(context, '/productDetailsActivity').then((_) => setState(() {}));
-                            }),
-                      ),
-
-                      // leadingWidth: width * .06,
-                      title: Text("My Cart"),
-                      // Row
-                    ),
-                  ),
-                )
-              :
-
-          appBar_backWidget(
-              context, appTitle(context, "My Cart"), SizedBox()) /* PreferredSize(
+                    )
+                  : appBar_backWidget(context, appTitle(context, "My Cart"),
+                      SizedBox()) /* PreferredSize(
                   preferredSize: Size.fromHeight(height * .09),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -288,7 +280,8 @@ setState(() {
                       // Row
                     ),
                   ),
-                )*/;
+                )*/
+              ;
         }),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -304,7 +297,7 @@ setState(() {
                     case Status.LOADING:
                       print("Api load");
 
-                      return TextFieldUtils().circularBar(context);
+                      return Container();
                     case Status.ERROR:
                       print("Api error");
 
@@ -318,11 +311,8 @@ setState(() {
                       print("orderPurchaseList" +
                           orderPurchaseList!.length.toString());
 
-
                       return cartProvider.cartSpecificID.data!.payload!
                               .ordersForPurchase!.isEmpty
-
-
                           ? bottomNavigationBarWidget(context)
                           : Container(
                               height: 144,
@@ -399,7 +389,9 @@ setState(() {
                                                     .isUserLoggedIn);
                                               }
 
-                                              
+                                              prefs.setString(
+                                                  'isUserNavigateFromDetailScreen',
+                                                  'Yes');
                                               if (StringConstant
                                                       .isUserLoggedIn ==
                                                   1) {
@@ -416,13 +408,78 @@ setState(() {
                                                   ),
                                                 );
                                               } else {
-                                                cartListView
-                                                    .cartSpecificIDEmbeddedWithGet(
-                                                        context,
-                                                        StringConstant
-                                                            .UserCartID)
-                                                    .then((value) =>
-                                                        setState(() {}));
+                                                for (int i = 0;
+                                                    i <
+                                                        cartProvider
+                                                            .cartSpecificID
+                                                            .data!
+                                                            .payload!
+                                                            .ordersForPurchase!
+                                                            .length;
+                                                    i++) {
+                                                  prefs.setString(
+                                                      'CartSpecificUserIdPref',
+                                                      cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .userId
+                                                          .toString());
+                                                  prefs.setString(
+                                                      'CartSpecificItem_codePref',
+                                                      cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .ordersForPurchase![i]
+                                                          .productCode
+                                                          .toString());
+                                                  prefs.setString(
+                                                      'CartSpecificItemQuantityPref',
+                                                      cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .ordersForPurchase![i]
+                                                          .itemQty
+                                                          .toString());
+
+                                                  Map data = {
+                                                    'user_id': cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .userId,
+                                                    'item_code': cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .ordersForPurchase![i]
+                                                        .productCode,
+                                                    'qty': cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .ordersForPurchase![i]
+                                                        .itemQty
+                                                  };
+
+                                                  Navigator.pushNamed(context,
+                                                      RoutesName.signInRoute);
+                                                  print(cartProvider
+                                                      .cartSpecificID
+                                                      .data!
+                                                      .payload!
+                                                      .totalItemCount);
+                                                }
+
+                                                // cartListView
+                                                //     .cartSpecificIDEmbeddedWithGet(
+                                                //         context,
+                                                //         StringConstant
+                                                //             .UserCartID)
+                                                //     .then((value) =>
+                                                //         setState(() {}));
 
                                                 Navigator.pushNamed(context,
                                                     RoutesName.signInRoute);
@@ -440,13 +497,19 @@ setState(() {
                                                 ),
                                                 padding: const EdgeInsets.only(
                                                     left: 15, right: 15),
-                                                child:  TextFieldUtils().dynamicText(
-                                                    "Checkout",
-                                                    context,
-                                                    TextStyle(fontFamily: 'Roboto',
-                                                        color: ThemeApp.tealButtonColor,
-                                                        fontSize: 12,
-                                                        fontWeight: FontWeight.w700)))),
+                                                child: TextFieldUtils()
+                                                    .dynamicText(
+                                                        "Checkout",
+                                                        context,
+                                                        TextStyle(
+                                                            fontFamily:
+                                                                'Roboto',
+                                                            color: ThemeApp
+                                                                .tealButtonColor,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w700)))),
                                       ],
                                     ),
                                   ),
@@ -461,7 +524,8 @@ setState(() {
                     child: TextFieldUtils().dynamicText(
                         'No Match found!',
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                            fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: height * .03,
                             fontWeight: FontWeight.bold)),
@@ -609,14 +673,16 @@ setState(() {
                                 child: TextFieldUtils().dynamicText(
                                     "Cart is Empty",
                                     context,
-                                    TextStyle(fontFamily: 'Roboto',
+                                    TextStyle(
+                                        fontFamily: 'Roboto',
                                         color: ThemeApp.blackColor,
                                         fontWeight: FontWeight.w500,
                                         fontSize: height * .03,
                                         overflow: TextOverflow.ellipsis)),
                               )
                             : Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   cartProductList(orderPurchaseList),
@@ -631,7 +697,8 @@ setState(() {
                   child: TextFieldUtils().dynamicText(
                       'No Match found!',
                       context,
-                      TextStyle(fontFamily: 'Roboto',
+                      TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
                           fontSize: height * .03,
                           fontWeight: FontWeight.bold)),
@@ -642,11 +709,11 @@ setState(() {
 
   Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
     return Container(
-        height:300,
+        height: 300,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            physics:  ScrollPhysics(),
+            physics: ScrollPhysics(),
             // physics: NeverScrollableScrollPhysics(),
             itemCount: orderPurchaseList!.length,
             itemBuilder: (BuildContext context, int index) {
@@ -655,7 +722,7 @@ setState(() {
                       child: Text(
                       "No Match",
                     ))
-                  : Column(
+                  :  Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -682,20 +749,18 @@ setState(() {
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(10)),
                                     child: Image.network(
-                                      // width: double.infinity,
-                                      // snapshot.data![index].serviceImage,
-                                      orderPurchaseList[index]
-                                          .imageUrl
-                                          .toString(),
-                                      fit: BoxFit.fill,
-                                      // width: width*.18,
-                                      height: 79,
-                                      width: 79,  errorBuilder: ((context,
-                                        error, stackTrace) {
-                                      return Icon(
-                                          Icons.image_outlined);
-                                    })
-                                    ),
+                                        // width: double.infinity,
+                                        // snapshot.data![index].serviceImage,
+                                        orderPurchaseList[index]
+                                            .imageUrl
+                                            .toString(),
+                                        fit: BoxFit.fill,
+                                        // width: width*.18,
+                                        height: 79,
+                                        width: 79, errorBuilder:
+                                            ((context, error, stackTrace) {
+                                      return Icon(Icons.image_outlined);
+                                    })),
                                   ),
                                 ),
                                 Expanded(
@@ -715,15 +780,17 @@ setState(() {
                                                 .oneliner
                                                 .toString(),
                                             context,
-                                            TextStyle(fontFamily: 'Roboto',
-                                                color: ThemeApp.primaryNavyBlackColor,
+                                            TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color: ThemeApp
+                                                    .primaryNavyBlackColor,
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w700)),
 
                                         // SizedBox(
                                         //   height: height * .005,
                                         // ),
-                                      /*  rattingBar(
+                                        /*  rattingBar(
                                             orderPurchaseList[index], index),*/
                                         SizedBox(
                                           height: height * .01,
@@ -735,7 +802,8 @@ setState(() {
                                         Row(
                                           children: [
                                             Text('Delivery by ',
-                                                style: TextStyle(fontFamily: 'Roboto',
+                                                style: TextStyle(
+                                                    fontFamily: 'Roboto',
                                                     color:
                                                         ThemeApp.lightFontColor,
                                                     fontSize: 12,
@@ -746,7 +814,8 @@ setState(() {
                                                     orderPurchaseList[index]
                                                         .deliveryDate
                                                         .toString()),
-                                                style: TextStyle(fontFamily: 'Roboto',
+                                                style: TextStyle(
+                                                    fontFamily: 'Roboto',
                                                     color:
                                                         ThemeApp.lightFontColor,
                                                     fontSize: 12,
@@ -772,8 +841,10 @@ setState(() {
                           padding: const EdgeInsets.only(
                               top: 5, left: 15, right: 20, bottom: 20),
                           child: aadToCartCounter(orderPurchaseList, index),
-                        ),SizedBox(height: 10,)
-
+                        ),
+                        SizedBox(
+                          height: 10,
+                        )
                       ],
                     );
             }));
@@ -818,52 +889,53 @@ setState(() {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          value.offer.toString().isNotEmpty?   Text(
-              "${indianRupeesFormat.format(double.parse(value.offer.toString())??0.0)??"0.0"}",
-              style: TextStyle(fontFamily: 'Roboto',
-                  color:
-                  ThemeApp.blackColor,
-                  fontSize: height * .028,
-                  letterSpacing: 0.2,
-                  fontWeight:
-                  FontWeight.w700)):Text('0.0', style: TextStyle(fontFamily: 'Roboto',
-          color:
-          ThemeApp.blackColor,
-          fontSize: height * .028,
-          letterSpacing: 0.2,
-          fontWeight:
-          FontWeight.w700)),
+          value.offer.toString().isNotEmpty
+              ? Text(
+                  "${indianRupeesFormat.format(double.parse(value.offer.toString()) ?? 0.0) ?? "0.0"}",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: 22,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500))
+              : Text('0.0',
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: 22,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
           SizedBox(
-            width: width * .02,
+            width: 1,
           ),
-          value.mrp.toString().isNotEmpty?  Text(
-              "${indianRupeesFormat.format(double.parse(value.mrp.toString())??0.0)??"0.0"}",
-              style: TextStyle(fontFamily: 'Roboto',
-                  color:
-                  ThemeApp.lightFontColor,
-                  fontSize: height * .022,
-                  decoration: TextDecoration.lineThrough,
-                  letterSpacing: 0.2,
-                  fontWeight:
-                  FontWeight.w700)):Text('0.0', style: TextStyle(fontFamily: 'Roboto',
-              color:
-              ThemeApp.lightFontColor,
-              fontSize: height * .022,
-              decoration: TextDecoration.lineThrough,
-              letterSpacing: 0.2,
-              fontWeight:
-              FontWeight.w700)),
+          value.mrp.toString().isNotEmpty
+              ? Text(
+                  "${indianRupeesFormat.format(double.parse(value.mrp.toString()) ?? 0.0) ?? "0.0"}",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      decoration: TextDecoration.lineThrough,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500))
+              : Text('0.0',
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      decoration: TextDecoration.lineThrough,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
           SizedBox(
-            width: width * .02,
+            width: 1,
           ),
-          Text(
-              value.discountPercent.toString() + "% Off", style: TextStyle(fontFamily: 'Roboto',
-              color:
-              ThemeApp.blackColor,
-              fontSize: height * .02,
-              letterSpacing: 0.2,
-              fontWeight:
-              FontWeight.w500)),
+          Text(value.discountPercent.toString() + "% Off",
+              style: TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  fontSize: 12,
+                  letterSpacing: 0.2,
+                  fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -893,45 +965,41 @@ setState(() {
                 InkWell(
                   onTap: () {
                     // setState(() {
-                      // minusQuantity(value![index], index);
-                      if (value![index].itemQty! > 1) {
+                    // minusQuantity(value![index], index);
+                    if (value![index].itemQty! > 1) {
+                      value[index].itemQty = (value[index].itemQty! - 1);
+                      // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
+                      updateCart(
+                          value,
+                          value[index].merchantId,
+                          value[index].itemQty!,
+                          value[index].productId.toString());
 
-                        value[index].itemQty=(value[index].itemQty! -1);
-                        // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
-                        updateCart(
-                            value,
-                            value[index].merchantId,
-                            value[index].itemQty,
-                            value[index].productId.toString());
+                      StringConstant.BadgeCounterValue =
+                          value!.length.toString() +
+                              value![index].itemQty.toString();
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ConfirmDialog(
+                              text:
+                                  "Are you sure, you want to remove product from cart list?",
+                              tap: () {
+                                setState(() {
+                                  print("value[index].merchantId" +
+                                      value[index].merchantId.toString());
 
-                        StringConstant.BadgeCounterValue =
-                            value!.length.toString() +
-                                value![index].itemQty.toString();
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return ConfirmDialog(
-                                text:
-                                    "Are you sure, you want to remove product from cart list?",
-                                tap: () {
-                                  setState(() {
-                                    print("value[index].merchantId" +
-                                        value[index].merchantId.toString());
+                                  updateCart(value, value[index].merchantId, 0,
+                                      value[index].productId.toString());
 
-                                    updateCart(
-                                        value,
-                                        value[index].merchantId,
-                                        0,
-                                        value[index].productId.toString());
-
-                                    value.removeAt(index);
-                                    Navigator.pop(context);
-                                  });
-                                },
-                              );
-                            });
-                      }
+                                  value.removeAt(index);
+                                  Navigator.pop(context);
+                                });
+                              },
+                            );
+                          });
+                    }
                     // });
                   },
                   child: Padding(
@@ -953,7 +1021,8 @@ setState(() {
                   color: ThemeApp.buttonBorderLightGreyColor,
                   child: Text(
                     value![index].itemQty.toString().padLeft(2, '0'),
-                    style: TextStyle(fontFamily: 'Roboto',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
                         fontSize: MediaQuery.of(context).size.height * .016,
                         fontWeight: FontWeight.w400,
                         overflow: TextOverflow.ellipsis,
@@ -963,12 +1032,12 @@ setState(() {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      value![index].itemQty=value![index].itemQty! +1;
+                      value![index].itemQty = value![index].itemQty! + 1;
                       // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
                       updateCart(
                           value,
                           value[index].merchantId,
-                          value[index].itemQty,
+                          value[index].itemQty!,
                           value[index].productId.toString());
                     });
                   },
@@ -1026,10 +1095,12 @@ setState(() {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Price Details',
-                style: TextStyle(fontFamily: 'Roboto',
-                    color: ThemeApp.primaryNavyBlackColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,)),
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.primaryNavyBlackColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                )),
             SizedBox(
               height: 10,
             ),
@@ -1038,7 +1109,8 @@ setState(() {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Price',
-                    style: TextStyle(fontFamily: 'Roboto',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
@@ -1048,7 +1120,8 @@ setState(() {
                 Text(
                     indianRupeesFormat
                         .format(double.parse(payload.totalMrp.toString())),
-                    style: TextStyle(fontFamily: 'Roboto',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
@@ -1066,13 +1139,15 @@ setState(() {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Discount',
-                    style: TextStyle(fontFamily: 'Roboto',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
                 Text(
                     "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
-                    style: TextStyle(fontFamily: 'Roboto',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
@@ -1091,14 +1166,16 @@ setState(() {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Delivery charges',
-                    style: TextStyle(fontFamily: 'Roboto',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
                 Text(
                     indianRupeesFormat.format(
                         double.parse(payload.totalDeliveryCharges.toString())),
-                    style: TextStyle(fontFamily: 'Roboto',
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500)),
@@ -1141,12 +1218,14 @@ setState(() {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Total Amount',
-                      style: TextStyle(fontFamily: 'Roboto',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w700)),
                   Text("${indianRupeesFormat.format(payload.totalPayable)} ",
-                      style: TextStyle(fontFamily: 'Roboto',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.appColor,
                           fontSize: 20,
                           fontWeight: FontWeight.w700)),
@@ -1248,7 +1327,8 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
                   child: TextFieldUtils().dynamicText(
                       widget.text,
                       context,
-                      TextStyle(fontFamily: 'Roboto',
+                      TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
 
                           // fontWeight: FontWeight.w500,

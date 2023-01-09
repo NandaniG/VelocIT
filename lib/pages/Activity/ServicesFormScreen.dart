@@ -25,6 +25,7 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
   TextEditingController email = new TextEditingController();
 
   bool _validateName = false;
+  bool _validateMobile = false;
   bool _validateEmail = false;
 
   List<BankListDataModel> bankDataList = [
@@ -48,55 +49,47 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    return
-      Scaffold(
-        backgroundColor: ThemeApp.appBackgroundColor,
-        key: scaffoldGlobalKey,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .09),
-          child: appBar_backWidget(
-              context, appTitle(context, "Services Appointment"), SizedBox()),
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    return Scaffold(
+      backgroundColor: ThemeApp.appBackgroundColor,
+      key: scaffoldGlobalKey,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(height * .09),
+        child: appBar_backWidget(
+            context, appTitle(context, "Services Appointment"), SizedBox()),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            appointmentService(),
+          ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              appointmentService(),
-            ],
-          ),
-        ),
-      );
+      ),
+    );
   }
 
   Widget appointmentService() {
     return Container(
       decoration: const BoxDecoration(
           color: ThemeApp.whiteColor,
-          borderRadius: BorderRadius.all(
-              Radius.circular(10))),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
           child: Center(
-            child: Column(mainAxisAlignment: MainAxisAlignment.start,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFieldUtils().asteriskTextField(
-                    StringUtils.services, context),
+                TextFieldUtils()
+                    .asteriskTextField(StringUtils.services, context),
                 FormField<String>(
                   builder: (FormFieldState<String> state) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                          contentPadding:
-                          EdgeInsets.fromLTRB(12, 10, 20, 20),
+                          contentPadding: EdgeInsets.fromLTRB(12, 10, 20, 20),
                           // labelText: "hi",
                           // labelStyle: textStyle,
                           // labelText: _dropdownValue == null
@@ -106,11 +99,9 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
                           // errorStyle: TextStyle(fontFamily: 'Roboto',
                           //     color: Colors.redAccent, fontSize: 16.0),
                           border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.circular(10.0))),
+                              borderRadius: BorderRadius.circular(10.0))),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<BankListDataModel>(
-
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
@@ -127,50 +118,46 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
                           items: bankDataList
                               .map<DropdownMenuItem<BankListDataModel>>(
                                   (BankListDataModel value) {
-                                return DropdownMenuItem(
-                                  value: value,
-                                  child: Row(
-                                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-
-                                      Text(value.bank_name),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-
+                            return DropdownMenuItem(
+                              value: value,
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(value.bank_name),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                           isExpanded: true,
                           isDense: true,
                           onChanged: (BankListDataModel? newSelectedBank) {
                             _onDropDownItemSelected(newSelectedBank!);
                           },
                           value: _bankChoose,
-
                         ),
                       ),
                     );
                   },
-                ), SizedBox(
+                ),
+                SizedBox(
                   height: height * .02,
                 ),
-
                 nameWidget(),
                 SizedBox(
                   height: height * .02,
                 ),
-
                 dateAndTimeWidget(),
                 SizedBox(
                   height: height * .02,
-                ), mobileNumber(),
+                ),
+                mobileNumber(),
                 SizedBox(
                   height: height * .02,
                 ),
-                TextFieldUtils().asteriskTextField(
-                    StringUtils.emailAddress, context),
-
-                TextFormFieldsWidget(
-                    errorText: StringUtils.emailError,
+                TextFieldUtils()
+                    .asteriskTextField(StringUtils.emailAddress, context),
+                EmailTextFormFieldsWidget(
+                    errorText: StringUtils.validEmailError,
                     textInputType: TextInputType.emailAddress,
                     controller: email,
                     autoValidation: AutovalidateMode.onUserInteraction,
@@ -214,14 +201,13 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextFieldUtils().asteriskTextField(
-            StringUtils.name, context),
+        TextFieldUtils().asteriskTextField(StringUtils.name, context),
         CharacterTextFormFieldsWidget(
             errorText: 'Please enter Name',
             textInputType: TextInputType.name,
             controller: nameController,
             autoValidation: AutovalidateMode.onUserInteraction,
-            hintText: 'David Wong',
+            hintText: 'Type your name',
             onChange: (val) {
               setState(() {
                 if (val.isEmpty && nameController.text.isEmpty) {
@@ -252,12 +238,12 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
   Widget dateAndTimeWidget() {
     return Row(
       children: [
-        Expanded(flex: 1,
+        Expanded(
+          flex: 1,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFieldUtils().asteriskTextField(
-                  StringUtils.date, context),
+              TextFieldUtils().asteriskTextField(StringUtils.date, context),
               TextFormFieldsWidget(
                   errorText: 'Please enter date',
                   textInputType: TextInputType.name,
@@ -290,12 +276,12 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
             ],
           ),
         ),
-        Expanded(flex: 1,
+        Expanded(
+          flex: 1,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFieldUtils().asteriskTextField(
-                  StringUtils.time, context),
+              TextFieldUtils().asteriskTextField(StringUtils.time, context),
               TextFormFieldsWidget(
                   errorText: 'Please enter time',
                   textInputType: TextInputType.name,
@@ -336,42 +322,53 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextFieldUtils().asteriskTextField(
-            StringUtils.mobileNumber, context),
+        TextFieldUtils().asteriskTextField(StringUtils.mobileNumber, context),
         MobileNumberTextFormField(
-          controller: mobileNumberController,
-          enable: true,
-        ),
+            controller: mobileNumberController,
+            enable: true,
+            validator: (value) {
+              if (value.isEmpty && mobileNumberController.text.isEmpty) {
+                _validateMobile = true;
+                return StringUtils.enterMobileNumber;
+              } else if (mobileNumberController.text.length < 10) {
+                _validateMobile = true;
+                return StringUtils.enterMobileNumber;
+              } else {
+                _validateMobile = false;
+              }
+              return null;
+            }),
       ],
     );
   }
 
   Widget submitButton() {
-    return proceedButton('Make Payment', ThemeApp.tealButtonColor,
-        context, false, () {                        FocusManager.instance.primaryFocus?.unfocus();
+    return proceedButton(
+        'Make Payment', ThemeApp.tealButtonColor, context, false, () {
+      FocusManager.instance.primaryFocus?.unfocus();
 
-        showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return submitDialog(
-                  heading: 'Thank you',
-                  subHeading: 'You have successfully submitted Plumber Appointment.',
-                  buttonText: 'Close',
-                  onTap
-                  :(){
-                    Navigator.pop(context);
-                  });
-              });
-        });
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return submitDialog(
+                heading: 'Thank you',
+                subHeading:
+                    'You have successfully submitted Plumber Appointment.',
+                buttonText: 'Close',
+                onTap: () {
+                  Navigator.pop(context);
+                });
+          });
+    });
   }
-
-
 }
 
 class BankListDataModel {
   String bank_name;
 
-  BankListDataModel(this.bank_name,);
+  BankListDataModel(
+    this.bank_name,
+  );
 }
 
 class submitDialog extends StatefulWidget {
@@ -380,8 +377,12 @@ class submitDialog extends StatefulWidget {
   final String buttonText;
   final VoidCallback onTap;
 
-  submitDialog(
-      {required this.heading, required this.subHeading, required this.buttonText, required this.onTap,});
+  submitDialog({
+    required this.heading,
+    required this.subHeading,
+    required this.buttonText,
+    required this.onTap,
+  });
 
   @override
   State<submitDialog> createState() => _submitDialogState();
@@ -394,10 +395,7 @@ class _submitDialogState extends State<submitDialog> {
         constraints: BoxConstraints(
           minHeight: 70.0,
           maxHeight: 300.0,
-          maxWidth: MediaQuery
-              .of(context)
-              .size
-              .width,
+          maxWidth: MediaQuery.of(context).size.width,
         ),
         child: Container(
           padding: EdgeInsets.all(15),
@@ -425,15 +423,14 @@ class _submitDialogState extends State<submitDialog> {
                 TextFieldUtils().dynamicText(
                     widget.subHeading,
                     context,
-                    TextStyle(fontFamily: 'Roboto',
+                    TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         // fontWeight: FontWeight.w500,
                         fontSize: MediaQuery.of(context).size.height * .022,
                         fontWeight: FontWeight.w400)),
-
-                proceedButton(
-                    widget.buttonText, ThemeApp.tealButtonColor, context, false,
-                    widget.onTap),
+                proceedButton(widget.buttonText, ThemeApp.tealButtonColor,
+                    context, false, widget.onTap),
               ],
             ),
           ),

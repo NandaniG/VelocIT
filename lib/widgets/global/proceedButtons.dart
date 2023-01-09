@@ -37,20 +37,32 @@ Widget proceedButton(String name, Color color, BuildContext context,
 }
 
 Widget whiteProceedButton(
-    String name, BuildContext context, VoidCallback onTap) {
+    String name,Color color,  BuildContext context, VoidCallback onTap) {
   return InkWell(
     onTap: onTap,
     child: Container(
-        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 12.0),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
-            Radius.circular(10),
+            Radius.circular(100),
           ),
-          border: Border.all(color: ThemeApp.darkGreyTab),
-          color: ThemeApp.whiteColor,
+          border: Border.all(
+            color: color== ThemeApp.whiteColor?ThemeApp.tealButtonColor: ThemeApp.whiteColor,
+          ),
+          color: color== ThemeApp.whiteColor?ThemeApp.whiteColor: ThemeApp.tealButtonColor,
         ),
-        child: TextFieldUtils()
-            .usingPassTextFields(name, ThemeApp.blackColor, context)),
+        child: Text(
+          name,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontFamily: 'Roboto',
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              overflow: TextOverflow.ellipsis,
+              color: color== ThemeApp.whiteColor?ThemeApp.tealButtonColor: ThemeApp.whiteColor,
+              letterSpacing: -0.25
+          ),
+        )),
   );
 }
 

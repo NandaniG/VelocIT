@@ -20,7 +20,7 @@ class Routes {
             builder: (BuildContext context) => SignUp());
       case RoutesName.signInRoute:
         return MaterialPageRoute(
-            builder: (BuildContext context) => SignIn_Screen());
+            builder: (BuildContext context) => SignIn_Screen(),);
       case RoutesName.dashboardRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => DashboardScreen());

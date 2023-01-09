@@ -29,15 +29,24 @@ class HomeProvider with ChangeNotifier {
   //--------------------load json file------------------------
   //----------------------------------------------------------
   loadJson() async {
-    try {
+    try {    final prefs = await SharedPreferences.getInstance();
+
+    StringConstant.RandomUserLoginId =
+          (prefs.getString('RandomUserId')) ?? '';
       String jsonContents = await OrderBasketRepository().postApiRequest({
-        "user_id": 669250095,
+        "user_id": StringConstant.RandomUserLoginId,
         "IsActiveOrderList": true,
         "from_days_in_past": 3
       });
       jsonData = json.decode(jsonContents);
       print("____________loadJson______________________");
       print(jsonData["payload"]['consumer_baskets'].toString());
+      print("OrderBasketRepository data"+{
+        "user_id": StringConstant.RandomUserLoginId,
+        "IsActiveOrderList": true,
+        "from_days_in_past": 3
+      }.toString());
+
       notifyListeners();
       merchantNearYouListService();
       ///////
@@ -54,7 +63,7 @@ class HomeProvider with ChangeNotifier {
       bestDealListService();
       cartProductListService();
       orderCheckOutListService();
-      myOrdersListService();
+      // myOrdersListService();
       myAddressListService();
       customerSupportService();
       accountSettingService();

@@ -156,9 +156,10 @@ static int isUserLoggedIn = 0;
 
   ///validations
   String emailRegExp =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-z\-0-9]+\.)+[a-z]{2,}))$';
 
   bool isEmail(String input) => RegExp(emailRegExp).hasMatch(input);
+  // bool isEmail(String input) => EmailValidator.validate(input);
 
   // 10 to 12 digit validation
   // bool isPhone(String input) =>

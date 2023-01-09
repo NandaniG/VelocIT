@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/utils.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
@@ -45,12 +46,13 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
   bool _validateFullName = false;
   bool _validateMobile = false;
   bool _validateEmail = false;
-@override
+
+  @override
   void initState() {
     // TODO: implement initState
 
-  getPrefValue();
-  super.initState();
+    getPrefValue();
+    super.initState();
   }
 
   getPrefValue() async {
@@ -66,6 +68,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
   }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -88,7 +91,15 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
             ),
           ),
         ),
-        title: Text("Edit my account"),
+        title: TextFieldUtils().dynamicText(
+            'Edit my Account',
+            context,
+            TextStyle(
+                fontFamily: 'Roboto',
+                color: ThemeApp.blackColor,
+                // fontWeight: FontWeight.w500,
+                fontSize: MediaQuery.of(context).size.height * .022,
+                fontWeight: FontWeight.w500)),
       ),
       body: SafeArea(
         child: Consumer<ProductProvider>(builder: (context, provider, child) {
@@ -169,9 +180,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                                   // height: height * .03,
                                 ),
                               ),
-                            )
-
-                            ),
+                            )),
                       ),
                     ],
                   )
@@ -188,17 +197,17 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                                   color: Colors.grey.shade600,
                                   spreadRadius: 1,
                                   blurRadius: 15)
-                            ],color: ThemeApp.whiteColor,
+                            ],
+                            color: ThemeApp.whiteColor,
                             border: Border.all(
                                 color: ThemeApp.whiteColor, width: 7),
                             shape: BoxShape.circle,
                           ),
-                          child:  ClipRRect(
+                          child: ClipRRect(
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(100)),
+                                const BorderRadius.all(Radius.circular(100)),
                             child: Image.file(
-
-                              File(  StringConstant.ProfilePhoto),
+                              File(StringConstant.ProfilePhoto),
                               fit: BoxFit.fill,
                               width: 130.0,
                               height: 130.0,
@@ -286,16 +295,17 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
               height: height * .03,
             ),
             TextFieldUtils().asteriskTextField(
-                StringUtils.fullName,
-                context,
-              ),
+              StringUtils.fullName,
+              context,
+            ),
             CharacterTextFormFieldsWidget(
-                isEnable: true,
+                isEnable: false,
                 errorText: StringUtils.enterFullName,
                 textInputType: TextInputType.name,
                 controller: provider.userNameController,
                 autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: 'David Wong',
+                intialvalue: 'Testing Name',
+                hintText: 'Test name',
                 onChange: (val) {},
                 validator: (value) {
                   return null;
@@ -304,32 +314,60 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
               height: height * .02,
             ),
             TextFieldUtils().asteriskTextField(
-                StringUtils.mobileNumber,
-                context,
-                ),
+              StringUtils.mobileNumber,
+              context,
+            ),
             MobileNumberTextFormField(
-                controller: provider.userMobileController, enable: false),
+                controller: provider.userMobileController,
+                enable: false,
+                validator: (value) {
+                  if (value.isEmpty &&
+                      provider.userMobileController.text.isEmpty) {
+                    _validateMobile = true;
+                    return StringUtils.enterMobileNumber;
+                  } else if (provider.userMobileController.text.length < 10) {
+                    _validateMobile = true;
+                    return StringUtils.enterMobileNumber;
+                  } else {
+                    _validateMobile = false;
+                  }
+                  return null;
+                }),
+            SizedBox(
+              height:5,
+            ),
+            Text(
+              "In order to prevent unauthorized access of personal information, request you to contact admin for changing the registered mobile number and email address.",
+              style: SafeGoogleFont(
+                'Roboto',
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: ThemeApp.lightFontColor,
+              ),
+            ),
             SizedBox(
               height: height * .02,
             ),
             TextFieldUtils().asteriskTextField(
-                StringUtils.email,
-                context,),
-            TextFormFieldsWidget(
-                errorText: StringUtils.email,
+              StringUtils.emailAddress,
+              context,
+            ),
+            EmailTextFormFieldsWidget(
+              enabled: false,
+                errorText: StringUtils.validEmailError,
                 textInputType: TextInputType.emailAddress,
                 controller: provider.userEmailController,
                 autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: 'david@gmil.com',
+                hintText: 'test@gmail.com',
                 onChange: (val) {},
                 validator: (val) {
                   if (val.isEmpty &&
                       provider.userEmailController.text.isEmpty) {
                     _validateEmail = true;
-                    return StringUtils.emailError;
+                    return StringUtils.validEmailError;
                   } else if (!StringConstant().isEmail(val)) {
                     _validateEmail = true;
-                    return StringUtils.emailError;
+                    return StringUtils.validEmailError;
                   } else {
                     _validateEmail = false;
                   }
@@ -367,7 +405,6 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
   //   }
   // }
 
-
   Future _getFromCamera() async {
     var image = await picker.getImage(source: ImageSource.camera);
     final prefs = await SharedPreferences.getInstance();
@@ -376,29 +413,28 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
 
     await prefs.setString('profileImagePrefs', imagePath);
 
-
     setState(() {
       imageFile1 = File(image!.path);
 
-   // final   file = File(image!.path);
-   //    final bytes =
-   //    file!.readAsBytesSync();
-   //   final img64 = base64Encode(bytes);
-
+      // final   file = File(image!.path);
+      //    final bytes =
+      //    file!.readAsBytesSync();
+      //   final img64 = base64Encode(bytes);
     });
     // Navigator.pop(this.context);
   }
 
   bool isEnable = false;
 
-  Widget fullName(ProductProvider provider) {
+/*  Widget fullName(ProductProvider provider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFieldUtils().dynamicText(
             StringUtils.fullName,
             context,
-            TextStyle(fontFamily: 'Roboto',
+            TextStyle(
+                fontFamily: 'Roboto',
                 color: ThemeApp.blackColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w600)),
@@ -408,7 +444,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
             textInputType: TextInputType.name,
             controller: provider.userNameController,
             autoValidation: AutovalidateMode.onUserInteraction,
-            hintText: 'David Wong',
+            hintText: 'Type your name',
             onChange: (val) {},
             validator: (value) {
               return null;
@@ -424,12 +460,26 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
         TextFieldUtils().dynamicText(
             StringUtils.mobileNumber,
             context,
-            TextStyle(fontFamily: 'Roboto',
+            TextStyle(
+                fontFamily: 'Roboto',
                 color: ThemeApp.blackColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w600)),
         MobileNumberTextFormField(
-            controller: provider.userMobileController, enable: false),
+            controller: provider.userMobileController,
+            enable: false,
+            validator: (value) {
+              if (value.isEmpty && provider.userMobileController.text.isEmpty) {
+                _validateMobile = true;
+                return StringUtils.enterMobileNumber;
+              } else if (provider.userMobileController.text.length < 10) {
+                _validateMobile = true;
+                return StringUtils.enterMobileNumber;
+              } else {
+                _validateMobile = false;
+              }
+              return null;
+            }),
       ],
     );
   }
@@ -439,26 +489,28 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFieldUtils().dynamicText(
-            StringUtils.email,
+            StringUtils.emailAddress,
             context,
-            TextStyle(fontFamily: 'Roboto',
+            TextStyle(
+                fontFamily: 'Roboto',
                 color: ThemeApp.blackColor,
                 fontSize: height * .02,
                 fontWeight: FontWeight.w600)),
-        TextFormFieldsWidget(
-            errorText: StringUtils.email,
+        EmailTextFormFieldsWidget(
+            errorText: StringUtils.validEmailError,
             textInputType: TextInputType.emailAddress,
             controller: provider.userEmailController,
             autoValidation: AutovalidateMode.onUserInteraction,
-            hintText: 'david@gmil.com',
+            hintText: 'test@gmail.com',
+
             onChange: (val) {},
             validator: (val) {
               if (val.isEmpty && provider.userEmailController.text.isEmpty) {
                 _validateEmail = true;
-                return StringUtils.emailError;
+                return StringUtils.validEmailError;
               } else if (!StringConstant().isEmail(val)) {
                 _validateEmail = true;
-                return StringUtils.emailError;
+                return StringUtils.validEmailError;
               } else {
                 _validateEmail = false;
               }
@@ -466,7 +518,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
             }),
       ],
     );
-  }
+  }*/
 
   Widget updateButton(ProductProvider provider) {
     return proceedButton(

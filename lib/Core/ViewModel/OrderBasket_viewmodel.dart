@@ -21,6 +21,7 @@ class OrderBasketViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+/*
   Future<void> getOrderBasketView(BuildContext context, dynamic data) async {
     loadingOrderBasket(ApiResponse.loading());
 
@@ -32,5 +33,6 @@ class OrderBasketViewModel with ChangeNotifier {
       loadingOrderBasket(ApiResponse.error(error.toString()));
     });
   }
+*/
 }
 

@@ -25,6 +25,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
   TextEditingController email = new TextEditingController();
 
   bool _validateName = false;
+  bool _validateMobile = false;
   bool _validateEmail = false;
 
   List<BankListDataModel> bankDataList = [
@@ -168,8 +169,8 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                 TextFieldUtils().asteriskTextField(
                     StringUtils.emailAddress, context),
 
-                TextFormFieldsWidget(
-                    errorText: StringUtils.emailError,
+                EmailTextFormFieldsWidget(
+                    errorText: StringUtils.validEmailError,
                     textInputType: TextInputType.emailAddress,
                     controller: email,
                     autoValidation: AutovalidateMode.onUserInteraction,
@@ -220,7 +221,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
             textInputType: TextInputType.name,
             controller: nameController,
             autoValidation: AutovalidateMode.onUserInteraction,
-            hintText: 'David Wong',
+            hintText: 'Type your name',
             onChange: (val) {
               setState(() {
                 if (val.isEmpty && nameController.text.isEmpty) {
@@ -339,7 +340,18 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
             StringUtils.mobileNumber, context),
         MobileNumberTextFormField(
           controller: mobileNumberController,
-          enable: true,
+          enable: true,  validator: (value) {
+          if (value.isEmpty && mobileNumberController.text.isEmpty) {
+            _validateMobile = true;
+            return StringUtils.enterMobileNumber;
+          } else if (mobileNumberController.text.length < 10) {
+            _validateMobile = true;
+            return StringUtils.enterMobileNumber;
+          } else {
+            _validateMobile = false;
+          }
+          return null;
+        }
         ),
       ],
     );

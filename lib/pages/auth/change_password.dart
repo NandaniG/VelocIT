@@ -29,7 +29,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
-      appBar: PreferredSize(
+/*      appBar: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Container(
             color: ThemeApp.whiteColor,
@@ -47,7 +47,63 @@ class _ChangePasswordState extends State<ChangePassword> {
                     .changePassword, context),
               ],
             ),
-          )),
+          )),*/
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .07),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          color: ThemeApp.appBackgroundColor,
+          alignment: Alignment.center,
+          child: AppBar(
+            centerTitle: false,
+            elevation: 0,
+            backgroundColor: ThemeApp.appBackgroundColor,
+            flexibleSpace: Container(
+              height: MediaQuery.of(context).size.height * .07,
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                color: ThemeApp.appBackgroundColor,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15)),
+              ),
+            ),
+            titleSpacing: 0,
+            leading: InkWell(
+              onTap: () {
+Navigator.pop(context);
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) =>
+                //     const DashboardScreen(),
+                //   ),
+                // );
+
+              },
+              child: Transform.scale(
+                scale: 0.7,
+                child: Image.asset(
+                  'assets/appImages/backArrow.png',
+                  color: ThemeApp.primaryNavyBlackColor,
+                  // height: height*.001,
+                ),
+              ),
+            ),
+
+            // leadingWidth: width * .06,
+            title: TextFieldUtils().dynamicText(
+                'Change password',
+                context,
+                TextStyle(fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    // fontWeight: FontWeight.w500,
+                    fontSize: MediaQuery.of(context).size.height * .022,
+                    fontWeight: FontWeight.w500)),
+            // Row
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -69,7 +125,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   children: [
                     TextFieldUtils()
                         .titleTextFields(StringUtils
-                        .changePassword, context),
+                        .currentPassword, context),
                     PasswordTextFormFieldsWidget(
                         errorText: StringUtils
                             .passwordError,
@@ -77,7 +133,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         controller: _currentPass,
                         autoValidation: AutovalidateMode.onUserInteraction,
                         hintText: StringUtils
-                            .password,
+                            .currentPassword,
                         onChange: (val) {
                           setState(() {
                             if (val.isEmpty && _currentPass.text.isEmpty) {
@@ -149,7 +205,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         textInputType: TextInputType.text,
                         controller: _confirmPass,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: 'Password',
+                        hintText: 'Confirm Password',
                         onChange: (val) {
                           setState(() {
                             if (val.isNotEmpty &&

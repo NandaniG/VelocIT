@@ -90,13 +90,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // TODO: implement initState
     super.initState();
     // addCartList();
+    getCartDetailsFromPref();
+
     data = Provider.of<HomeProvider>(context, listen: false).loadJson();
 
     print(url.toString());
-    final datassss = basketRepo.getOrderBasketApi(data);
     print('datassss.toString()');
     print(basketRepo.orderBasketData.toString());
-    getCartDetailsFromPref();
     // getCurrentLocation();
 // if()
 
@@ -129,7 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
 
       StringConstant.RandomUserLoginId =
-          (prefs.getString('isRandomUserId')) ?? '';
+          (prefs.getString('RandomUserId')) ?? '';
 
       print("IS USER LOG-IN ..............." +
           StringConstant.isUserLoggedIn.toString());
@@ -137,36 +137,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
           StringConstant.RandomUserLoginId.toString());
 
       StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+var userLoginId=StringConstant.UserLoginId;
+
+var userRandomId=StringConstant.RandomUserLoginId;
 
       print("USER LOGIN ID..............." +
           StringConstant.UserLoginId.toString());
-      if ((StringConstant.RandomUserLoginId == '' ||
-              StringConstant.RandomUserLoginId == null) &&
-          (StringConstant.UserLoginId == '' ||
-              StringConstant.UserLoginId == null)) {
-        print("RandomUserLoginId empty");
-        rnd = new Random();
-        var r = min + rnd.nextInt(max - min);
-
-        print("$r is in the range of $min and $max");
-        ID = r;
-        print("cartId empty" + ID.toString());
+      // if ((StringConstant.RandomUserLoginId == '' ||
+      //         StringConstant.RandomUserLoginId == null||StringConstant.RandomUserLoginId.isEmpty) &&
+      //     (StringConstant.UserLoginId == '' ||
+      //         StringConstant.UserLoginId == null)) {
+      //   print("RandomUserLoginId empty");
+      //   rnd = new Random();
+      //   var r = min + rnd.nextInt(max - min);
+      //
+      //   print("$r is in the range of $min and $max");
+      //   ID = r;
+      //   print("cartId empty" + ID.toString());
+      // } else {
+      //   print("RandomUserLoginId empty");
+      //   // ID = StringConstant.UserLoginId;
+      //   ID = StringConstant.UserLoginId;
+      // }
+      // // 715223688
+      // finalId = ID.toString();
+      // prefs.setString('RandomUserId', finalId.toString());
+      //
+      // print('finalId  RandomUserLoginId' + finalId);
+      Map<String, String> dat;
+      if (StringConstant.UserLoginId=='') {
+data = {
+          'userId': userRandomId
+        };
       } else {
-        print("RandomUserLoginId empty");
-        // ID = StringConstant.UserLoginId;
-        ID = StringConstant.UserLoginId;
+ data = {
+          'userId': userLoginId
+        };
       }
-      // 715223688
-      finalId = ID.toString();
-      prefs.setString('isRandomUserId', finalId.toString());
-
-      print('finalId  RandomUserLoginId' + finalId);
-      Map<String, String> data = {'userId': finalId};
 
       print("cart data pass : " + data.toString());
       CartRepository().cartPostRequest(data, context);
 
-      prefs.setString('finalUserId', finalId.toString());
       var CARTID = prefs.getString('CartIdPref');
 
       print("cartId from Pref" + CARTID.toString());
@@ -262,15 +273,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body:ChangeNotifierProvider<DashboardViewModel>.value(
-                value: dashboardViewModel,
-                child:  Consumer<DashboardViewModel>(
-                    builder: (context, dashboardProvider, child) {
-                  // print('object-------------' + provider.jsonData.toString());
-                  return data == ''
-                      ? CircularProgressIndicator()
-                      : Consumer<HomeProvider>(
-                      builder: (context, provider, child) {
+        body: ChangeNotifierProvider<DashboardViewModel>.value(
+          value: dashboardViewModel,
+          child: Consumer<DashboardViewModel>(
+              builder: (context, dashboardProvider, child) {
+            // print('object-------------' + provider.jsonData.toString());
+            return data == ''
+                ? CircularProgressIndicator()
+                : Consumer<HomeProvider>(builder: (context, provider, child) {
                     return (provider.jsonData.isNotEmpty &&
                             provider.jsonData['error'] == null)
                         ? SafeArea(
@@ -291,7 +301,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       SizedBox(
                                         height: height * .02,
                                       ),
-                                    /*  productList(),
+                                      /*  productList(),
                                       SizedBox(
                                         height: height * .02,
                                       ),*/
@@ -302,7 +312,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       stepperOfDelivery(provider),
                                       SizedBox(
                                         height: 20,
-                                      ),   productDetailsUI(),
+                                      ),
+                                      productDetailsUI(),
                                       SizedBox(
                                         height: height * .02,
                                       ),
@@ -373,10 +384,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 )))
                         : /*provider.jsonData['error'] != null
                             ? Container()
-                            :*/ Center(child: CircularProgressIndicator());
+                            :*/
+                        Center(child: CircularProgressIndicator());
                   });
-                }),
-              ));
+          }),
+        ));
   }
 
   Widget productServiceChip() {
@@ -422,7 +434,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: TextFieldUtils().dynamicText(
                         'Products',
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                            fontFamily: 'Roboto',
                             color: _isProductListChip
                                 ? ThemeApp.whiteColor
                                 : ThemeApp.blackColor,
@@ -464,7 +477,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: TextFieldUtils().dynamicText(
                         'Services',
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                            fontFamily: 'Roboto',
                             color: _isServiceListChip
                                 ? ThemeApp.whiteColor
                                 : ThemeApp.blackColor,
@@ -504,7 +518,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: TextFieldUtils().dynamicText(
                         'CRM',
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                            fontFamily: 'Roboto',
                             color: _isCRMListChip
                                 ? ThemeApp.whiteColor
                                 : ThemeApp.blackColor,
@@ -581,7 +596,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     child: TextFieldUtils().dynamicText(
                                         serviceList[index].name!,
                                         context,
-                                        TextStyle(fontFamily: 'Roboto',
+                                        TextStyle(
+                                          fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
                                           // fontWeight: FontWeight.w500,
                                           fontSize: 13,
@@ -609,157 +625,165 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       child: Text("sakdjsak"),
     );
-  }  int selected = 0;
+  }
 
-  Widget productDetailsUI(){
+  int selected = 0;
 
- return ChangeNotifierProvider<DashboardViewModel>.value(
-     value: productCategories,
-     child: Consumer<DashboardViewModel>(
-         builder: (context, productCategories, child) {
-           switch (productCategories.productCategoryList.status) {
-             case Status.LOADING:
-               if (kDebugMode) {
-                 print("Api load");
-               }
-               return ProgressIndicatorLoader(true);
+  Widget productDetailsUI() {
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value: productCategories,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-             case Status.ERROR:
-               if (kDebugMode) {
-                 print("Api error");
-               }
-               return Text(
-                   productCategories.productCategoryList.message.toString());
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
 
-             case Status.COMPLETED:
-               if (kDebugMode) {
-                 print("Api calll");
-               }
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-               List<ProductList>? serviceList =
-                   productCategories.productCategoryList.data!.productList;
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
 
-               return Container(
-       // padding: const EdgeInsets.all(10),
-       child: Column(
-           mainAxisAlignment: MainAxisAlignment.start,
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-
-             TextFieldUtils()
-                 .headingTextField('Shop by Categories', context),
-             SizedBox(
-               height: height * .02,
-             ),
-             ListView.builder(
-               key: Key('builder ${selected.toString()}'),
-               shrinkWrap: true,
-               physics: const NeverScrollableScrollPhysics(),
-               itemCount: serviceList!.length,
-               itemBuilder: (context, index) {
-                 return Card(
-                   shape: RoundedRectangleBorder(
-                     borderRadius: BorderRadius.circular(10),
-                   ),
-                   margin: const EdgeInsets.symmetric(
-                       horizontal: 5, vertical: 5),
-                   child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.center,
-                       mainAxisAlignment: MainAxisAlignment.center,
-                       children: <Widget>[
-                         ExpansionTile(
-                           key: Key(index.toString()),
-                           onExpansionChanged: ((newState) {
-                             if (newState) {
-                               setState(() {
-                                 const Duration(seconds: 20000);
-                                 selected = index;
-                               });
-                             } else {
-                               setState(() {
-                                 selected = -1;
-                               });
-                             }
-                           }),
-                           initiallyExpanded: index == selected,
-                           trailing:index == selected?Icon(
-                             Icons.arrow_drop_up,
-                             color: ThemeApp.textFieldBorderColor,
-                             size: height * .05,
-                           ): Icon(
-                             Icons.arrow_drop_down,
-                             color: ThemeApp.textFieldBorderColor,
-                             size: height * .05,
-                           ),
-                           tilePadding: const EdgeInsets.symmetric(
-                               horizontal: 20, vertical: 2),
-                           childrenPadding: const EdgeInsets.symmetric(
-                               horizontal: 20, vertical: 10),
-                           textColor: Colors.black,
-                           title: Row(
-                             children: [
-                               CircleAvatar(
-                                 child: ClipRRect(
-                                   borderRadius: const BorderRadius.all(
-                                       Radius.circular(50)),
-                                   child: Image.network(
-                                     serviceList[index]
-                                         .productCategoryImageId!,
-                                     fit: BoxFit.fill,
-                                     height: MediaQuery.of(context)
-                                         .size
-                                         .height *
-                                         .07,
-                                   ),
-                                 ),
-                               ),
-                               SizedBox(
-                                 width: width * .03,
-                               ),
-                               categoryListFont(
-                                   serviceList[index].name!,
-                                   context)
-                             ],
-                           ),
-                           expandedAlignment: Alignment.centerLeft,
-                           expandedCrossAxisAlignment:
-                           CrossAxisAlignment.start,
-                           children: [
-                             subListOfCategories(
-                                 serviceList[index])
-                           ],
-                         ),
-                       ]),
-                 );
-               },
-             )
-           ]),
-     );
-             default:
-               return Text("No Data found!");
-           }
-           return Text("No Data found!");
-         }));}
+              return Container(
+                // padding: const EdgeInsets.all(10),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFieldUtils()
+                          .headingTextField('Shop by Categories', context),
+                      SizedBox(
+                        height: height * .02,
+                      ),
+                      ListView.builder(
+                        key: Key('builder ${selected.toString()}'),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: serviceList!.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  ExpansionTile(
+                                    key: Key(index.toString()),
+                                    onExpansionChanged: ((newState) {
+                                      if (newState) {
+                                        setState(() {
+                                          const Duration(seconds: 20000);
+                                          selected = index;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          selected = -1;
+                                        });
+                                      }
+                                    }),
+                                    initiallyExpanded: index == selected,
+                                    trailing: index == selected
+                                        ? Icon(
+                                            Icons.arrow_drop_up,
+                                            color:
+                                                ThemeApp.textFieldBorderColor,
+                                            size: height * .05,
+                                          )
+                                        : Icon(
+                                            Icons.arrow_drop_down,
+                                            color:
+                                                ThemeApp.textFieldBorderColor,
+                                            size: height * .05,
+                                          ),
+                                    tilePadding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 2),
+                                    childrenPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    textColor: Colors.black,
+                                    title: Row(
+                                      children: [
+                                        CircleAvatar(
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(50)),
+                                            child: Image.network(
+                                              serviceList[index]
+                                                  .productCategoryImageId!,
+                                              fit: BoxFit.fill,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .07,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width * .03,
+                                        ),
+                                        categoryListFont(
+                                            serviceList[index].name!, context)
+                                      ],
+                                    ),
+                                    expandedAlignment: Alignment.centerLeft,
+                                    expandedCrossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      subListOfCategories(serviceList[index])
+                                    ],
+                                  ),
+                                ]),
+                          );
+                        },
+                      )
+                    ]),
+              );
+            default:
+              return Text("No Data found!");
+          }
+          return Text("No Data found!");
+        }));
+  }
 
   Widget categoryListFont(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: 16,
           overflow: TextOverflow.ellipsis,
-          fontWeight: FontWeight.w700,letterSpacing:-0.25 ,color: ThemeApp.primaryNavyBlackColor
-      ),
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.25,
+          color: ThemeApp.primaryNavyBlackColor),
     );
   }
 
   Widget subCategoryListFont(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: 13,
           overflow: TextOverflow.ellipsis,
-          fontWeight: FontWeight.w500,letterSpacing:-0.25 ,color: ThemeApp.primaryNavyBlackColor
-      ),
+          fontWeight: FontWeight.w500,
+          letterSpacing: -0.25,
+          color: ThemeApp.primaryNavyBlackColor),
     );
   }
 
@@ -774,7 +798,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: productList!.simpleSubCats!.length,*/
-        GridView.builder(
+            GridView.builder(
           itemCount: productList!.simpleSubCats!.length,
           scrollDirection: Axis.vertical,
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -791,29 +815,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ));
               },
               // child: Padding(
-                // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
-                child: Container(
+              // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+              child: Container(
                   // width: width * .25,
-                    width: 98,height: 59,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: ThemeApp.containerColor, width: 1.5),
-                        color: ThemeApp.containerColor),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(productList
-                                .simpleSubCats![index].imageUrl!),
-                          ) ??
-                              SizedBox(),
-                          /* ClipRRect(
+                  width: 98,
+                  height: 59,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: ThemeApp.containerColor, width: 1.5),
+                      color: ThemeApp.containerColor),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(
+                                  productList.simpleSubCats![index].imageUrl!),
+                            ) ??
+                            SizedBox(),
+                        /* ClipRRect(
                           borderRadius: const BorderRadius.all(
                               Radius.circular(50)),
                           child: Image.network(
@@ -826,17 +851,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 .07,
                           )??SizedBox(),
                         ),*/
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: subCategoryListFont(
+                              productList.simpleSubCats![index].name!, context),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Center(
-                            child: subCategoryListFont(
-                                productList.simpleSubCats![index].name!,
-                                context),
-                          ),
-                        )
-                      ],
-                    )),
+                      )
+                    ],
+                  )),
               // ),
             );
           },
@@ -911,7 +935,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ));*/
   }
 
-
   Widget serviceList() {
     return ChangeNotifierProvider<DashboardViewModel>.value(
         value: productCategories,
@@ -971,7 +994,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: TextFieldUtils().dynamicText(
                                   serviceList[index].name!,
                                   context,
-                                  TextStyle(fontFamily: 'Roboto',
+                                  TextStyle(
+                                    fontFamily: 'Roboto',
                                     color: ThemeApp.blackColor,
                                     // fontWeight: FontWeight.w500,
                                     fontSize: height * .02,
@@ -1002,54 +1026,57 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget imageLists(HomeProvider provider) {
     return data == ''
-        ? CircularProgressIndicator(): FutureBuilder(
+        ? CircularProgressIndicator()
+        : FutureBuilder(
             future: provider.homeImageSliderService(),
             builder: (context, snapShot) {
-              return (provider.homeSliderList !=null)
+              return (provider.homeSliderList != null)
                   ? Container(
-                  height: (MediaQuery.of(context).orientation ==
-                          Orientation.landscape)
-                      ? height * .5
-                      : height * 0.2,
-                  width: width,
-                  child: Stack(
-                    children: [
-                      CarouselSlider(
-                        carouselController: _carouselController,
-                        items: provider.homeSliderList["homeImageSlider"]
-                            .map<Widget>((e) {
-                          return Card(
-                            margin: EdgeInsets.zero,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            color: ThemeApp.whiteColor,
-                            child: ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                child: Container(
-                                  width: width,
-                                  color: Colors.white,
-                                  child: Image.asset(
-                                    e["homeSliderImage"],
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(Icons.image_outlined);
-                                    },
-                                  ),
-                                )),
-                          );
-                        }).toList()??'',
-                        options: CarouselOptions(
-                            autoPlay: false,
-                            viewportFraction: 1,
-                            height: height * .3),
-                      ),
-                    ],
-                  )):SizedBox();
-            })
-        ;
+                      height: (MediaQuery.of(context).orientation ==
+                              Orientation.landscape)
+                          ? height * .5
+                          : height * 0.2,
+                      width: width,
+                      child: Stack(
+                        children: [
+                          CarouselSlider(
+                            carouselController: _carouselController,
+                            items: provider.homeSliderList["homeImageSlider"]
+                                    .map<Widget>((e) {
+                                  return Card(
+                                    margin: EdgeInsets.zero,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    color: ThemeApp.whiteColor,
+                                    child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        child: Container(
+                                          width: width,
+                                          color: Colors.white,
+                                          child: Image.asset(
+                                            e["homeSliderImage"],
+                                            fit: BoxFit.fill,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Icon(Icons.image_outlined);
+                                            },
+                                          ),
+                                        )),
+                                  );
+                                }).toList() ??
+                                '',
+                            options: CarouselOptions(
+                                autoPlay: false,
+                                viewportFraction: 1,
+                                height: height * .3),
+                          ),
+                        ],
+                      ))
+                  : SizedBox();
+            });
   }
 
 /*
@@ -1381,7 +1408,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int indexForItems = 0;
 
   Widget stepperOfDelivery(HomeProvider value) {
-    return (value.jsonData.length > 0 && value.jsonData['status'] == 'OK'||value.jsonData.isNotEmpty)
+    return (value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
+            value.jsonData.isNotEmpty)
         ? Container(
             // height: 300,
             height: 161,
@@ -1457,7 +1485,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           overflow: TextOverflow.ellipsis,
                                           textAlign: TextAlign.start,
                                           maxLines: 2,
-                                          style: TextStyle(fontFamily: 'Roboto',
+                                          style: TextStyle(
+                                              fontFamily: 'Roboto',
                                               fontSize: 12,
                                               letterSpacing: -0.25,
                                               fontWeight: FontWeight.w700),
@@ -3048,7 +3077,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: subOrders['is_delivered'] == true
                       ? ThemeApp.appColor
                       : ThemeApp.inactiveStepperColor,
-                  size:20,
+                  size: 20,
                 ),
         ),
       ],

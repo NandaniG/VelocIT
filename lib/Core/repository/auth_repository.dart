@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/Core/data/network/baseApiServices.dart';
 import 'package:velocit/Core/data/network/networkApiServices.dart';
+import 'package:velocit/Core/repository/cart_repository.dart';
 import 'package:velocit/pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 
@@ -72,7 +73,7 @@ class AuthRepository {
     Map<String, dynamic> map = jsonDecode(rawJson);
     int id = map['id'];
     String message = map['message'];
-    Utils.successToast(rawJson.toString());
+    // Utils.successToast(rawJson.toString());
 
     if (response.statusCode == 200) {
       print(responseJson.toString());
@@ -89,15 +90,36 @@ class AuthRepository {
 
       print("LoginId : .. " + loginId.toString());
       StringConstant.isLogIn = true;
-      Utils.successToast(id.toString());
+      // Utils.successToast(id.toString());
 
 
    StringConstant.isUserNavigateFromDetailScreen= (prefs.getString('isUserNavigateFromDetailScreen'))??"";
       StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
       
       if(StringConstant.isUserNavigateFromDetailScreen=='Yes') {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => OrderReviewActivity(cartId: int.parse(StringConstant.UserCartID))));
+
+
+      var cartUserId=  prefs.getString(
+            'CartSpecificUserIdPref');
+   var itemCode=     prefs.getString(
+            'CartSpecificItem_codePref');
+ var itemQuanity=       prefs.getString(
+            'CartSpecificItemQuantityPref');
+
+        Map data = {
+          'user_id':cartUserId,
+          'item_code': itemCode,
+          'qty': itemQuanity
+        };
+
+        print("isUserNavigateFromDetailScreen UserCartID: "+StringConstant.UserCartID.toString());
+        print("isUserNavigateFromDetailScreen UserCartID: "+data.toString());
+        StringConstant.RandomUserLoginId =
+            (prefs.getString('RandomUserId')) ?? '';
+
+        // CartRepository().mergeCartList(StringConstant.RandomUserLoginId, id.toString(),data);
+        // Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => CartDetailsActivity());
         print("StringConstant.isUserNavigateFromDetailScreen"+StringConstant.isUserNavigateFromDetailScreen);
 
       }else{

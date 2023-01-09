@@ -44,7 +44,7 @@ class CartViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-
+int productBadge=0;
 
   Future<void> cartSpecificIDWithGet(BuildContext context, String id) async {
     setCartSpecificIDList(ApiResponse.loading());
@@ -113,7 +113,7 @@ class CartViewModel with ChangeNotifier {
 
     var requestUrl = ApiMapping.baseAPI + url;
 
-    print("setSecondDefaultAddress" + requestUrl.toString());
+    print("setDefaultAddress" + requestUrl.toString());
 
     // String body = json.encode(data);
     // print("setSecondDefaultAddress" + body.toString());

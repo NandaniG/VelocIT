@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
+import '../../utils/StringUtils.dart';
+import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 
@@ -19,6 +22,7 @@ class TextFormFieldsWidget extends StatefulWidget {
   FormFieldValidator validator;
   Icon? icon;
   Widget? suffixText;
+  Widget? preffixText;
   int? maxLength;
 
   TextFormFieldsWidget(
@@ -35,6 +39,7 @@ class TextFormFieldsWidget extends StatefulWidget {
       this.maxline: 1,
       this.icon,
       this.suffixText,
+      this.preffixText,
       this.maxLength});
 
   @override
@@ -61,7 +66,7 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
         onChanged: widget.onChange,
         decoration: InputDecoration(
           counterText: "",
-          prefixIcon: widget.icon,
+          prefixIcon: widget.preffixText,
           suffixIcon: widget.suffixText,
           suffixIconConstraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * .3,
@@ -77,6 +82,130 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
               fontSize: MediaQuery.of(context).size.height * 0.020),
           errorMaxLines: 2,
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(
+                color: ThemeApp.separatedLineColor,
+              )),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(
+                  color: ThemeApp.separatedLineColor, width: 1)),
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(
+                  color: ThemeApp.separatedLineColor, width: 1)),
+          errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(color: ThemeApp.redColor, width: 1)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(
+                  color: ThemeApp.separatedLineColor, width: 1)),
+        ),
+        validator: widget.validator,
+      ),
+    );
+  }
+}
+
+class EmailTextFormFieldsWidget extends StatefulWidget {
+  TextEditingController controller;
+  bool enablepadding;
+  bool obsecureText;
+  AutovalidateMode? autoValidation;
+  TextInputType textInputType;
+  String hintText;
+  String? intialvalue;
+  String errorText;
+  int maxline;
+  bool enabled;
+  FormFieldSetter onChange;
+  FormFieldValidator validator;
+  Icon? icon;
+  Widget? suffixText;
+  Widget? preffixText;
+  int? maxLength;bool isEmailValidateIcon;
+
+  EmailTextFormFieldsWidget(
+      {required this.errorText,
+        this.intialvalue,
+        required this.textInputType,
+        required this.controller,
+        required this.hintText,
+        this.autoValidation,
+        this.obsecureText: false,
+        this.enabled: false,
+        required this.onChange,
+        required this.validator,
+        this.enablepadding: true,
+        this.maxline: 1,
+        this.icon,
+        this.suffixText,
+        this.preffixText,
+        this.maxLength,
+  this.isEmailValidateIcon :false});
+
+  @override
+  _EmailTextFormFieldsWidgetState createState() => _EmailTextFormFieldsWidgetState();
+}
+
+class _EmailTextFormFieldsWidgetState extends State<EmailTextFormFieldsWidget> {
+  FocusNode focusNode = FocusNode();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: TextFormField(
+        controller: widget.controller,
+        autovalidateMode: widget.autoValidation,
+        keyboardType: widget.textInputType,
+        textCapitalization: TextCapitalization.words,
+        textInputAction: TextInputAction.next,
+        autofocus: false,
+        maxLength: widget.maxLength,
+        enabled: widget.enabled,
+        // focusNode: focusNode,
+        maxLines: widget.maxline,
+        onChanged: widget.onChange,
+        decoration: InputDecoration(
+          counterText: "",
+          // prefixIcon: widget.preffixText,
+          // suffixIcon: widget.suffixText,
+
+          // suffixIconConstraints: BoxConstraints(
+          //     maxWidth: 15.54,
+          //     minWidth: 15.54),
+
+          prefixIcon: Padding(
+            padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
+            child: SvgPicture.asset(
+              'assets/appImages/Username.svg',
+              width: 16.56,
+              height: 16.56,
+            ),
+          ),
+          suffixIcon:!StringConstant().isEmail(widget.controller.text)?SizedBox(): Padding(
+            padding: const EdgeInsets.fromLTRB(11.73,12.73,11.73,12.73),
+            child: SvgPicture.asset(
+              'assets/appImages/emailValidateIcon.svg',
+              width: 15.54,
+              height: 15.54,
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+
+          hintStyle: TextStyle(fontFamily: 'Roboto',
+              color: Colors.grey,
+              fontSize: 14,fontWeight: FontWeight.w400),
+          hintText: widget.hintText,
+          errorStyle: TextStyle(fontFamily: 'Roboto',
+              color: ThemeApp.redColor,
+              fontSize: MediaQuery.of(context).size.height * 0.020),
+          errorMaxLines: 2,
+          contentPadding: const EdgeInsets.fromLTRB(12.0, 12.0, 11.0, 12.0),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
               borderSide: const BorderSide(
@@ -169,10 +298,13 @@ class _CharacterTextFormFieldsWidgetState
         decoration: InputDecoration(
           counterText: "",
           prefixIcon: widget.icon,
+          // prefixIconConstraints:    BoxConstraints(
+          //   maxWidth: 15,
+          //   minWidth: 15),
           suffixIcon: widget.suffixText,
           suffixIconConstraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * .3,
-              minWidth: MediaQuery.of(context).size.width * .3),
+              maxWidth: 15,
+              minWidth: 15),
           filled: true,
           fillColor: Colors.white,
           hintStyle: TextStyle(fontFamily: 'Roboto',
@@ -183,7 +315,7 @@ class _CharacterTextFormFieldsWidgetState
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           errorMaxLines: 2,
-          contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 12.0, 11.0, 12.0),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
               borderSide: const BorderSide(
@@ -224,6 +356,7 @@ class PasswordTextFormFieldsWidget extends StatefulWidget {
   FormFieldSetter onChange;
   FormFieldValidator validator;
   Icon? icon;
+  Widget? prefixIcon;
 
   PasswordTextFormFieldsWidget(
       {required this.errorText,
@@ -237,7 +370,9 @@ class PasswordTextFormFieldsWidget extends StatefulWidget {
       required this.validator,
       this.enablepadding: true,
       this.maxline: 1,
-      this.icon});
+      this.icon,
+      this.prefixIcon,
+      });
 
   @override
   _PasswordTextFormFieldsWidgetState createState() =>
@@ -266,12 +401,12 @@ class _PasswordTextFormFieldsWidgetState
         autovalidateMode: widget.autoValidation,
         keyboardType: widget.textInputType,
         textCapitalization: TextCapitalization.words,
-        autofocus: false,
+        autofocus: false,maxLength: 16,
         focusNode: focusNode,
         maxLines: widget.maxline,
         onChanged: widget.onChange,
-        decoration: InputDecoration(
-          prefixIcon: widget.icon,
+        decoration: InputDecoration( counterText: "",
+          // prefixIcon: widget.prefixIcon,
           filled: true,
           fillColor: Colors.white,
           hintStyle: TextStyle(fontFamily: 'Roboto',
@@ -302,6 +437,16 @@ class _PasswordTextFormFieldsWidgetState
               borderRadius: BorderRadius.circular(5),
               borderSide: const BorderSide(
                   color: ThemeApp.separatedLineColor, width: 1)),
+
+
+          prefixIcon: Padding(
+            padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
+            child: SvgPicture.asset(
+              'assets/appImages/Password.svg',
+              width: 16.56,
+              height: 16.56,
+            ),
+          ),
           suffixIcon: IconButton(
             splashColor: Colors.white,
             highlightColor: Colors.white,
@@ -443,9 +588,11 @@ class _CardCVVTextFormFieldWidgetState
 class MobileNumberTextFormField extends StatefulWidget {
   TextEditingController controller;
   bool enable = true;
+  FormFieldValidator validator;
+  String? errorText;
 
   MobileNumberTextFormField(
-      {Key? key, required this.controller, required this.enable})
+      {Key? key, required this.controller, required this.enable, required this.validator, this.errorText})
       : super(key: key);
 
   @override
@@ -459,10 +606,11 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
     return Container(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: IntlPhoneField(
+        invalidNumberMessage: widget.errorText ,
 
         dropdownIconPosition: IconPosition.trailing,
         // showCountryFlag: false,
-        enabled: true,
+        enabled: widget.enable,
         controller: widget.controller,
         flagsButtonPadding: EdgeInsets.only(
           left: 20,
@@ -519,8 +667,16 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
               borderSide: const BorderSide(
                   color: ThemeApp.separatedLineColor, width: 1)),
         ),
+        validator: widget.validator,
         onChanged: (phone) {
-          print(phone.completeNumber);
+          if(phone.countryCode=="IN") {
+            print("india selected");
+            print(phone.completeNumber);
+
+          }else{
+            print("india not selected");
+
+          }
         },
         onCountryChanged: (country) {
           print('Country changed to: ' + country.name);
@@ -1210,12 +1366,12 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
 
   Widget stepperWidget() {
     return Container(
-        height: height * .1,
+        height: 100,
         width: width,
         alignment: Alignment.center,
         color: ThemeApp.appBackgroundColor,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -1300,20 +1456,24 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
     titles.asMap().forEach((i, text) {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
-            ? TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(fontFamily: 'Roboto',
-                    color: ThemeApp.tealButtonColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400))
-            : TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(fontFamily: 'Roboto',
-                    color: ThemeApp.inactiveStepperColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400)),
+            ? Container(width: 50,
+              child: TextFieldUtils().dynamicText(
+                  text,
+                  context,
+                  TextStyle(fontFamily: 'Roboto',
+                      color: ThemeApp.tealButtonColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400)),
+            )
+            : Container(width: 50,
+              child: TextFieldUtils().dynamicText(
+                  text,
+                  context,
+                  TextStyle(fontFamily: 'Roboto',
+                      color: ThemeApp.inactiveStepperColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400)),
+            ),
       );
     });
     return list;

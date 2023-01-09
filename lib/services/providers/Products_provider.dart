@@ -709,7 +709,7 @@ class ProductProvider with ChangeNotifier {
     TextEditingController userNameController = TextEditingController();
     TextEditingController userMobileController = TextEditingController(
         text: StringConstant.userAccountMobile);
-    TextEditingController userEmailController = TextEditingController();
+    TextEditingController userEmailController = TextEditingController(text: StringConstant.userAccountEmail);
 
 
   }

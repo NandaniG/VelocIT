@@ -102,15 +102,37 @@ class _OTPScreenState extends State<OTPScreen> {
                     height: 70,
                   ),
                 ),*/
-
-                TextFieldUtils().textFieldHeightThree(
-                    StringUtils.verification, context),
-                const SizedBox(
-                  height: 5,
+                Text(
+                  StringUtils.verification,
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 20,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.w400,
+                      color: ThemeApp.primaryNavyBlackColor),
                 ),
-                TextFieldUtils().subHeadingTextFields(
-                    StringUtils.verificationSubHeading,
-                    context),
+                SizedBox(
+                  height: 8,
+                ),
+                // Text(StringUtils!.helloWorld);
+                Text(
+                  StringUtils.verificationSubHeading,
+                  maxLines: 2,
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 14,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.w400,
+                      color: ThemeApp.primaryNavyBlackColor),
+                ),
+                // TextFieldUtils().textFieldHeightThree(
+                //     StringUtils.verification, context),
+                // const SizedBox(
+                //   height: 5,
+                // ),
+                // TextFieldUtils().subHeadingTextFields(
+                //     StringUtils.verificationSubHeading,
+                //     context),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .04,
                 ),
@@ -120,8 +142,8 @@ class _OTPScreenState extends State<OTPScreen> {
                       context,
                       TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
-                          fontSize:22,
-                          fontWeight: FontWeight.bold)),
+                          fontSize:20,
+                          fontWeight: FontWeight.w400)),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .04,
@@ -131,7 +153,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   controller: controller,
                   hideCharacter: true,
                   highlight: false,
-                  defaultBorderColor: ThemeApp.textFieldBorderColor,
+                  defaultBorderColor: ThemeApp.whiteColor,
                   hasTextBorderColor: controller.text.length <= 5
                       ? Colors.red
                       : ThemeApp.innertextfieldbordercolor,
@@ -168,7 +190,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
 //                    highlightAnimation: true,
                   highlightAnimationBeginColor: Colors.black,
-                  highlightAnimationEndColor: Colors.white12,
+                  highlightAnimationEndColor: Colors.white,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(
@@ -189,12 +211,29 @@ class _OTPScreenState extends State<OTPScreen> {
                         style: TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.primaryNavyBlackColor,
                             fontWeight: FontWeight.w400,
-                            fontSize: 19),
+                            fontSize: 14),
                       ),
                     )
-                        : SizedBox(),
+                        :  SizedBox(),
                     SizedBox(width: MediaQuery.of(context).size.width*0.02 ,),
-                    Center(
+              /*      _start == 0? Center(
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _start = 120;
+                              isLoading = true;
+                              startTimer();
+                            });
+                          },
+                          child: Text(
+                            'Re-generate OTP',
+                            style: TextStyle(fontFamily: 'Roboto',
+                                color: ThemeApp.tealButtonColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize:
+                                MediaQuery.of(context).size.height * .021),
+                          ),
+                        )): */   Center(
                         child: InkWell(
                           onTap: () {
                             setState(() {
@@ -209,7 +248,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                 color: ThemeApp.tealButtonColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize:
-                                MediaQuery.of(context).size.height * .021),
+                              14),
                           ),
                         )),
                   ],
@@ -219,14 +258,14 @@ class _OTPScreenState extends State<OTPScreen> {
                 ),
                 proceedButton(StringUtils.verifyOTP,
                     ThemeApp.tealButtonColor,context, authViewModel.loadingWithPost,() async {
-                      StringConstant.isLogIn = true;
 
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              DashboardScreen(),
-                        ),
-                      );
+
+                      // Navigator.of(context).pushReplacement(
+                      //   MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         DashboardScreen(),
+                      //   ),
+                      // );
                       String? emailId =
                       await Prefs.instance.getToken(StringConstant.emailPref);
 
@@ -235,6 +274,13 @@ class _OTPScreenState extends State<OTPScreen> {
                   print("Intend OTP:${authViewModel.getOTP}");
 
                   if (controller.text.length >= 6) {
+                    StringConstant.isLogIn = true;
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            DashboardScreen(),
+                      ),
+                    );
                     // if (authViewModel.getOTP == controller.text) {
                     //   Map data = {'username': 'testuser@test.com'};
                     //   authViewModel.loginApiWithPost(data, context);

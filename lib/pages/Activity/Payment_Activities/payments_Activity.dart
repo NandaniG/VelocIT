@@ -304,7 +304,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           _radioSelected == 3
                               ? CardNumberTextFormFieldsWidget(
                                   errorText:
-                                      StringUtils.emailError,
+                                      StringUtils.validEmailError,
                                   textInputType: TextInputType.number,
                                   controller: cardNumberController,
                                   maxLength: 19,

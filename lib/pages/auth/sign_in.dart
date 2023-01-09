@@ -45,7 +45,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _radioIndex=1;
+    _radioIndex = 1;
     _usingPassVisible = false;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<HomeProvider>(context, listen: false).loadJson();
@@ -123,12 +123,14 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                           fontSize: 14,
                           overflow: TextOverflow.ellipsis,
                           fontWeight: FontWeight.w400,
-                          color: ThemeApp.primaryNavyBlackColor),),
+                          color: ThemeApp.primaryNavyBlackColor),
+                    ),
 
                     SizedBox(
                       height: 20,
                     ),
-                    Row(mainAxisAlignment: MainAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Radio(
                           value: 1,
@@ -155,10 +157,11 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                           groupValue: _radioIndex,
                           activeColor: ThemeApp.appColor,
                           onChanged: (value) {
-                            setState(() { _usingPassVisible = true;
-                            _usingPassVisible = !_usingPassVisible;
-                            email.clear();
-                            password.clear();
+                            setState(() {
+                              _usingPassVisible = true;
+                              _usingPassVisible = !_usingPassVisible;
+                              email.clear();
+                              password.clear();
                               _radioIndex = value as int;
                               _radioVal = 'Phone';
                               print(_radioVal);
@@ -251,19 +254,35 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     SizedBox(
                       height: 50,
                     ),
-                    _radioIndex==1
+                    _radioIndex == 1
                         ? TextFieldUtils().asteriskTextField(
                             StringUtils.emailAddress, context)
                         : TextFieldUtils().asteriskTextField(
                             StringUtils.mobileNumber, context),
 
-                    _radioIndex==1
-                        ? TextFormFieldsWidget(
-                            errorText: StringUtils.emailError,
+                    _radioIndex == 1
+                        ? EmailTextFormFieldsWidget(
+                            errorText: StringUtils.validEmailError,
                             textInputType: TextInputType.emailAddress,
                             controller: email,
                             autoValidation: AutovalidateMode.onUserInteraction,
                             hintText: StringUtils.emailAddress,
+                            // preffixText: Padding(
+                            //   padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
+                            //   child: SvgPicture.asset(
+                            //     'assets/appImages/Username.svg',
+                            //     width: 16.56,
+                            //     height: 16.56,
+                            //   ),
+                            // ),
+                            // suffixText:!StringConstant().isEmail(email.text)?SizedBox(): Padding(
+                            //   padding: const EdgeInsets.fromLTRB(11.73,12.73,11.73,12.73),
+                            //   child: SvgPicture.asset(
+                            //     'assets/appImages/emailValidateIcon.svg',
+                            //     width: 15.54,
+                            //     height: 15.54,
+                            //   ),
+                            // ),
                             onChange: (val) {
                               setState(() {
                                 if (val.isEmpty && email.text.isEmpty) {
@@ -278,10 +297,10 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             validator: (value) {
                               if (value.isEmpty && email.text.isEmpty) {
                                 _validateEmail = true;
-                                return StringUtils.emailError;
+                                return StringUtils.validEmailError;
                               } else if (!StringConstant().isEmail(value)) {
                                 _validateEmail = true;
-                                return StringUtils.emailError;
+                                return StringUtils.validEmailError;
                               } else {
                                 _validateEmail = false;
                               }
@@ -290,16 +309,25 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         : const SizedBox(
                             height: 0,
                           ),
-                    _radioIndex==1
+                    _radioIndex == 1
                         ? const SizedBox(
                             height: 0,
                           )
                         : TextFormFieldsWidget(
-                            errorText: StringUtils.emailError,
+                            errorText: StringUtils.validEmailError,
                             textInputType: TextInputType.phone,
                             controller: mobileController,
                             autoValidation: AutovalidateMode.onUserInteraction,
                             hintText: StringUtils.mobileNumber,
+
+                        suffixText:!StringConstant().isEmail(email.text)?SizedBox(): Padding(
+                          padding: const EdgeInsets.fromLTRB(11.73,12.73,11.73,12.73),
+                          child: SvgPicture.asset(
+                            'assets/appImages/emailValidateIcon.svg',
+                            width: 15.54,
+                            height: 15.54,
+                          ),
+                        ),
                             onChange: (val) {
                               setState(() {
                                 if (val.isEmpty &&
@@ -325,14 +353,14 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               }
                               return null;
                             }),
-                    _radioIndex==1
+                    _radioIndex == 1
                         ? SizedBox(
                             height: MediaQuery.of(context).size.height * .02,
                           )
                         : const SizedBox(
                             height: 0,
                           ),
-                    _radioIndex==1
+                    _radioIndex == 1
                         ? Row(
                             children: [
                               TextFieldUtils().asteriskTextField(
@@ -343,20 +371,19 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               Tooltip(
                                 key: tooltipkey,
                                 message:
-                                    'Enter Password that must be\n(i) 8-16 characters long\n(ii) Must contain a number\n(iii) Must contain a capital and small letter\n(iv)Must contain a special character',
+                                'Enter Password that must be\no 8-16 characters long\no Must contain a number\no Must contain a capital and small letter\no Must contain a special character',
                                 padding: const EdgeInsets.all(30),
                                 margin: const EdgeInsets.only(
                                     top: 30, left: 30, right: 30),
                                 triggerMode: TooltipTriggerMode.tap,
                                 showDuration: const Duration(seconds: 2),
                                 decoration: BoxDecoration(
-                                    color: Colors.redAccent,
+                                    color: ThemeApp.appColor,
                                     borderRadius: BorderRadius.circular(22)),
                                 textStyle: const TextStyle(
                                     fontFamily: 'Roboto',
                                     fontSize: 16,
                                     letterSpacing: 1.2,
-                                    fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white),
                                 child: Icon(Icons.info_outline),
@@ -366,13 +393,21 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         : const SizedBox(
                             height: 0,
                           ),
-                    _radioIndex==1
+                    _radioIndex == 1
                         ? PasswordTextFormFieldsWidget(
                             errorText: StringUtils.passwordError,
                             textInputType: TextInputType.text,
                             controller: password,
                             autoValidation: AutovalidateMode.onUserInteraction,
                             hintText: StringUtils.password,
+                        // prefixIcon: Padding(
+                        //   padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
+                        //   child: SvgPicture.asset(
+                        //     'assets/appImages/Password.svg',
+                        //     width: 16.56,
+                        //     height: 16.56,
+                        //   ),
+                        // ),
                             onChange: (val) {
                               setState(() {
                                 if (val.isEmpty && password.text.isEmpty) {
@@ -402,8 +437,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .008,
                     ),
-                    _radioIndex==1
-
+                    _radioIndex == 1
                         ? Container(
                             alignment: Alignment.centerRight,
                             child: InkWell(
@@ -422,15 +456,15 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         : const SizedBox(
                             height: 0,
                           ),
-                    _radioIndex==1
+                    _radioIndex == 1
                         ? SizedBox(
-                            height: MediaQuery.of(context).size.height * .02,
+                            height: 50,
                           )
                         : const SizedBox(
-                            height: 0,
+                        height: 50,
                           ),
                     proceedButton(
-                        _radioIndex==1
+                        _radioIndex == 1
                             ? StringUtils.signin
                             : StringUtils.sendOtp,
                         ThemeApp.tealButtonColor,
@@ -441,32 +475,32 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         Prefs.instance
                             .setToken(StringConstant.emailPref, email.text);
                         // if (  !_usingPassVisible) {
-                          if (_formKey.currentState!.validate() &&
-                              email.text.isNotEmpty &&
-                              password.text.isNotEmpty) {
-                            Prefs.instance.setToken(StringConstant.emailOTPPref,
-                                mobileController.text);
+                        if (_formKey.currentState!.validate() &&
+                            email.text.isNotEmpty &&
+                            password.text.isNotEmpty) {
+                          Prefs.instance.setToken(StringConstant.emailOTPPref,
+                              mobileController.text);
 
-                            Map data = {
-                              'email': email.text,
-                              'password': password.text.trim()
-                            };
-                            Map mobileData = {
-                              'mobile': email.text,
-                              'password': password.text
-                            };
-                            print(data);
-                            if (StringConstant().isNumeric(email.text)) {
-                              print("Digit found");
-                            } else {
-                              AuthRepository()
-                                  .postApiUsingEmailRequest(data, context);
-
-                              print("Digit not found");
-                            }
+                          Map data = {
+                            'email': email.text,
+                            'password': password.text.trim()
+                          };
+                          Map mobileData = {
+                            'mobile': email.text,
+                            'password': password.text
+                          };
+                          print(data);
+                          if (StringConstant().isNumeric(email.text)) {
+                            print("Digit found");
                           } else {
-                            Utils.errorToast("Incorrect username or password");
+                            AuthRepository()
+                                .postApiUsingEmailRequest(data, context);
+
+                            print("Digit not found");
                           }
+                        } else {
+                          _radioIndex == 1?   Utils.errorToast("Incorrect username or password"):Utils.errorToast("Incorrect mobile number");
+                        }
                         // } else {
                         //   if (mobileController.text.isNotEmpty) {
                         //     authViewModel.loginApiWithGet(context);
