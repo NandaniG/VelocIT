@@ -308,7 +308,7 @@ class _HomePageState extends State<HomePage> {
                                                 subProductList[index]
                                                     .imageUrls![0]
                                                     .imageUrl!,
-                                                fit: BoxFit.fill,
+                                                // fit: BoxFit.fill,
                                                 height: (MediaQuery.of(
                                                     context)
                                                     .orientation ==

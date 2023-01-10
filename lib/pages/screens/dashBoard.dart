@@ -137,9 +137,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           StringConstant.RandomUserLoginId.toString());
 
       StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-var userLoginId=StringConstant.UserLoginId;
+      var userLoginId = StringConstant.UserLoginId;
 
-var userRandomId=StringConstant.RandomUserLoginId;
+      var userRandomId = StringConstant.RandomUserLoginId;
 
       print("USER LOGIN ID..............." +
           StringConstant.UserLoginId.toString());
@@ -165,14 +165,10 @@ var userRandomId=StringConstant.RandomUserLoginId;
       //
       // print('finalId  RandomUserLoginId' + finalId);
       Map<String, String> dat;
-      if (StringConstant.UserLoginId=='') {
-data = {
-          'userId': userRandomId
-        };
+      if (StringConstant.UserLoginId == '') {
+        data = {'userId': userRandomId};
       } else {
- data = {
-          'userId': userLoginId
-        };
+        data = {'userId': userLoginId};
       }
 
       print("cart data pass : " + data.toString());
@@ -697,7 +693,8 @@ data = {
                                         });
                                       }
                                     }),
-                                    initiallyExpanded: index == selected,
+                                    // initiallyExpanded: index == selected,
+                                    initiallyExpanded: false,
                                     trailing: index == selected
                                         ? Icon(
                                             Icons.arrow_drop_up,
@@ -711,10 +708,10 @@ data = {
                                                 ThemeApp.textFieldBorderColor,
                                             size: height * .05,
                                           ),
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 2),
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
+                                    // tilePadding: const EdgeInsets.symmetric(
+                                    //     horizontal: 15, vertical: 2),
+                                    // childrenPadding: const EdgeInsets.symmetric(
+                                    //     horizontal: 15, vertical: 5),
                                     textColor: Colors.black,
                                     title: Row(
                                       children: [
@@ -726,7 +723,7 @@ data = {
                                             child: Image.network(
                                               serviceList[index]
                                                   .productCategoryImageId!,
-                                              fit: BoxFit.fill,
+                                              // fit: BoxFit.fill,
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .height *
@@ -745,7 +742,10 @@ data = {
                                     expandedCrossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      subListOfCategories(serviceList[index])
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(10,10,10,15),
+                                        child: subListOfCategories(serviceList[index]),
+                                      )
                                     ],
                                   ),
                                 ]),
@@ -788,25 +788,27 @@ data = {
   }
 
   Widget subListOfCategories(ProductList productList) {
-    return Container(
+    return/* Container(
         height: 200,
         // height: 200,
         width: double.infinity,
         alignment: Alignment.center,
         color: ThemeApp.whiteColor,
-        child: /*ListView.builder(
+        child:*/ /*ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: productList!.simpleSubCats!.length,*/
-            GridView.builder(
-          itemCount: productList!.simpleSubCats!.length,
-          scrollDirection: Axis.vertical,
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 150,
-              childAspectRatio: 3 / 2.5,
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20),
-          itemBuilder: (BuildContext context, int index) {
+        GridView(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 12,
+        // childAspectRatio: 1.0,
+        childAspectRatio: MediaQuery.of(context).size.height / 500,
+    ),
+    shrinkWrap: true,
+    children: List.generate(productList!.simpleSubCats!.length,
+    (index) {
             return InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
@@ -818,11 +820,11 @@ data = {
               // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
               child: Container(
                   // width: width * .25,
-                  width: 98,
+                  width: 97,
                   height: 59,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(5),
                       border: Border.all(
                           color: ThemeApp.containerColor, width: 1.5),
                       color: ThemeApp.containerColor),
@@ -863,8 +865,10 @@ data = {
                   )),
               // ),
             );
-          },
-        ));
+          },)
+        )
+    // )
+    ;
 
     /*Container(
         height: 200,
@@ -1058,7 +1062,7 @@ data = {
                                           color: Colors.white,
                                           child: Image.asset(
                                             e["homeSliderImage"],
-                                            fit: BoxFit.fill,
+                                            // fit: BoxFit.fill,
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return Icon(Icons.image_outlined);
@@ -1466,7 +1470,7 @@ data = {
                                           child: Image.network(
                                             // width: double.infinity,
                                             subOrders['image_url'] ?? "",
-                                            fit: BoxFit.fill,
+                                            // fit: BoxFit.fill,
                                             errorBuilder:
                                                 ((context, error, stackTrace) {
                                               return Icon(Icons.image_outlined);
@@ -1931,7 +1935,7 @@ data = {
                                                         .imageUrls![0]
                                                         .imageUrl! ??
                                                     "",
-                                                fit: BoxFit.fill,
+                                                // fit: BoxFit.fill,
                                                 errorBuilder: ((context, error,
                                                     stackTrace) {
                                                   return Icon(
@@ -2316,7 +2320,7 @@ data = {
                                           width: 191,
                                           decoration: const BoxDecoration(
                                               color:
-                                                  ThemeApp.textFieldBorderColor,
+                                                  ThemeApp.whiteColor,
                                               borderRadius: BorderRadius.only(
                                                 topRight: Radius.circular(10),
                                                 topLeft: Radius.circular(10),
@@ -2332,7 +2336,7 @@ data = {
                                                 ((context, error, stackTrace) {
                                               return Icon(Icons.image_outlined);
                                             }),
-                                            fit: BoxFit.fill,
+                                            // fit: BoxFit.fill,
                                           )),
                                         ),
                                         Container(
@@ -2593,64 +2597,71 @@ data = {
                   .productListingResponse.data!.payload!.content;
 
               return Container(
-                  height: serviceList!.length > 2 ? 480 : 240,
-                  // width: MediaQuery.of(context).size.width,
-                  // padding: EdgeInsets.all(12.0),
-                  child: GridView.builder(
-                    itemCount: 4,
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 0.5,
-                      crossAxisSpacing: 0.5,
-                      // width / height: fixed for *all* items
-                      childAspectRatio: 0.85,
-
+                height: serviceList!.length > 2 ? 420 : 240,
+                child: GridView(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 12,
+                      // childAspectRatio: 1.0,
+                      childAspectRatio: MediaQuery.of(context).size.height / 800,
                     ),
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ProductDetailsActivity(
-                                id: serviceList[index].id,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: List.generate(
+                        serviceList!.length >= 4 ? 4 : serviceList!.length,
+                        (index) {
+                      return Container(
+                        // height: 191,
+                        // width: 191,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailsActivity(
+                                  id: serviceList[index].id,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        child: Container(
+                            );
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                height: 163,
-                                width: 191,
+                                  height: 141,
+                                  width: 191,
                                 decoration: const BoxDecoration(
-                                    color: ThemeApp.textFieldBorderColor,
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      topLeft: Radius.circular(10),
-                                    )),
-                                child: ClipRRect(
-                                    child: Image.network(
+                                  color: ThemeApp.whiteColor,
+                                  // borderRadius: BorderRadius.only(
+                                  //   topRight: Radius.circular(10),
+                                  //   topLeft: Radius.circular(10),
+                                  // )
+                                ),
+                                child: Image.network(
                                   // width: double.infinity,
                                   serviceList[index]
                                       .imageUrls![0]
                                       .imageUrl
                                       .toString(),
-                                  fit: BoxFit.fill,
+                                  // fit: BoxFit.fill,
                                   errorBuilder: ((context, error, stackTrace) {
-                                    return Icon(Icons.image_outlined);
+                                    return Container(
+                                        height: 141,
+                                        width: 191,
+                                        color: ThemeApp.whiteColor,
+                                        child: Icon(
+                                          Icons.image_outlined,
+                                        ));
                                   }),
-                                )),
-                              ),
+                                  // height: 163,
+                                  // width: 191,
+                                ),
+                              ),SizedBox(),
                               Container(
                                 color: ThemeApp.tealButtonColor,
                                 width: 191,
-                                height: 65,
+                                // height: 65,
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -2658,7 +2669,7 @@ data = {
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.fromLTRB(
-                                          21, 9, 21, 4),
+                                          21, 10, 21, 0),
                                       child: TextFieldUtils()
                                           .listNameHeadingTextField(
                                               serviceList[index].shortName!,
@@ -2677,36 +2688,140 @@ data = {
                                     ),
                                     Container(
                                       padding: const EdgeInsets.fromLTRB(
-                                          21, 0, 21, 9),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          //discount
-                                          TextFieldUtils()
-                                              .listPriceHeadingTextField(
-                                                  indianRupeesFormat.format(
-                                                      serviceList[index]
-                                                              .defaultSellPrice ??
-                                                          0.0),
-                                                  context),
-
-                                          TextFieldUtils()
-                                              .listScratchPriceHeadingTextField(
-                                                  indianRupeesFormat.format(
-                                                      serviceList[index]
-                                                              .defaultMrp ??
-                                                          0.0),
-                                                  context),
-                                        ],
-                                      ),
+                                          21,4, 21, 9),
+                                      child:  TextFieldUtils()
+                                          .listPriceHeadingTextField(
+                                        'Under'+  indianRupeesFormat.format(
+                                              serviceList[index]
+                                                  .defaultSellPrice ??
+                                                  0.0),
+                                          context),
                                     )
                                   ],
                                 ),
                               ),
                             ],
                           ),
-                          /* Column(
+                        ),
+                      );
+                    })),
+              );
+
+            /*    Container(
+                      height: serviceList!.length > 2 ? 480 : 240,
+                      // width: MediaQuery.of(context).size.width,
+                      // padding: EdgeInsets.all(12.0),
+                      child: GridView.builder(
+                        itemCount: 4,
+                        physics: const NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisSpacing: 0.5,
+                          crossAxisSpacing: 0.5,
+                          // width / height: fixed for *all* items
+                          childAspectRatio: 0.85,
+
+                          crossAxisCount: 2,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetailsActivity(
+                                    id: serviceList[index].id,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 163,
+                                    width: 191,
+                                    decoration: const BoxDecoration(
+                                        color: ThemeApp.textFieldBorderColor,
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          topLeft: Radius.circular(10),
+                                        )),
+                                    child: ClipRRect(
+                                        child: Image.network(
+                                          // width: double.infinity,
+                                          serviceList[index]
+                                              .imageUrls![0]
+                                              .imageUrl
+                                              .toString(),
+                                          fit: BoxFit.fill,
+                                          errorBuilder: ((context, error, stackTrace) {
+                                            return Icon(Icons.image_outlined);
+                                          }),
+                                        )),
+                                  ),
+                                  Container(
+                                    color: ThemeApp.tealButtonColor,
+                                    width: 191,
+                                    height: 65,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              21, 9, 21, 4),
+                                          child: TextFieldUtils()
+                                              .listNameHeadingTextField(
+                                              serviceList[index].shortName!,
+                                              context) */ /*Text(
+                                                    serviceList[index].shortName!,
+                                                    maxLines: 1,
+                                                    style: TextStyle(fontFamily: 'Roboto',
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        fontSize: height * .022,
+                                                        fontWeight:
+                                                            FontWeight.bold))*/ /*
+                                          ,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              21, 0, 21, 9),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              //discount
+                                              TextFieldUtils()
+                                                  .listPriceHeadingTextField(
+                                                  indianRupeesFormat.format(
+                                                      serviceList[index]
+                                                          .defaultSellPrice ??
+                                                          0.0),
+                                                  context),
+
+                                              TextFieldUtils()
+                                                  .listScratchPriceHeadingTextField(
+                                                  indianRupeesFormat.format(
+                                                      serviceList[index]
+                                                          .defaultMrp ??
+                                                          0.0),
+                                                  context),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              */ /* Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -2782,11 +2897,11 @@ data = {
                                   ),
                                 )
                               ],
-                            )*/
-                        ),
-                      );
-                    },
-                  ));
+                            )*/ /*
+                            ),
+                          );
+                        },
+                      ));*/
             default:
               return Text("No Data found!");
           }
@@ -2930,6 +3045,380 @@ data = {
         }));
 */
   }
+
+/*
+  Widget budgetBuyList() {
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value: productListView,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+          switch (productCategories.productListingResponse.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
+
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productListingResponse.message.toString());
+
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
+
+              List<Content>? serviceList = productCategories
+                  .productListingResponse.data!.payload!.content;
+
+              return Container(
+                  height: serviceList!.length > 2 ? 480 : 240,
+                  // width: MediaQuery.of(context).size.width,
+                  // padding: EdgeInsets.all(12.0),
+                  child: GridView.builder(
+                    itemCount: 4,
+                    physics: const NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      mainAxisSpacing: 0.5,
+                      crossAxisSpacing: 0.5,
+                      // width / height: fixed for *all* items
+                      childAspectRatio: 0.85,
+
+                      crossAxisCount: 2,
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetailsActivity(
+                                id: serviceList[index].id,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 163,
+                                width: 191,
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.textFieldBorderColor,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      topLeft: Radius.circular(10),
+                                    )),
+                                child: ClipRRect(
+                                    child: Image.network(
+                                  // width: double.infinity,
+                                  serviceList[index]
+                                      .imageUrls![0]
+                                      .imageUrl
+                                      .toString(),
+                                  fit: BoxFit.fill,
+                                  errorBuilder: ((context, error, stackTrace) {
+                                    return Icon(Icons.image_outlined);
+                                  }),
+                                )),
+                              ),
+                              Container(
+                                color: ThemeApp.tealButtonColor,
+                                width: 191,
+                                height: 65,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          21, 9, 21, 4),
+                                      child: TextFieldUtils()
+                                          .listNameHeadingTextField(
+                                              serviceList[index].shortName!,
+                                              context) */
+/*Text(
+                                                    serviceList[index].shortName!,
+                                                    maxLines: 1,
+                                                    style: TextStyle(fontFamily: 'Roboto',
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        fontSize: height * .022,
+                                                        fontWeight:
+                                                            FontWeight.bold))*/ /*
+
+                                      ,
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          21, 0, 21, 9),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          //discount
+                                          TextFieldUtils()
+                                              .listPriceHeadingTextField(
+                                                  indianRupeesFormat.format(
+                                                      serviceList[index]
+                                                              .defaultSellPrice ??
+                                                          0.0),
+                                                  context),
+
+                                          TextFieldUtils()
+                                              .listScratchPriceHeadingTextField(
+                                                  indianRupeesFormat.format(
+                                                      serviceList[index]
+                                                              .defaultMrp ??
+                                                          0.0),
+                                                  context),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          */
+/* Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Stack(
+                                    alignment: Alignment.topRight,
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .25,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
+                                            )),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            topLeft: Radius.circular(10),
+                                          ),
+                                          child: serviceList[index]
+                                                  .imageUrls![0]
+                                                  .imageUrl!
+                                                  .isNotEmpty
+                                              ? Image.network(
+                                                  // width: double.infinity,
+                                                  serviceList![index]
+                                                      .imageUrls![0]
+                                                      .imageUrl!,
+                                                  fit: BoxFit.fill,
+                                                )
+                                              : SizedBox(
+                                                  // height: height * .28,
+                                                  width: width,
+                                                  child: Icon(
+                                                    Icons.image_outlined,
+                                                    size: 50,
+                                                  )),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  // flex: 1,
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 12, right: 12),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextFieldUtils()
+                                            .homePageTitlesTextFieldsWHITE(
+                                                serviceList[index].shortName!,
+                                                context),
+                                        TextFieldUtils().dynamicText(
+                                            "under 9532",
+                                            context,
+                                            TextStyle(fontFamily: 'Roboto',
+                                                color: ThemeApp.whiteColor,
+                                                fontSize: height * .022,
+                                                fontWeight: FontWeight.bold)),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )*/ /*
+
+                        ),
+                      );
+                    },
+                  ));
+            default:
+              return Text("No Data found!");
+          }
+          return Text("No Data found!");
+        }));
+*/
+/*
+    return ChangeNotifierProvider<DashboardViewModel>(
+        value:  dashboardViewModel,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, dashboardProvider, child) {
+          return Consumer<DashboardViewModel>(
+              builder: (context, dashboardProvider, child) {
+            switch (dashboardViewModel.productListingList.status) {
+              case Status.LOADING:
+                if (kDebugMode) {
+                  print("Api load");
+                }
+                return ProgressIndicatorLoader(true);
+
+              case Status.ERROR:
+                if (kDebugMode) {
+                  print("Api error");
+                }
+                return Text(
+                    dashboardViewModel.productListingList.message.toString());
+
+              case Status.COMPLETED:
+                if (kDebugMode) {
+                  print("Api calll");
+                }
+
+                List<ProductListing>? productListing = dashboardViewModel
+                    .productListingList.data!.response!.body!.productListing;
+
+                return Container(
+                    height: 580,
+                    // width: MediaQuery.of(context).size.width,
+                    // padding: EdgeInsets.all(12.0),
+                    child: GridView.builder(
+                      itemCount: 4,
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 10,
+                        // width / height: fixed for *all* items
+                        childAspectRatio: 0.75,
+
+                        crossAxisCount: 2,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(
+                                color: ThemeApp.darkGreyTab,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Stack(
+                                    alignment: Alignment.topRight,
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                .25,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
+                                            )),
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            topLeft: Radius.circular(10),
+                                          ),
+                                          child: Image.network(
+                                            // width: double.infinity,
+                                            productListing![index].image1Url!,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10, right: 10),
+                                        child: kmAwayOnMerchantImage(
+                                          '1.1 KM away',
+                                          context,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  // flex: 1,
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 12, right: 12),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextFieldUtils()
+                                            .homePageTitlesTextFieldsWHITE(
+                                                productListing[index]
+                                                    .shortName!,
+                                                context),
+                                        TextFieldUtils().dynamicText(
+                                            indianRupeesFormat.format(
+                                                productListing[index]
+                                                    .currentPrice),
+                                            context,
+                                            TextStyle(fontFamily: 'Roboto',
+                                                color: ThemeApp.whiteColor,
+                                                fontSize: height * .022,
+                                                fontWeight: FontWeight.bold)),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ));
+                      },
+                    ));
+              default:
+                return Text("No Data found!");
+            }
+            return Text("No Data found!");
+          });
+        }));
+*/ /*
+
+  }
+*/
 
   // List<Widget> _iconViews() {
   //   var list = <Widget>[];

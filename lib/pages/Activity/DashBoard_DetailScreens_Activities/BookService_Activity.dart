@@ -162,7 +162,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
                                           child: Image.network(
                                             widget.shopByCategoryList![index]
                                                 .productCategoryImageId!,
-                                            fit: BoxFit.fill,
+                                            // fit: BoxFit.fill,
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *

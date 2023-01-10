@@ -359,7 +359,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                               child: Image.asset(
                                                 // width: double.infinity,
                                                 widget.merchantList["subMerchantList"][index]["subMerchantNearYouImage"],
-                                                fit: BoxFit.fill,
+                                                // fit: BoxFit.fill,
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height *

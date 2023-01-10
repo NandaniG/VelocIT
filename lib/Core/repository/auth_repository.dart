@@ -72,7 +72,8 @@ class AuthRepository {
 
     Map<String, dynamic> map = jsonDecode(rawJson);
     int id = map['id'];
-    String message = map['message'];
+    String username = map['username'];
+    String email = map['email'];
     // Utils.successToast(rawJson.toString());
 
     if (response.statusCode == 200) {
@@ -87,10 +88,12 @@ class AuthRepository {
       final preferences = await SharedPreferences.getInstance();
       preferences.setInt('isUserLoggedIn',1);
       preferences.setString('isUserId',id.toString());
+      preferences.setString('usernameLogin',username.toString());
+      preferences.setString('emailLogin',email.toString());
 
       print("LoginId : .. " + loginId.toString());
       StringConstant.isLogIn = true;
-      // Utils.successToast(id.toString());
+      Utils.successToast('User login successfully');
 
 
    StringConstant.isUserNavigateFromDetailScreen= (prefs.getString('isUserNavigateFromDetailScreen'))??"";
@@ -118,11 +121,12 @@ class AuthRepository {
             (prefs.getString('RandomUserId')) ?? '';
 
         // CartRepository().mergeCartList(StringConstant.RandomUserLoginId, id.toString(),data);
-        // Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => CartDetailsActivity());
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => CartDetailsActivity()));
         print("StringConstant.isUserNavigateFromDetailScreen"+StringConstant.isUserNavigateFromDetailScreen);
 
       }else{
+
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => DashboardScreen()));
         print("StringConstant.isUserNavigateFromDetailScreen"+StringConstant.isUserNavigateFromDetailScreen);

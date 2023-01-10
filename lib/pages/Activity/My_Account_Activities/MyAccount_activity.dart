@@ -66,6 +66,8 @@ var data;
     }
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+    // StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
+    // StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
 
     cartListView.sendCartForPaymentWithGet(
         this.context, StringConstant.UserCartID);
@@ -321,7 +323,7 @@ var data;
                           ),
                           TextFieldUtils().dynamicText(
                               // StringConstant.userAccountName,
-                              'Dawid John',
+                              StringConstant.loginUserName,
                               context,
                               TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.blackColor,
@@ -333,7 +335,7 @@ var data;
                           ),
                           TextFieldUtils().dynamicText(
                               // StringConstant.userAccountEmail,
-                              'dawid@gmail.com',
+                              StringConstant.loginUserEmail,
                               context,
                               TextStyle(fontFamily: 'Roboto',
                                   color: ThemeApp.lightFontColor,
@@ -364,7 +366,7 @@ var data;
                               child: Row(
                                 children: [
                                   iconsUtils(
-                                      'assets/appImages/settingIcon.svg'),
+                                      'assets/appImages/notificationIcon.svg',17,15.41),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -388,7 +390,7 @@ var data;
                               child: Row(
                                 children: [
                                   iconsUtils(
-                                      'assets/appImages/myOrderIcon.svg'),
+                                      'assets/appImages/myOrderIcon.svg',18.65,18),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -474,7 +476,7 @@ var data;
                               child: Row(
                                 children: [
                                   iconsUtils(
-                                      'assets/appImages/savedAddressIcon.svg'),
+                                      'assets/appImages/savedAddressIcon.svg',20,15.26),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -498,7 +500,7 @@ var data;
                               child: Row(
                                 children: [
                                   iconsUtils(
-                                      'assets/appImages/headPhoneIcon.svg'),
+                                      'assets/appImages/settingIcon.svg',20,18),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -522,7 +524,7 @@ var data;
                               child: Row(
                                 children: [
                                   iconsUtils(
-                                      'assets/appImages/settingIcon.svg'),
+                                      'assets/appImages/changePassIcon.svg',21.59,19),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -546,7 +548,7 @@ var data;
                               child: Row(
                                 children: [
                                   iconsUtils(
-                                      'assets/appImages/headPhoneIcon.svg'),
+                                      'assets/appImages/headPhoneIcon.svg',18,18),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -605,7 +607,7 @@ var data;
                               StringConstant.ScannedProductId = '';
                               final pref =
                                   await SharedPreferences.getInstance();
-                              Utils.errorToast('You are sign out');
+                              Utils.successToast('You are signed out');
                               await pref.clear();
 
                               late Random rnd;
@@ -631,7 +633,7 @@ var data;
                               child: Row(
                                 children: [
                                   iconsUtils(
-                                      'assets/appImages/signOutIcon.svg'),
+                                      'assets/appImages/signOutIcon.svg',18,18),
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -651,7 +653,7 @@ var data;
     );
   }
 
-  Widget iconsUtils(String svgIcon) {
+  Widget iconsUtils(String svgIcon,double height, double width) {
     return Container(
       height: 32,
       width: 32,
@@ -663,7 +665,8 @@ var data;
           svgIcon,
           color: ThemeApp.whiteColor,
           semanticsLabel: 'Acme Logo',
-
+height: height,
+          width: width,
           // height: height * .03,
         ),
       ),

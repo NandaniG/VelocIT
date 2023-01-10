@@ -356,8 +356,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                             // mainAxisAlignment: MainAxisAlignment.start,
                             // crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              StepperGlobalWidget(),
-                              // stepperWidget(),
+                              // StepperGlobalWidget(),
+                              stepperWidget(),
                               Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Column(
@@ -392,7 +392,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                       : ThemeApp.appColor,
                                                 ),
                                                 child: Center(
-                                                  child: Text('Home delivery',
+                                                  child: Text('Deliver to Address',
                                                       style: TextStyle(
                                                           fontFamily: 'Roboto',
                                                           fontSize: 14,
@@ -432,7 +432,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                         : ThemeApp.whiteColor,
                                                   ),
                                                   child: Center(
-                                                    child: Text('Self Pick-up',
+                                                    child: Text('Pickup from Store',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Roboto',
@@ -2224,13 +2224,13 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
   }*/
 
   Widget stepperWidget() {
-    return Container(
-        height: height * .1,
-        width: width,
-        alignment: Alignment.center,
-        color: ThemeApp.appBackgroundColor,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(19,16,19,14),
+      child: Container(
+          height: 78,
+          width: width,
+          alignment: Alignment.center,
+          color: ThemeApp.appBackgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -2248,8 +2248,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                 ),
               ),
             ],
-          ),
-        ));
+          )),
+    );
   }
 
   List<Widget> _iconViews() {
@@ -2310,22 +2310,26 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     titles.asMap().forEach((i, text) {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
-            ? TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.w400))
-            : TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.w400)),
+            ? SizedBox(width: 61,
+              child: TextFieldUtils().dynamicText(
+                  text,
+                  context,
+                  TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400)),
+            )
+            : SizedBox(width: 61,
+              child: TextFieldUtils().dynamicText(
+                  text,
+                  context,
+                  TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400)),
+            ),
       );
     });
     return list;
@@ -2333,9 +2337,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
 }
 
 final List<String> titles = [
-  'Order Placed',
+  'Order review',
+  'Delivery detail',
   'Payment',
-  'Order Completed',
+  'Order confirmation',
 ];
 int _curStep = 1;
 

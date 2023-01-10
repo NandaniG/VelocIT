@@ -74,13 +74,13 @@ class _SignUpState extends State<SignUp> {
                     children: [
                       // group796Z38 (213:207)
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(122, 50, 121, 46),
+                        padding: const EdgeInsets.fromLTRB(110, 50.74, 110, 46),
                         child: SvgPicture.asset(
                           'assets/appImages/new_app_icon.svg',
                           // color: ThemeApp.primaryNavyBlackColor,
                           semanticsLabel: 'Acme Logo',
 
-                          height: 40, width: 132,
+                          height: 47.67, width: 155,
                         ),
                       ),
                       /*         width: double.infinity,
@@ -343,6 +343,7 @@ class _SignUpState extends State<SignUp> {
                             context,
                             authViewModel.loadingWithAuthUSerPost, () {
                           FocusManager.instance.primaryFocus?.unfocus();
+
                           if (isTermSelected == false) {
                             setState(() {
                               isTermError =
@@ -362,10 +363,12 @@ class _SignUpState extends State<SignUp> {
                               "mobile": mobileNumberController.text,
                             };
                             apiRequest(data);
+
                             // authViewModel.authSignUpUsingPost(data, context);
                           } else {
-                            Utils.errorToast("Please enter all details");
+                            Utils.errorToast("Please enter valid details");
                           }
+
                         }),
                       ),
                       SizedBox(
@@ -448,7 +451,12 @@ class _SignUpState extends State<SignUp> {
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
+                                businessNameController.clear();
+                                mobileNumberController.clear();
+                                emailOtp.clear();
+                                password.clear();
+                                confirmPassword.clear();
+                                Navigator.of(context).pushReplacement(MaterialPageRoute(
                                     builder: (context) => SignIn_Screen()));
                               },
                               child: Text(
@@ -684,7 +692,7 @@ class _SignUpState extends State<SignUp> {
         MobileNumberTextFormField(
             errorText: StringUtils.enterMobileNumber,
             controller: mobileNumberController,
-            enable: false,
+            enable: true,
             validator: (value) {
               if (value.isEmpty && mobileNumberController.text.isEmpty) {
                 _validateMobile = true;
@@ -730,14 +738,21 @@ class _SignUpState extends State<SignUp> {
     Map<String, dynamic> map = jsonDecode(rawJson);
     String name = map['message'];
     Utils.successToast(name.toString());
+    print("SignUp response " + name.toString());
+
     if (response.statusCode == 200) {
+
       Utils.successToast(name.toString());
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => SignIn_Screen()));
+          .pushReplacement(MaterialPageRoute(builder: (context) => SignIn_Screen()));
+      businessNameController.clear();
+      mobileNumberController.clear();
+      email.clear();
+      password.clear();
+      confirmPassword.clear();
       print(reply.toString());
     } else {
-      Utils.errorToast("System is busy, Please try after sometime.");
-    }
+      Utils.errorToast(name.toString());    }
 
     httpClient.close();
     return reply;

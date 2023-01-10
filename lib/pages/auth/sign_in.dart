@@ -93,13 +93,13 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     //   ),
                     // ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(122, 50, 121, 46),
+                      padding: const EdgeInsets.fromLTRB(110, 50.74, 110, 46),
                       child: SvgPicture.asset(
                         'assets/appImages/new_app_icon.svg',
                         // color: ThemeApp.primaryNavyBlackColor,
                         semanticsLabel: 'Acme Logo',
 
-                        height: 40, width: 132,
+                        height: 47.67, width: 155,
                       ),
                     ),
 
@@ -127,22 +127,25 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     ),
 
                     SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Radio(
-                          value: 1,
-                          groupValue: _radioIndex,
-                          activeColor: ThemeApp.appColor,
-                          onChanged: (value) {
-                            setState(() {
-                              _radioIndex = value as int;
-                              _radioVal = 'Email';
-                              print(_radioVal);
-                            });
-                          },
+             SizedBox(
+                          width:25,
+                          child: Radio(
+                            value: 1,
+                            groupValue: _radioIndex,
+                            activeColor: ThemeApp.appColor,
+                            onChanged: (value) {
+                              setState(() {
+                                _radioIndex = value as int;
+                                _radioVal = 'Email';
+                                print(_radioVal);
+                              });
+                            },
+                          ),
                         ),
                         const Text("Email",
                             style: TextStyle(
@@ -252,7 +255,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                       ],
                     ),*/
                     SizedBox(
-                      height: 50,
+                      height: 30,
                     ),
                     _radioIndex == 1
                         ? TextFieldUtils().asteriskTextField(
@@ -262,6 +265,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
 
                     _radioIndex == 1
                         ? EmailTextFormFieldsWidget(
+
                             errorText: StringUtils.validEmailError,
                             textInputType: TextInputType.emailAddress,
                             controller: email,
@@ -471,6 +475,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         context,
                         authViewModel.loadingWithGet, () async {
                       FocusManager.instance.primaryFocus?.unfocus();
+
                       setState(() {
                         Prefs.instance
                             .setToken(StringConstant.emailPref, email.text);
@@ -497,6 +502,9 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 .postApiUsingEmailRequest(data, context);
 
                             print("Digit not found");
+                            // email.clear();
+                            // mobileController.clear();
+                            // password.clear();
                           }
                         } else {
                           _radioIndex == 1?   Utils.errorToast("Incorrect username or password"):Utils.errorToast("Incorrect mobile number");
@@ -552,7 +560,10 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context).push(
+                        email.clear();
+                        mobileController.clear();
+                        password.clear();
+                        Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (context) => SignUp()));
                       },
                       child: Text(

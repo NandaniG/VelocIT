@@ -82,13 +82,13 @@ class _OTPScreenState extends State<OTPScreen> {
             child: ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(122,50,121,46),
+                  padding: const EdgeInsets.fromLTRB(110, 50.74, 110, 46),
                   child: SvgPicture.asset(
                     'assets/appImages/new_app_icon.svg',
                     // color: ThemeApp.primaryNavyBlackColor,
                     semanticsLabel: 'Acme Logo',
 
-                    height:40,width: 132,
+                    height: 47.67, width: 155,
                   ),
                 ),
            /*     Container(

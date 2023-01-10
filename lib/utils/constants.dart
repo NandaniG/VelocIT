@@ -15,6 +15,11 @@ class StringConstant {
 
   static String apiOrderBasket_submitRatings = '/order-basket/submitRatings';
 
+//login users
+  static String loginUserName = '';
+  static String loginUserEmail = '';
+
+
 
   static String CurrentPinCode = '';
   static String FINALPINCODE = '';
@@ -253,7 +258,7 @@ static int isUserLoggedIn = 0;
       //     (prefs.getString('ScannedProductIDPref')) ?? '';
 
       if (_scanBarcode == '-1') {
-        Utils.flushBarErrorMessage("Please scan proper content", context);
+        // Utils.flushBarErrorMessage("Please scan proper content", context);
       } else {
         // Utils.successToast(_scanBarcode);
       }

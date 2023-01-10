@@ -705,11 +705,13 @@ class ProductProvider with ChangeNotifier {
 //---------------------------------<- Notifications Provider ->--------------------------
     List<UserAccountList> userAccountDetailList = <UserAccountList>[];
   File? images;
+  // StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
+  // StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
 
     TextEditingController userNameController = TextEditingController();
     TextEditingController userMobileController = TextEditingController(
         text: StringConstant.userAccountMobile);
-    TextEditingController userEmailController = TextEditingController(text: StringConstant.userAccountEmail);
+    TextEditingController userEmailController = TextEditingController(text: StringConstant.loginUserEmail);
 
 
   }

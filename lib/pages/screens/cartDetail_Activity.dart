@@ -886,30 +886,76 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget prices(OrdersForPurchase value, int index) {
     return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+
         children: [
-          value.offer.toString().isNotEmpty
-              ? Text(
-                  "${indianRupeesFormat.format(double.parse(value.offer.toString()) ?? 0.0) ?? "0.0"}",
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              value.offer.toString().isNotEmpty
+                  ? Text(
+                      "${indianRupeesFormat.format(double.parse(value.offer.toString()) ?? 0.0) ?? "0.0"}",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: 22,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500))
+                  : Text('0.0',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: 22,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500)),
+    /*      SizedBox(
+                width: 1,
+              ),
+              value.mrp.toString().isNotEmpty
+                  ? Text(
+                      "${indianRupeesFormat.format(double.parse(value.mrp.toString()) ?? 0.0) ?? "0.0"}",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500))
+                  : Text('0.0',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500)),*/
+              SizedBox(
+                width: 1,
+              ),
+              Text("(${value.discountPercent.toString()} % Off)",
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
-                      fontSize: 22,
-                      letterSpacing: 0.2,
-                      fontWeight: FontWeight.w500))
-              : Text('0.0',
-                  style: TextStyle(
-                      fontFamily: 'Roboto',
-                      color: ThemeApp.blackColor,
-                      fontSize: 22,
+                      fontSize: 12,
                       letterSpacing: 0.2,
                       fontWeight: FontWeight.w500)),
-          SizedBox(
-            width: 1,
+            ],
           ),
-          value.mrp.toString().isNotEmpty
-              ? Text(
+          SizedBox(
+            height: height * .01,
+          ),
+          Row(
+            children: [
+              Text(
+                  "M.R.P.: ",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
+              value.mrp.toString().isNotEmpty
+                  ? Text(
                   "${indianRupeesFormat.format(double.parse(value.mrp.toString()) ?? 0.0) ?? "0.0"}",
                   style: TextStyle(
                       fontFamily: 'Roboto',
@@ -918,7 +964,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       decoration: TextDecoration.lineThrough,
                       letterSpacing: 0.2,
                       fontWeight: FontWeight.w500))
-              : Text('0.0',
+                  : Text('0.0',
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       color: ThemeApp.lightFontColor,
@@ -926,16 +972,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       decoration: TextDecoration.lineThrough,
                       letterSpacing: 0.2,
                       fontWeight: FontWeight.w500)),
-          SizedBox(
-            width: 1,
+            ],
           ),
-          Text(value.discountPercent.toString() + "% Off",
-              style: TextStyle(
-                  fontFamily: 'Roboto',
-                  color: ThemeApp.blackColor,
-                  fontSize: 12,
-                  letterSpacing: 0.2,
-                  fontWeight: FontWeight.w500)),
         ],
       ),
     );

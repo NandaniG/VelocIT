@@ -90,6 +90,7 @@ class CartRepository {
     responseJson = await response.transform(utf8.decoder).join();
     String rawJson = responseJson.toString();
     print("Cart response11");
+    print("Cart response11 map : "+jsonMap.toString());
     print(responseJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);

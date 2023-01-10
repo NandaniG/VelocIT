@@ -364,7 +364,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
                                                 child: Image.network(
                                                         e.imageUrl ?? "",
-                                                        fit: BoxFit.fill,
+                                                        // fit: BoxFit.fill,
                                                         errorBuilder: ((context,
                                                             error, stackTrace) {
                                                       return Icon(

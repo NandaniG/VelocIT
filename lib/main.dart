@@ -54,6 +54,11 @@ getpref() async {
   Prefs.instance;
   StringConstant.isLogIn = false;
   SharedPreferences prefs = await SharedPreferences.getInstance();
+//user login id final
+  StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
+  StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
+  //
+
 
   // var loginId=await  prefs.getString(StringConstant.userId);
   var testId = await prefs.getString(StringConstant.testId);

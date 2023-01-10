@@ -175,13 +175,13 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
+                          Radius.circular(100),
                         ),
                         color: ThemeApp.whiteColor,
                       ),
                       padding: const EdgeInsets.only(left: 15, right: 15),
                       child: TextFieldUtils().dynamicText(
-                          'Place Order',
+                          'Proceed to Payment',
                           context,
                           TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.tealButtonColor,
