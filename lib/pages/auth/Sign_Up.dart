@@ -692,7 +692,16 @@ class _SignUpState extends State<SignUp> {
         MobileNumberTextFormField(
             errorText: StringUtils.enterMobileNumber,
             controller: mobileNumberController,
-            enable: true,
+            enable: true,        onChanged: (phone) {
+              print('phone.completeNumber');
+              print(phone.completeNumber);
+        if (phone.countryCode == "IN") {
+          print("india selected");
+          print(phone.completeNumber);
+        } else {
+          print("india not selected");
+        }
+        },
             validator: (value) {
               if (value.isEmpty && mobileNumberController.text.isEmpty) {
                 _validateMobile = true;

@@ -126,9 +126,9 @@ class _ProductListByCategoryActivityState
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    final availableProducts = Provider.of<ProductProvider>(context);
+    // final availableProducts = Provider.of<ProductProvider>(context);
 
-    final productsList = availableProducts.getProductsLists();
+    // final productsList = availableProducts.getProductsLists();
 
     return Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
@@ -156,7 +156,7 @@ class _ProductListByCategoryActivityState
             SizedBox(
               height: MediaQuery.of(context).size.height * .02,
             ),*/
-                filterWidgets(productsList),
+                filterWidgets(),
                 SizedBox(
                   height: 10,
                 ),
@@ -268,7 +268,7 @@ class _ProductListByCategoryActivityState
   }
 */
 
-  Widget filterWidgets(List<ProductDetailsModel> product) {
+  Widget filterWidgets() {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
@@ -385,7 +385,7 @@ class _ProductListByCategoryActivityState
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 16,
-                        mainAxisSpacing: 12,
+                        mainAxisSpacing: 30,
                         // childAspectRatio: 1.0,
                         childAspectRatio: MediaQuery.of(context).size.height / 900,
                       ),
@@ -424,7 +424,7 @@ class _ProductListByCategoryActivityState
                                 );
                               },
                               child: Container(
-
+// height: 205,
                                   child: Column(
                                     mainAxisAlignment:
                                     MainAxisAlignment.start,
@@ -434,7 +434,7 @@ class _ProductListByCategoryActivityState
                                       /*   Expanded(
                                             flex: 2,
                                             child:*/ Container(
-                                        height: 163,
+                                        height: 143,
                                         width: 191, /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
@@ -484,13 +484,13 @@ class _ProductListByCategoryActivityState
                                       // ),
                                       Container(      color: ThemeApp.tealButtonColor,
                                         width: 191,
-                                        height: 65,
+                                        height: 66,
                                         padding: const EdgeInsets.only(
-                                            left: 12, right: 12),
+                                            left: 12, right: 12,),
                                         child: Column(
                                           mainAxisAlignment:
                                           MainAxisAlignment
-                                              .spaceAround,
+                                              .center,
                                           crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                           children: [
@@ -498,6 +498,7 @@ class _ProductListByCategoryActivityState
                                                 .listNameHeadingTextField(
                                                 subProductList[index]
                                                     .shortName!,context),
+                                            SizedBox(height:10),
                                             Row(
                                               mainAxisAlignment:
                                               MainAxisAlignment

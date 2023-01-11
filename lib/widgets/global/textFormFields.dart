@@ -616,6 +616,7 @@ class MobileNumberTextFormField extends StatefulWidget {
   TextEditingController controller;
   bool enable = true;
   FormFieldValidator validator;
+  FormFieldValidator onChanged;
   String? errorText;
 
   MobileNumberTextFormField(
@@ -623,6 +624,7 @@ class MobileNumberTextFormField extends StatefulWidget {
       required this.controller,
       required this.enable,
       required this.validator,
+      required this.onChanged,
       this.errorText})
       : super(key: key);
 
@@ -712,16 +714,19 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
                   color: ThemeApp.separatedLineColor, width: 1)),
         ),
         validator: widget.validator,
-        onChanged: (phone) {
-          if (phone.countryCode == "IN") {
-            print("india selected");
-            print(phone.completeNumber);
-          } else {
-            print("india not selected");
-          }
-        },
+        // onChanged: (phone) {   print(phone.completeNumber);
+        //   if (phone.countryCode == "IN") {
+        //     print("india selected");
+        //     print(phone.completeNumber);
+        //   } else {
+        //     print("india not selected");
+        //   }
+        // },
+        onChanged: widget.onChanged,
         onCountryChanged: (country) {
           print('Country changed to: ' + country.name);
+          print('Country changed to: ' + country.dialCode);
+          print('Country changed to: ' + country.dialCode);
         },
       ),
     );

@@ -100,7 +100,7 @@ class CartRepository {
     // if (response.statusCode == 200) {
     print(userData.payload!.id.toString());
 
-    print(userData.payload!.ordersForPurchase![0].itemQuantity);
+    // print(userData.payload!.ordersForPurchase![0].itemQuantity);
     badgeLength = userData.payload!.ordersForPurchase![0].itemQuantity;
 
     print("userData.payload!.id");

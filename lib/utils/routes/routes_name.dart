@@ -27,7 +27,7 @@ class Routes {
 
       case RoutesName.otpRoute:
         return MaterialPageRoute(
-            builder: (BuildContext context) => OTPScreen());
+            builder: (BuildContext context) => OTPScreen(mobileNumber: '7985895462',));
       default:
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(

@@ -16,7 +16,8 @@ import '../../widgets/global/textFormFields.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 class OTPScreen extends StatefulWidget {
-  OTPScreen({Key? key}) : super(key: key);
+final  String mobileNumber;
+  OTPScreen( {Key? key, required this.mobileNumber}) : super(key: key);
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -138,7 +139,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 ),
                 Container(alignment: Alignment.centerLeft,
                   child: TextFieldUtils().dynamicText(
-                      '+91 78945612352',
+                    widget.  mobileNumber.toString(),
                       context,
                       TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,

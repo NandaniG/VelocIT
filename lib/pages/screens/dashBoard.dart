@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
@@ -39,7 +40,7 @@ import '../../widgets/global/textFormFields.dart';
 import '../Activity/CRMFormScreen.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart';
 import '../Activity/Merchant_Near_Activities/merchant_Activity.dart';
-import '../Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
+import '../Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Categories_Activity.dart';
 import '../Activity/Product_Activities/ProductDetails_activity.dart';
 import '../Activity/Product_Activities/Products_List.dart';
 import '../Activity/ServicesFormScreen.dart';
@@ -278,7 +279,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ? CircularProgressIndicator()
                 : Consumer<HomeProvider>(builder: (context, provider, child) {
                     return (provider.jsonData.isNotEmpty &&
-                            provider.jsonData['error'] == null)
+                                provider.jsonData['error'] == null ||
+                            provider.jsonData.length > 0)
                         ? SafeArea(
                             child: Container(
                                 // height: MediaQuery.of(context).size.height,
@@ -293,7 +295,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      productServiceChip(),
+                                      productServiceChip(dashboardProvider),
                                       SizedBox(
                                         height: height * .02,
                                       ),
@@ -387,7 +389,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ));
   }
 
-  Widget productServiceChip() {
+  Widget productServiceChip(DashboardViewModel dashboardProvider) {
     return Container(
       width: width / 1,
       padding: EdgeInsets.only(top: 10),
@@ -454,10 +456,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     print(
                         "_isProductListChip 2" + _isServiceListChip.toString());
                     Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ServicesFormScreen(),
+                          MaterialPageRoute(
+                            builder: (context) => ShopByCategoryActivity(
+                    ),
                       ),
-                    );
+                    ).then((value) => setState((){}));
                   });
                 },
                 child: Container(
@@ -624,7 +627,155 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   int selected = 0;
+  bool isOpen = false;
 
+  Widget productDetailsUI() {
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value: productCategories,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+              switch (productCategories.productCategoryList.status) {
+                case Status.LOADING:
+                  if (kDebugMode) {
+                    print("Api load");
+                  }
+                  return ProgressIndicatorLoader(true);
+
+                case Status.ERROR:
+                  if (kDebugMode) {
+                    print("Api error");
+                  }
+                  return Text(
+                      productCategories.productCategoryList.message.toString());
+
+                case Status.COMPLETED:
+                  if (kDebugMode) {
+                    print("Api calll");
+                  }
+
+                  List<ProductList>? serviceList =
+                      productCategories.productCategoryList.data!.productList;
+
+                  return Container(
+                    // padding: const EdgeInsets.all(10),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextFieldUtils()
+                              .headingTextField('Shop by Categories', context),
+                          SizedBox(
+                            height: height * .02,
+                          ),
+                          ListView.builder(
+                            key: Key('builder ${selected.toString()}'),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: serviceList!.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      ExpansionTile(
+                                        key: Key(index.toString()),
+                                        onExpansionChanged: ((newState) {
+                                          if (newState) {
+                                            setState(() {
+                                              const Duration(seconds: 20000);
+                                              selected = index;
+                                              isOpen = true;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              selected = -1;
+                                            });
+                                          }
+                                        }),
+                                        initiallyExpanded:isOpen==true? index == selected:false,
+
+                                        // initiallyExpanded: false,
+                                        // trailing: selected == true
+                                        //     ? Icon(
+                                        //         Icons.arrow_drop_up,
+                                        //         color:
+                                        //             ThemeApp.textFieldBorderColor,
+                                        //         size: height * .05,
+                                        //       )
+                                        //     : Icon(
+                                        //         Icons.arrow_drop_down,
+                                        //         color:
+                                        //             ThemeApp.textFieldBorderColor,
+                                        //         size: height * .05,
+                                        //       ),
+                                        // tilePadding: const EdgeInsets.symmetric(
+                                        //     horizontal: 15, vertical: 2),
+                                        // childrenPadding: const EdgeInsets.symmetric(
+                                        //     horizontal: 15, vertical: 5),
+                                        textColor: Colors.black,
+                                        title: Row(
+                                          children: [
+                                 /*           CircleAvatar(
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(50)),
+                                                child: Image.network(
+                                                  serviceList[index]
+                                                      .productCategoryImageId!,
+                                                  // fit: BoxFit.fill,
+                                                  height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                      .07,
+                                                ),
+                                              ),
+                                            ),*/
+                                            SvgPicture.asset(
+                                              'assets/appImages/appliancesIcon.svg',
+
+                                              height: 17,
+                                              width: 26,
+                                            ),
+                                            SizedBox(
+                                              width: 16,
+                                            ),
+                                            categoryListFont(
+                                                serviceList[index].name!, context)
+                                          ],
+                                        ),
+                                        expandedAlignment: Alignment.centerLeft,
+                                        expandedCrossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                10, 0, 10, 15),
+                                            child: subListOfCategories(
+                                                serviceList[index]),
+                                          )
+                                        ],
+                                      ),
+                                    ]),
+                              );
+                            },
+                          )
+                        ]),
+                  );
+                default:
+                  return Text("No Data found!");
+              }
+              return Text("No Data found!");
+            }));
+  }
+
+/*
   Widget productDetailsUI() {
     return ChangeNotifierProvider<DashboardViewModel>.value(
         value: productCategories,
@@ -681,33 +832,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 children: <Widget>[
                                   ExpansionTile(
                                     key: Key(index.toString()),
-                                    onExpansionChanged: ((newState) {
-                                      if (newState) {
-                                        setState(() {
-                                          const Duration(seconds: 20000);
-                                          selected = index;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          selected = -1;
-                                        });
-                                      }
-                                    }),
+                                    // onExpansionChanged: ((newState) {
+                                    //   if (newState) {
+                                    //     setState(() {
+                                    //       const Duration(seconds: 20000);
+                                    //       selected = true;
+                                    //     });
+                                    //   } else {
+                                    //     setState(() {
+                                    //       selected = false;
+                                    //     });
+                                    //   }
+                                    // }),
                                     // initiallyExpanded: index == selected,
-                                    initiallyExpanded: false,
-                                    trailing: index == selected
-                                        ? Icon(
-                                            Icons.arrow_drop_up,
-                                            color:
-                                                ThemeApp.textFieldBorderColor,
-                                            size: height * .05,
-                                          )
-                                        : Icon(
-                                            Icons.arrow_drop_down,
-                                            color:
-                                                ThemeApp.textFieldBorderColor,
-                                            size: height * .05,
-                                          ),
+
+                                    // initiallyExpanded: selected,
+                                    // trailing: selected == true
+                                    //     ? Icon(
+                                    //         Icons.arrow_drop_up,
+                                    //         color:
+                                    //             ThemeApp.textFieldBorderColor,
+                                    //         size: height * .05,
+                                    //       )
+                                    //     : Icon(
+                                    //         Icons.arrow_drop_down,
+                                    //         color:
+                                    //             ThemeApp.textFieldBorderColor,
+                                    //         size: height * .05,
+                                    //       ),
                                     // tilePadding: const EdgeInsets.symmetric(
                                     //     horizontal: 15, vertical: 2),
                                     // childrenPadding: const EdgeInsets.symmetric(
@@ -743,8 +895,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(10,10,10,15),
-                                        child: subListOfCategories(serviceList[index]),
+                                        padding: const EdgeInsets.fromLTRB(
+                                            10, 10, 10, 15),
+                                        child: subListOfCategories(
+                                            serviceList[index]),
                                       )
                                     ],
                                   ),
@@ -760,6 +914,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           return Text("No Data found!");
         }));
   }
+*/
 
   Widget categoryListFont(String text, BuildContext context) {
     return Text(
@@ -768,7 +923,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           fontFamily: 'Roboto',
           fontSize: 16,
           overflow: TextOverflow.ellipsis,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w900,
           letterSpacing: -0.25,
           color: ThemeApp.primaryNavyBlackColor),
     );
@@ -781,14 +936,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           fontFamily: 'Roboto',
           fontSize: 13,
           overflow: TextOverflow.ellipsis,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           letterSpacing: -0.25,
           color: ThemeApp.primaryNavyBlackColor),
     );
   }
 
   Widget subListOfCategories(ProductList productList) {
-    return/* Container(
+    return /* Container(
         height: 200,
         // height: 200,
         width: double.infinity,
@@ -799,76 +954,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
           scrollDirection: Axis.horizontal,
           itemCount: productList!.simpleSubCats!.length,*/
         GridView(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 12,
-        // childAspectRatio: 1.0,
-        childAspectRatio: MediaQuery.of(context).size.height / 500,
-    ),
-    shrinkWrap: true,
-    children: List.generate(productList!.simpleSubCats!.length,
-    (index) {
-            return InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProductListByCategoryActivity(
-                      productList: productList!.simpleSubCats![index]),
-                ));
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 12,
+              // childAspectRatio: 1.0,
+              childAspectRatio: MediaQuery.of(context).size.height / 500,
+            ),
+            shrinkWrap: true,
+            children: List.generate(
+              productList!.simpleSubCats!.length,
+              (index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProductListByCategoryActivity(
+                          productList: productList.simpleSubCats![index]),
+                    ));
+                  },
+                  // child: Padding(
+                  // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+                  child: Container(
+                      // width: width * .25,
+                      width: 97,
+                      height: 59,
+                      padding:  EdgeInsets.fromLTRB(14,10,16,10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(
+                              color: ThemeApp.containerColor, width: 1.5),
+                          color: ThemeApp.containerColor),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/appImages/televisionIcon.svg',
+                            color: ThemeApp.blackColor,
+
+                            height: 17,
+                            width: 19,
+                          ),
+SizedBox(height: 6,),
+                   subCategoryListFont(
+                                  productList.simpleSubCats![index].name!,
+                                  context),
+
+
+                        ],
+                      )),
+                  // ),
+                );
               },
-              // child: Padding(
-              // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
-              child: Container(
-                  // width: width * .25,
-                  width: 97,
-                  height: 59,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                          color: ThemeApp.containerColor, width: 1.5),
-                      color: ThemeApp.containerColor),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(
-                                  productList.simpleSubCats![index].imageUrl!),
-                            ) ??
-                            SizedBox(),
-                        /* ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(50)),
-                          child: Image.network(
-                            productList.simpleSubCats![index]
-                                .imageUrl! ??
-                                '',
-                            fit: BoxFit.fill,
-                            height:
-                            MediaQuery.of(context).size.height *
-                                .07,
-                          )??SizedBox(),
-                        ),*/
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: subCategoryListFont(
-                              productList.simpleSubCats![index].name!, context),
-                        ),
-                      )
-                    ],
-                  )),
-              // ),
-            );
-          },)
-        )
-    // )
-    ;
+            ))
+        // )
+        ;
 
     /*Container(
         height: 200,
@@ -978,8 +1118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => ShopByCategoryActivity(
-                                  shopByCategoryList: serviceList!,
-                                  shopByCategorySelected: index),
+                                 ),
                             ),
                           );
                         },
@@ -2319,8 +2458,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           height: 163,
                                           width: 191,
                                           decoration: const BoxDecoration(
-                                              color:
-                                                  ThemeApp.whiteColor,
+                                              color: ThemeApp.whiteColor,
                                               borderRadius: BorderRadius.only(
                                                 topRight: Radius.circular(10),
                                                 topLeft: Radius.circular(10),
@@ -2604,7 +2742,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 12,
                       // childAspectRatio: 1.0,
-                      childAspectRatio: MediaQuery.of(context).size.height / 800,
+                      childAspectRatio:
+                          MediaQuery.of(context).size.height / 800,
                     ),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -2629,8 +2768,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                  height: 141,
-                                  width: 191,
+                                height: 141,
+                                width: 191,
                                 decoration: const BoxDecoration(
                                   color: ThemeApp.whiteColor,
                                   // borderRadius: BorderRadius.only(
@@ -2657,7 +2796,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   // height: 163,
                                   // width: 191,
                                 ),
-                              ),SizedBox(),
+                              ),
+                              SizedBox(),
                               Container(
                                 color: ThemeApp.tealButtonColor,
                                 width: 191,
@@ -2688,14 +2828,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     ),
                                     Container(
                                       padding: const EdgeInsets.fromLTRB(
-                                          21,4, 21, 9),
-                                      child:  TextFieldUtils()
+                                          21, 4, 21, 9),
+                                      child: TextFieldUtils()
                                           .listPriceHeadingTextField(
-                                        'Under'+  indianRupeesFormat.format(
-                                              serviceList[index]
-                                                  .defaultSellPrice ??
-                                                  0.0),
-                                          context),
+                                              'Under' +
+                                                  indianRupeesFormat.format(
+                                                      serviceList[index]
+                                                              .defaultSellPrice ??
+                                                          0.0),
+                                              context),
                                     )
                                   ],
                                 ),

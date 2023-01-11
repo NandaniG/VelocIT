@@ -337,7 +337,14 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
             MobileNumberTextFormField(
                 controller: mobileController,
                 enable: false,
-                validator: (value) {
+                onChanged: (phone) {   print(phone.completeNumber);
+                if (phone.countryCode == "IN") {
+                  print("india selected");
+                  print(phone.completeNumber);
+                } else {
+                  print("india not selected");
+                }
+                }, validator: (value) {
 
                   return null;
                 }),

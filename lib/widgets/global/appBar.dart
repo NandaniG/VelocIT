@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/ProductCategoryModel.dart';
-import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
+import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Categories_Activity.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/utils/utils.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';

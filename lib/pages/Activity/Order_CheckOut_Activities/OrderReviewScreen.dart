@@ -109,7 +109,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     return Scaffold(
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .09),
+          preferredSize: Size.fromHeight(72),
           child: appBar_backWidget(
               context, appTitle(context, "Order Checkout"), const SizedBox()),
         ),
@@ -142,51 +142,41 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                               .ordersForPurchase!;
 
                       return Container(
-                        height: height * .09,
+                        height: 72,
+                        // height: height * .09,
                         width: width,
                         alignment: Alignment.center,
                         decoration: const BoxDecoration(
                           color: ThemeApp.tealButtonColor,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15),
-                              topLeft: Radius.circular(15)),
+
                         ),
                         padding: const EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          top: 10,
+                          left: 20,
+                          right: 20,
+                          top: 15,bottom: 14
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            /*  Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextFieldUtils().pricesLineThroughWhite(
-                    // " ${indianRupeesFormat.format(finalOriginalPrice)}",
-                    " ${indianRupeesFormat.format(finalOriginalPrice)}",
-                    context,
-                    MediaQuery.of(context).size.height * .021,
-                  ),
-                  TextFieldUtils().homePageheadingTextFieldWHITE(
-                    "${indianRupeesFormat.format(StringConstant.totalFinalPrice)}",
-                    context,
-                  ),
-                ]),*/
+
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+
+                                  Text(
+                                      "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalPayable.toString()))}",
+                                      style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize:20,
+                                          color: ThemeApp.separatedLineColor,
+                                          overflow: TextOverflow.ellipsis,
+                                          fontWeight: FontWeight.bold),),
+
                                   TextFieldUtils().pricesLineThroughWhite(
                                     "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalMrp.toString()))}",
                                     context,
-                                    MediaQuery.of(context).size.height * .021,
-                                  ),
-                                  TextFieldUtils()
-                                      .homePageheadingTextFieldWHITE(
-                                    "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalPayable.toString()))}",
-                                    context,
+                                    14,
                                   ),
                                 ]),
                             InkWell(
@@ -215,7 +205,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                   // );
                                 },
                                 child: Container(
-                                    height: height * 0.05,
+                                    height: 40,width: 121,
                                     alignment: Alignment.center,
                                     decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.all(
@@ -223,22 +213,26 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                       ),
                                       color: ThemeApp.whiteColor,
                                     ),
-                                    padding: const EdgeInsets.only(
-                                        left: 21, right: 21),
+                                    // padding: const EdgeInsets.only(
+                                    //     left: 21, right: 21),
                                     child: TextFieldUtils().dynamicText(
                                         "Pay now",
                                         context,
                                         TextStyle(
-                                            fontFamily: 'Roboto',
-                                            color: ThemeApp.tealButtonColor,
+                                            fontFamily:
+                                            'Roboto',
+                                            color: ThemeApp
+                                                .tealButtonColor,
                                             fontSize: 12,
-                                            fontWeight: FontWeight.w700)))),
+                                            fontWeight:
+                                            FontWeight
+                                                .w700,letterSpacing: -0.25)))),
                           ],
                         ),
                       );
                   }
                   return Container(
-                    height: height * .8,
+                    height: 72,
                     alignment: Alignment.center,
                     child: TextFieldUtils().dynamicText(
                         'No Match found!',
@@ -246,7 +240,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                         TextStyle(
                             fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
-                            fontSize: height * .03,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold)),
                   );
                 }))
@@ -885,17 +879,21 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                           ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
-                            child: Image.network(
-                                // width: double.infinity,
-                                // snapshot.data![index].serviceImage,
-                                cartOrderPurchase[index].imageUrl.toString(),
-                                fit: BoxFit.fill,
-                                // width: width*.18,
-                                height: 79,
-                                width: 79,
-                                errorBuilder: ((context, error, stackTrace) {
-                              return Icon(Icons.image_outlined);
-                            })),
+                            child: Container(
+                              // height: 83,
+                              // width: 79,
+                              child: Image.network(
+                                  // width: double.infinity,
+                                  // snapshot.data![index].serviceImage,
+                                  cartOrderPurchase[index].imageUrl.toString(),
+                                  // fit: BoxFit.fill,
+                                  // width: width*.18,
+                                  height: 85,
+                                  width: 85,
+                                  errorBuilder: ((context, error, stackTrace) {
+                                return Icon(Icons.image_outlined);
+                              })),
+                            ),
                           ),
                           Expanded(
                             flex: 4,
@@ -1022,57 +1020,80 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
 
   Widget prices(List<CartOrdersForPurchase> cartOrderPurchase, int index) {
     return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          cartOrderPurchase![index].offer.toString().isNotEmpty
-              ? TextFieldUtils().dynamicText(
-                  indianRupeesFormat.format(double.parse(
-                              cartOrderPurchase![index].offer.toString()) ??
-                          0.0) ??
-                      "0.0",
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              cartOrderPurchase![index].offer.toString().isNotEmpty
+                  ? TextFieldUtils().dynamicText(
+                      indianRupeesFormat.format(double.parse(
+                                  cartOrderPurchase![index].offer.toString()) ??
+                              0.0) ??
+                          "0.0",
+                      context,
+                      TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.blackColor,
+                        fontSize: 22,
+                        overflow: TextOverflow.ellipsis,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.2,
+                      ))
+                  : SizedBox(),
+              SizedBox(
+                width:5,
+              ),
+
+
+              TextFieldUtils().dynamicText(
+                "(${cartOrderPurchase![index].discountPercent.toString().toString()} % Off)",
                   context,
                   TextStyle(
                     fontFamily: 'Roboto',
+                    fontSize: 12,
                     color: ThemeApp.blackColor,
-                    fontSize: 22,
-                    overflow: TextOverflow.ellipsis,
                     fontWeight: FontWeight.w500,
-                    letterSpacing: 0.2,
-                  ))
-              : SizedBox(),
-          SizedBox(
-            width: 1,
+                    overflow: TextOverflow.ellipsis,
+                    decorationThickness: 1.5,
+                  )),
+            ],
           ),
-          TextFieldUtils().dynamicText(
-              indianRupeesFormat.format(
-                  double.parse(cartOrderPurchase![index].mrp.toString())),
-              context,
-              TextStyle(
-                fontFamily: 'Roboto',
-                overflow: TextOverflow.ellipsis,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.2,
-                fontSize: 16,
-                color: ThemeApp.lightFontColor,
-                decoration: TextDecoration.lineThrough,
-                decorationThickness: 1.5,
-              )),
           SizedBox(
-            width:1,
+            height: 5,
           ),
-          TextFieldUtils().dynamicText(
-              cartOrderPurchase![index].discountPercent.toString().toString() +
-                  " % Off",
-              context,
-              TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 12,
-                color: ThemeApp.blackColor,
-                fontWeight: FontWeight.w500,
-                overflow: TextOverflow.ellipsis,
-                decorationThickness: 1.5,
-              )),
+          Row(
+            children: [
+
+
+              Text(
+                  "M.R.P.: ",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
+              cartOrderPurchase![index].mrp.toString().isNotEmpty
+                  ? Text(
+                  "${indianRupeesFormat.format(double.parse(cartOrderPurchase![index].mrp.toString()) ?? 0.0) ?? "0.0"}",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      decoration: TextDecoration.lineThrough,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500))
+                  : Text('0.0',
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      decoration: TextDecoration.lineThrough,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
+            ],
+          ),
         ],
       ),
     );

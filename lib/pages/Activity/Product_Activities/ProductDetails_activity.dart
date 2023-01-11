@@ -256,9 +256,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     : SizedBox(),
 */
                                 // prices(model),
-                                SizedBox(
+                               /* SizedBox(
                                   height: height * .01,
-                                ),
+                                ),*/
                                 model.productVariants!.isNotEmpty
                                     ? availableVariant(model)
                                     : SizedBox(),
@@ -1459,17 +1459,22 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     )
                   ],
                 ))
-            : Padding(
+            : Container(
+              width: width,
+              height: 72,
+              color: ThemeApp.whiteColor,
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 5, bottom: 5),
-                child: TextFieldUtils().dynamicText(
-                    "OUT OF STOCK",
-                    context,
-                    TextStyle(fontFamily: 'Roboto',
-                      color: ThemeApp.redColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: height * .035,
-                    )),
+                child: Center(
+                  child: TextFieldUtils().dynamicText(
+                      "OUT OF STOCK",
+                      context,
+                      TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.redColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: height * .035,
+                      )),
+                ),
               );
       });
     });

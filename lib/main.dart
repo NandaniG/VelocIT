@@ -64,7 +64,7 @@ getpref() async {
   var testId = await prefs.getString(StringConstant.testId);
   print("on loging testId : " + testId.toString());
 
-  // StringConstant.isLogIn = true;
+  /*// StringConstant.isLogIn = true;
   StringConstant.emailOTPVar =
       (await Prefs.instance.getToken(StringConstant.emailOTPPref))!;
 
@@ -105,13 +105,13 @@ getpref() async {
           ? StringConstant.addressFromCurrentLocation
           : StringConstant.addressFromCurrentLocation;
 
-  SharedPreferences.setMockInitialValues({});
+  SharedPreferences.setMockInitialValues({});*/
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  ProductSpecificListViewModel productViewModel =
+/*  ProductSpecificListViewModel productViewModel =
       ProductSpecificListViewModel();
   Map data = {
     "category_code": "EOLP",
@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
     "Merchants Near You": "1",
     "best_deal": "",
     'budget_buys': ""
-  };
+  };*/
 
   // This widget is the root of your application.
   @override
