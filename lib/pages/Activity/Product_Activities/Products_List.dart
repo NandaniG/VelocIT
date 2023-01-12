@@ -390,7 +390,7 @@ class _ProductListByCategoryActivityState
                           mainAxisSpacing: 0.5,
                           crossAxisSpacing: 0.5,
                           // width / height: fixed for *all* items
-                          childAspectRatio: 0.85,
+                          childAspectRatio: 0.75,
 
                       crossAxisCount: 2,
                     ),

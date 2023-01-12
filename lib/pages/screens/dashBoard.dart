@@ -801,9 +801,11 @@ data = {
             GridView.builder(
           itemCount: productList!.simpleSubCats!.length,
           scrollDirection: Axis.vertical,
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 150,
-              childAspectRatio: 3 / 2.5,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount : 3,
+              // maxCrossAxisExtent: 150,
+              // childAspectRatio: 3 / 2.5,
+              childAspectRatio: 1.2,
               crossAxisSpacing: 20,
               mainAxisSpacing: 20),
           itemBuilder: (BuildContext context, int index) {
@@ -2605,7 +2607,7 @@ data = {
                       mainAxisSpacing: 0.5,
                       crossAxisSpacing: 0.5,
                       // width / height: fixed for *all* items
-                      childAspectRatio: 0.85,
+                      childAspectRatio: 0.76,
 
                       crossAxisCount: 2,
                     ),

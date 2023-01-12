@@ -53,9 +53,9 @@ class CartRepository {
     Map<String, dynamic> map = jsonDecode(rawJson);
 
     var userData = CartCreateRetrieveModel.fromJson(map);
-    prefs.setString('CartIdPref', userData.payload!.id.toString());
-    print(userData.payload!.id.toString());
-    Prefs.instance.setToken(Prefs.prefCartId, userData.payload!.id.toString());
+    prefs.setString('CartIdPref', (userData.payload?.id ?? 0).toString());
+    print(userData.payload?.id.toString());
+    Prefs.instance.setToken(Prefs.prefCartId, (userData.payload?.id ?? 0).toString());
 
     print("userData.payload!.id");
 

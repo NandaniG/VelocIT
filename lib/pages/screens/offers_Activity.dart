@@ -213,7 +213,7 @@ class _OfferActivityState extends State<OfferActivity> {
                             ),
                             child: Image.asset(
                               // width: double.infinity,
-                              provider.offerListDetails[index]["offerImage"],
+                              provider.offerListDetails?[index]?["offerImage"] ?? "",
                               fit: BoxFit.fill,
                               height: orientation
                                   ? height * .35
@@ -237,7 +237,7 @@ class _OfferActivityState extends State<OfferActivity> {
                           child: Column(
                             children: [
                               TextFieldUtils().subHeadingTextFieldsWhite(
-                                  provider.offerListDetails[index]["offerName"], context),
+                                  provider.offerListDetails?[index]?["offerName"] ?? "", context),
                               TextFieldUtils().homePageTitlesTextFieldsWHITE(
                                   'Starting from ${provider.offerListDetails[index]
                                     ["offerDiscountPrice"]}', context)
@@ -261,7 +261,7 @@ class _OfferActivityState extends State<OfferActivity> {
                       : height * .35,
                   // padding: EdgeInsets.all(12.0),
                   child: GridView.builder(
-                    itemCount: provider.offerByType!.length,
+                    itemCount: provider.offerByType?.length ?? 0,
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         // childAspectRatio: 3 / 2,

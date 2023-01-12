@@ -244,13 +244,13 @@ class HomeProvider with ChangeNotifier {
   //---------------------------------------------------------
   //----------------- home slider service--------------------
   var homeSliderList;
-
-  Future<List<HomeImageSlider>> homeImageSliderService() async {
+Future<Map<String,dynamic>> homeImageSliderService() async {
+  // Future<List<HomeImageSlider>> homeImageSliderService() async {
     final jsondata = await rootBundle.loadString('assets/jsonData.json');
     homeSliderList = json.decode(jsondata) ?? '';
     // print("-------------homeImageSliderService Data-------------");
     // homeSliderList = homeImageSliderFromJson(homeSliderList);
-    // // print(homeSliderList["homeImageSlider"]);
+    // print(homeSliderList["homeImageSlider"]);
     return homeSliderList;
   }
 
@@ -330,10 +330,13 @@ class HomeProvider with ChangeNotifier {
     merchantNearYouList = json.decode(jsondata);
     merchantNearYouList = merchantNearYouList["merchantNearYouList"];
     // print("-------------MerchantNearYouList Data-------------");
-    // // print(merchantNearYouList.toString());
-    return merchantNearYouList
-        .map((e) => MerchantNearYouList.fromJson(e))
-        .toList();
+    // // print(merchantNearYouList.toString()); 
+    List<MerchantNearYouList> list = [];
+    await merchantNearYouList
+        .map((e) {
+          list.add(MerchantNearYouList.fromJson(e));
+        });
+        return list;
   }
 
   //---------------------------------------------------------
@@ -347,7 +350,11 @@ class HomeProvider with ChangeNotifier {
     bestDealList = bestDealList["bestDealList"];
     // print("-------------BestDealList Data-------------");
     // // print(bestDealList.toString());
-    return bestDealList.map((e) => BestDealList.fromJson(e)).toList();
+    List<BestDealList> list = [];
+    await bestDealList.map((e) {
+      list.add(BestDealList.fromJson(e));
+    });
+    return list;
   }
 
   //---------------------------------------------------------
@@ -377,7 +384,11 @@ class HomeProvider with ChangeNotifier {
     cartProductList = cartProductList["cartProductList"];
     // print("-------------BestDealList Data-------------");
     // // print(budgetBuyList.toString());
-    return budgetBuyList.map((e) => CartProductList.fromJson(e)).toList();
+    List<CartProductList> list = [];
+    await cartProductList.map((e) {
+      list.add(CartProductList.fromJson(e));
+    });
+    return list;
   }
 
   //---------------------------------------------------------
@@ -393,13 +404,17 @@ class HomeProvider with ChangeNotifier {
     print("-------------orderCheckOutDetails Data-------------");
     print(orderCheckOutList.toString());
 
-    for (int i = 0; i <= orderCheckOutList.length; i++) {
+    for (int i = 0; i < orderCheckOutList.length; i++) {
       orderCheckOutDetails = orderCheckOutList[i]["orderCheckOutDetails"];
       print(
           "-------------orderCheckOutDetails Dataaaaaaaa$orderCheckOutDetails");
     }
     // // print(orderCheckOutList.toString());
-    return orderCheckOutList.map((e) => OrderCheckOut.fromJson(e)).toList();
+    List<OrderCheckOut> list = [];
+    await orderCheckOutList.map((e) {
+      list.add(OrderCheckOut.fromJson(e));
+    });
+    return list;
   }
 
   //---------------------------------------------------------
@@ -434,12 +449,18 @@ class HomeProvider with ChangeNotifier {
     // print("-------------myAddressList Data-------------");
     // // print(myAddressList.toString());
 
-    for (int i = 0; i <= myOrdersList.length; i++) {
+    if (myOrdersDetails != null) {
+      for (int i = 0; i < myOrdersList.length; i++) {
       myOrdersDetails = myOrdersList[i]["myOrderDetailList"];
       // print("-------------myOrderDetailList Dataaaaaaaa$myOrdersDetails");
     }
+    }
     // // print(myAddressList.toString());
-    return myAddressList.map((e) => MyAddressList.fromJson(e)).toList();
+    List<MyAddressList> list = [];
+    await myAddressList.map((e){
+      list.add( MyAddressList.fromJson(e));
+    });
+    return list;
   }
 
   //---------------------------------------------------------
@@ -483,10 +504,12 @@ class HomeProvider with ChangeNotifier {
 
     // print("-------------notificationsList Data-------------");
     // // print(notificationDataList.toString());
-
-    return notificationDataList
-        .map((e) => NotificationsList.fromJson(e))
-        .toList();
+    List<NotificationsList> list = [];
+    await notificationDataList
+        .map((e) {
+          list.add(NotificationsList.fromJson(e));
+        });
+        return list;
   }
 
   //---------------------------------------------------------
@@ -516,22 +539,28 @@ class HomeProvider with ChangeNotifier {
   var offerByType;
   var offerByTypeImagesList;
 
-  Future<List<OffersData>> offersListService() async {
+  Future<OffersData> offersListService() async {
     final jsondata = await rootBundle.loadString('assets/jsonData.json');
     offerList = json.decode(jsondata);
     offerList = offerList["offersData"];
     // // print(offerList.toString());
+    OffersData offer = OffersData.fromJson(offerList);
+    
+    return offer;
+//     offerListDetails = offerList["offerList"];
+//     offerByType = offerList["offerByType"];
+//     // print("-------------offerList Data-------------");
 
-    offerListDetails = offerList["offerList"];
-    offerByType = offerList["offerByType"];
-    // print("-------------offerList Data-------------");
-
-    for (int i = 0; i <= offerByType.length; i++) {
-      offerByTypeImagesList = offerByType[i]["offerImages"];
-      // // print("-------------offerImages Dataaaaaaaa$offerByTypeImagesList");
-    }
-
-    // // print(offerByType.toString());
-    return offerList.map((e) => OffersData.fromJson(e)).toList();
+//     for (int i = 0; i < offerByType.length; i++) {
+//       offerByTypeImagesList = offerByType[i]["offerImages"];
+//       // // print("-------------offerImages Dataaaaaaaa$offerByTypeImagesList");
+//     }
+//     offerList = offerList["offerList"];
+//     // // print(offerByType.toString());
+//     List<OffersData> list = [];
+//     await offerList.map((e) {
+// list.add(OffersData.fromJson(e));
+//     });
+//     return list;
   }
 }

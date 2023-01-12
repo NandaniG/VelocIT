@@ -1003,10 +1003,10 @@ class OrderCheckOutDetails {
   String? orderCheckOutCartMaxCounter;
   String? orderCheckOutCartDeliveredBy;
   int? orderCheckOutCartTempCounter;
-  int? orderCheckOutCartTotalOriginalPrice;
-  int? orderCheckOutCartTotalDiscountPrice;
-  int? orderCheckOutCartTotalDeliveryChargePrice;
-  int? orderCheckOutCartTotalGrandAmount;
+  double? orderCheckOutCartTotalOriginalPrice;
+  double? orderCheckOutCartTotalDiscountPrice;
+  double? orderCheckOutCartTotalDeliveryChargePrice;
+  double? orderCheckOutCartTotalGrandAmount;
   String? orderCheckOutPromoCode;
   List<OrderCheckOutChangeAddressList>? orderCheckOutChangeAddressList;
 

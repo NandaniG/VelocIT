@@ -335,8 +335,14 @@ if(StringConstant.UserLoginId==''){
     print("address.streetAddress");
     if (lat == null || lang == null) return "";
     GeoCode geoCode = GeoCode();
-    Address address =
+    Address address = Address();
+    try {
+      address =
     await geoCode.reverseGeocoding(latitude: lat, longitude: lang);
+    } catch (e) {
+      print(e);
+    }
+    
     addressPincode = address.postal.toString();
     print("address.streetAddress"+address.streetAddress.toString());
     print("address.streetAddress"+address.region.toString());

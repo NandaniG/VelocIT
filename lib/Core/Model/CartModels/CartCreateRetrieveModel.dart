@@ -8,7 +8,7 @@ class CartCreateRetrieveModel {
   CartCreateRetrieveModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     payload =
-    json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+    (json['payload'] != null && status != "EXCEPTION") ? new Payload.fromJson(json['payload']) : null;
     timestamp = json['timestamp'];
   }
 

@@ -20,7 +20,7 @@ class ProductDetailsModel {
   String serviceDescription;
   String maxCounter;
   String deliveredBy;
-  int tempCounter;
+  int? tempCounter;
 
   ProductDetailsModel({
     required this.serviceImage,
@@ -35,7 +35,7 @@ class ProductDetailsModel {
     required this.serviceDescription,
     required this.maxCounter,
     required this.deliveredBy,
-    required this.tempCounter,
+    this.tempCounter,
   });
 
   factory ProductDetailsModel.fromJson(Map<String, dynamic> json) =>
