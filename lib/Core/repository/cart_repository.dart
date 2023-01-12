@@ -157,7 +157,7 @@ class CartRepository {
   Future<MergeCartModel> mergeCartList(String oldId,String newId,dynamic json) async {
 
     // var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);
-    var url = ApiMapping.baseAPI+'/cart/merge_cart/$oldId?newid=$newId';
+    var url = ApiMapping.BaseAPI+'/cart/merge_cart/$oldId?newid=$newId';
     print(url);
     final prefs = await SharedPreferences.getInstance();
 
@@ -214,7 +214,7 @@ class CartRepository {
     // var url = ApiMapping.getURI(apiEndPoint.address_list);
     https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
 
-    var requestUrl = ApiMapping.baseAPI +'/user/'+id + '/address?page=0&size=10';
+    var requestUrl = ApiMapping.BaseAPI +'/user/'+id + '/address?page=0&size=10';
 
     print(requestUrl.toString());
     print( 'https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10');
@@ -273,7 +273,7 @@ class CartRepository {
 
     print("userId"+userId.toString());
     var url = '/address/user/' + userId.toString();
-    var requestUrl = ApiMapping.baseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI +url;
 
     String body = json.encode(data);
     print("jsonMap"+body.toString());
@@ -292,7 +292,7 @@ class CartRepository {
     print("userId"+orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/attempt_payment';
 
-    var requestUrl = ApiMapping.baseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI +url;
     print(requestUrl.toString());
 
     String body = json.encode(data);
@@ -319,7 +319,7 @@ class CartRepository {
     print("userId"+orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/update_payment';
 
-    var requestUrl = ApiMapping.baseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI +url;
     print(requestUrl.toString());
 
     String body = json.encode(data);

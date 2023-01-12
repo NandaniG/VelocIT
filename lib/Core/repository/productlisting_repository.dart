@@ -70,7 +70,7 @@ class ProductSpecificListRepository {
     var url = '/product/findByFmcgCode';
     String queryString = Uri(queryParameters: fmcgData).query;
     var urls = ApiMapping.getURI(apiEndPoint.single_product_scanner);
-    var requestUrl = ApiMapping.baseAPI + url + '?' + queryString!;
+    var requestUrl = ApiMapping.BaseAPI + url + '?' + queryString!;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);

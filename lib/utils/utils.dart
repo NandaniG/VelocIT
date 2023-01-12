@@ -53,6 +53,7 @@ class Utils {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 10000 * 5,
+
         fontSize: 20,
         backgroundColor: Colors.green,
         textColor: Colors.white);

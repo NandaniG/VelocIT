@@ -13,13 +13,10 @@ import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 import '../../Core/AppConstant/apiMapping.dart';
-import '../../Core/Model/SignUpModel.dart';
-import '../../Core/ViewModel/auth_view_model.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/textFormFields.dart';
-import 'forgot_password.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SignUp extends StatefulWidget {
@@ -55,7 +52,6 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    final authViewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
@@ -341,7 +337,7 @@ class _SignUpState extends State<SignUp> {
                             'Create an Account',
                             ThemeApp.tealButtonColor,
                             context,
-                            authViewModel.loadingWithAuthUSerPost, () {
+                         false, () {
                           FocusManager.instance.primaryFocus?.unfocus();
 
                           if (isTermSelected == false) {
@@ -742,16 +738,16 @@ class _SignUpState extends State<SignUp> {
     // todo - you should check the response.statusCode
     dynamic reply = await response.transform(utf8.decoder).join();
     String rawJson = reply.toString();
-    // Utils.successToast(rawJson.toString());
+    Utils.successToast(rawJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
-    String name = map['message'];
-    Utils.successToast(name.toString());
-    print("SignUp response " + name.toString());
+    // String name = map['message'];
+    // Utils.successToast(name.toString());
+    // print("SignUp response " + name.toString());
 
     if (response.statusCode == 200) {
 
-      Utils.successToast(name.toString());
+      // Utils.successToast(name.toString());
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => SignIn_Screen()));
       businessNameController.clear();
@@ -761,7 +757,8 @@ class _SignUpState extends State<SignUp> {
       confirmPassword.clear();
       print(reply.toString());
     } else {
-      Utils.errorToast(name.toString());    }
+      // Utils.errorToast(name.toString());
+      }
 
     httpClient.close();
     return reply;

@@ -5,7 +5,6 @@ import 'package:velocit/Core/Model/FindProductBySubCategoryModel.dart';
 
 import '../../../Core/Model/CategoriesModel.dart';
 import '../../../Core/Model/ProductCategoryModel.dart';
-import '../../../Core/Model/servicesModel.dart';
 import '../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../Core/ViewModel/product_listing_view_model.dart';
 import '../../../Core/data/responses/status.dart';

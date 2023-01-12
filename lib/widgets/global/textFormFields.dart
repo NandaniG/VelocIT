@@ -68,9 +68,9 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
           counterText: "",
           prefixIcon: widget.preffixText,
           suffixIcon: widget.suffixText,
-          suffixIconConstraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * .3,
-              minWidth: MediaQuery.of(context).size.width * .3),
+          // suffixIconConstraints: BoxConstraints(
+          //     maxWidth: MediaQuery.of(context).size.width * .3,
+          //     minWidth: MediaQuery.of(context).size.width * .3),
           filled: true,
           fillColor: Colors.white,
           hintStyle: TextStyle(
@@ -199,7 +199,7 @@ class _EmailTextFormFieldsWidgetState extends State<EmailTextFormFieldsWidget> {
               height: 16.56,
             ),
           ),
-          suffixIcon: !StringConstant().isEmail(widget.controller.text)
+          suffixIcon: !StringConstant().isEmail(widget.controller.text)||!StringConstant().isPhone(widget.controller.text)
               ? SizedBox()
               : Padding(
                   padding:

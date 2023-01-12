@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:velocit/Core/Model/ProductListingModel.dart';
@@ -10,7 +12,8 @@ import '../Model/Orders/ActiveOrdersBasketModel.dart';
 import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
 import '../Model/ProductsModel/Product_by_search_term_model.dart';
-import '../Model/servicesModel.dart';
+import '../Model/RecommendedForYouModel.dart';
+import '../Model/ServiceSubCategoriesModel.dart';
 import '../repository/auth_repository.dart';
 
 class DashboardViewModel with ChangeNotifier {
@@ -20,9 +23,10 @@ class DashboardViewModel with ChangeNotifier {
 
   ApiResponse<CategoriesModel> categoryList = ApiResponse.loading();
 
-  ApiResponse<ServicesModel> serviceList = ApiResponse.loading();
   ApiResponse<ProductsListingModel> productListingList = ApiResponse.loading();
   ApiResponse<ProductCategoryModel> productCategoryList = ApiResponse.loading();
+  ApiResponse<List<ServicesSubCategoriesModel>> serviceCategoryList = ApiResponse.loading();
+  ApiResponse<RecommendedForYouModel> recommendedList = ApiResponse.loading();
 
   ApiResponse<ProductAllPaginatedModel> productListingResponse =
       ApiResponse.loading();
@@ -34,10 +38,6 @@ class DashboardViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  setServicesList(ApiResponse<ServicesModel> response) {
-    serviceList = response;
-    notifyListeners();
-  }
 
   setProductListingList(ApiResponse<ProductsListingModel> response) {
     productListingList = response;
@@ -48,10 +48,18 @@ class DashboardViewModel with ChangeNotifier {
     productCategoryList = response;
     notifyListeners();
   }
+  getServiceCategoryListingList(ApiResponse<List<ServicesSubCategoriesModel>> response) {
+    serviceCategoryList = response;
+    notifyListeners();
+  }
 
 
   getProductListing(ApiResponse<ProductAllPaginatedModel> response) {
     productListingResponse = response;
+    notifyListeners();
+  }
+  getRecommended(ApiResponse<RecommendedForYouModel> response) {
+    recommendedList = response;
     notifyListeners();
   }
 
@@ -71,6 +79,19 @@ class DashboardViewModel with ChangeNotifier {
       getProductListing(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       getProductListing(ApiResponse.error(error.toString()));
+    });
+  }
+
+  Future<void> recommendedWithGet(
+      int page, int size) async {
+    getRecommended(ApiResponse.loading());
+
+    _myProductListingRepo
+        .getRecommendedForYou(page, size)
+        .then((value) async {
+      getRecommended(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      getRecommended(ApiResponse.error(error.toString()));
     });
   }
 
@@ -96,4 +117,31 @@ class DashboardViewModel with ChangeNotifier {
       getProductCategoryListingList(ApiResponse.error(error.toString()));
     });
   }
+  Map<dynamic, dynamic> jsonData = {};
+
+  loadJson() async {
+    try {
+
+
+      String jsonContents = await DashBoardRepository().getServiceCategoryListing();
+      // DashBoardRepository().getServiceCategoryListing();
+
+      jsonData = json.decode(jsonContents);
+
+      print("____________loadJson______________________");
+
+      // print(jsonData["payload"]['consumer_baskets'].toString());
+
+      notifyListeners();
+    }catch(e){}}
+
+    /*  Future<void> serviceCategoryListingWithGet() async {
+    getServiceCategoryListingList(ApiResponse.loading());
+
+    _myRepo.getServiceCategoryListing().then((value) async {
+      getServiceCategoryListingList(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      getServiceCategoryListingList(ApiResponse.error(error.toString()));
+    });
+  }*/
 }

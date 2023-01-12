@@ -16,7 +16,7 @@ import '../../Core/Model/Orders/ActiveOrdersBasketModel.dart';
 import '../../Core/Model/ProductAllPaginatedModel.dart';
 import '../../Core/Model/ProductCategoryModel.dart';
 import '../../Core/Model/ProductListingModel.dart';
-import '../../Core/Model/servicesModel.dart';
+import '../../Core/Model/RecommendedForYouModel.dart';
 import '../../Core/ViewModel/OrderBasket_viewmodel.dart';
 import '../../Core/ViewModel/cart_view_model.dart';
 import '../../Core/ViewModel/dashboard_view_model.dart';
@@ -98,7 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     print(url.toString());
     print('datassss.toString()');
     print(basketRepo.orderBasketData.toString());
-    // getCurrentLocation();
+    getCurrentLocation();
 // if()
 
     productCategories.productCategoryListingWithGet();
@@ -109,6 +109,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     };
     print("getProductListing Query" + productListingData.toString());
     productListView.productListingWithGet(0, 10);
+    productListView.recommendedWithGet(0, 10);
     _isProductListChip = true;
     getPincode();
     StringConstant.controllerSpeechToText.clear();
@@ -460,7 +461,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             builder: (context) => ShopByCategoryActivity(
                     ),
                       ),
-                    ).then((value) => setState((){}));
+                    ).then((value) => setState((){
+                      _isProductListChip = true;
+
+                      _isServiceListChip = false;
+                      _isCRMListChip = false;
+
+
+                    }));
                   });
                 },
                 child: Container(
@@ -502,7 +510,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       MaterialPageRoute(
                         builder: (context) => CRMFormScreen(),
                       ),
-                    );
+                    )   .then((value) => setState((){
+                    _isProductListChip = true;
+                    //
+                    // _isServiceListChip = false;
+                    // _isCRMListChip = false;
+
+
+                    }));
                   });
                 },
                 child: Container(
@@ -1679,7 +1694,7 @@ SizedBox(height: 6,),
         value: productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
-          switch (productCategories.productListingResponse.status) {
+          switch (productCategories.recommendedList.status) {
             case Status.LOADING:
               if (kDebugMode) {
                 print("Api load");
@@ -1691,23 +1706,23 @@ SizedBox(height: 6,),
                 print("Api error");
               }
               return Text(
-                  productCategories.productListingResponse.message.toString());
+                  productCategories.recommendedList.message.toString());
 
             case Status.COMPLETED:
               if (kDebugMode) {
                 print("Api calll");
               }
 
-              List<Content>? serviceList = productCategories
-                  .productListingResponse.data!.payload!.content;
+              List<RecommendedContent>? recommendedList = productCategories
+                  .recommendedList.data!.payload!.content;
 
               return Container(
                 height: 228,
-                child: serviceList!.isNotEmpty
+                child: recommendedList!.isNotEmpty
                     ? ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
-                        itemCount: serviceList!.length,
+                        itemCount: recommendedList!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Row(
                                 children: [
@@ -1717,7 +1732,7 @@ SizedBox(height: 6,),
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               ProductDetailsActivity(
-                                            id: serviceList[index].id,
+                                            id: recommendedList[index].id,
                                             // productList: subProductList[index],
                                             // productSpecificListViewModel:
                                             //     productSpecificListViewModel,
@@ -1743,7 +1758,7 @@ SizedBox(height: 6,),
                                           child: ClipRRect(
                                               child: Image.network(
                                             // width: double.infinity,
-                                            serviceList[index]
+                                                recommendedList[index]
                                                     .imageUrls![0]
                                                     .imageUrl
                                                     .toString() ??
@@ -1771,7 +1786,7 @@ SizedBox(height: 6,),
                                                         21, 9, 21, 4),
                                                 child: TextFieldUtils()
                                                     .listNameHeadingTextField(
-                                                        serviceList[index]
+                                                    recommendedList[index]
                                                             .shortName!,
                                                         context) /*Text(
                                                     serviceList[index].shortName!,
@@ -1799,7 +1814,7 @@ SizedBox(height: 6,),
                                                     TextFieldUtils()
                                                         .listPriceHeadingTextField(
                                                             indianRupeesFormat
-                                                                .format(serviceList[
+                                                                .format(recommendedList[
                                                                             index]
                                                                         .defaultSellPrice ??
                                                                     0.0),
@@ -1808,7 +1823,7 @@ SizedBox(height: 6,),
                                                     TextFieldUtils()
                                                         .listScratchPriceHeadingTextField(
                                                             indianRupeesFormat
-                                                                .format(serviceList[
+                                                                .format(recommendedList[
                                                                             index]
                                                                         .defaultMrp ??
                                                                     0.0),

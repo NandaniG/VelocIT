@@ -122,7 +122,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
         await Prefs.instance.getToken(StringConstant.cartListForPreferenceKey);
     print('____________CartData AFTER GETTING PREF______________');
     StringConstant.prettyPrintJson(
-        StringConstant.getCartList_FromPref.toString());
+        StringConstant.getCartList_FromPref.toString(), 'Cartlist pref');
   }
 
   @override

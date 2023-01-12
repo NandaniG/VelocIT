@@ -100,7 +100,7 @@ class ProductProvider with ChangeNotifier {
     copyCartList = cartList.map((v) => v).toList();
     String encodedMap = json.encode(copyCartList);
     print('___________ SET PREF______________');
-    StringConstant.prettyPrintJson(encodedMap);
+    StringConstant.prettyPrintJson(encodedMap, 'copy cart list');
 
     Prefs.instance.setToken(
         StringConstant.cartListForPreferenceKey, encodedMap);

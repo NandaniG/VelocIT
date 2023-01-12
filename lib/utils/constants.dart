@@ -38,6 +38,7 @@ static int isUserLoggedIn = 0;
   static String userId = 'userId';
   static String userIdPref = 'userIdPref';
   static String testId = 'testIdPref';
+  static String setOtp = 'setOtpPref';
   static int sortByRadio = 0;
   static String sortedBy = "Low to High";
 
@@ -167,14 +168,14 @@ static int isUserLoggedIn = 0;
   // bool isEmail(String input) => EmailValidator.validate(input);
 
   // 10 to 12 digit validation
-  // bool isPhone(String input) =>
-  //     RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
-  //         .hasMatch(input);
+  bool isPhone(String input) =>
+      RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
+          .hasMatch(input);
 
   //10digit validation
-  bool isPhone(String input) =>
-      RegExp(r"^[0-9]{10}$")
-          .hasMatch(input);
+  // bool isPhone(String input) =>
+  //     RegExp(r"^[0-9]{10}$")
+  //         .hasMatch(input);
 
   bool  isValidName(String input) => RegExp(r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$").hasMatch(input);
 
@@ -203,12 +204,12 @@ static int isUserLoggedIn = 0;
   static JsonDecoder decoder = const JsonDecoder();
   static JsonEncoder encoder = const JsonEncoder.withIndent('  ');
 
-  static void prettyPrintJson(String input) {
+  static void prettyPrintJson(String input,String apiName) {
     var object = decoder.convert(input);
     var prettyString = encoder.convert(object);
     if(kDebugMode) {
       print(
-          "_______________________________Json Printer_______________________________________");
+          "______________________________${apiName}________________________________");
     }
     prettyString.split('\n').forEach((element) {
       if(kDebugMode) {

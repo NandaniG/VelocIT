@@ -111,7 +111,7 @@ int productBadge=0;
     // var url = "/user/130/defaultAddress?addressid=42";
     var url = "/user/$consumerUID/defaultAddress?addressid=$addressId";
 
-    var requestUrl = ApiMapping.baseAPI + url;
+    var requestUrl = ApiMapping.BaseAPI + url;
 
     print("setDefaultAddress" + requestUrl.toString());
 

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
+import 'package:velocit/Core/repository/dashboard_repository.dart';
 
 import '../../../utils/ApiMapping.dart';
 import '../../Core/AppConstant/apiMapping.dart';
@@ -22,14 +23,14 @@ import '../models/JsonModelForApp/HomeModel.dart';
 
 class HomeProvider with ChangeNotifier {
   Map<dynamic, dynamic> jsonData = {};
-  Map<dynamic, dynamic> jsonDatass = {};
-  Map<dynamic, dynamic> jsonOrdersData = {};
 
   //---------------------------------------------------------
   //--------------------load json file------------------------
   //----------------------------------------------------------
+
   loadJson() async {
-    try {    final prefs = await SharedPreferences.getInstance();
+    try {
+      final prefs = await SharedPreferences.getInstance();
 
     StringConstant.RandomUserLoginId =
           (prefs.getString('RandomUserId')) ?? '';
@@ -38,15 +39,16 @@ class HomeProvider with ChangeNotifier {
         "IsActiveOrderList": true,
         "from_days_in_past": 3
       });
-      jsonData = json.decode(jsonContents);
-      print("____________loadJson______________________");
-      print(jsonData["payload"]['consumer_baskets'].toString());
-      print("OrderBasketRepository data"+{
-        "user_id": StringConstant.RandomUserLoginId,
-        "IsActiveOrderList": true,
-        "from_days_in_past": 3
-      }.toString());
 
+    // DashBoardRepository().getServiceCategoryListing();
+
+      jsonData = json.decode(jsonContents);
+
+      print("____________loadJson______________________");
+
+      // print(jsonData["payload"]['consumer_baskets'].toString());
+
+      getServiceCategoryListing();
       notifyListeners();
       merchantNearYouListService();
       ///////
@@ -62,7 +64,7 @@ class HomeProvider with ChangeNotifier {
       // recommendedListService();
       bestDealListService();
       cartProductListService();
-      orderCheckOutListService();
+      // orderCheckOutListService();
       // myOrdersListService();
       myAddressListService();
       customerSupportService();
@@ -75,38 +77,6 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  loadOrderJson(Map jsonMap, int basketId) async {
-    try {
-      String jsonContents = await putCartForPaymentUpdate(jsonMap, basketId);
-      String jsonContentss = await putCartForPayment(jsonMap, basketId);
-
-      jsonData = json.decode(jsonContents);
-      jsonData = json.decode(jsonContentss);
-      print(
-          "____________loadJson__putCartForPaymentUpdate____________________");
-      print(jsonData.toString());
-
-      notifyListeners();
-    } catch (e) {
-      print("Error in loadJson: $e");
-      return {};
-    }
-  }
-  loadAddressJson(String consumerUID, String addressId) async {
-    try {
-      String jsonContents = await setSecondDefaultAddress(consumerUID, addressId);
-
-      jsonData = json.decode(jsonContents);
-      print(
-          "____________loadJson__putCartForPaymentUpdate____________________");
-      print(jsonData.toString());
-
-      notifyListeners();
-    } catch (e) {
-      print("Error in loadJson: $e");
-      return {};
-    }
-  }
 
   loadCartForPaymentJson() async {
     try {
@@ -129,13 +99,29 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
+  BaseApiServices _apiServices = NetworkApiServices();
+
+  Future getServiceCategoryListing() async {
+    var url = ApiMapping.BaseAPI + ApiMapping.ServiceSubCategory;
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url);
+
+      print("ServiceSubCategory list: " + response.toString());
+      print("ServiceSubCategory"+jsonData['service_sub_category_code'].toString());
+
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
   Future putCartForPaymentUpdate(dynamic data, int orderBasketID) async {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
 
     print("userId" + orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/update_payment';
 
-    var requestUrl = ApiMapping.baseAPI + url;
+    var requestUrl = ApiMapping.BaseAPI + url;
     print(requestUrl.toString());
 
     String body = json.encode(data);
@@ -161,7 +147,7 @@ class HomeProvider with ChangeNotifier {
     print("userId"+orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/attempt_payment';
 
-    var requestUrl = ApiMapping.baseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI +url;
     print(requestUrl.toString());
 
     String body = json.encode(data);
@@ -189,7 +175,7 @@ class HomeProvider with ChangeNotifier {
     // var url = "/user/130/defaultAddress?addressid=42";
     var url = "/user/$consumerUID/defaultAddress?addressid=$addressId";
 
-    var requestUrl = ApiMapping.baseAPI + url;
+    var requestUrl = ApiMapping.BaseAPI + url;
 
     print("setSecondDefaultAddress" + requestUrl.toString());
 
@@ -225,7 +211,7 @@ class HomeProvider with ChangeNotifier {
     };*/
     try {
       var requestUrl =
-          ApiMapping.baseAPI + StringConstant.apiOrderBasket_submitRatings;
+          ApiMapping.BaseAPI + StringConstant.apiOrderBasket_submitRatings;
 
       String body = json.encode(jsonMap);
       print("reviewPostAPI jsonMap" + body.toString());
@@ -245,7 +231,7 @@ class HomeProvider with ChangeNotifier {
   //----------------- home slider service--------------------
   var homeSliderList;
 
-  Future<List<HomeImageSlider>> homeImageSliderService() async {
+  Future homeImageSliderService() async {
     final jsondata = await rootBundle.loadString('assets/jsonData.json');
     homeSliderList = json.decode(jsondata) ?? '';
     // print("-------------homeImageSliderService Data-------------");
@@ -267,7 +253,7 @@ class HomeProvider with ChangeNotifier {
     shopByCategoryList = json.decode(jsondata);
     shopByCategoryList = shopByCategoryList["shopByCategoryList"];
 
-    for (int i = 0; i <= shopByCategoryList.length; i++) {
+    for (int i = 0; i <= shopByCategoryList.length-1; i++) {
       indexofSubProductList = i;
 
       productList = shopByCategoryList[i]["subShopByCategoryList"];
@@ -325,15 +311,15 @@ class HomeProvider with ChangeNotifier {
 
   var merchantNearYouList;
 
-  Future<List<MerchantNearYouList>> merchantNearYouListService() async {
+  Future merchantNearYouListService() async {
     final jsondata = await rootBundle.loadString('assets/jsonData.json');
     merchantNearYouList = json.decode(jsondata);
     merchantNearYouList = merchantNearYouList["merchantNearYouList"];
     // print("-------------MerchantNearYouList Data-------------");
     // // print(merchantNearYouList.toString());
-    return merchantNearYouList
+    return merchantNearYouList/*
         .map((e) => MerchantNearYouList.fromJson(e))
-        .toList();
+        .toList()*/;
   }
 
   //---------------------------------------------------------
@@ -385,7 +371,7 @@ class HomeProvider with ChangeNotifier {
   var orderCheckOutList;
   var orderCheckOutDetails;
 
-  Future<List<OrderCheckOut>> orderCheckOutListService() async {
+  Future orderCheckOutListService() async {
     final jsondata = await rootBundle.loadString('assets/jsonData.json');
     orderCheckOutList = json.decode(jsondata);
     orderCheckOutList = orderCheckOutList["orderCheckOut"];
@@ -399,7 +385,7 @@ class HomeProvider with ChangeNotifier {
           "-------------orderCheckOutDetails Dataaaaaaaa$orderCheckOutDetails");
     }
     // // print(orderCheckOutList.toString());
-    return orderCheckOutList.map((e) => OrderCheckOut.fromJson(e)).toList();
+    // return orderCheckOutList.map((e) => OrderCheckOut.fromJson(e)).toList();
   }
 
   //---------------------------------------------------------

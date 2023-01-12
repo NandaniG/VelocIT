@@ -215,7 +215,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                   var copyOfAddressList =
                       value.creditCardList.map((v) => v).toList();
                   String encodedMap = json.encode(copyOfAddressList);
-                  StringConstant.prettyPrintJson(encodedMap.toString());
+                  StringConstant.prettyPrintJson(encodedMap.toString(),"new Card");
 
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -459,7 +459,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
                   var copyOfAddressList =
                       value.creditCardList.map((v) => v).toList();
                   String encodedMap = json.encode(copyOfAddressList);
-                  StringConstant.prettyPrintJson(encodedMap.toString());
+                  StringConstant.prettyPrintJson(encodedMap.toString(),'new Card');
 
                   Navigator.of(context).push(
                     MaterialPageRoute(

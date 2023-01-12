@@ -32,7 +32,6 @@ import 'package:velocit/utils/styles.dart';
 import 'package:velocit/utils/utils.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 import 'Core/ViewModel/OrderBasket_viewmodel.dart';
-import 'Core/ViewModel/auth_view_model.dart';
 import 'Core/ViewModel/dashboard_view_model.dart';
 import 'Core/ViewModel/product_listing_view_model.dart';
 import 'L10n/l10n.dart';
@@ -60,52 +59,9 @@ getpref() async {
   //
 
 
-  // var loginId=await  prefs.getString(StringConstant.userId);
   var testId = await prefs.getString(StringConstant.testId);
   print("on loging testId : " + testId.toString());
 
-  /*// StringConstant.isLogIn = true;
-  StringConstant.emailOTPVar =
-      (await Prefs.instance.getToken(StringConstant.emailOTPPref))!;
-
-  print('The name is ${StringConstant.emailOTPVar}');
-
-  StringConstant.emailvar =
-      (await Prefs.instance.getToken(StringConstant.emailPref))!;
-  await Prefs.instance.getToken(StringConstant.pinCodePref);
-
-  StringConstant.userAccountName =
-      (await Prefs.instance.getToken(StringConstant.userAccountNamePref))!
-              .isEmpty
-          ? StringConstant.userAccountName
-          : StringConstant.userAccountName;
-  StringConstant.userAccountEmail =
-      (await Prefs.instance.getToken(StringConstant.userAccountEmailPref))!
-              .isEmpty
-          ? StringConstant.userAccountEmail
-          : StringConstant.userAccountEmail;
-  StringConstant.userAccountMobile =
-      (await Prefs.instance.getToken(StringConstant.userAccountMobilePref))!
-              .isEmpty
-          ? StringConstant.userAccountMobile
-          : StringConstant.userAccountMobile;
-  StringConstant.userAccountPass =
-      (await Prefs.instance.getToken(StringConstant.userAccountPassPref))!
-              .isEmpty
-          ? StringConstant.userAccountPass
-          : StringConstant.userAccountPass;
-
-  StringConstant.placesFromCurrentLocation =
-      (await Prefs.instance.getToken(StringConstant.pinCodePref))!.isEmpty
-          ? StringConstant.placesFromCurrentLocation
-          : StringConstant.placesFromCurrentLocation;
-
-  StringConstant.addressFromCurrentLocation =
-      (await Prefs.instance.getToken(StringConstant.addressPref))!.isEmpty
-          ? StringConstant.addressFromCurrentLocation
-          : StringConstant.addressFromCurrentLocation;
-
-  SharedPreferences.setMockInitialValues({});*/
 }
 
 class MyApp extends StatelessWidget {
@@ -127,9 +83,7 @@ class MyApp extends StatelessWidget {
     // productViewModel.productSpecificListWithGet(context, data);
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(
-            create: (_) => AuthViewModel(),
-          ),
+
           ChangeNotifierProvider(
             create: (_) => DashboardViewModel(),
           ),
@@ -186,7 +140,7 @@ class MyApp extends StatelessWidget {
                 //     ? SignIn_Screen()
                 //     : DashboardScreen(),
                 '/': (context) => SplashScreen(),
-                // '/': (context) => MyHomePage(title: ""),
+                // '/': (context) => SignIn_Screen(),
                 '/dashBoardScreen': (context) => const DashboardScreen(),
                 '/editAccountActivity': (context) =>
                     const EditAccountActivity(),

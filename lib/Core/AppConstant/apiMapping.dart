@@ -7,7 +7,7 @@ class ApiMapping {
   static String basePort = "443";
   static String apiVersion = "api/v1";
   // static String username = "/v2/IAM/authenticateWithUID";
-static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
+static String BaseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
 
 
   static String ConstructURI(String path) {
@@ -32,7 +32,13 @@ static String baseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
       apiVersion;
 //https://velocitapiqa.fulgorithmapi.com:443/v1/IAM/authenticate
 
+ static String loginViaEmailPassword = '/auth/login_via_email_password';
+ static String loginViaEmailOTP = '/auth/login_via_email_otp';
+ static String loginViaMobileOTP = '/auth/login_via_mobile_otp';
+ static String validateOTP = '/auth/login_via_otp_stage_2';
  static String consumerBasket = '/consumerbasket/findby_consumer';
+ static String ServiceSubCategory = '/service-sub-category';
+ static String RecommendForYou = '/product/recommendedforuser';
 
   static String getURI(apiEndPoint ep) {
     String retVal = "";

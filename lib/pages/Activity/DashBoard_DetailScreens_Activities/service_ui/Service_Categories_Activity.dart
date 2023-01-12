@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../Core/Model/CategoriesModel.dart';
 import '../../../../Core/Model/ProductCategoryModel.dart';
+import '../../../../Core/Model/ServiceSubCategoriesModel.dart';
 import '../../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../../Core/data/responses/status.dart';
 import '../../../../services/models/demoModel.dart';
@@ -50,13 +51,16 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
     "best_deal": "",
     'budget_buys': ""
   };
-
+var dataJson;
   @override
   void initState() {
     // TODO: implement initState
 
     // selected = widget.shopByCategorySelected;
     productViewModel.productCategoryListingWithGet();
+    dataJson = Provider.of<DashboardViewModel>(context, listen: false).loadJson();
+
+    // productViewModel.serviceCategoryListingWithGet();
     super.initState();
   }
 
@@ -89,13 +93,19 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: SafeArea(
+
+     body: SafeArea(
           child: SingleChildScrollView(
             child: ChangeNotifierProvider<DashboardViewModel>.value(
               value: productViewModel,
-              child: Consumer<DashboardViewModel>(
+              child: data == ''
+                  ? CircularProgressIndicator()
+                  :Text(""),
+
+
+              /*Consumer<DashboardViewModel>(
                   builder: (context, productCategories, child) {
-                switch (productCategories.productCategoryList.status) {
+                switch (productCategories.serviceCategoryList.status) {
                   case Status.LOADING:
                     if (kDebugMode) {
                       print("Api load");
@@ -106,18 +116,15 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                     if (kDebugMode) {
                       print("Api error");
                     }
-                    return Text(productCategories.productCategoryList.message
+                    return Text(productCategories.serviceCategoryList.message
                         .toString());
 
                   case Status.COMPLETED:
                     if (kDebugMode) {
                       print("Api calll");
                     }
-
-                    List<ProductList>? serviceList =
-                        productCategories.productCategoryList.data!.productList;
-
-                    return Container(
+return Text(productCategories.serviceCategoryList.message.toString());
+     *//*               return Container(
                       padding: const EdgeInsets.all(10),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -141,11 +148,20 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                             SizedBox(
                               height: height * .02,
                             ),
-                            ListView.builder(
+                         *//**//*   TextFieldUtils().dynamicText(
+                                productCategories.serviceCategoryList.data![0].name.toString(),
+                                context,
+                                TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.primaryNavyBlackColor,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: height * .03,
+                                )),*//**//*
+                        *//**//*    ListView.builder(
                               key: Key('builder ${selected.toString()}'),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: serviceList!.length,
+                              itemCount: productCategories.serviceCategoryList.data!.length,
                               itemBuilder: (context, index) {
                                 return Card(
                                   shape: RoundedRectangleBorder(
@@ -194,7 +210,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                           textColor: Colors.black,
                                           title: Row(
                                             children: [
-                                              /*           CircleAvatar(
+                                                         CircleAvatar(
                                               child: ClipRRect(
                                                 borderRadius:
                                                 const BorderRadius.all(
@@ -209,7 +225,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                                       .07,
                                                 ),
                                               ),
-                                            ),*/
+                                            ),
                                               SvgPicture.asset(
                                                 'assets/appImages/appliancesIcon.svg',
 
@@ -238,11 +254,11 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                       ]),
                                 );
                               },
-                            )
+                            )*//**//*
                           ]),
-                    );
+                    );*//*
                 }return Text('');
-              }),
+              }),*/
             ),
           ),
         ));
