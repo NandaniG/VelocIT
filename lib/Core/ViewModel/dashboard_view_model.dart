@@ -6,6 +6,7 @@ import 'package:velocit/Core/Model/ProductListingModel.dart';
 import 'package:velocit/Core/data/responses/api_response.dart';
 import 'package:velocit/Core/repository/dashboard_repository.dart';
 
+import '../Model/BestDealModel.dart';
 import '../Model/CategoriesModel.dart';
 import '../Model/CategoriesModel.dart';
 import '../Model/Orders/ActiveOrdersBasketModel.dart';
@@ -14,6 +15,7 @@ import '../Model/ProductCategoryModel.dart';
 import '../Model/ProductsModel/Product_by_search_term_model.dart';
 import '../Model/RecommendedForYouModel.dart';
 import '../Model/ServiceSubCategoriesModel.dart';
+import '../Model/SimmilarProductModel.dart';
 import '../repository/auth_repository.dart';
 
 class DashboardViewModel with ChangeNotifier {
@@ -27,6 +29,8 @@ class DashboardViewModel with ChangeNotifier {
   ApiResponse<ProductCategoryModel> productCategoryList = ApiResponse.loading();
   ApiResponse<List<ServicesSubCategoriesModel>> serviceCategoryList = ApiResponse.loading();
   ApiResponse<RecommendedForYouModel> recommendedList = ApiResponse.loading();
+  ApiResponse<BestDealModel> bestDealList = ApiResponse.loading();
+  ApiResponse<SimilarProductModel> similarList = ApiResponse.loading();
 
   ApiResponse<ProductAllPaginatedModel> productListingResponse =
       ApiResponse.loading();
@@ -61,6 +65,13 @@ class DashboardViewModel with ChangeNotifier {
   getRecommended(ApiResponse<RecommendedForYouModel> response) {
     recommendedList = response;
     notifyListeners();
+  }  getBestDeal(ApiResponse<BestDealModel> response) {
+    bestDealList = response;
+    notifyListeners();
+  }
+  getSimilarProduct(ApiResponse<SimilarProductModel> response) {
+    similarList = response;
+    notifyListeners();
   }
 
   getProductByTermsListing(ApiResponse<ProductFindBySearchTermModel> response) {
@@ -92,6 +103,31 @@ class DashboardViewModel with ChangeNotifier {
       getRecommended(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       getRecommended(ApiResponse.error(error.toString()));
+    });
+  }
+
+  Future<void> bestDealWithGet(
+      int page, int size) async {
+    getBestDeal(ApiResponse.loading());
+
+    _myProductListingRepo
+        .getBestDeal(page, size)
+        .then((value) async {
+      getBestDeal(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      getBestDeal(ApiResponse.error(error.toString()));
+    });
+  }
+  Future<void> similarProductWithGet(
+      int page, int size, int productId) async {
+    getSimilarProduct(ApiResponse.loading());
+
+    _myProductListingRepo
+        .getSimilarProduct(page, size,productId)
+        .then((value) async {
+      getSimilarProduct(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      getSimilarProduct(ApiResponse.error(error.toString()));
     });
   }
 

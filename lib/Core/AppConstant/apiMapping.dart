@@ -39,6 +39,8 @@ static String BaseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
  static String consumerBasket = '/consumerbasket/findby_consumer';
  static String ServiceSubCategory = '/service-sub-category';
  static String RecommendForYou = '/product/recommendedforuser';
+ static String BestDeal = '/product/bestDeal';
+ static String SimilarProducts = '/product/similarproducts';
 
   static String getURI(apiEndPoint ep) {
     String retVal = "";

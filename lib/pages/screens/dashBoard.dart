@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/utils/ProgressIndicatorLoader.dart';
 import '../../Core/AppConstant/apiMapping.dart';
+import '../../Core/Model/BestDealModel.dart';
 import '../../Core/Model/Orders/ActiveOrdersBasketModel.dart';
 import '../../Core/Model/ProductAllPaginatedModel.dart';
 import '../../Core/Model/ProductCategoryModel.dart';
@@ -110,6 +111,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     print("getProductListing Query" + productListingData.toString());
     productListView.productListingWithGet(0, 10);
     productListView.recommendedWithGet(0, 10);
+    productListView.bestDealWithGet(0, 10);
     _isProductListChip = true;
     getPincode();
     StringConstant.controllerSpeechToText.clear();
@@ -1751,10 +1753,7 @@ SizedBox(height: 6,),
                                           width: 191,
                                           decoration: const BoxDecoration(
                                               color: ThemeApp.whiteColor,
-                                              borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(10),
-                                                topLeft: Radius.circular(10),
-                                              )),
+                                           ),
                                           child: ClipRRect(
                                               child: Image.network(
                                             // width: double.infinity,
@@ -2417,7 +2416,7 @@ SizedBox(height: 6,),
         value: productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
-          switch (productCategories.productListingResponse.status) {
+          switch (productCategories.bestDealList.status) {
             case Status.LOADING:
               if (kDebugMode) {
                 print("Api load");
@@ -2429,15 +2428,15 @@ SizedBox(height: 6,),
                 print("Api error");
               }
               return Text(
-                  productCategories.productListingResponse.message.toString());
+                  productCategories.bestDealList.message.toString());
 
             case Status.COMPLETED:
               if (kDebugMode) {
                 print("Api calll");
               }
 
-              List<Content>? serviceList = productCategories
-                  .productListingResponse.data!.payload!.content;
+              List<BestDealContent>? serviceList = productCategories
+                  .bestDealList.data!.payload!.content;
 
               return Container(
                 height: 228,
@@ -2474,10 +2473,7 @@ SizedBox(height: 6,),
                                           width: 191,
                                           decoration: const BoxDecoration(
                                               color: ThemeApp.whiteColor,
-                                              borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(10),
-                                                topLeft: Radius.circular(10),
-                                              )),
+                                            ),
                                           child: ClipRRect(
                                               child: Image.network(
                                             // width: double.infinity,
