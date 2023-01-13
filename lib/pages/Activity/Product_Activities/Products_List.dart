@@ -381,7 +381,7 @@ class _ProductListByCategoryActivityState
                   return Expanded(
 
                     // width: MediaQuery.of(context).size.width,
-                    child: GridView(
+                    child: subProductList.length==[]?CircularProgressIndicator(): GridView(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 16,

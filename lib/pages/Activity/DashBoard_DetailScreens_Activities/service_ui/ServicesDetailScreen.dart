@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:velocit/Core/Model/ProductCategoryModel.dart';
+import '../../../../Core/Model/ServiceCategoryAndSubCategoriesModel.dart';
 import '../../../../utils/constants.dart';
 
 import '../../../../utils/styles.dart';
@@ -8,7 +8,7 @@ import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/textFormFields.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
-  SimpleSubCats? productList;
+  ServiceSimpleSubCats? productList;
 
   ServiceDetailScreen({Key? key, required this.productList}) : super(key: key);
 

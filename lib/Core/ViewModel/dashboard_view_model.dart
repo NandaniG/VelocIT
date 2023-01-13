@@ -7,6 +7,7 @@ import 'package:velocit/Core/data/responses/api_response.dart';
 import 'package:velocit/Core/repository/dashboard_repository.dart';
 
 import '../Model/BestDealModel.dart';
+import '../Model/CRMModel.dart';
 import '../Model/CategoriesModel.dart';
 import '../Model/CategoriesModel.dart';
 import '../Model/Orders/ActiveOrdersBasketModel.dart';
@@ -14,7 +15,7 @@ import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
 import '../Model/ProductsModel/Product_by_search_term_model.dart';
 import '../Model/RecommendedForYouModel.dart';
-import '../Model/ServiceSubCategoriesModel.dart';
+import '../Model/ServiceCategoryAndSubCategoriesModel.dart';
 import '../Model/SimmilarProductModel.dart';
 import '../repository/auth_repository.dart';
 
@@ -27,7 +28,8 @@ class DashboardViewModel with ChangeNotifier {
 
   ApiResponse<ProductsListingModel> productListingList = ApiResponse.loading();
   ApiResponse<ProductCategoryModel> productCategoryList = ApiResponse.loading();
-  ApiResponse<List<ServicesSubCategoriesModel>> serviceCategoryList = ApiResponse.loading();
+  ApiResponse<ServiceCategoryModel> serviceCategoryList = ApiResponse.loading();
+  ApiResponse<CRMModel> CRMList = ApiResponse.loading();
   ApiResponse<RecommendedForYouModel> recommendedList = ApiResponse.loading();
   ApiResponse<BestDealModel> bestDealList = ApiResponse.loading();
   ApiResponse<SimilarProductModel> similarList = ApiResponse.loading();
@@ -52,8 +54,12 @@ class DashboardViewModel with ChangeNotifier {
     productCategoryList = response;
     notifyListeners();
   }
-  getServiceCategoryListingList(ApiResponse<List<ServicesSubCategoriesModel>> response) {
+  getServiceCategoryListingList(ApiResponse<ServiceCategoryModel> response) {
     serviceCategoryList = response;
+    notifyListeners();
+  }
+  getCRMList(ApiResponse<CRMModel> response) {
+    CRMList = response;
     notifyListeners();
   }
 
@@ -153,8 +159,9 @@ class DashboardViewModel with ChangeNotifier {
       getProductCategoryListingList(ApiResponse.error(error.toString()));
     });
   }
-  Map<dynamic, dynamic> jsonData = {};
+  // Map<dynamic, dynamic> jsonData = {};
 
+/*
   loadJson() async {
     try {
 
@@ -170,8 +177,9 @@ class DashboardViewModel with ChangeNotifier {
 
       notifyListeners();
     }catch(e){}}
+*/
 
-    /*  Future<void> serviceCategoryListingWithGet() async {
+      Future<void> serviceCategoryListingWithGet() async {
     getServiceCategoryListingList(ApiResponse.loading());
 
     _myRepo.getServiceCategoryListing().then((value) async {
@@ -179,5 +187,14 @@ class DashboardViewModel with ChangeNotifier {
     }).onError((error, stackTrace) {
       getServiceCategoryListingList(ApiResponse.error(error.toString()));
     });
-  }*/
+  }
+  Future<void> CRMListingWithGet() async {
+    getCRMList(ApiResponse.loading());
+
+    _myRepo.getCRMListing().then((value) async {
+      getCRMList(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      getCRMList(ApiResponse.error(error.toString()));
+    });
+  }
 }

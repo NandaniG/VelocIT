@@ -121,8 +121,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     if (StringConstant.UserLoginId.toString() == '' ||
         StringConstant.UserLoginId.toString() == null) {
       userId = StringConstant.RandomUserLoginId;
+      print('login user is GUEST');
     } else {
       userId = StringConstant.UserLoginId;
+      print('login user is not GUEST');
     }
     Map<String, String> data = {
       // "cartId": StringConstant.UserCartID.toString(),
@@ -134,11 +136,20 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     };
     print("update cart DATA" + data.toString());
     setState(() {});
-    CartRepository().updateCartPostRequest(data, context);
-    cartListView
-        .cartSpecificIDWithGet(context, StringConstant.UserCartID);
+    CartRepository().updateCartPostRequest(data, context).then((value) {
+      setState(() {
 
-    Utils.successToast('Added Successfully!');
+      });
+      StringConstant.BadgeCounterValue = (prefs.getString('setBadgeCountPrefs')) ?? '';
+    });
+    cartListView
+        .cartSpecificIDWithGet(context, StringConstant.UserCartID).then((value) {
+setState(() {
+
+});
+      StringConstant.BadgeCounterValue = (prefs.getString('setBadgeCountPrefs')) ?? '';
+    });
+
     setState(() {
       // prefs.setString(
       //   'setBadgeCountPref',

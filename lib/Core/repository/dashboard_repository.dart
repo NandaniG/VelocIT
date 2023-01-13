@@ -7,13 +7,14 @@ import 'package:velocit/Core/Model/RecommendedForYouModel.dart';
 import '../../utils/constants.dart';
 import '../AppConstant/apiMapping.dart';
 import '../Model/BestDealModel.dart';
+import '../Model/CRMModel.dart';
 import '../Model/CategoriesModel.dart';
 import '../Model/Orders/ActiveOrdersBasketModel.dart';
 import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
 import '../Model/ProductListingModel.dart';
 import '../Model/ProductsModel/Product_by_search_term_model.dart';
-import '../Model/ServiceSubCategoriesModel.dart';
+import '../Model/ServiceCategoryAndSubCategoriesModel.dart';
 import '../Model/SimmilarProductModel.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
@@ -74,16 +75,27 @@ class DashBoardRepository {
       throw e;
     }
   }
-  Future getServiceCategoryListing() async {
+  Future<ServiceCategoryModel> getServiceCategoryListing() async {
     var url = ApiMapping.BaseAPI + ApiMapping.ServiceSubCategory;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(url);
 
       print("ServiceSubCategory list:.... " + response.toString());
-      List responseJson = json.decode(response.body);
 
-      return response;
+      return response = ServiceCategoryModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }  Future<CRMModel> getCRMListing() async {
+    var url = ApiMapping.BaseAPI + ApiMapping.CRMSubCategory;
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url);
+
+      print("CRM list:.... " + response.toString());
+
+      return response = CRMModel.fromJson(response);
     } catch (e) {
       throw e;
     }

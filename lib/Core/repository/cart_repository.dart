@@ -9,6 +9,7 @@ import 'package:velocit/Core/Model/CartModels/CartSpecificIDForEmbeddedModel.dar
 import 'package:velocit/Core/ViewModel/cart_view_model.dart';
 import 'package:velocit/utils/constants.dart';
 
+import '../../pages/screens/cartDetail_Activity.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/utils.dart';
 import '../AppConstant/apiMapping.dart';
@@ -69,7 +70,7 @@ class CartRepository {
     return userData;
   }
 
-  int badgeLength = 0;
+  // int badgeLength = 0;
 
   Future<UpdateCartModel> updateCartPostRequest(
       Map jsonMap, BuildContext context) async {
@@ -101,27 +102,28 @@ class CartRepository {
     print(userData.payload!.id.toString());
 
     // print(userData.payload!.ordersForPurchase![0].itemQuantity);
-    badgeLength = userData.payload!.ordersForPurchase![0].itemQuantity;
+    // badgeLength = userData.payload!.ordersForPurchase![0].itemQty!;
 
     print("userData.payload!.id");
     print(responseJson.toString());
     Provider.of<ProductProvider>(context, listen: false);
     final preference = await SharedPreferences.getInstance();
 
-    prefs.setBadgeToken(badgeLength.toString());
-    StringConstant.BadgeCounterValue =
-        (preference.getString('setBadgeCountPrefs')) ?? '';
+    // prefs.setBadgeToken(badgeLength.toString());
+    // StringConstant.BadgeCounterValue =
+    //     (preference.getString('setBadgeCountPrefs')) ?? '';
     print("Badge,........" + StringConstant.BadgeCounterValue);
     await  getCartSpecificIDList(userData.payload!.id.toString());
 
 
-
+    Utils.successToast('Added Successfully!');
     httpClient.close();
     return responseJson = UpdateCartModel.fromJson(map);
   }
 
   Future<CartSpecificIdModel> getCartSpecificIDList(String id) async {
     var url = ApiMapping.getURI(apiEndPoint.cart_by_ID);
+    print("Cart specific ID : "+id.toString());
     final prefs = await SharedPreferences.getInstance();
 
     try {
@@ -132,6 +134,7 @@ class CartRepository {
         'setBadgeCountPrefs',
         response['payload']['total_item_count'].toString(),
       );
+
 
       return response = CartSpecificIdModel.fromJson(response);
     } catch (e) {
@@ -154,19 +157,25 @@ class CartRepository {
     }
   }
 
-  Future<MergeCartModel> mergeCartList(String oldId,String newId,dynamic json) async {
+  Future<MergeCartModel> mergeCartList(String oldId,String newId,dynamic json,BuildContext context) async {
 
     // var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);
     var url = ApiMapping.BaseAPI+'/cart/merge_cart/$oldId?newid=$newId';
     print(url);
+    print(json);
     final prefs = await SharedPreferences.getInstance();
 
     try {
       dynamic response = await _apiServices.getPutApiResponse(url, json);
       print("Cart MergeCartModel Id : " + response.toString());
-      print("Cart MergeCartModel Id orders_for_purchase: " + response['orders_for_purchase'].toString());
       await prefs.setString('CartIdPref',response);
-      return response = MergeCartModel.fromJson(response);
+      if (response['status'].toString() == 'OK') {
+
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => CartDetailsActivity()));
+      }
+
+        return response = MergeCartModel.fromJson(response);
     } catch (e) {
       throw e;
     }

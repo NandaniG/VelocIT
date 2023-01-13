@@ -40,6 +40,7 @@ import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
 import '../Activity/CRMFormScreen.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart';
+import '../Activity/DashBoard_DetailScreens_Activities/CRM_ui/CRM_Activity.dart';
 import '../Activity/Merchant_Near_Activities/merchant_Activity.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Categories_Activity.dart';
 import '../Activity/Product_Activities/ProductDetails_activity.dart';
@@ -147,34 +148,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       print("USER LOGIN ID..............." +
           StringConstant.UserLoginId.toString());
-      // if ((StringConstant.RandomUserLoginId == '' ||
-      //         StringConstant.RandomUserLoginId == null||StringConstant.RandomUserLoginId.isEmpty) &&
-      //     (StringConstant.UserLoginId == '' ||
-      //         StringConstant.UserLoginId == null)) {
-      //   print("RandomUserLoginId empty");
-      //   rnd = new Random();
-      //   var r = min + rnd.nextInt(max - min);
-      //
-      //   print("$r is in the range of $min and $max");
-      //   ID = r;
-      //   print("cartId empty" + ID.toString());
-      // } else {
-      //   print("RandomUserLoginId empty");
-      //   // ID = StringConstant.UserLoginId;
-      //   ID = StringConstant.UserLoginId;
-      // }
-      // // 715223688
-      // finalId = ID.toString();
-      // prefs.setString('RandomUserId', finalId.toString());
-      //
-      // print('finalId  RandomUserLoginId' + finalId);
-      Map<String, String> dat;
+
       if (StringConstant.UserLoginId == '') {
         data = {'userId': userRandomId};
+        print('login user is GUEST');
       } else {
         data = {'userId': userLoginId};
-      }
+        print('login user is NOT GUEST');
 
+      }
+      //597723544
       print("cart data pass : " + data.toString());
       CartRepository().cartPostRequest(data, context);
 
@@ -510,13 +493,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     print("_isProductListChip 3" + _isCRMListChip.toString());
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => CRMFormScreen(),
+                        builder: (context) => CRMActivity(),
                       ),
                     )   .then((value) => setState((){
                     _isProductListChip = true;
                     //
-                    // _isServiceListChip = false;
-                    // _isCRMListChip = false;
+                    _isServiceListChip = false;
+                    _isCRMListChip = false;
 
 
                     }));

@@ -224,7 +224,7 @@ class _SplashScreenState extends State<SplashScreen> {
 if(StringConstant.UserLoginId==''){
       if ((StringConstant.RandomUserLoginId == '' ||
           StringConstant.RandomUserLoginId == null)) {
-        print("RandomUserLoginId empty");
+        print('login user is GUEST');
         rnd = new Random();
         var r = min + rnd.nextInt(max - min);
 
@@ -232,10 +232,9 @@ if(StringConstant.UserLoginId==''){
         ID = r;
         print("cartId empty" + ID.toString());
       } else {
-        print("RandomUserLoginId empty");
-        // ID = StringConstant.UserLoginId;
+        print('login user is GUEST');        // ID = StringConstant.UserLoginId;
         ID = StringConstant.UserLoginId.toString();
-      }}else {
+      }}else {   print('login user is not GUEST');
   print("RandomUserLoginId empty");
   // ID = StringConstant.UserLoginId;
   ID = StringConstant.UserLoginId.toString();

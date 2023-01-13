@@ -70,20 +70,20 @@ class AuthRepository {
         var cartUserId = prefs.getString('CartSpecificUserIdPref');
         var itemCode = prefs.getString('CartSpecificItem_codePref');
         var itemQuanity = prefs.getString('CartSpecificItemQuantityPref');
-
+        StringConstant.RandomUserLoginId =
+            (prefs.getString('RandomUserId')) ?? '';
         Map data = {
-          'user_id': cartUserId,
+          'user_id': jsonData['payload']['body']['id'],
           'item_code': itemCode,
           'qty': itemQuanity
         };
+
         CartRepository().mergeCartList(StringConstant.RandomUserLoginId,
-            jsonData['payload']['body']['id'].toString(), data);
+            jsonData['payload']['body']['id'].toString(), data,context);
 
         StringConstant.RandomUserLoginId =
             (prefs.getString('RandomUserId')) ?? '';
 
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CartDetailsActivity()));
       } else {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => DashboardScreen()));
@@ -242,13 +242,13 @@ class AuthRepository {
           'qty': itemQuanity
         };
         CartRepository().mergeCartList(StringConstant.RandomUserLoginId,
-            jsonData['payload']['body']['id'].toString(), data);
+            jsonData['payload']['body']['id'].toString(), data,context);
 
         StringConstant.RandomUserLoginId =
             (prefs.getString('RandomUserId')) ?? '';
 
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CartDetailsActivity()));
+        // Navigator.of(context).push(
+        //     MaterialPageRoute(builder: (context) => CartDetailsActivity()));
       } else {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => DashboardScreen()));

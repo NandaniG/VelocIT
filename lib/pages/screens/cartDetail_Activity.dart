@@ -676,8 +676,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         // height: MediaQuery.of(context).size.height,
                         padding: const EdgeInsets.all(10),
                         child: cartProvider.cartSpecificID.data!.payload!
-                                    .ordersForPurchase!.length <=
-                                0
+                                    .ordersForPurchase!.length- 1<0
+
                             ? Container(
                                 height: height * .5,
                                 alignment: Alignment.center,
@@ -1271,9 +1271,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                           value[index].itemQty!,
                           value[index].productId.toString());
 
-                      StringConstant.BadgeCounterValue =
-                          value!.length.toString() +
-                              value![index].itemQty.toString();
+                      // StringConstant.BadgeCounterValue =
+                      //     value.length.toString();
                     } else {
                       showDialog(
                           context: context,

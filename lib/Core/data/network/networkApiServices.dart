@@ -16,6 +16,7 @@ class NetworkApiServices extends BaseApiServices {
       final client = http.Client();
       final response =
           await client.get(Uri.parse(url)).timeout(Duration(seconds: 30));
+
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
@@ -74,11 +75,11 @@ class NetworkApiServices extends BaseApiServices {
       case 200:
         dynamic responseJson = jsonDecode(response.body);
         return responseJson;
-      // case 400:
-      //   throw  Utils.errorToast("System is busy, Please try after sometime.");
+      case 400:
+        throw  Utils.errorToast("System is busy, Please try after sometime.");
       case 500:
       // case 404:
-      // throw  Utils.errorToast("System is busy, Please try after sometime.");
+      throw  Utils.errorToast("System is busy, Please try after sometime.");
 
       default:
         throw Utils.errorToast("System is busy, Please try after sometime.");
