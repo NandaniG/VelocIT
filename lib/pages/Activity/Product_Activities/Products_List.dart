@@ -126,9 +126,9 @@ class _ProductListByCategoryActivityState
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    final availableProducts = Provider.of<ProductProvider>(context);
+    // final availableProducts = Provider.of<ProductProvider>(context);
 
-    final productsList = availableProducts.getProductsLists();
+    // final productsList = availableProducts.getProductsLists();
 
     return Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
@@ -156,7 +156,7 @@ class _ProductListByCategoryActivityState
             SizedBox(
               height: MediaQuery.of(context).size.height * .02,
             ),*/
-                filterWidgets(productsList),
+                filterWidgets(),
                 SizedBox(
                   height: 10,
                 ),
@@ -268,7 +268,7 @@ class _ProductListByCategoryActivityState
   }
 */
 
-  Widget filterWidgets(List<ProductDetailsModel> product) {
+  Widget filterWidgets() {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
@@ -359,6 +359,229 @@ class _ProductListByCategoryActivityState
   Widget productListView() {
     return/* LayoutBuilder(builder: (context, constrains) {
       return*/ ChangeNotifierProvider<ProductSpecificListViewModel>.value(
+        value:  productSpecificListViewModel,
+        child: Consumer<ProductSpecificListViewModel>(
+            builder: (context, productSubCategoryProvider, child) {
+              switch (productSubCategoryProvider.productSubCategory.status) {
+                case Status.LOADING:
+                  print("Api load");
+
+                  return TextFieldUtils().circularBar(context);
+                case Status.ERROR:
+                  print("Api error");
+
+                  return Text(productSubCategoryProvider
+                      .productSubCategory.message
+                      .toString());
+                case Status.COMPLETED:
+                  print("Api calll");
+                  List<Content>? subProductList = productSubCategoryProvider
+                      .productSubCategory.data!.payload!.content;
+                  print("subProductList length.......${subProductList!.length}");
+                  return Expanded(
+
+                    // width: MediaQuery.of(context).size.width,
+                    child: subProductList.length==[]?CircularProgressIndicator(): GridView(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 30,
+                        // childAspectRatio: 1.0,
+                        childAspectRatio: MediaQuery.of(context).size.height / 900,
+                      ),
+                      shrinkWrap: true,
+                        children: List.generate(subProductList!.length,
+                              (index) {
+                        return Stack(
+                          children: [
+                            index == subProductList!.length
+                                ? Container(
+                              // width: constrains.minWidth,
+                              height: 20,
+                              // height: MediaQuery.of(context).size.height * .08,
+                              // alignment: Alignment.center,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: ThemeApp.blackColor,
+                                ),
+                              ),
+                            )
+                                : InkWell(
+                              onTap: () {
+                                print(
+                                    "Id ........${subProductList[index].id}");
+
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductDetailsActivity(
+                                          id: subProductList[index].id,
+                                          // productList: subProductList[index],
+                                          // productSpecificListViewModel:
+                                          //     productSpecificListViewModel,
+                                        ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+// height: 205,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      /*   Expanded(
+                                            flex: 2,
+                                            child:*/ Container(
+                                        height: 143,
+                                        width: 191, /* height: SizeConfig.orientations !=
+                                                      Orientation.landscape
+                                                  ? MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .25
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .1,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,*/
+                                        decoration: const BoxDecoration(
+                                          color: ThemeApp.whiteColor,
+                                        ),
+                                        child: ClipRRect(
+
+                                          child: subProductList[index]
+                                              .imageUrls![0]
+                                              .imageUrl!.isNotEmpty?Image.network(
+                                            subProductList[index]
+                                                .imageUrls![0]
+                                                .imageUrl!,
+                                            // fit: BoxFit.fill,
+                                            height: (MediaQuery.of(
+                                                context)
+                                                .orientation ==
+                                                Orientation.landscape)
+                                                ? MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                                .26
+                                                : MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                                .1,
+                                          ) :SizedBox(
+                                            // height: height * .28,
+                                              width: width,
+                                              child: Icon(
+                                                Icons.image_outlined,
+                                                size: 50,
+                                              )),
+                                        ),
+                                      ),
+                                      // ),
+                                      Container(      color: ThemeApp.tealButtonColor,
+                                        width: 191,
+                                        height: 66,
+                                        padding: const EdgeInsets.only(
+                                            left: 12, right: 12,),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment
+                                              .center,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            TextFieldUtils()
+                                                .listNameHeadingTextField(
+                                                subProductList[index]
+                                                    .shortName!,context),
+                                            SizedBox(height:10),
+                                            Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                TextFieldUtils().listPriceHeadingTextField(
+                                                    indianRupeesFormat
+                                                        .format(subProductList[
+                                                    index]
+                                                        .defaultSellPrice ??
+                                                        0.0),
+                                                    context),
+                                                TextFieldUtils().listScratchPriceHeadingTextField(
+                                                    indianRupeesFormat.format(
+                                                        subProductList[
+                                                        index]
+                                                            .defaultMrp ??
+                                                            0.0),
+                                                    context)
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+
+                                    ],
+                                  )),
+                            ),
+                            index == subProductList!.length
+                                ? Container(
+                              // width: constrains.minWidth,
+                              height: 20,
+                              // height: MediaQuery.of(context).size.height * .08,
+                              // alignment: Alignment.center,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: ThemeApp.blackColor,
+                                ),
+                              ),
+                            )
+                                : SizedBox()
+                          ],
+                        );
+                        /*else {
+                        return  Container(
+                          // width: constrains.minWidth,
+                          height: 80,
+                          // height: MediaQuery.of(context).size.height * .08,
+                          // alignment: Alignment.center,
+                          child: TextFieldUtils().dynamicText(
+                              'Nothing more to load',
+                              context,
+                              TextStyle(fontFamily: 'Roboto',
+                                  color: ThemeApp.blackColor,
+                                  fontSize: height * .03,
+                                  fontWeight: FontWeight.bold)),
+                        );
+                      }*/
+                      },)
+                    ),
+                  );
+              }
+              return Container(
+                height: height * .08,
+                alignment: Alignment.center,
+                child: TextFieldUtils().dynamicText(
+                    'No Match found!',
+                    context,
+                    TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.blackColor,
+                        fontSize: height * .03,
+                        fontWeight: FontWeight.bold)),
+              );
+            }));
+    // });
+  }
+
+/*
+  Widget productListView() {
+    return*/
+/* LayoutBuilder(builder: (context, constrains) {
+      return*//*
+ ChangeNotifierProvider<ProductSpecificListViewModel>.value(
           value:  productSpecificListViewModel,
           child: Consumer<ProductSpecificListViewModel>(
               builder: (context, productSubCategoryProvider, child) {
@@ -434,11 +657,14 @@ class _ProductListByCategoryActivityState
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                       /*   Expanded(
+                                       */
+/*   Expanded(
                                             flex: 2,
-                                            child:*/ Container(
+                                            child:*//*
+ Container(
                                               height: 163,
-                                              width: 191, /* height: SizeConfig.orientations !=
+                                              width: 191, */
+/* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
                                                           .size
@@ -450,7 +676,8 @@ class _ProductListByCategoryActivityState
                                                       .1,
                                               width: MediaQuery.of(context)
                                                   .size
-                                                  .width,*/
+                                                  .width,*//*
+
                                               decoration: const BoxDecoration(
                                                   color: ThemeApp.whiteColor,
                                                  ),
@@ -544,7 +771,8 @@ class _ProductListByCategoryActivityState
                               : SizedBox()
                         ],
                       );
-                      /*else {
+                      */
+/*else {
                         return  Container(
                           // width: constrains.minWidth,
                           height: 80,
@@ -558,7 +786,8 @@ class _ProductListByCategoryActivityState
                                   fontSize: height * .03,
                                   fontWeight: FontWeight.bold)),
                         );
-                      }*/
+                      }*//*
+
                     },
                   ),
                 );
@@ -577,6 +806,7 @@ class _ProductListByCategoryActivityState
           }));
     // });
   }
+*/
 
   int? _radioValue = 0;
 

@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
 
       String queryString = Uri(queryParameters: productData).query;
 
-      var requestUrl = ApiMapping.baseAPI +url + '?' + queryString!;
+      var requestUrl = ApiMapping.BaseAPI +url + '?' + queryString!;
       try {
         final res =
         await http.get(Uri.parse(requestUrl));
@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
 
       String queryString = Uri(queryParameters: productData).query;
 
-      var requestUrl = ApiMapping.baseAPI + url + '?' + queryString!;
+      var requestUrl = ApiMapping.BaseAPI + url + '?' + queryString!;
       res = await http.get(Uri.parse(requestUrl));
       setState(() {
         dynamic responseJson = jsonDecode(res.body);
@@ -308,7 +308,7 @@ class _HomePageState extends State<HomePage> {
                                                 subProductList[index]
                                                     .imageUrls![0]
                                                     .imageUrl!,
-                                                fit: BoxFit.fill,
+                                                // fit: BoxFit.fill,
                                                 height: (MediaQuery.of(
                                                     context)
                                                     .orientation ==

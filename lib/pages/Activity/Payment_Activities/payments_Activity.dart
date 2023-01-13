@@ -89,15 +89,28 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
         elevation: 0,
         child: Consumer<HomeProvider>(builder: (context, value, child) {
           return Container(
-            height: height * .09,
+            height: 72,
+            // height: height * .09,
             width: width,
-            decoration: BoxDecoration(
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
               color: ThemeApp.tealButtonColor,
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                  topLeft: Radius.circular(15)),
+
             ),
-            padding: const EdgeInsets.only(left: 15, right: 15),
+            padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 15,bottom: 14
+            ),
+            // height: height * .09,
+            // width: width,
+            // decoration: BoxDecoration(
+            //   color: ThemeApp.tealButtonColor,
+            //   borderRadius: BorderRadius.only(
+            //       topRight: Radius.circular(15),
+            //       topLeft: Radius.circular(15)),
+            // ),
+            // padding: const EdgeInsets.only(left: 15, right: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,22 +184,24 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                         ));
                     },
                     child: Container(
-                      height: height * 0.05,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                        color: ThemeApp.whiteColor,
-                      ),
-                      padding: const EdgeInsets.only(left: 15, right: 15),
+
+                          height: 40,width: 141,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(100),
+                            ),
+                            color: ThemeApp.whiteColor,
+                          ),
                       child: TextFieldUtils().dynamicText(
-                          'Place Order',
+                          'Proceed to Payment',
                           context,
                           TextStyle(fontFamily: 'Roboto',
                               color: ThemeApp.tealButtonColor,
-                              fontSize: height * .022,
-                              fontWeight: FontWeight.w500)),
+                              fontSize: 12,
+                              fontWeight:
+                              FontWeight
+                                  .w700,letterSpacing: -0.25)),
                     )),
               ],
             ),

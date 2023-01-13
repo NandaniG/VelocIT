@@ -8,7 +8,7 @@ import 'package:speech_to_text/speech_to_text.dart' as speechToText;
 import 'package:velocit/Core/ViewModel/dashboard_view_model.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 
-import '../../pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
+import '../../pages/Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Categories_Activity.dart';
 import '../../pages/Activity/Product_Activities/Products_List.dart';
 import '../../pages/SearchContent/searchProductListScreen.dart';
 import '../../utils/constants.dart';

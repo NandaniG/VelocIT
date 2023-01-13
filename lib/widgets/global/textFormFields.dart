@@ -52,7 +52,7 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: TextFormField(
         controller: widget.controller,
         autovalidateMode: widget.autoValidation,
@@ -68,16 +68,19 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
           counterText: "",
           prefixIcon: widget.preffixText,
           suffixIcon: widget.suffixText,
-          suffixIconConstraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * .3,
-              minWidth: MediaQuery.of(context).size.width * .3),
+          // suffixIconConstraints: BoxConstraints(
+          //     maxWidth: MediaQuery.of(context).size.width * .3,
+          //     minWidth: MediaQuery.of(context).size.width * .3),
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(fontFamily: 'Roboto',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: 14,fontWeight: FontWeight.w400),
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
           hintText: widget.hintText,
-          errorStyle: TextStyle(fontFamily: 'Roboto',
+          errorStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           errorMaxLines: 2,
@@ -125,29 +128,31 @@ class EmailTextFormFieldsWidget extends StatefulWidget {
   Icon? icon;
   Widget? suffixText;
   Widget? preffixText;
-  int? maxLength;bool isEmailValidateIcon;
+  int? maxLength;
+  bool isEmailValidateIcon;
 
   EmailTextFormFieldsWidget(
       {required this.errorText,
-        this.intialvalue,
-        required this.textInputType,
-        required this.controller,
-        required this.hintText,
-        this.autoValidation,
-        this.obsecureText: false,
-        this.enabled: false,
-        required this.onChange,
-        required this.validator,
-        this.enablepadding: true,
-        this.maxline: 1,
-        this.icon,
-        this.suffixText,
-        this.preffixText,
-        this.maxLength,
-  this.isEmailValidateIcon :false});
+      this.intialvalue,
+      required this.textInputType,
+      required this.controller,
+      required this.hintText,
+      this.autoValidation,
+      this.obsecureText: false,
+      this.enabled: true,
+      required this.onChange,
+      required this.validator,
+      this.enablepadding: true,
+      this.maxline: 1,
+      this.icon,
+      this.suffixText,
+      this.preffixText,
+      this.maxLength,
+      this.isEmailValidateIcon: false});
 
   @override
-  _EmailTextFormFieldsWidgetState createState() => _EmailTextFormFieldsWidgetState();
+  _EmailTextFormFieldsWidgetState createState() =>
+      _EmailTextFormFieldsWidgetState();
 }
 
 class _EmailTextFormFieldsWidgetState extends State<EmailTextFormFieldsWidget> {
@@ -169,8 +174,16 @@ class _EmailTextFormFieldsWidgetState extends State<EmailTextFormFieldsWidget> {
         // focusNode: focusNode,
         maxLines: widget.maxline,
         onChanged: widget.onChange,
+        style: TextStyle(
+            fontFamily: 'Roboto',
+            color: widget.enabled == true
+                ? ThemeApp.blackColor
+                : ThemeApp.subIconColor,
+            fontSize: 14,
+            fontWeight: FontWeight.w400),
         decoration: InputDecoration(
           counterText: "",
+
           // prefixIcon: widget.preffixText,
           // suffixIcon: widget.suffixText,
 
@@ -179,29 +192,34 @@ class _EmailTextFormFieldsWidgetState extends State<EmailTextFormFieldsWidget> {
           //     minWidth: 15.54),
 
           prefixIcon: Padding(
-            padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
+            padding: const EdgeInsets.fromLTRB(11.73, 12.73, 6.36, 12.73),
             child: SvgPicture.asset(
               'assets/appImages/Username.svg',
               width: 16.56,
               height: 16.56,
             ),
           ),
-          suffixIcon:!StringConstant().isEmail(widget.controller.text)?SizedBox(): Padding(
-            padding: const EdgeInsets.fromLTRB(11.73,12.73,11.73,12.73),
-            child: SvgPicture.asset(
-              'assets/appImages/emailValidateIcon.svg',
-              width: 15.54,
-              height: 15.54,
-            ),
-          ),
+          suffixIcon: !StringConstant().isEmail(widget.controller.text)||!StringConstant().isPhone(widget.controller.text)
+              ? SizedBox()
+              : Padding(
+                  padding:
+                      const EdgeInsets.fromLTRB(11.73, 12.73, 11.73, 12.73),
+                  child: SvgPicture.asset(
+                    'assets/appImages/emailValidateIcon.svg',
+                    width: 15.54,
+                    height: 15.54,
+                  ),
+                ),
           filled: true,
           fillColor: Colors.white,
-
-          hintStyle: TextStyle(fontFamily: 'Roboto',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: 14,fontWeight: FontWeight.w400),
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
           hintText: widget.hintText,
-          errorStyle: TextStyle(fontFamily: 'Roboto',
+          errorStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           errorMaxLines: 2,
@@ -265,7 +283,7 @@ class CharacterTextFormFieldsWidget extends StatefulWidget {
       this.icon,
       this.suffixText,
       this.maxLength,
-      this.isEnable});
+      this.isEnable =true});
 
   @override
   _CharacterTextFormFieldsWidgetState createState() =>
@@ -281,7 +299,8 @@ class _CharacterTextFormFieldsWidgetState
     return Container(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       // padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      child: TextFormField(enabled: widget.isEnable,
+      child: TextFormField(
+        enabled: widget.isEnable,
         controller: widget.controller,
         autovalidateMode: widget.autoValidation,
         keyboardType: widget.textInputType,
@@ -302,16 +321,17 @@ class _CharacterTextFormFieldsWidgetState
           //   maxWidth: 15,
           //   minWidth: 15),
           suffixIcon: widget.suffixText,
-          suffixIconConstraints: BoxConstraints(
-              maxWidth: 15,
-              minWidth: 15),
+          suffixIconConstraints: BoxConstraints(maxWidth: 15, minWidth: 15),
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(fontFamily: 'Roboto',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: 14,fontWeight: FontWeight.w400),
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
           hintText: widget.hintText,
-          errorStyle: TextStyle(fontFamily: 'Roboto',
+          errorStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           errorMaxLines: 2,
@@ -358,21 +378,21 @@ class PasswordTextFormFieldsWidget extends StatefulWidget {
   Icon? icon;
   Widget? prefixIcon;
 
-  PasswordTextFormFieldsWidget(
-      {required this.errorText,
-      this.intialvalue,
-      required this.textInputType,
-      required this.controller,
-      required this.hintText,
-      this.autoValidation,
-      this.obsecureText: false,
-      required this.onChange,
-      required this.validator,
-      this.enablepadding: true,
-      this.maxline: 1,
-      this.icon,
-      this.prefixIcon,
-      });
+  PasswordTextFormFieldsWidget({
+    required this.errorText,
+    this.intialvalue,
+    required this.textInputType,
+    required this.controller,
+    required this.hintText,
+    this.autoValidation,
+    this.obsecureText: false,
+    required this.onChange,
+    required this.validator,
+    this.enablepadding: true,
+    this.maxline: 1,
+    this.icon,
+    this.prefixIcon,
+  });
 
   @override
   _PasswordTextFormFieldsWidgetState createState() =>
@@ -401,19 +421,24 @@ class _PasswordTextFormFieldsWidgetState
         autovalidateMode: widget.autoValidation,
         keyboardType: widget.textInputType,
         textCapitalization: TextCapitalization.words,
-        autofocus: false,maxLength: 16,
+        autofocus: false,
+        maxLength: 16,
         focusNode: focusNode,
         maxLines: widget.maxline,
         onChanged: widget.onChange,
-        decoration: InputDecoration( counterText: "",
+        decoration: InputDecoration(
+          counterText: "",
           // prefixIcon: widget.prefixIcon,
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(fontFamily: 'Roboto',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: 14,fontWeight: FontWeight.w400),
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
           hintText: widget.hintText,
-          errorStyle: TextStyle(fontFamily: 'Roboto',
+          errorStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -438,9 +463,8 @@ class _PasswordTextFormFieldsWidgetState
               borderSide: const BorderSide(
                   color: ThemeApp.separatedLineColor, width: 1)),
 
-
           prefixIcon: Padding(
-            padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
+            padding: const EdgeInsets.fromLTRB(11.73, 12.73, 6.36, 12.73),
             child: SvgPicture.asset(
               'assets/appImages/Password.svg',
               width: 16.56,
@@ -537,11 +561,14 @@ class _CardCVVTextFormFieldWidgetState
           prefixIcon: widget.icon,
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(fontFamily: 'Roboto',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: 14,fontWeight: FontWeight.w400),
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
           hintText: widget.hintText,
-          errorStyle: TextStyle(fontFamily: 'Roboto',
+          errorStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -589,10 +616,16 @@ class MobileNumberTextFormField extends StatefulWidget {
   TextEditingController controller;
   bool enable = true;
   FormFieldValidator validator;
+  FormFieldValidator onChanged;
   String? errorText;
 
   MobileNumberTextFormField(
-      {Key? key, required this.controller, required this.enable, required this.validator, this.errorText})
+      {Key? key,
+      required this.controller,
+      required this.enable,
+      required this.validator,
+      required this.onChanged,
+      this.errorText})
       : super(key: key);
 
   @override
@@ -606,7 +639,7 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
     return Container(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: IntlPhoneField(
-        invalidNumberMessage: widget.errorText ,
+        invalidNumberMessage: widget.errorText,
 
         dropdownIconPosition: IconPosition.trailing,
         // showCountryFlag: false,
@@ -627,7 +660,17 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(10),
         ],
-        style: TextStyle(fontFamily: 'Roboto',color: ThemeApp.darkGreyColor),
+        style: TextStyle(
+            fontFamily: 'Roboto',
+            color: widget.enable == true
+                ? ThemeApp.blackColor
+                : ThemeApp.subIconColor,
+            fontSize: 14,
+            fontWeight: FontWeight.w400),
+        dropdownTextStyle:     TextStyle(fontFamily: 'Roboto',
+          color: widget.enable ==true?ThemeApp.blackColor:ThemeApp.subIconColor,
+          fontSize: 14,fontWeight: FontWeight.w400) ,
+        // style: TextStyle(fontFamily: 'Roboto',color: ThemeApp.darkGreyColor),
         decoration: InputDecoration(
           hintText: 'Do not enter country code',
           counterText: "",
@@ -639,10 +682,13 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
             padding: EdgeInsets.fromLTRB(0, 0, 10.0, 0),
           ),
           fillColor: Colors.white,
-          hintStyle: TextStyle(fontFamily: 'Roboto',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: 14,fontWeight: FontWeight.w400),
-          errorStyle: TextStyle(fontFamily: 'Roboto',
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
+          errorStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -668,18 +714,19 @@ class _MobileNumberTextFormFieldState extends State<MobileNumberTextFormField> {
                   color: ThemeApp.separatedLineColor, width: 1)),
         ),
         validator: widget.validator,
-        onChanged: (phone) {
-          if(phone.countryCode=="IN") {
-            print("india selected");
-            print(phone.completeNumber);
-
-          }else{
-            print("india not selected");
-
-          }
-        },
+        // onChanged: (phone) {   print(phone.completeNumber);
+        //   if (phone.countryCode == "IN") {
+        //     print("india selected");
+        //     print(phone.completeNumber);
+        //   } else {
+        //     print("india not selected");
+        //   }
+        // },
+        onChanged: widget.onChanged,
         onCountryChanged: (country) {
           print('Country changed to: ' + country.name);
+          print('Country changed to: ' + country.dialCode);
+          print('Country changed to: ' + country.dialCode);
         },
       ),
     );
@@ -763,10 +810,14 @@ class _CardNumberTextFormFieldsWidgetState
           prefixIcon: widget.icon,
           filled: true,
           fillColor: Colors.white,
-          hintStyle: TextStyle(fontFamily: 'Roboto',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: Colors.grey,
-              fontSize: 14,fontWeight: FontWeight.w400),  hintText: widget.hintText,
-          errorStyle: TextStyle(fontFamily: 'Roboto',
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
+          hintText: widget.hintText,
+          errorStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: ThemeApp.redColor,
               fontSize: MediaQuery.of(context).size.height * 0.020),
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -840,9 +891,10 @@ class TextFieldUtils {
       ),
     );
   }
-  Widget circularBar(BuildContext context){
-    return  Container(
-      height: MediaQuery.of(context).size.height*.5,
+
+  Widget circularBar(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * .5,
       alignment: Alignment.center,
       child: CircularProgressIndicator(
         color: ThemeApp.appColor,
@@ -866,12 +918,12 @@ class TextFieldUtils {
     );
   }
 
-
   //for all headings
   Widget headingTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: 20,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w400),
@@ -881,44 +933,52 @@ class TextFieldUtils {
   // for dashboard and all list of products name
   Widget listNameHeadingTextField(String text, BuildContext context) {
     return Text(
-      text,
-      style: TextStyle(fontFamily: 'Roboto',
+      text,maxLines: 1,
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: 14,
           overflow: TextOverflow.ellipsis,
-          fontWeight: FontWeight.w500,letterSpacing: 0.2,color: ThemeApp.separatedLineColor
-      ),
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.2,
+          color: ThemeApp.separatedLineColor),
     );
   }
+
   // for dashboard and all list of products price
   Widget listPriceHeadingTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: 12,
           overflow: TextOverflow.ellipsis,
-          fontWeight: FontWeight.w700,letterSpacing: 0.2,color: ThemeApp.separatedLineColor
-      ),
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.2,
+          color: ThemeApp.separatedLineColor),
     );
   }
+
   Widget listScratchPriceHeadingTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: 12,
           overflow: TextOverflow.ellipsis,
           decoration: TextDecoration.lineThrough,
           decorationThickness: 1.5,
-          fontWeight: FontWeight.w700,letterSpacing: 0.2,color: ThemeApp.separatedLineColor
-      ),
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.2,
+          color: ThemeApp.separatedLineColor),
     );
   }
-
 
   /////
   Widget appBarTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .028,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.w500),
@@ -928,7 +988,8 @@ class TextFieldUtils {
   Widget textFieldHeightThree(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .03,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.bold,
@@ -939,7 +1000,8 @@ class TextFieldUtils {
   Widget textFieldHeightFour(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .04,
           overflow: TextOverflow.ellipsis,
           fontWeight: FontWeight.bold),
@@ -950,7 +1012,8 @@ class TextFieldUtils {
     return Text(
       text,
       maxLines: 2,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: 16,
           fontWeight: FontWeight.w400,
           overflow: TextOverflow.ellipsis,
@@ -961,7 +1024,8 @@ class TextFieldUtils {
   Widget titleTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           overflow: TextOverflow.ellipsis,
           fontSize: MediaQuery.of(context).size.height * .021,
           fontWeight: FontWeight.w500,
@@ -1007,7 +1071,8 @@ class TextFieldUtils {
   Widget hyperLinkTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           shadows: [
             const Shadow(color: ThemeApp.tealButtonColor, offset: Offset(0, -5))
           ],
@@ -1025,18 +1090,21 @@ class TextFieldUtils {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: TextStyle(fontFamily: 'Roboto',
-          fontSize: MediaQuery.of(context).size.height * .021,
-          fontWeight: FontWeight.w500,
-          overflow: TextOverflow.ellipsis,
-          color: colors,),
+      style: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: MediaQuery.of(context).size.height * .021,
+        fontWeight: FontWeight.w500,
+        overflow: TextOverflow.ellipsis,
+        color: colors,
+      ),
     );
   }
 
   Widget errorTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .021,
           color: ThemeApp.redColor,
           overflow: TextOverflow.ellipsis,
@@ -1049,7 +1117,8 @@ class TextFieldUtils {
       String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .025,
           color: ThemeApp.darkGreyTab,
           fontWeight: FontWeight.bold,
@@ -1063,7 +1132,8 @@ class TextFieldUtils {
   Widget pricesLineThrough(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .03,
           color: ThemeApp.darkGreyTab,
           overflow: TextOverflow.ellipsis,
@@ -1076,7 +1146,8 @@ class TextFieldUtils {
       String text, BuildContext context, double fontSize) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: fontSize,
           color: ThemeApp.separatedLineColor,
           overflow: TextOverflow.ellipsis,
@@ -1088,7 +1159,8 @@ class TextFieldUtils {
   Widget homePageheadingTextField(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+        fontFamily: 'Roboto',
         fontSize: MediaQuery.of(context).size.height * .025,
         fontWeight: FontWeight.w500,
         overflow: TextOverflow.ellipsis,
@@ -1099,7 +1171,8 @@ class TextFieldUtils {
   Widget homePageTitlesTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+        fontFamily: 'Roboto',
         fontSize: MediaQuery.of(context).size.height * .021,
         color: ThemeApp.darkGreyTab,
         fontWeight: FontWeight.w500,
@@ -1111,7 +1184,8 @@ class TextFieldUtils {
   Widget homePageTitlesTextFieldsWHITE(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+        fontFamily: 'Roboto',
         fontSize: MediaQuery.of(context).size.height * .020,
         color: ThemeApp.separatedLineColor,
         fontWeight: FontWeight.w500,
@@ -1123,7 +1197,8 @@ class TextFieldUtils {
   Widget homePageheadingTextFieldWHITE(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .025,
           color: ThemeApp.separatedLineColor,
           overflow: TextOverflow.ellipsis,
@@ -1134,7 +1209,8 @@ class TextFieldUtils {
   Widget subHeadingTextFieldsWhite(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+        fontFamily: 'Roboto',
         fontSize: MediaQuery.of(context).size.height * .02,
         fontWeight: FontWeight.w400,
         color: ThemeApp.separatedLineColor,
@@ -1145,8 +1221,10 @@ class TextFieldUtils {
 
   Widget stepperTextFields(String text, BuildContext context, Color color) {
     return Text(
-      text,maxLines: 2,
-      style: TextStyle(fontFamily: 'Roboto',
+      text,
+      maxLines: 2,
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .013,
           fontWeight: FontWeight.w500,
           overflow: TextOverflow.ellipsis,
@@ -1157,7 +1235,8 @@ class TextFieldUtils {
   Widget stepperHeadingTextFields(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .016,
           fontWeight: FontWeight.w400,
           color: Colors.grey),
@@ -1166,19 +1245,21 @@ class TextFieldUtils {
 
   Widget appliancesTitleTextFields(String text, BuildContext context) {
     return Text(
-      text,maxLines: 2,
-      style: TextStyle(fontFamily: 'Roboto',
+      text,
+      maxLines: 2,
+      style: TextStyle(
+          fontFamily: 'Roboto',
           overflow: TextOverflow.ellipsis,
           fontSize: MediaQuery.of(context).size.height * .020,
           fontWeight: FontWeight.w400),
     );
   }
 
-
   Widget textFieldTwoFiveGrey(String text, BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontFamily: 'Roboto',
+      style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: MediaQuery.of(context).size.height * .025,
           overflow: TextOverflow.ellipsis,
           color: ThemeApp.darkGreyTab,
@@ -1405,8 +1486,9 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
       var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.inactiveStepperColor;
-      var lineColor =
-      (i == 0 || i == 1 || _curStep > i + 1)? ThemeApp.tealButtonColor : ThemeApp.inactiveStepperColor;
+      var lineColor = (i == 0 || i == 1 || _curStep > i + 1)
+          ? ThemeApp.tealButtonColor
+          : ThemeApp.inactiveStepperColor;
       var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.inactiveStepperColor;
@@ -1456,24 +1538,28 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
     titles.asMap().forEach((i, text) {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
-            ? Container(width: 50,
-              child: TextFieldUtils().dynamicText(
-                  text,
-                  context,
-                  TextStyle(fontFamily: 'Roboto',
-                      color: ThemeApp.tealButtonColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400)),
-            )
-            : Container(width: 50,
-              child: TextFieldUtils().dynamicText(
-                  text,
-                  context,
-                  TextStyle(fontFamily: 'Roboto',
-                      color: ThemeApp.inactiveStepperColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400)),
-            ),
+            ? Container(
+                width: 50,
+                child: TextFieldUtils().dynamicText(
+                    text,
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.tealButtonColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400)),
+              )
+            : Container(
+                width: 50,
+                child: TextFieldUtils().dynamicText(
+                    text,
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.inactiveStepperColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400)),
+              ),
       );
     });
     return list;
@@ -1487,14 +1573,16 @@ class _StepperGlobalWidgetState extends State<StepperGlobalWidget> {
             ? TextFieldUtils().dynamicText(
                 text,
                 context,
-                TextStyle(fontFamily: 'Roboto',
+                TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.tealButtonColor,
                     fontSize: height * .016,
                     fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
                 text,
                 context,
-                TextStyle(fontFamily: 'Roboto',
+                TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.inactiveStepperColor,
                     fontSize: height * .016,
                     fontWeight: FontWeight.w400)),

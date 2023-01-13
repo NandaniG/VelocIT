@@ -9,6 +9,7 @@ import 'package:velocit/Core/Model/CartModels/CartSpecificIDForEmbeddedModel.dar
 import 'package:velocit/Core/ViewModel/cart_view_model.dart';
 import 'package:velocit/utils/constants.dart';
 
+import '../../pages/screens/cartDetail_Activity.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/utils.dart';
 import '../AppConstant/apiMapping.dart';
@@ -69,7 +70,7 @@ class CartRepository {
     return userData;
   }
 
-  int badgeLength = 0;
+  // int badgeLength = 0;
 
   Future<UpdateCartModel> updateCartPostRequest(
       Map jsonMap, BuildContext context) async {
@@ -90,6 +91,7 @@ class CartRepository {
     responseJson = await response.transform(utf8.decoder).join();
     String rawJson = responseJson.toString();
     print("Cart response11");
+    print("Cart response11 map : "+jsonMap.toString());
     print(responseJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
@@ -99,28 +101,29 @@ class CartRepository {
     // if (response.statusCode == 200) {
     print(userData.payload!.id.toString());
 
-    print(userData.payload!.ordersForPurchase![0].itemQuantity);
-    badgeLength = userData.payload!.ordersForPurchase![0].itemQuantity;
+    // print(userData.payload!.ordersForPurchase![0].itemQuantity);
+    // badgeLength = userData.payload!.ordersForPurchase![0].itemQty!;
 
     print("userData.payload!.id");
     print(responseJson.toString());
     Provider.of<ProductProvider>(context, listen: false);
     final preference = await SharedPreferences.getInstance();
 
-    prefs.setBadgeToken(badgeLength.toString());
-    StringConstant.BadgeCounterValue =
-        (preference.getString('setBadgeCountPrefs')) ?? '';
+    // prefs.setBadgeToken(badgeLength.toString());
+    // StringConstant.BadgeCounterValue =
+    //     (preference.getString('setBadgeCountPrefs')) ?? '';
     print("Badge,........" + StringConstant.BadgeCounterValue);
     await  getCartSpecificIDList(userData.payload!.id.toString());
 
 
-
+    Utils.successToast('Added Successfully!');
     httpClient.close();
     return responseJson = UpdateCartModel.fromJson(map);
   }
 
   Future<CartSpecificIdModel> getCartSpecificIDList(String id) async {
     var url = ApiMapping.getURI(apiEndPoint.cart_by_ID);
+    print("Cart specific ID : "+id.toString());
     final prefs = await SharedPreferences.getInstance();
 
     try {
@@ -131,6 +134,7 @@ class CartRepository {
         'setBadgeCountPrefs',
         response['payload']['total_item_count'].toString(),
       );
+
 
       return response = CartSpecificIdModel.fromJson(response);
     } catch (e) {
@@ -153,19 +157,25 @@ class CartRepository {
     }
   }
 
-  Future<MergeCartModel> mergeCartList(String oldId,String newId,dynamic json) async {
+  Future<MergeCartModel> mergeCartList(String oldId,String newId,dynamic json,BuildContext context) async {
 
     // var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);
-    var url = ApiMapping.baseAPI+'/cart/merge_cart/$oldId?newid=$newId';
+    var url = ApiMapping.BaseAPI+'/cart/merge_cart/$oldId?newid=$newId';
     print(url);
+    print(json);
     final prefs = await SharedPreferences.getInstance();
 
     try {
       dynamic response = await _apiServices.getPutApiResponse(url, json);
       print("Cart MergeCartModel Id : " + response.toString());
-      print("Cart MergeCartModel Id orders_for_purchase: " + response['orders_for_purchase'].toString());
       await prefs.setString('CartIdPref',response);
-      return response = MergeCartModel.fromJson(response);
+      if (response['status'].toString() == 'OK') {
+
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => CartDetailsActivity()));
+      }
+
+        return response = MergeCartModel.fromJson(response);
     } catch (e) {
       throw e;
     }
@@ -213,7 +223,7 @@ class CartRepository {
     // var url = ApiMapping.getURI(apiEndPoint.address_list);
     https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
 
-    var requestUrl = ApiMapping.baseAPI +'/user/'+id + '/address?page=0&size=10';
+    var requestUrl = ApiMapping.BaseAPI +'/user/'+id + '/address?page=0&size=10';
 
     print(requestUrl.toString());
     print( 'https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10');
@@ -272,7 +282,7 @@ class CartRepository {
 
     print("userId"+userId.toString());
     var url = '/address/user/' + userId.toString();
-    var requestUrl = ApiMapping.baseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI +url;
 
     String body = json.encode(data);
     print("jsonMap"+body.toString());
@@ -291,7 +301,7 @@ class CartRepository {
     print("userId"+orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/attempt_payment';
 
-    var requestUrl = ApiMapping.baseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI +url;
     print(requestUrl.toString());
 
     String body = json.encode(data);
@@ -318,7 +328,7 @@ class CartRepository {
     print("userId"+orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/update_payment';
 
-    var requestUrl = ApiMapping.baseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI +url;
     print(requestUrl.toString());
 
     String body = json.encode(data);

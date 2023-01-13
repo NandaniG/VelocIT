@@ -1,59 +1,16 @@
 # velocit
-#\
-#   use this for add in to generated <flutter gen-l10n>
 
-#   Gmap key: "AIzaSyCwyTYtvfdrZaXMbIbv3oQWnpH6sdYw46g"
+A new Flutter project.
 
+## Getting Started
 
-#   banner image size w:981 h:392
-#   flutter build appbundle --release --no-sound-null-safety
+This project is a starting point for a Flutter application.
 
+A few resources to get you started if this is your first Flutter project:
 
-# API Completed
-   - authenticate
-   - authenticateWithUID
-   - users (Post)
-   - users (Get)
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-#API EndPoints
-
-HomePage -
-    - Banner
-    - SearchProducts
-    - GetUserLocation
-    - ShopByCategories
-    - BookOurServices
-    - RecommendedForYou
-    - MerchantNearYou
-    - BestDeal
-    - BudgetBuys
-
-ProductDetails Page -
-    - SimilarProductList
-
-OrderCheckOut Page -
-    - OrderCheckout
-
-MyOrders -
-    - MyOrderDetailList  
-    - MyOrderCancel  
-    - MyOrderReturn   
-
-PaymentMethod -
-    - PaymentMethodList
-
-DeliveryAddress -
-    - DeliveryAddressList
-
-CustomerSupport -
-    - CustomerSupport
-
-AccountSettings -
-    - AccountSettings
-
-Notifications -
-    - NotificationDetail
-
-ChangePassword
-    - ChangePassword
-
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

@@ -91,7 +91,7 @@ class _QRDialogState extends State<QRDialog> {
                               const BorderRadius.all(Radius.circular(30)),
                           shape: BoxShape.rectangle,
                           image: new DecorationImage(
-                              fit: BoxFit.fill,
+                              // fit: BoxFit.fill,
                               image: new AssetImage(
                                 'assets/images/qr_test_image.png',
                               )))),

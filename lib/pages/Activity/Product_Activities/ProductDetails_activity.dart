@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:insta_image_viewer/insta_image_viewer.dart';
@@ -9,8 +10,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/utils/utils.dart';
+import '../../../Core/Model/SimmilarProductModel.dart';
 import '../../../Core/Model/scannerModel/SingleProductModel.dart';
 import '../../../Core/ViewModel/cart_view_model.dart';
+import '../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../Core/ViewModel/product_listing_view_model.dart';
 import '../../../Core/data/responses/status.dart';
 import '../../../Core/repository/cart_repository.dart';
@@ -21,6 +24,7 @@ import '../../../services/models/demoModel.dart';
 import '../../../services/providers/Home_Provider.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../services/providers/cart_Provider.dart';
+import '../../../utils/ProgressIndicatorLoader.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/routes/routes.dart';
 import '../../../utils/styles.dart';
@@ -54,6 +58,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   int imageVariantIndex = 0;
   late List<CartProductList> cartList;
   int counterPrice = 1;
+  DashboardViewModel productListView = DashboardViewModel();
 
   int badgeData = 0;
   String sellerAvailable = "";
@@ -78,6 +83,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     print("widget.id! number : " + widget.id!.toString());
     print("Badge,........" + StringConstant.BadgeCounterValue);
     getBadgePref();
+    productListView.similarProductWithGet(0, 10,10);
+
   }
 
   CartViewModel cartListView = CartViewModel();
@@ -114,8 +121,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     if (StringConstant.UserLoginId.toString() == '' ||
         StringConstant.UserLoginId.toString() == null) {
       userId = StringConstant.RandomUserLoginId;
+      print('login user is GUEST');
     } else {
       userId = StringConstant.UserLoginId;
+      print('login user is not GUEST');
     }
     Map<String, String> data = {
       // "cartId": StringConstant.UserCartID.toString(),
@@ -127,11 +136,20 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     };
     print("update cart DATA" + data.toString());
     setState(() {});
-    CartRepository().updateCartPostRequest(data, context);
-    cartListView
-        .cartSpecificIDWithGet(context, StringConstant.UserCartID);
+    CartRepository().updateCartPostRequest(data, context).then((value) {
+      setState(() {
 
-    Utils.successToast('Added Successfully!');
+      });
+      StringConstant.BadgeCounterValue = (prefs.getString('setBadgeCountPrefs')) ?? '';
+    });
+    cartListView
+        .cartSpecificIDWithGet(context, StringConstant.UserCartID).then((value) {
+setState(() {
+
+});
+      StringConstant.BadgeCounterValue = (prefs.getString('setBadgeCountPrefs')) ?? '';
+    });
+
     setState(() {
       // prefs.setString(
       //   'setBadgeCountPref',
@@ -256,9 +274,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     : SizedBox(),
 */
                                 // prices(model),
-                                SizedBox(
+                               /* SizedBox(
                                   height: height * .01,
-                                ),
+                                ),*/
                                 model.productVariants!.isNotEmpty
                                     ? availableVariant(model)
                                     : SizedBox(),
@@ -278,7 +296,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
                                 //similar product
 
-                                /*   SizedBox(
+                                   SizedBox(
                               height: height * .03,
                             ),
                             Padding(
@@ -286,15 +304,15 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 left: 20,
                                 right: 20,
                               ),
-                              child: TextFieldUtils()
-                                  .listHeadingTextField(
-                                  "Similar Products", context),
+                              child:  TextFieldUtils().headingTextField(
+                                  'Similar Products', context),
+
                             ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height *
                                   .02,
                             ),
-                            similarProductList()*/
+                            similarProductList()
                               ],
                             ) ??
                             SizedBox();
@@ -364,7 +382,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
                                                 child: Image.network(
                                                         e.imageUrl ?? "",
-                                                        fit: BoxFit.fill,
+                                                        // fit: BoxFit.fill,
                                                         errorBuilder: ((context,
                                                             error, stackTrace) {
                                                       return Icon(
@@ -1459,23 +1477,336 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     )
                   ],
                 ))
-            : Padding(
+            : Container(
+              width: width,
+              height: 72,
+              color: ThemeApp.whiteColor,
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 5, bottom: 5),
-                child: TextFieldUtils().dynamicText(
-                    "OUT OF STOCK",
-                    context,
-                    TextStyle(fontFamily: 'Roboto',
-                      color: ThemeApp.redColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: height * .035,
-                    )),
+                child: Center(
+                  child: TextFieldUtils().dynamicText(
+                      "OUT OF STOCK",
+                      context,
+                      TextStyle(fontFamily: 'Roboto',
+                        color: ThemeApp.redColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: height * .035,
+                      )),
+                ),
               );
       });
     });
   }
 
   Widget similarProductList() {
+    return ChangeNotifierProvider<DashboardViewModel>.value(
+        value: productListView,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, productCategories, child) {
+              switch (productCategories.similarList.status) {
+                case Status.LOADING:
+                  if (kDebugMode) {
+                    print("Api load");
+                  }
+                  return ProgressIndicatorLoader(true);
+
+                case Status.ERROR:
+                  if (kDebugMode) {
+                    print("Api error : " +productCategories.similarList.message.toString());
+                  }
+                  return Text(
+                      productCategories.similarList.message.toString());
+
+                case Status.COMPLETED:
+                  if (kDebugMode) {
+                    print("Api calll");
+                  }
+
+                  List<SimilarContent>? similarList = productCategories
+                      .similarList.data!.payload!.content;
+
+                  return Container(
+                    height: 228,
+                    child: similarList!.isNotEmpty
+                        ? ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: similarList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProductDetailsActivity(
+                                            id: similarList[index].id,
+                                            // productList: subProductList[index],
+                                            // productSpecificListViewModel:
+                                            //     productSpecificListViewModel,
+                                          ),
+                                    ),
+                                  );
+                                },
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 163,
+                                      width: 191,
+                                      decoration: const BoxDecoration(
+                                        color: ThemeApp.whiteColor,
+                                      ),
+                                      child: ClipRRect(
+                                          child: Image.network(
+                                            // width: double.infinity,
+                                            similarList[index]
+                                                .imageUrls![0]
+                                                .imageUrl
+                                                .toString() ??
+                                                "",
+                                            fit: BoxFit.scaleDown,
+                                            errorBuilder:
+                                            ((context, error, stackTrace) {
+                                              return Icon(Icons.image_outlined);
+                                            }),
+                                          )),
+                                    ),
+                                    Container(
+                                      color: ThemeApp.tealButtonColor,
+                                      width: 191,
+                                      height: 65,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding:
+                                            const EdgeInsets.fromLTRB(
+                                                21, 9, 21, 4),
+                                            child:  Text(
+                                                similarList[index].shortName!,
+                                                    maxLines: 1,
+                                                    style: TextStyle(fontFamily: 'Roboto',
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        fontSize: height * .022,
+                                                        fontWeight:
+                                                            FontWeight.bold))
+                                            ,
+                                          ),
+                                          Container(
+                                            padding:
+                                            const EdgeInsets.fromLTRB(
+                                                21, 0, 21, 9),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                //discount
+                                                TextFieldUtils()
+                                                    .listPriceHeadingTextField(
+                                                    indianRupeesFormat
+                                                        .format(similarList[
+                                                    index]
+                                                        .defaultSellPrice ??
+                                                        0.0),
+                                                    context),
+
+                                                TextFieldUtils()
+                                                    .listScratchPriceHeadingTextField(
+                                                    indianRupeesFormat
+                                                        .format(similarList[
+                                                    index]
+                                                        .defaultMrp ??
+                                                        0.0),
+                                                    context),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width:
+                                MediaQuery.of(context).size.width * .03,
+                              )
+                            ],
+                          ) ??
+                              SizedBox();
+                        })
+                        : SizedBox(),
+                  );
+                default:
+                  return Text("No Data found!");
+              }
+              return Text("No Data found!");
+            }));
+
+/*
+    return ChangeNotifierProvider<DashboardViewModel>(
+        value:  dashboardViewModel,
+        child: Consumer<DashboardViewModel>(
+            builder: (context, dashboardProvider, child) {
+          return Consumer<DashboardViewModel>(
+              builder: (context, dashboardProvider, child) {
+            switch (dashboardViewModel.productListingList.status) {
+              case Status.LOADING:
+                if (kDebugMode) {
+                  print("Api load");
+                }
+                return ProgressIndicatorLoader(true);
+
+              case Status.ERROR:
+                if (kDebugMode) {
+                  print("Api error");
+                }
+                return Text(
+                    dashboardViewModel.productListingList.message.toString());
+
+              case Status.COMPLETED:
+                if (kDebugMode) {
+                  print("Api calll");
+                }
+
+                List<ProductListing>? productListing = dashboardViewModel
+                    .productListingList.data!.response!.body!.productListing;
+
+                return Container(
+                  height: MediaQuery.of(context).size.height * .35,
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: productListing!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(
+                          children: [
+                            Container(
+                                // height: MediaQuery.of(context).size.height * .3,
+
+                                // width: 200,
+                                width: MediaQuery.of(context).size.width * .45,
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.whiteColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .26,
+                                      width: MediaQuery.of(context).size.width *
+                                          .45,
+                                      decoration: const BoxDecoration(
+                                          color: ThemeApp.textFieldBorderColor,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            topLeft: Radius.circular(10),
+                                          )),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          topLeft: Radius.circular(10),
+                                        ),
+                                        child: Image.network(
+                                          // width: double.infinity,
+                                          productListing[index].image1Url!,
+                                          fit: BoxFit.fill,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .07,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .01,
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 10, right: 10),
+                                      child: TextFieldUtils()
+                                          .homePageTitlesTextFields(
+                                              productListing[index].shortName!,
+                                              context),
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .01,
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextFieldUtils().dynamicText(
+                                                indianRupeesFormat.format(
+                                                    productListing[index]
+                                                            .scrappedPrice ??
+                                                        0.0),
+                                                context,
+                                                TextStyle(fontFamily: 'Roboto',
+                                                    color: ThemeApp.primaryNavyBlackColor
+                                                    fontSize: height * .022,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            TextFieldUtils().dynamicText(
+                                                indianRupeesFormat.format(
+                                                    productListing[index]
+                                                            .currentPrice ??
+                                                        0.0),
+                                                context,
+                                                TextStyle(fontFamily: 'Roboto',
+                                                    color: ThemeApp.darkGreyTab,
+                                                    fontSize: height * .02,
+                                                    fontWeight: FontWeight.w500,
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                    decorationThickness: 1.5)),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .03,
+                            )
+                          ],
+                        );
+                      }),
+                );
+              default:
+                return Text("No Data found!");
+            }
+            return Text("No Data found!");
+          });
+        }));
+*/
+  }
+
+  Widget similarProductListss() {
     return Padding(
       padding: const EdgeInsets.only(
         left: 20,

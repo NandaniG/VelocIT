@@ -30,6 +30,7 @@ def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
+
 android {
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
@@ -60,9 +61,10 @@ android {
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
-            storePassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            keyPassword keystoreProperties['storePassword']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ?
+                    file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
         }
     }
     buildTypes {
@@ -72,6 +74,7 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
 }
 
 flutter {

@@ -38,10 +38,10 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
   late File _profileImage;
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
 
-  //
-  // TextEditingController fullNameController = new TextEditingController();
-  // TextEditingController mobileController = new TextEditingController();
-  // TextEditingController emailController = new TextEditingController();
+
+  TextEditingController userNameController = new TextEditingController();
+  TextEditingController mobileController = new TextEditingController(text: StringConstant.userAccountMobile);
+  TextEditingController emailController = new TextEditingController(text: StringConstant.loginUserEmail);
 
   bool _validateFullName = false;
   bool _validateMobile = false;
@@ -65,6 +65,8 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
       });
       return;
     }
+    StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
+    StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
   }
@@ -151,6 +153,14 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                               fit: BoxFit.fill,
                               width: 130.0,
                               height: 130.0,
+                              errorBuilder: (context, error,
+                                  stackTrace) {
+                                return Icon(
+                                  Icons.image,
+                                  color:
+                                  ThemeApp.whiteColor,
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -194,11 +204,11 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                           decoration: new BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.grey.shade600,
+                                  color:ThemeApp.appBackgroundColor,
                                   spreadRadius: 1,
                                   blurRadius: 15)
                             ],
-                            color: ThemeApp.whiteColor,
+                            color: ThemeApp.appBackgroundColor,
                             border: Border.all(
                                 color: ThemeApp.whiteColor, width: 7),
                             shape: BoxShape.circle,
@@ -210,7 +220,14 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                               File(StringConstant.ProfilePhoto),
                               fit: BoxFit.fill,
                               width: 130.0,
-                              height: 130.0,
+                              height: 130.0,     errorBuilder: (context, error,
+                                stackTrace) {
+                              return Icon(
+                                Icons.image,
+                                color:
+                                ThemeApp.whiteColor,
+                              );
+                            },
                             ),
                           ),
                         ),
@@ -299,10 +316,10 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
               context,
             ),
             CharacterTextFormFieldsWidget(
-                isEnable: false,
+                // isEnable: true,
                 errorText: StringUtils.enterFullName,
                 textInputType: TextInputType.name,
-                controller: provider.userNameController,
+                controller:userNameController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 intialvalue: 'Testing Name',
                 hintText: 'Test name',
@@ -318,19 +335,17 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
               context,
             ),
             MobileNumberTextFormField(
-                controller: provider.userMobileController,
+                controller: mobileController,
                 enable: false,
-                validator: (value) {
-                  if (value.isEmpty &&
-                      provider.userMobileController.text.isEmpty) {
-                    _validateMobile = true;
-                    return StringUtils.enterMobileNumber;
-                  } else if (provider.userMobileController.text.length < 10) {
-                    _validateMobile = true;
-                    return StringUtils.enterMobileNumber;
-                  } else {
-                    _validateMobile = false;
-                  }
+                onChanged: (phone) {   print(phone.completeNumber);
+                if (phone.countryCode == "IN") {
+                  print("india selected");
+                  print(phone.completeNumber);
+                } else {
+                  print("india not selected");
+                }
+                }, validator: (value) {
+
                   return null;
                 }),
             SizedBox(
@@ -356,21 +371,12 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
               enabled: false,
                 errorText: StringUtils.validEmailError,
                 textInputType: TextInputType.emailAddress,
-                controller: provider.userEmailController,
+                controller: emailController,
                 autoValidation: AutovalidateMode.onUserInteraction,
-                hintText: 'test@gmail.com',
+                hintText: '',
                 onChange: (val) {},
                 validator: (val) {
-                  if (val.isEmpty &&
-                      provider.userEmailController.text.isEmpty) {
-                    _validateEmail = true;
-                    return StringUtils.validEmailError;
-                  } else if (!StringConstant().isEmail(val)) {
-                    _validateEmail = true;
-                    return StringUtils.validEmailError;
-                  } else {
-                    _validateEmail = false;
-                  }
+
                   return null;
                 }),
             SizedBox(

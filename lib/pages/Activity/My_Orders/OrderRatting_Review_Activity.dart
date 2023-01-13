@@ -115,7 +115,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
 */
             SingleChildScrollView(
           child: Container(
-            height: height * .65,
+            height: height * .75,
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: Column(
@@ -300,7 +300,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 TextFieldUtils().dynamicText(
-                                                    'Vendor Review and Rating',
+                                                    'Merchant Review and Rating',
                                                     context,
                                                     TextStyle(fontFamily: 'Roboto',
                                                         color:
@@ -378,7 +378,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                             ),
                           );
                         }),
-                  ),SizedBox(height: 14,),
+                  ),SizedBox(height: 20,),
                   proceedButton("Submit", ThemeApp.tealButtonColor, context, false,
                       () async {                        FocusManager.instance.primaryFocus?.unfocus();
 

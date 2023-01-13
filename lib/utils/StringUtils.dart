@@ -22,6 +22,7 @@ class StringUtils {
   static String passwordError = "Password field cannot be blank.";
   static String confirmPasswordError = "Confirm Password field cannot be blank.";
   static String validEmailError = "Please enter a valid email.";
+  static String validemailORMobileError = "Please enter a valid email or mobile.";
   static String validPasswordError = "Please enter a valid password.";
   static String validConfirmPasswordError = "Please enter a valid confirm password.";
   static String forgotPassword = "Forgot Password?";

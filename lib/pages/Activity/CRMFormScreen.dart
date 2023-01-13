@@ -340,7 +340,14 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
             StringUtils.mobileNumber, context),
         MobileNumberTextFormField(
           controller: mobileNumberController,
-          enable: true,  validator: (value) {
+          enable: true,         onChanged: (phone) {   print(phone.completeNumber);
+        if (phone.countryCode == "IN") {
+          print("india selected");
+          print(phone.completeNumber);
+        } else {
+          print("india not selected");
+        }
+        }, validator: (value) {
           if (value.isEmpty && mobileNumberController.text.isEmpty) {
             _validateMobile = true;
             return StringUtils.enterMobileNumber;

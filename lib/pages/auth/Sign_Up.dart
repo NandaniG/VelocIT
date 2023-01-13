@@ -13,13 +13,10 @@ import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 import '../../Core/AppConstant/apiMapping.dart';
-import '../../Core/Model/SignUpModel.dart';
-import '../../Core/ViewModel/auth_view_model.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/textFormFields.dart';
-import 'forgot_password.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SignUp extends StatefulWidget {
@@ -55,7 +52,6 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    final authViewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
@@ -74,13 +70,13 @@ class _SignUpState extends State<SignUp> {
                     children: [
                       // group796Z38 (213:207)
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(122, 50, 121, 46),
+                        padding: const EdgeInsets.fromLTRB(110, 50.74, 110, 46),
                         child: SvgPicture.asset(
                           'assets/appImages/new_app_icon.svg',
                           // color: ThemeApp.primaryNavyBlackColor,
                           semanticsLabel: 'Acme Logo',
 
-                          height: 40, width: 132,
+                          height: 47.67, width: 155,
                         ),
                       ),
                       /*         width: double.infinity,
@@ -341,8 +337,9 @@ class _SignUpState extends State<SignUp> {
                             'Create an Account',
                             ThemeApp.tealButtonColor,
                             context,
-                            authViewModel.loadingWithAuthUSerPost, () {
+                         false, () {
                           FocusManager.instance.primaryFocus?.unfocus();
+
                           if (isTermSelected == false) {
                             setState(() {
                               isTermError =
@@ -362,10 +359,12 @@ class _SignUpState extends State<SignUp> {
                               "mobile": mobileNumberController.text,
                             };
                             apiRequest(data);
+
                             // authViewModel.authSignUpUsingPost(data, context);
                           } else {
-                            Utils.errorToast("Please enter all details");
+                            Utils.errorToast("Please enter valid details");
                           }
+
                         }),
                       ),
                       SizedBox(
@@ -448,7 +447,12 @@ class _SignUpState extends State<SignUp> {
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
+                                businessNameController.clear();
+                                mobileNumberController.clear();
+                                emailOtp.clear();
+                                password.clear();
+                                confirmPassword.clear();
+                                Navigator.of(context).pushReplacement(MaterialPageRoute(
                                     builder: (context) => SignIn_Screen()));
                               },
                               child: Text(
@@ -684,7 +688,16 @@ class _SignUpState extends State<SignUp> {
         MobileNumberTextFormField(
             errorText: StringUtils.enterMobileNumber,
             controller: mobileNumberController,
-            enable: false,
+            enable: true,        onChanged: (phone) {
+              print('phone.completeNumber');
+              print(phone.completeNumber);
+        if (phone.countryCode == "IN") {
+          print("india selected");
+          print(phone.completeNumber);
+        } else {
+          print("india not selected");
+        }
+        },
             validator: (value) {
               if (value.isEmpty && mobileNumberController.text.isEmpty) {
                 _validateMobile = true;
@@ -725,19 +738,27 @@ class _SignUpState extends State<SignUp> {
     // todo - you should check the response.statusCode
     dynamic reply = await response.transform(utf8.decoder).join();
     String rawJson = reply.toString();
-    // Utils.successToast(rawJson.toString());
+    Utils.successToast(rawJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
-    String name = map['message'];
-    Utils.successToast(name.toString());
+    // String name = map['message'];
+    // Utils.successToast(name.toString());
+    // print("SignUp response " + name.toString());
+
     if (response.statusCode == 200) {
-      Utils.successToast(name.toString());
+
+      // Utils.successToast(name.toString());
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => SignIn_Screen()));
+          .pushReplacement(MaterialPageRoute(builder: (context) => SignIn_Screen()));
+      businessNameController.clear();
+      mobileNumberController.clear();
+      email.clear();
+      password.clear();
+      confirmPassword.clear();
       print(reply.toString());
     } else {
-      Utils.errorToast("System is busy, Please try after sometime.");
-    }
+      // Utils.errorToast(name.toString());
+      }
 
     httpClient.close();
     return reply;

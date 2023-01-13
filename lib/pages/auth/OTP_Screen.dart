@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
-import '../../Core/ViewModel/auth_view_model.dart';
+import '../../Core/repository/auth_repository.dart';
 import '../../utils/constants.dart';
 import '../../utils/routes/routes.dart';
 import '../../utils/styles.dart';
@@ -16,7 +16,11 @@ import '../../widgets/global/textFormFields.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 class OTPScreen extends StatefulWidget {
-  OTPScreen({Key? key}) : super(key: key);
+final  String UID;
+final  String mobileNumber;
+final  String OTP;
+final  String Uname;
+  OTPScreen( {Key? key,required this.UID, required this.mobileNumber,required this.OTP, required this.Uname}) : super(key: key);
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -39,13 +43,11 @@ class _OTPScreenState extends State<OTPScreen> {
     // TODO: implement initState
     super.initState();
     startTimer();
-    getOtp();
+    print(widget.OTP);
+    print(widget.UID);
+    print(widget.mobileNumber);
   }
 
-  getOtp() async {
-    OTP = await Prefs.instance.getToken("otpKey");
-    print("get OTP from Preference : $OTP");
-  }
 
   @override
   void dispose() {
@@ -55,7 +57,6 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authViewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
@@ -82,13 +83,13 @@ class _OTPScreenState extends State<OTPScreen> {
             child: ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(122,50,121,46),
+                  padding: const EdgeInsets.fromLTRB(110, 50.74, 110, 46),
                   child: SvgPicture.asset(
                     'assets/appImages/new_app_icon.svg',
                     // color: ThemeApp.primaryNavyBlackColor,
                     semanticsLabel: 'Acme Logo',
 
-                    height:40,width: 132,
+                    height: 47.67, width: 155,
                   ),
                 ),
            /*     Container(
@@ -138,7 +139,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 ),
                 Container(alignment: Alignment.centerLeft,
                   child: TextFieldUtils().dynamicText(
-                      '+91 78945612352',
+                    widget.  mobileNumber.toString(),
                       context,
                       TextStyle(fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
@@ -257,7 +258,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   height: MediaQuery.of(context).size.height * .025,
                 ),
                 proceedButton(StringUtils.verifyOTP,
-                    ThemeApp.tealButtonColor,context, authViewModel.loadingWithPost,() async {
+                    ThemeApp.tealButtonColor,context, false,() async {
 
 
                       // Navigator.of(context).pushReplacement(
@@ -266,21 +267,16 @@ class _OTPScreenState extends State<OTPScreen> {
                       //         DashboardScreen(),
                       //   ),
                       // );
-                      String? emailId =
-                      await Prefs.instance.getToken(StringConstant.emailPref);
-
-                  print("SharePref OTP:" + OTP);
-
-                  print("Intend OTP:${authViewModel.getOTP}");
-
-                  if (controller.text.length >= 6) {
+                                      if (controller.text.length >= 6) {
                     StringConstant.isLogIn = true;
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            DashboardScreen(),
-                      ),
-                    );
+
+                    Map passOtpData = {
+                      'username': widget.Uname,
+                      'otp': widget.OTP,
+                      'user_id': widget.UID,
+                    };
+                    AuthRepository()
+                        .postApiForValidateOTP(passOtpData, context);
                     // if (authViewModel.getOTP == controller.text) {
                     //   Map data = {'username': 'testuser@test.com'};
                     //   authViewModel.loginApiWithPost(data, context);

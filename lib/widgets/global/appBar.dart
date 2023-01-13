@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/ProductCategoryModel.dart';
-import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/Categories_Activity.dart';
+import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Categories_Activity.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/utils/utils.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
@@ -223,6 +223,9 @@ Widget appBarWidget(
                       provider.isHome = true;
 
                       final prefs = await SharedPreferences.getInstance();
+                      StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
+                      StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
+
                       StringConstant.isUserLoggedIn =
                           (prefs.getInt('isUserLoggedIn')) ?? 0;
                       // Navigator.pushAndRemoveUntil(
@@ -1000,6 +1003,7 @@ Widget bottomNavigationBarWidget(BuildContext context) {
   );
 }
 
+/*
 class ScannerWidget extends StatefulWidget {
   BarcodeFinderState state;
 
@@ -1023,7 +1027,7 @@ class _ScannerWidgetState extends State<ScannerWidget> {
   var getResult = 'QR Code Result';
   final controller = BarcodeFinderController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _scanBarcode = 'Please scan proper content';
+  String _scanBarcode = '';
 
   @override
   Widget build(BuildContext context) {
@@ -1064,7 +1068,8 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                         //   'Code:',
                         //   textAlign: TextAlign.center,
                         // ),
-                        /*    if (state is BarcodeFinderLoading)
+                        */
+/*    if (state is BarcodeFinderLoading)
                           _loading()
                         else if (state is BarcodeFinderError)
 
@@ -1075,7 +1080,8 @@ class _ScannerWidgetState extends State<ScannerWidget> {
                         else if (state is BarcodeFinderSuccess)
                           _text(
                             '${state.code}',
-                          ),*/
+                          ),*//*
+
                       ],
                     );
                   },
@@ -1110,7 +1116,7 @@ class _ScannerWidgetState extends State<ScannerWidget> {
       //     (prefs.getString('ScannedProductIDPref')) ?? '';
 
       if (_scanBarcode == '-1') {
-        Utils.flushBarErrorMessage("Please scan proper content", context);
+        // Utils.flushBarErrorMessage("Please scan proper content", context);
       } else {
         // Utils.successToast(_scanBarcode);
       }
@@ -1172,57 +1178,8 @@ class _ScannerWidgetState extends State<ScannerWidget> {
     );
   }
 }
+*/
 
-class LocationController extends GetxController {
-  Position? currentPosition;
-  var _isLoading = false.obs;
-
-  String? currentLocation;
-
-//if no permission ? ask
-
-  Future<Position> getPosition() async {
-    LocationPermission? permission;
-
-    permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permission are denied');
-      }
-    }
-    return await Geolocator.getCurrentPosition();
-  }
-
-  Future<void> getAddressFromLatLong(lat, long) async {
-    try {
-      List<Placemark> placemarcks = await placemarkFromCoordinates(lat, long);
-
-      Placemark place = placemarcks[0];
-      currentLocation = "${place.locality}${place.postalCode},${place.country}";
-      print("place.locality" + place.locality.toString());
-
-      update();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future<void> getCurrentLocation() async {
-    try {
-      _isLoading(true);
-      update();
-      currentPosition = await getPosition();
-      getAddressFromLatLong(
-          currentPosition!.latitude, currentPosition!.longitude);
-      _isLoading(false);
-      update();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-}
 
 class searchBarWidget extends StatefulWidget {
   const searchBarWidget({Key? key}) : super(key: key);
@@ -1399,4 +1356,54 @@ class _searchBarWidgetState extends State<searchBarWidget> {
     );
   }
 
+}
+class LocationController extends GetxController {
+  Position? currentPosition;
+  var _isLoading = false.obs;
+
+  String? currentLocation;
+
+//if no permission ? ask
+
+  Future<Position> getPosition() async {
+    LocationPermission? permission;
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permission are denied');
+      }
+    }
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<void> getAddressFromLatLong(lat, long) async {
+    try {
+      List<Placemark> placemarcks = await placemarkFromCoordinates(lat, long);
+
+      Placemark place = placemarcks[0];
+      currentLocation = "${place.locality}${place.postalCode},${place.country}";
+      print("place.locality" + place.locality.toString());
+
+      update();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> getCurrentLocation() async {
+    try {
+      _isLoading(true);
+      update();
+      currentPosition = await getPosition();
+      getAddressFromLatLong(
+          currentPosition!.latitude, currentPosition!.longitude);
+      _isLoading(false);
+      update();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

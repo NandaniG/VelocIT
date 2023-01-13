@@ -26,7 +26,7 @@ class ProductSubCategoryRepository {
     var url = '/product/findBySubCategoryId';
     String queryString = Uri(queryParameters: productData).query;
 
-    var requestUrl = ApiMapping.baseAPI +url + '?' + queryString!;
+    var requestUrl = ApiMapping.BaseAPI +url + '?' + queryString!;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);

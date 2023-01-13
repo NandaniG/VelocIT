@@ -325,7 +325,14 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
         TextFieldUtils().asteriskTextField(StringUtils.mobileNumber, context),
         MobileNumberTextFormField(
             controller: mobileNumberController,
-            enable: true,
+            enable: true,        onChanged: (phone) {   print(phone.completeNumber);
+        if (phone.countryCode == "IN") {
+          print("india selected");
+          print(phone.completeNumber);
+        } else {
+          print("india not selected");
+        }
+        },
             validator: (value) {
               if (value.isEmpty && mobileNumberController.text.isEmpty) {
                 _validateMobile = true;

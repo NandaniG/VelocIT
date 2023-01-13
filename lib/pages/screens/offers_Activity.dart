@@ -53,7 +53,7 @@ class _OfferActivityState extends State<OfferActivity> {
                   padding: const EdgeInsets.all(10),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         bannerOffer(provider.offerList["topBanner"]),
                         SizedBox(
@@ -125,12 +125,13 @@ class _OfferActivityState extends State<OfferActivity> {
             decoration: BoxDecoration(
                 color: ThemeApp.whiteColor,
                 borderRadius: const BorderRadius.all(
-                  Radius.circular(10),
-                )),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(10),
+                  Radius.circular(15),
+                )
               ),
+            child: ClipRRect(
+              // borderRadius: const BorderRadius.all(
+              //   Radius.circular(10),
+              // ),
               child: Image.asset(
                   // width: double.infinity,
                   //w:981 h:392
@@ -188,11 +189,11 @@ class _OfferActivityState extends State<OfferActivity> {
                   // height: orientation
                   //     ? height * .6
                   //     : MediaQuery.of(context).size.height * .45,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  // decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(flex: 2,
                         child: Container(
@@ -202,19 +203,20 @@ class _OfferActivityState extends State<OfferActivity> {
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               color: ThemeApp.whiteColor,
-                              borderRadius: const BorderRadius.only(
+                            border: Border.all(color: ThemeApp.tealButtonColor,)
+                            /*  borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(10),
                                 topLeft: Radius.circular(10),
-                              )),
+                              )*/),
                           child: ClipRRect(
-                            borderRadius: const BorderRadius.only(
+                          /*  borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(10),
                               topLeft: Radius.circular(10),
-                            ),
+                            ),*/
                             child: Image.asset(
                               // width: double.infinity,
                               provider.offerListDetails?[index]?["offerImage"] ?? "",
-                              fit: BoxFit.fill,
+                              //fit: BoxFit.fill,
                               height: orientation
                                   ? height * .35
                                   : MediaQuery.of(context).size.height * .07,
@@ -227,10 +229,10 @@ class _OfferActivityState extends State<OfferActivity> {
                           width: width,
                           decoration: BoxDecoration(
                               color: ThemeApp.tealButtonColor,
-                              borderRadius: const BorderRadius.only(
+                             /* borderRadius: const BorderRadius.only(
                                 bottomRight: Radius.circular(10),
                                 bottomLeft: Radius.circular(10),
-                              )),
+                              )*/),
                           padding: orientation
                               ? EdgeInsets.only(top: 10, bottom: 10)
                               : EdgeInsets.zero,
@@ -289,7 +291,7 @@ class _OfferActivityState extends State<OfferActivity> {
                             child: Image.asset(
                               // width: double.infinity,
                               provider.offerByTypeImagesList[index]["imagesForOffer"],
-                              fit: BoxFit.fill,
+                              // fit: BoxFit.fill,
                               height: MediaQuery.of(context).size.height * .07,
                             ),
                           ),

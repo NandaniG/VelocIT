@@ -173,7 +173,14 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   .asteriskTextField(StringUtils.mobileNumber, context),
               MobileNumberTextFormField(
                 controller: mobileController,
-                enable: true,  validator: (value) {
+                enable: true,          onChanged: (phone) {   print(phone.completeNumber);
+              if (phone.countryCode == "IN") {
+                print("india selected");
+                print(phone.completeNumber);
+              } else {
+                print("india not selected");
+              }
+              },validator: (value) {
                 if (value.isEmpty && mobileController.text.isEmpty) {
                   _validateMobile = true;
                   return StringUtils.enterMobileNumber;
@@ -696,7 +703,14 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     fontWeight: FontWeight.w500)),
             MobileNumberTextFormField(
               controller: mobileController,
-              enable: true,  validator: (value) {
+              enable: true,         onChanged: (phone) {   print(phone.completeNumber);
+            if (phone.countryCode == "IN") {
+              print("india selected");
+              print(phone.completeNumber);
+            } else {
+              print("india not selected");
+            }
+            }, validator: (value) {
               // if (value.isEmpty && mobileController.text.isEmpty) {
               //   _validateMobile = true;
               //   return StringUtils.enterMobileNumber;

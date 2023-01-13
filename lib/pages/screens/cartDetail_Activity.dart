@@ -247,40 +247,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       ),
                     )
                   : appBar_backWidget(context, appTitle(context, "My Cart"),
-                      SizedBox()) /* PreferredSize(
-                  preferredSize: Size.fromHeight(height * .09),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    color: ThemeApp.darkGreyTab,
-                    child: AppBar(
-                      centerTitle: false,
-                      elevation: 0,
-                      backgroundColor: ThemeApp.appBackgroundColor,
-                      flexibleSpace: Container(
-                        height: height * .11,
-                        width: width,
-                        decoration: const BoxDecoration(
-                          color: ThemeApp.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15)),
-                        ),
-                      ),
-                      titleSpacing: 0,
-                      leadingWidth: 20,
-                      leading: Transform.scale(
-                          scale: 0,
-                          child: IconButton(
-                              icon: const Icon(Icons.arrow_back,
-                                  color: Colors.white, size: 10),
-                              onPressed: () {})),
-
-                      // leadingWidth: width * .06,
-                      title: Text("My Cart"),
-                      // Row
-                    ),
-                  ),
-                )*/
+                      SizedBox())
               ;
         }),
       ),
@@ -288,7 +255,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           color: ThemeApp.appBackgroundColor,
           elevation: 0,
           child: Container(
-            height: 144,
+            height: 130,
             child: ChangeNotifierProvider<CartViewModel>.value(
                 value: cartListView,
                 child: Consumer<CartViewModel>(
@@ -315,32 +282,53 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                               .ordersForPurchase!.isEmpty
                           ? bottomNavigationBarWidget(context)
                           : Container(
-                              height: 144,
+                              height: 100,
                               width: width,
                               decoration: const BoxDecoration(
                                 color: ThemeApp.tealButtonColor,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(15),
-                                    topLeft: Radius.circular(15)),
+                                // borderRadius: BorderRadius.only(
+                                //     topRight: Radius.circular(15),
+                                //     topLeft: Radius.circular(15)),
                               ),
-                              child: Column(
+                              child: Stack(    alignment: const FractionalOffset(.5, 1.0),
+
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 15,
+                                  Container(
+                                    color: ThemeApp.tealButtonColor,
+                                    margin: const EdgeInsets.only(
+                                      left: 20,
                                       right: 15,
-                                      top: 10,
+                                      top: 15,
+                                      bottom: 0
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
+                                              Text(
+                                                indianRupeesFormat.format(
+                                                    double.parse(cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .totalPayable
+                                                        .toString())),
+                                                style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontSize: 20,
+                                                    color: ThemeApp
+                                                        .separatedLineColor,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),SizedBox(height: 2,),
                                               TextFieldUtils()
                                                   .pricesLineThroughWhite(
                                                 indianRupeesFormat.format(
@@ -351,21 +339,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                         .totalMrp
                                                         .toString())),
                                                 context,
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    .021,
-                                              ),
-                                              TextFieldUtils()
-                                                  .homePageheadingTextFieldWHITE(
-                                                indianRupeesFormat.format(
-                                                    double.parse(cartProvider
-                                                        .cartSpecificID
-                                                        .data!
-                                                        .payload!
-                                                        .totalPayable
-                                                        .toString())),
-                                                context,
+                                                14,
                                               ),
                                             ]),
                                         InkWell(
@@ -481,12 +455,12 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                 //     .then((value) =>
                                                 //         setState(() {}));
 
-                                                Navigator.pushNamed(context,
-                                                    RoutesName.signInRoute);
                                               }
                                             },
                                             child: Container(
-                                                height: height * 0.05,
+                                                // height: height * 0.05,
+                                                height: 40,
+                                                width: 121,
                                                 alignment: Alignment.center,
                                                 decoration: const BoxDecoration(
                                                   borderRadius:
@@ -495,8 +469,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                   ),
                                                   color: ThemeApp.whiteColor,
                                                 ),
-                                                padding: const EdgeInsets.only(
-                                                    left: 15, right: 15),
+                                                // padding: const EdgeInsets.only(
+                                                //     left: 15, right: 15),
                                                 child: TextFieldUtils()
                                                     .dynamicText(
                                                         "Checkout",
@@ -506,14 +480,51 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                                 'Roboto',
                                                             color: ThemeApp
                                                                 .tealButtonColor,
-                                                            fontSize: 12,
+                                                            fontSize: 16,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .w700)))),
+                                                                FontWeight.w600,
+                                                            letterSpacing:
+                                                                -0.25)))),
                                       ],
                                     ),
+                                  ),bottomNavBarItems(context), Padding(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    child: Container(
+                                      height: 70,
+                                      width: 70,
+                                      child: FloatingActionButton(
+                                        backgroundColor: ThemeApp.appColor,
+                                        onPressed: () {
+                                          StringConstant().scanQR(context);
+                                          // scanQRCode();
+                                          // scanFile();
+                                          // Navigator.of(context).push(
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) => StepperScreen(),
+                                          //   ),
+                                          // );
+
+                                          // showModalBottomSheet(
+                                          //     isDismissible: true,
+                                          //     context: context,
+                                          //     builder: (context) {
+                                          //       return ScannerWidget(state: controller.state);
+                                          //     });
+                                        },
+                                        child:  SvgPicture.asset(
+                                          'assets/appImages/bottomApp/scanIcon.svg',
+                                          color: ThemeApp.whiteColor,
+                                          semanticsLabel: 'Acme Logo',
+                                          width: 29,
+                                          height: 29,
+
+                                          // height: height * .03,
+                                        ),/*   child: const Icon(Icons.document_scanner_outlined,
+                color: ThemeApp.whiteColor),*/
+                                      ),
+                                    ),
                                   ),
-                                  bottomNavigationBarWidget(context),
+                                  // bottomNavigationBarWidget(context),
                                 ],
                               ),
                             );
@@ -665,8 +676,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         // height: MediaQuery.of(context).size.height,
                         padding: const EdgeInsets.all(10),
                         child: cartProvider.cartSpecificID.data!.payload!
-                                    .ordersForPurchase!.length <=
-                                0
+                                    .ordersForPurchase!.length- 1<0
+
                             ? Container(
                                 height: height * .5,
                                 alignment: Alignment.center,
@@ -709,7 +720,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
     return Container(
-        height: 300,
+        height: 360,
         child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
@@ -722,7 +733,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       child: Text(
                       "No Match",
                     ))
-                  :  Column(
+                  : Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -743,25 +754,22 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10)),
-                                    child: Image.network(
-                                        // width: double.infinity,
-                                        // snapshot.data![index].serviceImage,
-                                        orderPurchaseList[index]
-                                            .imageUrl
-                                            .toString(),
-                                        fit: BoxFit.fill,
-                                        // width: width*.18,
-                                        height: 79,
-                                        width: 79, errorBuilder:
-                                            ((context, error, stackTrace) {
-                                      return Icon(Icons.image_outlined);
-                                    })),
-                                  ),
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  child: Image.network(
+                                      // width: double.infinity,
+                                      // snapshot.data![index].serviceImage,
+                                      orderPurchaseList[index]
+                                          .imageUrl
+                                          .toString(),
+                                      // fit: BoxFit.fill,
+                                      // width: width*.18,
+                                      height: 85,
+                                      width: 85, errorBuilder:
+                                          ((context, error, stackTrace) {
+                                    return Icon(Icons.image_outlined);
+                                  })),
                                 ),
                                 Expanded(
                                   flex: 3,
@@ -850,6 +858,158 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
             }));
   }
 
+/*
+  Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
+    return Container(
+        height: 340,
+        child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            physics: ScrollPhysics(),
+            // physics: NeverScrollableScrollPhysics(),
+            itemCount: orderPurchaseList!.length,
+            itemBuilder: (BuildContext context, int index) {
+              return orderPurchaseList.isEmpty
+                  ? const Center(
+                      child: Text(
+                      "No Match",
+                    ))
+                  : Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: ThemeApp.whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: width,
+                              decoration: const BoxDecoration(
+                                color: ThemeApp.whiteColor,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(6, 12, 8, 0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 79,
+                                      width: 79,
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        child: Image.network(
+                                            // width: double.infinity,
+                                            // snapshot.data![index].serviceImage,
+                                            orderPurchaseList[index]
+                                                .imageUrl
+                                                .toString(),
+                                            fit: BoxFit.fill,
+                                            // width: width*.18,
+                                            height: 79,
+                                            width: 79, errorBuilder:
+                                                ((context, error, stackTrace) {
+                                          return Icon(Icons.image_outlined);
+                                        })),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 300,
+                                      padding: const EdgeInsets.only(
+                                        left: 11,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextFieldUtils().dynamicText(
+                                              orderPurchaseList[index]
+                                                  .oneliner
+                                                  .toString(),
+                                              context,
+                                              TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color: ThemeApp
+                                                      .primaryNavyBlackColor,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w700)),
+
+                                          // SizedBox(
+                                          //   height: height * .005,
+                                          // ),
+                                          */
+/*  rattingBar(
+                                              orderPurchaseList[index], index),*/ /*
+
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          prices(
+                                              orderPurchaseList[index], index),
+                                          SizedBox(
+                                            height: 11,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text('Delivery by ',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      color: ThemeApp
+                                                          .lightFontColor,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                              Text(
+                                                  convertDateTimeDisplay(
+                                                      orderPurchaseList[index]
+                                                          .deliveryDate
+                                                          .toString()),
+                                                  style: TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      color: ThemeApp
+                                                          .lightFontColor,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                                right: 20,
+                              ),
+                              child: aadToCartCounter(orderPurchaseList, index),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+            }));
+  }
+*/
+
   Widget rattingBar(OrdersForPurchase value, int index) {
     return Container(
       // width: width * .7,
@@ -886,30 +1046,172 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   Widget prices(OrdersForPurchase value, int index) {
     return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          value.offer.toString().isNotEmpty
-              ? Text(
-                  "${indianRupeesFormat.format(double.parse(value.offer.toString()) ?? 0.0) ?? "0.0"}",
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              value.offer.toString().isNotEmpty
+                  ? Text(
+                      "${indianRupeesFormat.format(double.parse(value.offer.toString()) ?? 0.0) ?? "0.0"}",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: 22,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500))
+                  : Text('0.0',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: 22,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500)),
+              /*      SizedBox(
+                width: 1,
+              ),
+              value.mrp.toString().isNotEmpty
+                  ? Text(
+                      "${indianRupeesFormat.format(double.parse(value.mrp.toString()) ?? 0.0) ?? "0.0"}",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500))
+                  : Text('0.0',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500)),*/
+              SizedBox(
+                width: 1,
+              ),
+              Text("(${value.discountPercent.toString()} % Off)",
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
-                      fontSize: 22,
-                      letterSpacing: 0.2,
-                      fontWeight: FontWeight.w500))
-              : Text('0.0',
-                  style: TextStyle(
-                      fontFamily: 'Roboto',
-                      color: ThemeApp.blackColor,
-                      fontSize: 22,
+                      fontSize: 12,
                       letterSpacing: 0.2,
                       fontWeight: FontWeight.w500)),
-          SizedBox(
-            width: 1,
+            ],
           ),
-          value.mrp.toString().isNotEmpty
-              ? Text(
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            children: [
+              Text("M.R.P.: ",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
+              value.mrp.toString().isNotEmpty
+                  ? Text(
+                      "${indianRupeesFormat.format(double.parse(value.mrp.toString()) ?? 0.0) ?? "0.0"}",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500))
+                  : Text('0.0',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+/*
+  Widget prices(OrdersForPurchase value, int index) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              value.offer.toString().isNotEmpty
+                  ? Text(
+                      "${indianRupeesFormat.format(double.parse(value.offer.toString()) ?? 0.0) ?? "0.0"}",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: 22,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500))
+                  : Text('0.0',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: 22,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500)),
+              SizedBox(
+                width: 5,
+              ),
+              value.mrp.toString().isNotEmpty
+                  ? Text(
+                      "${indianRupeesFormat.format(double.parse(value.mrp.toString()) ?? 0.0) ?? "0.0"}",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500))
+                  : Text('0.0',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500)),
+              SizedBox(
+                width: 5,
+              ),
+              Text("(${value.discountPercent.toString()} % Off)",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: 12,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
+            ],
+          ),
+          */
+/*      SizedBox(
+            height: height * .01,
+          ),
+          Row(
+            children: [
+              Text(
+                  "M.R.P.: ",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
+              value.mrp.toString().isNotEmpty
+                  ? Text(
                   "${indianRupeesFormat.format(double.parse(value.mrp.toString()) ?? 0.0) ?? "0.0"}",
                   style: TextStyle(
                       fontFamily: 'Roboto',
@@ -918,7 +1220,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       decoration: TextDecoration.lineThrough,
                       letterSpacing: 0.2,
                       fontWeight: FontWeight.w500))
-              : Text('0.0',
+                  : Text('0.0',
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       color: ThemeApp.lightFontColor,
@@ -926,20 +1228,14 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       decoration: TextDecoration.lineThrough,
                       letterSpacing: 0.2,
                       fontWeight: FontWeight.w500)),
-          SizedBox(
-            width: 1,
-          ),
-          Text(value.discountPercent.toString() + "% Off",
-              style: TextStyle(
-                  fontFamily: 'Roboto',
-                  color: ThemeApp.blackColor,
-                  fontSize: 12,
-                  letterSpacing: 0.2,
-                  fontWeight: FontWeight.w500)),
+            ],
+          ),*/ /*
+
         ],
       ),
     );
   }
+*/
 
   Widget aadToCartCounter(List<OrdersForPurchase>? value, int index) {
     return Row(
@@ -975,9 +1271,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                           value[index].itemQty!,
                           value[index].productId.toString());
 
-                      StringConstant.BadgeCounterValue =
-                          value!.length.toString() +
-                              value![index].itemQty.toString();
+                      // StringConstant.BadgeCounterValue =
+                      //     value.length.toString();
                     } else {
                       showDialog(
                           context: context,
@@ -1082,7 +1377,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [*/
         Container(
-      // height: height * 0.25,
+      // height: 180,
       width: width,
       decoration: const BoxDecoration(
         color: ThemeApp.whiteColor,

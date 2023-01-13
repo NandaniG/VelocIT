@@ -100,7 +100,7 @@ class ProductProvider with ChangeNotifier {
     copyCartList = cartList.map((v) => v).toList();
     String encodedMap = json.encode(copyCartList);
     print('___________ SET PREF______________');
-    StringConstant.prettyPrintJson(encodedMap);
+    StringConstant.prettyPrintJson(encodedMap, 'copy cart list');
 
     Prefs.instance.setToken(
         StringConstant.cartListForPreferenceKey, encodedMap);
@@ -705,11 +705,13 @@ class ProductProvider with ChangeNotifier {
 //---------------------------------<- Notifications Provider ->--------------------------
     List<UserAccountList> userAccountDetailList = <UserAccountList>[];
   File? images;
+  // StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
+  // StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
 
     TextEditingController userNameController = TextEditingController();
     TextEditingController userMobileController = TextEditingController(
         text: StringConstant.userAccountMobile);
-    TextEditingController userEmailController = TextEditingController(text: StringConstant.userAccountEmail);
+    TextEditingController userEmailController = TextEditingController(text: StringConstant.loginUserEmail);
 
 
   }
