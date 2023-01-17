@@ -2851,7 +2851,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                   context,
                                   TextStyle(
                                       fontFamily: 'Roboto',
-                                      color: ThemeApp.whiteColor,
+                                      color: ThemeApp.blackColor,
                                       fontSize: height * .02,
                                       fontWeight: FontWeight.w400)),
                           Container(

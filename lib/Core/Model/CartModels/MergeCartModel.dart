@@ -98,14 +98,14 @@ class Payload {
 
 class OrdersForPurchase {
   int? orderId;
-  Null? customerContact;
-  Null? customerName;
-  Null? deliveryAddressCity;
-  Null? deliveryAddressLine1;
-  Null? deliveryAddressLine2;
-  Null? deliveryAddressPincode;
-  Null? deliveryAddressState;
-  Null? deliveryDate;
+  var customerContact;
+  var customerName;
+  var deliveryAddressCity;
+  var deliveryAddressLine1;
+  var deliveryAddressLine2;
+  var deliveryAddressPincode;
+  var deliveryAddressState;
+  var deliveryDate;
   int? discountAmount;
   int? discountPercent;
   String? imageUrl;
@@ -121,17 +121,17 @@ class OrdersForPurchase {
   String? oneliner;
   int? productId;
   String? productCode;
-  Null? serviceCode;
+  var serviceCode;
   int? productItemId;
-  Null? productRating;
-  Null? serviceId;
-  Null? serviceItemId;
+  var productRating;
+  var serviceId;
+  var serviceItemId;
   String? shortName;
-  Null? userId;
+  var userId;
   int? unitMrp;
   int? unitOffer;
   int? unitDiscount;
-  Null? unitDiscountPerc;
+  var unitDiscountPerc;
 
   OrdersForPurchase(
       {this.orderId,

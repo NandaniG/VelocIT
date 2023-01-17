@@ -129,9 +129,6 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    final availableProducts = Provider.of<ProductProvider>(context);
-
-    final productsList = availableProducts.getProductsLists();
 
     return Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
@@ -159,7 +156,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
             SizedBox(
               height: MediaQuery.of(context).size.height * .02,
             ),*/
-                filterWidgets(productsList),
+                filterWidgets(),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .02,
                 ),
@@ -290,7 +287,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
         }));
   }
 
-  Widget filterWidgets(List<ProductDetailsModel> product) {
+  Widget filterWidgets() {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
@@ -482,7 +479,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                           child: Image.network(
                                             searchProductList[index]
                                                 .imageUrls![0]
-                                                .imageUrl!??"",
+                                                .imageUrl.toString(),
                                             fit: BoxFit.fill,
                                             errorBuilder: ((context, error, stackTrace) {
                                               return Icon(Icons.image_outlined);

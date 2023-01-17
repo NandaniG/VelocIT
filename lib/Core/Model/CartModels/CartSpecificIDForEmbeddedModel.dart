@@ -98,7 +98,7 @@ class CartSpecificIDforEmbeddedModel {
 class OrdersForPurchase {
   int? id;
   String? currentStatus;
-  Null? orderNumber;
+  var orderNumber;
   bool? isProductItem;
   bool? isServiceItem;
   bool? isCancelled;

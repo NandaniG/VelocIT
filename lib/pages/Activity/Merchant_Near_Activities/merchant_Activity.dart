@@ -203,8 +203,8 @@ class _MerchantActvityState extends State<MerchantActvity> {
                         scale: 1.1,
                         child: Switch(
                           // This bool value toggles the switch.
-                          value: isGridView, activeColor: ThemeApp.appColor,
-                          inactiveTrackColor: ThemeApp.appColor,
+                          value: isGridView, activeColor: ThemeApp.appLightColor,
+                          inactiveTrackColor: ThemeApp.appLightColor,
 
                           inactiveThumbColor: ThemeApp.whiteColor,
                           onChanged: (bool value) {

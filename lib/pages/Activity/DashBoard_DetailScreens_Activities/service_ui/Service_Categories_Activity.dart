@@ -133,7 +133,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                     height: height * .02,
                                   ),
                                   TextFieldUtils().dynamicText(
-                                      StringUtils.shopByCategories,
+                                      StringUtils.bookOurServices,
                                       context,
                                       TextStyle(
                                         fontFamily: 'Roboto',
@@ -416,11 +416,35 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(
-                        'assets/appImages/televisionIcon.svg',
-                        color: ThemeApp.blackColor,
+
+                      Container( color: ThemeApp
+                          .appColor,
                         height: 17,
                         width: 19,
+                        // borderRadius:
+                        // const BorderRadius.all(
+                        //     Radius.circular(50)),
+                        child: Image.network(
+                          servicePayload.simpleSubCats![index]
+                              .imageUrl ??
+                              "",
+                          // fit: BoxFit.fill,
+                          height: 17,
+                          width: 19,
+                          errorBuilder:
+                              (context, error,
+                              stackTrace) {
+                            return Container(
+                              height: 17,
+                              width: 19,
+                              child: Icon(
+                                Icons.image,
+                                color: ThemeApp
+                                    .whiteColor,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       SizedBox(
                         height: 6,

@@ -421,7 +421,7 @@ class SingleProductsubCategory {
 class SingleModelMerchants {
   int? id;
   String? merchantCode;
-  String merchantName='';
+  String? merchantName;
  double? unitMrp;
  double? unitOfferPrice;
   var deliveryChargesPerOrder;
@@ -430,10 +430,10 @@ class SingleModelMerchants {
   int? productItemId;
   int? unitDiscountPerc;
 
-  SingleModelMerchants(   this.merchantName,
+  SingleModelMerchants(
       {this.id,
         this.merchantCode,
-
+        this.merchantName,
         this.unitMrp,
         this.unitOfferPrice,
         this.deliveryChargesPerOrder,

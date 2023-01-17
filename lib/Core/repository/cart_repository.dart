@@ -48,8 +48,7 @@ class CartRepository {
     // todo - you should check the response.statusCode
     responseJson = await response.transform(utf8.decoder).join();
     String rawJson = responseJson.toString();
-    print("Cart response1111");
-    print(responseJson.toString());
+    print("Cart Created : "+responseJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
 
@@ -58,7 +57,6 @@ class CartRepository {
     print(userData.payload!.id.toString());
     Prefs.instance.setToken(Prefs.prefCartId, userData.payload!.id.toString());
 
-    print("userData.payload!.id");
 
     // if (response.statusCode == 200) {
     //   print(responseJson.toString());
@@ -101,22 +99,13 @@ class CartRepository {
     // if (response.statusCode == 200) {
     print(userData.payload!.id.toString());
 
-    // print(userData.payload!.ordersForPurchase![0].itemQuantity);
-    // badgeLength = userData.payload!.ordersForPurchase![0].itemQty!;
-
     print("userData.payload!.id");
     print(responseJson.toString());
     Provider.of<ProductProvider>(context, listen: false);
-    final preference = await SharedPreferences.getInstance();
 
-    // prefs.setBadgeToken(badgeLength.toString());
-    // StringConstant.BadgeCounterValue =
-    //     (preference.getString('setBadgeCountPrefs')) ?? '';
-    print("Badge,........" + StringConstant.BadgeCounterValue);
     await  getCartSpecificIDList(userData.payload!.id.toString());
 
 
-    Utils.successToast('Added Successfully!');
     httpClient.close();
     return responseJson = UpdateCartModel.fromJson(map);
   }
@@ -157,7 +146,7 @@ class CartRepository {
     }
   }
 
-  Future<MergeCartModel> mergeCartList(String oldId,String newId,dynamic json,BuildContext context) async {
+  Future<MergeCartModel> mergeCartList(String oldId,String newId,Map json,BuildContext context) async {
 
     // var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);
     var url = ApiMapping.BaseAPI+'/cart/merge_cart/$oldId?newid=$newId';
@@ -167,7 +156,7 @@ class CartRepository {
 
     try {
       dynamic response = await _apiServices.getPutApiResponse(url, json);
-      print("Cart MergeCartModel Id : " + response.toString());
+      print("Cart Merge CartModel Id : " + response.toString());
       await prefs.setString('CartIdPref',response);
       if (response['status'].toString() == 'OK') {
 
@@ -177,6 +166,7 @@ class CartRepository {
 
         return response = MergeCartModel.fromJson(response);
     } catch (e) {
+      print("Merge car error: "+e.toString());
       throw e;
     }
   }

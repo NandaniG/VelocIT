@@ -190,7 +190,7 @@ var goodsCharges;
 class OrdersSavedLater {
   int? id;
   String? currentStatus;
-  Null? orderNumber;
+  var orderNumber;
   bool? isProductItem;
   bool? isServiceItem;
   bool? isCancelled;

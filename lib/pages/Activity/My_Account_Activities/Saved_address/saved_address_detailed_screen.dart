@@ -620,7 +620,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                               'No Address found',
                               context,
                               TextStyle(fontFamily: 'Roboto',
-                                  color: ThemeApp.whiteColor,
+                                  color: ThemeApp.blackColor,
                                   fontSize: height * .02,
                                   fontWeight: FontWeight.w400)),
                     ],

@@ -83,8 +83,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     print("widget.id! number : " + widget.id!.toString());
     print("Badge,........" + StringConstant.BadgeCounterValue);
     getBadgePref();
-    productListView.similarProductWithGet(0, 10,10);
-
+    productListView.similarProductWithGet(0, 10, 10);
   }
 
   CartViewModel cartListView = CartViewModel();
@@ -107,8 +106,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     var userId = '';
 
     StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-    StringConstant.RandomUserLoginId =
-        (prefs.getString('RandomUserId')) ?? '';
+    StringConstant.RandomUserLoginId = (prefs.getString('RandomUserId')) ?? '';
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
 
@@ -138,16 +136,17 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     setState(() {});
     CartRepository().updateCartPostRequest(data, context).then((value) {
       setState(() {
-
+        Utils.successToast('Added Successfully!');
       });
-      StringConstant.BadgeCounterValue = (prefs.getString('setBadgeCountPrefs')) ?? '';
+      StringConstant.BadgeCounterValue =
+          (prefs.getString('setBadgeCountPrefs')) ?? '';
     });
     cartListView
-        .cartSpecificIDWithGet(context, StringConstant.UserCartID).then((value) {
-setState(() {
-
-});
-      StringConstant.BadgeCounterValue = (prefs.getString('setBadgeCountPrefs')) ?? '';
+        .cartSpecificIDWithGet(context, StringConstant.UserCartID)
+        .then((value) {
+      setState(() {});
+      StringConstant.BadgeCounterValue =
+          (prefs.getString('setBadgeCountPrefs')) ?? '';
     });
 
     setState(() {
@@ -158,7 +157,6 @@ setState(() {
       StringConstant.BadgeCounterValue =
           (prefs.getString('setBadgeCountPrefs')) ?? '';
       print("Badge,........" + StringConstant.BadgeCounterValue);
-
     });
   }
 
@@ -246,7 +244,7 @@ setState(() {
                                 ),
                                 rattingBar(model),
                                 SizedBox(
-                                  height: height * .01,
+                                  height: 10,
                                 ),
                                 prices(model),
                                 SizedBox(
@@ -274,16 +272,17 @@ setState(() {
                                     : SizedBox(),
 */
                                 // prices(model),
-                               /* SizedBox(
+                                /* SizedBox(
                                   height: height * .01,
                                 ),*/
                                 model.productVariants!.isNotEmpty
                                     ? availableVariant(model)
                                     : SizedBox(),
                                 model.productVariants!.isNotEmpty
-                                    ?  SizedBox(
-                                  height: height * .01,
-                                ):SizedBox(),
+                                    ? SizedBox(
+                                        height: height * .01,
+                                      )
+                                    : SizedBox(),
                                 productDescription(model),
                                 SizedBox(
                                   height: height * .01,
@@ -296,23 +295,22 @@ setState(() {
 
                                 //similar product
 
-                                   SizedBox(
-                              height: height * .03,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 20,
-                                right: 20,
-                              ),
-                              child:  TextFieldUtils().headingTextField(
-                                  'Similar Products', context),
-
-                            ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height *
-                                  .02,
-                            ),
-                            similarProductList()
+                                SizedBox(
+                                  height: height * .03,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 20,
+                                    right: 20,
+                                  ),
+                                  child: TextFieldUtils().headingTextField(
+                                      'Similar Products', context),
+                                ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * .02,
+                                ),
+                                similarProductList()
                               ],
                             ) ??
                             SizedBox();
@@ -323,7 +321,8 @@ setState(() {
                           child: TextFieldUtils().dynamicText(
                               'No Match found!',
                               context,
-                              TextStyle(fontFamily: 'Roboto',
+                              TextStyle(
+                                  fontFamily: 'Roboto',
                                   color: ThemeApp.blackColor,
                                   fontSize: height * .03,
                                   fontWeight: FontWeight.bold)),
@@ -336,7 +335,8 @@ setState(() {
                     child: TextFieldUtils().dynamicText(
                         'No Match found!',
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                            fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: height * .03,
                             fontWeight: FontWeight.bold)),
@@ -379,7 +379,6 @@ setState(() {
                                               width: width,
                                               color: Colors.white,
                                               child: InstaImageViewer(
-
                                                 child: Image.network(
                                                         e.imageUrl ?? "",
                                                         // fit: BoxFit.fill,
@@ -487,6 +486,8 @@ setState(() {
   }
 
   bool isMerchantfive = false;
+  int indexOfMerchant = 0;
+  List<SingleModelMerchants> selectedMerchants = [];
 
   Widget merchantDetails(SingleProductPayload model) {
     return Column(
@@ -503,11 +504,25 @@ setState(() {
                     : 5,
             // itemCount: 5,
             itemBuilder: (BuildContext context, int index) {
+
+/*for(int i= 0; i<model.merchants.length; i++){
+  if(model.merchants[index].id! == indexOfMerchant){
+    selectedMerchants.add(model.merchants);
+
+  }
+
+}*/
+
+
+
               return Container(
                     // height: height*.02,
                     padding: const EdgeInsets.only(left: 14, right: 20),
                     child: Column(
                       children: [
+                        // model.merchants[index].id! == model.selectedMerchantId
+                        //     ? Text(model.selectedMerchantId.toString())
+                        //     : Text(model.selectedMerchantId.toString()),
                         Row(
                           children: [
                             SizedBox(
@@ -527,6 +542,10 @@ setState(() {
                                 onChanged: (value) {
                                   setState(() {
                                     _radioValue = value;
+                                    indexOfMerchant = index;
+                                    model.merchants.add(SingleModelMerchants());
+                                    model.selectedMerchantId =
+                                        model.merchants[index].id;
                                     // print("_radioValue"+_radioValue.toString());
                                   });
                                 },
@@ -544,7 +563,8 @@ setState(() {
                               padding: const EdgeInsets.only(left: 0),
                               child: Text(
                                       model.merchants[index].merchantName ?? "",
-                                      style: TextStyle(fontFamily: 'Roboto',
+                                      style: TextStyle(
+                                          fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500)) ??
@@ -563,7 +583,8 @@ setState(() {
                                 model.merchants![index].deliveryDays
                                         .toString() +
                                     " Day(s)",
-                                style: TextStyle(fontFamily: 'Roboto',
+                                style: TextStyle(
+                                    fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400)),
@@ -578,12 +599,14 @@ setState(() {
                                             .merchants![index].unitOfferPrice
                                             .toString()) ??
                                         0.0),
-                                    style: TextStyle(fontFamily: 'Roboto',
+                                    style: TextStyle(
+                                        fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400))
                                 : Text('0.0',
-                                    style: TextStyle(fontFamily: 'Roboto',
+                                    style: TextStyle(
+                                        fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400)),
@@ -619,8 +642,9 @@ setState(() {
                             Text(
                                 model.merchants![index].unitDiscountPerc
                                         .toString() +
-                                    "%",
-                                style: TextStyle(fontFamily: 'Roboto',
+                                    "% Off",
+                                style: TextStyle(
+                                    fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400)),
@@ -705,10 +729,10 @@ setState(() {
                   ) ??
                   SizedBox();
             }),
-        Container(alignment: Alignment.centerRight,
+        Container(
+          alignment: Alignment.centerRight,
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
-          decoration: BoxDecoration(
-          ),
+          decoration: BoxDecoration(),
           child: model.merchants!.length > 5 && isMerchantfive == false
               ? InkWell(
                   onTap: () {
@@ -719,19 +743,20 @@ setState(() {
                   child: TextFieldUtils().dynamicText(
                       'View more',
                       context,
-                      TextStyle(fontFamily: 'Roboto',
-                          color: ThemeApp.tealButtonColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
+                      TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.tealButtonColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
                         decorationThickness: 3,
                       )),
                 )
               : Container(),
         ),
-        Container(           alignment: Alignment.centerRight,        padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
-
-
+        Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
           child: isMerchantfive == true
               ? InkWell(
                   onTap: () {
@@ -742,7 +767,8 @@ setState(() {
                   child: TextFieldUtils().dynamicText(
                       'View less',
                       context,
-                      TextStyle(fontFamily: 'Roboto',
+                      TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.tealButtonColor,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -762,40 +788,89 @@ setState(() {
         left: 20,
         right: 20,
       ),
-      child: Container(  padding: const EdgeInsets.fromLTRB(20, 27, 20, 26),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         color: ThemeApp.priceContainerColor,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextFieldUtils().dynamicText(
-                indianRupeesFormat
-                    .format(double.parse(model.defaultSellPrice.toString())??'0.0'),
-                context,
-                TextStyle(fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: 34,letterSpacing: 0.2 ,
-                    fontWeight: FontWeight.w700)),
+            model.merchants.isNotEmpty
+                ? TextFieldUtils().dynamicText(
+                    indianRupeesFormat.format(double.parse(model
+                            .merchants[indexOfMerchant].unitOfferPrice
+                            .toString()) ??
+                        '0.0'),
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.blackColor,
+                        fontSize: 34,
+                        letterSpacing: 0.2,
+                        fontWeight: FontWeight.w700))
+                : TextFieldUtils().dynamicText(
+                    indianRupeesFormat.format(
+                        double.parse(model.defaultSellPrice.toString()) ??
+                            '0.0'),
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.blackColor,
+                        fontSize: 34,
+                        letterSpacing: 0.2,
+                        fontWeight: FontWeight.w700)),
             SizedBox(
-              width: 20,
-            ), TextFieldUtils().dynamicText(
-                indianRupeesFormat
-                    .format(double.parse(model.defaultMrp.toString())??'0.0'),
-                context,
-                TextStyle(fontFamily: 'Roboto',
-                    color: ThemeApp.lightFontColor,
-                    decoration: TextDecoration.lineThrough,letterSpacing: 0.2 ,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700)),
-
+              width: 25,
+            ),
+            model.merchants.isNotEmpty
+                ? TextFieldUtils().dynamicText(
+                    indianRupeesFormat.format(double.parse(model
+                            .merchants[indexOfMerchant].unitMrp
+                            .toString()) ??
+                        '0.0'),
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.lightFontColor,
+                        decoration: TextDecoration.lineThrough,
+                        letterSpacing: 0.2,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700))
+                : TextFieldUtils().dynamicText(
+                    indianRupeesFormat.format(
+                        double.parse(model.defaultMrp.toString()) ?? '0.0'),
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.lightFontColor,
+                        decoration: TextDecoration.lineThrough,
+                        letterSpacing: 0.2,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700)),
             SizedBox(
-              width: 9,
-            ), TextFieldUtils().dynamicText(
-                model.defaultDiscount.toString() + "%",
-                context,
-                TextStyle(fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500)),
+              width: 15,
+            ),
+            model.merchants.isNotEmpty
+                ? TextFieldUtils().dynamicText(
+                    model.merchants[indexOfMerchant].unitDiscountPerc
+                            .toString() +
+                        "% Off",
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.blackColor,
+                        fontSize: 14,
+                        letterSpacing: 0.2,
+                        fontWeight: FontWeight.w500))
+                : TextFieldUtils().dynamicText(
+                    model.defaultDiscount.toString() + "% Off",
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.blackColor,
+                        fontSize: 14,
+                        letterSpacing: 0.2,
+                        fontWeight: FontWeight.w500)),
           ],
         ),
       ),
@@ -818,7 +893,8 @@ setState(() {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Available variants",
-                style: TextStyle(fontFamily: 'Roboto',
+                style: TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontWeight: FontWeight.w500,
                     fontSize: height * .022)),
@@ -847,7 +923,8 @@ setState(() {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Product Description",
-                style: TextStyle(fontFamily: 'Roboto',
+                style: TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 16)),
@@ -855,7 +932,8 @@ setState(() {
               height: height * .01,
             ),
             Text(model.oneliner!,
-                style: TextStyle(fontFamily: 'Roboto',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
                   color: ThemeApp.lightFontColor,
                   // fontWeight: FontWeight.w500,
                   fontSize: 14,
@@ -933,7 +1011,8 @@ setState(() {
                   child: TextFieldUtils().dynamicText(
                       'Quantity : ',
                       context,
-                      TextStyle(fontFamily: 'Roboto',
+                      TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
                           // fontWeight: FontWeight.w500,
                           fontSize: height * .023,
@@ -991,7 +1070,8 @@ setState(() {
                                 left: 8.0, right: 8, top: 0, bottom: 0),
                             child: Text(
                               counterPrice.toString().padLeft(2, '0'),
-                              style: TextStyle(fontFamily: 'Roboto',
+                              style: TextStyle(
+                                  fontFamily: 'Roboto',
                                   fontSize:
                                       MediaQuery.of(context).size.height * .016,
                                   fontWeight: FontWeight.w400,
@@ -1138,8 +1218,11 @@ setState(() {
                                   await SharedPreferences.getInstance();
 
                               setState(() {
-                                updateCart(model.merchants![0].id, counterPrice,
-                                    productProvider, model.productsubCategory);
+                                updateCart(
+                                    model.merchants![indexOfMerchant].id,
+                                    counterPrice,
+                                    productProvider,
+                                    model.productsubCategory);
 
                                 StringConstant.BadgeCounterValue =
                                     (prefs.getString('setBadgeCountPrefs')) ??
@@ -1159,7 +1242,8 @@ setState(() {
                                 ),
                                 child: Text(
                                   "Add to Cart",
-                                  style: TextStyle(fontFamily: 'Roboto',
+                                  style: TextStyle(
+                                    fontFamily: 'Roboto',
                                     fontSize:
                                         MediaQuery.of(context).size.height *
                                             .021,
@@ -1478,16 +1562,17 @@ setState(() {
                   ],
                 ))
             : Container(
-              width: width,
-              height: 72,
-              color: ThemeApp.whiteColor,
+                width: width,
+                height: 72,
+                color: ThemeApp.whiteColor,
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 5, bottom: 5),
                 child: Center(
                   child: TextFieldUtils().dynamicText(
                       "OUT OF STOCK",
                       context,
-                      TextStyle(fontFamily: 'Roboto',
+                      TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.redColor,
                         fontWeight: FontWeight.w500,
                         fontSize: height * .035,
@@ -1503,157 +1588,158 @@ setState(() {
         value: productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
-              switch (productCategories.similarList.status) {
-                case Status.LOADING:
-                  if (kDebugMode) {
-                    print("Api load");
-                  }
-                  return ProgressIndicatorLoader(true);
+          switch (productCategories.similarList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-                case Status.ERROR:
-                  if (kDebugMode) {
-                    print("Api error : " +productCategories.similarList.message.toString());
-                  }
-                  return Text(
-                      productCategories.similarList.message.toString());
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error : " +
+                    productCategories.similarList.message.toString());
+              }
+              return Text(productCategories.similarList.message.toString());
 
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-                  List<SimilarContent>? similarList = productCategories
-                      .similarList.data!.payload!.content;
+              List<SimilarContent>? similarList =
+                  productCategories.similarList.data!.payload!.content;
 
-                  return Container(
-                    height: 228,
-                    child: similarList!.isNotEmpty
-                        ? ListView.builder(
+              return Container(
+                height: 228,
+                child: similarList!.isNotEmpty
+                    ? ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         itemCount: similarList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProductDetailsActivity(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProductDetailsActivity(
                                             id: similarList[index].id,
                                             // productList: subProductList[index],
                                             // productSpecificListViewModel:
                                             //     productSpecificListViewModel,
                                           ),
-                                    ),
-                                  );
-                                },
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: 163,
-                                      width: 191,
-                                      decoration: const BoxDecoration(
-                                        color: ThemeApp.whiteColor,
-                                      ),
-                                      child: ClipRRect(
-                                          child: Image.network(
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 163,
+                                          width: 191,
+                                          decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                          ),
+                                          child: ClipRRect(
+                                              child: Image.network(
                                             // width: double.infinity,
                                             similarList[index]
-                                                .imageUrls![0]
-                                                .imageUrl
-                                                .toString() ??
+                                                    .imageUrls![0]
+                                                    .imageUrl
+                                                    .toString() ??
                                                 "",
                                             fit: BoxFit.scaleDown,
                                             errorBuilder:
-                                            ((context, error, stackTrace) {
+                                                ((context, error, stackTrace) {
                                               return Icon(Icons.image_outlined);
                                             }),
                                           )),
-                                    ),
-                                    Container(
-                                      color: ThemeApp.tealButtonColor,
-                                      width: 191,
-                                      height: 65,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            padding:
-                                            const EdgeInsets.fromLTRB(
-                                                21, 9, 21, 4),
-                                            child:  Text(
-                                                similarList[index].shortName!,
+                                        ),
+                                        Container(
+                                          color: ThemeApp.tealButtonColor,
+                                          width: 191,
+                                          height: 65,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 9, 21, 4),
+                                                child: Text(
+                                                    similarList[index]
+                                                        .shortName!,
                                                     maxLines: 1,
-                                                    style: TextStyle(fontFamily: 'Roboto',
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         color:
                                                             ThemeApp.whiteColor,
                                                         fontSize: height * .022,
                                                         fontWeight:
-                                                            FontWeight.bold))
-                                            ,
-                                          ),
-                                          Container(
-                                            padding:
-                                            const EdgeInsets.fromLTRB(
-                                                21, 0, 21, 9),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                //discount
-                                                TextFieldUtils()
-                                                    .listPriceHeadingTextField(
-                                                    indianRupeesFormat
-                                                        .format(similarList[
-                                                    index]
-                                                        .defaultSellPrice ??
-                                                        0.0),
-                                                    context),
+                                                            FontWeight.bold)),
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 0, 21, 9),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    //discount
+                                                    TextFieldUtils()
+                                                        .listPriceHeadingTextField(
+                                                            indianRupeesFormat
+                                                                .format(similarList[
+                                                                            index]
+                                                                        .defaultSellPrice ??
+                                                                    0.0),
+                                                            context),
 
-                                                TextFieldUtils()
-                                                    .listScratchPriceHeadingTextField(
-                                                    indianRupeesFormat
-                                                        .format(similarList[
-                                                    index]
-                                                        .defaultMrp ??
-                                                        0.0),
-                                                    context),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                                    TextFieldUtils()
+                                                        .listScratchPriceHeadingTextField(
+                                                            indianRupeesFormat
+                                                                .format(similarList[
+                                                                            index]
+                                                                        .defaultMrp ??
+                                                                    0.0),
+                                                            context),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width:
-                                MediaQuery.of(context).size.width * .03,
-                              )
-                            ],
-                          ) ??
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .03,
+                                  )
+                                ],
+                              ) ??
                               SizedBox();
                         })
-                        : SizedBox(),
-                  );
-                default:
-                  return Text("No Data found!");
-              }
+                    : SizedBox(),
+              );
+            default:
               return Text("No Data found!");
-            }));
+          }
+          return Text("No Data found!");
+        }));
 
 /*
     return ChangeNotifierProvider<DashboardViewModel>(

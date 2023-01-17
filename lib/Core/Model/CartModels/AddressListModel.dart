@@ -39,7 +39,7 @@ class AddressPayload {
   String? pincode;
   double? latitude;
   double? longitude;
-  Null? googlePOI;
+  var googlePOI;
 
   AddressPayload(
       {this.id,
@@ -194,7 +194,7 @@ class AddressContent {
   String? pincode;
   double? latitude;
   double? longitude;
-  Null? googlePOI;
+  var googlePOI;
 
   AddressContent(
       {this.id,
