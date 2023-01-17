@@ -1,17 +1,15 @@
-class StateModel {
+class CityModel {
   String? status;
-  List<StatePayload>? payload;
+  List<CityPayloadData>? payload;
   String? timestamp;
 
-  StateModel({this.status, this.payload, this.timestamp});
+  CityModel({this.status, this.payload, this.timestamp});
 
-  StateModel.fromJson(Map<String, dynamic> json) {
+  CityModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['payload'] != null) {
-      payload = <StatePayload>[];
-      json['payload'].forEach((v) {
-        payload!.add(new StatePayload.fromJson(v));
-      });
+      payload = <CityPayloadData>[];
+      json['payload'].forEach((v) { payload!.add(new CityPayloadData.fromJson(v)); });
     }
     timestamp = json['timestamp'];
   }
@@ -27,46 +25,19 @@ class StateModel {
   }
 }
 
-class StatePayload {
-  int? id;
-  List<StateCities>? cities;
-  String? name;
-
-  StatePayload({this.id, this.cities, this.name});
-
-  StatePayload.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    if (json['cities'] != null) {
-      cities = <StateCities>[];
-      json['cities'].forEach((v) {
-        cities!.add(new StateCities.fromJson(v));
-      });
-    }
-    name = json['name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    if (this.cities != null) {
-      data['cities'] = this.cities!.map((v) => v.toJson()).toList();
-    }
-    data['name'] = this.name;
-    return data;
-  }
-}
-
-class StateCities {
+class CityPayloadData {
   int? id;
   String? name;
   String? country;
+  CityState? state;
 
-  StateCities({this.id, this.name, this.country});
+  CityPayloadData({this.id, this.name, this.country, this.state});
 
-  StateCities.fromJson(Map<String, dynamic> json) {
+  CityPayloadData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     country = json['country'];
+    state = json['state'] != null ? new CityState.fromJson(json['state']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -74,6 +45,30 @@ class StateCities {
     data['id'] = this.id;
     data['name'] = this.name;
     data['country'] = this.country;
+    if (this.state != null) {
+      data['state'] = this.state!.toJson();
+    }
     return data;
   }
 }
+
+class CityState {
+  int? id;
+  String? name;
+
+  CityState({this.id, this.name});
+
+  CityState.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+
+    return data;
+  }
+}
+

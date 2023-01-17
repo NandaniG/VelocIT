@@ -71,7 +71,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       ProductSpecificListViewModel();
   late Map<String, dynamic> data = new Map<String, dynamic>();
 
-  List<SingleModelMerchants> merchantList = [];
+
+
+  List<SingleModelMerchants> merchantTemp =[];
 
   @override
   void initState() {
@@ -227,6 +229,33 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           productSubCategoryProvider.singleproductSpecificList
                               .data!.payload!.merchants;
 
+
+
+                      merchantTemp = [];
+                      //adding selected merchants
+                      for(int i=0; i<merchants.length; i++){
+                        if(merchants[i].id==productSubCategoryProvider.singleproductSpecificList
+                            .data!.payload!.selectedMerchantId){
+                          merchantTemp.add(merchants[i]);
+                        }
+                      }
+                      //adding remaining merchant list
+                      for(int i=0; i<merchants.length; i++){
+                        if(merchants[i].id!=productSubCategoryProvider.singleproductSpecificList
+                            .data!.payload!.selectedMerchantId){
+                          merchantTemp.add(merchants[i]);
+                        }
+                      }
+                      for(int i=0; i<merchantTemp.length; i++){
+                        print("merchantTemp id"+merchantTemp[i].id.toString());
+                        print("merchantTemp merchantName"+merchantTemp[i].merchantName.toString());
+
+                      }
+// print("merchants length"+productSubCategoryProvider
+//     .singleproductSpecificList.data!.payload!.merchants.length.toString());
+// print("merchants selected index"+productSubCategoryProvider
+//         .singleproductSpecificList.data!.payload!.selectedMerchantId.toString());
+
                       if (widget.id == model!.id) {
                         return ListView(
                               // mainAxisAlignment: MainAxisAlignment.start,
@@ -350,7 +379,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
   final CarouselController _carouselController = CarouselController();
   int _currentIndex = 0;
-  int? _radioValue = 0;
+  int _radioValue = 0;
 
   Widget productImage(SingleProductPayload? model) {
     return Padding(
@@ -488,23 +517,23 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   }
 
   bool isMerchantfive = false;
-  int indexOfMerchant = 0;
+
 
 
 
   Widget merchantDetails(SingleProductPayload model) {
-    merchantList = model.merchants;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
-            itemCount: isMerchantfive == false && merchantList.length < 5
-                ? merchantList.length
+            itemCount: isMerchantfive == false && merchantTemp.length < 5
+                ? merchantTemp.length
                 : isMerchantfive == true
-                    ? merchantList.length
+                    ? merchantTemp.length
                     : 5,
             // itemCount: 5,
             itemBuilder: (BuildContext context, int index) {
@@ -513,9 +542,6 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     padding: const EdgeInsets.only(left: 14, right: 20),
                     child: Column(
                       children: [
-                        // model.merchants[index].id! == model.selectedMerchantId
-                        //     ? Text(model.selectedMerchantId.toString())
-                        //     : Text(model.selectedMerchantId.toString()),
                         Row(
                           children: [
                             SizedBox(
@@ -533,33 +559,17 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 ),
                                 groupValue: _radioValue,
                                 onChanged: (value) async {
-                                  List<SingleModelMerchants> tempMerchantList = [];
 
-                                  model.selectedMerchantId =
-                                      merchantList[index].id;
-                                  SingleModelMerchants selectedMerchant =
-                                      merchantList[index];
-                                  // merchantList = [];
-                                  tempMerchantList.add(selectedMerchant);
-                                  // merchantList.add(selectedMerchant);
 
-                               // await   model.merchants.map((e) {
-                               //      if(e.id!= selectedMerchant.id){
-                               //        merchantList.add(e);
-                               //      }
-                               //    } );
-
-                               for(int i =0; i<model.merchants.length; i++){
-
-                                 if(model.merchants[i].id!= selectedMerchant.id){
-                                   tempMerchantList.add(model.merchants[i]);
-                                 }
-                               }
                                   setState(() {
-                                    _radioValue = value;
-                                    indexOfMerchant = index;
-                                    merchantList = [];
-                                    merchantList= tempMerchantList;
+                                    _radioValue = 0;
+                                    print("radio value "+_radioValue.toString());
+                                    // _radioValue = index;
+                                    print("before change"+model.selectedMerchantId.toString());
+                                   model.selectedMerchantId= merchantTemp[index].id;
+                                    print("after change"+model.selectedMerchantId.toString());
+
+
 
                                   });
                                 },
@@ -569,7 +579,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                             Padding(
                               padding: const EdgeInsets.only(left: 0),
                               child: Text(
-                                      merchantList[index].merchantName ?? "",
+                                      merchantTemp[index].merchantName ?? "",
                                       style: TextStyle(
                                           fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
@@ -587,7 +597,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               width: width * .08,
                             ),
                             Text(
-                                merchantList[index].deliveryDays.toString() +
+                                merchantTemp[index].deliveryDays.toString() +
                                     " Day(s)",
                                 style: TextStyle(
                                     fontFamily: 'Roboto',
@@ -599,10 +609,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     const EdgeInsets.only(right: 10, left: 10),
                                 height: height * .02,
                                 child: TextFieldUtils().lineVertical()),
-                            merchantList[index].unitOfferPrice != null
+                            merchantTemp[index].unitOfferPrice != null
                                 ? Text(
                                     indianRupeesFormat.format(double.parse(
-                                            merchantList[index]
+                                        merchantTemp[index]
                                                 .unitOfferPrice
                                                 .toString()) ??
                                         0.0),
@@ -647,7 +657,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 height: height * .02,
                                 child: TextFieldUtils().lineVertical()),
                             Text(
-                                merchantList[index]
+                                merchantTemp[index]
                                         .unitDiscountPerc
                                         .toString() +
                                     "% Off",
@@ -666,75 +676,13 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     model,
                                     5,
                                     width * .3,
-                                    merchantList[index]
+                                    merchantTemp[index]
                                         .merchantRating!
                                         .toDouble()))
                           ],
                         ),
                       ],
                     ),
-                    /* Row(
-                    children: [
-                      RadioListTile(
-                        activeColor: ThemeApp.appColor,
-                        value: 0,
-
-                        dense: true,
-                        // visualDensity: const VisualDensity(horizontal: -4.0),
-                        visualDensity: const VisualDensity(
-                          horizontal: VisualDensity.minimumDensity,
-                          vertical: VisualDensity.minimumDensity,
-                        ),
-                        groupValue: _radioValue,
-                        onChanged: (value) {
-                          setState(() {
-                            _radioValue = value;
-                            StringConstant.sortByRadio = _radioValue!;
-                            print(StringConstant.sortedBy);
-                          });
-                        },
-                        title: Padding(
-                          padding: const EdgeInsets.only(left: 0),
-                          child: Text(model.merchants![0].merchantName!,
-                              style: TextStyle(fontFamily: 'Roboto',
-                                  color: ThemeApp.darkGreyColor,
-                                  fontSize: MediaQuery.of(context).size.height * .02,
-                                  fontWeight: FontWeight.w400)),
-                        ),
-                      ),    */ /* Container(      padding: const EdgeInsets.only(right: 10,left: 10),
-                          height: height*.02,
-
-                          child: TextFieldUtils().lineVertical()),*/ /*
-                      Text(
-                          indianRupeesFormat
-                              .format(double.parse(model.defaultSellPrice.toString())),
-                          style: TextStyle(fontFamily: 'Roboto',
-                              color: ThemeApp.darkGreyColor,
-                              fontSize: MediaQuery.of(context).size.height * .02,
-                              fontWeight: FontWeight.w400)),
-                      SizedBox(
-                        width: width * .02,
-                      ),
-
-
-                      Text(
-                          indianRupeesFormat
-                              .format(double.parse(model.defaultMrp.toString()) ?? 0.0),
-                          style: TextStyle(fontFamily: 'Roboto',
-                              decoration: TextDecoration.lineThrough,
-                              color: ThemeApp.darkGreyColor,
-                              fontSize: MediaQuery.of(context).size.height * .02,
-                              fontWeight: FontWeight.w400)),
-                      SizedBox(
-                        width: width * .02,
-                      ),
-                      Text(model.defaultDiscount.toString() + "%",
-                          style: TextStyle(fontFamily: 'Roboto',
-                              color: ThemeApp.darkGreyColor,
-                              fontSize: MediaQuery.of(context).size.height * .02,
-                              fontWeight: FontWeight.w400)),
-                    ],
-                  ),*/
                   ) ??
                   SizedBox();
             }),
@@ -742,7 +690,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
           decoration: BoxDecoration(),
-          child: merchantList.length > 5 && isMerchantfive == false
+          child: merchantTemp.length > 5 && isMerchantfive == false
               ? InkWell(
                   onTap: () {
                     setState(() {
@@ -806,8 +754,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           children: [
             model.merchants.isNotEmpty
                 ? TextFieldUtils().dynamicText(
-                    indianRupeesFormat.format(double.parse(model
-                            .merchants[indexOfMerchant].unitOfferPrice
+                    indianRupeesFormat.format(double.parse(merchantTemp[_radioValue].unitOfferPrice
                             .toString()) ??
                         '0.0'),
                     context,
@@ -831,10 +778,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             SizedBox(
               width: 25,
             ),
-            model.merchants.isNotEmpty
+            merchantTemp.isNotEmpty
                 ? TextFieldUtils().dynamicText(
-                    indianRupeesFormat.format(double.parse(model
-                            .merchants[indexOfMerchant].unitMrp
+                    indianRupeesFormat.format(double.parse(
+                           merchantTemp[_radioValue].unitMrp
                             .toString()) ??
                         '0.0'),
                     context,
@@ -859,9 +806,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             SizedBox(
               width: 15,
             ),
-            model.merchants.isNotEmpty
+            merchantTemp.isNotEmpty
                 ? TextFieldUtils().dynamicText(
-                    model.merchants[indexOfMerchant].unitDiscountPerc
+                merchantTemp[_radioValue].unitDiscountPerc
                             .toString() +
                         "% Off",
                     context,
@@ -1228,7 +1175,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
                               setState(() {
                                 updateCart(
-                                    model.merchants![indexOfMerchant].id,
+                                    model.selectedMerchantId,
                                     counterPrice,
                                     productProvider,
                                     model.productsubCategory);

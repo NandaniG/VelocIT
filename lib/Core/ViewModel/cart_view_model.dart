@@ -10,6 +10,7 @@ import '../Model/CartModels/CartCreateRetrieveModel.dart';
 import '../Model/CartModels/CartSpecificIDForEmbeddedModel.dart';
 import '../Model/CartModels/CartSpecificIdModel.dart';
 import '../Model/CartModels/SendCartForPaymentModel.dart';
+import '../Model/CityModel.dart';
 import '../Model/StateModel.dart';
 import '../data/responses/api_response.dart';
 import '../repository/cart_repository.dart';
@@ -24,6 +25,7 @@ class CartViewModel with ChangeNotifier {
       ApiResponse.loading();
   ApiResponse<AddressListModel> getAddress = ApiResponse.loading();
   ApiResponse<StateModel> getState = ApiResponse.loading();
+  ApiResponse<CityModel> getCity = ApiResponse.loading();
 
   setCartSpecificIDList(ApiResponse<CartSpecificIdModel> response) {
     cartSpecificID = response;
@@ -47,6 +49,9 @@ class CartViewModel with ChangeNotifier {
   }
   getStateAddress(ApiResponse<StateModel> response) {
     getState = response;
+    notifyListeners();
+  }  getCityAddress(ApiResponse<CityModel> response) {
+    getCity = response;
     notifyListeners();
   }
 
@@ -101,6 +106,16 @@ int productBadge=0;
       getStateAddress(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       getStateAddress(ApiResponse.error(error.toString()));
+    });
+  }
+
+  Future<void> getCityAddressWithGet(BuildContext context) async {
+    getCityAddress(ApiResponse.loading());
+
+    _myRepo.getCityAddressList().then((value) async {
+      getCityAddress(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      getCityAddress(ApiResponse.error(error.toString()));
     });
   }
   ///

@@ -13,6 +13,7 @@ import 'package:velocit/utils/StringUtils.dart';
 import 'package:http/http.dart' as http;
 import '../../../Core/AppConstant/apiMapping.dart';
 import '../../../Core/Model/CartModels/SendCartForPaymentModel.dart';
+import '../../../Core/Model/CityModel.dart';
 import '../../../Core/Model/StateModel.dart';
 import '../../../Core/ViewModel/cart_view_model.dart';
 import '../../../Core/data/responses/status.dart';
@@ -64,14 +65,23 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
   bool _validateEmail = false;
 
   final _formKey = GlobalKey<FormState>();
-  CartViewModel cartRepo = CartViewModel();
+  CartViewModel cartViewModel = CartViewModel();
+  CartRepository cartRepository = CartRepository();
+  StateModel stateModel = StateModel();
+
+  CityModel cityData = CityModel();
+  var data;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     isHome = false;
-    cartRepo.getStateAddressWithGet(context);
+    cartViewModel.getStateAddressWithGet(context);
+    cartViewModel.getCityAddressWithGet(context);
+    data = cartRepository.getCityAddressList();
+
+    print(data);
   }
 
   @override
@@ -110,7 +120,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 ),
                 padding: const EdgeInsets.all(20),
                 child: ChangeNotifierProvider<CartViewModel>.value(
-                    value: cartRepo,
+                    value: cartViewModel,
                     child: Consumer<CartViewModel>(
                         builder: (context, cartData, child) {
                       switch (cartData.getState.status) {
@@ -124,8 +134,9 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                           return Text(cartData.getState.message.toString());
                         case Status.COMPLETED:
                           print("Api calll");
+                          // List<StatePayload>? statePayloadList=   cartData.getState.data!.payload;
 
-                          return mainUi();
+                          return mainUi(cartData.getState.data!.payload!);
                       }
                       return Container(
                         height: height * .8,
@@ -146,13 +157,11 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
     );
   }
 
-  String countryValue = 'India';
-  String stateValue = '';
-  String cityValue = '';
-  String address = "";
-  GlobalKey<CSCPickerState> _cscPickerKey = GlobalKey();
+  var selectedStateId;
 
-  Widget mainUi() {
+  var selectedIndexOfState;
+
+  Widget mainUi(List<StatePayload> stateDetailList) {
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -160,6 +169,101 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              DropdownButtonHideUnderline(
+                  child: DropdownButtonFormField<StatePayload>(
+                //value: _companyDataResponseModel,
+                isDense: true,
+                onChanged: (StatePayload? newValue) {
+                  //   for(int i =0; i<stateDetailList.length; i++){
+                  //
+                  //   selectedState = newValue!.cities??[];
+                  // }
+                  setState(() {
+                    print("selected state" + newValue!.name.toString());
+                    selectedStateId = newValue.id;
+                  });
+                },
+                decoration: InputDecoration(
+                  // contentPadding:
+                  //     EdgeInsets.only(left: 15, top: 2, bottom: 2),
+                  border: OutlineInputBorder(),
+                ),
+                items: stateDetailList.map((StatePayload map) {
+                  return DropdownMenuItem<StatePayload>(
+                    value: map,
+                    child: Text(
+                      map.name.toString(),
+                      style: TextStyle(
+                        fontFamily: 'SegoeUi',
+                      ),
+                    ),
+                  );
+                }).toList(),
+              )),
+              ChangeNotifierProvider<CartViewModel>.value(
+                  value: cartViewModel,
+                  child: Consumer<CartViewModel>(
+                      builder: (context, cartData, child) {
+                    switch (cartData.getCity.status) {
+                      case Status.LOADING:
+                        print("Api load");
+
+                        return TextFieldUtils().circularBar(context);
+                      case Status.ERROR:
+                        print("Api error");
+
+                        return Text(cartData.getCity.message.toString());
+                      case Status.COMPLETED:
+                        print("Api calll");
+                        var citySelectedId;
+                        cartData.getCity.data!.payload!
+                            .map((CityPayloadData map) {
+                          citySelectedId = map.id;
+                        });
+                        // List<StatePayload>? statePayloadList=   cartData.getState.data!.payload;
+                        return DropdownButtonHideUnderline(
+                            child: DropdownButtonFormField<CityPayloadData>(
+                          isDense: true,
+                          onChanged: (CityPayloadData? newValue) {
+                            setState(() {});
+                          },
+                          decoration: InputDecoration(
+                            // contentPadding:
+                            //     EdgeInsets.only(left: 15, top: 2, bottom: 2),
+                            border: OutlineInputBorder(),
+                          ),
+                          items: cartData.getCity.data!.payload!
+                                  .map((CityPayloadData map) {
+                                return DropdownMenuItem<CityPayloadData>(
+                                  value: map,
+                                  child: selectedStateId == map.id
+                                      ? Text(
+                                          map.name.toString() ?? "",
+                                          style: TextStyle(
+                                            fontFamily: 'SegoeUi',
+                                          ),
+                                        )
+                                      : Text(''),
+                                );
+                              }).toList() ??
+                              [],
+                          // items: [],
+                        ));
+                    }
+                    return Container(
+                      height: height * .8,
+                      alignment: Alignment.center,
+                      child: TextFieldUtils().dynamicText(
+                          'No Match found!',
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              fontSize: height * .03,
+                              fontWeight: FontWeight.bold)),
+                    );
+                  })),
+
               //Full Name
               TextFieldUtils().asteriskTextField(StringUtils.fullName, context),
               CharacterTextFormFieldsWidget(
