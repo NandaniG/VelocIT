@@ -71,6 +71,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       ProductSpecificListViewModel();
   late Map<String, dynamic> data = new Map<String, dynamic>();
 
+  List<SingleModelMerchants> merchantList = [];
+
   @override
   void initState() {
     imageVariantIndex;
@@ -487,9 +489,11 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
   bool isMerchantfive = false;
   int indexOfMerchant = 0;
-  List<SingleModelMerchants> selectedMerchants = [];
+
+
 
   Widget merchantDetails(SingleProductPayload model) {
+    merchantList = model.merchants;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -497,24 +501,13 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
-            itemCount: isMerchantfive == false && model.merchants.length < 5
-                ? model.merchants.length
+            itemCount: isMerchantfive == false && merchantList.length < 5
+                ? merchantList.length
                 : isMerchantfive == true
-                    ? model.merchants.length
+                    ? merchantList.length
                     : 5,
             // itemCount: 5,
             itemBuilder: (BuildContext context, int index) {
-
-/*for(int i= 0; i<model.merchants.length; i++){
-  if(model.merchants[index].id! == indexOfMerchant){
-    selectedMerchants.add(model.merchants);
-
-  }
-
-}*/
-
-
-
               return Container(
                     // height: height*.02,
                     padding: const EdgeInsets.only(left: 14, right: 20),
@@ -539,30 +532,44 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   vertical: VisualDensity.minimumDensity,
                                 ),
                                 groupValue: _radioValue,
-                                onChanged: (value) {
+                                onChanged: (value) async {
+                                  List<SingleModelMerchants> tempMerchantList = [];
+
+                                  model.selectedMerchantId =
+                                      merchantList[index].id;
+                                  SingleModelMerchants selectedMerchant =
+                                      merchantList[index];
+                                  // merchantList = [];
+                                  tempMerchantList.add(selectedMerchant);
+                                  // merchantList.add(selectedMerchant);
+
+                               // await   model.merchants.map((e) {
+                               //      if(e.id!= selectedMerchant.id){
+                               //        merchantList.add(e);
+                               //      }
+                               //    } );
+
+                               for(int i =0; i<model.merchants.length; i++){
+
+                                 if(model.merchants[i].id!= selectedMerchant.id){
+                                   tempMerchantList.add(model.merchants[i]);
+                                 }
+                               }
                                   setState(() {
                                     _radioValue = value;
                                     indexOfMerchant = index;
-                                    model.merchants.add(SingleModelMerchants());
-                                    model.selectedMerchantId =
-                                        model.merchants[index].id;
-                                    // print("_radioValue"+_radioValue.toString());
+                                    merchantList = [];
+                                    merchantList= tempMerchantList;
+
                                   });
                                 },
-                                // title: Padding(
-                                //   padding: const EdgeInsets.only(left: 0),
-                                //   child: Text(model.merchants![0].merchantName!,
-                                //       style: TextStyle(fontFamily: 'Roboto',
-                                //           color: ThemeApp.blackColor,
-                                //           fontSize: MediaQuery.of(context).size.height * .02,
-                                //           fontWeight: FontWeight.w400)),
-                                // ),
+
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 0),
                               child: Text(
-                                      model.merchants[index].merchantName ?? "",
+                                      merchantList[index].merchantName ?? "",
                                       style: TextStyle(
                                           fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
@@ -580,8 +587,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               width: width * .08,
                             ),
                             Text(
-                                model.merchants![index].deliveryDays
-                                        .toString() +
+                                merchantList[index].deliveryDays.toString() +
                                     " Day(s)",
                                 style: TextStyle(
                                     fontFamily: 'Roboto',
@@ -593,11 +599,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     const EdgeInsets.only(right: 10, left: 10),
                                 height: height * .02,
                                 child: TextFieldUtils().lineVertical()),
-                            model.merchants![index].unitOfferPrice != null
+                            merchantList[index].unitOfferPrice != null
                                 ? Text(
-                                    indianRupeesFormat.format(double.parse(model
-                                            .merchants![index].unitOfferPrice
-                                            .toString()) ??
+                                    indianRupeesFormat.format(double.parse(
+                                            merchantList[index]
+                                                .unitOfferPrice
+                                                .toString()) ??
                                         0.0),
                                     style: TextStyle(
                                         fontFamily: 'Roboto',
@@ -640,7 +647,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 height: height * .02,
                                 child: TextFieldUtils().lineVertical()),
                             Text(
-                                model.merchants![index].unitDiscountPerc
+                                merchantList[index]
+                                        .unitDiscountPerc
                                         .toString() +
                                     "% Off",
                                 style: TextStyle(
@@ -658,7 +666,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     model,
                                     5,
                                     width * .3,
-                                    model.merchants![index].merchantRating!
+                                    merchantList[index]
+                                        .merchantRating!
                                         .toDouble()))
                           ],
                         ),
@@ -733,7 +742,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
           decoration: BoxDecoration(),
-          child: model.merchants!.length > 5 && isMerchantfive == false
+          child: merchantList.length > 5 && isMerchantfive == false
               ? InkWell(
                   onTap: () {
                     setState(() {

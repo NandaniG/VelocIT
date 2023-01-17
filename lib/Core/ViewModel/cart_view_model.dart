@@ -10,6 +10,7 @@ import '../Model/CartModels/CartCreateRetrieveModel.dart';
 import '../Model/CartModels/CartSpecificIDForEmbeddedModel.dart';
 import '../Model/CartModels/CartSpecificIdModel.dart';
 import '../Model/CartModels/SendCartForPaymentModel.dart';
+import '../Model/StateModel.dart';
 import '../data/responses/api_response.dart';
 import '../repository/cart_repository.dart';
 import 'package:http/http.dart'as http;
@@ -22,6 +23,7 @@ class CartViewModel with ChangeNotifier {
   ApiResponse<SendCartForPaymentModel> sendCartForPayment =
       ApiResponse.loading();
   ApiResponse<AddressListModel> getAddress = ApiResponse.loading();
+  ApiResponse<StateModel> getState = ApiResponse.loading();
 
   setCartSpecificIDList(ApiResponse<CartSpecificIdModel> response) {
     cartSpecificID = response;
@@ -41,6 +43,10 @@ class CartViewModel with ChangeNotifier {
 
   getAddressForPayment(ApiResponse<AddressListModel> response) {
     getAddress = response;
+    notifyListeners();
+  }
+  getStateAddress(ApiResponse<StateModel> response) {
+    getState = response;
     notifyListeners();
   }
 
@@ -85,6 +91,16 @@ int productBadge=0;
       getAddressForPayment(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       getAddressForPayment(ApiResponse.error(error.toString()));
+    });
+  }
+
+  Future<void> getStateAddressWithGet(BuildContext context) async {
+    getStateAddress(ApiResponse.loading());
+
+    _myRepo.getStateAddressList().then((value) async {
+      getStateAddress(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      getStateAddress(ApiResponse.error(error.toString()));
     });
   }
   ///

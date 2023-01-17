@@ -19,6 +19,7 @@ import '../Model/CartModels/CartSpecificIdModel.dart';
 import '../Model/CartModels/MergeCartModel.dart';
 import '../Model/CartModels/SendCartForPaymentModel.dart';
 import '../Model/CartModels/updateCartModel.dart';
+import '../Model/StateModel.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
 import 'package:http/http.dart'as http;
@@ -225,6 +226,22 @@ class CartRepository {
       print(" AddressListModel : " + response.toString());
 
       return response = AddressListModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<StateModel> getStateAddressList() async {
+    // var url = ApiMapping.getURI(apiEndPoint.address_list);
+    https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
+
+    var requestUrl = ApiMapping.BaseAPI +ApiMapping.StateAddress;
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(requestUrl);
+      print(" State AddressListModel : " + response.toString());
+
+      return response = StateModel.fromJson(response);
     } catch (e) {
       throw e;
     }

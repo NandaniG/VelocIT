@@ -32,6 +32,7 @@ import 'package:velocit/utils/styles.dart';
 import 'package:velocit/utils/utils.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 import 'Core/ViewModel/OrderBasket_viewmodel.dart';
+import 'Core/ViewModel/cart_view_model.dart';
 import 'Core/ViewModel/dashboard_view_model.dart';
 import 'Core/ViewModel/product_listing_view_model.dart';
 import 'L10n/l10n.dart';
@@ -99,6 +100,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => OrderBasketViewModel(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => CartViewModel(),
           ),
 
           // ChangeNotifierProvider(create: (_) => ProductsVM(),),
