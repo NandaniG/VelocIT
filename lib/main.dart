@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,6 +32,7 @@ import 'package:velocit/utils/styles.dart';
 import 'package:velocit/utils/utils.dart';
 import 'package:velocit/widgets/global/textFormFields.dart';
 import 'Core/ViewModel/OrderBasket_viewmodel.dart';
+import 'Core/ViewModel/cart_view_model.dart';
 import 'Core/ViewModel/dashboard_view_model.dart';
 import 'Core/ViewModel/product_listing_view_model.dart';
 import 'L10n/l10n.dart';
@@ -58,10 +59,8 @@ getpref() async {
   StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
   //
 
-
   var testId = await prefs.getString(StringConstant.testId);
   print("on loging testId : " + testId.toString());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -83,7 +82,6 @@ class MyApp extends StatelessWidget {
     // productViewModel.productSpecificListWithGet(context, data);
     return MultiProvider(
         providers: [
-
           ChangeNotifierProvider(
             create: (_) => DashboardViewModel(),
           ),
@@ -96,19 +94,20 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (_) => HomeProvider(),
           ),
-          ChangeNotifierProvider(
-            create: (_) => CartManageProvider(),
-          ),
+
           ChangeNotifierProvider(
             create: (_) => ProductProvider(),
-          ),ChangeNotifierProvider(
+          ),
+          ChangeNotifierProvider(
             create: (_) => OrderBasketViewModel(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => CartViewModel(),
           ),
 
           // ChangeNotifierProvider(create: (_) => ProductsVM(),),
         ],
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
-
           return Consumer<ProductProvider>(builder: (context, value, child) {
             // return Consumer<LocaleProvider>(
             //     builder: (context, localeProvider, snapshot) {
@@ -128,14 +127,14 @@ class MyApp extends StatelessWidget {
                   Theme.of(context).textTheme,
                 ),
                 primarySwatch: colorCustomForMaterialApp,
-              ),color: ThemeApp.appColor,
+              ),
+              color: ThemeApp.appColor,
               debugShowCheckedModeBanner: false,
               // home: ForgotPassword(),
               // initialRoute: StringConstant.isLogIn != true?RoutesName.signInRoute:RoutesName.dashboardRoute,
               initialRoute: RoutesName.splashScreenRoute,
               onGenerateRoute: Routes.generateRoute,
               routes: {
-
                 // '/': (context) => StringConstant.isLogIn != true
                 //     ? SignIn_Screen()
                 //     : DashboardScreen(),
@@ -162,7 +161,6 @@ class MyApp extends StatelessWidget {
                 '/cartScreen': (context) => CartDetailsActivity(),
                 // '/orderReviewSubActivity': (context) => OrderReviewSubActivity(
                 //     cartPayLoad: value, cartListFromHome: provider.productList),
-
               },
             );
             // });
@@ -187,9 +185,10 @@ class _SplashScreenState extends State<SplashScreen> {
     getCurrentLocation();
   }
 
-  startTime() async {    final prefs = await SharedPreferences.getInstance();
+  startTime() async {
+    final prefs = await SharedPreferences.getInstance();
 
-  var loginId = await Prefs.instance.getToken(StringConstant.userId);
+    var loginId = await Prefs.instance.getToken(StringConstant.userId);
     StringConstant.BadgeCounterValue =
         (prefs.getString('setBadgeCountPrefs')) ?? '';
     print("Splash LoginId : " + loginId.toString());
@@ -202,16 +201,19 @@ class _SplashScreenState extends State<SplashScreen> {
     _loadCounter();
     // Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
   }
+
   late Random rnd;
   var min = 100000000;
-  int max = 1000000000; var ID;  String finalId = '';
+  int max = 1000000000;
+  var ID;
+  String finalId = '';
 
   Future<void> _loadCounter() async {
-
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-
       StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
+      StringConstant.FINALPINCODE =
+          (prefs.getString('CurrentPinCodePref')) ?? '';
       print("IS USER LOGGEDIN ..............." +
           StringConstant.isUserLoggedIn.toString());
 
@@ -221,35 +223,45 @@ class _SplashScreenState extends State<SplashScreen> {
       print("USER LOGIN ID..............." +
           StringConstant.UserLoginId.toString());
 
-if(StringConstant.UserLoginId==''){
-      if ((StringConstant.RandomUserLoginId == '' ||
-          StringConstant.RandomUserLoginId == null)) {
-        print('login user is GUEST');
-        rnd = new Random();
-        var r = min + rnd.nextInt(max - min);
+      if (StringConstant.UserLoginId == '') {
+        if ((StringConstant.RandomUserLoginId == '' ||
+            StringConstant.RandomUserLoginId == null)) {
+          print('login user is GUEST');
+          rnd = new Random();
+          var r = min + rnd.nextInt(max - min);
 
-        print("$r is in the range of $min and $max");
-        ID = r;
-        print("cartId empty" + ID.toString());
+          print("$r is in the range of $min and $max");
+          ID = r;
+          print("cartId empty" + ID.toString());
+        } else {
+          print('login user is GUEST'); // ID = StringConstant.UserLoginId;
+          ID = StringConstant.UserLoginId.toString();
+        }
       } else {
-        print('login user is GUEST');        // ID = StringConstant.UserLoginId;
+        print('login user is not GUEST');
+        print("RandomUserLoginId empty");
+        // ID = StringConstant.UserLoginId;
         ID = StringConstant.UserLoginId.toString();
-      }}else {   print('login user is not GUEST');
-  print("RandomUserLoginId empty");
-  // ID = StringConstant.UserLoginId;
-  ID = StringConstant.UserLoginId.toString();
-}
+      }
       // 715223688
       finalId = ID.toString();
       prefs.setString('RandomUserId', finalId.toString());
 
       print('finalId  RandomUserLoginId' + finalId);
-      if (StringConstant.isUserLoggedIn != 0) {
-        Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
-      } else {
-        Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
 
-      print("Not Logged in");
+      if (StringConstant.isUserLoggedIn != 0) {
+        Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute)
+            .then((value) {
+          StringConstant.FINALPINCODE;
+        });
+      } else {
+        Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute)
+            .then((value) {
+          StringConstant.FINALPINCODE;
+        });
+        // StringConstant.FINALPINCODE =
+        //     (prefs.getString('CurrentPinCodePref')) ?? '';
+        print("Not Logged in");
         // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
       }
     });
@@ -258,9 +270,7 @@ if(StringConstant.UserLoginId==''){
   var locationMessage = "";
   String addressPincode = "";
 
-
-  Future getCurrentLocation() async{
-
+  Future getCurrentLocation() async {
     LocationPermission? permission;
 
     permission = await Geolocator.checkPermission();
@@ -275,8 +285,8 @@ if(StringConstant.UserLoginId==''){
     var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
-    var lastPosition =  await Geolocator.getLastKnownPosition();
-    print("lastPosition"+lastPosition.toString());
+    var lastPosition = await Geolocator.getLastKnownPosition();
+    print("lastPosition" + lastPosition.toString());
     startTime();
 
     setState(() {
@@ -285,10 +295,9 @@ if(StringConstant.UserLoginId==''){
       //     position.latitude, position.longitude);
     });
 
-    _getAddress(
-        position.latitude, position.longitude);
-
+    _getAddress(position.latitude, position.longitude);
   }
+
   Future<String> _getAddress(double? lat, double? lang) async {
     print("address.streetAddress");
     if (lat == null || lang == null) return "";
@@ -302,9 +311,10 @@ if(StringConstant.UserLoginId==''){
     }
     
     addressPincode = address.postal.toString();
-    print("address.streetAddress"+address.streetAddress.toString());
-    print("address.streetAddress"+address.region.toString());
-    print("address.streetAddress"+address.toString());
+    print("address.streetAddress" + address.streetAddress.toString());
+    print("address.streetAddress" + address.region.toString());
+    print("address.streetAddress" + address.toString());
+    print("address.streetAddress" + address.toString());
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('CurrentPinCodePref', addressPincode.toString());
@@ -320,8 +330,8 @@ if(StringConstant.UserLoginId==''){
         body: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-                begin: FractionalOffset.topCenter,
-                end: FractionalOffset.bottomCenter,
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
               // end: Alignment(0.8, 1),
               colors: <Color>[
                 Color(0xff95EAF1),
@@ -331,7 +341,8 @@ if(StringConstant.UserLoginId==''){
                 Color(0xff007896),
                 // Color(0xff3AA17E),
                 // Color(0xff3AA17E),
-              ], // Gradient from https://learnui.design/tools/gradient-generator.html
+              ],
+              // Gradient from https://learnui.design/tools/gradient-generator.html
               tileMode: TileMode.mirror,
             ),
           ),
@@ -355,8 +366,6 @@ if(StringConstant.UserLoginId==''){
   }
 }
 
-
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -379,7 +388,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .get(Uri.parse("http://www.postalpincode.in/api/pincode/$pincode"))
         .then((http.Response response) {
       final String res = response.body;
-      print('res'+res.toString());
+      print('res' + res.toString());
       final int statusCode = response.statusCode;
 
       if (statusCode < 200 || statusCode > 400) {
@@ -410,7 +419,7 @@ class _MyHomePageState extends State<MyHomePage> {
               key: GlobalKey<FormState>(),
               decoration: InputDecoration(
                 contentPadding:
-                EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    EdgeInsets.symmetric(vertical: 6, horizontal: 12),
                 labelText: "Pincode",
                 floatingLabelBehavior: FloatingLabelBehavior.auto,
               ),
@@ -419,28 +428,33 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(status,
-                  style: TextStyle(fontFamily: 'Roboto',fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
             ),
             Expanded(
-              child: status!='No records found' ?ListView.builder(
-                padding: EdgeInsets.all(10.0),
-                itemCount: locations.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final Location location = locations.elementAt(index);
+              child: status != 'No records found'
+                  ? ListView.builder(
+                      padding: EdgeInsets.all(10.0),
+                      itemCount: locations.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final Location location = locations.elementAt(index);
 
-                  return Card(
-                    child: ListTile(
-                      title: Text(location.name),
-                      subtitle: Text('District: ' +
-                          location.district +
-                          '\nTaluk: ' +
-                          location.taluka +
-                          '\nState: ' +
-                          location.state),
-                    ),
-                  );
-                },
-              ):Text(""),
+                        return Card(
+                          child: ListTile(
+                            title: Text(location.name),
+                            subtitle: Text('District: ' +
+                                location.district +
+                                '\nTaluk: ' +
+                                location.taluka +
+                                '\nState: ' +
+                                location.state),
+                          ),
+                        );
+                      },
+                    )
+                  : Text(""),
             )
           ],
         ),
@@ -448,6 +462,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 class Location {
   String name;
   String district;
@@ -455,10 +470,10 @@ class Location {
   String region;
   String state;
 
-  Location(this.name, this.district,this.taluka, this.region, this.state);
+  Location(this.name, this.district, this.taluka, this.region, this.state);
 
   factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-        json['Name'], json['District'],json['Taluk'], json['Region'], json['State']);
+    return Location(json['Name'], json['District'], json['Taluk'],
+        json['Region'], json['State']);
   }
 }

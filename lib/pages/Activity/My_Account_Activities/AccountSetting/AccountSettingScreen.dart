@@ -66,8 +66,8 @@ class _AccountSettingScreenState extends State<AccountSettingScreen> {
                           child: Switch(
                             // This bool value toggles the switch.
                             value: value.accountSettings["isPushNotifications"],
-                            activeColor: ThemeApp.appColor,
-                            inactiveTrackColor: ThemeApp.appColor,
+                            activeColor: ThemeApp.appLightColor,
+                            inactiveTrackColor: ThemeApp.appLightColor,
                             inactiveThumbColor: ThemeApp.whiteColor,
                             onChanged: (bool val) {
                               // This is called when the user toggles the switch.

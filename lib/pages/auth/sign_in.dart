@@ -138,7 +138,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               });
                             },
                           ),
-                        ),
+                        ),SizedBox(     width: 10,),
                         const Text("Email",
                             style: TextStyle(
                               fontFamily: 'Roboto',
@@ -146,23 +146,27 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                               overflow: TextOverflow.ellipsis,
-                            )),
-                        Radio(
-                          value: 2,
-                          groupValue: _radioIndex,
-                          activeColor: ThemeApp.appColor,
-                          onChanged: (value) {
-                            setState(() {
-                              _usingPassVisible = true;
-                              _usingPassVisible = !_usingPassVisible;
-                              email.clear();
-                              password.clear();
-                              _radioIndex = value as int;
-                              _radioVal = 'Phone';
-                              print(_radioVal);
-                            });
-                          },
-                        ),
+                            )),SizedBox(     width: 14,),
+                        SizedBox(
+                          width: 25,
+
+                          child: Radio(
+                            value: 2,
+                            groupValue: _radioIndex,
+                            activeColor: ThemeApp.appColor,
+                            onChanged: (value) {
+                              setState(() {
+                                _usingPassVisible = true;
+                                _usingPassVisible = !_usingPassVisible;
+                                email.clear();
+                                password.clear();
+                                _radioIndex = value as int;
+                                _radioVal = 'Phone';
+                                print(_radioVal);
+                              });
+                            },
+                          ),
+                        ),SizedBox(     width: 10,),
                         const Text("Phone Number",
                             style: TextStyle(
                               fontFamily: 'Roboto',
@@ -257,7 +261,8 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             StringUtils.mobileNumber, context),*/
 
                     _radioIndex == 1
-                        ? /*EmailTextFormFieldsWidget(
+                        ?
+                    EmailTextFormFieldsWidget(
                             errorText: StringUtils.validEmailError,
                             textInputType: TextInputType.text,
                             controller: email,
@@ -301,8 +306,10 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 _validateEmail = false;
                               }
                               return null;
-                            })*/
-                    TextFormFieldsWidget(
+                            })
+           //both email and phone
+
+              /*      TextFormFieldsWidget(
                         errorText:StringUtils.validEmailError,
                         textInputType: TextInputType.emailAddress,
                         controller: email,
@@ -350,7 +357,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             _validateEmail = false;
                           }
                           return null;
-                        })
+                        })*/
                         : const SizedBox(
                             height: 0,
                           ),
@@ -359,7 +366,9 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             height: 0,
                           )
                         :
-                    TextFormFieldsWidget(
+                        //using both email phone
+
+                   /* TextFormFieldsWidget(
                         errorText:StringUtils.validemailORMobileError,
                         textInputType: TextInputType.emailAddress,
                         controller: mobileController,
@@ -407,7 +416,9 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             _validateMobile = false;
                           }
                           return null;
-                        }),/* MobileNumberTextFormField(
+                        }),*/
+
+                     MobileNumberTextFormField(
                         errorText: StringUtils.enterMobileNumber,
                         controller: mobileController,
                         enable: true,
@@ -431,7 +442,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             _validateMobile = false;
                           }
                           return null;
-                        }),*/
+                        }),
 
                     _radioIndex == 1
                         ? SizedBox(

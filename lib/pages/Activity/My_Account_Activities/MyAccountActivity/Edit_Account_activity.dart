@@ -132,8 +132,8 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                     children: [
                       Center(
                         child: Container(
-                          width: 130.0,
-                          height: 130.0,
+                          width: 110.0,
+                          height: 110.0,
                           decoration: new BoxDecoration(
                             boxShadow: [
                               BoxShadow(
@@ -151,8 +151,8 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                             child: Image.file(
                               imageFile1!,
                               fit: BoxFit.fill,
-                              width: 130.0,
-                              height: 130.0,
+                              width: 110.0,
+                              height: 110.0,
                               errorBuilder: (context, error,
                                   stackTrace) {
                                 return Icon(
@@ -166,7 +166,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                         ),
                       ),
                       Positioned(
-                        bottom: 0, right: width * .32,
+                        bottom: 0, right: width/ 2.7,
                         // width: 130.0,
 
                         // height: 40.0,
@@ -175,8 +175,8 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                               _getFromCamera();
                             },
                             child: Container(
-                              height: height * .06,
-                              width: width * .11,
+                              height: 32,
+                              width: 32,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
                                   color: ThemeApp.appColor),
@@ -199,8 +199,8 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                     children: [
                       Center(
                         child: Container(
-                          width: 130.0,
-                          height: 130.0,
+                          width: 110.0,
+                          height: 110.0,
                           decoration: new BoxDecoration(
                             boxShadow: [
                               BoxShadow(
@@ -219,8 +219,8 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                             child: Image.file(
                               File(StringConstant.ProfilePhoto),
                               fit: BoxFit.fill,
-                              width: 130.0,
-                              height: 130.0,     errorBuilder: (context, error,
+                              width: 110.0,
+                              height: 110.0,     errorBuilder: (context, error,
                                 stackTrace) {
                               return Icon(
                                 Icons.image,
@@ -233,7 +233,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                         ),
                       ),
                       Positioned(
-                        bottom: 0, right: width * .32,
+                        bottom: 0, right: width/ 2.7,
                         // width: 130.0,
 
                         // height: 40.0,
@@ -242,8 +242,8 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                               _getFromCamera();
                             },
                             child: Container(
-                              height: height * .06,
-                              width: width * .11,
+                              height: 32,
+                              width: 32,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
                                   color: ThemeApp.appColor),

@@ -114,7 +114,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     productListView.recommendedWithGet(0, 10);
     productListView.bestDealWithGet(0, 10);
     _isProductListChip = true;
-    getPincode();
+    // getPincode();
     StringConstant.controllerSpeechToText.clear();
     Provider.of<HomeProvider>(context, listen: false).loadJson();
   }
@@ -126,7 +126,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      // StringConstant.CurrentPinCode = (prefs.getString('CurrentPinCodePref') ?? '');
+      StringConstant.FINALPINCODE = (prefs.getString('CurrentPinCodePref') ?? '');
+      print(
+          "placesFromCurrentLocation FINALPINCODE pref...${StringConstant.FINALPINCODE.toString()}");
 
       print("StringConstant.CurrentPinCode");
       StringConstant.isUserLoggedIn = (prefs.getInt(isUserLoginPref) ?? 0);
@@ -169,7 +171,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   var finalPINCODE = '';
 
-  getPincode() async {
+/*  getPincode() async {
     var loginId = await Prefs.instance.getToken(StringConstant.userId);
     setState(() {});
     await Prefs.instance.getToken(StringConstant.pinCodePref);
@@ -177,21 +179,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         (await Prefs.instance.getToken(StringConstant.pinCodePref))!;
     final prefs = await SharedPreferences.getInstance();
 
-    StringConstant.CurrentPinCode =
-        (prefs.getString('CurrentPinCodePref') ?? '');
+    // StringConstant.CurrentPinCode =
+    //     (prefs.getString('CurrentPinCodePref') ?? '');
 
     if (StringConstant.placesFromCurrentLocation != null ||
         StringConstant.placesFromCurrentLocation != '' ||
         StringConstant.placesFromCurrentLocation.isNotEmpty) {
       StringConstant.FINALPINCODE = StringConstant.placesFromCurrentLocation;
     } else {
-      StringConstant.FINALPINCODE = StringConstant.CurrentPinCode;
+      StringConstant.FINALPINCODE = StringConstant.FINALPINCODE;
     }
     // StringConstant.FINALPINCODE = StringConstant.CurrentPinCode;
 
     print(
-        "placesFromCurrentLocation pref...${StringConstant.CurrentPinCode.toString()}");
-  }
+        "placesFromCurrentLocation pref...${StringConstant.FINALPINCODE.toString()}");
+  }*/
 
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
@@ -298,8 +300,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       SizedBox(
                                         height: height * .02,
                                       ),
-                                      stepperOfDelivery(provider),
-                                      SizedBox(
+                                      StringConstant.UserLoginId == ''?SizedBox():   stepperOfDelivery(provider),
+                                      StringConstant.UserLoginId ==''?SizedBox():   SizedBox(
                                         height: 20,
                                       ),
                                       productDetailsUI(),
@@ -726,28 +728,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         textColor: Colors.black,
                                         title: Row(
                                           children: [
-                                 /*           CircleAvatar(
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(50)),
-                                                child: Image.network(
-                                                  serviceList[index]
-                                                      .productCategoryImageId!,
-                                                  // fit: BoxFit.fill,
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                      .07,
-                                                ),
-                                              ),
-                                            ),*/
-                                            SvgPicture.asset(
-                                              'assets/appImages/appliancesIcon.svg',
-
+                                            Container(
+                                              color: ThemeApp
+                                                .containerColor,
                                               height: 17,
-                                              width: 26,
-                                            ),
+                                              width: 19,
+                                            child: Image.network(
+                                                    serviceList[index]
+                                                        .productCategoryImageId!,
+                                                    // fit: BoxFit.fill,
+
+                                                  ),
+                                          ),
+
+                                            // SvgPicture.asset(
+                                            //   'assets/appImages/appliancesIcon.svg',
+                                            //
+                                            //   height: 17,
+                                            //   width: 26,
+                                            // ),
                                             SizedBox(
                                               width: 16,
                                             ),
@@ -993,12 +992,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SvgPicture.asset(
+                    /*      SvgPicture.asset(
                             'assets/appImages/televisionIcon.svg',
                             color: ThemeApp.blackColor,
 
                             height: 17,
                             width: 19,
+                          ),*/
+                          Container( color: ThemeApp
+                              .appColor,
+                            height: 17,
+                            width: 19,
+                            // borderRadius:
+                            // const BorderRadius.all(
+                            //     Radius.circular(50)),
+                            child: Image.network(
+                              productList.simpleSubCats![index]
+                                  .imageUrl ??
+                                  "",
+                              // fit: BoxFit.fill,
+                              height: 17,
+                              width: 19,
+                              errorBuilder:
+                                  (context, error,
+                                  stackTrace) {
+                                return Container(
+                                  height: 17,
+                                  width: 19,
+                                  child: Icon(
+                                    Icons.image,
+                                    color: ThemeApp
+                                        .whiteColor,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
 SizedBox(height: 6,),
                    subCategoryListFont(
@@ -1556,9 +1584,10 @@ SizedBox(height: 6,),
   int indexForItems = 0;
 
   Widget stepperOfDelivery(HomeProvider value) {
-    return (value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
-            value.jsonData.isNotEmpty)
-        ? Container(
+    return /*(value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
+            value.jsonData.isNotEmpty)*/
+      value.jsonData['status']=="EXCEPTION"? Text("No data found"):
+       Container(
             // height: 300,
             height: 160,
             child: ListView.builder(
@@ -1576,7 +1605,7 @@ SizedBox(height: 6,),
                   // DateTime.parse(order['earliest_delivery_date']);
                   // var earliest_delivery_date = format.format(date);
 
-                  return ListView.builder(
+                  return value.jsonData['payload']['consumer_baskets'].length-1<0 ?CircularProgressIndicator():ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemCount: value
@@ -1649,10 +1678,10 @@ SizedBox(height: 6,),
                         );
                       });
                 }),
-          )
-        : value.jsonData['error'] != null
+          );
+      /*  : value.jsonData['error'] != null
             ? Container()
-            : Center(child: CircularProgressIndicator());
+            : Center(child: CircularProgressIndicator());*/
   }
 
   Widget stepperWidget(Map subOrders) {

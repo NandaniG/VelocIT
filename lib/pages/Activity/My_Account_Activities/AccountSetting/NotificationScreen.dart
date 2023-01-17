@@ -66,8 +66,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   child: Switch(
                     // This bool value toggles the switch.
                     value: isGridView,
-                    activeColor: ThemeApp.appColor,
-                    inactiveTrackColor: ThemeApp.appColor,
+                    activeColor: ThemeApp.appLightColor,
+                    inactiveTrackColor: ThemeApp.appLightColor,
                     inactiveThumbColor: ThemeApp.whiteColor,
                     onChanged: (bool val) {
                       // This is called when the user toggles the switch.

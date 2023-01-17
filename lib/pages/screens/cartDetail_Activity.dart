@@ -58,9 +58,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    getCartDetailsFromPref();
     // getListFromPref();
-    getCartId();
+    // getCartId();
     // dateFormat();
     /*  if (kDebugMode) {
       print("widget.cartDetailScreen[]${widget.productList}");
@@ -129,8 +129,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     final String formatted = serverFormater.format(displayDate);
     return formatted;
   }
+  var data;
 
-  getCartId() async {
+/*  getCartId() async {
     final prefs = await SharedPreferences.getInstance();
 
     StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
@@ -140,6 +141,47 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     setState(() {});
     await cartListView.cartSpecificIDWithGet(
         context, StringConstant.UserCartID);
+  }*/
+  Future<void> getCartDetailsFromPref() async {
+
+    final prefs = await SharedPreferences.getInstance();
+
+      StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
+
+      StringConstant.RandomUserLoginId =
+          (prefs.getString('RandomUserId')) ?? '';
+
+      print("IS USER LOG-IN ..............." +
+          StringConstant.isUserLoggedIn.toString());
+      print("ISRANDOM ID............" +
+          StringConstant.RandomUserLoginId.toString());
+
+      StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+      var userLoginId = StringConstant.UserLoginId;
+
+      var userRandomId = StringConstant.RandomUserLoginId;
+
+      print("USER LOGIN ID..............." +
+          StringConstant.UserLoginId.toString());
+
+      if (StringConstant.UserLoginId == '') {
+        data = {'userId': userRandomId};
+        print('login user is GUEST');
+      } else {
+        data = {'userId': userLoginId};
+        print('login user is NOT GUEST');
+
+      }
+      //597723544
+      print("cart data pass in cart: " + data.toString());
+      CartRepository().cartPostRequest(data, context);
+
+      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+      setState(() {});
+      await cartListView.cartSpecificIDWithGet(
+          context, StringConstant.UserCartID);
+      print("cartId from Pref" + StringConstant.UserCartID.toString());
+
   }
 
   @override
@@ -181,7 +223,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     print("update cart DATA" + data.toString());
     setState(() {});
     await CartRepository().updateCartPostRequest(data, context);
-    getCartId();
+    getCartDetailsFromPref();
+    // getCartId();
 
 /*    for (int i = 0; i < value!.length; i++) {
       StringConstant.BadgeCounterValue =
@@ -418,7 +461,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                           .itemQty
                                                           .toString());
 
-                                                  Map data = {
+                                           /*       Map data = {
                                                     'user_id': cartProvider
                                                         .cartSpecificID
                                                         .data!
@@ -436,7 +479,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                         .payload!
                                                         .ordersForPurchase![i]
                                                         .itemQty
-                                                  };
+                                                  };*/
 
                                                   Navigator.pushNamed(context,
                                                       RoutesName.signInRoute);
@@ -660,6 +703,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   case Status.LOADING:
                     print("Api load");
 
+                    return TextFieldUtils().circularBar(context);
                     return TextFieldUtils().circularBar(context);
                   case Status.ERROR:
                     print("Api error");
@@ -1052,9 +1096,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              value.offer.toString().isNotEmpty
+              value.unitOffer.toString().isNotEmpty
                   ? Text(
-                      "${indianRupeesFormat.format(double.parse(value.offer.toString()) ?? 0.0) ?? "0.0"}",
+                      "${indianRupeesFormat.format(double.parse(value.unitOffer.toString()) ?? 0.0) ?? "0.0"}",
                       style: TextStyle(
                           fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
@@ -1115,7 +1159,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       fontWeight: FontWeight.w500)),
               value.mrp.toString().isNotEmpty
                   ? Text(
-                      "${indianRupeesFormat.format(double.parse(value.mrp.toString()) ?? 0.0) ?? "0.0"}",
+                      "${indianRupeesFormat.format(double.parse(value.unitMrp.toString()) ?? 0.0) ?? "0.0"}",
                       style: TextStyle(
                           fontFamily: 'Roboto',
                           color: ThemeApp.lightFontColor,

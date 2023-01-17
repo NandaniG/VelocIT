@@ -434,6 +434,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
       );
 
   }
+
 var vendortRating = 0.0;
 var productRating = 0.0;
   Widget vendorRattingBar() {

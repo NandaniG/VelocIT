@@ -602,6 +602,7 @@ Widget addressWidget(BuildContext context, String addressString) {
   double width = 0.0;
   height = MediaQuery.of(context).size.height;
   width = MediaQuery.of(context).size.width;
+  String pc='';
   return InkWell(
     onTap: () {
       showDialog(
@@ -650,13 +651,24 @@ Widget addressWidget(BuildContext context, String addressString) {
             ),
             SizedBox(
               child: TextFieldUtils().dynamicText(
-                  "Deliver to - ${StringConstant.FINALPINCODE.toString().isEmpty ? StringConstant.CurrentPinCode.toString() : StringConstant.FINALPINCODE} ",
+
+                  "Deliver to - ${StringConstant.FINALPINCODE} ",
                   context,
                   TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.tealButtonColor,
                       fontSize: 12,
                       fontWeight: FontWeight.w400)),
             ),
+         /*   SizedBox(
+              child: TextFieldUtils().dynamicText(
+
+                  "Deliver to - ${StringConstant.FINALPINCODE.toString().isEmpty ? StringConstant.CurrentPinCode.toString() : StringConstant.FINALPINCODE} ",
+                  context,
+                  TextStyle(fontFamily: 'Roboto',
+                      color: ThemeApp.tealButtonColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400)),
+            ),*/
             //Text(StringConstant.placesFromCurrentLocation),
             SizedBox(
               width: width * .01,

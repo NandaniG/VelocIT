@@ -8,7 +8,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
-import 'package:velocit/services/models/JsonModelForApp/SignIn.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
@@ -171,20 +170,20 @@ class _SignUpState extends State<SignUp> {
                           Tooltip(
                             key: tooltipkey,
                             message:
-                                'Enter Password that must be\no 8-16 characters long\no Must contain a number\no Must contain a capital and small letter\no Must contain a special character',
-                            padding: const EdgeInsets.all(30),
+                                'Enter Password that must be\n\u2022 8-16 characters long\n\u2022 Must contain a number\n\u2022 Must contain a capital and small letter\n\u2022 Must contain a special character',
+                            padding: const EdgeInsets.all(15),
                             margin: const EdgeInsets.only(
                                 top: 30, left: 30, right: 30),
                             triggerMode: TooltipTriggerMode.tap,
                             showDuration: const Duration(seconds: 2),
                             decoration: BoxDecoration(
                                 color: ThemeApp.appColor,
-                                borderRadius: BorderRadius.circular(22)),
+                                borderRadius: BorderRadius.circular(10)),
                             textStyle: const TextStyle(
                                 fontFamily: 'Roboto',
-                                fontSize: 16,
+                                fontSize: 12,
                                 letterSpacing: 1.2,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.white),
                             child: Icon(Icons.info_outline),
                           )
@@ -738,11 +737,11 @@ class _SignUpState extends State<SignUp> {
     // todo - you should check the response.statusCode
     dynamic reply = await response.transform(utf8.decoder).join();
     String rawJson = reply.toString();
-    Utils.successToast(rawJson.toString());
+    // Utils.successToast(rawJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
-    // String name = map['message'];
-    // Utils.successToast(name.toString());
+    String name = map['message'];
+    Utils.successToast(name.toString());
     // print("SignUp response " + name.toString());
 
     if (response.statusCode == 200) {
