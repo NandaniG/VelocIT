@@ -47,5 +47,17 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>location required for app</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>location required for app</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>location required for app</string>
+	<key>NSCameraUsageDescription</key>
+	<string>camera required for app</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>mic required for app</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo library required for app</string>
 </dict>
 </plist>

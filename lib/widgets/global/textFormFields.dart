@@ -1223,9 +1223,10 @@ class TextFieldUtils {
     return Text(
       text,
       maxLines: 2,
+      softWrap: true,
       style: TextStyle(
           fontFamily: 'Roboto',
-          fontSize: MediaQuery.of(context).size.height * .013,
+          fontSize: 12,
           fontWeight: FontWeight.w500,
           overflow: TextOverflow.ellipsis,
           color: color),

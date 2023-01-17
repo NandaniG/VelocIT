@@ -232,10 +232,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     print("address.streetAddress");
     if (lat == null || lang == null) return "";
     GeoCode geoCode = GeoCode();
-    Address address =
-        await geoCode.reverseGeocoding(latitude: lat, longitude: lang);
+    Address address = Address();
+    try {
+     address =
+        await geoCode.reverseGeocoding(latitude: lat, longitude: lang); 
+    } catch (e) {
+      print(e);
+    }
     print("address.streetAddress" + address.streetAddress.toString());
-    addressPincode = address.postal!.toString();
+    addressPincode = address.postal.toString();
     return "${address.streetAddress}, ${address.city}, ${address.countryName}, ${address.postal}";
   }
 
@@ -1555,7 +1560,7 @@ SizedBox(height: 6,),
             value.jsonData.isNotEmpty)
         ? Container(
             // height: 300,
-            height: 161,
+            height: 160,
             child: ListView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
@@ -1605,7 +1610,7 @@ SizedBox(height: 6,),
                                     children: [
                                       ClipRRect(
                                           borderRadius: const BorderRadius.all(
-                                              Radius.circular(50)),
+                                              Radius.circular(0)),
                                           child: Image.network(
                                             // width: double.infinity,
                                             subOrders['image_url'] ?? "",
@@ -1614,10 +1619,8 @@ SizedBox(height: 6,),
                                                 ((context, error, stackTrace) {
                                               return Icon(Icons.image_outlined);
                                             }),
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                .055,
+                                            height: 42,
+                                            width: 45,
                                           )),
                                       SizedBox(
                                         width: 9,
@@ -1637,6 +1640,9 @@ SizedBox(height: 6,),
                                       ),
                                     ],
                                   ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
                                   stepperWidget(subOrders),
                                 ],
                               )),
@@ -1651,7 +1657,7 @@ SizedBox(height: 6,),
 
   Widget stepperWidget(Map subOrders) {
     return Container(
-        height: height * .1,
+        height: 80,
         width: width,
         alignment: Alignment.center,
         child: Column(
@@ -1660,7 +1666,7 @@ SizedBox(height: 6,),
           children: <Widget>[
             Flexible(child: _iconViews(context, subOrders)),
             const SizedBox(
-              height: 8,
+              height: 1,
             ),
             Flexible(child: _titleViews(context, subOrders)),
             Flexible(child: _stepsViews(context, subOrders)),
@@ -2730,14 +2736,16 @@ SizedBox(height: 6,),
 
               return Container(
                 height: serviceList!.length > 2 ? 420 : 240,
+                // height: ,
+                // color: Colors.yellow,
                 child: GridView(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 12,
-                      // childAspectRatio: 1.0,
-                      childAspectRatio:
-                          MediaQuery.of(context).size.height / 800,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 0,
+                      // childAspectRatio: 0.9,
+                      // childAspectRatio:
+                          // MediaQuery.of(context).size.height / 800,
                     ),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -2745,8 +2753,8 @@ SizedBox(height: 6,),
                         serviceList!.length >= 4 ? 4 : serviceList!.length,
                         (index) {
                       return Container(
-                        // height: 191,
-                        // width: 191,
+                        height: 200,
+                        width: 200,
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).push(
@@ -2759,11 +2767,11 @@ SizedBox(height: 6,),
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                height: 141,
-                                width: 191,
+                                height: 130,
+                                width: 200,
                                 decoration: const BoxDecoration(
                                   color: ThemeApp.whiteColor,
                                   // borderRadius: BorderRadius.only(
@@ -2780,8 +2788,8 @@ SizedBox(height: 6,),
                                   // fit: BoxFit.fill,
                                   errorBuilder: ((context, error, stackTrace) {
                                     return Container(
-                                        height: 141,
-                                        width: 191,
+                                        height: 130,
+                                width: 200,
                                         color: ThemeApp.whiteColor,
                                         child: Icon(
                                           Icons.image_outlined,
@@ -2795,15 +2803,16 @@ SizedBox(height: 6,),
                               Container(
                                 color: ThemeApp.tealButtonColor,
                                 width: 191,
-                                // height: 65,
+                                // height: 45,
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          21, 10, 21, 0),
+                                      margin: EdgeInsets.only(left: 10,right: 10),
+                                      // padding: const EdgeInsets.fromLTRB(
+                                      //     21, 10, 21, 0),
                                       child: TextFieldUtils()
                                           .listNameHeadingTextField(
                                               serviceList[index].shortName!,
@@ -2821,8 +2830,9 @@ SizedBox(height: 6,),
                                       ,
                                     ),
                                     Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          21, 4, 21, 9),
+                                      // padding: const EdgeInsets.fromLTRB(
+                                      //     21, 4, 21, 9),
+                                      margin: EdgeInsets.only(left: 10,right: 10,top: 5),
                                       child: TextFieldUtils()
                                           .listPriceHeadingTextField(
                                               'Under' +

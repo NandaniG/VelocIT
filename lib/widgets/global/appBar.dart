@@ -957,16 +957,28 @@ Widget bottomNavBarItems(BuildContext context) {
 
 Widget bottomNavigationBarWidget(BuildContext context) {
   final controller = BarcodeFinderController();
-  return Stack(
+  return Container(
+    // height: MediaQuery.of(context).size.height,
+
+    // color: Colors.red,
+    child: Stack(
+      alignment: AlignmentDirectional.bottomCenter,
     // alignment: const FractionalOffset(.5, 1.0),
-    alignment: const FractionalOffset(.5, 1.0),
+    // alignment: const FractionalOffset(.5, - 4.5),
     children: [
       bottomNavBarItems(context),
-      Padding(
-        padding: const EdgeInsets.only(bottom: 20),
+      Positioned(
+        // right: 0,
+        // left: 0,
+        // top: -26,
+        // alignment: Alignment(0, -2),
+        // child: Padding(
+        // padding: const EdgeInsets.only(bottom: 20),
         child: Container(
+          margin: EdgeInsets.only(bottom: 50),
           height: 70,
           width: 70,
+          // color: Colors.yellow,
           child: FloatingActionButton(
             backgroundColor: ThemeApp.appColor,
             onPressed: () {
@@ -998,8 +1010,10 @@ Widget bottomNavigationBarWidget(BuildContext context) {
                 color: ThemeApp.whiteColor),*/
           ),
         ),
+      // ),
       ),
     ],
+  ),
   );
 }
 
