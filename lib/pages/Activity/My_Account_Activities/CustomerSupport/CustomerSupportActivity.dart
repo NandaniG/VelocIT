@@ -33,7 +33,7 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
           child: appBar_backWidget(
-              context, appTitle(context, "Customer Support"), SizedBox()),
+              context, appTitle(context, "Customer Support"), SizedBox(),setState),
         ),
         body: SafeArea(
           child: Consumer<HomeProvider>(builder: (context, value, child) {

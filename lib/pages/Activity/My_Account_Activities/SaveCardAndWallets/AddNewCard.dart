@@ -43,7 +43,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "Add New Card"), SizedBox()),
+            context, appTitle(context, "Add New Card"), SizedBox(),setState),
       ),
       body: SafeArea(
         child: Container(
@@ -288,7 +288,7 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "Add New Card"), SizedBox()),
+            context, appTitle(context, "Add New Card"), SizedBox(),setState),
       ),
       body: SafeArea(
         child: Container(

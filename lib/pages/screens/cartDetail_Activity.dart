@@ -27,7 +27,7 @@ class CartDetailsActivity extends StatefulWidget {
   ProductProvider value;*/
 
   CartDetailsActivity(
-      {Key? key, /* required this.value, required this.productLis*/ t})
+      {Key? key, /* required this.value, required this.productList*/ })
       : super(key: key);
 
   @override
@@ -58,9 +58,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCartDetailsFromPref();
+    // getCartDetailsFromPref();
     // getListFromPref();
-    // getCartId();
+    getCartId();
     // dateFormat();
     /*  if (kDebugMode) {
       print("widget.cartDetailScreen[]${widget.productList}");
@@ -131,28 +131,43 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   }
   var data;
 
-/*  getCartId() async {
+  getCartId() async {
     final prefs = await SharedPreferences.getInstance();
 
     StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
     StringConstant.RandomUserLoginId =
         (prefs.getString('isRandomUserId')) ?? '';
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+    print("Cart Id From Cart Activity "+StringConstant.UserCartID);
     setState(() {});
-    await cartListView.cartSpecificIDWithGet(
-        context, StringConstant.UserCartID);
-  }*/
-  Future<void> getCartDetailsFromPref() async {
+    var getDirectCartID = prefs.getString('directCartIdPref');
+    var getDirectCartIDIsTrue = prefs.getString('directCartIdIsTrue');
+
+
+    if(getDirectCartIDIsTrue == 'true'){
+      print(" get DirectCartIDIs True ");
+
+      await cartListView.cartSpecificIDWithGet(
+          context, getDirectCartID.toString());
+    }else{
+      print(" get DirectCartIDIs false ");
+
+      await cartListView.cartSpecificIDWithGet(
+          context, StringConstant.UserCartID);
+    }
+    print("Cart Id ForDirect" + getDirectCartID.toString());
+
+
+  }
+/*
+   getCartDetailsFromPref() async {
 
     final prefs = await SharedPreferences.getInstance();
 
-      StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
 
       StringConstant.RandomUserLoginId =
           (prefs.getString('RandomUserId')) ?? '';
 
-      print("IS USER LOG-IN ..............." +
-          StringConstant.isUserLoggedIn.toString());
       print("ISRANDOM ID............" +
           StringConstant.RandomUserLoginId.toString());
 
@@ -173,8 +188,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
       }
       //597723544
-      print("cart data pass in cart: " + data.toString());
-      CartRepository().cartPostRequest(data, context);
+      // print("cart data pass in cart: " + data.toString());
+      // CartRepository().cartPostRequest(data, context);
 
       StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
       setState(() {});
@@ -183,6 +198,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       print("cartId from Pref" + StringConstant.UserCartID.toString());
 
   }
+*/
 
   @override
   void dispose() {
@@ -199,7 +215,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     StringConstant.RandomUserLoginId = (prefs.getString('RandomUserId')) ?? '';
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-
+    print("Cart Id From Cart Update "+StringConstant.UserCartID);
     var prefUserId = await Prefs.instance.getToken(
       Prefs.prefRandomUserId,
     );
@@ -223,19 +239,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     print("update cart DATA" + data.toString());
     setState(() {});
     await CartRepository().updateCartPostRequest(data, context);
-    getCartDetailsFromPref();
-    // getCartId();
+    // getCartDetailsFromPref();
+    getCartId();
 
-/*    for (int i = 0; i < value!.length; i++) {
-      StringConstant.BadgeCounterValue =
-          value!.length.toString() + value[i].itemQty.toString();
-      print("Badge,.......in for." + StringConstant.BadgeCounterValue);
-    }*/
-/*    setState(() {
-    StringConstant.BadgeCounterValue =
-          (prefs.getString('setBadgeCountPrefs')) ?? '';
-      print("Badge,........" + StringConstant.BadgeCounterValue);
-    });      getCartId();*/
   }
 
   @override
@@ -248,7 +254,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .08),
         child: Consumer<HomeProvider>(builder: (context, provider, child) {
-          return provider.isBottomAppCart == false
+          return /*provider.isBottomAppCart == false
                   ? PreferredSize(
                       preferredSize: Size.fromHeight(height * .08),
                       child: Container(
@@ -277,8 +283,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                   size: 30,
                                 ),
                                 onPressed: () {
+                                  setState(() {});
                                   // Navigator.pop(context);
-                                  Navigator.pop(context);
+
+                                  Navigator.pop(context,true);
                                   // Navigator.pushReplacementNamed(context, '/productDetailsActivity').then((_) => setState(() {}));
                                 }),
                           ),
@@ -289,8 +297,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         ),
                       ),
                     )
-                  : appBar_backWidget(context, appTitle(context, "My Cart"),
-                      SizedBox())
+                  :*/ appBar_backWidget(context, appTitle(context, "My Cart"),
+                      SizedBox(),setState)
               ;
         }),
       ),
@@ -311,8 +319,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     case Status.ERROR:
                       print("Api error");
 
-                      return Text(
-                          cartProvider.cartSpecificID.message.toString());
+                      return Text('');
                     case Status.COMPLETED:
                       print("Api calll");
                       List<OrdersForPurchase>? orderPurchaseList = cartProvider
@@ -412,6 +419,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                               if (StringConstant
                                                       .isUserLoggedIn ==
                                                   1) {
+
                                                 Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                     builder: (context) =>
@@ -708,7 +716,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   case Status.ERROR:
                     print("Api error");
 
-                    return Text(cartProvider.cartSpecificID.message.toString());
+                    return Text(cartProvider.cartSpecificID.status.toString());
                   case Status.COMPLETED:
                     print("Api calll");
                     List<OrdersForPurchase>? orderPurchaseList = cartProvider
@@ -720,7 +728,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         // height: MediaQuery.of(context).size.height,
                         padding: const EdgeInsets.all(10),
                         child: cartProvider.cartSpecificID.data!.payload!
-                                    .ordersForPurchase!.length- 1<0
+                                    .ordersForPurchase!.isEmpty
 
                             ? Container(
                                 height: height * .5,
@@ -849,6 +857,17 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                         ),
                                         prices(orderPurchaseList[index], index),
                                         SizedBox(
+                                          height: height * .01,
+                                        ),
+
+                                        Text('Merchant Name : ${orderPurchaseList[index].merchantName}'??"",
+                                            style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color:
+                                                ThemeApp.lightFontColor,
+                                                fontSize: 12,
+                                                fontWeight:
+                                                FontWeight.w500)),    SizedBox(
                                           height: height * .01,
                                         ),
                                         Row(
@@ -1148,6 +1167,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           SizedBox(
             height: 5,
           ),
+
           Row(
             children: [
               Text("M.R.P.: ",
@@ -1307,12 +1327,12 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     // setState(() {
                     // minusQuantity(value![index], index);
                     if (value![index].itemQty! > 1) {
-                      value[index].itemQty = (value[index].itemQty! - 1);
+                      // value[index].itemQty = (value[index].itemQty! - 1);
                       // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
                       updateCart(
                           value,
                           value[index].merchantId,
-                          value[index].itemQty!,
+                          value[index].itemQty! - 1,
                           value[index].productId.toString());
 
                       // StringConstant.BadgeCounterValue =
@@ -1332,8 +1352,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                   updateCart(value, value[index].merchantId, 0,
                                       value[index].productId.toString());
 
-                                  value.removeAt(index);
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(builder: (context) => CartDetailsActivity())).then((value) {
+                                    setState(() {});
+                                  });
                                   Navigator.pop(context);
+
+
                                 });
                               },
                             );
@@ -1371,12 +1396,12 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 InkWell(
                   onTap: () {
                     setState(() {
-                      value![index].itemQty = value![index].itemQty! + 1;
+                      // value[index].itemQty = value[index].itemQty! + 1;
                       // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
                       updateCart(
                           value,
                           value[index].merchantId,
-                          value[index].itemQty!,
+                          value[index].itemQty! + 1,
                           value[index].productId.toString());
                     });
                   },
@@ -1398,7 +1423,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 "value[index].merchantId" + value[index].merchantId.toString());
             updateCart(value, value[index].merchantId, 0,
                 value[index].productId.toString());
-            value.removeAt(index);
+            // value.removeAt(index);
           },
           child: SvgPicture.asset(
             'assets/appImages/deleteIcon.svg',

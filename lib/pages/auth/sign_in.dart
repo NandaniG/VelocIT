@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/pages/auth/Sign_Up.dart';
+import 'package:velocit/pages/screens/dashBoard.dart';
 
 import '../../Core/repository/auth_repository.dart';
 import '../../utils/StringUtils.dart';
@@ -41,7 +42,6 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
     super.initState();
     _radioIndex = 1;
     _usingPassVisible = false;
-
   }
 
   @override
@@ -138,7 +138,10 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               });
                             },
                           ),
-                        ),SizedBox(     width: 10,),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
                         const Text("Email",
                             style: TextStyle(
                               fontFamily: 'Roboto',
@@ -146,10 +149,12 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                               overflow: TextOverflow.ellipsis,
-                            )),SizedBox(     width: 14,),
+                            )),
+                        SizedBox(
+                          width: 14,
+                        ),
                         SizedBox(
                           width: 25,
-
                           child: Radio(
                             value: 2,
                             groupValue: _radioIndex,
@@ -166,7 +171,10 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               });
                             },
                           ),
-                        ),SizedBox(     width: 10,),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
                         const Text("Phone Number",
                             style: TextStyle(
                               fontFamily: 'Roboto',
@@ -257,12 +265,12 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         ? TextFieldUtils().asteriskTextField(
                             StringUtils.emailAddress, context)
                         : TextFieldUtils().asteriskTextField(
-                        StringUtils.emailORMobile, context),/*TextFieldUtils().asteriskTextField(
+                            StringUtils.emailORMobile, context),
+                    /*TextFieldUtils().asteriskTextField(
                             StringUtils.mobileNumber, context),*/
 
                     _radioIndex == 1
-                        ?
-                    EmailTextFormFieldsWidget(
+                        ? EmailTextFormFieldsWidget(
                             errorText: StringUtils.validEmailError,
                             textInputType: TextInputType.text,
                             controller: email,
@@ -307,9 +315,9 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               }
                               return null;
                             })
-           //both email and phone
+                        //both email and phone
 
-              /*      TextFormFieldsWidget(
+                        /*      TextFormFieldsWidget(
                         errorText:StringUtils.validEmailError,
                         textInputType: TextInputType.emailAddress,
                         controller: email,
@@ -368,7 +376,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         :
                         //using both email phone
 
-                   /* TextFormFieldsWidget(
+                        /* TextFormFieldsWidget(
                         errorText:StringUtils.validemailORMobileError,
                         textInputType: TextInputType.emailAddress,
                         controller: mobileController,
@@ -418,31 +426,32 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                           return null;
                         }),*/
 
-                     MobileNumberTextFormField(
-                        errorText: StringUtils.enterMobileNumber,
-                        controller: mobileController,
-                        enable: true,
-                        onChanged: (phone) {   print(phone.completeNumber);
-                        if (phone.countryCode == "IN") {
-                          print("india selected");
-                          print(phone.completeNumber);
-                        } else {
-                          print("india not selected");
-                        }
-                        },
-                        validator: (value) {
-                          if (
-                              mobileController.text.isEmpty) {
-                            _validateMobile = true;
-                            return StringUtils.mobileError;
-                          } else if (!StringConstant().isPhone(mobileController.text)) {
-                            _validateMobile = true;
-                            return StringUtils.mobileError;
-                          } else {
-                            _validateMobile = false;
-                          }
-                          return null;
-                        }),
+                        MobileNumberTextFormField(
+                            errorText: StringUtils.enterMobileNumber,
+                            controller: mobileController,
+                            enable: true,
+                            onChanged: (phone) {
+                              print(phone.completeNumber);
+                              if (phone.countryCode == "IN") {
+                                print("india selected");
+                                print(phone.completeNumber);
+                              } else {
+                                print("india not selected");
+                              }
+                            },
+                            validator: (value) {
+                              if (mobileController.text.isEmpty) {
+                                _validateMobile = true;
+                                return StringUtils.mobileError;
+                              } else if (!StringConstant()
+                                  .isPhone(mobileController.text)) {
+                                _validateMobile = true;
+                                return StringUtils.mobileError;
+                              } else {
+                                _validateMobile = false;
+                              }
+                              return null;
+                            }),
 
                     _radioIndex == 1
                         ? SizedBox(
@@ -555,11 +564,8 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             height: 50,
                           ),
                     _radioIndex == 1
-                        ? proceedButton(
-                            StringUtils.signin,
-                            ThemeApp.tealButtonColor,
-                            context,
-                        false, () {
+                        ? proceedButton(StringUtils.signin,
+                            ThemeApp.tealButtonColor, context, false, () {
                             if (_formKey.currentState!.validate() &&
                                 email.text.isNotEmpty &&
                                 password.text.isNotEmpty) {
@@ -578,11 +584,13 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               print(emaildata);
                               if (StringConstant().isNumeric(email.text)) {
                                 AuthRepository()
-                                    .postApiUsingEmailPasswordRequest(mobileData, context);
+                                    .postApiUsingEmailPasswordRequest(
+                                        mobileData, context);
                                 print("Digit found");
                               } else {
                                 AuthRepository()
-                                    .postApiUsingEmailPasswordRequest(emaildata, context);
+                                    .postApiUsingEmailPasswordRequest(
+                                        emaildata, context);
 
                                 print("Digit not found");
                                 // email.clear();
@@ -590,36 +598,33 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 // password.clear();
                               }
                             } else {
-                               Utils.errorToast(
-                                      "Please enter valid username or password")
-                                  ;
+                              Utils.errorToast(
+                                  "Please enter valid username or password");
                             }
                           })
-                        : proceedButton(
-                            StringUtils.sendOtp,
-                            ThemeApp.tealButtonColor,
-                            context,
-                           false, () {
-                            if (_formKey.currentState!.validate() &&mobileController.text.isNotEmpty ) {
-
+                        : proceedButton(StringUtils.sendOtp,
+                            ThemeApp.tealButtonColor, context, false, () {
+                            if (_formKey.currentState!.validate() &&
+                                mobileController.text.isNotEmpty) {
                               Map emaildata = {
                                 'email': mobileController.text,
                               };
                               Map mobileData = {
                                 'mobile': mobileController.text,
                               };
-                              if (StringConstant().isNumeric(mobileController.text)) {
+                              if (StringConstant()
+                                  .isNumeric(mobileController.text)) {
                                 print(mobileData);
 
-                                AuthRepository()
-                                    .postApiForMobileOTPRequest(mobileData, context);
+                                AuthRepository().postApiForMobileOTPRequest(
+                                    mobileData, context);
 
-                               print("Digit found");
+                                print("Digit found");
                               } else {
                                 print(emaildata);
 
-                                AuthRepository()
-                                    .postApiForEmailOTPRequest(emaildata, context);
+                                AuthRepository().postApiForEmailOTPRequest(
+                                    emaildata, context);
                                 // Navigator.of(context).push(
                                 //     MaterialPageRoute(builder: (context) => OTPScreen(mobileNumber:    mobileController.text))).then((value) => setState((){}));
 
@@ -628,10 +633,9 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 // mobileController.clear();
                                 // password.clear();
                               }
-
-
-                              } else {
-                              Utils.errorToast("Please enter valid mobile number");
+                            } else {
+                              Utils.errorToast(
+                                  "Please enter valid mobile number");
                             }
                           })
                     /*   proceedButton(
@@ -713,38 +717,88 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
               Container(
                 padding: const EdgeInsets.only(bottom: 10),
                 alignment: Alignment.bottomCenter,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                child: Column(
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Don't have an account? ",
+                          style: TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.primaryNavyBlackColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            email.clear();
+                            mobileController.clear();
+                            password.clear();
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => SignUp()));
+                          },
+                          child: Text(
+                            "Sign Up",
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.tealButtonColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
                     Text(
-                      "Don't have an account? ",
+                      "or",
                       style: TextStyle(
                           fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w400),
                     ),
-                    InkWell(
-                      onTap: () {
-                        email.clear();
-                        mobileController.clear();
-                        password.clear();
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => SignUp()));
-                      },
-                      child: Text(
-                        "Sign Up",
-                        style: TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.primaryNavyBlackColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                      ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Continue as ",
+                          style: TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.primaryNavyBlackColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        InkWell(
+                          onTap: (){
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => DashboardScreen()));
+                          },
+                          child: Text(
+                            "Guest",
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.tealButtonColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

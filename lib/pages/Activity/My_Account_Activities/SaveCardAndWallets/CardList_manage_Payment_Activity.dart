@@ -35,7 +35,7 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "Manage Payment Methods"), SizedBox()),
+            context, appTitle(context, "Manage Payment Methods"), SizedBox(),setState),
       ),
       body: SafeArea(
         child: Container(

@@ -113,67 +113,7 @@ Widget appBarWidget(
                     ),
                   )
                 : SizedBox(),
-            /*   leading: Consumer<HomeProvider>(builder: (context, provider, child) {
-                return  Consumer  <ProductProvider>(builder: (context, product, child) {
 
-                  return StringConstant.isLogIn == false
-                        ? const SizedBox(
-                            width: 0,
-                          )
-                        : InkWell(
-                            onTap: () {
-                              /// locale languages
-                              // Navigator.of(context).push(
-                              //   MaterialPageRoute(
-                              //       builder: (context) => FlutterLocalizationDemo()),
-                              // );
-
-                              if (kDebugMode) {
-                                print("provider.cartProductList");
-                                print(provider.cartProductList);
-                              }
-                              product.badgeFinalCount;
-
-                              provider.isBottomAppCart = true;
-                              provider.isHome = true;
-
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CartDetailsActivity(
-                                          value: product, productList: provider.cartProductList)),
-                                      (route) => false);
-
-                              // Navigator.of(context).push(
-                              //   MaterialPageRoute(
-                              //     builder: (context) => const MyAccountActivity(),
-                              //   ),
-                              // );
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(100),
-                                ),
-                                child: Icon(Icons.account_circle_rounded,
-                                    size:
-                                        40) */ /*Container(
-                              alignment: Alignment.center,
-                              child: const Image(
-                                image: NetworkImage(
-                                    'https://cdn1.iconfinder.com/data/icons/technology-devices-2/100/Profile-512.png'),
-                                fit: BoxFit.fill,
-                              ))*/ /*
-                                ,
-                              ),
-                            ),
-                          );
-                  }
-                );
-              }
-            ),*/
-            // leadingWidth: width * .06,
             title: titleWidget,
             // Row
             actions: [
@@ -365,6 +305,7 @@ Widget appBar_backWidget(
   BuildContext context,
   Widget titleWidget,
   Widget location,
+    StateSetter setState,
 ) {
   double height = 0.0;
   double width = 0.0;
@@ -395,8 +336,10 @@ Widget appBar_backWidget(
           titleSpacing: 1,
           leading: InkWell(
             onTap: () {
-              Navigator.of(context).pop();
-              // Provider.of<ProductProvider>(context, listen: false);
+
+              Navigator.pop(context, () {
+                setState(() {});
+              });              // Provider.of<ProductProvider>(context, listen: false);
             },
             child: Transform.scale(
               scale: 0.7,

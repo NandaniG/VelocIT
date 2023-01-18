@@ -48,7 +48,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
       appBar: PreferredSize(
     preferredSize: Size.fromHeight(height * .09),
     child: appBar_backWidget(
-        context, appTitle(context, "Order Checkout"), SizedBox()),
+        context, appTitle(context, "Order Checkout"), SizedBox(),setState),
       ),
       body:SafeArea(
         child:ChangeNotifierProvider<DashboardViewModel>.value(

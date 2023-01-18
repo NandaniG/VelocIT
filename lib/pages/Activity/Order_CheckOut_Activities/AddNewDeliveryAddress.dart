@@ -105,7 +105,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 context,
                 "Add New Delivery Address",
               ),
-              const SizedBox()),
+              const SizedBox(),setState,)
         ),
         body: SafeArea(
           child: Padding(
@@ -292,7 +292,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     }
                   },
                   validator: (value) {
-                    if (value.isEmpty && mobileController.text.isEmpty) {
+                    if (value==''  && mobileController.text.isEmpty) {
                       _validateMobile = true;
                       return StringUtils.enterMobileNumber;
                     } else if (mobileController.text.length < 10) {

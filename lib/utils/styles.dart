@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ThemeApp {
   static const appColor =  Color(0xff00A7BF);
+  static const bottomIconColor =  Color(0xff1B283D);
   static const appLightColor =  Color(0xff75E4ED);
   static const priceContainerColor =  Color(0xff79E5ED);
   static const inactiveStepperColor =  Color(0xff88F0FF);

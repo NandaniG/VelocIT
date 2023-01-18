@@ -57,7 +57,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "Cancel Order"), SizedBox()),
+            context, appTitle(context, "Cancel Order"), SizedBox(),setState),
       ),
       body: SafeArea(
         child: Container(

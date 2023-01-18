@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
@@ -17,6 +16,8 @@ import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/textFormFields.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../screens/dashBoard.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -429,7 +430,7 @@ class _SignUpState extends State<SignUp> {
                 controlAffinity: ListTileControlAffinity.leading,
                 activeColor: Colors.green,
               ),*/
-                      Container(
+                    /*  Container(
                         padding: const EdgeInsets.only(top: 20, bottom: 10),
                         alignment: Alignment.bottomCenter,
                         child: Row(
@@ -465,7 +466,94 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ],
                         ),
-                      )
+                      ),
+*/
+
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        alignment: Alignment.bottomCenter,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Already have an account? ",
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.primaryNavyBlackColor,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    businessNameController.clear();
+                                    mobileNumberController.clear();
+                                    emailOtp.clear();
+                                    password.clear();
+                                    confirmPassword.clear();
+                                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                        builder: (context) => SignIn_Screen()));
+                                  },
+                                  child: Text(
+                                    "Sign In",
+                                    style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        color: ThemeApp.primaryNavyBlackColor,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "or",
+                              style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.primaryNavyBlackColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Continue as ",
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.primaryNavyBlackColor,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                InkWell(
+                                  onTap: (){
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (context) => DashboardScreen()));
+                                  },
+                                  child: Text(
+                                    "Guest",
+                                    style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        color: ThemeApp.tealButtonColor,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.underline),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -698,7 +786,7 @@ class _SignUpState extends State<SignUp> {
         }
         },
             validator: (value) {
-              if (value.isEmpty && mobileNumberController.text.isEmpty) {
+              if (value==''  && mobileNumberController.text.isEmpty) {
                 _validateMobile = true;
                 return StringUtils.enterMobileNumber;
               } else if (mobileNumberController.text.length < 10) {
@@ -737,11 +825,12 @@ class _SignUpState extends State<SignUp> {
     // todo - you should check the response.statusCode
     dynamic reply = await response.transform(utf8.decoder).join();
     String rawJson = reply.toString();
+    print(reply);
     // Utils.successToast(rawJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
     String name = map['message'];
-    Utils.successToast(name.toString());
+    // Utils.successToast(name.toString());
     // print("SignUp response " + name.toString());
 
     if (response.statusCode == 200) {
@@ -756,7 +845,7 @@ class _SignUpState extends State<SignUp> {
       confirmPassword.clear();
       print(reply.toString());
     } else {
-      // Utils.errorToast(name.toString());
+      Utils.errorToast(name.toString());
       }
 
     httpClient.close();

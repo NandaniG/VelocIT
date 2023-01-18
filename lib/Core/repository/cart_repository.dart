@@ -9,6 +9,7 @@ import 'package:velocit/Core/Model/CartModels/CartSpecificIDForEmbeddedModel.dar
 import 'package:velocit/Core/ViewModel/cart_view_model.dart';
 import 'package:velocit/utils/constants.dart';
 
+import '../../pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import '../../pages/screens/cartDetail_Activity.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/utils.dart';
@@ -23,14 +24,12 @@ import '../Model/CityModel.dart';
 import '../Model/StateModel.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 
 class CartRepository {
   BaseApiServices _apiServices = NetworkApiServices();
 
   CartCreateRetrieveModel modelResponse = CartCreateRetrieveModel();
-
-
 
   Future<CartCreateRetrieveModel> cartPostRequest(
       Map jsonMap, BuildContext context) async {
@@ -39,6 +38,7 @@ class CartRepository {
     dynamic responseJson;
     var url = ApiMapping.getURI(apiEndPoint.cart_create_retrive);
     print(url);
+    print(jsonMap);
     HttpClient httpClient = new HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
 
@@ -50,15 +50,14 @@ class CartRepository {
     // todo - you should check the response.statusCode
     responseJson = await response.transform(utf8.decoder).join();
     String rawJson = responseJson.toString();
-    print("Cart Created : "+responseJson.toString());
+    print("Cart Created : " + responseJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
 
     var userData = CartCreateRetrieveModel.fromJson(map);
     prefs.setString('CartIdPref', userData.payload!.id.toString());
+    print("Cart Id From Cart Create and retrieve " + StringConstant.UserCartID);
     print(userData.payload!.id.toString());
-    Prefs.instance.setToken(Prefs.prefCartId, userData.payload!.id.toString());
-
 
     // if (response.statusCode == 200) {
     //   print(responseJson.toString());
@@ -90,8 +89,8 @@ class CartRepository {
     // todo - you should check the response.statusCode
     responseJson = await response.transform(utf8.decoder).join();
     String rawJson = responseJson.toString();
-    print("Cart response11");
-    print("Cart response11 map : "+jsonMap.toString());
+    print("updateCartPostRequest response11");
+    print("updateCartPostRequest map : " + jsonMap.toString());
     print(responseJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
@@ -105,8 +104,7 @@ class CartRepository {
     print(responseJson.toString());
     Provider.of<ProductProvider>(context, listen: false);
 
-    await  getCartSpecificIDList(userData.payload!.id.toString());
-
+    await getCartSpecificIDList(userData.payload!.id.toString());
 
     httpClient.close();
     return responseJson = UpdateCartModel.fromJson(map);
@@ -114,18 +112,18 @@ class CartRepository {
 
   Future<CartSpecificIdModel> getCartSpecificIDList(String id) async {
     var url = ApiMapping.getURI(apiEndPoint.cart_by_ID);
-    print("Cart specific ID : "+id.toString());
+    print("Cart specific ID : " + id.toString());
     final prefs = await SharedPreferences.getInstance();
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
       print("Cart Specific Id : " + response.toString());
-      StringConstant.BadgeCounterValue = response['payload']['total_item_count'].toString();
+      StringConstant.BadgeCounterValue =
+          response['payload']['total_item_count'].toString();
       prefs.setString(
         'setBadgeCountPrefs',
         response['payload']['total_item_count'].toString(),
       );
-
 
       return response = CartSpecificIdModel.fromJson(response);
     } catch (e) {
@@ -133,42 +131,94 @@ class CartRepository {
     }
   }
 
-  Future<CartSpecificIDforEmbeddedModel> getCartSpecificIDEmbeddedList(String id) async {
+  void buyNowGetRequest(String userId, BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    dynamic responseJson;
+    var urldata = ApiMapping.BaseAPI + ApiMapping.GetCartForDirectBuy;
+    print(urldata);
+
+    Map<String, String> jsonMap = {"userId": userId};
+    String queryString = Uri(queryParameters: jsonMap).query;
+    print(queryString);
+
+    var requestUrl = urldata + '?' + queryString;
+    print(requestUrl);
+
+    var response = await http.get(Uri.parse(requestUrl), headers: {
+      HttpHeaders.contentTypeHeader: "application/json",
+    });
+
+    print('---- status code: ${response.statusCode}');
+    var jsonData = json.decode(response.body);
+if(response.statusCode == 200) {
+      print('---- slot: ${jsonData['payload']['id']}');
+  var merchanId  =  prefs.getString('selectedMerchantId');
+  var ProductId  =      prefs.getString('selectedProductId');
+  var CounterPrice  =      prefs.getString('selectedCounterPrice');
+
+      Map<String, String> data = {
+        "cartId": jsonData['payload']['id'].toString(),
+        "userId": userId,
+        "productId":ProductId.toString(),
+        "merchantId": merchanId.toString(),
+        "qty": CounterPrice.toString(),
+        "is_new_order": 'true'
+      };
+      print("update cart DATA buyNowGetRequest" + data.toString());
+
+      CartRepository().updateCartPostRequest(data, context).then((value) {
+        prefs.setString('directCartIdPref', jsonData['payload']['id'].toString());
+        var directCartId = prefs.getString('directCartIdPref');
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => OrderReviewActivity(
+                cartId: int.parse(jsonData['payload']['id'].toString()))));
+      });
+
+
+    }else{
+  print("error in direct buy now");
+}
+  }
+
+  Future<CartSpecificIDforEmbeddedModel> getCartSpecificIDEmbeddedList(
+      String id) async {
     var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);
     final prefs = await SharedPreferences.getInstance();
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
       print("Cart cart_by_Embedded_ID Id : " + response.toString());
-      print("Cart cart_by_Embedded_ID Id orders_for_purchase: " + response['orders_for_purchase'].toString());
-      await prefs.setString('CartIdPref',response);
+      print("Cart cart_by_Embedded_ID Id orders_for_purchase: " +
+          response['orders_for_purchase'].toString());
+      await prefs.setString('CartIdPref', response);
       return response = CartSpecificIDforEmbeddedModel.fromJson(response);
     } catch (e) {
       throw e;
     }
   }
 
-  Future<MergeCartModel> mergeCartList(String oldId,String newId,Map json,BuildContext context) async {
-
+  Future<MergeCartModel> mergeCartList(
+      String oldId, String newId, Map json, BuildContext context) async {
     // var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);
-    var url = ApiMapping.BaseAPI+'/cart/merge_cart/$oldId?newid=$newId';
+    var url = ApiMapping.BaseAPI + '/cart/merge_cart/$oldId?newid=$newId';
     print(url);
     print(json);
     final prefs = await SharedPreferences.getInstance();
 
-    try {
-      dynamic response = await _apiServices.getPutApiResponse(url, json);
-      print("Cart Merge CartModel Id : " + response.toString());
-      await prefs.setString('CartIdPref',response);
-      if (response['status'].toString() == 'OK') {
+    dynamic response = await _apiServices.getPutApiResponse(url, json);
 
+    print("Cart Merge CartModel Id : " + response.toString());
+    try {await prefs.setString('CartIdPref', response['payload']['id'].toString());
+    print("Cart Id From Merge Cart " + StringConstant.UserCartID);
+
+    if (response['status'].toString() == 'OK') {
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => CartDetailsActivity()));
       }
 
-        return response = MergeCartModel.fromJson(response);
+      return response = MergeCartModel.fromJson(response);
     } catch (e) {
-      print("Merge car error: "+e.toString());
+      print("Merge cart error: " + e.toString());
       throw e;
     }
   }
@@ -193,6 +243,7 @@ class CartRepository {
       throw e;
     }
   }
+
   Future getSendCartForPaymentLists(String id) async {
     var url = ApiMapping.getURI(apiEndPoint.send_Cart_For_Payment);
     final prefs = await SharedPreferences.getInstance();
@@ -211,14 +262,17 @@ class CartRepository {
       throw e;
     }
   }
+
   Future<AddressListModel> getAddressList(String id) async {
     // var url = ApiMapping.getURI(apiEndPoint.address_list);
-    https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
+    https: //velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
 
-    var requestUrl = ApiMapping.BaseAPI +'/user/'+id + '/address?page=0&size=10';
+    var requestUrl =
+        ApiMapping.BaseAPI + '/user/' + id + '/address?page=0&size=10';
 
     print(requestUrl.toString());
-    print( 'https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10');
+    print(
+        'https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10');
     print(id.toString());
     final prefs = await SharedPreferences.getInstance();
 
@@ -234,9 +288,9 @@ class CartRepository {
 
   Future<StateModel> getStateAddressList() async {
     // var url = ApiMapping.getURI(apiEndPoint.address_list);
-    https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
+    https: //velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
 
-    var requestUrl = ApiMapping.BaseAPI +ApiMapping.StateAddress;
+    var requestUrl = ApiMapping.BaseAPI + ApiMapping.StateAddress;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -250,9 +304,9 @@ class CartRepository {
 
   Future<CityModel> getCityAddressList() async {
     // var url = ApiMapping.getURI(apiEndPoint.address_list);
-    https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
+    https: //velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
 
-    var requestUrl = ApiMapping.BaseAPI +ApiMapping.CityAddress;
+    var requestUrl = ApiMapping.BaseAPI + ApiMapping.CityAddress;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -263,7 +317,6 @@ class CartRepository {
       throw e;
     }
   }
-
 
 /*
   Future createAddressApi(Map<String, dynamic> jsonMap, BuildContext context, int userId) async {
@@ -302,74 +355,73 @@ class CartRepository {
   }
 */
 
-  Future createAddressPostAPI(Map data,  String userId) async {
-
-    print("userId"+userId.toString());
+  Future createAddressPostAPI(Map data, String userId) async {
+    print("userId" + userId.toString());
     var url = '/address/user/' + userId.toString();
-    var requestUrl = ApiMapping.BaseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI + url;
 
     String body = json.encode(data);
-    print("jsonMap"+body.toString());
+    print("jsonMap" + body.toString());
 
     dynamic reply;
-    http.Response response = await http.post(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
-    print("response post"+response.body.toString());
+    http.Response response = await http.post(Uri.parse(requestUrl),
+        body: body, headers: {'content-type': 'application/json'});
+    print("response post" + response.body.toString());
     // Utils.successToast(response.body.toString());
     return reply;
-
   }
 
-  Future putCartForPayment(dynamic data,int orderBasketID) async {
+  Future putCartForPayment(dynamic data, int orderBasketID) async {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
 
-    print("userId"+orderBasketID.toString());
+    print("userId" + orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/attempt_payment';
 
-    var requestUrl = ApiMapping.BaseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI + url;
     print(requestUrl.toString());
 
     String body = json.encode(data);
-    print("jsonMap"+body.toString());
-
+    print("jsonMap" + body.toString());
 
     try {
       dynamic reply;
-      http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
-      print("response post"+response.body.toString());
+      http.Response response = await http.put(Uri.parse(requestUrl),
+          body: body, headers: {'content-type': 'application/json'});
+      print("response post" + response.body.toString());
       // Utils.successToast(response.body.toString());
       return reply;
 
-      return response ;
+      return response;
     } catch (e) {
       throw e;
     }
   }
+
   Map<dynamic, dynamic> orderDetails = {};
 
-  Future putCartForPaymentUpdate(dynamic data,int orderBasketID) async {
+  Future putCartForPaymentUpdate(dynamic data, int orderBasketID) async {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
 
-    print("userId"+orderBasketID.toString());
+    print("userId" + orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/update_payment';
 
-    var requestUrl = ApiMapping.BaseAPI +url;
+    var requestUrl = ApiMapping.BaseAPI + url;
     print(requestUrl.toString());
 
     String body = json.encode(data);
-    print("jsonMap"+body.toString());
-
+    print("jsonMap" + body.toString());
 
     try {
       dynamic reply;
-      http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
-      print("response postputCartForPaymentUpdate"+response.body.toString());
+      http.Response response = await http.put(Uri.parse(requestUrl),
+          body: body, headers: {'content-type': 'application/json'});
+      print("response postputCartForPaymentUpdate" + response.body.toString());
       // Utils.successToast(response.body.toString());
       return reply;
 
-      return response ;
+      return response;
     } catch (e) {
       throw e;
     }
   }
-
 }

@@ -163,10 +163,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       print("cart data pass : " + data.toString());
       CartRepository().cartPostRequest(data, context);
 
-      var CARTID = prefs.getString('CartIdPref');
-
-      print("cartId from Pref" + CARTID.toString());
+      // var CARTID = prefs.getString('CartIdPref');
+      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+      print("Cart Id From DashBoard Activity "+StringConstant.UserCartID);
+      // print("cartId from Pref" + CARTID.toString());
     });
+
+    await CartViewModel().cartSpecificIDWithGet(
+        context, StringConstant.UserCartID);
   }
 
   var finalPINCODE = '';
@@ -283,7 +287,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      productServiceChip(dashboardProvider),
+                                      productServiceChip(),
                                       SizedBox(
                                         height: height * .02,
                                       ),
@@ -377,7 +381,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ));
   }
 
-  Widget productServiceChip(DashboardViewModel dashboardProvider) {
+  Widget productServiceChip() {
     return Container(
       width: width / 1,
       padding: EdgeInsets.only(top: 10),
@@ -554,7 +558,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 print("Api error");
               }
               return Text(
-                  productCategories.productCategoryList.message.toString());
+                 '');
 
             case Status.COMPLETED:
               if (kDebugMode) {

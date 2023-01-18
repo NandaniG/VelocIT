@@ -56,7 +56,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "Review and Rating"), SizedBox()),
+            context, appTitle(context, "Review and Rating"), SizedBox(),setState),
       ),
       body: SafeArea(
         child: Container(
