@@ -294,11 +294,13 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               ;
         }),
       ),
-      bottomNavigationBar: BottomAppBar(
-          color: ThemeApp.appBackgroundColor,
-          elevation: 0,
-          child: Container(
-            height: 130,
+      bottomNavigationBar: 
+      // BottomAppBar(
+      //     color: ThemeApp.appBackgroundColor,
+      //     elevation: 0,
+      //     child: 
+          Container(
+            // height: 130,
             child: ChangeNotifierProvider<CartViewModel>.value(
                 value: cartListView,
                 child: Consumer<CartViewModel>(
@@ -316,7 +318,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     case Status.COMPLETED:
                       print("Api calll");
                       List<OrdersForPurchase>? orderPurchaseList = cartProvider
-                          .cartSpecificID.data!.payload!.ordersForPurchase;
+                          .cartSpecificID.data?.payload?.ordersForPurchase;
 
                       print("orderPurchaseList" +
                           orderPurchaseList!.length.toString());
@@ -333,7 +335,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                 //     topRight: Radius.circular(15),
                                 //     topLeft: Radius.circular(15)),
                               ),
-                              child: Stack(    alignment: const FractionalOffset(.5, 1.0),
+                              child: Stack(    
+                                alignment: const FractionalOffset(.5, 1.0),
 
                                 children: [
                                   Container(
@@ -585,7 +588,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                             fontWeight: FontWeight.bold)),
                   );
                 })),
-          )),
+          ),
+          // ),
 
 /*
         Consumer<ProductProvider>(builder: (context, value, child) {

@@ -698,7 +698,7 @@ class _SignUpState extends State<SignUp> {
         }
         },
             validator: (value) {
-              if (value.isEmpty && mobileNumberController.text.isEmpty) {
+              if (value.number.isEmpty && mobileNumberController.text.isEmpty) {
                 _validateMobile = true;
                 return StringUtils.enterMobileNumber;
               } else if (mobileNumberController.text.length < 10) {
@@ -740,11 +740,12 @@ class _SignUpState extends State<SignUp> {
     // Utils.successToast(rawJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
-    String name = map['message'];
-    Utils.successToast(name.toString());
+    
     // print("SignUp response " + name.toString());
 
     if (response.statusCode == 200) {
+      String name = map['message'];
+    Utils.successToast(name.toString());
 
       // Utils.successToast(name.toString());
       Navigator.of(context)
@@ -757,6 +758,7 @@ class _SignUpState extends State<SignUp> {
       print(reply.toString());
     } else {
       // Utils.errorToast(name.toString());
+      Utils.errorToast(map['error'].toString());
       }
 
     httpClient.close();

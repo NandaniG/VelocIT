@@ -120,14 +120,20 @@ class CartRepository {
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
       print("Cart Specific Id : " + response.toString());
-      StringConstant.BadgeCounterValue = response['payload']['total_item_count'].toString();
+      
+      if (response['status'] != "EXCEPTION") {
+       StringConstant.BadgeCounterValue = response['payload']['total_item_count'].toString();
       prefs.setString(
         'setBadgeCountPrefs',
         response['payload']['total_item_count'].toString(),
       );
 
 
-      return response = CartSpecificIdModel.fromJson(response);
+      return response = CartSpecificIdModel.fromJson(response); 
+      }
+      var cart = CartSpecificIdModel();
+      cart.status = "ERROR";
+      return cart;
     } catch (e) {
       throw e;
     }

@@ -384,10 +384,10 @@ class _ProductListByCategoryActivityState
                     child: subProductList.length==[]?CircularProgressIndicator(): GridView(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 30,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
                         // childAspectRatio: 1.0,
-                        childAspectRatio: MediaQuery.of(context).size.height / 900,
+                        // childAspectRatio: MediaQuery.of(context).size.height / 900,
                       ),
                       shrinkWrap: true,
                         children: List.generate(subProductList!.length,
@@ -434,7 +434,7 @@ class _ProductListByCategoryActivityState
                                       /*   Expanded(
                                             flex: 2,
                                             child:*/ Container(
-                                        height: 143,
+                                        height: 133,
                                         width: 191, /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
