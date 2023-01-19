@@ -951,7 +951,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   }
 
   Widget counterWidget(SingleProductPayload model) {
-    return model.merchants!.isNotEmpty
+    return model.merchants.isNotEmpty
         ? Container(color: ThemeApp.whiteColor,
             padding:
                 const EdgeInsets.only(left: 20, right: 20, top:20, bottom: 20),
@@ -1064,7 +1064,24 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
               ],
             ),
           )
-        : SizedBox();
+        : Container(
+      width: width,
+      height: 72,
+      color: ThemeApp.whiteColor,
+      padding: const EdgeInsets.only(
+          left: 20, right: 20, top: 5, bottom: 5),
+      child: Center(
+        child: TextFieldUtils().dynamicText(
+            "OUT OF STOCK",
+            context,
+            TextStyle(
+              fontFamily: 'Roboto',
+              color: ThemeApp.redColor,
+              fontWeight: FontWeight.w500,
+              fontSize: height * .035,
+            )),
+      ),
+    );
   }
 
   Widget addToCart(SingleProductPayload model) {
@@ -1072,7 +1089,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         builder: (context, productProvider, child) {
       return Consumer<ProductSpecificListViewModel>(
           builder: (context, productListProvider, child) {
-        return model.merchants!.isNotEmpty
+            print("model.merchants lengthghgfjgfj "+merchantTemp.length.toString());
+        return model.merchants.isNotEmpty
             ? Padding(
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 5, bottom: 5),
