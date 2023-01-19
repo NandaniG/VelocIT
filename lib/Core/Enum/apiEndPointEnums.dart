@@ -19,6 +19,7 @@ enum apiEndPoint {
   cart_by_Embedded_ID,
   single_product_scanner,
   single_product,
+  single_service,
   send_Cart_For_Payment,
   address_list,
   add_address,

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../../Core/Model/CRMModel.dart';
 import '../../../../Core/Model/CategoriesModel.dart';
 import '../../../../Core/Model/ProductCategoryModel.dart';
-import '../../../../Core/Model/ServiceCategoryAndSubCategoriesModel.dart';
+import '../../../../Core/Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
 import '../../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../../Core/data/responses/status.dart';
 import '../../../../services/models/demoModel.dart';

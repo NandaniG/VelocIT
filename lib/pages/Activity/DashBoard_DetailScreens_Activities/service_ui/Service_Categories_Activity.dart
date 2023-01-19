@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../Core/Model/CategoriesModel.dart';
 import '../../../../Core/Model/ProductCategoryModel.dart';
-import '../../../../Core/Model/ServiceCategoryAndSubCategoriesModel.dart';
+import '../../../../Core/Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
 import '../../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../../Core/data/responses/status.dart';
 import '../../../../services/models/demoModel.dart';
@@ -23,6 +23,7 @@ import '../../../homePage.dart';
 import '../../../screens/dashBoard.dart';
 import '../../Product_Activities/Products_List.dart';
 import 'ServicesDetailScreen.dart';
+import 'Services_List_Screen.dart';
 
 class ShopByCategoryActivity extends StatefulWidget {
   // List<ProductList>? shopByCategoryList;
@@ -133,7 +134,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                     height: height * .02,
                                   ),
                                   TextFieldUtils().dynamicText(
-                                      StringUtils.bookOurServices,
+                                      'Services',
                                       context,
                                       TextStyle(
                                         fontFamily: 'Roboto',
@@ -396,7 +397,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
             return InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ServiceDetailScreen(
+                  builder: (context) => ServiceListByCategoryActivity(
                       productList: servicePayload.simpleSubCats![index]),
                 ));
               },

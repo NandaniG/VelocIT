@@ -839,13 +839,14 @@ class _SignUpState extends State<SignUp> {
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => SignIn_Screen()));
       businessNameController.clear();
+
       mobileNumberController.clear();
       email.clear();
       password.clear();
       confirmPassword.clear();
       print(reply.toString());
     } else {
-      Utils.errorToast(name.toString());
+      Utils.errorToast('Something went wrong');
       }
 
     httpClient.close();

@@ -14,7 +14,7 @@ import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
 import '../Model/ProductListingModel.dart';
 import '../Model/ProductsModel/Product_by_search_term_model.dart';
-import '../Model/ServiceCategoryAndSubCategoriesModel.dart';
+import '../Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
 import '../Model/SimmilarProductModel.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';

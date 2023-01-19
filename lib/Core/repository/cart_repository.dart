@@ -93,18 +93,23 @@ class CartRepository {
     print("updateCartPostRequest map : " + jsonMap.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
+    if(map['status']=='OK'){}else{print("Status not ok");}
 
-    var userData = UpdateCartModel.fromJson(map);
 
-    // if (response.statusCode == 200) {
-    print(userData.payload!.id.toString());
+    if (response.statusCode == 200) {
 
-    print("userData.payload!.id");
-    print(responseJson.toString());
-    Provider.of<ProductProvider>(context, listen: false);
+      var userData = UpdateCartModel.fromJson(map);
 
-    await getCartSpecificIDList(userData.payload!.id.toString());
+      print(userData.payload!.id.toString());
 
+      print("userData.payload!.id");
+      print(responseJson.toString());
+      Provider.of<ProductProvider>(context, listen: false);
+
+      await getCartSpecificIDList(userData.payload!.id.toString());
+    }else{
+      print(response);
+    }
     httpClient.close();
     return responseJson = UpdateCartModel.fromJson(map);
   }
@@ -422,12 +427,13 @@ if(response.statusCode == 200) {
     print(requestUrl.toString());
 
     String body = json.encode(data);
-    print("jsonMap for update" + body.toString());
+    print("putCartForPayment jsonMap" + body.toString());
 
     try {
       dynamic reply;
       http.Response response = await http.put(Uri.parse(requestUrl),
           body: body, headers: {'content-type': 'application/json'});
+      print("response post" + response.body.toString());
       print("response postputCartForPaymentUpdate" + response.body.toString());
       // Utils.successToast(response.body.toString());
       return reply;

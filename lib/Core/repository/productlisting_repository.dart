@@ -15,6 +15,7 @@ import '../Model/FindProductBySubCategoryModel.dart';
 import '../Model/CartModel.dart';
 import '../Model/CategoriesModel.dart';
 import '../Model/ProductCategoryModel.dart';
+import '../Model/ServiceModels/SingleServiceModel.dart';
 import '../Model/productSpecificListModel.dart';
 import '../Model/scannerModel/SingleProductModel.dart';
 import '../Model/scannerModel/productScanModel.dart';
@@ -39,10 +40,21 @@ class ProductSpecificListRepository {
   Future<SingleProductIDModel> getSingleProductSpecificList(
       String productId) async {
     var url = ApiMapping.getURI(apiEndPoint.single_product);
-
+print(url+productId);
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + productId);
       return response = SingleProductIDModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+  Future<SingleServiceIDModel> getSingleServiceSpecificList(
+      String productId) async {
+    var url = ApiMapping.getURI(apiEndPoint.single_service);
+print(url+productId);
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url + productId);
+      return response = SingleServiceIDModel.fromJson(response);
     } catch (e) {
       throw e;
     }

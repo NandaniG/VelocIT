@@ -222,6 +222,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                     "user_id": cartForPaymentPayload.userId,
                                     "payable_amount": cartForPaymentPayload
                                         .cart!.totalPayable,
+                                    "is_self_pickup":isSelfPickUp,
                                   };
                                   if(StringConstant
                                       .selectedFullName!=''){
