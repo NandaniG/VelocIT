@@ -29,10 +29,12 @@ import '../../../widgets/global/textFormFields.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
+import '../../screens/dashBoard.dart';
 import '../My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import '../Payment_Activities/OrderPlaced_activity.dart';
 import '../Payment_Activities/payments_Activity.dart';
 import 'AddNewDeliveryAddress.dart';
+import 'confirmationPopUpForNavBack.dart';
 
 class OrderReviewActivity extends StatefulWidget {
   int cartId;
@@ -113,10 +115,38 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
 
     return Scaffold(
         key: scaffoldGlobalKey,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(72),
-          child: appBar_backWidget(
-              context, appTitle(context, "Order Checkout"), const SizedBox(),setState),
+        appBar: AppBar(
+          backgroundColor: ThemeApp.appBackgroundColor,
+          elevation: 0,
+          leading: InkWell(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return NavBackConfirmationFromPayment();
+                  });
+
+
+            // Provider.of<ProductProvider>(context, listen: false);
+            },
+            child: Transform.scale(
+              scale: 0.7,
+              child: Image.asset(
+                'assets/appImages/backArrow.png',
+                color: ThemeApp.primaryNavyBlackColor,
+                // height: height*.001,
+              ),
+            ),
+          ),
+          title: TextFieldUtils().dynamicText(
+              'Order Checkout',
+              context,
+              TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  // fontWeight: FontWeight.w500,
+                  fontSize: MediaQuery.of(context).size.height * .022,
+                  fontWeight: FontWeight.w500)),
         ),
         bottomNavigationBar: BottomAppBar(
             color: ThemeApp.appBackgroundColor,
@@ -193,16 +223,23 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                     "payable_amount": cartForPaymentPayload
                                         .cart!.totalPayable,
                                   };
-                                  CartRepository().putCartForPayment(data,
-                                      cartForPaymentPayload.orderBasketId!);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          Payment_Creditcard_debitcardScreen(
-                                              cartForPaymentPayload:
-                                                  cartForPaymentPayload),
-                                    ),
-                                  );
+                                  if(StringConstant
+                                      .selectedFullName!=''){
+
+                                    CartRepository().putCartForPayment(data,
+                                        cartForPaymentPayload.orderBasketId!);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            Payment_Creditcard_debitcardScreen(
+                                                cartForPaymentPayload:
+                                                cartForPaymentPayload),
+                                      ),
+                                    );
+                                  }else{
+                                    Utils.successToast("Please select delivery address");
+                                  }
+
                                   // Navigator.of(context).push(
                                   //   MaterialPageRoute(
                                   //     builder: (context) => OrderPlaceActivity(productList: widget.productList),

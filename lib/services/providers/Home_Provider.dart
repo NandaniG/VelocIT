@@ -115,6 +115,7 @@ class HomeProvider with ChangeNotifier {
       throw e;
     }
   }
+/*
   Future putCartForPaymentUpdate(dynamic data, int orderBasketID) async {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
 
@@ -143,8 +144,9 @@ class HomeProvider with ChangeNotifier {
 
   Future putCartForPayment(dynamic data,int orderBasketID) async {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
+    final prefs = await SharedPreferences.getInstance();
 
-    print("userId"+orderBasketID.toString());
+    print("orderBasketID"+orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/attempt_payment';
 
     var requestUrl = ApiMapping.BaseAPI +url;
@@ -158,8 +160,14 @@ class HomeProvider with ChangeNotifier {
       dynamic reply;
       http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
       print("response post"+response.body.toString());
-      jsonData = json.decode(response.body);
-      // Utils.successToast(response.body.toString());
+      if(response.statusCode ==200) {
+        jsonData = json.decode(response.body);
+        prefs.setString('payment_attempt_id', jsonData['payload']['payment_attempt_id']);
+
+      }else{
+        Utils.successToast('something went wrong');
+
+      }
       return reply;
 
       return response ;
@@ -168,6 +176,7 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
+*/
 
   Future setSecondDefaultAddress(String consumerUID, String addressId) async {
 

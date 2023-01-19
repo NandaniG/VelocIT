@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/CartModels/SendCartForPaymentModel.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 
@@ -20,6 +21,7 @@ import '../../../widgets/global/textFormFields.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
+import '../Order_CheckOut_Activities/confirmationPopUpForNavBack.dart';
 import 'OrderPlaced_activity.dart';
 
 enum CardType {
@@ -79,16 +81,46 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-            context, appTitle(context, "Order Checkout"), SizedBox(),setState),
+
+      appBar: AppBar(
+        backgroundColor: ThemeApp.appBackgroundColor,
+        elevation: 0,
+        leading: InkWell(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return NavBackConfirmationFromPayment();
+                });
+
+
+            // Provider.of<ProductProvider>(context, listen: false);
+          },
+          child: Transform.scale(
+            scale: 0.7,
+            child: Image.asset(
+              'assets/appImages/backArrow.png',
+              color: ThemeApp.primaryNavyBlackColor,
+              // height: height*.001,
+            ),
+          ),
+        ),
+        title: TextFieldUtils().dynamicText(
+            'Order Checkout',
+            context,
+            TextStyle(
+                fontFamily: 'Roboto',
+                color: ThemeApp.blackColor,
+                // fontWeight: FontWeight.w500,
+                fontSize: MediaQuery.of(context).size.height * .022,
+                fontWeight: FontWeight.w500)),
       ),
       bottomNavigationBar: BottomAppBar(
         color: ThemeApp.appBackgroundColor,
         elevation: 0,
         child: Consumer<HomeProvider>(builder: (context, value, child) {
-          return Container(
+
+          return value.jsonData.isEmpty?CircularProgressIndicator(): Container(
             height: 72,
             // height: height * .09,
             width: width,
@@ -135,8 +167,9 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           ))
                     ]),
                 InkWell(
-                    onTap: () async {
-                      // Navigator.of(context).push(
+                    onTap: () async {    final prefs = await SharedPreferences.getInstance();
+
+                    // Navigator.of(context).push(
                       //   MaterialPageRoute(
                       //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
                       //   ),
@@ -148,7 +181,6 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                       print("$r is in the range of $min and $max");
                      int UTRNumber = r;
                       print("UTRNumber " + UTRNumber.toString());
-                      print("UTRNumber " + value.jsonData['payload']['payment_attempt_id'].toString());
                           // Map data={
                           //           "utr_number":UTRNumber,
                           //           "user_id": widget.cartForPaymentPayload.userId,
@@ -156,9 +188,9 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           //           "remark":"OK",
                           //           "is_successful":true
                           //         };
-
+                   var paymentAttemptId=   prefs.getString('payment_attempt_id');
                       Map data={
-                          "payment_attempt_id":value.jsonData['payload']['payment_attempt_id'].toString(),
+                          "payment_attempt_id":paymentAttemptId.toString(),
                           "order_basket_id":widget.cartForPaymentPayload.orderBasketId,
                           "utr_number":UTRNumber,
                           "user_id":widget.cartForPaymentPayload.userId,
@@ -170,9 +202,8 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           "payment_sent_to_pg":DateTime.now().toString(),
                           "payment_status":"OK",
                           "pg_selected":"RazorPay"
-
                               };
-                              value.putCartForPayment(data,widget.cartForPaymentPayload.orderBasketId!).then((value) {
+                      CartRepository().putCartForPaymentUpdate(data,widget.cartForPaymentPayload.orderBasketId!).then((value) {
                                 Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => OrderPlaceActivity(data:   data,cartForPaymentPayload: widget.cartForPaymentPayload
