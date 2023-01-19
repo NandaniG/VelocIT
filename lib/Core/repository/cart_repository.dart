@@ -134,7 +134,6 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
 
       return response = CartSpecificIdModel.fromJson(response); 
       }
-      }
       var cart = CartSpecificIdModel();
       cart.status = "ERROR";
       return cart;
