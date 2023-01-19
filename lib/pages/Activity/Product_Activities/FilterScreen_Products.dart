@@ -225,9 +225,9 @@ class _FilterScreenState extends State<FilterScreen> {
           child: Row(
             children: [
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Container(
-                    height: height * .87,
+                    height: MediaQuery.of(context).size.height * 0.85,
                     width: width,
                     color: ThemeApp.appBackgroundColor,
                     child: ListView.builder(
@@ -282,7 +282,7 @@ class _FilterScreenState extends State<FilterScreen> {
               Expanded(
                 flex: 3,
                 child: Container(
-                  height: height * .87,
+                  height: MediaQuery.of(context).size.height * 0.85,
                   child: Container(
                     width: width * .4,
                     height: height * .04,
@@ -342,7 +342,7 @@ class _FilterScreenState extends State<FilterScreen> {
               // ),
               Container(
                 width: width,
-                height: height * .1,
+                height: 60,
                 color: ThemeApp.whiteColor,
                 child: _bottomBar(),
               ),
@@ -381,7 +381,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   textAlign: TextAlign.center,
                   style:   TextStyle(fontFamily: 'Roboto',
                       color:ThemeApp.tealButtonColor,
-                      fontSize: height * .022,
+                      fontSize: 18,
                       fontWeight: FontWeight.w700)),
             ),
           ),),
@@ -413,7 +413,7 @@ class _FilterScreenState extends State<FilterScreen> {
                     textAlign: TextAlign.center,
                     style:   TextStyle(fontFamily: 'Roboto',
                         color:ThemeApp.whiteColor,
-                        fontSize: height * .022,
+                        fontSize: 18,
                         fontWeight: FontWeight.w700)),
               ),
             ))

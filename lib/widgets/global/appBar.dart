@@ -370,7 +370,7 @@ Widget appTitle(BuildContext context, String text) {
         TextStyle(fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             // fontWeight: FontWeight.w500,
-            fontSize: MediaQuery.of(context).size.height * .022,
+            fontSize: 20,
             fontWeight: FontWeight.w500)),
   );
 }

@@ -114,7 +114,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     return Scaffold(
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(72),
+          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.085),
           child: appBar_backWidget(
               context, appTitle(context, "Order Checkout"), const SizedBox(),setState),
         ),

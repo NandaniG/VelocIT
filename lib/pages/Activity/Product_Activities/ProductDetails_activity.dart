@@ -488,7 +488,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   Widget rattingBarWidget(
       SingleProductPayload model, int count, double width, double ratingValue) {
     return Container(
-      width: width,
+      width: MediaQuery.of(context).size.width * 0.34,
       // padding: const EdgeInsets.only(
       //   left: 20,
       //   right: 20,

@@ -164,7 +164,8 @@ class _OfferActivityState extends State<OfferActivity> {
         (MediaQuery.of(context).orientation == Orientation.landscape);
 
     return Consumer<HomeProvider>(builder: (context, provider, child) {
-    return  Container(
+      if (provider.offerListDetails != null) {
+        return  Container(
           height:400,
           // padding: EdgeInsets.all(12.0),
           child: GridView.builder(
@@ -251,6 +252,21 @@ class _OfferActivityState extends State<OfferActivity> {
                   ));
             },
           ));
+      } else {
+        return Container(
+                                height: height * .5,
+                                alignment: Alignment.center,
+                                child: TextFieldUtils().dynamicText(
+                                    "No Current Offers",
+                                    context,
+                                    TextStyle(
+                                        fontFamily: 'Roboto',
+                                        color: ThemeApp.blackColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: height * .03,
+                                        overflow: TextOverflow.ellipsis)),
+                              );
+      }
     });
   }
 
