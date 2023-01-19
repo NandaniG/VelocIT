@@ -157,47 +157,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           context, StringConstant.UserCartID);
     }
     print("Cart Id ForDirect" + getDirectCartID.toString());
-  }
-/*
-   getCartDetailsFromPref() async {
-
-    final prefs = await SharedPreferences.getInstance();
-
-
-      StringConstant.RandomUserLoginId =
-          (prefs.getString('RandomUserId')) ?? '';
-
-      print("ISRANDOM ID............" +
-          StringConstant.RandomUserLoginId.toString());
-
-      StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-      var userLoginId = StringConstant.UserLoginId;
-
-      var userRandomId = StringConstant.RandomUserLoginId;
-
-      print("USER LOGIN ID..............." +
-          StringConstant.UserLoginId.toString());
-
-      if (StringConstant.UserLoginId == '') {
-        data = {'userId': userRandomId};
-        print('login user is GUEST');
-      } else {
-        data = {'userId': userLoginId};
-        print('login user is NOT GUEST');
-
-      }
-      //597723544
-      // print("cart data pass in cart: " + data.toString());
-      // CartRepository().cartPostRequest(data, context);
-
-      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-      setState(() {});
-      await cartListView.cartSpecificIDWithGet(
-          context, StringConstant.UserCartID);
-      print("cartId from Pref" + StringConstant.UserCartID.toString());
 
   }
-*/
 
   @override
   void dispose() {
@@ -218,7 +179,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     var prefUserId = await Prefs.instance.getToken(
       Prefs.prefRandomUserId,
     );
-    print("cartId from Pref" + StringConstant.UserCartID.toString());
+    print("Cart Id From Cart Activity " + StringConstant.UserCartID.toString());
     print("prefUserId from Pref" + prefUserId.toString());
 
     if (StringConstant.UserLoginId.toString() == '' ||

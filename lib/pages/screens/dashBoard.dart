@@ -121,10 +121,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   String finalId = '';
 
-  Future<void> getCartDetailsFromPref() async {
+  getCartDetailsFromPref() async {
     String isUserLoginPref = 'isUserLoginPref';
 
     final prefs = await SharedPreferences.getInstance();
+    StringConstant.BadgeCounterValue =
+        (prefs.getString('setBadgeCountPrefs')) ?? '';
     setState(() {
       StringConstant.FINALPINCODE = (prefs.getString('CurrentPinCodePref') ?? '');
       print(
@@ -305,9 +307,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         height: height * .02,
                                       ),
                                       StringConstant.UserLoginId == ''?SizedBox():   stepperOfDelivery(provider),
-                                      StringConstant.UserLoginId ==''?SizedBox():   SizedBox(
-                                        height: 20,
-                                      ),
+                                      // StringConstant.UserLoginId ==''?SizedBox():   SizedBox(
+                                      //   height: 20,
+                                      // ),
                                       productDetailsUI(),
                                       SizedBox(
                                         height: height * .02,
@@ -777,7 +779,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ]),
                   );
                 default:
-                  return Text("No Data found!");
+                  return Text("");
               }
               return Text("No Data found!");
             }));
@@ -1590,7 +1592,7 @@ SizedBox(height: 6,),
   Widget stepperOfDelivery(HomeProvider value) {
     return /*(value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
             value.jsonData.isNotEmpty)*/
-      value.jsonData['status']=="EXCEPTION"? Text("No data found"):
+      value.jsonData['status']=="EXCEPTION"? Text(""):
        Container(
             // height: 300,
             height: 160,

@@ -74,7 +74,7 @@ class CartRepository {
 
   Future<UpdateCartModel> updateCartPostRequest(
       Map jsonMap, BuildContext context) async {
-    SessionManager prefs = SessionManager();
+    final prefs = await SharedPreferences.getInstance();
 
     dynamic responseJson;
     var url = ApiMapping.getURI(apiEndPoint.cart_update);
@@ -92,7 +92,6 @@ class CartRepository {
     String rawJson = responseJson.toString();
     print("updateCartPostRequest response11");
     print("updateCartPostRequest map : " + jsonMap.toString());
-    print(responseJson.toString());
 
     Map<String, dynamic> map = jsonDecode(rawJson);
 
@@ -116,6 +115,9 @@ class CartRepository {
     print("Cart specific ID : " + id.toString());
     final prefs = await SharedPreferences.getInstance();
 
+
+    var isNavFromBuyNow =  prefs.getString(
+        'isBuyNow');
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
       print("Cart Specific Id : " + response.toString());
@@ -126,7 +128,8 @@ class CartRepository {
       prefs.setString(
         'setBadgeCountPrefs',
         response['payload']['total_item_count'].toString(),
-      );
+      );}
+print(" total_item_count Badge"+response['payload']['total_item_count'].toString());
 
 
       return response = CartSpecificIdModel.fromJson(response); 
@@ -160,6 +163,8 @@ class CartRepository {
     print('---- status code: ${response.statusCode}');
     var jsonData = json.decode(response.body);
 if(response.statusCode == 200) {
+  prefs.setString(
+      'isUserNavigateFromDetailScreen', '1');
       print('---- slot: ${jsonData['payload']['id']}');
   var merchanId  =  prefs.getString('selectedMerchantId');
   var ProductId  =      prefs.getString('selectedProductId');
@@ -382,6 +387,7 @@ if(response.statusCode == 200) {
 
   Future putCartForPayment(dynamic data, int orderBasketID) async {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
+    final prefs = await SharedPreferences.getInstance();
 
     print("userId" + orderBasketID.toString());
     var url = '/order-basket/$orderBasketID/attempt_payment';
@@ -390,13 +396,17 @@ if(response.statusCode == 200) {
     print(requestUrl.toString());
 
     String body = json.encode(data);
-    print("jsonMap" + body.toString());
+    print("putCartForPayment jsonMap" + body.toString());
 
     try {
       dynamic reply;
       http.Response response = await http.put(Uri.parse(requestUrl),
           body: body, headers: {'content-type': 'application/json'});
       print("response post" + response.body.toString());
+   var jsonData = json.decode(response.body);
+      print("response post jsonData" + jsonData['payload']['payment_attempt_id'].toString());
+      prefs.setString('payment_attempt_id', jsonData['payload']['payment_attempt_id'].toString());
+
       // Utils.successToast(response.body.toString());
       return reply;
 
@@ -418,7 +428,7 @@ if(response.statusCode == 200) {
     print(requestUrl.toString());
 
     String body = json.encode(data);
-    print("jsonMap" + body.toString());
+    print("jsonMap for update" + body.toString());
 
     try {
       dynamic reply;

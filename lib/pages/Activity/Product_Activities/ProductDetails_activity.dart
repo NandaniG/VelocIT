@@ -1315,8 +1315,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           });
 
                           final prefs = await SharedPreferences.getInstance();
+                          prefs.setString(
+                              'isBuyNow', 'true');
+
                           StringConstant.isUserLoggedIn =
                               (prefs.getInt('isUserLoggedIn')) ?? 0;
+
                           final navigator =
                               Navigator.of(context); // <- Add this
                           model.productsubCategory;

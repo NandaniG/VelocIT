@@ -3,25 +3,34 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/CartModels/SendCartForPaymentModel.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 
+import '../../../Core/ViewModel/cart_view_model.dart';
 import '../../../Core/ViewModel/dashboard_view_model.dart';
+import '../../../Core/repository/cart_repository.dart';
 import '../../../services/providers/Home_Provider.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/textFormFields.dart';
+
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 import '../../homePage.dart';
 import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
+import '../Order_CheckOut_Activities/confirmationPopUpForNavBack.dart';
 
 class OrderPlaceActivity extends StatefulWidget {
   Map data;
   CartForPaymentPayload cartForPaymentPayload;
-   OrderPlaceActivity({Key? key, required this.data,required this.cartForPaymentPayload}) : super(key: key);
+
+  OrderPlaceActivity(
+      {Key? key, required this.data, required this.cartForPaymentPayload})
+      : super(key: key);
 
   @override
   State<OrderPlaceActivity> createState() => _OrderPlaceActivityState();
@@ -31,101 +40,134 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
+
   @override
   void initState() {
     // TODO: implement initState
 // print("orderData vdnvkd"+orderData.toString());
-  super.initState();
-  }  DashboardViewModel dashboardViewModel = DashboardViewModel();
+    super.initState();
+  }
+
+  DashboardViewModel dashboardViewModel = DashboardViewModel();
 
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
 
-    return Scaffold(backgroundColor: ThemeApp.appBackgroundColor,
+    return Scaffold(
+      backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
-      appBar: PreferredSize(
-    preferredSize: Size.fromHeight(height * .09),
-    child: appBar_backWidget(
-        context, appTitle(context, "Order Checkout"), SizedBox(),setState),
+      appBar: AppBar(
+        backgroundColor: ThemeApp.appBackgroundColor,
+        elevation: 0,
+        leading: InkWell(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return NavBackConfirmationFromPayment();
+                });
+
+
+            // Provider.of<ProductProvider>(context, listen: false);
+          },
+          child: Transform.scale(
+            scale: 0.7,
+            child: Image.asset(
+              'assets/appImages/backArrow.png',
+              color: ThemeApp.primaryNavyBlackColor,
+              // height: height*.001,
+            ),
+          ),
+        ),
+        title: TextFieldUtils().dynamicText(
+            'Order Checkout',
+            context,
+            TextStyle(
+                fontFamily: 'Roboto',
+                color: ThemeApp.blackColor,
+                // fontWeight: FontWeight.w500,
+                fontSize: MediaQuery.of(context).size.height * .022,
+                fontWeight: FontWeight.w500)),
       ),
-      body:SafeArea(
-        child:ChangeNotifierProvider<DashboardViewModel>.value(
+      body: SafeArea(
+        child: ChangeNotifierProvider<DashboardViewModel>.value(
           value: dashboardViewModel,
           child: Consumer<HomeProvider>(builder: (context, value, child) {
-              return  (value.jsonData['payload']!=null) ?Container(
-    color: ThemeApp.appColor,
-    width: width,
-    child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  stepperWidget(),
-SizedBox(height: 44,),
-                  SvgPicture.asset(
-                    'assets/appImages/successIcon.svg',
-                    color: ThemeApp
-                        .whiteColor,
-                    semanticsLabel:
-                    'Acme Logo',
-
-                    height: 68,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-
-                  TextFieldUtils().dynamicText(
-                      StringUtils.orderPlacedSuccessfully,
-                      context,
-                      TextStyle(fontFamily: 'Roboto',
+            return Container(
+                  color: ThemeApp.appColor,
+                  width: width,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        stepperWidget(),
+                        SizedBox(
+                          height: 44,
+                        ),
+                        SvgPicture.asset(
+                          'assets/appImages/successIcon.svg',
                           color: ThemeApp.whiteColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,letterSpacing: -0.25 )),
-                  SizedBox(
-                    height: 5,
-                  ),
+                          semanticsLabel: 'Acme Logo',
+                          height: 68,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        TextFieldUtils().dynamicText(
+                            StringUtils.orderPlacedSuccessfully,
+                            context,
+                            TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.whiteColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.25)),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        TextFieldUtils().dynamicText(
+                            StringUtils.thankyouForOrderingWithUs,
+                            context,
+                            TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.whiteColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400)),
+                        SizedBox(
+                          height: 32,
+                        ),
+                        TextFieldUtils().dynamicText(
+                            '${StringUtils.orderId + ":"} ${widget.cartForPaymentPayload.orderBasketId.toString()}',
+                            // '${StringUtils.orderId + ": ${value.jsonDat
+                            // 0a['payload']['order_basket_id'].toStrin/g()??''}"}',
 
-                  TextFieldUtils().dynamicText(
-                      StringUtils.thankyouForOrderingWithUs,
-                      context,
-                      TextStyle(fontFamily: 'Roboto',
-                          color: ThemeApp.whiteColor,
-                          fontSize:14,
-                          fontWeight: FontWeight.w400)),
-                  SizedBox(
-                    height: 32,
-                  ),
-
-                  TextFieldUtils().dynamicText(
-                      '${StringUtils.orderId + ": ${value.jsonData['payload']['order_basket_id'].toString()??''}"}',
-                  context,
-                      TextStyle(fontFamily: 'Roboto',
-                          color: ThemeApp.whiteColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700)),
-                  SizedBox(
-                    height: height * 0.04,
-                  ),
-                  Container(
-                    height: 137,
-                    width: 137,
-                    child: Image.asset(
-                      'assets/images/qr_test_image.png',
-                      // scale: 2,
-
-                    ),
-                  ),
-                  SizedBox(
-                    height: 32,
-                  ),
-
-                  buttonsForOrderAndShipping(),
-                ]),
-              ):SizedBox();
-            }
-          ),
+                            context,
+                            TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.whiteColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700)),
+                        SizedBox(
+                          height: height * 0.04,
+                        ),
+                        Container(
+                          height: 137,
+                          width: 137,
+                          child: Image.asset(
+                            'assets/images/qr_test_image.png',
+                            // scale: 2,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 32,
+                        ),
+                        buttonsForOrderAndShipping(),
+                      ]),
+                ) ??
+                SizedBox();
+          }),
         ),
       ),
     );
@@ -166,8 +208,9 @@ SizedBox(height: 44,),
       var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var lineColor =
-      (i == 0 || i == 1 || _curStep > i + 1) ? ThemeApp.tealButtonColor : ThemeApp.appColor;
+      var lineColor = (i == 0 || i == 1 || _curStep > i + 1)
+          ? ThemeApp.tealButtonColor
+          : ThemeApp.appColor;
       var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
@@ -187,15 +230,15 @@ SizedBox(height: 44,),
           //   ),),
           child: (i == 0 || _curStep > i + 1)
               ? Icon(
-            Icons.circle,
-            color: iconColor,
-            size: 18.0,
-          )
+                  Icons.circle,
+                  color: iconColor,
+                  size: 18.0,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: iconColor,
-            size: 18.0,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: iconColor,
+                  size: 18.0,
+                ),
         ),
       );
 
@@ -203,9 +246,9 @@ SizedBox(height: 44,),
       if (i != titles.length - 1) {
         list.add(Expanded(
             child: Container(
-              height: 3.0,
-              color: lineColor,
-            )));
+          height: 3.0,
+          color: lineColor,
+        )));
       }
     });
 
@@ -218,19 +261,21 @@ SizedBox(height: 44,),
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
             ? TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(fontFamily: 'Roboto',
-                color: ThemeApp.blackColor,
-                fontSize: height * .018,
-                fontWeight: FontWeight.w400))
+                text,
+                context,
+                TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .018,
+                    fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(fontFamily: 'Roboto',
-                color: ThemeApp.blackColor,
-                fontSize: height * .018,
-                fontWeight: FontWeight.w400)),
+                text,
+                context,
+                TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .018,
+                    fontWeight: FontWeight.w400)),
       );
     });
     return list;
@@ -238,21 +283,57 @@ SizedBox(height: 44,),
 
   Widget buttonsForOrderAndShipping() {
     return Container(
-      padding: EdgeInsets.only(left: 20,right: 20),
+      padding: EdgeInsets.only(left: 20, right: 20),
       child: Column(children: [
-proceedButton("Continue Shopping ", ThemeApp.tealButtonColor, context, false, () {
-  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
+        proceedButton(
+            "Continue Shopping ", ThemeApp.tealButtonColor, context, false,
+            () async {
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('isUserNavigateFromDetailScreen', '');
+          prefs.setString('directCartIdPref', '');
+          prefs.setString('directCartIdIsTrue', '');
+    prefs.setString(
+              'isBuyNow', 'false');
+          StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+          var userLoginId = StringConstant.UserLoginId;
+          Map data = {'userId': userLoginId};
+          print("cart data passOrderPlaced : " + data.toString());
 
-}),
-        SizedBox(height: 21,),
-        proceedButton("View my orders", ThemeApp.tealButtonColor, context, false, () {  // Navigator.of(context).pushReplacement(
-    //   MaterialPageRoute(
-    //     builder: (context) => DashboardScreen(),
-    //   ),
-    // );
-    }),
+          CartRepository().cartPostRequest(data, context).then((value) {
+            StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+            print("Cart Id From OrderPlaced Activity " + StringConstant.UserCartID);
+            // print("cartId from Pref" + CARTID.toString());
+            CartViewModel()
+                .cartSpecificIDWithGet(context, StringConstant.UserCartID).then((value) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardScreen(),
+                ),
+              ).then((value) {
+                setState(() {
+
+                });
+              });
+            });
+          });
 
 
+
+
+
+        }),
+        SizedBox(
+          height: 21,
+        ),
+        proceedButton(
+            "View my orders", ThemeApp.tealButtonColor, context, false, () {
+          // Navigator.of(context).pushReplacement(
+          //   MaterialPageRoute(
+          //     builder: (context) => DashboardScreen(),
+          //   ),
+          // );
+        }),
       ]),
     );
   }
