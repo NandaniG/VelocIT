@@ -65,7 +65,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
           child: Column(
             children: [
               appBar_backWidget(
-                  context, appTitle(context, "My Orders"), SizedBox()),
+                  context, appTitle(context, "My Orders"), SizedBox(),setState),
               Container(
                 height: height * .077,
                 decoration: BoxDecoration(

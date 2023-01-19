@@ -232,7 +232,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
           print("$r is in the range of $min and $max");
           ID = r;
-          print("cartId empty" + ID.toString());
+          print("cartId empty UserID" + ID.toString());
         } else {
           print('login user is GUEST'); // ID = StringConstant.UserLoginId;
           ID = StringConstant.UserLoginId.toString();

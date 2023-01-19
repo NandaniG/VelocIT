@@ -57,7 +57,7 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "Services Appointment"), SizedBox()),
+            context, appTitle(context, "Services Appointment"), SizedBox(),setState),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -334,7 +334,7 @@ class _ServicesFormScreenState extends State<ServicesFormScreen> {
         }
         },
             validator: (value) {
-              if (value.isEmpty && mobileNumberController.text.isEmpty) {
+              if (value==''  && mobileNumberController.text.isEmpty) {
                 _validateMobile = true;
                 return StringUtils.enterMobileNumber;
               } else if (mobileNumberController.text.length < 10) {

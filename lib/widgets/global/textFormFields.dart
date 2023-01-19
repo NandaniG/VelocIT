@@ -199,7 +199,7 @@ class _EmailTextFormFieldsWidgetState extends State<EmailTextFormFieldsWidget> {
               height: 16.56,
             ),
           ),
-          suffixIcon: !StringConstant().isEmail(widget.controller.text)||!StringConstant().isPhone(widget.controller.text)
+          suffixIcon: !StringConstant().isEmail(widget.controller.text)
               ? SizedBox()
               : Padding(
                   padding:
@@ -884,9 +884,9 @@ class TextFieldUtils {
         border: Border(
           top: BorderSide(
             color: ThemeApp.separatedLineColor,
-            width: 0.5,
+            width:1,
           ),
-          bottom: BorderSide(color: ThemeApp.separatedLineColor, width: 0.5),
+          bottom: BorderSide(color: ThemeApp.separatedLineColor, width: 1),
         ),
       ),
     );

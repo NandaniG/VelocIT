@@ -71,9 +71,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       ProductSpecificListViewModel();
   late Map<String, dynamic> data = new Map<String, dynamic>();
 
-
-
-  List<SingleModelMerchants> merchantTemp =[];
+  List<SingleModelMerchants> merchantTemp = [];
 
   @override
   void initState() {
@@ -113,7 +111,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     StringConstant.RandomUserLoginId = (prefs.getString('RandomUserId')) ?? '';
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-
+    print("Cart Id From Detail Activity " + StringConstant.UserCartID);
     var prefUserId = await Prefs.instance.getToken(
       Prefs.prefRandomUserId,
     );
@@ -134,7 +132,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       "userId": userId,
       "productId": widget.id.toString(),
       "merchantId": merchantId.toString(),
-      "qty": quantity.toString()
+      "qty": quantity.toString(),
+      "is_new_order": 'true'
     };
     print("update cart DATA" + data.toString());
     setState(() {});
@@ -145,13 +144,21 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       StringConstant.BadgeCounterValue =
           (prefs.getString('setBadgeCountPrefs')) ?? '';
     });
-    cartListView
-        .cartSpecificIDWithGet(context, StringConstant.UserCartID)
-        .then((value) {
-      setState(() {});
-      StringConstant.BadgeCounterValue =
-          (prefs.getString('setBadgeCountPrefs')) ?? '';
-    });
+
+    var getDirectCartID = prefs.getString('directCartIdPref');
+    var getDirectCartIDIsTrue = prefs.getString('directCartIdIsTrue');
+
+    if (getDirectCartIDIsTrue == 'true') {
+      print(" get DirectCartIDIs True ");
+
+      await cartListView.cartSpecificIDWithGet(
+          context, getDirectCartID.toString());
+    } else {
+      print(" get DirectCartIDIs false ");
+
+      await cartListView.cartSpecificIDWithGet(
+          context, StringConstant.UserCartID);
+    }
 
     setState(() {
       // prefs.setString(
@@ -192,11 +199,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-          context,
-          appTitle(context, "My Product"),
-          const SizedBox(),
-        ),
+        child: appBar_backWidget(context, appTitle(context, "My Product"),
+            const SizedBox(), setState),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -229,26 +233,26 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           productSubCategoryProvider.singleproductSpecificList
                               .data!.payload!.merchants;
 
-
-
                       merchantTemp = [];
                       //adding selected merchants
-                      for(int i=0; i<merchants.length; i++){
-                        if(merchants[i].id==productSubCategoryProvider.singleproductSpecificList
-                            .data!.payload!.selectedMerchantId){
+                      for (int i = 0; i < merchants.length; i++) {
+                        if (merchants[i].id ==
+                            productSubCategoryProvider.singleproductSpecificList
+                                .data!.payload!.selectedMerchantId) {
                           merchantTemp.add(merchants[i]);
                         }
                       }
                       //adding remaining merchant list
-                      for(int i=0; i<merchants.length; i++){
-                        if(merchants[i].id!=productSubCategoryProvider.singleproductSpecificList
-                            .data!.payload!.selectedMerchantId){
+                      for (int i = 0; i < merchants.length; i++) {
+                        if (merchants[i].id !=
+                            productSubCategoryProvider.singleproductSpecificList
+                                .data!.payload!.selectedMerchantId) {
                           merchantTemp.add(merchants[i]);
                         }
                       }
-                      for(int i=0; i<merchantTemp.length; i++){
-                        print("merchantTemp id"+merchantTemp[i].id.toString());
-                        print("merchantTemp merchantName"+merchantTemp[i].merchantName.toString());
+                      for (int i = 0; i < merchantTemp.length; i++) {
+                        // print("merchantTemp id"+merchantTemp[i].id.toString());
+                        // print("merchantTemp merchantName"+merchantTemp[i].merchantName.toString());
 
                       }
 // print("merchants length"+productSubCategoryProvider
@@ -319,10 +323,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   height: height * .01,
                                 ),
                                 counterWidget(model),
-                                SizedBox(
-                                  height: height * .01,
-                                ),
-                                addToCart(model),
+
 
                                 //similar product
 
@@ -518,14 +519,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
   bool isMerchantfive = false;
 
-
-
-
   Widget merchantDetails(SingleProductPayload model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
@@ -559,21 +556,19 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 ),
                                 groupValue: _radioValue,
                                 onChanged: (value) async {
-
-
                                   setState(() {
                                     _radioValue = 0;
-                                    print("radio value "+_radioValue.toString());
+                                    print("radio value " +
+                                        _radioValue.toString());
                                     // _radioValue = index;
-                                    print("before change"+model.selectedMerchantId.toString());
-                                   model.selectedMerchantId= merchantTemp[index].id;
-                                    print("after change"+model.selectedMerchantId.toString());
-
-
-
+                                    print("before change" +
+                                        model.selectedMerchantId.toString());
+                                    model.selectedMerchantId =
+                                        merchantTemp[index].id;
+                                    print("after change" +
+                                        model.selectedMerchantId.toString());
                                   });
                                 },
-
                               ),
                             ),
                             Padding(
@@ -612,7 +607,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                             merchantTemp[index].unitOfferPrice != null
                                 ? Text(
                                     indianRupeesFormat.format(double.parse(
-                                        merchantTemp[index]
+                                            merchantTemp[index]
                                                 .unitOfferPrice
                                                 .toString()) ??
                                         0.0),
@@ -754,8 +749,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           children: [
             model.merchants.isNotEmpty
                 ? TextFieldUtils().dynamicText(
-                    indianRupeesFormat.format(double.parse(merchantTemp[_radioValue].unitOfferPrice
-                            .toString()) ??
+                    indianRupeesFormat.format(double.parse(
+                            merchantTemp[_radioValue]
+                                .unitOfferPrice
+                                .toString()) ??
                         '0.0'),
                     context,
                     TextStyle(
@@ -781,8 +778,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             merchantTemp.isNotEmpty
                 ? TextFieldUtils().dynamicText(
                     indianRupeesFormat.format(double.parse(
-                           merchantTemp[_radioValue].unitMrp
-                            .toString()) ??
+                            merchantTemp[_radioValue].unitMrp.toString()) ??
                         '0.0'),
                     context,
                     TextStyle(
@@ -808,8 +804,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             ),
             merchantTemp.isNotEmpty
                 ? TextFieldUtils().dynamicText(
-                merchantTemp[_radioValue].unitDiscountPerc
-                            .toString() +
+                    merchantTemp[_radioValue].unitDiscountPerc.toString() +
                         "% Off",
                     context,
                     TextStyle(
@@ -868,9 +863,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     return Container(
       width: width,
       decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey, width: 1),
-        ),
+        // border: Border(
+        //   bottom: BorderSide(color: Colors.grey, width: 1),
+        // ),
       ),
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
@@ -957,162 +952,115 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
   Widget counterWidget(SingleProductPayload model) {
     return model.merchants!.isNotEmpty
-        ? Padding(
+        ? Container(color: ThemeApp.whiteColor,
             padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-            child: Row(
+                const EdgeInsets.only(left: 20, right: 20, top:20, bottom: 20),
+            child: Column(
               children: [
-                Expanded(
-                  flex: 1,
-                  child: TextFieldUtils().dynamicText(
-                      'Quantity : ',
-                      context,
-                      TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.blackColor,
-                          // fontWeight: FontWeight.w500,
-                          fontSize: height * .023,
-                          fontWeight: FontWeight.w500)),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * .05,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    height: height * 0.06,
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20,),
+                  child: Row(
+                    children: [
+                      TextFieldUtils().dynamicText(
+                          'Quantity : ',
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              // fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400)),
+                      SizedBox(
+                        width: 11,
                       ),
-                      color: ThemeApp.whiteColor,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                counterPrice--;
-                                remainingCounters();
 
-                                var data = {
-                                  "user_id": userId.toString(),
-                                  "item_code": model.productCode.toString(),
-                                  "qty": counterPrice.toString()
-                                };
-                                print("data maping " + data.toString());
-                                // productSpecificListViewModel.cartListWithPut(
-                                //     context, data);
-                              });
-                            },
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: ThemeApp.whiteColor,
-                              ),
-                              child: const Icon(
-                                Icons.remove,
-                                // size: 20,
-                                color: ThemeApp.tealButtonColor,
-                              ),
+                      Container(
+                        height:30,
+                        // width: width * .2,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8.0, right: 8, top: 0, bottom: 0),
-                            child: Text(
-                              counterPrice.toString().padLeft(2, '0'),
-                              style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize:
-                                      MediaQuery.of(context).size.height * .016,
-                                  fontWeight: FontWeight.w400,
-                                  overflow: TextOverflow.ellipsis,
-                                  color: ThemeApp.tealButtonColor),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                counterPrice++;
-                                remainingCounters();
+                            border: Border.all(
+                                color: ThemeApp.separatedLineColor, width: 1.5)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    counterPrice--;
+                                    remainingCounters();
 
-                                //badge counting
-                                badgeData = 0;
-
-                                ///counting will manage after api
-                                /*   for (int i = 0;
-                                            i < cartProvider.cartList.length;
-                                            i++) {
-                                              if (widget.productList.shortName==
-                                                  cartProvider.cartList[i]
-                                                      .cartProductsDescription) {
-                                                widget.productList[
-                                                "productCartMaxCounter"] =
-                                                    counterPrice;
-                                                widget.value.cartList[i]
-                                                    .cartProductsTempCounter =
-                                                widget.productList[
-                                                "productCartMaxCounter"];
-                                              }
-                                              //badge counting
-                                              print("Badge counting before" +
-                                                  badgeData.toString());
-                                              print("Badge cTemp Counting" +
-                                                  widget.value.cartList[i]
-                                                      .cartProductsTempCounter
-                                                      .toString());
-                                              print("Badge Product name" +
-                                                  widget.value.cartList[i]
-                                                      .cartProductsDescription
-                                                      .toString());
-
-                                              badgeData = badgeData +
-                                                  widget.value.cartList[i]
-                                                      .cartProductsTempCounter!;
-                                              widget.value.badgeFinalCount =
-                                                  badgeData;
-                                            }
-                                            print("Badge counting" +
-                                                badgeData.toString());
-                                            //setting value of count to the badge
-*/
-
-                                ///api for counting
-
-                                var data = {
-                                  "user_id": userId.toString(),
-                                  // "item_code": widget
-                                  //     .productList.categoryCode
-                                  //     .toString(),
-                                  "item_code": '1',
-                                  "qty": counterPrice.toString()
-                                };
-                                print("data maping " + data.toString());
-                                // productSpecificListViewModel.cartListWithPut(
-                                //     context, data);
-                              });
-                            },
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: ThemeApp.whiteColor,
+                                    var data = {
+                                      "user_id": userId.toString(),
+                                      "item_code": model.productCode.toString(),
+                                      "qty": counterPrice.toString()
+                                    };
+                                    print("data maping " + data.toString());
+                                    // productSpecificListViewModel.cartListWithPut(
+                                    //     context, data);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                  child: const Icon(Icons.remove,
+                                      // size: 20,
+                                      color: ThemeApp.lightFontColor),
+                                ),
                               ),
-                              child: const Icon(
-                                Icons.add,
-                                // size: 20,
-                                color: ThemeApp.tealButtonColor,
+                              Container(
+                                height:30,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.fromLTRB(
+                                  20,
+                                  0,
+                                  20,
+                                  0,
+                                ),
+                                color: ThemeApp.separatedLineColor,
+                                child: Text(
+                                  counterPrice.toString().padLeft(2, '0'),
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: MediaQuery.of(context).size.height * .016,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis,
+                                      color: ThemeApp.blackColor),
+                                ),
                               ),
-                            ),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    counterPrice++;
+                                    remainingCounters();
+
+
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                  child: const Icon(Icons.add,
+                                      // size: 20,
+                                      color: ThemeApp.lightFontColor),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                addToCart(model),
               ],
             ),
           )
@@ -1188,22 +1136,22 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               });
                             },
                             child: Container(
-                                height: height * 0.06,
+                                height:40,
                                 alignment: Alignment.center,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
+                                    Radius.circular(100),
                                   ),
-                                  color: ThemeApp.whiteColor,
+                                  border: Border.all(
+                                      color: ThemeApp.tealButtonColor),
+                                  color: ThemeApp.containerColor,
                                 ),
                                 child: Text(
                                   "Add to Cart",
                                   style: TextStyle(
                                     fontFamily: 'Roboto',
-                                    fontSize:
-                                        MediaQuery.of(context).size.height *
-                                            .021,
-                                    fontWeight: FontWeight.w500,
+                                    fontSize:16,
+                                    fontWeight: FontWeight.bold,
                                     overflow: TextOverflow.ellipsis,
                                     color: ThemeApp.tealButtonColor,
                                   ),
@@ -1365,154 +1313,64 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                             productListProvider.isHome = false;
                             productListProvider.isBottomAppCart = false;
                           });
-                          // StringConstant.isLogIn == false
-                          //     ? Navigator.of(context).push(
-                          //     MaterialPageRoute(
-                          //       builder: (context) => OrderReviewSubActivity(
-                          //           value: productProvider,
-                          //           cartListFromHome: widget.productList),
-                          //     ),
-                          //   )
-                          // :
+
                           final prefs = await SharedPreferences.getInstance();
                           StringConstant.isUserLoggedIn =
                               (prefs.getInt('isUserLoggedIn')) ?? 0;
                           final navigator =
                               Navigator.of(context); // <- Add this
+                          model.productsubCategory;
 
+                          //send data to login user for direct purchase api
+                          prefs.setString('selectedMerchantId',
+                              model.selectedMerchantId.toString());
                           prefs.setString(
-                              'isUserNavigateFromDetailScreen', 'Yes');
-                          if (StringConstant.isUserLoggedIn != 0) {
-                            navigator
-                                .push(MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        OrderReviewActivity(
-                                            cartId: int.parse(
-                                                StringConstant.UserCartID))))
-                                .then((value) => setState(() {}));
+                              'selectedProductId', model.id.toString());
+                          prefs.setString(
+                              'selectedCounterPrice', counterPrice.toString());
+
+                          //get cartID from DirectUser for purchase
+
+                          var directCartId =
+                              prefs.getString('directCartIdPref');
+                          var loginUserId = (prefs.getString('isUserId')) ?? '';
+                          if (StringConstant.isUserLoggedIn == 1) {
+                            //if user logged in
+
+                            CartRepository()
+                                .buyNowGetRequest(loginUserId, context);
                           } else {
+                            //if user not login
+                            prefs.setString(
+                                'isUserNavigateFromDetailScreen', 'BN');
                             Navigator.pushReplacementNamed(
                                 context, RoutesName.signInRoute);
 
                             print("Not Logged in");
                             // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
                           }
-
-                          // StringConstant.isUserLoggedIn == 0?'':     Navigator.pushNamed(
-                          //       context, RoutesName.signInRoute);
-
-                          /*    widget.productList["productTempCounter"] = counterPrice;
-                              print("_________widget.productListtempCounter_" +
-                                  widget.productList["productTempCounter"].toString());
-                              final navigator = Navigator.of(context); // <- Add this
-
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-
-                              var contain = productProvider.cartList.where((element) =>
-                                  element.cartProductsDescription ==
-                                  widget.productList["productsListDescription"]);
-
-                              if (productProvider.cartList.length >= 0) {
-                                if (contain.isNotEmpty) {
-                                  navigator
-                                      .push(MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              CartDetailsActivity(
-                                                  productList: widget.productList,
-                                                  value: productProvider)))
-                                      .then((value) => setState(() {}));
-                                  print("_________widget.productList..." +
-                                      widget.productList["productTempCounter"]
-                                          .toString());
-                                  widget.productList["productTempCounter"] =
-                                      counterPrice;
-                                } else {
-                                  print(
-                                      "-------------I do not have any Values_________");
-
-                                  navigator
-                                      .push(MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              CartDetailsActivity(
-                                                  productList: widget.productList,
-                                                  value: productProvider)))
-                                      .then((value) => setState(() {}));
-                                  print(
-                                      "-------------Cart Length before ADD in product details_________${productProvider.cartList.length}");
-
-                                  productProvider.add(
-                                    widget.productList["productsListImage"],
-                                    widget.productList["productsListName"],
-                                    widget.productList["productSellerName"],
-                                    double.parse(widget.productList["productRatting"]
-                                        .toString()),
-                                    widget.productList["productDiscountPrice"],
-                                    widget.productList["productOriginalPrice"],
-                                    widget.productList["productOfferPercent"],
-                                    widget.productList["productAvailableVariants"],
-                                    widget.productList["productCartProductsLength"],
-                                    widget.productList["productsListDescription"],
-                                    widget.productList["productCartMaxCounter"],
-                                    widget.productList["productDeliveredBy"],
-                                    widget.productList["productTempCounter"] == 0
-                                        ? widget.productList["productTempCounter"] = 1
-                                        : widget.productList["productTempCounter"],
-                                  );
-
-                                  print(
-                                      "-------------Cart Length after ADD in product details_________${productProvider.cartList.length}");
-                                }
-                              } else {
-                                print("-------------List is empty_________");
-                                print(
-                                    "-------------Cart Length before ADD in product details_________${productProvider.cartList.length}");
-
-                                productProvider.add(
-                                  widget.productList["productsListImage"],
-                                  widget.productList["productsListName"],
-                                  widget.productList["productSellerName"],
-                                  double.parse(
-                                      widget.productList["productRatting"].toString()),
-                                  widget.productList["productDiscountPrice"],
-                                  widget.productList["productOriginalPrice"],
-                                  widget.productList["productOfferPercent"],
-                                  widget.productList["productAvailableVariants"],
-                                  widget.productList["productCartProductsLength"],
-                                  widget.productList["productsListDescription"],
-                                  widget.productList["productCartMaxCounter"],
-                                  widget.productList["productDeliveredBy"],
-                                  widget.productList["productTempCounter"] == 0
-                                      ? widget.productList["productTempCounter"] = 1
-                                      : widget.productList["productTempCounter"],
-                                );
-                                print("_________widget.model.tempCounter_333333333" +
-                                    widget.model.tempCounter.toString());
-                                print(
-                                    "-------------Cart Length after ADD in product details_________${productProvider.cartList.length}");
-
-                                // if(value.lst.length>=0) {
-                                navigator
-                                    .push(MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            CartDetailsActivity(
-                                                productList: widget.productList,
-                                                value: productProvider)))
-                                    .then((value) => setState(() {}));
-                                // }
-                              }*/
                         },
                         child: Container(
-                            height: height * 0.06,
+                            height:40,
                             alignment: Alignment.center,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(
-                                Radius.circular(10),
+                                Radius.circular(100),
                               ),
+                              border: Border.all(
+                                  color: ThemeApp.tealButtonColor),
                               color: ThemeApp.tealButtonColor,
                             ),
-                            child: TextFieldUtils().usingPassTextFields(
-                                "Buy now", ThemeApp.whiteColor, context)),
+                            child: Text(
+                              "Buy now",
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize:16,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
+                                color: ThemeApp.whiteColor,
+                              ),
+                            )),
                       ),
                     )
                   ],

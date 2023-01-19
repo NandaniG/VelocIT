@@ -51,7 +51,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .08),
         child: appBar_backWidget(
-            context, appTitle(context, "Order Details"), SizedBox()),
+            context, appTitle(context, "Order Details"), SizedBox(),setState),
       ),
       body: SafeArea(child: mainUI()),
     );

@@ -26,16 +26,16 @@ class MergeCartModel {
 class Payload {
   int? id;
   List<OrdersForPurchase>? ordersForPurchase;
-  int? totalDeliveryCharges;
-  int? totalDiscountAmount;
-  int? totalDiscountAmountPercent;
-  int? productRating;
+  double? totalDeliveryCharges;
+  double? totalDiscountAmount;
+  double? totalDiscountAmountPercent;
+  double? productRating;
   bool? isDelivertAddressSet;
   var deliveryAddressId;
   int? totalItemCount;
-  int? totalMrp;
-  int? totalOffer;
-  int? totalPayable;
+  double? totalMrp;
+  double? totalOffer;
+  double? totalPayable;
   int? userId;
 
   Payload(
@@ -106,8 +106,8 @@ class OrdersForPurchase {
   var deliveryAddressPincode;
   var deliveryAddressState;
   var deliveryDate;
-  int? discountAmount;
-  int? discountPercent;
+  double? discountAmount;
+  double? discountPercent;
   String? imageUrl;
   bool? isAccepted;
   bool? isDelivered;
@@ -116,8 +116,8 @@ class OrdersForPurchase {
   bool? isShipped;
   int? itemQty;
   int? merchantId;
-  int? mrp;
-  int? offer;
+  double? mrp;
+  double? offer;
   String? oneliner;
   int? productId;
   String? productCode;
@@ -128,9 +128,9 @@ class OrdersForPurchase {
   var serviceItemId;
   String? shortName;
   var userId;
-  int? unitMrp;
-  int? unitOffer;
-  int? unitDiscount;
+  double? unitMrp;
+  double? unitOffer;
+  double? unitDiscount;
   var unitDiscountPerc;
 
   OrdersForPurchase(

@@ -82,7 +82,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "Order Checkout"), SizedBox()),
+            context, appTitle(context, "Order Checkout"), SizedBox(),setState),
       ),
       bottomNavigationBar: BottomAppBar(
         color: ThemeApp.appBackgroundColor,
@@ -172,16 +172,15 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           "pg_selected":"RazorPay"
 
                               };
-                              value.putCartForPayment(data,widget.cartForPaymentPayload.orderBasketId!);
+                              value.putCartForPayment(data,widget.cartForPaymentPayload.orderBasketId!).then((value) {
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => OrderPlaceActivity(data:   data,cartForPaymentPayload: widget.cartForPaymentPayload
+                                      ),
+                                    ));
+                              } );
 
-                      // String jsonContents = await   CartRepository().putCartForPaymentUpdate(data,widget.cartForPaymentPayload.orderBasketId!);
 
-
-                          Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => OrderPlaceActivity(data:   data,cartForPaymentPayload: widget.cartForPaymentPayload
-                        ),
-                        ));
                     },
                     child: Container(
 

@@ -66,9 +66,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     // TODO: implement initState
     super.initState();
 
-    print("Cart id in sub order " + widget.cartId.toString());
-    cartListView.sendCartForPaymentWithGet(context, widget.cartId.toString());
-    StringConstant.addressFromCurrentLocation;
+   StringConstant.addressFromCurrentLocation;
     StringConstant.selectedFullName;
     StringConstant.selectedFullAddress;
     StringConstant.selectedTypeOfAddress;
@@ -81,7 +79,14 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
 
   getPreferences() async {
     //get address
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+    print("Cart Id From Order Review"+StringConstant.UserCartID);
+
+    print("Cart id in sub order " + widget.cartId.toString());
+    cartListView.sendCartForPaymentWithGet(context, widget.cartId.toString());
+////////////////
     StringConstant.addressFromCurrentLocation =
         (await Prefs.instance.getToken(StringConstant.addressPref))!;
     StringConstant.selectedFullAddress = (await Prefs.instance
@@ -111,7 +116,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(72),
           child: appBar_backWidget(
-              context, appTitle(context, "Order Checkout"), const SizedBox()),
+              context, appTitle(context, "Order Checkout"), const SizedBox(),setState),
         ),
         bottomNavigationBar: BottomAppBar(
             color: ThemeApp.appBackgroundColor,
@@ -129,7 +134,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                       print("Api error");
 
                       return Text(
-                          cartProvider.sendCartForPayment.message.toString());
+                          'Please try after some time');
                     case Status.COMPLETED:
                       print("Api calll");
                       CartForPaymentPayload cartForPaymentPayload =
@@ -141,7 +146,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                           cartProvider.sendCartForPayment.data!.payload!.cart!
                               .ordersForPurchase!;
 
-                      return Container(
+                      return cartProvider.sendCartForPayment.data!.status =='EXCEPTION'?Text( 'Please try after some time'): Container(
                         height: 72,
                         // height: height * .09,
                         width: width,
@@ -972,51 +977,6 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
         : const CircularProgressIndicator();
   }
 
-  updateCart(List<CartOrdersForPurchase>? value, var merchantId, int quantity,
-      String productId) async {
-    final prefs = await SharedPreferences.getInstance();
-    var userId = '';
-
-    StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-    StringConstant.RandomUserLoginId = (prefs.getString('RandomUserId')) ?? '';
-
-    StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-
-    var prefUserId = await Prefs.instance.getToken(
-      Prefs.prefRandomUserId,
-    );
-    print("cartId from Pref" + StringConstant.UserCartID.toString());
-    print("prefUserId from Pref" + prefUserId.toString());
-
-    if (StringConstant.UserLoginId.toString() == '' ||
-        StringConstant.UserLoginId.toString() == null) {
-      userId = StringConstant.RandomUserLoginId;
-    } else {
-      userId = StringConstant.UserLoginId;
-    }
-    Map<String, String> data = {
-      // "cartId": StringConstant.UserCartID.toString(),
-      "cartId": StringConstant.UserCartID.toString(),
-      "userId": userId,
-      "productId": productId,
-      "merchantId": merchantId.toString(),
-      "qty": quantity.toString()
-    };
-    print("update cart DATA" + data.toString());
-    setState(() {});
-    await CartRepository().updateCartPostRequest(data, context);
-
-/*    for (int i = 0; i < value!.length; i++) {
-      StringConstant.BadgeCounterValue =
-          value!.length.toString() + value[i].itemQty.toString();
-      print("Badge,.......in for." + StringConstant.BadgeCounterValue);
-    }*/
-/*    setState(() {
-    StringConstant.BadgeCounterValue =
-          (prefs.getString('setBadgeCountPrefs')) ?? '';
-      print("Badge,........" + StringConstant.BadgeCounterValue);
-    });      getCartId();*/
-  }
 
   Widget prices(List<CartOrdersForPurchase> cartOrderPurchase, int index) {
     return Container(

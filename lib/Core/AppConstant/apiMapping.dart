@@ -44,6 +44,7 @@ static String BaseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
  static String SimilarProducts = '/product/similarproducts';
  static String StateAddress = '/state';
  static String CityAddress = '/city';
+ static String GetCartForDirectBuy = '/cart/getCartForDirectBuy';
 
   static String getURI(apiEndPoint ep) {
     String retVal = "";

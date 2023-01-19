@@ -3,19 +3,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
-import 'package:velocit/Core/data/network/baseApiServices.dart';
-import 'package:velocit/Core/data/network/networkApiServices.dart';
 import 'package:velocit/Core/repository/cart_repository.dart';
-import 'package:velocit/pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 
+import '../../pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import '../../pages/auth/OTP_Screen.dart';
 import '../../pages/screens/dashBoard.dart';
 import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 import '../AppConstant/apiMapping.dart';
-import '../ViewModel/apiCalling_viewmodel.dart';
+import '../ViewModel/cart_view_model.dart';
 
 class AuthRepository {
   /// FINAL API FOR LOGIN USING EMAIL AND PASSWORD
@@ -63,9 +60,10 @@ class AuthRepository {
       StringConstant.isUserNavigateFromDetailScreen =
           (prefs.getString('isUserNavigateFromDetailScreen')) ?? "";
       StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+      print("Cart Id From Login usinh Email " + StringConstant.UserCartID);
       print("StringConstant.isUserNavigateFromDetailScreen" +
           StringConstant.isUserNavigateFromDetailScreen);
-
+      var userId = preferences.getString('isUserId');
       if (StringConstant.isUserNavigateFromDetailScreen == 'Yes') {
         var cartUserId = prefs.getString('CartSpecificUserIdPref');
         var itemCode = prefs.getString('CartSpecificItem_codePref');
@@ -78,24 +76,27 @@ class AuthRepository {
           'qty': itemQuanity
         };
 
-          data = {'userId': jsonData['payload']['body']['id'].toString()};
-          print('login user is NOT GUEST');
-
+        data = {'userId': jsonData['payload']['body']['id'].toString()};
+        print('login user is NOT GUEST');
 
         print("create cart data pass : " + data.toString());
         //create cart
         CartRepository().cartPostRequest(data, context);
         //merge cart
-        print("Random ID : "+StringConstant.RandomUserLoginId);
+        print("Random ID : " + StringConstant.RandomUserLoginId);
 
-        CartRepository().mergeCartList(StringConstant.RandomUserLoginId,
-            jsonData['payload']['body']['id'].toString(), data,context);
-
-        // StringConstant.RandomUserLoginId =
-        //     (prefs.getString('RandomUserId')) ?? '';
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => CartDetailsActivity()));
-
+        CartRepository().mergeCartList(
+            StringConstant.RandomUserLoginId, userId.toString(), data, context);
+      } else if (StringConstant.isUserNavigateFromDetailScreen == 'BN') {
+ /*       Map data = {'userId': jsonData['payload']['body']['id'].toString()};
+        print("create cart data pass for Direct buy now: " + data.toString());
+        CartRepository()
+            .mergeCartList(StringConstant.RandomUserLoginId, userId.toString(),
+                data, context)
+            .then((value) {
+          CartRepository().buyNowGetRequest(userId.toString(), context);
+        });*/
+        CartRepository().buyNowGetRequest(userId.toString(), context);
 
       } else {
         Navigator.of(context).pushReplacement(
@@ -226,8 +227,7 @@ class AuthRepository {
       var loginId = await Prefs.instance.getToken(StringConstant.userId);
       final preferences = await SharedPreferences.getInstance();
       preferences.setInt('isUserLoggedIn', 1);
-      preferences.setString(
-          'isUserId', jsonData['payload']['id'].toString());
+      preferences.setString('isUserId', jsonData['payload']['id'].toString());
       preferences.setString(
           'usernameLogin', jsonData['payload']['username'].toString());
       preferences.setString(
@@ -241,6 +241,7 @@ class AuthRepository {
       StringConstant.isUserNavigateFromDetailScreen =
           (prefs.getString('isUserNavigateFromDetailScreen')) ?? "";
       StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+      print("Cart Id From OTP verify API  " + StringConstant.UserCartID);
       print("StringConstant.isUserNavigateFromDetailScreen" +
           StringConstant.isUserNavigateFromDetailScreen);
 
@@ -255,13 +256,12 @@ class AuthRepository {
           'qty': itemQuanity
         };
 
-
         StringConstant.RandomUserLoginId =
             (prefs.getString('RandomUserId')) ?? '';
-        print("Random ID : "+StringConstant.RandomUserLoginId);
+        print("Random ID : " + StringConstant.RandomUserLoginId);
 
         CartRepository().mergeCartList(StringConstant.RandomUserLoginId,
-            jsonData['payload']['id'].toString(), data,context);
+            jsonData['payload']['id'].toString(), data, context);
         // Navigator.of(context).push(
         //     MaterialPageRoute(builder: (context) => CartDetailsActivity()));
       } else {

@@ -120,7 +120,7 @@ class Prefs {
   Prefs._privateConstructor();
 
   static final Prefs instance = Prefs._privateConstructor();
-  static String prefCartId = "prefCartId";
+
   static String prefRandomUserId = "prefRandomUserId";
  late SharedPreferences ShareSave ;
 

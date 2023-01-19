@@ -57,7 +57,7 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: appBar_backWidget(
-            context, appTitle(context, "Return Order"), SizedBox()),
+            context, appTitle(context, "Return Order"), SizedBox(),setState),
       ),
       body: SafeArea(
         child: Container(
