@@ -553,113 +553,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   );
                 })),
           )),
-
-/*
-        Consumer<ProductProvider>(builder: (context, value, child) {
-          return widget.value.cartList.isEmpty
-              ? bottomNavigationBarWidget(context)
-              : Container(
-                  height: 144,
-                  width: width,
-                  decoration: const BoxDecoration(
-                    color: ThemeApp.darkGreyColor,
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(15),
-                        topLeft: Radius.circular(15)),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          top: 10,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextFieldUtils().pricesLineThroughWhite(
-                                    " ${indianRupeesFormat.format(finalOriginalPrice)}",
-                                    context,
-                                    MediaQuery.of(context).size.height * .021,
-                                  ),
-                                  TextFieldUtils()
-                                      .homePageheadingTextFieldWHITE(
-                                    "${indianRupeesFormat.format(finalTotalPrice)}",
-                                    context,
-                                  ),
-                                ]),
-                            InkWell(
-                                onTap: () async {
-                                  if (widget.value.deliveryAmount == 0.0) {
-                                    Utils.flushBarErrorMessage(
-                                        'Please enter Product length', context);
-                                  }
-
-                                  if (kDebugMode) {
-                                    print(StringConstant.isLogIn);
-                                  }
-                                  // Utils.flushBarErrorMessage(
-                                  //     "Please Sign Up", context);
-                                  StringConstant.isLogIn == true
-                                      ? Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                OrderReviewSubActivity(
-                                                    value: value,
-                                                    cartListFromHome:
-                                                        widget.productList),
-                                          ),
-                                        )
-                                      : Navigator.pushNamed(
-                                          context, RoutesName.signInRoute);
-
-                                  // Prefs.instance.clear();
-                                  StringConstant.totalOriginalPrice =
-                                      (await Prefs.instance.getDoubleToken(
-                                          StringConstant
-                                              .totalOriginalPricePref))!;
-                                  if (kDebugMode) {
-                                    print(
-                                        'StringConstant.totalOriginalPrice${StringConstant.totalOriginalPrice}');
-                                  }
-
-                                  StringConstant.totalFinalPrice =
-                                      (await Prefs.instance.getDoubleToken(
-                                          StringConstant.totalFinalPricePref))!;
-                                  if (kDebugMode) {
-                                    print(
-                                        'StringConstant.totalFinalPrice${StringConstant.totalFinalPrice}');
-                                  }
-                                },
-                                child: Container(
-                                    height: height * 0.05,
-                                    alignment: Alignment.center,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      color: ThemeApp.whiteColor,
-                                    ),
-                                    padding: const EdgeInsets.only(
-                                        left: 15, right: 15),
-                                    child: TextFieldUtils().usingPassTextFields(
-                                        "Place Order",
-                                        ThemeApp.blackColor,
-                                        context))),
-                          ],
-                        ),
-                      ),
-                      bottomNavigationBarWidget(context),
-                    ],
-                  ),
-                );
-        }),*/
-      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
           child: ChangeNotifierProvider<CartViewModel>.value(
@@ -1266,7 +1159,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       children: [
         // Text(value.lst[index].totalOriginalPrice.toString()),
         Container(
-          height: height * 0.05,
+          height:30,
           // width: width * .2,
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -1274,7 +1167,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 Radius.circular(5),
               ),
               border: Border.all(
-                  color: ThemeApp.buttonBorderLightGreyColor, width: 1.5)),
+                  color: ThemeApp.separatedLineColor, width: 1.5)),
           child: Padding(
             padding: const EdgeInsets.all(0),
             child: Row(
@@ -1325,15 +1218,16 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     }
                     // });
                   },
-                  child: Padding(
+                    child: Padding(
                     padding: const EdgeInsets.only(left: 8.0, right: 8),
-                    child: const Icon(Icons.remove,
-                        // size: 20,
-                        color: ThemeApp.buttonCounterFontColor),
-                  ),
+    child: const Icon(Icons.remove,
+    // size: 20,
+    color: ThemeApp.lightFontColor),
+    ),
+
                 ),
                 Container(
-                  height: height * 0.06,
+                  height:30,
                   alignment: Alignment.center,
                   padding: EdgeInsets.fromLTRB(
                     20,
@@ -1341,15 +1235,15 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     20,
                     0,
                   ),
-                  color: ThemeApp.buttonBorderLightGreyColor,
+                  color: ThemeApp.separatedLineColor,
                   child: Text(
                     value![index].itemQty.toString().padLeft(2, '0'),
                     style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: MediaQuery.of(context).size.height * .016,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.bold,
                         overflow: TextOverflow.ellipsis,
-                        color: ThemeApp.buttonCounterFontColor),
+                        color: ThemeApp.blackColor),
                   ),
                 ),
                 InkWell(
@@ -1368,7 +1262,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     padding: const EdgeInsets.only(left: 8.0, right: 8),
                     child: const Icon(Icons.add,
                         // size: 20,
-                        color: ThemeApp.buttonCounterFontColor),
+                        color: ThemeApp.lightFontColor),
                   ),
                 ),
               ],

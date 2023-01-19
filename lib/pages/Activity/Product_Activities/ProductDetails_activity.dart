@@ -1104,38 +1104,6 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         flex: 1,
                         child: InkWell(
                             onTap: () async {
-                              /*    setState(() async {
-                                // counterPrice++;
-                                userId = 1;
-                                remainingCounters();
-                                // addProductInCartBadge(
-                                //     productProvider, homeProvider);
-                                print("Badge counting before..." +
-                                    counterPrice.toString());
-                                // if (counterPrice > 0) {
-                                //   cartProvider.badgeFinalCount =
-                                //       cartProvider.badgeFinalCount + 1;
-                                //   print("widget.value.badgeFinalCount" +
-                                //       cartProvider.badgeFinalCount.toString());
-                                // } else {}
-                                // var data = {
-                                //   "user_id": userId.toString(),
-                                //   "item_code":
-                                //       subProductList.productCode.toString(),
-                                //   "qty": counterPrice.toString()
-                                // };
-
-
-                                print("data maping " + data.toString());
-                                // productSpecificListViewModel.cartListWithPut(
-                                //     context, data);
-                                //
-
-                                // method for update cart value
-
-
-
-                              }); */
                               final prefs =
                                   await SharedPreferences.getInstance();
 
