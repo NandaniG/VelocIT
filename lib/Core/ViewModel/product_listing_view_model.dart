@@ -7,6 +7,8 @@ import '../Model/FindProductBySubCategoryModel.dart';
 import '../Model/CartModel.dart';
 import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
+import '../Model/ServiceModels/FindServicesBySubCategory.dart';
+import '../Model/ServiceModels/SingleServiceModel.dart';
 import '../Model/productSpecificListModel.dart';
 import '../Model/scannerModel/SingleProductModel.dart';
 import '../Model/scannerModel/productScanModel.dart';
@@ -22,9 +24,12 @@ class ProductSpecificListViewModel with ChangeNotifier {
       ApiResponse.loading();
   ApiResponse<SingleProductIDModel> singleproductSpecificList =
       ApiResponse.loading();
+  ApiResponse<SingleServiceIDModel> singleServiceSpecificList =
+      ApiResponse.loading();
   ApiResponse<CartListModel> cartList = ApiResponse.loading();
   ApiResponse<ProductCategoryModel> productCategories = ApiResponse.loading();
   ApiResponse<FindProductBySubCategoryModel> productSubCategory =
+      ApiResponse.loading();  ApiResponse<FindServicesbySUbCategoriesModel> serviceSubCategory =
       ApiResponse.loading();
   ApiResponse<FindByFMCGCodeScannerModel> singleProductScan = ApiResponse.loading();
   ApiResponse<ProductAllPaginatedModel> productListingResponse =
@@ -40,10 +45,19 @@ class ProductSpecificListViewModel with ChangeNotifier {
     singleproductSpecificList = response;
     notifyListeners();
   }
+  setSingleServiceSpecificList(ApiResponse<SingleServiceIDModel> response) {
+    singleServiceSpecificList = response;
+    notifyListeners();
+  }
 
   setProductSubCategoryList(
       ApiResponse<FindProductBySubCategoryModel> response) {
     productSubCategory = response;
+    notifyListeners();
+  }
+  setServiceSubCategoryList(
+      ApiResponse<FindServicesbySUbCategoriesModel> response) {
+    serviceSubCategory = response;
     notifyListeners();
   }
 
@@ -90,6 +104,16 @@ class ProductSpecificListViewModel with ChangeNotifier {
       setSingleProductSpecificList(ApiResponse.error(error.toString()));
     });
   }
+  Future<void> serviceSingleIDListWithGet(
+      BuildContext context,String productId) async {
+    setSingleServiceSpecificList(ApiResponse.loading());
+
+    _myRepo.getSingleServiceSpecificList(productId).then((value) async {
+      setSingleServiceSpecificList(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      setSingleServiceSpecificList(ApiResponse.error(error.toString()));
+    });
+  }
 
   Future<void> cartListWithPut(BuildContext context, dynamic data) async {
     putCartList(ApiResponse.loading());
@@ -113,6 +137,20 @@ class ProductSpecificListViewModel with ChangeNotifier {
       setProductSubCategoryList(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       setProductSubCategoryList(ApiResponse.error(error.toString()));
+    });
+  }
+  Future<void> serviceBySubCategoryWithGet(
+      int page, int size, int subCategoryId) async {
+    setServiceSubCategoryList(ApiResponse.loading());
+
+    _mySubCategoryRepo
+        .getServiceBySubCategoryList(page, size, subCategoryId)
+        .then((value) async {
+      // productSubCategory.data!.payload!.content! .addAll(value.payload!.content!);
+
+      setServiceSubCategoryList(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      setServiceSubCategoryList(ApiResponse.error(error.toString()));
     });
   }
 

@@ -10,48 +10,43 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/utils/utils.dart';
-import '../../../Core/Model/SimmilarProductModel.dart';
-import '../../../Core/Model/scannerModel/SingleProductModel.dart';
-import '../../../Core/ViewModel/cart_view_model.dart';
-import '../../../Core/ViewModel/dashboard_view_model.dart';
-import '../../../Core/ViewModel/product_listing_view_model.dart';
-import '../../../Core/data/responses/status.dart';
-import '../../../Core/repository/cart_repository.dart';
-import '../../../services/models/CartModel.dart';
-import '../../../services/models/JsonModelForApp/HomeModel.dart';
-import '../../../services/models/ProductDetailModel.dart';
-import '../../../services/models/demoModel.dart';
-import '../../../services/providers/Home_Provider.dart';
-import '../../../services/providers/Products_provider.dart';
-import '../../../services/providers/cart_Provider.dart';
-import '../../../utils/ProgressIndicatorLoader.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/routes/routes.dart';
-import '../../../utils/styles.dart';
-import '../../../widgets/global/appBar.dart';
-import '../../../widgets/global/textFormFields.dart';
 
-import '../../screens/dashBoard.dart';
-import '../../screens/cartDetail_Activity.dart';
-import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
-import 'ImageZoomWidget.dart';
+import '../../../../Core/Model/ServiceModels/SingleServiceModel.dart';
+import '../../../../Core/Model/SimmilarProductModel.dart';
 
-class ProductDetailsActivity extends StatefulWidget {
+import '../../../../Core/ViewModel/cart_view_model.dart';
+import '../../../../Core/ViewModel/dashboard_view_model.dart';
+import '../../../../Core/ViewModel/product_listing_view_model.dart';
+import '../../../../Core/data/responses/status.dart';
+import '../../../../Core/repository/cart_repository.dart';
+import '../../../../services/models/JsonModelForApp/HomeModel.dart';
+import '../../../../services/models/demoModel.dart';
+import '../../../../services/providers/Home_Provider.dart';
+import '../../../../services/providers/Products_provider.dart';
+import '../../../../utils/ProgressIndicatorLoader.dart';
+import '../../../../utils/constants.dart';
+import '../../../../utils/routes/routes.dart';
+import '../../../../utils/styles.dart';
+import '../../../../widgets/global/appBar.dart';
+import '../../../../widgets/global/textFormFields.dart';
+
+
+class ServiceDetailsActivity extends StatefulWidget {
   // List<ProductList>? productList;
   // Content? productList;
   final int? id;
 
-  ProductDetailsActivity(
+  ServiceDetailsActivity(
       {Key? key,
       // required this.productList,
       required this.id})
       : super(key: key);
 
   @override
-  State<ProductDetailsActivity> createState() => _ProductDetailsActivityState();
+  State<ServiceDetailsActivity> createState() => _ServiceDetailsActivityState();
 }
 
-class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
+class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
@@ -79,7 +74,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     // TODO: implement initState
     super.initState();
     randomNumber = random.nextInt(100);
-    productSpecificListViewModel.productSingleIDListWithGet(
+    productSpecificListViewModel.serviceSingleIDListWithGet(
         context, widget.id.toString());
     print("Random number : " + data.toString());
     print("widget.id! number : " + widget.id!.toString());
@@ -199,10 +194,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(context, appTitle(context, "My Product"),
+        child: appBar_backWidget(context, appTitle(context, "My Service"),
             const SizedBox(), setState),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context,0),
+      bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(
@@ -213,7 +208,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                 child: Consumer<ProductSpecificListViewModel>(
                     builder: (context, productSubCategoryProvider, child) {
                   switch (productSubCategoryProvider
-                      .singleproductSpecificList.status) {
+                      .singleServiceSpecificList.status) {
                     case Status.LOADING:
                       print("Api load");
 
@@ -221,21 +216,22 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     case Status.ERROR:
                       print("Api error");
 
-                      return Text('Service is not available');
+                      return Text(productSubCategoryProvider
+                          .singleServiceSpecificList.message.toString());
                     case Status.COMPLETED:
                       print("Api calll");
                       SingleProductPayload? model = productSubCategoryProvider
-                          .singleproductSpecificList.data!.payload;
+                          .singleServiceSpecificList.data!.payload;
 
                       List<SingleModelMerchants>? merchants =
-                          productSubCategoryProvider.singleproductSpecificList
+                          productSubCategoryProvider.singleServiceSpecificList
                               .data!.payload!.merchants;
 
                       merchantTemp = [];
                       //adding selected merchants
                       for (int i = 0; i < merchants.length; i++) {
                         if (merchants[i].id ==
-                            productSubCategoryProvider.singleproductSpecificList
+                            productSubCategoryProvider.singleServiceSpecificList
                                 .data!.payload!.selectedMerchantId) {
                           merchantTemp.add(merchants[i]);
                         }
@@ -243,7 +239,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       //adding remaining merchant list
                       for (int i = 0; i < merchants.length; i++) {
                         if (merchants[i].id !=
-                            productSubCategoryProvider.singleproductSpecificList
+                            productSubCategoryProvider.singleServiceSpecificList
                                 .data!.payload!.selectedMerchantId) {
                           merchantTemp.add(merchants[i]);
                         }
@@ -270,7 +266,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     right: 20,
                                   ),
                                   child: TextFieldUtils().headingTextField(
-                                      model!.shortName!, context),
+                                      model.shortName!, context),
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -308,10 +304,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 /* SizedBox(
                                   height: height * .01,
                                 ),*/
-                                model.productVariants!.isNotEmpty
+                                model.productVariants.isNotEmpty
                                     ? availableVariant(model)
                                     : SizedBox(),
-                                model.productVariants!.isNotEmpty
+                                model.productVariants.isNotEmpty
                                     ? SizedBox(
                                         height: height * .01,
                                       )
@@ -486,7 +482,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   Widget rattingBarWidget(
       SingleProductPayload model, int count, double width, double ratingValue) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.34,
+      width: width,
       // padding: const EdgeInsets.only(
       //   left: 20,
       //   right: 20,
@@ -1427,7 +1423,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              ProductDetailsActivity(
+                                              ServiceDetailsActivity(
                                             id: similarList[index].id,
                                             // productList: subProductList[index],
                                             // productSpecificListViewModel:

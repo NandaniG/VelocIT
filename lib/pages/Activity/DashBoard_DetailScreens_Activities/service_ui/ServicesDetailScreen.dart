@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../../../Core/Model/ServiceCategoryAndSubCategoriesModel.dart';
+import '../../../../Core/Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
 import '../../../../utils/constants.dart';
 
 import '../../../../utils/styles.dart';

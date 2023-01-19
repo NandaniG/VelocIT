@@ -39,7 +39,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
 
 
-  TextEditingController userNameController = new TextEditingController();
+  TextEditingController userNameController = new TextEditingController(text: StringConstant.loginUserName);
   TextEditingController mobileController = new TextEditingController(text: StringConstant.userAccountMobile);
   TextEditingController emailController = new TextEditingController(text: StringConstant.loginUserEmail);
 
@@ -322,17 +322,43 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                 controller:userNameController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 intialvalue: 'Testing Name',
-                hintText: 'Test name',
-                onChange: (val) {},
+                hintText: 'Full Name',
+                onChange: (val) {
+                  setState(() {
+                    if (val.isEmpty && userNameController.text.isEmpty) {
+                      _validateFullName = true;
+                    } else if (!StringConstant().isEmail(val)) {
+                      _validateFullName = true;
+                    } else {
+                      _validateFullName = false;
+                    }
+                  });
+                },
                 validator: (value) {
+                  if (value.isEmpty && userNameController.text.isEmpty) {
+                    _validateFullName = true;
+                    return StringUtils.validUserNameError;
+                  } else if (!StringConstant().isEmail(value)) {
+                    _validateFullName = true;
+                    return StringUtils.validUserNameError;
+                  } else {
+                    _validateFullName = false;
+                  }
                   return null;
                 }),
             SizedBox(
               height: height * .02,
             ),
-            TextFieldUtils().asteriskTextField(
-              StringUtils.mobileNumber,
-              context,
+
+
+            Text(
+       StringUtils.mobileNumber,
+              style: SafeGoogleFont(
+                'Roboto',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: ThemeApp.primaryNavyBlackColor,
+              ),
             ),
             MobileNumberTextFormField(
                 controller: mobileController,
@@ -363,9 +389,14 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
             SizedBox(
               height: height * .02,
             ),
-            TextFieldUtils().asteriskTextField(
+            Text(
               StringUtils.emailAddress,
-              context,
+              style: SafeGoogleFont(
+                'Roboto',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: ThemeApp.primaryNavyBlackColor,
+              ),
             ),
             EmailTextFormFieldsWidget(
               enabled: false,

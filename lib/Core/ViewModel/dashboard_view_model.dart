@@ -15,7 +15,7 @@ import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
 import '../Model/ProductsModel/Product_by_search_term_model.dart';
 import '../Model/RecommendedForYouModel.dart';
-import '../Model/ServiceCategoryAndSubCategoriesModel.dart';
+import '../Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
 import '../Model/SimmilarProductModel.dart';
 import '../repository/auth_repository.dart';
 

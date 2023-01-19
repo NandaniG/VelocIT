@@ -177,29 +177,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   var finalPINCODE = '';
 
-/*  getPincode() async {
-    var loginId = await Prefs.instance.getToken(StringConstant.userId);
-    setState(() {});
-    await Prefs.instance.getToken(StringConstant.pinCodePref);
-    StringConstant.placesFromCurrentLocation =
-        (await Prefs.instance.getToken(StringConstant.pinCodePref))!;
-    final prefs = await SharedPreferences.getInstance();
-
-    // StringConstant.CurrentPinCode =
-    //     (prefs.getString('CurrentPinCodePref') ?? '');
-
-    if (StringConstant.placesFromCurrentLocation != null ||
-        StringConstant.placesFromCurrentLocation != '' ||
-        StringConstant.placesFromCurrentLocation.isNotEmpty) {
-      StringConstant.FINALPINCODE = StringConstant.placesFromCurrentLocation;
-    } else {
-      StringConstant.FINALPINCODE = StringConstant.FINALPINCODE;
-    }
-    // StringConstant.FINALPINCODE = StringConstant.CurrentPinCode;
-
-    print(
-        "placesFromCurrentLocation pref...${StringConstant.FINALPINCODE.toString()}");
-  }*/
 
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
@@ -287,7 +264,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 //   left: 20,
                                 //   right: 20,
                                 // ),
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.fromLTRB(10,10,10,0),
                                 child: SingleChildScrollView(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -1250,6 +1227,7 @@ SizedBox(height: 6,),
                                   );
                                 }).toList() ??
                                 '',
+
                             options: CarouselOptions(
                                 autoPlay: false,
                                 viewportFraction: 1,
@@ -1593,98 +1571,101 @@ SizedBox(height: 6,),
     return /*(value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
             value.jsonData.isNotEmpty)*/
       value.jsonData['status']=="EXCEPTION"? Text(""):
-       Container(
-            // height: 300,
-            height: 160,
-            child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: value.jsonData['payload']['consumer_baskets'].length,
-                itemBuilder: (_, index) {
-                  //
-                  // List orderList = value
-                  //     .jsonData['payload']['consumer_baskets'].values
-                  //     .toList();
-                  // Map order = orderList[index];
-                  // DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
-                  // DateTime date =
-                  // DateTime.parse(order['earliest_delivery_date']);
-                  // var earliest_delivery_date = format.format(date);
+       Padding(
+         padding: const EdgeInsets.only(bottom: 10.0),
+         child: Container(
+              // height: 300,
+              height: 161,
 
-                  return value.jsonData['payload']['consumer_baskets'].length-1<0 ?CircularProgressIndicator():ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: value
-                          .jsonData['payload']['consumer_baskets'][index]
-                              ['orders']
-                          .length,
-                      itemBuilder: (context, indexOrderDetails) {
-                        indexForItems = indexOrderDetails;
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: value.jsonData['payload']['consumer_baskets'].length,
+                  itemBuilder: (_, index) {
+                    //
+                    // List orderList = value
+                    //     .jsonData['payload']['consumer_baskets'].values
+                    //     .toList();
+                    // Map order = orderList[index];
+                    // DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
+                    // DateTime date =
+                    // DateTime.parse(order['earliest_delivery_date']);
+                    // var earliest_delivery_date = format.format(date);
 
-                        Map subOrders = value.jsonData['payload']
-                                ['consumer_baskets'][index]['orders']
-                            [indexForItems];
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: Container(
-                              // width: 300,
-                              width: width * 0.85,
-                              padding: const EdgeInsets.all(15),
-                              decoration: const BoxDecoration(
-                                  color: ThemeApp.whiteColor,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8))),
-                              child: Column(
-                                // mainAxisAlignment: MainAxisAlignment.start,
-                                // crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      ClipRRect(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(0)),
-                                          child: Image.network(
-                                            // width: double.infinity,
-                                            subOrders['image_url'] ?? "",
-                                            // fit: BoxFit.fill,
-                                            errorBuilder:
-                                                ((context, error, stackTrace) {
-                                              return Icon(Icons.image_outlined);
-                                            }),
-                                            height: 42,
-                                            width: 45,
-                                          )),
-                                      SizedBox(
-                                        width: 9,
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          "${subOrders["short_name"]}",
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.start,
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 12,
-                                              letterSpacing: -0.25,
-                                              fontWeight: FontWeight.w700),
+                    return value.jsonData['payload']['consumer_baskets'].length-1<0 ?CircularProgressIndicator():ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: value
+                            .jsonData['payload']['consumer_baskets'][index]
+                                ['orders']
+                            .length,
+                        itemBuilder: (context, indexOrderDetails) {
+                          indexForItems = indexOrderDetails;
+
+                          Map subOrders = value.jsonData['payload']
+                                  ['consumer_baskets'][index]['orders']
+                              [indexForItems];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: Container(
+                                // width: 300,
+                                width: width * 0.85,
+                                padding: const EdgeInsets.all(15),
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.whiteColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.start,
+                                  // crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        ClipRRect(
+                                            borderRadius: const BorderRadius.all(
+                                                Radius.circular(50)),
+                                            child: Image.network(
+                                              // width: double.infinity,
+                                              subOrders['image_url'] ?? "",
+                                              // fit: BoxFit.fill,
+                                              errorBuilder:
+                                                  ((context, error, stackTrace) {
+                                                return Icon(Icons.image_outlined);
+                                              }),
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .055,
+                                            )),
+                                        SizedBox(
+                                          width: 9,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  stepperWidget(subOrders),
-                                ],
-                              )),
-                        );
-                      });
-                }),
-          );
+                                        Flexible(
+                                          child: Text(
+                                            "${subOrders["short_name"]}",
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.start,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 12,
+                                                letterSpacing: -0.25,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    stepperWidget(subOrders),
+                                  ],
+                                )),
+                          );
+                        });
+                  }),
+            ),
+       );
       /*  : value.jsonData['error'] != null
             ? Container()
             : Center(child: CircularProgressIndicator());*/

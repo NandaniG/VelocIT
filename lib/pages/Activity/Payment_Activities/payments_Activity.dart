@@ -17,6 +17,7 @@ import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
+
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
@@ -41,14 +42,18 @@ enum DropSelections { upi, Wallets, creditCard, cashOnDelivery }
 class Payment_Creditcard_debitcardScreen extends StatefulWidget {
   final dynamic orderReview;
   CartForPaymentPayload cartForPaymentPayload;
-   Payment_Creditcard_debitcardScreen( {Key? key, this.orderReview, required this.cartForPaymentPayload}) : super(key: key);
+
+  Payment_Creditcard_debitcardScreen(
+      {Key? key, this.orderReview, required this.cartForPaymentPayload})
+      : super(key: key);
 
   @override
-  State<Payment_Creditcard_debitcardScreen> createState() => _Payment_Creditcard_debitcardScreenState();
+  State<Payment_Creditcard_debitcardScreen> createState() =>
+      _Payment_Creditcard_debitcardScreenState();
 }
 
-class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_debitcardScreen> {
-
+class _Payment_Creditcard_debitcardScreenState
+    extends State<Payment_Creditcard_debitcardScreen> {
   TextEditingController cardNumberController = TextEditingController();
   TextEditingController cVVController = TextEditingController();
   TextEditingController ExpiryDateController = TextEditingController();
@@ -73,6 +78,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
   int? _radioSelected = 3;
   String _radioVal = "";
   CardType cardType = CardType.Invalid;
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -81,7 +87,6 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
-
       appBar: AppBar(
         backgroundColor: ThemeApp.appBackgroundColor,
         elevation: 0,
@@ -92,7 +97,6 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                 builder: (BuildContext context) {
                   return NavBackConfirmationFromPayment();
                 });
-
 
             // Provider.of<ProductProvider>(context, listen: false);
           },
@@ -151,91 +155,129 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextFieldUtils().dynamicText(
-                          '${indianRupeesFormat.format(2530)}',
-                          context,
-                          TextStyle(fontFamily: 'Roboto',
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextFieldUtils().dynamicText(
+                                '${indianRupeesFormat.format(2530)}',
+                                context,
+                                TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.whiteColor,
+                                    fontSize: height * .025,
+                                    fontWeight: FontWeight.bold)),
+                            TextFieldUtils().dynamicText(
+                                'View Price Details',
+                                context,
+                                TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.whiteColor,
+                                  fontSize: height * .018,
+                                ))
+                          ]),
+                      InkWell(
+                          onTap: () async {
+                            final prefs = await SharedPreferences.getInstance();
+
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
+                            //   ),
+                            // );
+                            rnd = new Random();
+
+                            var r = min + rnd.nextInt(max - min);
+
+                            print("$r is in the range of $min and $max");
+                            int UTRNumber = r;
+                            print("UTRNumber " + UTRNumber.toString());
+                            // Map data={
+                            //           "utr_number":UTRNumber,
+                            //           "user_id": widget.cartForPaymentPayload.userId,
+                            //           "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
+                            //           "remark":"OK",
+                            //           "is_successful":true
+                            //         };
+                            var paymentAttemptId =  prefs.getString('payment_attempt_id');
+              /*
+                            Map data = {
+                              "payment_attempt_id":
+                                  int.parse(paymentAttemptId.toString()),
+                              "order_basket_id":
+                                  widget.cartForPaymentPayload.orderBasketId,
+                              "utr_number": UTRNumber.toString(),
+                              "user_id": widget.cartForPaymentPayload.userId,
+                              "paid_amount": widget
+                                  .cartForPaymentPayload.cart!.totalPayable,
+                              "remark": "yes",
+                              "is_successful": true,
+                              "error_message": "",
+                              "payment_received_from_pg":
+                                  DateTime.now().toString(),
+                              "payment_sent_to_pg": DateTime.now().toString(),
+                              "payment_status": "OK",
+                              "pg_selected": "RazorPay"
+                            };
+*/
+                            // DateTime currentDateTime = DateFormat("yyyy-MM-ddTHH:mm:ssZ").parseUTC(DateTime.now().toString()).toLocal(); // parse String datetime to DateTime and get local date time
+                            //2021-05-21T17:33:24.000000Z
+print("Current Date Time"+DateTime.now().toUtc().toString());
+                            //replace substring of the given string
+                            String result = DateTime.now().toUtc().toString().replaceAll(" ", "T");
+                            print("Current Date Time "+result.toString());
+
+                            print(result);
+                            Map data =   {
+                              "payment_attempt_id":paymentAttemptId,
+                              "order_basket_id":widget.cartForPaymentPayload.orderBasketId,
+                              "utr_number":UTRNumber,
+                              "user_id":widget.cartForPaymentPayload.userId,
+                              "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
+                              "remark":"yes",
+                              "is_successful":true,
+                              "error_message":"",
+                              "payment_received_from_pg":result,
+                              "payment_sent_to_pg":result,
+                              "payment_status":"OK",
+                              "pg_selected":"RazorPay"
+                            };
+
+                            CartRepository()
+                                .putCartForPaymentUpdate(data,
+                                    widget.cartForPaymentPayload.orderBasketId!)
+                                .then((value) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => OrderPlaceActivity(
+                                    data: data,
+                                    cartForPaymentPayload:
+                                        widget.cartForPaymentPayload),
+                              ));
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 141,
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(100),
+                              ),
                               color: ThemeApp.whiteColor,
-                              fontSize: height * .025,
-                              fontWeight: FontWeight.bold)),
-                      TextFieldUtils().dynamicText(
-                          'View Price Details',
-                          context,
-                          TextStyle(fontFamily: 'Roboto',
-                            color: ThemeApp.whiteColor,
-                            fontSize: 12,
-                          ))
-                    ]),
-                InkWell(
-                    onTap: () async {    final prefs = await SharedPreferences.getInstance();
-
-                    // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
-                      //   ),
-                      // );
-                      rnd = new Random();
-
-                      var r = min + rnd.nextInt(max - min);
-
-                      print("$r is in the range of $min and $max");
-                     int UTRNumber = r;
-                      print("UTRNumber " + UTRNumber.toString());
-                          // Map data={
-                          //           "utr_number":UTRNumber,
-                          //           "user_id": widget.cartForPaymentPayload.userId,
-                          //           "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
-                          //           "remark":"OK",
-                          //           "is_successful":true
-                          //         };
-                   var paymentAttemptId=   prefs.getString('payment_attempt_id');
-                      Map data={
-                          "payment_attempt_id":paymentAttemptId.toString(),
-                          "order_basket_id":widget.cartForPaymentPayload.orderBasketId,
-                          "utr_number":UTRNumber,
-                          "user_id":widget.cartForPaymentPayload.userId,
-                          "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
-                          "remark":"yes",
-                          "is_successful":true,
-                          "error_message":"",
-                          "payment_received_from_pg":DateTime.now().toString(),
-                          "payment_sent_to_pg":DateTime.now().toString(),
-                          "payment_status":"OK",
-                          "pg_selected":"RazorPay"
-                              };
-                      CartRepository().putCartForPaymentUpdate(data,widget.cartForPaymentPayload.orderBasketId!).then((value) {
-                                Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => OrderPlaceActivity(data:   data,cartForPaymentPayload: widget.cartForPaymentPayload
-                                      ),
-                                    ));
-                              } );
-
-
-                    },
-                    child: Container(
-
-                          height: 40,width: 141,
-                          alignment: Alignment.center,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(100),
                             ),
-                            color: ThemeApp.whiteColor,
-                          ),
-                      child: TextFieldUtils().dynamicText(
-                          'Proceed to Payment',
-                          context,
-                          TextStyle(fontFamily: 'Roboto',
-                              color: ThemeApp.tealButtonColor,
-                              fontSize: 12,
-                              fontWeight:
-                              FontWeight
-                                  .w700,letterSpacing: -0.25)),
-                    )),
-              ],
-            ),
-          );
+                            child: TextFieldUtils().dynamicText(
+                                'Proceed to Payment',
+                                context,
+                                TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.tealButtonColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.25)),
+                          )),
+                    ],
+                  ),
+                );
         }),
       ),
       body: SafeArea(
@@ -262,7 +304,8 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           TextFieldUtils().dynamicText(
                               StringUtils.allOtherOptions,
                               context,
-                              TextStyle(fontFamily: 'Roboto',
+                              TextStyle(
+                                  fontFamily: 'Roboto',
                                   color: ThemeApp.blackColor,
                                   fontSize: height * .025,
                                   fontWeight: FontWeight.bold)),
@@ -280,12 +323,14 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   });
                                 },
                               ),
-                              const Text("UPI",style:TextStyle(fontFamily: 'Roboto',
-                                color: ThemeApp.blackColor,
-                                // fontSize: height * .016,
-                                fontWeight: FontWeight.w400,
-                                overflow: TextOverflow.ellipsis,
-                              )),
+                              const Text("UPI",
+                                  style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    // fontSize: height * .016,
+                                    fontWeight: FontWeight.w400,
+                                    overflow: TextOverflow.ellipsis,
+                                  )),
                             ],
                           ),
                           Row(
@@ -302,12 +347,14 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   });
                                 },
                               ),
-                              const Text("Wallets",style:TextStyle(fontFamily: 'Roboto',
-                                color: ThemeApp.blackColor,
-                                // fontSize: height * .016,
-                                fontWeight: FontWeight.w400,
-                                overflow: TextOverflow.ellipsis,
-                              )),
+                              const Text("Wallets",
+                                  style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    // fontSize: height * .016,
+                                    fontWeight: FontWeight.w400,
+                                    overflow: TextOverflow.ellipsis,
+                                  )),
                             ],
                           ),
                           Row(
@@ -324,12 +371,14 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   });
                                 },
                               ),
-                              const Text("Credit / Debit / ATM Card",style:TextStyle(fontFamily: 'Roboto',
-                                color: ThemeApp.blackColor,
-                                // fontSize: height * .016,
-                                fontWeight: FontWeight.w400,
-                                overflow: TextOverflow.ellipsis,
-                              )),
+                              const Text("Credit / Debit / ATM Card",
+                                  style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    // fontSize: height * .016,
+                                    fontWeight: FontWeight.w400,
+                                    overflow: TextOverflow.ellipsis,
+                                  )),
                             ],
                           ),
                           // _radioSelected==3? SizedBox(
@@ -339,7 +388,8 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                               ? TextFieldUtils().dynamicText(
                                   StringUtils.cardNumber,
                                   context,
-                                  TextStyle(fontFamily: 'Roboto',
+                                  TextStyle(
+                                      fontFamily: 'Roboto',
                                       color: ThemeApp.blackColor,
                                       fontSize: height * .02,
                                       fontWeight: FontWeight.w500))
@@ -348,8 +398,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                 ),
                           _radioSelected == 3
                               ? CardNumberTextFormFieldsWidget(
-                                  errorText:
-                                      StringUtils.validEmailError,
+                                  errorText: StringUtils.validEmailError,
                                   textInputType: TextInputType.number,
                                   controller: cardNumberController,
                                   maxLength: 19,
@@ -368,9 +417,9 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                         _validateCardNumber = true;
                                       } else {
                                         _validateCardNumber = false;
-
                                       }
-                                    });},
+                                    });
+                                  },
                                   validator: (value) {
                                     if (value.isEmpty &&
                                         cardNumberController.text.length < 19) {
@@ -396,10 +445,10 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   children: [
                                     Expanded(
                                       child: TextFieldUtils().dynamicText(
-                                          StringUtils
-                                              .expiryDate,
+                                          StringUtils.expiryDate,
                                           context,
-                                          TextStyle(fontFamily: 'Roboto',
+                                          TextStyle(
+                                              fontFamily: 'Roboto',
                                               color: ThemeApp.blackColor,
                                               fontSize: height * .02,
                                               fontWeight: FontWeight.w500)),
@@ -408,7 +457,8 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                       child: TextFieldUtils().dynamicText(
                                           StringUtils.cvv,
                                           context,
-                                          TextStyle(fontFamily: 'Roboto',
+                                          TextStyle(
+                                              fontFamily: 'Roboto',
                                               color: ThemeApp.blackColor,
                                               fontSize: height * .02,
                                               fontWeight: FontWeight.w500)),
@@ -465,15 +515,16 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                             hintText: 'MM / YY',
                                             filled: true,
                                             fillColor: Colors.white,
-                                            hintStyle: TextStyle(fontFamily: 'Roboto',
+                                            hintStyle: TextStyle(
+                                                fontFamily: 'Roboto',
                                                 color: Colors.grey,
                                                 fontSize: MediaQuery.of(context)
                                                         .size
                                                         .height *
                                                     0.020),
-                                            errorStyle: TextStyle(fontFamily: 'Roboto',
-                                                color: ThemeApp
-                                                    .redColor,
+                                            errorStyle: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color: ThemeApp.redColor,
                                                 fontSize: MediaQuery.of(context)
                                                         .size
                                                         .height *
@@ -506,8 +557,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                                 borderSide: BorderSide(
-                                                    color: ThemeApp
-                                                        .redColor,
+                                                    color: ThemeApp.redColor,
                                                     width: 1)),
                                             enabledBorder: OutlineInputBorder(
                                                 borderRadius:
@@ -556,12 +606,14 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                                   });
                                 },
                               ),
-                              const Text("Cash on Delivery",style:TextStyle(fontFamily: 'Roboto',
-                                color: ThemeApp.blackColor,
-                                // fontSize: height * .016,
-                                fontWeight: FontWeight.w400,
-                                overflow: TextOverflow.ellipsis,
-                              )),
+                              const Text("Cash on Delivery",
+                                  style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    // fontSize: height * .016,
+                                    fontWeight: FontWeight.w400,
+                                    overflow: TextOverflow.ellipsis,
+                                  )),
                             ],
                           ),
                         ],
@@ -576,6 +628,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
       ),
     );
   }
+
   Widget stepperWidget() {
     return Container(
         height: height * .1,
@@ -611,8 +664,9 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
       var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var lineColor =
-      (i == 0 || i == 1 || _curStep > i + 1) ? ThemeApp.tealButtonColor : ThemeApp.appColor;
+      var lineColor = (i == 0 || i == 1 || _curStep > i + 1)
+          ? ThemeApp.tealButtonColor
+          : ThemeApp.appColor;
       var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
@@ -632,15 +686,15 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
           //   ),),
           child: (i == 0 || _curStep > i + 1)
               ? Icon(
-            Icons.circle,
-            color: iconColor,
-            size: 18.0,
-          )
+                  Icons.circle,
+                  color: iconColor,
+                  size: 18.0,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: iconColor,
-            size: 18.0,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: iconColor,
+                  size: 18.0,
+                ),
         ),
       );
 
@@ -648,9 +702,9 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
       if (i != titles.length - 1) {
         list.add(Expanded(
             child: Container(
-              height: 3.0,
-              color: lineColor,
-            )));
+          height: 3.0,
+          color: lineColor,
+        )));
       }
     });
 
@@ -663,19 +717,21 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
             ? TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(fontFamily: 'Roboto',
-                color: ThemeApp.blackColor,
-                fontSize: height * .018,
-                fontWeight: FontWeight.w400))
+                text,
+                context,
+                TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .018,
+                    fontWeight: FontWeight.w400))
             : TextFieldUtils().dynamicText(
-            text,
-            context,
-            TextStyle(fontFamily: 'Roboto',
-                color: ThemeApp.blackColor,
-                fontSize: height * .018,
-                fontWeight: FontWeight.w400)),
+                text,
+                context,
+                TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .018,
+                    fontWeight: FontWeight.w400)),
       );
     });
     return list;

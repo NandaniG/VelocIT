@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:velocit/Core/AppConstant/apiMapping.dart';
 
 import '../../utils/constants.dart';
@@ -5,6 +6,7 @@ import '../Model/FindProductBySubCategoryModel.dart';
 import 'package:http/http.dart' as http;
 
 import '../Model/ProductAllPaginatedModel.dart';
+import '../Model/ServiceModels/FindServicesBySubCategory.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
 import '../data/app_excaptions.dart';
@@ -14,53 +16,54 @@ class ProductSubCategoryRepository {
 
   BaseApiServices _apiServices = NetworkApiServices();
 
+  //for product listing page
+
   Future<FindProductBySubCategoryModel> getProductBySubCategoryList(int page,int size, int subCategoryId) async {
-
-
     Map<String, String> productData = {
       'page': page.toString(),
       'size': size.toString(),
       'sub_category_id':subCategoryId.toString(),
     };
-    print("Product Query"+productData.toString());
+    print("Product Query$productData");
     var url = '/product/findBySubCategoryId';
     String queryString = Uri(queryParameters: productData).query;
 
-    var requestUrl = ApiMapping.BaseAPI +url + '?' + queryString!;
+    var requestUrl = '${ApiMapping.BaseAPI}$url?${queryString!}';
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
-      print("getProductBySubCategoryList list: " + response.toString());
+      print("getProductBySubCategoryList list: $response");
       return response = FindProductBySubCategoryModel.fromJson(response);
     } catch (e) {
       throw e;
     }
   }
 
-/*
-  Future<ProductAllPaginatedModel> getProductListing(int page,int size, String searchString) async {
+  //for Service listing page
 
-
-    Map<String, String> productListingData = {
+  Future<FindServicesbySUbCategoriesModel> getServiceBySubCategoryList(int page,int size, int subCategoryId) async {
+    Map<String, String> productData = {
       'page': page.toString(),
       'size': size.toString(),
-      // 'searchString':searchString.toString(),
+      'sub_category_id':subCategoryId.toString(),
     };
-    print("getProductListing Query"+productListingData.toString());
-    var url = '/product/page-query';
-    String queryString = Uri(queryParameters: productListingData).query;
+    print("Product Query$productData");
+    var url = '/service/findBySubCategoryId';
+    String queryString = Uri(queryParameters: productData).query;
 
-    var requestUrl = ApiMapping.baseAPI +url + '?' + queryString!;
+    var requestUrl = '${ApiMapping.BaseAPI}$url?$queryString';
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
-      print("getProductListing list: " + response.toString());
-
-      return response = ProductAllPaginatedModel.fromJson(response);
+      if (kDebugMode) {
+        print("get Service By SubCategoryList list: $response");
+      }
+      return response = FindServicesbySUbCategoriesModel.fromJson(response);
     } catch (e) {
       throw e;
     }
   }
-*/
+
+
 
 }

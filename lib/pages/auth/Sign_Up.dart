@@ -840,6 +840,7 @@ class _SignUpState extends State<SignUp> {
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => SignIn_Screen()));
       businessNameController.clear();
+
       mobileNumberController.clear();
       email.clear();
       password.clear();

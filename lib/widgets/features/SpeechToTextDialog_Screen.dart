@@ -23,7 +23,7 @@ class SpeechToTextDialog extends StatefulWidget {
 
 class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
   speechToText.SpeechToText? speech;
-  String textString = "Tap to speech";
+  String textString = "Tap to speak";
   bool isListen = false;
   double confidence = 1.0;
 

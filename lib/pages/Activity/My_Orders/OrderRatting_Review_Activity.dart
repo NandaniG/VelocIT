@@ -379,6 +379,18 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                           );
                         }),
                   ),SizedBox(height: 20,),
+              /*    Expanded(
+                    child: ListView.builder(
+
+                      // physics: NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.values["orders"].length,
+                        itemBuilder: (_, index) {
+                          Map orders = widget.values["orders"][index];
+
+                          return  Icon(Icons.add);
+                        }),
+                  ),*/
                   proceedButton("Submit", ThemeApp.tealButtonColor, context, false,
                       () async {                        FocusManager.instance.primaryFocus?.unfocus();
 

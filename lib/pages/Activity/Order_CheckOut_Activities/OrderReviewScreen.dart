@@ -222,6 +222,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                     "user_id": cartForPaymentPayload.userId,
                                     "payable_amount": cartForPaymentPayload
                                         .cart!.totalPayable,
+                                    "is_self_pickup":isSelfPickUp,
                                   };
                                   if(StringConstant
                                       .selectedFullName!=''){
@@ -964,6 +965,30 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                   SizedBox(
                                     height: 11,
                                   ),
+                                  Row(
+                                    children: [
+                                      TextFieldUtils().dynamicText(
+                                          'Quantity : ',
+                                          context,
+                                          TextStyle(
+                                              fontFamily: 'Roboto',
+                                              color: ThemeApp.lightFontColor,
+                                              // fontWeight: FontWeight.w500,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400)),
+                                      Text(
+                                        cartOrderPurchase[index].itemQty.toString().padLeft(2, '0'),
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            fontSize: MediaQuery.of(context).size.height * .016,
+                                            fontWeight: FontWeight.w400,
+                                            overflow: TextOverflow.ellipsis,
+                                            color: ThemeApp.lightFontColor),
+                                      ),
+                                    ],
+                                  ),  SizedBox(
+                                    height: 10,
+                                  ),
                                   TextFieldUtils().dynamicText(
                                       StringConstant().convertDateTimeDisplay(
                                           cartOrderPurchase![index]
@@ -977,10 +1002,11 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                         fontWeight: FontWeight.w500,
                                         overflow: TextOverflow.ellipsis,
                                       )),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
+
+
+/*
                                   aadToCartCounter(cartOrderPurchase, index),
+*/
                                 ],
                               ),
                             ),
