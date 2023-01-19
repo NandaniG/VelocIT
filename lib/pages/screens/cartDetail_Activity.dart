@@ -292,7 +292,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
                     return cartProvider.cartSpecificID.data!.payload!
                             .ordersForPurchase!.isEmpty
-                        ? bottomNavigationBarWidget(context)
+                        ? bottomNavigationBarWidget(context,4)
                         : Container(
                             height: 170,
                             width: width,
@@ -530,12 +530,12 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                 //                     ),
                 //                   ),
                 //                 ),
-                                bottomNavigationBarWidget(context),
+                                bottomNavigationBarWidget(context,4),
                               ],
                             ),
                           );
                   } else {
-                    return bottomNavigationBarWidget(context);
+                    return bottomNavigationBarWidget(context,4);
                   }
               }
               return Container(

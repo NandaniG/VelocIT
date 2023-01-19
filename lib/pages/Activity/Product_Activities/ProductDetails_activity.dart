@@ -202,7 +202,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         child: appBar_backWidget(context, appTitle(context, "My Product"),
             const SizedBox(), setState),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context),
+      bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(

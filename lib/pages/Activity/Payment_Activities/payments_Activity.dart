@@ -121,7 +121,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
         child: Consumer<HomeProvider>(builder: (context, value, child) {
 
           return value.jsonData.isEmpty?CircularProgressIndicator(): Container(
-            height: 72,
+            height: 82,
             // height: height * .09,
             width: width,
             alignment: Alignment.center,
@@ -163,7 +163,7 @@ class _Payment_Creditcard_debitcardScreenState extends State<Payment_Creditcard_
                           context,
                           TextStyle(fontFamily: 'Roboto',
                             color: ThemeApp.whiteColor,
-                            fontSize: height * .018,
+                            fontSize: 12,
                           ))
                     ]),
                 InkWell(

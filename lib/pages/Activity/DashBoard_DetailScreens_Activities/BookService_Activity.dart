@@ -90,7 +90,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
             addressWidget(context, StringConstant.placesFromCurrentLocation),
             setState(() {})),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context),
+      bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: SingleChildScrollView(

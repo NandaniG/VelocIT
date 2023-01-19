@@ -267,7 +267,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               addressWidget(context, StringConstant.placesFromCurrentLocation),
               setState(() {})),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context),
+        bottomNavigationBar: bottomNavigationBarWidget(context,0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: ChangeNotifierProvider<DashboardViewModel>.value(
           value: dashboardViewModel,

@@ -42,7 +42,7 @@ class _OfferActivityState extends State<OfferActivity> {
                 addressWidget(
                     context, StringConstant.placesFromCurrentLocation),
                 setState(() {}))),
-        bottomNavigationBar: bottomNavigationBarWidget(context),
+        bottomNavigationBar: bottomNavigationBarWidget(context,1),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
         body: SafeArea(

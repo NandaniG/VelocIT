@@ -629,28 +629,34 @@ Widget addressWidget(BuildContext context, String addressString) {
   );
 }
 
-Widget bottomNavBarItems(BuildContext context) {
+Widget bottomNavBarItems(BuildContext context, int indexSelected) {
   (() {
     final dashBoardData =
         Provider.of<DashboardViewModel>(context, listen: false);
     dashBoardData.productCategoryListingWithGet();
   });
 
-  int _currentIndex = 0;
+  int _currentIndex = indexSelected;
   final dashBoardData = Provider.of<DashboardViewModel>(context);
 
-  return Consumer<HomeProvider>(builder: (context, provider, child) {
-    return Consumer<ProductProvider>(builder: (context, product, child) {
-      return Consumer<DashboardViewModel>(
-          builder: (context, productCategories, child) {
-        return BottomNavigationBar(
+  // return Consumer<HomeProvider>(builder: (context, provider, child) {
+  //   return Consumer<ProductProvider>(builder: (context, product, child) {
+  //     return Consumer<DashboardViewModel>(
+  //         builder: (context, productCategories, child) {
+        
+  //     });
+  //   });
+  // });
+  return BottomNavigationBar(
           backgroundColor: ThemeApp.whiteColor,
           type: BottomNavigationBarType.fixed,
+          selectedItemColor: ThemeApp.appColor,
+          unselectedItemColor: ThemeApp.unSelectedBottomBarItemColor,
           currentIndex: _currentIndex,
           onTap: (int index) async {
             final preference = await SharedPreferences.getInstance();
-
-            _currentIndex = index;
+              _currentIndex = index;
+            
             if (_currentIndex == 0) {
               // Navigator.pushNamed(context, '/dashBoardScreen');
               Navigator.pushAndRemoveUntil(
@@ -680,7 +686,7 @@ Widget bottomNavBarItems(BuildContext context) {
                   context,
                   MaterialPageRoute(
                     builder: (context) => MerchantActvity(
-                        merchantList: provider.merchantNearYouList[1]),
+                        ),
                   ),
                   (route) => false);
 
@@ -712,10 +718,10 @@ Widget bottomNavBarItems(BuildContext context) {
                   (preference.getString('setBadgeCountPrefs')) ?? '';
               print("Badge,........" + StringConstant.BadgeCounterValue);
               if (kDebugMode) {}
-              product.badgeFinalCount;
+              // product.badgeFinalCount;
 
-              provider.isBottomAppCart = true;
-              provider.isHome = true;
+              // provider.isBottomAppCart = true;
+              // provider.isHome = true;
 
               Navigator.push(
                 context,
@@ -731,14 +737,15 @@ Widget bottomNavBarItems(BuildContext context) {
             BottomNavigationBarItem(
               backgroundColor: Colors.white,
               icon: _currentIndex == 0
-                  ? Padding(
+                  ? 
+                  Padding(
                 padding: const EdgeInsets.only(top: 8.0, ),
                       child: SvgPicture.asset(
                         'assets/appImages/bottomApp/homeIcon.svg',
-                        color: ThemeApp.appColor,
+                        color: _currentIndex == 0 ? ThemeApp.appColor : ThemeApp.unSelectedBottomBarItemColor,
                         semanticsLabel: 'Acme Logo',
                         theme: SvgTheme(
-                          currentColor: ThemeApp.appColor,
+                          currentColor:  ThemeApp.appColor,
                         ),
                         height: 25,
                         width: 25,
@@ -748,10 +755,10 @@ Widget bottomNavBarItems(BuildContext context) {
                 padding: const EdgeInsets.only(top: 8.0, ),
                       child: SvgPicture.asset(
                         'assets/appImages/bottomApp/homeIcon.svg',
-                        color: ThemeApp.appColor,
+                        color: ThemeApp.unSelectedBottomBarItemColor,
                         semanticsLabel: 'Acme Logo',
                         theme: SvgTheme(
-                          currentColor: ThemeApp.appColor,
+                          currentColor: ThemeApp.unSelectedBottomBarItemColor,
                         ),
                         height: 25,
                         width: 25,
@@ -779,7 +786,7 @@ Widget bottomNavBarItems(BuildContext context) {
                 padding: const EdgeInsets.only(top: 8.0, ),
                       child: SvgPicture.asset(
                         'assets/appImages/bottomApp/offerIcon.svg',
-                        color: ThemeApp.appColor,
+                        color: ThemeApp.unSelectedBottomBarItemColor,
                         semanticsLabel: 'Acme Logo',
                         theme: SvgTheme(
                           currentColor: ThemeApp.appColor,
@@ -822,10 +829,10 @@ Widget bottomNavBarItems(BuildContext context) {
                   padding: const EdgeInsets.only(top: 8.0, ),
                       child: SvgPicture.asset(
                           'assets/appImages/bottomApp/shopIcon.svg',
-                          color: ThemeApp.appColor,
+                          color: ThemeApp.unSelectedBottomBarItemColor,
                           semanticsLabel: 'Acme Logo',
                           theme: SvgTheme(
-                            currentColor: ThemeApp.appColor,
+                            currentColor: ThemeApp.unSelectedBottomBarItemColor,
                           ),
                         height: 25,
                         width: 25,
@@ -854,10 +861,10 @@ Widget bottomNavBarItems(BuildContext context) {
                             padding: const EdgeInsets.only(top: 8.0, right: 8),
                             child: SvgPicture.asset(
                               'assets/appImages/bottomApp/cartIcons.svg',
-                              color: ThemeApp.appColor,
+                              color: ThemeApp.unSelectedBottomBarItemColor,
                               semanticsLabel: 'Acme Logo',
                               theme: SvgTheme(
-                                currentColor: ThemeApp.appColor,
+                                currentColor: ThemeApp.unSelectedBottomBarItemColor,
                               ),
                               height: 25,
                               width: 25,
@@ -905,12 +912,9 @@ Widget bottomNavBarItems(BuildContext context) {
                 label: 'CART'),
           ],
         );
-      });
-    });
-  });
 }
 
-Widget bottomNavigationBarWidget(BuildContext context) {
+Widget bottomNavigationBarWidget(BuildContext context,int indexSelected) {
   final controller = BarcodeFinderController();
   return Container(
     // height: MediaQuery.of(context).size.height,
@@ -921,7 +925,7 @@ Widget bottomNavigationBarWidget(BuildContext context) {
     // alignment: const FractionalOffset(.5, 1.0),
     // alignment: const FractionalOffset(.5, - 4.5),
     children: [
-      bottomNavBarItems(context),
+      bottomNavBarItems(context,indexSelected),
       Positioned(
         // right: 0,
         // left: 0,

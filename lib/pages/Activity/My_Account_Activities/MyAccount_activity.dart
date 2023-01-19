@@ -164,7 +164,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
           ),
         ),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context),
+      bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: data == ''
           ? CircularProgressIndicator()
