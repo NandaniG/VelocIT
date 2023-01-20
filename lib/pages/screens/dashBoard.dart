@@ -126,6 +126,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     String isUserLoginPref = 'isUserLoginPref';
 
     final prefs = await SharedPreferences.getInstance();
+    prefs.setString("FromType", 'FromProduct');
+
     StringConstant.BadgeCounterValue =
         (prefs.getString('setBadgeCountPrefs')) ?? '';
     setState(() {
@@ -379,12 +381,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Expanded(
               flex: 1,
               child: InkWell(
-                onTap: () {
-                  setState(() {
+                onTap: () async{
+                  final prefs = await SharedPreferences.getInstance();
+
+                  setState(()  {
                     _isProductListChip = true;
 
                     _isServiceListChip = false;
                     _isCRMListChip = false;
+                    prefs.setString("FromType", 'FromProduct');
                     // _isProductListChip = !_isProductListChip;
                     print(
                         "_isProductListChip 1" + _isProductListChip.toString());
@@ -419,11 +424,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Expanded(
               flex: 1,
               child: InkWell(
-                onTap: () {
-                  setState(() {
+                onTap: () async {                  final prefs = await SharedPreferences.getInstance();
+
+                setState(() {
                     _isServiceListChip = true;
                     _isCRMListChip = false;
                     _isProductListChip = false;
+                    prefs.setString("FromType", 'FromServices');
                     // _isProductListChip = !_isProductListChip;
                     print(
                         "_isProductListChip 2" + _isServiceListChip.toString());
@@ -471,11 +478,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               flex: 1,
               child: InkWell(
                 onTap: () {
-                  setState(() {
+                  setState(() async {
+                    final prefs = await SharedPreferences.getInstance();
                     // _isProductListChip = true;
                     _isCRMListChip = true;
                     _isServiceListChip = false;
                     _isProductListChip = false;
+                    prefs.setString("FromType", 'FromCRM');
                     print("_isProductListChip 3" + _isCRMListChip.toString());
                     Navigator.of(context).push(
                       MaterialPageRoute(

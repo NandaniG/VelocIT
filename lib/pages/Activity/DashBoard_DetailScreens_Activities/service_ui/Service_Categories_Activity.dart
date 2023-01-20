@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../Core/Model/CategoriesModel.dart';
 import '../../../../Core/Model/ProductCategoryModel.dart';
@@ -22,6 +23,7 @@ import '../../../../widgets/global/textFormFields.dart';
 import '../../../homePage.dart';
 import '../../../screens/dashBoard.dart';
 import '../../Product_Activities/Products_List.dart';
+import '../CRM_ui/CRM_Activity.dart';
 import 'ServicesDetailScreen.dart';
 import 'Services_List_Screen.dart';
 
@@ -58,7 +60,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
   void initState() {
     // TODO: implement initState
 
-
+    _isServiceListChip = true;
     dataJson = productViewModel.serviceCategoryListingWithGet();
     super.initState();
   }
@@ -128,6 +130,9 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  productServiceChip(), SizedBox(
+                                    height: height * .02,
+                                  ),
                                   imageLists(),
                                   // carouselImages(),
                                   SizedBox(
@@ -303,7 +308,181 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
           color: ThemeApp.primaryNavyBlackColor),
     );
   }
+  bool _isProductListChip = false;
+  bool _isServiceListChip = false;
+  bool _isCRMListChip = false;
+  Widget productServiceChip() {
+    return Container(
+      width: width / 1,
+      padding: EdgeInsets.only(top: 10),
+      child: Container(
+        height: 40,
+        decoration: BoxDecoration(
+          border: Border.all(color: Color(0xff00a7bf)),
+          color: Color(0xffffffff),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 1,
+              child: InkWell(
+                onTap: () async{
+                  final prefs = await SharedPreferences.getInstance();
 
+                setState(() {
+                    prefs.setString("FromType", 'FromProduct');
+                    _isProductListChip = true;
+
+                    _isServiceListChip = false;
+                    _isCRMListChip = false;
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => DashboardScreen(),
+                      ),
+                    )   .then((value) => setState((){
+                      _isProductListChip = true;
+
+                      _isServiceListChip = false;
+                      _isCRMListChip = false;
+
+
+                    }));                    print(
+                        "_isProductListChip 1" + _isProductListChip.toString());
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: _isProductListChip
+                        ? ThemeApp.appColor
+                        : ThemeApp.whiteColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: TextFieldUtils().dynamicText(
+                        'Products',
+                        context,
+                        TextStyle(
+                            fontFamily: 'Roboto',
+                            color: _isProductListChip
+                                ? ThemeApp.whiteColor
+                                : ThemeApp.blackColor,
+                            // fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500)),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: InkWell(
+                onTap: () async{final prefs = await SharedPreferences.getInstance();
+                  setState(() { prefs.setString("FromType", 'FromServices');
+                    _isServiceListChip = true;
+                    _isCRMListChip = false;
+                    _isProductListChip = false;
+                    // _isProductListChip = !_isProductListChip;
+                    print(
+                        "_isProductListChip 2" + _isServiceListChip.toString());
+                    /*     Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ShopByCategoryActivity(
+                        ),
+                      ),
+                    ).then((value) => setState((){
+                      _isProductListChip = true;
+
+                      _isServiceListChip = false;
+                      _isCRMListChip = false;
+
+
+                    }));*/
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color:
+                    _isServiceListChip ? Color(0xff00a7bf) : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: TextFieldUtils().dynamicText(
+                        'Services',
+                        context,
+                        TextStyle(
+                            fontFamily: 'Roboto',
+                            color: _isServiceListChip
+                                ? ThemeApp.whiteColor
+                                : ThemeApp.blackColor,
+                            // fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500)),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: InkWell(
+                onTap: () async{  final prefs = await SharedPreferences.getInstance();
+                  setState(() {  prefs.setString("FromType", 'FromCRM');
+                    // _isProductListChip = true;
+                    _isCRMListChip = true;
+                    _isServiceListChip = false;
+                    _isProductListChip = false;
+                    print("_isProductListChip 3" + _isCRMListChip.toString());
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CRMActivity(),
+                      ),
+                    )   .then((value) => setState((){
+                      _isProductListChip = true;
+                      //
+                      _isServiceListChip = false;
+                      _isCRMListChip = false;
+
+
+                    }));
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: _isCRMListChip ? Color(0xff00a7bf) : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: TextFieldUtils().dynamicText(
+                        'CRM',
+                        context,
+                        TextStyle(
+                            fontFamily: 'Roboto',
+                            color: _isCRMListChip
+                                ? ThemeApp.whiteColor
+                                : ThemeApp.blackColor,
+                            // fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500)),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   Widget imageLists() {
     return FutureBuilder<List<Payloads>>(
         future: getImageSlide(),

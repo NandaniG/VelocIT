@@ -168,15 +168,39 @@ class CartRepository {
       var merchanId = prefs.getString('selectedMerchantId');
       var ProductId = prefs.getString('selectedProductId');
       var CounterPrice = prefs.getString('selectedCounterPrice');
+      Map<String, String> data;
+      String FromType = (prefs.getString('FromType')) ?? '';
+      print("FromType : " + FromType.toString());
 
-      Map<String, String> data = {
-        "cartId": jsonData['payload']['id'].toString(),
-        "userId": userId,
-        "productId": ProductId.toString(),
-        "merchantId": merchanId.toString(),
-        "qty": CounterPrice.toString(),
-        "is_new_order": 'true'
-      };
+      // if (StringConstant().isNumeric(ProductId!)) {
+      //   FromType = 'FromProduct';
+      //   print("This is Product ");
+      // } else {
+      //   FromType = 'FromServices';
+      //   print("This is service ");
+      // }
+      // print("This is FromType "+FromType.toString());
+
+      if (FromType == 'FromServices') {
+        data = {
+          "cartId": jsonData['payload']['id'].toString(),
+          "userId": userId,
+          "serviceId": ProductId.toString(),
+          "merchantId": merchanId.toString(),
+          "qty": CounterPrice.toString(),
+          "is_new_order": 'true'
+        };
+      } else {
+      data = {
+          "cartId": jsonData['payload']['id'].toString(),
+          "userId": userId,
+          "productId": ProductId.toString(),
+          "merchantId": merchanId.toString(),
+          "qty": CounterPrice.toString(),
+          "is_new_order": 'true'
+        };
+      }
+
       print("update cart DATA buyNowGetRequest" + data.toString());
 
       CartRepository().updateCartPostRequest(data, context).then((value) {

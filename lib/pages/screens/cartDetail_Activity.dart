@@ -15,6 +15,7 @@ import '../../services/providers/Products_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
+import '../../widgets/global/ConfirmationDialog.dart';
 import '../../widgets/global/appBar.dart';
 import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
@@ -26,9 +27,10 @@ class CartDetailsActivity extends StatefulWidget {
   // ProductDetailsModel model;
   ProductProvider value;*/
 
-  CartDetailsActivity(
-      {Key? key, /* required this.value, required this.productList*/ })
-      : super(key: key);
+  CartDetailsActivity({
+    Key? key,
+    /* required this.value, required this.productList*/
+  }) : super(key: key);
 
   @override
   State<CartDetailsActivity> createState() => _CartDetailsActivityState();
@@ -129,6 +131,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     final String formatted = serverFormater.format(displayDate);
     return formatted;
   }
+
   var data;
 
   getCartId() async {
@@ -138,25 +141,23 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     StringConstant.RandomUserLoginId =
         (prefs.getString('isRandomUserId')) ?? '';
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-    print("Cart Id From Cart Activity "+StringConstant.UserCartID);
+    print("Cart Id From Cart Activity " + StringConstant.UserCartID);
     setState(() {});
     var getDirectCartID = prefs.getString('directCartIdPref');
     var getDirectCartIDIsTrue = prefs.getString('directCartIdIsTrue');
 
-
-    if(getDirectCartIDIsTrue == 'true'){
+    if (getDirectCartIDIsTrue == 'true') {
       print(" get DirectCartIDIs True ");
 
       await cartListView.cartSpecificIDWithGet(
           context, getDirectCartID.toString());
-    }else{
+    } else {
       print(" get DirectCartIDIs false ");
 
       await cartListView.cartSpecificIDWithGet(
           context, StringConstant.UserCartID);
     }
     print("Cart Id ForDirect" + getDirectCartID.toString());
-
   }
 
   @override
@@ -166,7 +167,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   }
 
   updateCart(List<OrdersForPurchase>? value, var merchantId, int quantity,
-      String productId) async {
+      String productId, String serviceId) async {
     final prefs = await SharedPreferences.getInstance();
     var userId = '';
 
@@ -174,33 +175,55 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     StringConstant.RandomUserLoginId = (prefs.getString('RandomUserId')) ?? '';
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-    print("Cart Id From Cart Update "+StringConstant.UserCartID);
+    print("Cart Id From Cart Update " + StringConstant.UserCartID);
     var prefUserId = await Prefs.instance.getToken(
       Prefs.prefRandomUserId,
     );
     print("Cart Id From Cart Activity " + StringConstant.UserCartID.toString());
     print("prefUserId from Pref" + prefUserId.toString());
 
-    if (StringConstant.UserLoginId.toString() == '' ||
-        StringConstant.UserLoginId.toString() == null) {
+    if (StringConstant.UserLoginId.toString() == '') {
       userId = StringConstant.RandomUserLoginId;
     } else {
       userId = StringConstant.UserLoginId;
     }
-    Map<String, String> data = {
-      // "cartId": StringConstant.UserCartID.toString(),
-      "cartId": StringConstant.UserCartID.toString(),
-      "userId": userId,
-      "productId": productId,
-      "merchantId": merchantId.toString(),
-      "qty": quantity.toString()
-    };
+    String FromType = (prefs.getString('FromType')) ?? '';
+    print("FromType : " + FromType.toString());
+    Map<String, String> data;
+    print('productId' + productId ?? serviceId);
+    print('serviceId' + serviceId);
+    if (StringConstant().isNumeric(productId)) {
+      FromType = 'FromProduct';
+      print("This is Product ");
+    } else {
+      FromType = 'FromServices';
+      print("This is service ");
+    }
+    print("This is FromType "+FromType.toString());
+    if (FromType == 'FromServices') {
+      data = {
+        // "cartId": StringConstant.UserCartID.toString(),
+        "cartId": StringConstant.UserCartID.toString(),
+        "userId": userId,
+        "serviceId": serviceId,
+        "merchantId": merchantId.toString(),
+        "qty": quantity.toString()
+      };
+    } else {
+      data = {
+        // "cartId": StringConstant.UserCartID.toString(),
+        "cartId": StringConstant.UserCartID.toString(),
+        "userId": userId,
+        "productId": productId,
+        "merchantId": merchantId.toString(),
+        "qty": quantity.toString()
+      };
+    }
     print("update cart DATA" + data.toString());
     setState(() {});
     await CartRepository().updateCartPostRequest(data, context);
     // getCartDetailsFromPref();
     getCartId();
-
   }
 
   @override
@@ -256,9 +279,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         ),
                       ),
                     )
-                  :*/ appBar_backWidget(context, appTitle(context, "My Cart"),
-                      SizedBox(),setState)
-              ;
+                  :*/
+              appBar_backWidget(
+                  context, appTitle(context, "My Cart"), SizedBox(), setState);
         }),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -299,17 +322,16 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                 //     topRight: Radius.circular(15),
                                 //     topLeft: Radius.circular(15)),
                               ),
-                              child: Stack(    alignment: const FractionalOffset(.5, 1.0),
-
+                              child: Stack(
+                                alignment: const FractionalOffset(.5, 1.0),
                                 children: [
                                   Container(
                                     color: ThemeApp.tealButtonColor,
                                     margin: const EdgeInsets.only(
-                                      left: 20,
-                                      right: 15,
-                                      top: 15,
-                                      bottom: 0
-                                    ),
+                                        left: 20,
+                                        right: 15,
+                                        top: 15,
+                                        bottom: 0),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -337,7 +359,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                         TextOverflow.ellipsis,
                                                     fontWeight:
                                                         FontWeight.bold),
-                                              ),SizedBox(height: 2,),
+                                              ),
+                                              SizedBox(
+                                                height: 2,
+                                              ),
                                               TextFieldUtils()
                                                   .pricesLineThroughWhite(
                                                 indianRupeesFormat.format(
@@ -378,7 +403,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                               if (StringConstant
                                                       .isUserLoggedIn ==
                                                   1) {
-
                                                 Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                     builder: (context) =>
@@ -428,7 +452,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                           .itemQty
                                                           .toString());
 
-                                           /*       Map data = {
+                                                  /*       Map data = {
                                                     'user_id': cartProvider
                                                         .cartSpecificID
                                                         .data!
@@ -497,7 +521,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                                 -0.25)))),
                                       ],
                                     ),
-                                  ),bottomNavBarItems(context), Padding(
+                                  ),
+                                  bottomNavBarItems(context),
+                                  Padding(
                                     padding: const EdgeInsets.only(bottom: 20),
                                     child: Container(
                                       height: 70,
@@ -521,7 +547,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                           //       return ScannerWidget(state: controller.state);
                                           //     });
                                         },
-                                        child:  SvgPicture.asset(
+                                        child: SvgPicture.asset(
                                           'assets/appImages/bottomApp/scanIcon.svg',
                                           color: ThemeApp.whiteColor,
                                           semanticsLabel: 'Acme Logo',
@@ -529,7 +555,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                           height: 29,
 
                                           // height: height * .03,
-                                        ),/*   child: const Icon(Icons.document_scanner_outlined,
+                                        ), /*   child: const Icon(Icons.document_scanner_outlined,
                 color: ThemeApp.whiteColor),*/
                                       ),
                                     ),
@@ -580,8 +606,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                         // height: MediaQuery.of(context).size.height,
                         padding: const EdgeInsets.all(10),
                         child: cartProvider.cartSpecificID.data!.payload!
-                                    .ordersForPurchase!.isEmpty
-
+                                .ordersForPurchase!.isEmpty
                             ? Container(
                                 height: height * .5,
                                 alignment: Alignment.center,
@@ -712,14 +737,15 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                           height: height * .01,
                                         ),
 
-                                        Text('Merchant Name : ${orderPurchaseList[index].merchantName}'??"",
+                                        Text(
+                                            'Merchant Name : ${orderPurchaseList[index].merchantName}' ??
+                                                "",
                                             style: TextStyle(
                                                 fontFamily: 'Roboto',
-                                                color:
-                                                ThemeApp.lightFontColor,
+                                                color: ThemeApp.lightFontColor,
                                                 fontSize: 12,
-                                                fontWeight:
-                                                FontWeight.w500)),    SizedBox(
+                                                fontWeight: FontWeight.w500)),
+                                        SizedBox(
                                           height: height * .01,
                                         ),
                                         Row(
@@ -1019,7 +1045,6 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           SizedBox(
             height: 5,
           ),
-
           Row(
             children: [
               Text("M.R.P.: ",
@@ -1159,15 +1184,15 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       children: [
         // Text(value.lst[index].totalOriginalPrice.toString()),
         Container(
-          height:30,
+          height: 30,
           // width: width * .2,
           alignment: Alignment.center,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
                 Radius.circular(5),
               ),
-              border: Border.all(
-                  color: ThemeApp.separatedLineColor, width: 1.5)),
+              border:
+                  Border.all(color: ThemeApp.separatedLineColor, width: 1.5)),
           child: Padding(
             padding: const EdgeInsets.all(0),
             child: Row(
@@ -1185,7 +1210,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                           value,
                           value[index].merchantId,
                           value[index].itemQty! - 1,
-                          value[index].productId.toString());
+                          value[index].productId.toString(),
+                          value[index].serviceId.toString());
 
                       // StringConstant.BadgeCounterValue =
                       //     value.length.toString();
@@ -1193,24 +1219,35 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return ConfirmDialog(
-                              text:
-                                  "Are you sure, you want to remove product from cart list?",
-                              tap: () {
+                            return ConfirmationDialog(
+                              heading: "Warning message",
+                              subTitle:
+                                  'Are you sure that you want to completely remove the item from the cart?',
+                              button1: 'Keep',
+                              button2: 'Remove',
+                              onTap1: () async {
+                                Navigator.pop(context);
+                              },
+                              onTap2: () {
                                 setState(() {
                                   print("value[index].merchantId" +
                                       value[index].merchantId.toString());
 
-                                  updateCart(value, value[index].merchantId, 0,
-                                      value[index].productId.toString());
+                                  updateCart(
+                                      value,
+                                      value[index].merchantId,
+                                      0,
+                                      value[index].productId.toString(),
+                                      value[index].serviceId.toString());
 
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(builder: (context) => CartDetailsActivity())).then((value) {
+                                  Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                          builder: (context) =>
+                                              CartDetailsActivity()))
+                                      .then((value) {
                                     setState(() {});
                                   });
                                   Navigator.pop(context);
-
-
                                 });
                               },
                             );
@@ -1218,16 +1255,15 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     }
                     // });
                   },
-                    child: Padding(
+                  child: Padding(
                     padding: const EdgeInsets.only(left: 8.0, right: 8),
-    child: const Icon(Icons.remove,
-    // size: 20,
-    color: ThemeApp.lightFontColor),
-    ),
-
+                    child: const Icon(Icons.remove,
+                        // size: 20,
+                        color: ThemeApp.lightFontColor),
+                  ),
                 ),
                 Container(
-                  height:30,
+                  height: 30,
                   alignment: Alignment.center,
                   padding: EdgeInsets.fromLTRB(
                     20,
@@ -1255,7 +1291,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                           value,
                           value[index].merchantId,
                           value[index].itemQty! + 1,
-                          value[index].productId.toString());
+                          value[index].productId.toString(),
+                          value[index].serviceId.toString());
                     });
                   },
                   child: Padding(
@@ -1271,11 +1308,41 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         ),
         InkWell(
           onTap: () {
-            setState(() {});
-            print(
-                "value[index].merchantId" + value[index].merchantId.toString());
-            updateCart(value, value[index].merchantId, 0,
-                value[index].productId.toString());
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return ConfirmationDialog(
+                    heading: "Warning message",
+                    subTitle:
+                        'Are you sure that you want to completely remove the item from the cart?',
+                    button1: 'Keep',
+                    button2: 'Remove',
+                    onTap1: () async {
+                      Navigator.pop(context);
+                    },
+                    onTap2: () {
+                      setState(() {
+                        print("value[index].merchantId" +
+                            value[index].merchantId.toString());
+                        updateCart(
+                            value,
+                            value[index].merchantId,
+                            0,
+                            value[index].productId.toString(),
+                            value[index].serviceId.toString());
+
+                        Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(
+                                builder: (context) => CartDetailsActivity()))
+                            .then((value) {
+                          setState(() {});
+                        });
+                        Navigator.pop(context);
+                      });
+                    },
+                  );
+                });
+
             // value.removeAt(index);
           },
           child: SvgPicture.asset(
@@ -1497,7 +1564,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     );*/
   }
 }
-
+/*
 class ConfirmDialog extends StatefulWidget {
   final String text;
   final VoidCallback tap;
@@ -1573,4 +1640,4 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
       child: dialogContent(context),
     );
   }
-}
+}*/
