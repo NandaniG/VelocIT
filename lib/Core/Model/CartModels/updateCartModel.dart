@@ -290,10 +290,10 @@ double? totalDiscountAmountPercent;
   double? totalPayable;
   int? userId;
 
-  Payload(
+  Payload(  this.totalDeliveryCharges,
       {this.id,
         this.ordersForPurchase,
-        this.totalDeliveryCharges,
+
         this.totalDiscountAmount,
         this.totalDiscountAmountPercent,
         this.isDelivertAddressSet,
@@ -312,7 +312,7 @@ double? totalDiscountAmountPercent;
         ordersForPurchase!.add(new OrdersForPurchase.fromJson(v));
       });
     }
-    totalDeliveryCharges = json['total_delivery_charges'];
+    totalDeliveryCharges = json['total_delivery_charges']??0.0;
     totalDiscountAmount = json['total_discount_amount'];
     totalDiscountAmountPercent = json['total_discount_amount_percent'];
     isDelivertAddressSet = json['is_delivert_address_set'];
@@ -331,7 +331,7 @@ double? totalDiscountAmountPercent;
       data['orders_for_purchase'] =
           this.ordersForPurchase!.map((v) => v.toJson()).toList();
     }
-    data['total_delivery_charges'] = this.totalDeliveryCharges;
+    data['total_delivery_charges'] = this.totalDeliveryCharges??0.0;
     data['total_discount_amount'] = this.totalDiscountAmount;
     data['total_discount_amount_percent'] = this.totalDiscountAmountPercent;
     data['is_delivert_address_set'] = this.isDelivertAddressSet;

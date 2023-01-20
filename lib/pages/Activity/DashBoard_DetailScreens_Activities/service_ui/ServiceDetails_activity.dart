@@ -9,6 +9,7 @@ import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/utils.dart';
 
 import '../../../../Core/Model/ServiceModels/SingleServiceModel.dart';
@@ -29,6 +30,7 @@ import '../../../../utils/routes/routes.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/textFormFields.dart';
+import '../CRM_ui/CRM_Activity.dart';
 
 
 class ServiceDetailsActivity extends StatefulWidget {
@@ -125,7 +127,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
       // "cartId": StringConstant.UserCartID.toString(),
       "cartId": StringConstant.UserCartID.toString(),
       "userId": userId,
-      "productId": widget.id.toString(),
+      "serviceId": widget.id.toString(),
       "merchantId": merchantId.toString(),
       "qty": quantity.toString(),
       "is_new_order": 'true'
@@ -259,6 +261,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                               // mainAxisAlignment: MainAxisAlignment.start,
                               // crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+
                                 productImage(model),
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -321,22 +324,22 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
 
                                 //similar product
 
-                                SizedBox(
-                                  height: height * .03,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 20,
-                                    right: 20,
-                                  ),
-                                  child: TextFieldUtils().headingTextField(
-                                      'Similar Products', context),
-                                ),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * .02,
-                                ),
-                                similarProductList()
+                                // SizedBox(
+                                //   height: height * .03,
+                                // ),
+                                // Padding(
+                                //   padding: const EdgeInsets.only(
+                                //     left: 20,
+                                //     right: 20,
+                                //   ),
+                                //   child: TextFieldUtils().headingTextField(
+                                //       'Similar Products', context),
+                                // ),
+                                // SizedBox(
+                                //   height:
+                                //       MediaQuery.of(context).size.height * .02,
+                                // ),
+                                // similarProductList()
                               ],
                             ) ??
                             SizedBox();
@@ -371,7 +374,6 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
       ),
     );
   }
-
   final CarouselController _carouselController = CarouselController();
   int _currentIndex = 0;
   int _radioValue = 0;
@@ -1066,7 +1068,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
           left: 20, right: 20, top: 5, bottom: 5),
       child: Center(
         child: TextFieldUtils().dynamicText(
-            "OUT OF STOCK",
+            "SERVICE NOT AVAILABLE",
             context,
             TextStyle(
               fontFamily: 'Roboto',
@@ -1297,7 +1299,8 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                           final prefs = await SharedPreferences.getInstance();
                           prefs.setString(
                               'isBuyNow', 'true');
-
+                          prefs.setString(
+                              'isBuyNowFrom', 'Services');
                           StringConstant.isUserLoggedIn =
                               (prefs.getInt('isUserLoggedIn')) ?? 0;
 

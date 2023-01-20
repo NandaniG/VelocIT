@@ -218,20 +218,23 @@ class AuthRepository {
 
     StringConstant.prettyPrintJson(
         responseJson.toString(), 'Validate OTP Response:');
+    if(response.statusCode == 200){}else{}
+
     if (jsonData['status'].toString() == 'OK') {
+
       prefs.setString(
-          StringConstant.testId, jsonData['payload']['body']['id'].toString());
+          StringConstant.testId, jsonData['payload']['id'].toString());
       // Prefs.instance.setToken(StringConstant.userId, id.toString());
 
       var loginId = await Prefs.instance.getToken(StringConstant.userId);
       final preferences = await SharedPreferences.getInstance();
       preferences.setInt('isUserLoggedIn', 1);
       preferences.setString(
-          'isUserId', jsonData['payload']['body']['id'].toString());
+          'isUserId', jsonData['payload']['id'].toString());
       preferences.setString(
-          'usernameLogin', jsonData['payload']['body']['username'].toString());
+          'usernameLogin', jsonData['payload']['username'].toString());
       preferences.setString(
-          'emailLogin', jsonData['payload']['body']['email'].toString());
+          'emailLogin', jsonData['payload']['email'].toString());
 
       print("LoginId : .. " + loginId.toString());
 
@@ -252,12 +255,12 @@ class AuthRepository {
         StringConstant.RandomUserLoginId =
             (prefs.getString('RandomUserId')) ?? '';
         Map data = {
-          'user_id': jsonData['payload']['body']['id'],
+          'user_id': jsonData['payload']['id'],
           'item_code': itemCode,
           'qty': itemQuanity
         };
 
-        data = {'userId': jsonData['payload']['body']['id'].toString()};
+        data = {'userId': jsonData['payload']['id'].toString()};
         print('login user is NOT GUEST');
 
         print("create cart data pass : " + data.toString());

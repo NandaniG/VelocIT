@@ -38,7 +38,9 @@ class ThemeApp {
  static const innertextfieldbordercolor = const Color.fromRGBO(128, 189, 40, 1);
  // static const redColor = const Color.fromRGBO(247, 7, 7, 1);
  static const purplecolor = const Color.fromRGBO(142, 110, 207, 1);
- static const greenappcolor = const Color.fromRGBO(18, 122, 69, 1);
+
+ static const orderStatusBGColor = const Color.fromRGBO(144, 152, 177, 0.2);
+ static const orderStatusColor = const Color.fromRGBO(144, 152, 177,1);
 
   static const Color titleTextColor = const Color(0xff1d2635);
   static const Color iconColor = const Color(0xff1d2635);

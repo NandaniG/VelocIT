@@ -34,8 +34,11 @@ class HomeProvider with ChangeNotifier {
 
     StringConstant.RandomUserLoginId =
           (prefs.getString('RandomUserId')) ?? '';
+
+
+      StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
       String jsonContents = await OrderBasketRepository().postApiRequest({
-        "user_id": StringConstant.RandomUserLoginId,
+        "user_id": StringConstant.UserLoginId,
         "IsActiveOrderList": true,
         "from_days_in_past": 3
       });
@@ -63,7 +66,7 @@ class HomeProvider with ChangeNotifier {
       // bookOurServicesService();
       // recommendedListService();
       bestDealListService();
-      cartProductListService();
+      // cartProductListService();
       // orderCheckOutListService();
       // myOrdersListService();
       myAddressListService();

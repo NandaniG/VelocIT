@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/CartModels/SendCartForPaymentModel.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
+import 'package:velocit/utils/routes/routes.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 
 import '../../../Core/ViewModel/cart_view_model.dart';
@@ -55,119 +56,129 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      backgroundColor: ThemeApp.appBackgroundColor,
-      key: scaffoldGlobalKey,
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return NavBackConfirmationFromPayment();
+            });
+        return Future.value(true);
+      },
+      child: Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
-        elevation: 0,
-        leading: InkWell(
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return NavBackConfirmationFromPayment();
-                });
+        key: scaffoldGlobalKey,
+        appBar: AppBar(
+          backgroundColor: ThemeApp.appBackgroundColor,
+          elevation: 0,
+          leading: InkWell(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return NavBackConfirmationFromPayment();
+                  });
 
 
-            // Provider.of<ProductProvider>(context, listen: false);
-          },
-          child: Transform.scale(
-            scale: 0.7,
-            child: Image.asset(
-              'assets/appImages/backArrow.png',
-              color: ThemeApp.primaryNavyBlackColor,
-              // height: height*.001,
+              // Provider.of<ProductProvider>(context, listen: false);
+            },
+            child: Transform.scale(
+              scale: 0.7,
+              child: Image.asset(
+                'assets/appImages/backArrow.png',
+                color: ThemeApp.primaryNavyBlackColor,
+                // height: height*.001,
+              ),
             ),
           ),
+          title: TextFieldUtils().dynamicText(
+              'Order Checkout',
+              context,
+              TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  // fontWeight: FontWeight.w500,
+                  fontSize: MediaQuery.of(context).size.height * .022,
+                  fontWeight: FontWeight.w500)),
         ),
-        title: TextFieldUtils().dynamicText(
-            'Order Checkout',
-            context,
-            TextStyle(
-                fontFamily: 'Roboto',
-                color: ThemeApp.blackColor,
-                // fontWeight: FontWeight.w500,
-                fontSize: MediaQuery.of(context).size.height * .022,
-                fontWeight: FontWeight.w500)),
-      ),
-      body: SafeArea(
-        child: ChangeNotifierProvider<DashboardViewModel>.value(
-          value: dashboardViewModel,
-          child: Consumer<HomeProvider>(builder: (context, value, child) {
-            return Container(
-                  color: ThemeApp.appColor,
-                  width: width,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        stepperWidget(),
-                        SizedBox(
-                          height: 44,
-                        ),
-                        SvgPicture.asset(
-                          'assets/appImages/successIcon.svg',
-                          color: ThemeApp.whiteColor,
-                          semanticsLabel: 'Acme Logo',
-                          height: 68,
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        TextFieldUtils().dynamicText(
-                            StringUtils.orderPlacedSuccessfully,
-                            context,
-                            TextStyle(
-                                fontFamily: 'Roboto',
-                                color: ThemeApp.whiteColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.25)),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        TextFieldUtils().dynamicText(
-                            StringUtils.thankyouForOrderingWithUs,
-                            context,
-                            TextStyle(
-                                fontFamily: 'Roboto',
-                                color: ThemeApp.whiteColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400)),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        TextFieldUtils().dynamicText(
-                            '${StringUtils.orderId + ":"} ${widget.cartForPaymentPayload.orderBasketId.toString()}',
-                            // '${StringUtils.orderId + ": ${value.jsonDat
-                            // 0a['payload']['order_basket_id'].toStrin/g()??''}"}',
-
-                            context,
-                            TextStyle(
-                                fontFamily: 'Roboto',
-                                color: ThemeApp.whiteColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700)),
-                        SizedBox(
-                          height: height * 0.04,
-                        ),
-                        Container(
-                          height: 137,
-                          width: 137,
-                          child: Image.asset(
-                            'assets/images/qr_test_image.png',
-                            // scale: 2,
+        body: SafeArea(
+          child: ChangeNotifierProvider<DashboardViewModel>.value(
+            value: dashboardViewModel,
+            child: Consumer<HomeProvider>(builder: (context, value, child) {
+              return Container(
+                    color: ThemeApp.appColor,
+                    width: width,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          stepperWidget(),
+                          SizedBox(
+                            height: 44,
                           ),
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        buttonsForOrderAndShipping(),
-                      ]),
-                ) ??
-                SizedBox();
-          }),
+                          SvgPicture.asset(
+                            'assets/appImages/successIcon.svg',
+                            color: ThemeApp.whiteColor,
+                            semanticsLabel: 'Acme Logo',
+                            height: 68,
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          TextFieldUtils().dynamicText(
+                              StringUtils.orderPlacedSuccessfully,
+                              context,
+                              TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.whiteColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.25)),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextFieldUtils().dynamicText(
+                              StringUtils.thankyouForOrderingWithUs,
+                              context,
+                              TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.whiteColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400)),
+                          SizedBox(
+                            height: 32,
+                          ),
+                          TextFieldUtils().dynamicText(
+                              '${StringUtils.orderId + ":"} ${widget.cartForPaymentPayload.orderBasketId.toString()}',
+                              // '${StringUtils.orderId + ": ${value.jsonDat
+                              // 0a['payload']['order_basket_id'].toStrin/g()??''}"}',
+
+                              context,
+                              TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.whiteColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700)),
+                          SizedBox(
+                            height: height * 0.04,
+                          ),
+                          Container(
+                            height: 137,
+                            width: 137,
+                            child: Image.asset(
+                              'assets/images/qr_test_image.png',
+                              // scale: 2,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 32,
+                          ),
+                          buttonsForOrderAndShipping(),
+                        ]),
+                  ) ??
+                  SizedBox();
+            }),
+          ),
         ),
       ),
     );
@@ -305,12 +316,9 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
             // print("cartId from Pref" + CARTID.toString());
             CartViewModel()
                 .cartSpecificIDWithGet(context, StringConstant.UserCartID).then((value) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DashboardScreen(),
-                ),
-              ).then((value) {
+
+
+              Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
                 setState(() {
 
                 });

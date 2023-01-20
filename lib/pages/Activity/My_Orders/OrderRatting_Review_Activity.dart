@@ -135,7 +135,7 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
                               decoration: BoxDecoration(
                                   color: ThemeApp.whiteColor,
                                   borderRadius: BorderRadius.circular(8)),
-                              width: width * .85,
+                              width: width * .8,
                               child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: SingleChildScrollView(

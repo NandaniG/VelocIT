@@ -51,7 +51,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .08),
         child: appBar_backWidget(
-            context, appTitle(context, "Order Details"), SizedBox(),setState),
+            context, appTitle(context, "Order Details"), SizedBox(), setState),
       ),
       body: SafeArea(child: mainUI()),
     );
@@ -76,7 +76,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       TextFieldUtils().dynamicText(
                           widget.values["id"].toString(),
                           context,
-                          TextStyle(fontFamily: 'Roboto',
+                          TextStyle(
+                              fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
                               fontSize: 12,
                               fontWeight: FontWeight.w700)),
@@ -91,15 +92,16 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                             Radius.circular(20),
                           ),
                           border: Border.all(
-                            color: ThemeApp.blackColor,
+                            color: ThemeApp.orderStatusColor,
                           ),
-                          color: ThemeApp.whiteColor,
+                          color: ThemeApp.orderStatusBGColor,
                         ),
                         child: TextFieldUtils().dynamicText(
-                            widget.values["overall_status"],
+                            widget.values["overall_status"] ?? "",
                             context,
-                            TextStyle(fontFamily: 'Roboto',
-                                color: ThemeApp.blackColor,
+                            TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.orderStatusColor,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700)),
                       ),
@@ -153,7 +155,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                             TextFieldUtils().dynamicText(
                                 'Download Invoice',
                                 context,
-                                TextStyle(fontFamily: 'Roboto',
+                                TextStyle(
+                                    fontFamily: 'Roboto',
                                     color: ThemeApp.whiteColor,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
@@ -194,13 +197,15 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
 
   Widget stepperOfDelivery() {
     return Container(
-      height: height * .3,
+      // height: height * .3,
+      height: 195,
+
       child: ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: widget.values["orders"].length,
           itemBuilder: (BuildContext context, int index) {
-            Map orders =widget.values["orders"][index];
+            Map orders = widget.values["orders"][index];
             return Row(
               children: [
                 Container(
@@ -218,43 +223,47 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            Container(
+                              width: 62.0,
+                              height: 62.0,
+                              decoration: new BoxDecoration(
+                                borderRadius:
+                                const BorderRadius.all(Radius.circular(2)),
+                                shape: BoxShape.rectangle,
+                              ),
+                              child: Image.network(
+                                // width: double.infinity,
+                                  orders["image_url"] ?? "",
+                                  width: 62.0,
+                                  height: 62.0,
+                                  errorBuilder: ((context, error, stackTrace) {
+                                    return Icon(Icons.image_outlined);
+                                  })),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .03,
+                            ),
                             Flexible(
                               child: TextFieldUtils().dynamicText(
-                                orders
-                                      ["oneliner"],
+                                  orders["oneliner"],
                                   context,
-                                  TextStyle(fontFamily: 'Roboto',
+                                  TextStyle(
+                                      fontFamily: 'Roboto',
                                       color: ThemeApp.blackColor,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400,
                                       overflow: TextOverflow.ellipsis)),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * .03,
-                            ),
-                            Container(
-                                width: 62.0,
-                                height: 62.0,
-                                decoration: new BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(2)),
-                                    shape: BoxShape.rectangle,
-                                 ),child: Image.network(
-                              // width: double.infinity,
-                                orders
-                                ["image_url"] ?? "",
-                                fit: BoxFit.fill,
-                                height:22,
-                                width: 21,
-                                errorBuilder: ((context, error, stackTrace) {
-                                  return Icon(Icons.image_outlined);
-                                })) ,)
+
+
                           ],
                         ),
+                        SizedBox(height: 6,),
                         TextFieldUtils().dynamicText(
-                            'vendor name',
+                            orders["merchant_name"].toString()??"",
                             context,
-                            TextStyle(fontFamily: 'Roboto',
+                            TextStyle(
+                                fontFamily: 'Roboto',
                                 color: ThemeApp.darkGreyTab,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
@@ -271,6 +280,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           }),
     );
   }
+
   Widget stepperWidget(Map subOrders) {
     return Container(
         height: height * .1,
@@ -286,111 +296,94 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
             ),
             Flexible(child: _titleViews(context, subOrders)),
             Flexible(child: _stepsViews(context, subOrders)),
-            /*  Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: _stepsViews(context),
-              ),
-            ),*/
+
           ],
         ));
   }
+
   Widget _iconViews(
-      BuildContext context,
-      Map subOrders,
-      ) {
+    BuildContext context,
+    Map subOrders,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          child: subOrders['is_order_placed'] == true
-              ? Icon(
-            Icons.circle,
-            color: subOrders['is_order_placed'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          )
-              : Icon(
-            Icons.radio_button_checked_outlined,
-            color: subOrders['is_order_placed'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          ),
-        ),
+            child: Icon(
+          Icons.circle,
+          color: ThemeApp.appColor,
+          size: 20,
+        )),
         Expanded(
             child: Container(
-              height: 3.0,
-              color: subOrders['is_order_placed'] == true
-                  ? ThemeApp.appColor
-                  : ThemeApp.inactiveStepperColor,
-            )),
+          height: 3.0,
+          color: ThemeApp.appColor,
+        )),
         Container(
           child: subOrders['is_packed'] == true
               ? Icon(
-            Icons.circle,
-            color: subOrders['is_packed'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          )
+                  Icons.circle,
+                  color: subOrders['is_packed'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: subOrders['is_packed'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: subOrders['is_packed'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                ),
         ),
         Expanded(
             child: Container(
-              height: 3.0,
-              color: subOrders['is_packed'] == true
-                  ? ThemeApp.appColor
-                  : ThemeApp.inactiveStepperColor,
-            )),
+          height: 3.0,
+          color: subOrders['is_packed'] == true
+              ? ThemeApp.appColor
+              : ThemeApp.inactiveStepperColor,
+        )),
         Container(
           child: subOrders['is_shipped'] == true
               ? Icon(
-            Icons.circle,
-            color: subOrders['is_shipped'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          )
+                  Icons.circle,
+                  color: subOrders['is_shipped'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: subOrders['is_shipped'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: subOrders['is_shipped'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                ),
         ),
         Expanded(
             child: Container(
-              height: 3.0,
-              color: subOrders['is_shipped'] == true
-                  ? ThemeApp.appColor
-                  : ThemeApp.inactiveStepperColor,
-            )),
+          height: 3.0,
+          color: subOrders['is_shipped'] == true
+              ? ThemeApp.appColor
+              : ThemeApp.inactiveStepperColor,
+        )),
         Container(
           child: subOrders['is_delivered'] == true
               ? Icon(
-            Icons.circle,
-            color: subOrders['is_delivered'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          )
+                  Icons.circle,
+                  color: subOrders['is_delivered'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: subOrders['is_delivered'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: subOrders['is_delivered'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                ),
         ),
       ],
     );
@@ -443,9 +436,9 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
   }
 
   Widget _titleViews(
-      BuildContext context,
-      Map subOrders,
-      ) {
+    BuildContext context,
+    Map subOrders,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -537,9 +530,9 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
   }
 
   Widget _stepsViews(
-      BuildContext context,
-      Map subOrders,
-      ) {
+    BuildContext context,
+    Map subOrders,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -547,7 +540,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              subOrders['item_qty'].toString()+ ' Items',
+              '',
               context,
               subOrders['is_order_placed'] == true
                   ? ThemeApp.blackColor
@@ -556,7 +549,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              '3/3',
+              '${widget.values['orders_packed_completed'].toString()}/${widget.values['orders_packed_total'].toString()}',
               context,
               subOrders['is_packed'] == true
                   ? ThemeApp.blackColor
@@ -565,7 +558,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              '2/3',
+              '${widget.values['orders_Shipped_completed'].toString()}/${widget.values['orders_Shipped_total'].toString()}',
+
               context,
               subOrders['is_shipped'] == true
                   ? ThemeApp.blackColor
@@ -574,7 +568,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              '1/3',
+              '${widget.values['orders_Delivered_completed'].toString()}/${widget.values['orders_Delivered_total'].toString()}',
               context,
               subOrders['is_delivered'] == true
                   ? ThemeApp.blackColor
@@ -629,6 +623,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
     });
 */
   }
+
   Widget deliveryDetails() {
     return Container(
       // width: 300,
@@ -643,7 +638,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           TextFieldUtils().dynamicText(
               StringUtils.deliveryDetails,
               context,
-              TextStyle(fontFamily: 'Roboto',
+              TextStyle(
+                  fontFamily: 'Roboto',
                   color: ThemeApp.primaryNavyBlackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -656,9 +652,10 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
             height: 10,
           ),
           TextFieldUtils().dynamicText(
-              widget.values["customer_name"]??'',
+              widget.values["customer_name"] ?? '',
               context,
-              TextStyle(fontFamily: 'Roboto',
+              TextStyle(
+                  fontFamily: 'Roboto',
                   color: ThemeApp.blackColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w400)),
@@ -666,19 +663,22 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
             height: height * .02,
           ),
           TextFieldUtils().dynamicText(
-             '${
-                    widget.values["delivery_address_line1"]??""} ${widget.values["delivery_address_line2"] ??
-                        ''} ${widget.values["delivery_address_city"] ??
-                        ""} ${widget.values["delivery_address_state"] ??
-                        ""} ${widget.values["delivery_address_pincode"].toString()
-                  }' ??"No Address ",
-              context,
-              TextStyle(fontFamily: 'Roboto',
-                  color: ThemeApp.blackColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: -0.25,
-                  height: 1.5)),
+                  " ${widget.values["delivery_address_line1"] ?? ''} ${widget.values["delivery_address_line2"] ?? ""} ${widget.values["delivery_address_city"] ?? ""}${widget.values["delivery_address_line2"] ?? ""}${widget.values["delivery_address_pincode"] ?? ""}",
+                  // "${
+                  //        widget.values["delivery_address_line1"]??""} ${widget.values["delivery_address_line2"] ??
+                  //            ''} ${widget.values["delivery_address_city"] ??
+                  //            ""} ${widget.values["delivery_address_state"] ??
+                  //            ""} ${widget.values["delivery_address_pincode"].toString()
+                  //      }" ??"",
+                  context,
+                  TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: -0.25,
+                      height: 1.5)) ??
+              SizedBox(),
         ],
       ),
     );
@@ -700,7 +700,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           TextFieldUtils().dynamicText(
               StringUtils.invoice,
               context,
-              TextStyle(fontFamily: 'Roboto',
+              TextStyle(
+                  fontFamily: 'Roboto',
                   color: ThemeApp.primaryNavyBlackColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w700)),
@@ -722,7 +723,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       child: TextFieldUtils().dynamicText(
                           widget.values["orders"][index]['oneliner'],
                           context,
-                          TextStyle(fontFamily: 'Roboto',
+                          TextStyle(
+                              fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
@@ -733,9 +735,15 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       width: width * .1,
                     ),
                     TextFieldUtils().dynamicText(
-                        indianRupeesFormat.format(double.parse(widget.values["orders"][index]['mrp'].toString())).toString()??'',
+                        indianRupeesFormat
+                                .format(double.parse(widget.values["orders"]
+                                        [index]['mrp']
+                                    .toString()))
+                                .toString() ??
+                            '',
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.lightFontColor,
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
@@ -755,16 +763,18 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
               TextFieldUtils().dynamicText(
                   "Total Amount",
                   context,
-                  TextStyle(fontFamily: 'Roboto',
+                  TextStyle(
+                      fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.2)),
               TextFieldUtils().dynamicText(
-                'total amount',
+                  'total amount',
                   // indianRupeesFormat.format(double.parse(widget.values["orders"][i]['mrp'])).toString()??'',
                   context,
-                  TextStyle(fontFamily: 'Roboto',
+                  TextStyle(
+                      fontFamily: 'Roboto',
                       color: ThemeApp.darkGreyColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -776,7 +786,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
     );
   }
 
-  Widget proofOfDeliverDetails() {
+/*  Widget proofOfDeliverDetails() {
     return Container(
       height: height * .2,
       // width: width * 0.88,
@@ -790,7 +800,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           TextFieldUtils().dynamicText(
               StringUtils.proofOfDelivery,
               context,
-              TextStyle(fontFamily: 'Roboto',
+              TextStyle(
+                  fontFamily: 'Roboto',
                   color: ThemeApp.darkGreyTab,
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -824,7 +835,8 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           child: TextFieldUtils().dynamicText(
               StringUtils.returnItems,
               context,
-              TextStyle(fontFamily: 'Roboto',
+              TextStyle(
+                  fontFamily: 'Roboto',
                   color: ThemeApp.blackColor,
                   fontSize: 12,
                   fontWeight: FontWeight.w700)),
@@ -842,14 +854,15 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           child: TextFieldUtils().dynamicText(
               StringUtils.cancelOrder,
               context,
-              TextStyle(fontFamily: 'Roboto',
+              TextStyle(
+                  fontFamily: 'Roboto',
                   color: ThemeApp.blackColor,
                   fontSize: 12,
                   fontWeight: FontWeight.w700)),
         ),
       ]),
     );
-  }
+  }*/
 
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
@@ -881,29 +894,53 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
     return Wrap(children: [mainUI()]);
   }
 
-
   Widget mainUI() {
     return Container(
-        height: MediaQuery.of(context).size.height * 0.85,
-        width: width,
-        padding: EdgeInsets.all(20),
-        decoration: new BoxDecoration(
-          color: Colors.white,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              returnOrderTitle(),
-              SizedBox(
-                height: height * .02,
-              ),
-              /*   chooseProductToReturn(),
+      height: MediaQuery.of(context).size.height * 0.85,
+      width: width,
+      padding: EdgeInsets.all(20),
+      decoration: new BoxDecoration(
+        color: Colors.white,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            returnOrderTitle(),
+            SizedBox(
+              height: height * .02,
+            ),
+            /*   chooseProductToReturn(),
               SizedBox(
                 height: height * .01,
               ),*/
-              Container(
+            Container(
+              padding: const EdgeInsets.only(right: 20),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: ThemeApp.lightBorderColor,
+                  ),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    chooseProductToReturn(),
+                    SizedBox(
+                      height: height * .01,
+                    ),
+                    itemCancelDetails(),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: height * .02,
+            ),
+            Container(
                 padding: const EdgeInsets.only(right: 20),
                 decoration: BoxDecoration(
                     border: Border.all(
@@ -916,60 +953,38 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      chooseProductToReturn(),
+                      cancelText(),
                       SizedBox(
-                        height: height * .01,
-                      ),
-                      itemCancelDetails(),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: height * .02,
-              ),
-              Container(
-                  padding: const EdgeInsets.only(right: 20),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: ThemeApp.lightBorderColor,
-                      ),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,children: [
-                      cancelText(),  SizedBox(
                         height: height * .01,
                       ),
                       whyItemCancelDetails(),
                     ],
-                    ),)
-              ), SizedBox(
-                height: 5,
-              ),
-              commentText(),
-              SizedBox(
-                height: height * .02,
-              ),
-              commentOrderReturn(),
-              SizedBox(
-                height: height * .02,
-              ),
-              returnOrderButton()
-            ],
-          ),
+                  ),
+                )),
+            SizedBox(
+              height: 5,
+            ),
+            commentText(),
+            SizedBox(
+              height: height * .02,
+            ),
+            commentOrderReturn(),
+            SizedBox(
+              height: height * .02,
+            ),
+            returnOrderButton()
+          ],
         ),
-      )
-    ;
+      ),
+    );
   }
 
   Widget returnOrderTitle() {
     return TextFieldUtils().dynamicText(
         StringUtils.cancelOrder,
         context,
-        TextStyle(fontFamily: 'Roboto',
+        TextStyle(
+            fontFamily: 'Roboto',
             color: ThemeApp.primaryNavyBlackColor,
             fontSize: 16,
             fontWeight: FontWeight.w700));
@@ -979,7 +994,8 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.chooseItemYouWantToCancel,
         context,
-        TextStyle(fontFamily: 'Roboto',
+        TextStyle(
+            fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             fontSize: 16,
             fontWeight: FontWeight.w400));
@@ -1002,20 +1018,21 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
                 children: [
                   Checkbox(
                     value: widget.values["myOrderCancelList"][index]
-                    ["isCancelProductFor"],
+                        ["isCancelProductFor"],
                     onChanged: (values) {
                       setState(() {
                         widget.values["myOrderCancelList"][index]
-                        ["isCancelProductFor"] = values!;
+                            ["isCancelProductFor"] = values!;
                       });
                     },
                   ),
                   Flexible(
                     child: TextFieldUtils().dynamicText(
                         widget.values["myOrderCancelList"][index]
-                        ["whyCancelProduct"],
+                            ["whyCancelProduct"],
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                            fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
@@ -1032,7 +1049,8 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.whyYouWantToCancel,
         context,
-        TextStyle(fontFamily: 'Roboto',
+        TextStyle(
+            fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             fontSize: 16,
             fontWeight: FontWeight.w400));
@@ -1057,27 +1075,28 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
                 children: [
                   Radio(
                     value: widget.values["myOrderCancelList"][index]
-                    ["whyCancelProduct"],
+                        ["whyCancelProduct"],
                     groupValue: valuesGroup,
                     onChanged: (d) {
                       setState(() {
-                        valuesGroup = widget.values["myOrderCancelList"]
-                        [index]["whyCancelProduct"];
+                        valuesGroup = widget.values["myOrderCancelList"][index]
+                            ["whyCancelProduct"];
                       });
                       print("-----tapped canceled reason-----------" +
                           widget.values["myOrderCancelList"][index]
-                          ["whyCancelProduct"]);
+                              ["whyCancelProduct"]);
                     },
                     toggleable: true,
                   ),
                   Flexible(
                     child: TextFieldUtils().dynamicText(
                         widget.values["myOrderCancelList"][index]
-                        ["whyCancelProduct"],
+                            ["whyCancelProduct"],
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                            fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
-                            fontSize:12,
+                            fontSize: 12,
                             fontWeight: FontWeight.w400,
                             overflow: TextOverflow.ellipsis)),
                   ),
@@ -1087,11 +1106,13 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
           }),
     );
   }
+
   Widget commentText() {
     return TextFieldUtils().dynamicText(
         'Comments',
         context,
-        TextStyle(fontFamily: 'Roboto',
+        TextStyle(
+            fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             fontSize: 16,
             fontWeight: FontWeight.w400));
@@ -1102,8 +1123,8 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
       width: width,
       child: TextFormField(
         // controller: doctoreNotesController,
-        style: TextStyle(fontFamily: 'Roboto',
-
+        style: TextStyle(
+          fontFamily: 'Roboto',
           fontSize: height * .022,
           color: ThemeApp.blackColor,
         ),
@@ -1115,7 +1136,8 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
         decoration: InputDecoration(
           filled: true,
           fillColor: ThemeApp.whiteColor,
-          hintStyle: TextStyle(fontFamily: 'Roboto',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: ThemeApp.darkGreyTab,
               fontSize: MediaQuery.of(context).size.height * 0.02),
           contentPadding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 10),
@@ -1148,7 +1170,8 @@ class _CancelOrderBottomSheetState extends State<CancelOrderBottomSheet> {
             ),
           );
         }));
-  } /* Widget mainUI() {
+  }
+/* Widget mainUI() {
     return SingleChildScrollView(
       child: Container(
         height: MediaQuery.of(context).size.height * 0.8,
@@ -1450,25 +1473,28 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
             SizedBox(
               height: height * .02,
             ),
-        Container(
-          padding: const EdgeInsets.only(right: 20),
-          decoration: BoxDecoration(
-              border: Border.all(
-                color: ThemeApp.lightBorderColor,
-              ),
-              borderRadius: BorderRadius.circular(8)),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,children: [
-                  cancelText(),  SizedBox(
-                    height: height * .01,
+            Container(
+                padding: const EdgeInsets.only(right: 20),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: ThemeApp.lightBorderColor,
+                    ),
+                    borderRadius: BorderRadius.circular(8)),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      cancelText(),
+                      SizedBox(
+                        height: height * .01,
+                      ),
+                      whyItemCancelDetails(),
+                    ],
                   ),
-                  whyItemCancelDetails(),
-                ],
-              ),)
-            ),SizedBox(
+                )),
+            SizedBox(
               height: 5,
             ),
             commentText(),
@@ -1490,7 +1516,8 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.returnOrder,
         context,
-        TextStyle(fontFamily: 'Roboto',
+        TextStyle(
+            fontFamily: 'Roboto',
             color: ThemeApp.primaryNavyBlackColor,
             fontSize: 16,
             fontWeight: FontWeight.w700));
@@ -1500,7 +1527,8 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.chooseItemYouWantToReturn,
         context,
-        TextStyle(fontFamily: 'Roboto',
+        TextStyle(
+            fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             fontSize: 16,
             fontWeight: FontWeight.w400));
@@ -1536,7 +1564,8 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
                         widget.values["myOrderReturnList"][index]
                             ["whyReturnProduct"],
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                            fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
@@ -1553,7 +1582,8 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
     return TextFieldUtils().dynamicText(
         StringUtils.whyYouWantToReturn,
         context,
-        TextStyle(fontFamily: 'Roboto',
+        TextStyle(
+            fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             fontSize: 16,
             fontWeight: FontWeight.w400));
@@ -1582,8 +1612,8 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
                     groupValue: valuesGroup,
                     onChanged: (d) {
                       setState(() {
-                        valuesGroup = widget.values["myOrderReturnList"]
-                            [index]["whyReturnProduct"];
+                        valuesGroup = widget.values["myOrderReturnList"][index]
+                            ["whyReturnProduct"];
                       });
                       print("-----tapped canceled reason-----------" +
                           widget.values["myOrderReturnList"][index]
@@ -1596,9 +1626,10 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
                         widget.values["myOrderReturnList"][index]
                             ["whyReturnProduct"],
                         context,
-                        TextStyle(fontFamily: 'Roboto',
+                        TextStyle(
+                            fontFamily: 'Roboto',
                             color: ThemeApp.blackColor,
-                            fontSize:12,
+                            fontSize: 12,
                             fontWeight: FontWeight.w400,
                             overflow: TextOverflow.ellipsis)),
                   ),
@@ -1608,11 +1639,13 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
           }),
     );
   }
+
   Widget commentText() {
     return TextFieldUtils().dynamicText(
-     'Comments',
+        'Comments',
         context,
-        TextStyle(fontFamily: 'Roboto',
+        TextStyle(
+            fontFamily: 'Roboto',
             color: ThemeApp.blackColor,
             fontSize: 16,
             fontWeight: FontWeight.w400));
@@ -1624,7 +1657,6 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
       child: TextFormField(
         // controller: doctoreNotesController,
         style: TextStyle(
-
           fontSize: height * .022,
           color: ThemeApp.blackColor,
         ),
@@ -1636,7 +1668,8 @@ class _ReturnOrderBottomSheetState extends State<ReturnOrderBottomSheet> {
         decoration: InputDecoration(
           filled: true,
           fillColor: ThemeApp.whiteColor,
-          hintStyle: TextStyle(fontFamily: 'Roboto',
+          hintStyle: TextStyle(
+              fontFamily: 'Roboto',
               color: ThemeApp.darkGreyTab,
               fontSize: MediaQuery.of(context).size.height * 0.02),
           contentPadding: EdgeInsets.fromLTRB(10.0, 10, 10.0, 10),
