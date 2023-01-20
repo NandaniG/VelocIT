@@ -138,7 +138,7 @@ class _ServiceListByCategoryActivityState
               addressWidget(context, StringConstant.placesFromCurrentLocation),
               setState(() {})),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context),
+        bottomNavigationBar: bottomNavigationBarWidget(context,0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(
@@ -379,8 +379,8 @@ class _ServiceListByCategoryActivityState
                     child: subProductList.length==0?Center(child: Text('No match found')): GridView(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 30,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
                           // childAspectRatio: 1.0,
                           childAspectRatio: MediaQuery.of(context).size.height / 900,
                         ),
@@ -429,7 +429,7 @@ class _ServiceListByCategoryActivityState
                                           /*   Expanded(
                                             flex: 2,
                                             child:*/ Container(
-                                            height: 143,
+                                            height: 123,
                                             width: 191, /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)

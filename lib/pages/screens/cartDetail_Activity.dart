@@ -537,6 +537,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   } else {
                     return bottomNavigationBarWidget(context,4);
                   }
+                  default:
                   return Container(
                     height: height * .8,
                     alignment: Alignment.center,
@@ -549,8 +550,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                             fontSize: height * .03,
                             fontWeight: FontWeight.bold)),
                   );
-                })),
-          )),
+                }})
+                ),
+  ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
           child: ChangeNotifierProvider<CartViewModel>.value(
