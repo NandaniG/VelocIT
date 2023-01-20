@@ -43,6 +43,7 @@ import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart
 import '../Activity/DashBoard_DetailScreens_Activities/CRM_ui/CRM_Activity.dart';
 import '../Activity/Merchant_Near_Activities/merchant_Activity.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Categories_Activity.dart';
+import '../Activity/My_Orders/MyOrderDetails.dart';
 import '../Activity/Product_Activities/ProductDetails_activity.dart';
 import '../Activity/Product_Activities/Products_List.dart';
 import '../Activity/ServicesFormScreen.dart';
@@ -1561,16 +1562,190 @@ SizedBox(height: 6,),
         }));
   }*/
   int indexForItems = 0;
-
   Widget stepperOfDelivery(HomeProvider value) {
     return /*(value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
             value.jsonData.isNotEmpty)*/
+      value.jsonData['status']=="EXCEPTION"? Text(""):
+      Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Container(
+          // height: 300,
+          height:value.jsonData['payload']['consumer_baskets'].length-1<0?0.0: 161,
+
+          child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: value.jsonData['payload']['consumer_baskets'].length,
+              itemBuilder: (_, index) {
+                //
+
+
+                // DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
+                // DateTime date =
+                // DateTime.parse(order['earliest_delivery_date']);
+                // var earliest_delivery_date = format.format(date);
+
+                return value.jsonData['payload']['consumer_baskets'][index]
+                ['orders'].length-1<0 ?SizedBox():InkWell(
+                  onTap: (){
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MyOrderDetails(values: value.jsonData['payload']['consumer_baskets'][index]),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: Container(
+                      // width: 300,
+                        width: width * 0.85,
+                        padding: const EdgeInsets.all(15),
+                        decoration: const BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(8))),
+                        child: Column(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.center,
+                              children: [
+                                ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(0)),
+                                    child: Image.network(
+                                      // width: double.infinity,
+                                      value.jsonData['payload']['consumer_baskets'][index]['orders'][0]['image_url'] ?? "",
+                                      // fit: BoxFit.fill,
+                                      errorBuilder:
+                                      ((context, error, stackTrace) {
+                                        return Icon(Icons.image_outlined);
+                                      }),
+                                      height: MediaQuery.of(context)
+                                          .size
+                                          .height *
+                                          .055,
+                                    )),
+                                SizedBox(
+                                  width: 9,
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    "Order ID : ${value.jsonData['payload']['consumer_baskets'][index]['id']}",
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.start,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontSize: 12,
+                                        letterSpacing: -0.25,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            stepperWidget(value.jsonData['payload']['consumer_baskets'][index]['orders'][0],value
+                                .jsonData['payload']['consumer_baskets'][index]),
+                          ],
+                        )),
+                  ),
+                );
+               /* ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: value
+                        .jsonData['payload']['consumer_baskets'][index]
+                    ['orders']
+                        .length,
+                    itemBuilder: (context, indexOrderDetails) {
+                      indexForItems = indexOrderDetails;
+
+                      Map subOrders = value.jsonData['payload']
+                      ['consumer_baskets'][index]['orders']
+                      [indexForItems];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Container(
+                          // width: 300,
+                            width: width * 0.85,
+                            padding: const EdgeInsets.all(15),
+                            decoration: const BoxDecoration(
+                                color: ThemeApp.whiteColor,
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(8))),
+                            child: Column(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  children: [
+                                    ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(0)),
+                                        child: Image.network(
+                                          // width: double.infinity,
+                                          subOrders['image_url'] ?? "",
+                                          // fit: BoxFit.fill,
+                                          errorBuilder:
+                                          ((context, error, stackTrace) {
+                                            return Icon(Icons.image_outlined);
+                                          }),
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height *
+                                              .055,
+                                        )),
+                                    SizedBox(
+                                      width: 9,
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        "${value.jsonData['payload']['consumer_baskets'][index]['id']}",
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            fontSize: 12,
+                                            letterSpacing: -0.25,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                stepperWidget(subOrders,value
+                                    .jsonData['payload']['consumer_baskets'][index]),
+                              ],
+                            )),
+                      );
+                    });*/
+              }),
+        ),
+      );
+    /*  : value.jsonData['error'] != null
+            ? Container()
+            : Center(child: CircularProgressIndicator());*/
+  }
+
+/*
+  Widget stepperOfDelivery(HomeProvider value) {
+    return */
+/*(value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
+            value.jsonData.isNotEmpty)*//*
+
       value.jsonData['status']=="EXCEPTION"? Text(""):
        Padding(
          padding: const EdgeInsets.only(bottom: 10.0),
          child: Container(
               // height: 300,
-              height: 161,
+              height:value.jsonData['payload']['consumer_baskets'].length-1<0?0.0: 161,
 
               child: ListView.builder(
                   shrinkWrap: true,
@@ -1578,16 +1753,15 @@ SizedBox(height: 6,),
                   itemCount: value.jsonData['payload']['consumer_baskets'].length,
                   itemBuilder: (_, index) {
                     //
-                    // List orderList = value
-                    //     .jsonData['payload']['consumer_baskets'].values
-                    //     .toList();
-                    // Map order = orderList[index];
+
+
                     // DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
                     // DateTime date =
                     // DateTime.parse(order['earliest_delivery_date']);
                     // var earliest_delivery_date = format.format(date);
 
-                    return value.jsonData['payload']['consumer_baskets'].length-1<0 ?CircularProgressIndicator():ListView.builder(
+                    return value.jsonData['payload']['consumer_baskets'][index]
+                    ['orders'].length-1<0 ?SizedBox():ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         itemCount: value
@@ -1621,7 +1795,7 @@ SizedBox(height: 6,),
                                       children: [
                                         ClipRRect(
                                             borderRadius: const BorderRadius.all(
-                                                Radius.circular(50)),
+                                                Radius.circular(0)),
                                             child: Image.network(
                                               // width: double.infinity,
                                               subOrders['image_url'] ?? "",
@@ -1640,7 +1814,7 @@ SizedBox(height: 6,),
                                         ),
                                         Flexible(
                                           child: Text(
-                                            "${subOrders["short_name"]}",
+                                            "${value.jsonData['payload']['consumer_baskets'][index]['id']}",
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.start,
                                             maxLines: 2,
@@ -1653,7 +1827,8 @@ SizedBox(height: 6,),
                                         ),
                                       ],
                                     ),
-                                    stepperWidget(subOrders),
+                                    stepperWidget(subOrders,value
+                                        .jsonData['payload']['consumer_baskets'][index]),
                                   ],
                                 )),
                           );
@@ -1661,12 +1836,15 @@ SizedBox(height: 6,),
                   }),
             ),
        );
-      /*  : value.jsonData['error'] != null
+      */
+/*  : value.jsonData['error'] != null
             ? Container()
-            : Center(child: CircularProgressIndicator());*/
-  }
+            : Center(child: CircularProgressIndicator());*//*
 
-  Widget stepperWidget(Map subOrders) {
+  }
+*/
+
+  Widget stepperWidget(Map subOrders,dynamic jsonData,) {
     return Container(
         height: height * .1,
         width: width,
@@ -1680,7 +1858,7 @@ SizedBox(height: 6,),
               height: 8,
             ),
             Flexible(child: _titleViews(context, subOrders)),
-            Flexible(child: _stepsViews(context, subOrders)),
+            Flexible(child: _stepsViews(context, subOrders,jsonData)),
             /*  Flexible(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3623,7 +3801,7 @@ SizedBox(height: 6,),
   //
   //   return list;
   // }
-
+int checkStepperCount=0;
   Widget _iconViews(
     BuildContext context,
     Map subOrders,
@@ -3633,28 +3811,16 @@ SizedBox(height: 6,),
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          child: subOrders['is_order_placed'] == true
-              ? Icon(
-                  Icons.circle,
-                  color: subOrders['is_order_placed'] == true
-                      ? ThemeApp.appColor
-                      : ThemeApp.inactiveStepperColor,
-                  size: 20,
-                )
-              : Icon(
-                  Icons.radio_button_checked_outlined,
-                  color: subOrders['is_order_placed'] == true
-                      ? ThemeApp.appColor
-                      : ThemeApp.inactiveStepperColor,
-                  size: 20,
-                ),
+          child:  Icon(
+            Icons.circle,
+            color: ThemeApp.appColor,
+            size: 20,
+          )
         ),
         Expanded(
             child: Container(
           height: 3.0,
-          color: subOrders['is_order_placed'] == true
-              ? ThemeApp.appColor
-              : ThemeApp.inactiveStepperColor,
+          color: ThemeApp.appColor,
         )),
         Container(
           child: subOrders['is_packed'] == true
@@ -3916,7 +4082,7 @@ SizedBox(height: 6,),
 
   Widget _stepsViews(
     BuildContext context,
-    Map subOrders,
+    Map subOrders,dynamic jsonData,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3934,7 +4100,7 @@ SizedBox(height: 6,),
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              '3/3',
+            '${jsonData['orders_packed_completed'].toString()}/${jsonData['orders_packed_total'].toString()}',
               context,
               subOrders['is_packed'] == true
                   ? ThemeApp.blackColor
@@ -3943,7 +4109,7 @@ SizedBox(height: 6,),
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              '2/3',
+              '${jsonData['orders_Shipped_completed'].toString()}/${jsonData['orders_Shipped_total'].toString()}',
               context,
               subOrders['is_shipped'] == true
                   ? ThemeApp.blackColor
@@ -3952,7 +4118,8 @@ SizedBox(height: 6,),
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              '1/3',
+              '${jsonData['orders_Delivered_completed'].toString()}/${jsonData['orders_Delivered_total'].toString()}',
+
               context,
               subOrders['is_delivered'] == true
                   ? ThemeApp.blackColor

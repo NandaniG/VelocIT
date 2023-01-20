@@ -84,539 +84,549 @@ class _Payment_Creditcard_debitcardScreenState
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      backgroundColor: ThemeApp.appBackgroundColor,
-      key: scaffoldGlobalKey,
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return NavBackConfirmationFromPayment();
+            });
+        return Future.value(true);
+      },
+      child: Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
-        elevation: 0,
-        leading: InkWell(
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return NavBackConfirmationFromPayment();
-                });
+        key: scaffoldGlobalKey,
+        appBar: AppBar(
+          backgroundColor: ThemeApp.appBackgroundColor,
+          elevation: 0,
+          leading: InkWell(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return NavBackConfirmationFromPayment();
+                  });
 
-            // Provider.of<ProductProvider>(context, listen: false);
-          },
-          child: Transform.scale(
-            scale: 0.7,
-            child: Image.asset(
-              'assets/appImages/backArrow.png',
-              color: ThemeApp.primaryNavyBlackColor,
-              // height: height*.001,
+              // Provider.of<ProductProvider>(context, listen: false);
+            },
+            child: Transform.scale(
+              scale: 0.7,
+              child: Image.asset(
+                'assets/appImages/backArrow.png',
+                color: ThemeApp.primaryNavyBlackColor,
+                // height: height*.001,
+              ),
             ),
           ),
+          title: TextFieldUtils().dynamicText(
+              'Order Checkout',
+              context,
+              TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  // fontWeight: FontWeight.w500,
+                  fontSize: MediaQuery.of(context).size.height * .022,
+                  fontWeight: FontWeight.w500)),
         ),
-        title: TextFieldUtils().dynamicText(
-            'Order Checkout',
-            context,
-            TextStyle(
-                fontFamily: 'Roboto',
-                color: ThemeApp.blackColor,
-                // fontWeight: FontWeight.w500,
-                fontSize: MediaQuery.of(context).size.height * .022,
-                fontWeight: FontWeight.w500)),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: ThemeApp.appBackgroundColor,
-        elevation: 0,
-        child: Consumer<HomeProvider>(builder: (context, value, child) {
-          return value.jsonData.isEmpty
-              ? CircularProgressIndicator()
-              : Container(
-                  height: 72,
-                  // height: height * .09,
-                  width: width,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: ThemeApp.tealButtonColor,
-                  ),
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 15, bottom: 14),
-                  // height: height * .09,
-                  // width: width,
-                  // decoration: BoxDecoration(
-                  //   color: ThemeApp.tealButtonColor,
-                  //   borderRadius: BorderRadius.only(
-                  //       topRight: Radius.circular(15),
-                  //       topLeft: Radius.circular(15)),
-                  // ),
-                  // padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextFieldUtils().dynamicText(
-                                '${indianRupeesFormat.format(2530)}',
-                                context,
-                                TextStyle(
-                                    fontFamily: 'Roboto',
-                                    color: ThemeApp.whiteColor,
-                                    fontSize: height * .025,
-                                    fontWeight: FontWeight.bold)),
-                            TextFieldUtils().dynamicText(
-                                'View Price Details',
-                                context,
-                                TextStyle(
-                                  fontFamily: 'Roboto',
-                                  color: ThemeApp.whiteColor,
-                                  fontSize: height * .018,
-                                ))
-                          ]),
-                      InkWell(
-                          onTap: () async {
-                            final prefs = await SharedPreferences.getInstance();
-
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
-                            //   ),
-                            // );
-                            rnd = new Random();
-
-                            var r = min + rnd.nextInt(max - min);
-
-                            print("$r is in the range of $min and $max");
-                            int UTRNumber = r;
-                            print("UTRNumber " + UTRNumber.toString());
-                            // Map data={
-                            //           "utr_number":UTRNumber,
-                            //           "user_id": widget.cartForPaymentPayload.userId,
-                            //           "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
-                            //           "remark":"OK",
-                            //           "is_successful":true
-                            //         };
-                            var paymentAttemptId =  prefs.getString('payment_attempt_id');
-              /*
-                            Map data = {
-                              "payment_attempt_id":
-                                  int.parse(paymentAttemptId.toString()),
-                              "order_basket_id":
-                                  widget.cartForPaymentPayload.orderBasketId,
-                              "utr_number": UTRNumber.toString(),
-                              "user_id": widget.cartForPaymentPayload.userId,
-                              "paid_amount": widget
-                                  .cartForPaymentPayload.cart!.totalPayable,
-                              "remark": "yes",
-                              "is_successful": true,
-                              "error_message": "",
-                              "payment_received_from_pg":
-                                  DateTime.now().toString(),
-                              "payment_sent_to_pg": DateTime.now().toString(),
-                              "payment_status": "OK",
-                              "pg_selected": "RazorPay"
-                            };
-*/
-                            // DateTime currentDateTime = DateFormat("yyyy-MM-ddTHH:mm:ssZ").parseUTC(DateTime.now().toString()).toLocal(); // parse String datetime to DateTime and get local date time
-                            //2021-05-21T17:33:24.000000Z
-print("Current Date Time"+DateTime.now().toUtc().toString());
-                            //replace substring of the given string
-                            String result = DateTime.now().toUtc().toString().replaceAll(" ", "T");
-                            print("Current Date Time "+result.toString());
-
-                            print(result);
-                            Map data =   {
-                              "payment_attempt_id":paymentAttemptId,
-                              "order_basket_id":widget.cartForPaymentPayload.orderBasketId,
-                              "utr_number":UTRNumber,
-                              "user_id":widget.cartForPaymentPayload.userId,
-                              "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
-                              "remark":"yes",
-                              "is_successful":true,
-                              "error_message":"",
-                              "payment_received_from_pg":result,
-                              "payment_sent_to_pg":result,
-                              "payment_status":"OK",
-                              "pg_selected":"RazorPay"
-                            };
-
-                            CartRepository()
-                                .putCartForPaymentUpdate(data,
-                                    widget.cartForPaymentPayload.orderBasketId!)
-                                .then((value) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => OrderPlaceActivity(
-                                    data: data,
-                                    cartForPaymentPayload:
-                                        widget.cartForPaymentPayload),
-                              ));
-                            });
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 141,
-                            alignment: Alignment.center,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(100),
-                              ),
-                              color: ThemeApp.whiteColor,
-                            ),
-                            child: TextFieldUtils().dynamicText(
-                                'Proceed to Payment',
-                                context,
-                                TextStyle(
-                                    fontFamily: 'Roboto',
-                                    color: ThemeApp.tealButtonColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: -0.25)),
-                          )),
-                    ],
-                  ),
-                );
-        }),
-      ),
-      body: SafeArea(
-        child: ListView(
-          children: [
-            stepperWidget(),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Container(
-                height: MediaQuery.of(context).size.height * .62,
-                decoration: BoxDecoration(
-                  color: ThemeApp.whiteColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15, right: 15, top: 15, bottom: 40),
-                  child: Form(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextFieldUtils().dynamicText(
-                              StringUtils.allOtherOptions,
-                              context,
-                              TextStyle(
-                                  fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .025,
-                                  fontWeight: FontWeight.bold)),
-                          Row(
+        bottomNavigationBar: BottomAppBar(
+          color: ThemeApp.appBackgroundColor,
+          elevation: 0,
+          child: Consumer<HomeProvider>(builder: (context, value, child) {
+            return value.jsonData.isEmpty
+                ? CircularProgressIndicator()
+                : Container(
+                    height: 72,
+                    // height: height * .09,
+                    width: width,
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      color: ThemeApp.tealButtonColor,
+                    ),
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 20, top: 15, bottom: 14),
+                    // height: height * .09,
+                    // width: width,
+                    // decoration: BoxDecoration(
+                    //   color: ThemeApp.tealButtonColor,
+                    //   borderRadius: BorderRadius.only(
+                    //       topRight: Radius.circular(15),
+                    //       topLeft: Radius.circular(15)),
+                    // ),
+                    // padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Radio(
-                                value: 1,
-                                groupValue: _radioSelected,
-                                activeColor: ThemeApp.appColor,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _radioSelected = value as int;
-                                    _radioVal = 'UPI';
-                                    print(_radioVal);
-                                  });
-                                },
-                              ),
-                              const Text("UPI",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    color: ThemeApp.blackColor,
-                                    // fontSize: height * .016,
-                                    fontWeight: FontWeight.w400,
-                                    overflow: TextOverflow.ellipsis,
-                                  )),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Radio(
-                                value: 2,
-                                groupValue: _radioSelected,
-                                activeColor: ThemeApp.appColor,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _radioSelected = value as int;
-                                    _radioVal = 'Wallets';
-                                    print(_radioVal);
-                                  });
-                                },
-                              ),
-                              const Text("Wallets",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    color: ThemeApp.blackColor,
-                                    // fontSize: height * .016,
-                                    fontWeight: FontWeight.w400,
-                                    overflow: TextOverflow.ellipsis,
-                                  )),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Radio(
-                                value: 3,
-                                groupValue: _radioSelected,
-                                activeColor: ThemeApp.appColor,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _radioSelected = value as int;
-                                    _radioVal = 'Credit / Debit / ATM Card';
-                                    print(_radioVal);
-                                  });
-                                },
-                              ),
-                              const Text("Credit / Debit / ATM Card",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    color: ThemeApp.blackColor,
-                                    // fontSize: height * .016,
-                                    fontWeight: FontWeight.w400,
-                                    overflow: TextOverflow.ellipsis,
-                                  )),
-                            ],
-                          ),
-                          // _radioSelected==3? SizedBox(
-                          //   height: MediaQuery.of(context).size.height * .02,
-                          // ):SizedBox(height: 0,),
-                          _radioSelected == 3
-                              ? TextFieldUtils().dynamicText(
-                                  StringUtils.cardNumber,
+                              TextFieldUtils().dynamicText(
+                                  '${indianRupeesFormat.format(2530)}',
                                   context,
                                   TextStyle(
                                       fontFamily: 'Roboto',
-                                      color: ThemeApp.blackColor,
-                                      fontSize: height * .02,
-                                      fontWeight: FontWeight.w500))
-                              : SizedBox(
-                                  height: 0,
+                                      color: ThemeApp.whiteColor,
+                                      fontSize: height * .025,
+                                      fontWeight: FontWeight.bold)),
+                              TextFieldUtils().dynamicText(
+                                  'View Price Details',
+                                  context,
+                                  TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.whiteColor,
+                                    fontSize: height * .018,
+                                  ))
+                            ]),
+                        InkWell(
+                            onTap: () async {
+                              final prefs = await SharedPreferences.getInstance();
+
+                              // Navigator.of(context).push(
+                              //   MaterialPageRoute(
+                              //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
+                              //   ),
+                              // );
+                              rnd = new Random();
+
+                              var r = min + rnd.nextInt(max - min);
+
+                              print("$r is in the range of $min and $max");
+                              int UTRNumber = r;
+                              print("UTRNumber " + UTRNumber.toString());
+                              // Map data={
+                              //           "utr_number":UTRNumber,
+                              //           "user_id": widget.cartForPaymentPayload.userId,
+                              //           "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
+                              //           "remark":"OK",
+                              //           "is_successful":true
+                              //         };
+                              var paymentAttemptId =  prefs.getString('payment_attempt_id');
+                /*
+                              Map data = {
+                                "payment_attempt_id":
+                                    int.parse(paymentAttemptId.toString()),
+                                "order_basket_id":
+                                    widget.cartForPaymentPayload.orderBasketId,
+                                "utr_number": UTRNumber.toString(),
+                                "user_id": widget.cartForPaymentPayload.userId,
+                                "paid_amount": widget
+                                    .cartForPaymentPayload.cart!.totalPayable,
+                                "remark": "yes",
+                                "is_successful": true,
+                                "error_message": "",
+                                "payment_received_from_pg":
+                                    DateTime.now().toString(),
+                                "payment_sent_to_pg": DateTime.now().toString(),
+                                "payment_status": "OK",
+                                "pg_selected": "RazorPay"
+                              };
+*/
+                              // DateTime currentDateTime = DateFormat("yyyy-MM-ddTHH:mm:ssZ").parseUTC(DateTime.now().toString()).toLocal(); // parse String datetime to DateTime and get local date time
+                              //2021-05-21T17:33:24.000000Z
+print("Current Date Time"+DateTime.now().toUtc().toString());
+                              //replace substring of the given string
+                              String result = DateTime.now().toUtc().toString().replaceAll(" ", "T");
+                              print("Current Date Time "+result.toString());
+
+                              print(result);
+                              Map data =   {
+                                "payment_attempt_id":paymentAttemptId,
+                                "order_basket_id":widget.cartForPaymentPayload.orderBasketId,
+                                "utr_number":UTRNumber,
+                                "user_id":widget.cartForPaymentPayload.userId,
+                                "paid_amount":widget.cartForPaymentPayload.cart!.totalPayable,
+                                "remark":"yes",
+                                "is_successful":true,
+                                "error_message":"",
+                                "payment_received_from_pg":result,
+                                "payment_sent_to_pg":result,
+                                "payment_status":"OK",
+                                "pg_selected":"RazorPay"
+                              };
+
+                              CartRepository()
+                                  .putCartForPaymentUpdate(data,
+                                      widget.cartForPaymentPayload.orderBasketId!)
+                                  .then((value) {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => OrderPlaceActivity(
+                                      data: data,
+                                      cartForPaymentPayload:
+                                          widget.cartForPaymentPayload),
+                                ));
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 141,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(100),
                                 ),
-                          _radioSelected == 3
-                              ? CardNumberTextFormFieldsWidget(
-                                  errorText: StringUtils.validEmailError,
-                                  textInputType: TextInputType.number,
-                                  controller: cardNumberController,
-                                  maxLength: 19,
-                                  autoValidation:
-                                      AutovalidateMode.onUserInteraction,
-                                  hintText: '1234 2345 5678 5553',
-                                  onFieldSubmit: (v) {
-                                    FocusScope.of(context)
-                                        .requestFocus(focusNodeExpiryDate);
-                                  },
-                                  onChange: (val) {
+                                color: ThemeApp.whiteColor,
+                              ),
+                              child: TextFieldUtils().dynamicText(
+                                  'Proceed to Payment',
+                                  context,
+                                  TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.tealButtonColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: -0.25)),
+                            )),
+                      ],
+                    ),
+                  );
+          }),
+        ),
+        body: SafeArea(
+          child: ListView(
+            children: [
+              stepperWidget(),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * .62,
+                  decoration: BoxDecoration(
+                    color: ThemeApp.whiteColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 15, right: 15, top: 15, bottom: 40),
+                    child: Form(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            TextFieldUtils().dynamicText(
+                                StringUtils.allOtherOptions,
+                                context,
+                                TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    fontSize: height * .025,
+                                    fontWeight: FontWeight.bold)),
+                            Row(
+                              children: [
+                                Radio(
+                                  value: 1,
+                                  groupValue: _radioSelected,
+                                  activeColor: ThemeApp.appColor,
+                                  onChanged: (value) {
                                     setState(() {
-                                      if (val.isEmpty &&
-                                          cardNumberController.text.length <
-                                              19) {
+                                      _radioSelected = value as int;
+                                      _radioVal = 'UPI';
+                                      print(_radioVal);
+                                    });
+                                  },
+                                ),
+                                const Text("UPI",
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.blackColor,
+                                      // fontSize: height * .016,
+                                      fontWeight: FontWeight.w400,
+                                      overflow: TextOverflow.ellipsis,
+                                    )),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio(
+                                  value: 2,
+                                  groupValue: _radioSelected,
+                                  activeColor: ThemeApp.appColor,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _radioSelected = value as int;
+                                      _radioVal = 'Wallets';
+                                      print(_radioVal);
+                                    });
+                                  },
+                                ),
+                                const Text("Wallets",
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.blackColor,
+                                      // fontSize: height * .016,
+                                      fontWeight: FontWeight.w400,
+                                      overflow: TextOverflow.ellipsis,
+                                    )),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio(
+                                  value: 3,
+                                  groupValue: _radioSelected,
+                                  activeColor: ThemeApp.appColor,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _radioSelected = value as int;
+                                      _radioVal = 'Credit / Debit / ATM Card';
+                                      print(_radioVal);
+                                    });
+                                  },
+                                ),
+                                const Text("Credit / Debit / ATM Card",
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.blackColor,
+                                      // fontSize: height * .016,
+                                      fontWeight: FontWeight.w400,
+                                      overflow: TextOverflow.ellipsis,
+                                    )),
+                              ],
+                            ),
+                            // _radioSelected==3? SizedBox(
+                            //   height: MediaQuery.of(context).size.height * .02,
+                            // ):SizedBox(height: 0,),
+                            _radioSelected == 3
+                                ? TextFieldUtils().dynamicText(
+                                    StringUtils.cardNumber,
+                                    context,
+                                    TextStyle(
+                                        fontFamily: 'Roboto',
+                                        color: ThemeApp.blackColor,
+                                        fontSize: height * .02,
+                                        fontWeight: FontWeight.w500))
+                                : SizedBox(
+                                    height: 0,
+                                  ),
+                            _radioSelected == 3
+                                ? CardNumberTextFormFieldsWidget(
+                                    errorText: StringUtils.validEmailError,
+                                    textInputType: TextInputType.number,
+                                    controller: cardNumberController,
+                                    maxLength: 19,
+                                    autoValidation:
+                                        AutovalidateMode.onUserInteraction,
+                                    hintText: '1234 2345 5678 5553',
+                                    onFieldSubmit: (v) {
+                                      FocusScope.of(context)
+                                          .requestFocus(focusNodeExpiryDate);
+                                    },
+                                    onChange: (val) {
+                                      setState(() {
+                                        if (val.isEmpty &&
+                                            cardNumberController.text.length <
+                                                19) {
+                                          _validateCardNumber = true;
+                                        } else {
+                                          _validateCardNumber = false;
+                                        }
+                                      });
+                                    },
+                                    validator: (value) {
+                                      if (value.isEmpty &&
+                                          cardNumberController.text.length < 19) {
                                         _validateCardNumber = true;
                                       } else {
                                         _validateCardNumber = false;
                                       }
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty &&
-                                        cardNumberController.text.length < 19) {
-                                      _validateCardNumber = true;
-                                    } else {
-                                      _validateCardNumber = false;
-                                    }
-                                    return null;
-                                  })
-                              : SizedBox(
-                                  height: 0,
-                                ),
-                          _radioSelected == 3
-                              ? SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * .02,
-                                )
-                              : SizedBox(
-                                  height: 0,
-                                ),
-                          _radioSelected == 3
-                              ? Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextFieldUtils().dynamicText(
-                                          StringUtils.expiryDate,
-                                          context,
-                                          TextStyle(
-                                              fontFamily: 'Roboto',
-                                              color: ThemeApp.blackColor,
-                                              fontSize: height * .02,
-                                              fontWeight: FontWeight.w500)),
-                                    ),
-                                    Expanded(
-                                      child: TextFieldUtils().dynamicText(
-                                          StringUtils.cvv,
-                                          context,
-                                          TextStyle(
-                                              fontFamily: 'Roboto',
-                                              color: ThemeApp.blackColor,
-                                              fontSize: height * .02,
-                                              fontWeight: FontWeight.w500)),
-                                    )
-                                  ],
-                                )
-                              : SizedBox(
-                                  height: 0,
-                                ),
-                          _radioSelected == 3
-                              ? Row(
-                                  children: [
-                                    // Expanded(
-                                    //     child: TextFormFieldsWidget(
-                                    //         errorText:
-                                    //             StringUtils
-                                    //                 .emailError,
-                                    //         textInputType:
-                                    //             TextInputType.emailAddress,
-                                    //         controller: ExpiryDateController,
-                                    //         autoValidation: AutovalidateMode
-                                    //             .onUserInteraction,
-                                    //         hintText: 'MM / YY',
-                                    //         onChange: (val) {
-                                    //           setState(() {});
-                                    //         },
-                                    //         validator: (value) {
-                                    //           return null;
-                                    //         })),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 8.0, bottom: 8.0),
-                                        child: TextFormField(
-                                          maxLength: 5,
-                                          controller: ExpiryDateController,
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter
-                                                .digitsOnly,
-                                            CardExpirationFormatter(),
-                                          ],
-                                          onFieldSubmitted: (v) {
-                                            FocusScope.of(context)
-                                                .requestFocus(focusNodeCvv);
-                                          },
-                                          focusNode: focusNodeExpiryDate,
-                                          autofocus: false,
-                                          decoration: InputDecoration(
-                                            counterText: "",
-                                            hintText: 'MM / YY',
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            hintStyle: TextStyle(
+                                      return null;
+                                    })
+                                : SizedBox(
+                                    height: 0,
+                                  ),
+                            _radioSelected == 3
+                                ? SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height * .02,
+                                  )
+                                : SizedBox(
+                                    height: 0,
+                                  ),
+                            _radioSelected == 3
+                                ? Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFieldUtils().dynamicText(
+                                            StringUtils.expiryDate,
+                                            context,
+                                            TextStyle(
                                                 fontFamily: 'Roboto',
-                                                color: Colors.grey,
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.020),
-                                            errorStyle: TextStyle(
+                                                color: ThemeApp.blackColor,
+                                                fontSize: height * .02,
+                                                fontWeight: FontWeight.w500)),
+                                      ),
+                                      Expanded(
+                                        child: TextFieldUtils().dynamicText(
+                                            StringUtils.cvv,
+                                            context,
+                                            TextStyle(
                                                 fontFamily: 'Roboto',
-                                                color: ThemeApp.redColor,
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.020),
-                                            contentPadding:
-                                                const EdgeInsets.fromLTRB(
-                                                    20.0, 15.0, 20.0, 15.0),
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide(
-                                                  color: ThemeApp
-                                                      .textFieldBorderColor,
-                                                )),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide(
+                                                color: ThemeApp.blackColor,
+                                                fontSize: height * .02,
+                                                fontWeight: FontWeight.w500)),
+                                      )
+                                    ],
+                                  )
+                                : SizedBox(
+                                    height: 0,
+                                  ),
+                            _radioSelected == 3
+                                ? Row(
+                                    children: [
+                                      // Expanded(
+                                      //     child: TextFormFieldsWidget(
+                                      //         errorText:
+                                      //             StringUtils
+                                      //                 .emailError,
+                                      //         textInputType:
+                                      //             TextInputType.emailAddress,
+                                      //         controller: ExpiryDateController,
+                                      //         autoValidation: AutovalidateMode
+                                      //             .onUserInteraction,
+                                      //         hintText: 'MM / YY',
+                                      //         onChange: (val) {
+                                      //           setState(() {});
+                                      //         },
+                                      //         validator: (value) {
+                                      //           return null;
+                                      //         })),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 8.0, bottom: 8.0),
+                                          child: TextFormField(
+                                            maxLength: 5,
+                                            controller: ExpiryDateController,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                              CardExpirationFormatter(),
+                                            ],
+                                            onFieldSubmitted: (v) {
+                                              FocusScope.of(context)
+                                                  .requestFocus(focusNodeCvv);
+                                            },
+                                            focusNode: focusNodeExpiryDate,
+                                            autofocus: false,
+                                            decoration: InputDecoration(
+                                              counterText: "",
+                                              hintText: 'MM / YY',
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              hintStyle: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color: Colors.grey,
+                                                  fontSize: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.020),
+                                              errorStyle: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color: ThemeApp.redColor,
+                                                  fontSize: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.020),
+                                              contentPadding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      20.0, 15.0, 20.0, 15.0),
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: BorderSide(
                                                     color: ThemeApp
                                                         .textFieldBorderColor,
-                                                    width: 1)),
-                                            disabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide(
-                                                    color: ThemeApp
-                                                        .textFieldBorderColor,
-                                                    width: 1)),
-                                            errorBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide(
-                                                    color: ThemeApp.redColor,
-                                                    width: 1)),
-                                            enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                borderSide: BorderSide(
-                                                    color: ThemeApp
-                                                        .textFieldBorderColor,
-                                                    width: 1)),
+                                                  )),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: BorderSide(
+                                                      color: ThemeApp
+                                                          .textFieldBorderColor,
+                                                      width: 1)),
+                                              disabledBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: BorderSide(
+                                                      color: ThemeApp
+                                                          .textFieldBorderColor,
+                                                      width: 1)),
+                                              errorBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: BorderSide(
+                                                      color: ThemeApp.redColor,
+                                                      width: 1)),
+                                              enabledBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: BorderSide(
+                                                      color: ThemeApp
+                                                          .textFieldBorderColor,
+                                                      width: 1)),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: CardCVVTextFormFieldWidget(
-                                          errorText: 'please enter password',
-                                          textInputType: TextInputType.number,
-                                          controller: cVVController,
-                                          autoValidation: AutovalidateMode
-                                              .onUserInteraction,
-                                          focusNode: focusNodeCvv,
-                                          hintText: '***',
-                                          onChange: (val) {
-                                            setState(() {});
-                                          },
-                                          validator: (value) {
-                                            return null;
-                                          }),
-                                    ),
-                                  ],
-                                )
-                              : SizedBox(
-                                  height: 0,
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: CardCVVTextFormFieldWidget(
+                                            errorText: 'please enter password',
+                                            textInputType: TextInputType.number,
+                                            controller: cVVController,
+                                            autoValidation: AutovalidateMode
+                                                .onUserInteraction,
+                                            focusNode: focusNodeCvv,
+                                            hintText: '***',
+                                            onChange: (val) {
+                                              setState(() {});
+                                            },
+                                            validator: (value) {
+                                              return null;
+                                            }),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(
+                                    height: 0,
+                                  ),
+                            Row(
+                              children: [
+                                Radio(
+                                  value: 4,
+                                  groupValue: _radioSelected,
+                                  activeColor: ThemeApp.appColor,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _radioSelected = value as int;
+                                      _radioVal = 'Cash on Delivery';
+                                      print(_radioVal);
+                                    });
+                                  },
                                 ),
-                          Row(
-                            children: [
-                              Radio(
-                                value: 4,
-                                groupValue: _radioSelected,
-                                activeColor: ThemeApp.appColor,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _radioSelected = value as int;
-                                    _radioVal = 'Cash on Delivery';
-                                    print(_radioVal);
-                                  });
-                                },
-                              ),
-                              const Text("Cash on Delivery",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    color: ThemeApp.blackColor,
-                                    // fontSize: height * .016,
-                                    fontWeight: FontWeight.w400,
-                                    overflow: TextOverflow.ellipsis,
-                                  )),
-                            ],
-                          ),
-                        ],
+                                const Text("Cash on Delivery",
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.blackColor,
+                                      // fontSize: height * .016,
+                                      fontWeight: FontWeight.w400,
+                                      overflow: TextOverflow.ellipsis,
+                                    )),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

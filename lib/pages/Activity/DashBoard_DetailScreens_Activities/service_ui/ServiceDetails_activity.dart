@@ -125,7 +125,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
       // "cartId": StringConstant.UserCartID.toString(),
       "cartId": StringConstant.UserCartID.toString(),
       "userId": userId,
-      "productId": widget.id.toString(),
+      "serviceId": widget.id.toString(),
       "merchantId": merchantId.toString(),
       "qty": quantity.toString(),
       "is_new_order": 'true'
@@ -1297,7 +1297,8 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                           final prefs = await SharedPreferences.getInstance();
                           prefs.setString(
                               'isBuyNow', 'true');
-
+                          prefs.setString(
+                              'isBuyNowFrom', 'Services');
                           StringConstant.isUserLoggedIn =
                               (prefs.getInt('isUserLoggedIn')) ?? 0;
 

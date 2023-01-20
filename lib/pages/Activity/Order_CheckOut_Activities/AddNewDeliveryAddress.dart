@@ -98,15 +98,16 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .09),
-          child: appBar_backWidget(
+            preferredSize: Size.fromHeight(height * .09),
+            child: appBar_backWidget(
               context,
               appTitle(
                 context,
                 "Add New Delivery Address",
               ),
-              const SizedBox(),setState,)
-        ),
+              const SizedBox(),
+              setState,
+            )),
         body: SafeArea(
           child: Padding(
             padding:
@@ -169,101 +170,6 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DropdownButtonHideUnderline(
-                  child: DropdownButtonFormField<StatePayload>(
-                //value: _companyDataResponseModel,
-                isDense: true,
-                onChanged: (StatePayload? newValue) {
-                  //   for(int i =0; i<stateDetailList.length; i++){
-                  //
-                  //   selectedState = newValue!.cities??[];
-                  // }
-                  setState(() {
-                    print("selected state" + newValue!.name.toString());
-                    selectedStateId = newValue.id;
-                  });
-                },
-                decoration: InputDecoration(
-                  // contentPadding:
-                  //     EdgeInsets.only(left: 15, top: 2, bottom: 2),
-                  border: OutlineInputBorder(),
-                ),
-                items: stateDetailList.map((StatePayload map) {
-                  return DropdownMenuItem<StatePayload>(
-                    value: map,
-                    child: Text(
-                      map.name.toString(),
-                      style: TextStyle(
-                        fontFamily: 'SegoeUi',
-                      ),
-                    ),
-                  );
-                }).toList(),
-              )),
-              ChangeNotifierProvider<CartViewModel>.value(
-                  value: cartViewModel,
-                  child: Consumer<CartViewModel>(
-                      builder: (context, cartData, child) {
-                    switch (cartData.getCity.status) {
-                      case Status.LOADING:
-                        print("Api load");
-
-                        return TextFieldUtils().circularBar(context);
-                      case Status.ERROR:
-                        print("Api error");
-
-                        return Text(cartData.getCity.message.toString());
-                      case Status.COMPLETED:
-                        print("Api calll");
-                        var citySelectedId;
-                        cartData.getCity.data!.payload!
-                            .map((CityPayloadData map) {
-                          citySelectedId = map.id;
-                        });
-                        // List<StatePayload>? statePayloadList=   cartData.getState.data!.payload;
-                        return DropdownButtonHideUnderline(
-                            child: DropdownButtonFormField<CityPayloadData>(
-                          isDense: true,
-                          onChanged: (CityPayloadData? newValue) {
-                            setState(() {});
-                          },
-                          decoration: InputDecoration(
-                            // contentPadding:
-                            //     EdgeInsets.only(left: 15, top: 2, bottom: 2),
-                            border: OutlineInputBorder(),
-                          ),
-                          items: cartData.getCity.data!.payload!
-                                  .map((CityPayloadData map) {
-                                return DropdownMenuItem<CityPayloadData>(
-                                  value: map,
-                                  child: selectedStateId == map.id
-                                      ? Text(
-                                          map.name.toString() ?? "",
-                                          style: TextStyle(
-                                            fontFamily: 'SegoeUi',
-                                          ),
-                                        )
-                                      : Text(''),
-                                );
-                              }).toList() ??
-                              [],
-                          // items: [],
-                        ));
-                    }
-                    return Container(
-                      height: height * .8,
-                      alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: height * .03,
-                              fontWeight: FontWeight.bold)),
-                    );
-                  })),
-
               //Full Name
               TextFieldUtils().asteriskTextField(StringUtils.fullName, context),
               CharacterTextFormFieldsWidget(
@@ -292,7 +198,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     }
                   },
                   validator: (value) {
-                    if (value==''  && mobileController.text.isEmpty) {
+                    if (value == '' && mobileController.text.isEmpty) {
                       _validateMobile = true;
                       return StringUtils.enterMobileNumber;
                     } else if (mobileController.text.length < 10) {
@@ -374,8 +280,9 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   validator: (value) {
                     return null;
                   }),
+
               TextFieldUtils().asteriskTextField(StringUtils.state, context),
-              TextFormFieldsWidget(
+              /*       TextFormFieldsWidget(
                   errorText: StringUtils.state,
                   textInputType: TextInputType.text,
                   controller: stateController,
@@ -384,7 +291,79 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   onChange: (val) {},
                   validator: (value) {
                     return null;
-                  }),
+                  }),*/
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                child: DropdownButtonHideUnderline(
+                    child: DropdownButtonFormField<StatePayload>(
+                  //value: _companyDataResponseModel,
+                  isDense: true,
+                  onChanged: (StatePayload? newValue) {
+                    //   for(int i =0; i<stateDetailList.length; i++){
+                    //
+                    //   selectedState = newValue!.cities??[];
+                    // }
+                    setState(() {
+                      print("selected state" + newValue!.name.toString());
+                      selectedStateId = newValue.id;
+                      print(selectedStateId);
+
+
+                    });
+                  },
+                  decoration: InputDecoration(
+                    counterText: "",
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintStyle: TextStyle(
+                        fontFamily: 'Roboto',
+                        color: Colors.grey,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                    hintText: 'State',
+                    errorStyle: TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.redColor,
+                        fontSize: MediaQuery.of(context).size.height * 0.020),
+                    errorMaxLines: 2,
+                    contentPadding:
+                        const EdgeInsets.fromLTRB(20.0, 12.0, 11.0, 12.0),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(
+                          color: ThemeApp.separatedLineColor,
+                        )),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(
+                            color: ThemeApp.separatedLineColor, width: 1)),
+                    disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(
+                            color: ThemeApp.separatedLineColor, width: 1)),
+                    errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(
+                            color: ThemeApp.redColor, width: 1)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(
+                            color: ThemeApp.separatedLineColor, width: 1)),
+                  ),
+                  items: stateDetailList.map((StatePayload map) {
+                    return DropdownMenuItem<StatePayload>(
+                      value: map,
+                      child: Text(
+                        map.name.toString(),
+                        style: TextStyle(
+                          fontFamily: 'SegoeUi',
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                )),
+              ),
+
 /*              Column(
                 children: [
                   ///Adding CSC Picker Widget in app
@@ -489,7 +468,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 ],
               )*/
               TextFieldUtils().asteriskTextField(StringUtils.city, context),
-              TextFormFieldsWidget(
+              /*    TextFormFieldsWidget(
                   errorText: StringUtils.city,
                   textInputType: TextInputType.text,
                   controller: cityController,
@@ -498,10 +477,119 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   onChange: (val) {},
                   validator: (value) {
                     return null;
-                  }),
-              SizedBox(
-                height: height * .02,
-              ),
+                  }),*/
+              ChangeNotifierProvider<CartViewModel>.value(
+                  value: cartViewModel,
+                  child: Consumer<CartViewModel>(
+                      builder: (context, cartData, child) {
+                        switch (cartData.getCity.status) {
+                          case Status.LOADING:
+                            print("Api load");
+
+                            return SizedBox();
+                          case Status.ERROR:
+                            print("Api error");
+
+                            return Text(cartData.getCity.message.toString());
+                          case Status.COMPLETED:
+                            print("Api calll");
+                            var citySelectedId;
+                            cartData.getCity.data!.payload!
+                                .map((CityPayloadData map) {
+                              citySelectedId = map.id;
+                            });
+                            // List<StatePayload>? statePayloadList=   cartData.getState.data!.payload;
+                            return     Padding(
+                              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+
+                              child: DropdownButtonHideUnderline(
+                                  child: DropdownButtonFormField<CityPayloadData>(
+                                    isDense: true,
+                                    isExpanded: false,
+
+                                    onChanged: (CityPayloadData? newValue) {
+                                      setState(() {});
+                                    },
+                                    decoration: InputDecoration(
+                                      counterText: "",
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      hintStyle: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400),
+                                      hintText: 'City',
+                                      errorStyle: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          color: ThemeApp.redColor,
+                                          fontSize:
+                                          MediaQuery.of(context).size.height * 0.020),
+                                      errorMaxLines: 2,
+                                      contentPadding: const EdgeInsets.fromLTRB(
+                                          20.0, 12.0, 11.0, 12.0),
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(5),
+                                          borderSide: const BorderSide(
+                                            color: ThemeApp.separatedLineColor,
+                                          )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(5),
+                                          borderSide: const BorderSide(
+                                              color: ThemeApp.separatedLineColor,
+                                              width: 1)),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(5),
+                                          borderSide: const BorderSide(
+                                              color: ThemeApp.separatedLineColor,
+                                              width: 1)),
+                                      errorBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(5),
+                                          borderSide: const BorderSide(
+                                              color: ThemeApp.redColor, width: 1)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(5),
+                                          borderSide: const BorderSide(
+                                              color: ThemeApp.separatedLineColor,
+                                              width: 1)),
+                                    ),
+                                    items: cartData.getCity.data!.payload!
+                                        .map((CityPayloadData map) {
+                                      return DropdownMenuItem<CityPayloadData>(
+                                        value: map,
+                                        child: selectedStateId == map.id
+                                            ? Flexible(
+                                          child: Text(
+                                            map.name.toString() ?? "",
+                                            style: TextStyle(
+                                              fontFamily: 'SegoeUi',
+                                            ),
+                                          ),
+                                        )
+                                            : Text(''),
+                                      );
+                                    }).toList() ??
+                                        [],
+                                    // items: [],
+                                  )),
+                            );
+                        }
+                        return Container(
+                          height: height * .8,
+                          alignment: Alignment.center,
+                          child: TextFieldUtils().dynamicText(
+                              'No Match found!',
+                              context,
+                              TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.blackColor,
+                                  fontSize: height * .03,
+                                  fontWeight: FontWeight.bold)),
+                        );
+                      })),
+
+
+
               TextFieldUtils().asteriskTextField(StringUtils.pincode, context),
               TextFormFieldsWidget(
                   errorText: StringUtils.pincode,
@@ -579,7 +667,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                       CartRepository()
                           .createAddressPostAPI(data, userId.toString());
 
-                      Utils.successToast("success");
+                      Utils.successToast("New Address added successfully");
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => SavedAddressDetails(
@@ -608,7 +696,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                       CartRepository()
                           .createAddressPostAPI(data, userId.toString());
 
-                      Utils.successToast("success");
+                      Utils.successToast("New Address added successfully");
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => OrderReviewActivity(
@@ -1156,7 +1244,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
 
                 CartRepository().createAddressPostAPI(data, userId.toString());
 
-                Utils.successToast("success");
+                Utils.successToast("New Address added successfully");
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => SavedAddressDetails(
@@ -1181,7 +1269,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
 
                 CartRepository().createAddressPostAPI(data, userId.toString());
 
-                Utils.successToast("success");
+                Utils.successToast("New Address added successfully");
                 //comment because need to manage apis
 
                 /*       Navigator.of(context).push(

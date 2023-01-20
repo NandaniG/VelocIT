@@ -322,7 +322,6 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 ),
                                 counterWidget(model),
 
-
                                 //similar product
 
                                 SizedBox(
@@ -861,10 +860,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     return Container(
       width: width,
       decoration: const BoxDecoration(
-        // border: Border(
-        //   bottom: BorderSide(color: Colors.grey, width: 1),
-        // ),
-      ),
+          // border: Border(
+          //   bottom: BorderSide(color: Colors.grey, width: 1),
+          // ),
+          ),
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
         child: Column(
@@ -950,14 +949,17 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
   Widget counterWidget(SingleProductPayload model) {
     return model.merchants.isNotEmpty
-        ? Container(color: ThemeApp.whiteColor,
+        ? Container(
+            color: ThemeApp.whiteColor,
             padding:
-                const EdgeInsets.only(left: 20, right: 20, top:20, bottom: 20),
+                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20,),
+                    left: 20,
+                    right: 20,
+                  ),
                   child: Row(
                     children: [
                       TextFieldUtils().dynamicText(
@@ -972,9 +974,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       SizedBox(
                         width: 11,
                       ),
-
                       Container(
-                        height:30,
+                        height: 30,
                         // width: width * .2,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -982,7 +983,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               Radius.circular(5),
                             ),
                             border: Border.all(
-                                color: ThemeApp.separatedLineColor, width: 1.5)),
+                                color: ThemeApp.separatedLineColor,
+                                width: 1.5)),
                         child: Padding(
                           padding: const EdgeInsets.all(0),
                           child: Row(
@@ -992,7 +994,10 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    counterPrice--;
+                                    if (counterPrice <= 1) {
+                                    } else {
+                                      counterPrice--;
+                                    }
                                     remainingCounters();
 
                                     var data = {
@@ -1006,14 +1011,15 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   });
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 8),
                                   child: const Icon(Icons.remove,
                                       // size: 20,
                                       color: ThemeApp.lightFontColor),
                                 ),
                               ),
                               Container(
-                                height:30,
+                                height: 30,
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.fromLTRB(
                                   20,
@@ -1026,7 +1032,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   counterPrice.toString().padLeft(2, '0'),
                                   style: TextStyle(
                                       fontFamily: 'Roboto',
-                                      fontSize: MediaQuery.of(context).size.height * .016,
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              .016,
                                       fontWeight: FontWeight.bold,
                                       overflow: TextOverflow.ellipsis,
                                       color: ThemeApp.blackColor),
@@ -1037,12 +1045,11 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   setState(() {
                                     counterPrice++;
                                     remainingCounters();
-
-
                                   });
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 8),
                                   child: const Icon(Icons.add,
                                       // size: 20,
                                       color: ThemeApp.lightFontColor),
@@ -1063,23 +1070,23 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             ),
           )
         : Container(
-      width: width,
-      height: 72,
-      color: ThemeApp.whiteColor,
-      padding: const EdgeInsets.only(
-          left: 20, right: 20, top: 5, bottom: 5),
-      child: Center(
-        child: TextFieldUtils().dynamicText(
-            "OUT OF STOCK",
-            context,
-            TextStyle(
-              fontFamily: 'Roboto',
-              color: ThemeApp.redColor,
-              fontWeight: FontWeight.w500,
-              fontSize: height * .035,
-            )),
-      ),
-    );
+            width: width,
+            height: 72,
+            color: ThemeApp.whiteColor,
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+            child: Center(
+              child: TextFieldUtils().dynamicText(
+                  "OUT OF STOCK",
+                  context,
+                  TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.redColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: height * .035,
+                  )),
+            ),
+          );
   }
 
   Widget addToCart(SingleProductPayload model) {
@@ -1087,7 +1094,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
         builder: (context, productProvider, child) {
       return Consumer<ProductSpecificListViewModel>(
           builder: (context, productListProvider, child) {
-            print("model.merchants lengthghgfjgfj "+merchantTemp.length.toString());
+        print(
+            "model.merchants lengthghgfjgfj " + merchantTemp.length.toString());
         return model.merchants.isNotEmpty
             ? Padding(
                 padding: const EdgeInsets.only(
@@ -1120,7 +1128,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               });
                             },
                             child: Container(
-                                height:40,
+                                height: 40,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(
@@ -1134,7 +1142,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   "Add to Cart",
                                   style: TextStyle(
                                     fontFamily: 'Roboto',
-                                    fontSize:16,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     overflow: TextOverflow.ellipsis,
                                     color: ThemeApp.tealButtonColor,
@@ -1299,9 +1307,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           });
 
                           final prefs = await SharedPreferences.getInstance();
+                          prefs.setString('isBuyNow', 'true');
                           prefs.setString(
-                              'isBuyNow', 'true');
-
+                              'isBuyNowFrom', 'Product');
                           StringConstant.isUserLoggedIn =
                               (prefs.getInt('isUserLoggedIn')) ?? 0;
 
@@ -1339,21 +1347,21 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                           }
                         },
                         child: Container(
-                            height:40,
+                            height: 40,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(100),
                               ),
-                              border: Border.all(
-                                  color: ThemeApp.tealButtonColor),
+                              border:
+                                  Border.all(color: ThemeApp.tealButtonColor),
                               color: ThemeApp.tealButtonColor,
                             ),
                             child: Text(
                               "Buy now",
                               style: TextStyle(
                                 fontFamily: 'Roboto',
-                                fontSize:16,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 overflow: TextOverflow.ellipsis,
                                 color: ThemeApp.whiteColor,

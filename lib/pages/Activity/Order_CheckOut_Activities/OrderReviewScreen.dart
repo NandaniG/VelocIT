@@ -68,7 +68,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     // TODO: implement initState
     super.initState();
 
-   StringConstant.addressFromCurrentLocation;
+    StringConstant.addressFromCurrentLocation;
     StringConstant.selectedFullName;
     StringConstant.selectedFullAddress;
     StringConstant.selectedTypeOfAddress;
@@ -84,7 +84,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-    print("Cart Id From Order Review"+StringConstant.UserCartID);
+    print("Cart Id From Order Review" + StringConstant.UserCartID);
 
     print("Cart id in sub order " + widget.cartId.toString());
     cartListView.sendCartForPaymentWithGet(context, widget.cartId.toString());
@@ -113,343 +113,315 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-        key: scaffoldGlobalKey,
-        appBar: AppBar(
-          backgroundColor: ThemeApp.appBackgroundColor,
-          elevation: 0,
-          leading: InkWell(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return NavBackConfirmationFromPayment();
-                  });
-
-
-            // Provider.of<ProductProvider>(context, listen: false);
-            },
-            child: Transform.scale(
-              scale: 0.7,
-              child: Image.asset(
-                'assets/appImages/backArrow.png',
-                color: ThemeApp.primaryNavyBlackColor,
-                // height: height*.001,
-              ),
-            ),
-          ),
-          title: TextFieldUtils().dynamicText(
-              'Order Checkout',
-              context,
-              TextStyle(
-                  fontFamily: 'Roboto',
-                  color: ThemeApp.blackColor,
-                  // fontWeight: FontWeight.w500,
-                  fontSize: MediaQuery.of(context).size.height * .022,
-                  fontWeight: FontWeight.w500)),
-        ),
-        bottomNavigationBar: BottomAppBar(
-            color: ThemeApp.appBackgroundColor,
+    return WillPopScope(
+      onWillPop: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return NavBackConfirmationFromPayment();
+            });
+        return Future.value(true);
+      },
+      child: Scaffold(
+          key: scaffoldGlobalKey,
+          appBar: AppBar(
+            backgroundColor: ThemeApp.appBackgroundColor,
             elevation: 0,
-            child: ChangeNotifierProvider<CartViewModel>.value(
-                value: cartListView,
-                child: Consumer<CartViewModel>(
-                    builder: (context, cartProvider, child) {
-                  switch (cartProvider.sendCartForPayment.status) {
-                    case Status.LOADING:
-                      print("Api load");
+            leading: InkWell(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return NavBackConfirmationFromPayment();
+                    });
 
-                      return Container();
-                    case Status.ERROR:
-                      print("Api error");
-
-                      return Text(
-                          'Please try after some time');
-                    case Status.COMPLETED:
-                      print("Api calll");
-                      CartForPaymentPayload cartForPaymentPayload =
-                          cartProvider.sendCartForPayment.data!.payload!;
-                      print("cartForPaymentPayload " +
-                          cartForPaymentPayload.toString());
-
-                      List<CartOrdersForPurchase> cartOrderPurchase =
-                          cartProvider.sendCartForPayment.data!.payload!.cart!
-                              .ordersForPurchase!;
-
-                      return cartProvider.sendCartForPayment.data!.status =='EXCEPTION'?Text( 'Please try after some time'): Container(
-                        height: 72,
-                        // height: height * .09,
-                        width: width,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                          color: ThemeApp.tealButtonColor,
-
-                        ),
-                        padding: const EdgeInsets.only(
-                          left: 20,
-                          right: 20,
-                          top: 15,bottom: 14
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-
-                                  Text(
-                                      "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalPayable.toString()))}",
-                                      style: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          fontSize:20,
-                                          color: ThemeApp.separatedLineColor,
-                                          overflow: TextOverflow.ellipsis,
-                                          fontWeight: FontWeight.bold),),
-
-                                  TextFieldUtils().pricesLineThroughWhite(
-                                    "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalMrp.toString()))}",
-                                    context,
-                                    14,
-                                  ),
-                                ]),
-                            InkWell(
-                                onTap: () {
-                                  Map data = {
-                                    "order_basket_id":
-                                        cartForPaymentPayload.orderBasketId,
-                                    "user_id": cartForPaymentPayload.userId,
-                                    "payable_amount": cartForPaymentPayload
-                                        .cart!.totalPayable,
-                                    "is_self_pickup":isSelfPickUp,
-                                  };
-                                  if(StringConstant
-                                      .selectedFullName!=''){
-
-                                    CartRepository().putCartForPayment(data,
-                                        cartForPaymentPayload.orderBasketId!);
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            Payment_Creditcard_debitcardScreen(
-                                                cartForPaymentPayload:
-                                                cartForPaymentPayload),
-                                      ),
-                                    );
-                                  }else{
-                                    Utils.successToast("Please select delivery address");
-                                  }
-
-                                  // Navigator.of(context).push(
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
-                                  //   ),
-                                  // );
-                                },
-                                child: Container(
-                                    height: 40,width: 121,
-                                    alignment: Alignment.center,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(100),
-                                      ),
-                                      color: ThemeApp.whiteColor,
-                                    ),
-                                    // padding: const EdgeInsets.only(
-                                    //     left: 21, right: 21),
-                                    child: TextFieldUtils().dynamicText(
-                                        "Pay now",
-                                        context,
-                                        TextStyle(
-                                            fontFamily:
-                                            'Roboto',
-                                            color: ThemeApp
-                                                .tealButtonColor,
-                                            fontSize: 12,
-                                            fontWeight:
-                                            FontWeight
-                                                .w700,letterSpacing: -0.25)))),
-                          ],
-                        ),
-                      );
-                  }
-                  return Container(
-                    height: 72,
-                    alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
-                  );
-                }))
-            /*    Consumer<HomeProvider>(builder: (context, value, child) {
-            return Container(
-              height: height * .08,
-              width: width,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: ThemeApp.appColor,
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(15),
-                    topLeft: Radius.circular(15)),
+                // Provider.of<ProductProvider>(context, listen: false);
+              },
+              child: Transform.scale(
+                scale: 0.7,
+                child: Image.asset(
+                  'assets/appImages/backArrow.png',
+                  color: ThemeApp.primaryNavyBlackColor,
+                  // height: height*.001,
+                ),
               ),
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  */ /*  Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextFieldUtils().pricesLineThroughWhite(
-                    // " ${indianRupeesFormat.format(finalOriginalPrice)}",
-                    " ${indianRupeesFormat.format(finalOriginalPrice)}",
-                    context,
-                    MediaQuery.of(context).size.height * .021,
-                  ),
-                  TextFieldUtils().homePageheadingTextFieldWHITE(
-                    "${indianRupeesFormat.format(StringConstant.totalFinalPrice)}",
-                    context,
-                  ),
-                ]),*/ /*
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextFieldUtils().pricesLineThroughWhite(
-                          " ${indianRupeesFormat.format(finalOriginalPrice)}",
-                          context,
-                          MediaQuery.of(context).size.height * .021,
-                        ),
-                        TextFieldUtils().homePageheadingTextFieldWHITE(
-                          "${indianRupeesFormat.format(finalTotalPrice)}",
-                          context,
-                        ),
-                      ]),
-                  InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                Payment_Creditcard_debitcardScreen(),
-                          ),
-                        );
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
-                        //   ),
-                        // );
-                      },
-                      child: Container(
-                          height: height * 0.05,
-                          alignment: Alignment.center,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            color: ThemeApp.whiteColor,
-                          ),
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: TextFieldUtils().usingPassTextFields(
-                              "Pay Now", ThemeApp.blackColor, context))),
-                ],
-              ),
-            );
-          }),*/
             ),
-        body: SafeArea(
-            child: ChangeNotifierProvider<CartViewModel>.value(
-                value: cartListView,
-                child: Consumer<CartViewModel>(
-                    builder: (context, cartProvider, child) {
-                  switch (cartProvider.sendCartForPayment.status) {
-                    case Status.LOADING:
-                      print("Api load");
+            title: TextFieldUtils().dynamicText(
+                'Order Checkout',
+                context,
+                TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    // fontWeight: FontWeight.w500,
+                    fontSize: MediaQuery.of(context).size.height * .022,
+                    fontWeight: FontWeight.w500)),
+          ),
+          bottomNavigationBar: BottomAppBar(
+              color: ThemeApp.appBackgroundColor,
+              elevation: 0,
+              child: ChangeNotifierProvider<CartViewModel>.value(
+                  value: cartListView,
+                  child: Consumer<CartViewModel>(
+                      builder: (context, cartProvider, child) {
+                    switch (cartProvider.sendCartForPayment.status) {
+                      case Status.LOADING:
+                        print("Api load");
 
-                      return TextFieldUtils().circularBar(context);
-                    case Status.ERROR:
-                      print("Api error");
+                        return Container();
+                      case Status.ERROR:
+                        print("Api error");
 
-                      return Text(
-                          cartProvider.sendCartForPayment.message.toString());
-                    case Status.COMPLETED:
-                      print("Api calll");
-                      CartForPaymentPayload cartForPaymentPayload =
-                          cartProvider.sendCartForPayment.data!.payload!;
+                        return Text('Please try after some time');
+                      case Status.COMPLETED:
+                        print("Api calll");
+                        CartForPaymentPayload cartForPaymentPayload =
+                            cartProvider.sendCartForPayment.data!.payload!;
+                        print("cartForPaymentPayload " +
+                            cartForPaymentPayload.toString());
 
-                      List<CartOrdersForPurchase> cartOrderPurchase =
-                          cartProvider.sendCartForPayment.data!.payload!.cart!
-                              .ordersForPurchase!;
+                        List<CartOrdersForPurchase> cartOrderPurchase =
+                            cartProvider.sendCartForPayment.data!.payload!.cart!
+                                .ordersForPurchase!;
 
-                      return Container(
-                        color: ThemeApp.appBackgroundColor,
-                        width: width,
-                        child: ListView(
-                            // mainAxisAlignment: MainAxisAlignment.start,
-                            // crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              // StepperGlobalWidget(),
-                              stepperWidget(),
-                              Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
+                        return cartProvider.sendCartForPayment.data!.status ==
+                                'EXCEPTION'
+                            ? Text('Please try after some time')
+                            : Container(
+                                height: 72,
+                                // height: height * .09,
+                                width: width,
+                                alignment: Alignment.center,
+                                decoration: const BoxDecoration(
+                                  color: ThemeApp.tealButtonColor,
+                                ),
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 15, bottom: 14),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                isSelfPickUp = true;
-                                                isSelfPickUp = !isSelfPickUp;
-
-                                                // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
-                                              });
-                                            },
-                                            child: Container(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        0, 15.0, 0, 15.0),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(100),
-                                                    bottomLeft:
-                                                        Radius.circular(100),
-                                                  ),
-                                                  color: isSelfPickUp
-                                                      ? Colors.white
-                                                      : ThemeApp.appColor,
-                                                ),
-                                                child: Center(
-                                                  child: Text('Deliver to Address',
-                                                      style: TextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          fontSize: 14,
-                                                          color: isSelfPickUp
-                                                              ? ThemeApp
-                                                                  .blackColor
-                                                              : Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          letterSpacing:
-                                                              -0.08)),
-                                                )),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalPayable.toString()))}",
+                                            style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 20,
+                                                color:
+                                                    ThemeApp.separatedLineColor,
+                                                overflow: TextOverflow.ellipsis,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: InkWell(
+                                          TextFieldUtils()
+                                              .pricesLineThroughWhite(
+                                            "${indianRupeesFormat.format(double.parse(cartForPaymentPayload.cart!.totalMrp.toString()))}",
+                                            context,
+                                            14,
+                                          ),
+                                        ]),
+                                    InkWell(
+                                        onTap: () {
+                                          Map data = {
+                                            "order_basket_id":
+                                                cartForPaymentPayload
+                                                    .orderBasketId,
+                                            "user_id":
+                                                cartForPaymentPayload.userId,
+                                            "payable_amount":
+                                                cartForPaymentPayload
+                                                    .cart!.totalPayable,
+                                            "is_self_pickup": isSelfPickUp,
+                                          };
+                                          if (StringConstant.selectedFullName !=
+                                              '') {
+                                            CartRepository().putCartForPayment(
+                                                data,
+                                                cartForPaymentPayload
+                                                    .orderBasketId!);
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Payment_Creditcard_debitcardScreen(
+                                                        cartForPaymentPayload:
+                                                            cartForPaymentPayload),
+                                              ),
+                                            );
+                                          } else {
+                                            Utils.successToast(
+                                                "Please select delivery address");
+                                          }
+
+                                          // Navigator.of(context).push(
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
+                                          //   ),
+                                          // );
+                                        },
+                                        child: Container(
+                                            height: 40,
+                                            width: 121,
+                                            alignment: Alignment.center,
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(100),
+                                              ),
+                                              color: ThemeApp.whiteColor,
+                                            ),
+                                            // padding: const EdgeInsets.only(
+                                            //     left: 21, right: 21),
+                                            child: TextFieldUtils().dynamicText(
+                                                "Pay now",
+                                                context,
+                                                TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    color: ThemeApp
+                                                        .tealButtonColor,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w700,
+                                                    letterSpacing: -0.25)))),
+                                  ],
+                                ),
+                              );
+                    }
+                    return Container(
+                      height: 72,
+                      alignment: Alignment.center,
+                      child: TextFieldUtils().dynamicText(
+                          'No Match found!',
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)),
+                    );
+                  }))
+              /*    Consumer<HomeProvider>(builder: (context, value, child) {
+              return Container(
+                height: height * .08,
+                width: width,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: ThemeApp.appColor,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15),
+                      topLeft: Radius.circular(15)),
+                ),
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    */ /*  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFieldUtils().pricesLineThroughWhite(
+                      // " ${indianRupeesFormat.format(finalOriginalPrice)}",
+                      " ${indianRupeesFormat.format(finalOriginalPrice)}",
+                      context,
+                      MediaQuery.of(context).size.height * .021,
+                    ),
+                    TextFieldUtils().homePageheadingTextFieldWHITE(
+                      "${indianRupeesFormat.format(StringConstant.totalFinalPrice)}",
+                      context,
+                    ),
+                  ]),*/ /*
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextFieldUtils().pricesLineThroughWhite(
+                            " ${indianRupeesFormat.format(finalOriginalPrice)}",
+                            context,
+                            MediaQuery.of(context).size.height * .021,
+                          ),
+                          TextFieldUtils().homePageheadingTextFieldWHITE(
+                            "${indianRupeesFormat.format(finalTotalPrice)}",
+                            context,
+                          ),
+                        ]),
+                    InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Payment_Creditcard_debitcardScreen(),
+                            ),
+                          );
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => OrderPlaceActivity(productList: widget.productList),
+                          //   ),
+                          // );
+                        },
+                        child: Container(
+                            height: height * 0.05,
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              color: ThemeApp.whiteColor,
+                            ),
+                            padding: const EdgeInsets.only(left: 15, right: 15),
+                            child: TextFieldUtils().usingPassTextFields(
+                                "Pay Now", ThemeApp.blackColor, context))),
+                  ],
+                ),
+              );
+            }),*/
+              ),
+          body: SafeArea(
+              child: ChangeNotifierProvider<CartViewModel>.value(
+                  value: cartListView,
+                  child: Consumer<CartViewModel>(
+                      builder: (context, cartProvider, child) {
+                    switch (cartProvider.sendCartForPayment.status) {
+                      case Status.LOADING:
+                        print("Api load");
+
+                        return TextFieldUtils().circularBar(context);
+                      case Status.ERROR:
+                        print("Api error");
+
+                        return Text(
+                            cartProvider.sendCartForPayment.message.toString());
+                      case Status.COMPLETED:
+                        print("Api calll");
+                        CartForPaymentPayload cartForPaymentPayload =
+                            cartProvider.sendCartForPayment.data!.payload!;
+
+                        List<CartOrdersForPurchase> cartOrderPurchase =
+                            cartProvider.sendCartForPayment.data!.payload!.cart!
+                                .ordersForPurchase!;
+
+                        return Container(
+                          color: ThemeApp.appBackgroundColor,
+                          width: width,
+                          child: ListView(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // StepperGlobalWidget(),
+                                stepperWidget(),
+                                Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
                                               onTap: () {
                                                 setState(() {
                                                   isSelfPickUp = true;
+                                                  isSelfPickUp = !isSelfPickUp;
+
+                                                  // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
                                                 });
                                               },
                                               child: Container(
@@ -459,433 +431,484 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         const BorderRadius.only(
-                                                      topRight:
+                                                      topLeft:
                                                           Radius.circular(100),
-                                                      bottomRight:
+                                                      bottomLeft:
                                                           Radius.circular(100),
                                                     ),
                                                     color: isSelfPickUp
-                                                        ? ThemeApp.appColor
-                                                        : ThemeApp.whiteColor,
+                                                        ? Colors.white
+                                                        : ThemeApp.appColor,
                                                   ),
                                                   child: Center(
-                                                    child: Text('Pickup from Store',
+                                                    child: Text(
+                                                        'Deliver to Address',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Roboto',
                                                             fontSize: 14,
                                                             color: isSelfPickUp
                                                                 ? ThemeApp
-                                                                    .whiteColor
-                                                                : ThemeApp
-                                                                    .blackColor,
+                                                                    .blackColor
+                                                                : Colors.white,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                             letterSpacing:
                                                                 -0.08)),
-                                                  ))),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 18,
-                                    ),
-                                    isSelfPickUp != true
-                                        ? Container(
-                                            // height: height * 0.5,
-                                            width: width,
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 13),
-                                            decoration: const BoxDecoration(
-                                              color: ThemeApp.whiteColor,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10)),
+                                                  )),
                                             ),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                        StringUtils
-                                                            .deliveryDetails,
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Roboto',
-                                                            color: ThemeApp
-                                                                .blackColor,
-                                                            fontSize: 16,
-                                                            letterSpacing:
-                                                                -0.25,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700)),
-                                                    InkWell(
-                                                        onTap: () {
-                                                          // Navigator.of(context).push(
-                                                          //   MaterialPageRoute(
-                                                          //     builder: (context) => AddNewDeliveryAddress(),
-                                                          //   ),
-                                                          // );
-                                                          print("widget.cartForPaymentPayload!.cartId11" +
-                                                              widget!.cartId
-                                                                  .toString());
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    isSelfPickUp = true;
+                                                  });
+                                                },
+                                                child: Container(
+                                                    padding: const EdgeInsets
+                                                            .fromLTRB(
+                                                        0, 15.0, 0, 15.0),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .only(
+                                                        topRight:
+                                                            Radius.circular(
+                                                                100),
+                                                        bottomRight:
+                                                            Radius.circular(
+                                                                100),
+                                                      ),
+                                                      color: isSelfPickUp
+                                                          ? ThemeApp.appColor
+                                                          : ThemeApp.whiteColor,
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                          'Pickup from Store',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              fontSize: 14,
+                                                              color: isSelfPickUp
+                                                                  ? ThemeApp
+                                                                      .whiteColor
+                                                                  : ThemeApp
+                                                                      .blackColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              letterSpacing:
+                                                                  -0.08)),
+                                                    ))),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 18,
+                                      ),
+                                      isSelfPickUp != true
+                                          ? Container(
+                                              // height: height * 0.5,
+                                              width: width,
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      10, 10, 10, 13),
+                                              decoration: const BoxDecoration(
+                                                color: ThemeApp.whiteColor,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10)),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                          StringUtils
+                                                              .deliveryDetails,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              color: ThemeApp
+                                                                  .blackColor,
+                                                              fontSize: 16,
+                                                              letterSpacing:
+                                                                  -0.25,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700)),
+                                                      InkWell(
+                                                          onTap: () {
+                                                            // Navigator.of(context).push(
+                                                            //   MaterialPageRoute(
+                                                            //     builder: (context) => AddNewDeliveryAddress(),
+                                                            //   ),
+                                                            // );
+                                                            print("widget.cartForPaymentPayload!.cartId11" +
+                                                                widget!.cartId
+                                                                    .toString());
 
-                                                          showModalBottomSheet(
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            60.0),
-                                                              ),
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              context:
-                                                                  scaffoldGlobalKey
-                                                                      .currentContext!,
-                                                              builder:
-                                                                  (context) {
-                                                                return ChangeAddressBottomSheet(
-                                                                    cartForPaymentPayload:
-                                                                        cartForPaymentPayload,
-                                                                    cartId: widget
-                                                                        .cartId);
-                                                              });
-                                                        },
-                                                        child: Container(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          decoration:
-                                                              BoxDecoration(
+                                                            showModalBottomSheet(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
                                                                   borderRadius:
                                                                       BorderRadius
-                                                                          .all(
-                                                                    Radius
-                                                                        .circular(
-                                                                            20),
+                                                                          .circular(
+                                                                              60.0),
+                                                                ),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                context:
+                                                                    scaffoldGlobalKey
+                                                                        .currentContext!,
+                                                                builder:
+                                                                    (context) {
+                                                                  return ChangeAddressBottomSheet(
+                                                                      cartForPaymentPayload:
+                                                                          cartForPaymentPayload,
+                                                                      cartId: widget
+                                                                          .cartId);
+                                                                });
+                                                          },
+                                                          child: Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .all(
+                                                                      Radius.circular(
+                                                                          20),
+                                                                    ),
+                                                                    border: Border.all(
+                                                                        color: ThemeApp
+                                                                            .appColor)
+                                                                    // color:
+                                                                    //     ThemeApp.blackColor,
+                                                                    ),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    10,
+                                                                    5,
+                                                                    10,
+                                                                    5),
+                                                            child: TextFieldUtils().dynamicText(
+                                                                StringUtils
+                                                                    .changeAddress,
+                                                                context,
+                                                                TextStyle(
+                                                                    fontFamily:
+                                                                        'Roboto',
+                                                                    color: ThemeApp
+                                                                        .appColor,
+                                                                    fontSize:
+                                                                        10,
+                                                                    letterSpacing:
+                                                                        -0.08,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700)),
+                                                          )),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 15,
+                                                  ),
+
+                                                  /*cartForPaymentPayload
+                                                              .isAddressPresent ==
+                                                          true*/
+                                                  StringConstant
+                                                              .selectedFullName !=
+                                                          ''
+                                                      ? Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                TextFieldUtils()
+                                                                    .dynamicText(
+                                                                        StringConstant
+                                                                            .selectedFullName,
+                                                                        context,
+                                                                        TextStyle(
+                                                                          fontFamily:
+                                                                              'Roboto',
+                                                                          fontSize:
+                                                                              14,
+                                                                          letterSpacing:
+                                                                              -0.08,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color:
+                                                                              ThemeApp.blackColor,
+                                                                        )),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Container(
+                                                                  // height: height * 0.05,
+
+                                                                  decoration:
+                                                                      const BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .all(
+                                                                      Radius.circular(
+                                                                          100),
+                                                                    ),
+                                                                    color: ThemeApp
+                                                                        .tealButtonColor,
                                                                   ),
-                                                                  border: Border.all(
-                                                                      color: ThemeApp
-                                                                          .appColor)
-                                                                  // color:
-                                                                  //     ThemeApp.blackColor,
-                                                                  ),
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  10, 5, 10, 5),
-                                                          child: TextFieldUtils().dynamicText(
-                                                              StringUtils
-                                                                  .changeAddress,
-                                                              context,
-                                                              TextStyle(
-                                                                  fontFamily:
-                                                                      'Roboto',
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 10,
+                                                                      right: 10,
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          5),
+                                                                  child: Text(
+                                                                      StringConstant
+                                                                          .selectedTypeOfAddress,
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              'Roboto',
+                                                                          color: ThemeApp
+                                                                              .whiteColor,
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight:
+                                                                              FontWeight.w400)),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Text(
+                                                                // provider.orderCheckOutDetails[0]
+                                                                //     ["orderCheckOutDeliveryAddress"],
+                                                                StringConstant
+                                                                    .selectedFullAddress,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Roboto',
+                                                                    fontSize:
+                                                                        12,
+                                                                    letterSpacing:
+                                                                        -0.08,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: ThemeApp
+                                                                        .blackColor,
+                                                                    height: 2)),
+                                                            SizedBox(
+                                                              height: 20,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                SvgPicture
+                                                                    .asset(
+                                                                  'assets/appImages/callIcon.svg',
                                                                   color: ThemeApp
                                                                       .appColor,
-                                                                  fontSize: 10,
-                                                                  letterSpacing:
-                                                                      -0.08,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700)),
-                                                        )),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-
-                                                /*cartForPaymentPayload
-                                                            .isAddressPresent ==
-                                                        true*/
-                                                StringConstant
-                                                    .selectedFullName!=''
-                                                    ? Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              TextFieldUtils()
-                                                                  .dynamicText(
-                                                                      StringConstant
-                                                                          .selectedFullName,
-                                                                      context,
-                                                                      TextStyle(
+                                                                  semanticsLabel:
+                                                                      'Acme Logo',
+                                                                  theme:
+                                                                      SvgTheme(
+                                                                    currentColor:
+                                                                        ThemeApp
+                                                                            .appColor,
+                                                                  ),
+                                                                  height:
+                                                                      height *
+                                                                          .025,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: width *
+                                                                      .03,
+                                                                ),
+                                                                TextFieldUtils().dynamicText(
+                                                                    "${StringConstant.selectedMobile}",
+                                                                    context,
+                                                                    TextStyle(
                                                                         fontFamily:
                                                                             'Roboto',
-                                                                        fontSize:
-                                                                            14,
-                                                                        letterSpacing:
-                                                                            -0.08,
-                                                                        fontWeight:
-                                                                            FontWeight.w400,
                                                                         color: ThemeApp
                                                                             .blackColor,
-                                                                      )),
-                                                              SizedBox(
-                                                                width: 10,
-                                                              ),
-                                                              Container(
-                                                                // height: height * 0.05,
-
-                                                                decoration:
-                                                                    const BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .all(
-                                                                    Radius
-                                                                        .circular(
-                                                                            100),
-                                                                  ),
-                                                                  color: ThemeApp
-                                                                      .tealButtonColor,
-                                                                ),
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        left:
-                                                                            10,
-                                                                        right:
-                                                                            10,
-                                                                        top: 5,
-                                                                        bottom:
-                                                                            5),
-                                                                child: Text(
-                                                                    StringConstant
-                                                                        .selectedTypeOfAddress,
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Roboto',
-                                                                        color: ThemeApp
-                                                                            .whiteColor,
                                                                         fontSize:
-                                                                            14,
+                                                                            12,
                                                                         fontWeight:
-                                                                            FontWeight.w400)),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                              // provider.orderCheckOutDetails[0]
-                                                              //     ["orderCheckOutDeliveryAddress"],
-                                                              StringConstant
-                                                                  .selectedFullAddress,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Roboto',
-                                                                  fontSize: 12,
-                                                                  letterSpacing:
-                                                                      -0.08,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: ThemeApp
-                                                                      .blackColor,
-                                                                  height: 2)),
-                                                          SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              SvgPicture.asset(
-                                                                'assets/appImages/callIcon.svg',
-                                                                color: ThemeApp
-                                                                    .appColor,
-                                                                semanticsLabel:
-                                                                    'Acme Logo',
-                                                                theme: SvgTheme(
-                                                                  currentColor:
-                                                                      ThemeApp
-                                                                          .appColor,
-                                                                ),
-                                                                height: height *
-                                                                    .025,
-                                                              ),
-                                                              SizedBox(
-                                                                width:
-                                                                    width * .03,
-                                                              ),
-                                                              TextFieldUtils().dynamicText(
-                                                                  "${StringConstant.selectedMobile}",
-                                                                  context,
-                                                                  TextStyle(
-                                                                      fontFamily:
-                                                                          'Roboto',
-                                                                      color: ThemeApp
-                                                                          .blackColor,
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700)),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : TextFieldUtils()
-                                                        .dynamicText(
-                                                            'No Address found',
-                                                            context,
-                                                            TextStyle(
-                                                                fontFamily:
-                                                                    'Roboto',
-                                                                color: ThemeApp
-                                                                    .darkGreyTab,
-                                                                fontSize:
-                                                                    height *
-                                                                        .021,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400)),
-                                              ],
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                    SizedBox(
-                                      height: height * .02,
-                                    ),
-                                    Container(
-                                        // height: height * 0.6,
-                                        width: width,
-                                        padding: const EdgeInsets.fromLTRB(
-                                            15, 12, 15, 20),
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            // TextFieldUtils().dynamicText(
-                                            //     StringUtils.orderSummary,
-                                            //     context,
-                                            //     TextStyle(fontFamily: 'Roboto',
-                                            //         color: Colors.grey.shade700,
-                                            //         fontSize: height * .023,
-                                            //         fontWeight:
-                                            //             FontWeight.bold)),
-                                            cartProductList(cartOrderPurchase),
-                                          ],
-                                        )),
-
-                                    //apply promo code
-                                    /*   SizedBox(
-                          height: height * .02,
-                        ),
-                        Container(
-                          // height: height * 0.16,
-                          width: width,
-                          padding: const EdgeInsets.all(20),
-                          decoration: const BoxDecoration(
-                            color: ThemeApp.whiteColor,
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFieldUtils().dynamicText(
-                                    StringUtils.applyPromoCode,
-                                    context,
-                                    TextStyle(fontFamily: 'Roboto',
-                                        color: ThemeApp.darkGreyColor,
-                                        fontSize: height * .023,
-                                        fontWeight: FontWeight.bold)),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: TextFormFieldsWidget(
-                                        textInputType: TextInputType.number,
-                                        controller: promoCodeController,
-                                        autoValidation:
-                                            AutovalidateMode.onUserInteraction,
-                                        onChange: (val) {
-                                          setState(() {});
-                                        },
-                                        validator: (value) {
-                                          return null;
-                                        },
-                                        errorText: '',
-                                        hintText: '',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: width * .02,
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: InkWell(
-                                          onTap: () {
-                                            // Navigator.of(context).push(
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) => AddNewCardScreen(),
-                                            //   ),
-                                            // );
-                                          },
-                                          child: Container(
-                                            height: height * 0.05,
-                                            alignment: Alignment.center,
-                                            decoration: const BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
+                                                                            FontWeight.w700)),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        )
+                                                      : TextFieldUtils().dynamicText(
+                                                          'No Address found',
+                                                          context,
+                                                          TextStyle(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              color: ThemeApp
+                                                                  .darkGreyTab,
+                                                              fontSize:
+                                                                  height * .021,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400)),
+                                                ],
                                               ),
-                                              color: ThemeApp.blackColor,
-                                            ),
-                                            padding: const EdgeInsets.only(
-                                                left: 15, right: 15),
-                                            child: TextFieldUtils().dynamicText(
-                                                StringUtils
-                                                    .apply,
-                                                context,
-                                                TextStyle(fontFamily: 'Roboto',
-                                                    color: ThemeApp.whiteColor,
-                                                    fontSize: height * .021,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
+                                            )
+                                          : SizedBox(),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      Container(
+                                          // height: height * 0.6,
+                                          width: width,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              15, 12, 15, 20),
+                                          decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // TextFieldUtils().dynamicText(
+                                              //     StringUtils.orderSummary,
+                                              //     context,
+                                              //     TextStyle(fontFamily: 'Roboto',
+                                              //         color: Colors.grey.shade700,
+                                              //         fontSize: height * .023,
+                                              //         fontWeight:
+                                              //             FontWeight.bold)),
+                                              cartProductList(
+                                                  cartOrderPurchase),
+                                            ],
                                           )),
-                                    ),
-                                  ],
-                                )
-                              ]),
-                        ),*/
-                                    SizedBox(
-                                      height: height * .02,
-                                    ),
-                                    priceDetails(cartForPaymentPayload),
-                                  ],
+
+                                      //apply promo code
+                                      /*   SizedBox(
+                            height: height * .02,
+                          ),
+                          Container(
+                            // height: height * 0.16,
+                            width: width,
+                            padding: const EdgeInsets.all(20),
+                            decoration: const BoxDecoration(
+                              color: ThemeApp.whiteColor,
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextFieldUtils().dynamicText(
+                                      StringUtils.applyPromoCode,
+                                      context,
+                                      TextStyle(fontFamily: 'Roboto',
+                                          color: ThemeApp.darkGreyColor,
+                                          fontSize: height * .023,
+                                          fontWeight: FontWeight.bold)),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 3,
+                                        child: TextFormFieldsWidget(
+                                          textInputType: TextInputType.number,
+                                          controller: promoCodeController,
+                                          autoValidation:
+                                              AutovalidateMode.onUserInteraction,
+                                          onChange: (val) {
+                                            setState(() {});
+                                          },
+                                          validator: (value) {
+                                            return null;
+                                          },
+                                          errorText: '',
+                                          hintText: '',
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: width * .02,
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: InkWell(
+                                            onTap: () {
+                                              // Navigator.of(context).push(
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) => AddNewCardScreen(),
+                                              //   ),
+                                              // );
+                                            },
+                                            child: Container(
+                                              height: height * 0.05,
+                                              alignment: Alignment.center,
+                                              decoration: const BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                color: ThemeApp.blackColor,
+                                              ),
+                                              padding: const EdgeInsets.only(
+                                                  left: 15, right: 15),
+                                              child: TextFieldUtils().dynamicText(
+                                                  StringUtils
+                                                      .apply,
+                                                  context,
+                                                  TextStyle(fontFamily: 'Roboto',
+                                                      color: ThemeApp.whiteColor,
+                                                      fontSize: height * .021,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            )),
+                                      ),
+                                    ],
+                                  )
+                                ]),
+                          ),*/
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      priceDetails(cartForPaymentPayload),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ]),
-                      );
-                  }
-                  return Container(
-                    height: height * .8,
-                    alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
-                  );
-                }))));
+                              ]),
+                        );
+                    }
+                    return Container(
+                      height: height * .8,
+                      alignment: Alignment.center,
+                      child: TextFieldUtils().dynamicText(
+                          'No Match found!',
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              fontSize: height * .03,
+                              fontWeight: FontWeight.bold)),
+                    );
+                  })))),
+    );
   }
 
   Widget cartProductList(List<CartOrdersForPurchase> cartOrderPurchase) {
@@ -977,16 +1000,23 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400)),
                                       Text(
-                                        cartOrderPurchase[index].itemQty.toString().padLeft(2, '0'),
+                                        cartOrderPurchase[index]
+                                            .itemQty
+                                            .toString()
+                                            .padLeft(2, '0'),
                                         style: TextStyle(
                                             fontFamily: 'Roboto',
-                                            fontSize: MediaQuery.of(context).size.height * .016,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                .016,
                                             fontWeight: FontWeight.w400,
                                             overflow: TextOverflow.ellipsis,
                                             color: ThemeApp.lightFontColor),
                                       ),
                                     ],
-                                  ),  SizedBox(
+                                  ),
+                                  SizedBox(
                                     height: 10,
                                   ),
                                   TextFieldUtils().dynamicText(
@@ -1002,7 +1032,6 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                         fontWeight: FontWeight.w500,
                                         overflow: TextOverflow.ellipsis,
                                       )),
-
 
 /*
                                   aadToCartCounter(cartOrderPurchase, index),
@@ -1040,10 +1069,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
         : const CircularProgressIndicator();
   }
 
-
   Widget prices(List<CartOrdersForPurchase> cartOrderPurchase, int index) {
     return Container(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1065,12 +1094,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                       ))
                   : SizedBox(),
               SizedBox(
-                width:5,
+                width: 5,
               ),
-
-
               TextFieldUtils().dynamicText(
-                "(${cartOrderPurchase![index].discountPercent.toString().toString()} % Off)",
+                  "(${cartOrderPurchase![index].discountPercent.toString().toString()} % Off)",
                   context,
                   TextStyle(
                     fontFamily: 'Roboto',
@@ -1087,10 +1114,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
           ),
           Row(
             children: [
-
-
-              Text(
-                  "M.R.P.: ",
+              Text("M.R.P.: ",
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       color: ThemeApp.lightFontColor,
@@ -1099,22 +1123,22 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                       fontWeight: FontWeight.w500)),
               cartOrderPurchase![index].mrp.toString().isNotEmpty
                   ? Text(
-                  "${indianRupeesFormat.format(double.parse(cartOrderPurchase![index].mrp.toString()) ?? 0.0) ?? "0.0"}",
-                  style: TextStyle(
-                      fontFamily: 'Roboto',
-                      color: ThemeApp.lightFontColor,
-                      fontSize: 16,
-                      decoration: TextDecoration.lineThrough,
-                      letterSpacing: 0.2,
-                      fontWeight: FontWeight.w500))
+                      "${indianRupeesFormat.format(double.parse(cartOrderPurchase![index].mrp.toString()) ?? 0.0) ?? "0.0"}",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500))
                   : Text('0.0',
-                  style: TextStyle(
-                      fontFamily: 'Roboto',
-                      color: ThemeApp.lightFontColor,
-                      fontSize: 16,
-                      decoration: TextDecoration.lineThrough,
-                      letterSpacing: 0.2,
-                      fontWeight: FontWeight.w500)),
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 16,
+                          decoration: TextDecoration.lineThrough,
+                          letterSpacing: 0.2,
+                          fontWeight: FontWeight.w500)),
             ],
           ),
         ],
@@ -1144,7 +1168,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 InkWell(
-            /*      onTap: () {
+                  /*      onTap: () {
                     // setState(() {
                     // minusQuantity(value![index], index);
                     if (value![index].itemQty! > 1) {
@@ -1211,7 +1235,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                   ),
                 ),
                 InkWell(
-         /*         onTap: () {
+                  /*         onTap: () {
                     setState(() {
                       value![index].itemQty = value![index].itemQty! + 1;
                       // StringConstant.BadgeCounterValue = value![index].itemQty.toString();
@@ -2269,7 +2293,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
 
   Widget stepperWidget() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(19,16,19,14),
+      padding: const EdgeInsets.fromLTRB(19, 16, 19, 14),
       child: Container(
           height: 78,
           width: width,
@@ -2354,26 +2378,28 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     titles.asMap().forEach((i, text) {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
-            ? SizedBox(width: 61,
-              child: TextFieldUtils().dynamicText(
-                  text,
-                  context,
-                  TextStyle(
-                      fontFamily: 'Roboto',
-                      color: ThemeApp.blackColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400)),
-            )
-            : SizedBox(width: 61,
-              child: TextFieldUtils().dynamicText(
-                  text,
-                  context,
-                  TextStyle(
-                      fontFamily: 'Roboto',
-                      color: ThemeApp.blackColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400)),
-            ),
+            ? SizedBox(
+                width: 61,
+                child: TextFieldUtils().dynamicText(
+                    text,
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.blackColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400)),
+              )
+            : SizedBox(
+                width: 61,
+                child: TextFieldUtils().dynamicText(
+                    text,
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.blackColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400)),
+              ),
       );
     });
     return list;
@@ -2886,13 +2912,9 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
 
                               setState(() {
                                 cartViewModel.loadAddressJson(
-                                    widget.cartForPaymentPayload!
-                                        .userId
+                                    widget.cartForPaymentPayload!.userId
                                         .toString(),
-                                    addressList[_value2]
-                                        .id
-                                        .toString());
-
+                                    addressList[_value2].id.toString());
 
                                 StringConstant.selectedFullAddress =
                                     "${addressList[_value2].addressLine1!}, ${addressList[_value2].addressLine2}, ${addressList[_value2].stateName},\n ${addressList[_value2].cityName}, ${addressList[_value2].pincode}";
