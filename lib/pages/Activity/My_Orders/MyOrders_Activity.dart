@@ -465,7 +465,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       ],
     );
   }
-
+int indexOfOrders=0;
   Widget activeOrderList(HomeProvider value) {
     return Expanded(
       child: value.jsonData['status']=="EXCEPTION"? Text(""):ListView.builder(
@@ -557,7 +557,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           itemBuilder:
                                               (context, indexOrderList) {
                                             subIndexOrderList = indexOrderList;
-                                            return Container(
+                                            return order['orders'][indexOrderList]['cancelled']=='true'?SizedBox(): Container(
                                               decoration: BoxDecoration(
                                                   border: Border.all(
                                                       color:
@@ -695,10 +695,11 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           : order['orders'].length,
                                       itemBuilder:
                                           (context, indexOrderDetails) {
+                                            indexOfOrders = indexOrderDetails;
                                         print("Order Id : "+order['orders'][indexOrderDetails]['order_id'].toString());
                                         return (order['orders'].length >2)
                                             ? !viewMore
-                                                ? Expanded(
+                                                ? order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Expanded(
                                                   child: Container(
                                                       child: Padding(
                                                         padding: const EdgeInsets.only(
@@ -737,7 +738,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                         ),
                                                       ))
                                                 )
-                                                : Container(
+                                                : order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Container(
                                             child: Padding(
                                               padding: const EdgeInsets.only(
                                                   top: 8.0),
@@ -774,7 +775,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                 ],
                                               ),
                                             ))
-                                            : Container(
+                                            : order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Container(
                                                 child: Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 8.0),
@@ -1020,7 +1021,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                   Navigator.of(context).push(MaterialPageRoute(
                                                       builder: (context) => CancelOrderActivity(
                                                           values: value.jsonData['payload']['consumer_baskets']
-                                                          [index])));
+                                                          [index], orderList:  order['orders'][indexOfOrders])));
                                                 },
                                                 child: Container(
                                                     padding:
@@ -1302,7 +1303,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           (context, indexOrderDetails) {
                                         return (order['orders'].length >2)
                                             ? !viewMore
-                                            ? Expanded(
+                                            ? order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Expanded(
                                             child: Container(
                                                 child: Padding(
                                                   padding: const EdgeInsets.only(
@@ -1341,7 +1342,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                   ),
                                                 ))
                                         )
-                                            : Container(
+                                            : order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Container(
                                             child: Padding(
                                               padding: const EdgeInsets.only(
                                                   top: 8.0),
@@ -1378,7 +1379,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                 ],
                                               ),
                                             ))
-                                            : Container(
+                                            : order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Container(
                                             child: Padding(
                                               padding: const EdgeInsets.only(
                                                   top: 8.0),
@@ -1624,7 +1625,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                             Navigator.of(context).push(MaterialPageRoute(
                                                 builder: (context) => CancelOrderActivity(
                                                     values: value.jsonData['payload']['consumer_baskets']
-                                                    [index])));
+                                                    [index],orderList:  order['orders'][indexOfOrders])));
                                           },
                                           child: Container(
                                               padding:

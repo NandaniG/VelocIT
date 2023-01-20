@@ -38,7 +38,7 @@ import '../../widgets/global/proceedButtons.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/global/textFormFields.dart';
-import '../Activity/CRMFormScreen.dart';
+import '../Activity/DashBoard_DetailScreens_Activities/CRM_ui/CRMFormScreen.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/CRM_ui/CRM_Activity.dart';
 import '../Activity/Merchant_Near_Activities/merchant_Activity.dart';
@@ -46,7 +46,7 @@ import '../Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Catego
 import '../Activity/My_Orders/MyOrderDetails.dart';
 import '../Activity/Product_Activities/ProductDetails_activity.dart';
 import '../Activity/Product_Activities/Products_List.dart';
-import '../Activity/ServicesFormScreen.dart';
+import '../Activity/DashBoard_DetailScreens_Activities/service_ui/ServicesFormScreen.dart';
 import 'offers_Activity.dart';
 
 final List<String> titles = ['Order Placed', 'Packed', 'Shipped', 'Delivered'];
@@ -477,9 +477,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Expanded(
               flex: 1,
               child: InkWell(
-                onTap: () {
-                  setState(() async {
-                    final prefs = await SharedPreferences.getInstance();
+                onTap: ()async {
+                  final prefs = await SharedPreferences.getInstance();
+
+                setState(()  {
                     // _isProductListChip = true;
                     _isCRMListChip = true;
                     _isServiceListChip = false;

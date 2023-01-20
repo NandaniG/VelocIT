@@ -26,6 +26,7 @@ import '../../../screens/dashBoard.dart';
 import '../../Product_Activities/Products_List.dart';
 import '../service_ui/Service_Categories_Activity.dart';
 import '../service_ui/ServicesDetailScreen.dart';
+import 'CRM_List_Screen.dart';
 
 class CRMActivity extends StatefulWidget {
   // List<ProductList>? shopByCategoryList;
@@ -577,15 +578,17 @@ class _CRMActivityState extends State<CRMActivity> {
         mainAxisSpacing: 12,
         // childAspectRatio: 1.0,
         childAspectRatio: MediaQuery.of(context).size.height / 500,
-      ),itemCount: servicePayload.simpleSubCats!.length,
+      ),
+      itemCount: servicePayload.simpleSubCats!.length,
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         return InkWell(
           onTap: () {
-            // Navigator.of(context).push(MaterialPageRoute(
-            //   builder: (context) => ServiceDetailScreen(
-            //       productList: servicePayload.simpleSubCats![index]),
-            // ));
+            print("id............."+servicePayload.simpleSubCats![index].id.toString());
+            Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CRMistByCategoryActivity(
+                productList: servicePayload.simpleSubCats![index]),
+          ));
           },
           // child: Padding(
           // padding: const EdgeInsets.only(right: 8.0, bottom: 8),

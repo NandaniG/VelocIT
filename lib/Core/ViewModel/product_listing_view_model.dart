@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:velocit/Core/Model/CRMModel.dart';
 import 'package:velocit/Core/data/responses/api_response.dart';
 import '../../pages/Activity/Product_Activities/ProductDetails_activity.dart';
+import '../Model/CRMModels/CRMSingleIDModel.dart';
+import '../Model/CRMModels/FindCRMBySubCategory.dart';
 import '../Model/FindProductBySubCategoryModel.dart';
 import '../Model/CartModel.dart';
 import '../Model/ProductAllPaginatedModel.dart';
@@ -26,10 +29,17 @@ class ProductSpecificListViewModel with ChangeNotifier {
       ApiResponse.loading();
   ApiResponse<SingleServiceIDModel> singleServiceSpecificList =
       ApiResponse.loading();
+  ApiResponse<CRMSingleIDModel> singleCRMSpecificList =
+      ApiResponse.loading();
+
   ApiResponse<CartListModel> cartList = ApiResponse.loading();
   ApiResponse<ProductCategoryModel> productCategories = ApiResponse.loading();
   ApiResponse<FindProductBySubCategoryModel> productSubCategory =
-      ApiResponse.loading();  ApiResponse<FindServicesbySUbCategoriesModel> serviceSubCategory =
+      ApiResponse.loading();
+  ApiResponse<FindServicesbySUbCategoriesModel> serviceSubCategory =
+      ApiResponse.loading();
+
+  ApiResponse<FindCRMbySUbCategoriesModel> CRMSubCategory =
       ApiResponse.loading();
   ApiResponse<FindByFMCGCodeScannerModel> singleProductScan = ApiResponse.loading();
   ApiResponse<ProductAllPaginatedModel> productListingResponse =
@@ -48,6 +58,9 @@ class ProductSpecificListViewModel with ChangeNotifier {
   setSingleServiceSpecificList(ApiResponse<SingleServiceIDModel> response) {
     singleServiceSpecificList = response;
     notifyListeners();
+  }  setCRMSpecificList(ApiResponse<CRMSingleIDModel> response) {
+    singleCRMSpecificList = response;
+    notifyListeners();
   }
 
   setProductSubCategoryList(
@@ -58,6 +71,11 @@ class ProductSpecificListViewModel with ChangeNotifier {
   setServiceSubCategoryList(
       ApiResponse<FindServicesbySUbCategoriesModel> response) {
     serviceSubCategory = response;
+    notifyListeners();
+  }
+  setCRMSubCategoryList(
+      ApiResponse<FindCRMbySUbCategoriesModel> response) {
+    CRMSubCategory = response;
     notifyListeners();
   }
 
@@ -115,6 +133,17 @@ class ProductSpecificListViewModel with ChangeNotifier {
     });
   }
 
+  Future<void> CRMSingleIDListWithGet(
+      BuildContext context,String productId) async {
+    setCRMSpecificList(ApiResponse.loading());
+
+    _myRepo.getCRMSpecificList(productId).then((value) async {
+      setCRMSpecificList(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      setCRMSpecificList(ApiResponse.error(error.toString()));
+    });
+  }
+
   Future<void> cartListWithPut(BuildContext context, dynamic data) async {
     putCartList(ApiResponse.loading());
 
@@ -151,6 +180,18 @@ class ProductSpecificListViewModel with ChangeNotifier {
       setServiceSubCategoryList(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       setServiceSubCategoryList(ApiResponse.error(error.toString()));
+    });
+  }
+  Future<void> CRMBySubCategoryWithGet(
+      int page, int size, int subCategoryId) async {
+    setCRMSubCategoryList(ApiResponse.loading());
+
+    _mySubCategoryRepo
+        .getCRMBySubCategoryList(page, size, subCategoryId)
+        .then((value) async {
+      setCRMSubCategoryList(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      setCRMSubCategoryList(ApiResponse.error(error.toString()));
     });
   }
 

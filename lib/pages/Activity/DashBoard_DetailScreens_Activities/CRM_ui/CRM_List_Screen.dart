@@ -7,12 +7,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/Model/CRMModels/FindCRMBySubCategory.dart';
 import 'package:velocit/Core/Model/ServiceModels/FindServicesBySubCategory.dart';
+import 'package:velocit/Core/Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
 import 'package:velocit/Core/ViewModel/product_listing_view_model.dart';
 import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/service_ui/ServiceDetails_activity.dart';
 import 'package:velocit/utils/constants.dart';
+import '../../../../Core/Model/CRMModel.dart';
 import '../../../../Core/Model/FindProductBySubCategoryModel.dart';
-import '../../../../Core/Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
 import '../../../../Core/data/responses/status.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
@@ -26,18 +28,20 @@ import '../../Product_Activities/ProductDetails_activity.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
-class ServiceListByCategoryActivity extends StatefulWidget {
-  ServiceSimpleSubCats? productList;
+import 'CRMDetails_activity.dart';
 
-  ServiceListByCategoryActivity({Key? key, this.productList}) : super(key: key);
+class CRMistByCategoryActivity extends StatefulWidget {
+  CRMSimpleSubCats? productList;
+
+  CRMistByCategoryActivity({Key? key, this.productList}) : super(key: key);
 
   @override
-  State<ServiceListByCategoryActivity> createState() =>
-      _ServiceListByCategoryActivityState();
+  State<CRMistByCategoryActivity> createState() =>
+      _CRMistByCategoryActivityState();
 }
 
-class _ServiceListByCategoryActivityState
-    extends State<ServiceListByCategoryActivity> {
+class _CRMistByCategoryActivityState
+    extends State<CRMistByCategoryActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   late ScrollController scrollController = ScrollController();
   double height = 0.0;
@@ -57,7 +61,7 @@ class _ServiceListByCategoryActivityState
     // TODO: implement initState
     super.initState();
 
-    productSpecificListViewModel.serviceBySubCategoryWithGet(
+    productSpecificListViewModel.CRMBySubCategoryWithGet(
       0,
       10,
       widget.productList!.id!,
@@ -104,7 +108,7 @@ class _ServiceListByCategoryActivityState
           pageCount = pageCount + 1;
 
           //// CALL YOUR API HERE FOR THE NEXT FUNCTIONALITY
-          productSpecificListViewModel.serviceBySubCategoryWithGet(
+          productSpecificListViewModel.CRMBySubCategoryWithGet(
               pageCount, 10, widget.productList!.id!);
         }
       });
@@ -358,8 +362,8 @@ class _ServiceListByCategoryActivityState
       return*/ ChangeNotifierProvider<ProductSpecificListViewModel>.value(
         value:  productSpecificListViewModel,
         child: Consumer<ProductSpecificListViewModel>(
-            builder: (context, productSubCategoryProvider, child) {
-              switch (productSubCategoryProvider.serviceSubCategory.status) {
+            builder: (context, crmSubCategoryProvider, child) {
+              switch (crmSubCategoryProvider.CRMSubCategory.status) {
                 case Status.LOADING:
                   print("Api load");
 
@@ -367,11 +371,10 @@ class _ServiceListByCategoryActivityState
                 case Status.ERROR:
                   print("Api error");
 
-                  return Text('Something went wrong');
+                  return Text('Something went wrong'+crmSubCategoryProvider.CRMSubCategory.data!.payload.toString());
                 case Status.COMPLETED:
                   print("Api calll");
-                  List<ServiceContent>? subProductList = productSubCategoryProvider
-                      .serviceSubCategory.data!.payload!.content;
+                  List<CRMContent>? subProductList = crmSubCategoryProvider.CRMSubCategory.data!.payload!.content;
                   print("subProductList length.......${subProductList!.length}");
                   return Expanded(
 
@@ -405,12 +408,11 @@ class _ServiceListByCategoryActivityState
                                   onTap: () {
                                     print(
                                         "Id ........${subProductList[index].id}");
-
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            ServiceDetailsActivity(
-                                              id: subProductList[index].id,
+                                            CRMDetailsActivity(
+                                              id: 1,
                                               // productList: subProductList[index],
                                               // productSpecificListViewModel:
                                               //     productSpecificListViewModel,
@@ -493,7 +495,7 @@ class _ServiceListByCategoryActivityState
                                                     .listNameHeadingTextField(
                                                     subProductList[index]
                                                         .shortName!,context),
-                                                SizedBox(height:10),
+                                 /*               SizedBox(height:10),
                                                 Row(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment
@@ -514,7 +516,7 @@ class _ServiceListByCategoryActivityState
                                                                 0.0),
                                                         context)
                                                   ],
-                                                )
+                                                )*/
                                               ],
                                             ),
                                           ),

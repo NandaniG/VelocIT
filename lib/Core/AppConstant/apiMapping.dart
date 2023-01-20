@@ -129,6 +129,13 @@ static String BaseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
       case apiEndPoint.single_service:
         retVal = ConstructURI("/service/");
         break;
+        case apiEndPoint.single_CRM:
+        retVal = ConstructURI("/crm-item/");
+        break;   case apiEndPoint.crm_form_data:
+        retVal = ConstructURI("/crm-form-data");
+        break; case apiEndPoint.crm_form:
+        retVal = ConstructURI("/crm-form/");
+        break;
       default:
         retVal = "Error";
     }

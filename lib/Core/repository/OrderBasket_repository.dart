@@ -1,17 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:velocit/Core/Enum/apiEndPointEnums.dart';import '../../utils/constants.dart';
+import 'package:velocit/Core/Enum/apiEndPointEnums.dart';import '../../pages/Activity/My_Orders/MyOrders_Activity.dart';
+import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 
 
 import '../AppConstant/apiMapping.dart';
+import '../Model/CartModel.dart';
 import '../Model/Orders/ActiveOrdersBasketModel.dart';
+import '../data/app_excaptions.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
 import 'package:http/http.dart' as http
-;
+;import 'package:http/http.dart' as http;import 'dart:convert';
 class OrderBasketRepository {
 
   BaseApiServices _apiServices = NetworkApiServices();
@@ -30,6 +34,79 @@ class OrderBasketRepository {
     print("consumerBasket : "+responseJson.toString());
     return responseJson;
   }
+
+  void cancelOrderApiRequest(
+     BuildContext context, Map json, String orderId) async {
+    // var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);
+    var url = ApiMapping.BaseAPI + '/order/$orderId/cancel';
+    print(url);
+    print(json);
+
+    dynamic response = await _apiServices.getPutApiResponse(url, json);
+    try {
+
+      if (response['status'].toString() == 'OK') {
+        print("Order cancelled list: " + response.toString());
+
+        Utils.successToast(
+            'Order cancelled successful');
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MyOrdersActivity()));
+
+      }
+    } catch (e) {
+      print("Merge cart error: " + e.toString());
+      throw e;
+    }
+  }
+
+  Future cancelOrderPutApiResponse(
+  BuildContext context, dynamic json, String orderId) async {
+    dynamic responseJson;
+    var url = ApiMapping.BaseAPI + '/order/$orderId/cancel';
+    print(url);
+    try {
+      final client = http.Client();
+      String body = json.encode(json);
+
+      http.Response response = await client.put(Uri.parse(url),
+          body: body,
+          headers: {
+            'content-type': 'application/json'
+          }).timeout(Duration(seconds: 30));
+
+      if (response.statusCode==200) {
+      responseJson = returnResponse(response);
+      print("cancelOrderPutApiResponse..$url........" + responseJson['status'].toString());
+
+      if(responseJson['status'] =="OK"){
+        Utils.successToast(
+            'Order cancelled successful');
+      }else{
+        Utils.successToast(
+            'Something went wrong');
+      }
+    } } catch (e) {
+      print("Error on put: " + e.toString());
+    }
+    return responseJson;
+  }
+  dynamic returnResponse(http.Response response) {
+    switch (response.statusCode) {
+      case 200:
+        var responseJson = json.decode(response.body.toString());
+        print(responseJson);
+        return responseJson;
+      case 400:
+        throw BadRequestException(response.body.toString());
+      case 401:
+      case 403:
+        throw UnauthorisedException(response.body.toString());
+      case 500:
+      default:
+        throw FetchDataException(
+            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+    }}
 
   // Future<ActiveOrderBasketModel> getOrderBasketApi(
   //     dynamic data) async {

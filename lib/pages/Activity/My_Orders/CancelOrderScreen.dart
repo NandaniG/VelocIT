@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/repository/OrderBasket_repository.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 
 import '../../../services/models/MyOrdersModel.dart';
@@ -18,8 +19,9 @@ import 'MyOrderDetails.dart';
 class CancelOrderActivity extends StatefulWidget {
   // final MyOrdersModel values;
   final dynamic values;
+  final dynamic orderList;
 
-  CancelOrderActivity({Key? key, required this.values}) : super(key: key);
+  CancelOrderActivity({Key? key, required this.values,required this.orderList}) : super(key: key);
 
   @override
   State<CancelOrderActivity> createState() => _CancelOrderActivityState();
@@ -221,7 +223,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                       setState(() {
                                                         _radioIndex =
                                                         value as int;
-                                                        _radioVal = 'Email';
+                                                        _radioVal = 'I have purchased  a product elsewhere';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -257,7 +259,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                       setState(() {
                                                         _radioIndex =
                                                         value as int;
-                                                        _radioVal = 'Email';
+                                                        _radioVal = 'Price for the product has increased';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -294,7 +296,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                       setState(() {
                                                         _radioIndex =
                                                         value as int;
-                                                        _radioVal = 'Email';
+                                                        _radioVal = 'Expected delivery time is very long';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -331,7 +333,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                       setState(() {
                                                         _radioIndex =
                                                         value as int;
-                                                        _radioVal = 'Email';
+                                                        _radioVal = 'I have changed my mind';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -368,7 +370,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                       setState(() {
                                                         _radioIndex =
                                                         value as int;
-                                                        _radioVal = 'Email';
+                                                        _radioVal = 'Added to order by mistake';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -463,6 +465,28 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                   width: 1)),
                                         ),
                                       ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      proceedButton(
+                                          "Submit", ThemeApp.tealButtonColor, context, false,
+                                              () async {
+                                            FocusManager.instance.primaryFocus?.unfocus();
+
+                                            final prefs = await SharedPreferences.getInstance();
+
+                                            StringConstant.UserLoginId =
+                                                (prefs.getString('isUserId')) ?? '';
+
+                                            print("USER LOGIN ID..............." +
+                                                StringConstant.UserLoginId.toString());
+                                            String date = DateTime.now().toUtc().toString().replaceAll(" ", "T");
+                                            OrderBasketRepository().cancelOrderApiRequest(context, {
+                                              "cancellation_date": date,
+                                              "reason": _radioVal.toString()
+                                            }, widget.orderList['order_id'].toString());
+
+                                          })
                                     ]),
                               ),
                             ),
@@ -470,44 +494,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                         );
                       }),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                proceedButton(
-                    "Submit", ThemeApp.tealButtonColor, context, false,
-                        () async {
-                      FocusManager.instance.primaryFocus?.unfocus();
 
-                      final prefs = await SharedPreferences.getInstance();
-
-                      StringConstant.UserLoginId =
-                          (prefs.getString('isUserId')) ?? '';
-
-                      print("USER LOGIN ID..............." +
-                          StringConstant.UserLoginId.toString());
-                      Utils.successToast(
-                          'Return order request submitted successfuly');
-
-                      /*           Map jsonMap = {
-                    "user_id": StringConstant.UserLoginId,
-                    "order_id": 45,
-                    "product_item_id": 31,
-                    "merchant_comments": vendorReviewController.text ?? "",
-                    "merchant_rating": vendortRating,
-                    "product_comments": productReviewController.text,
-                    "product_rating": productRating
-                  };
-                  value.reviewPostAPI(jsonMap);
-                  if (value.jsonData.isNotEmpty &&
-                      value.jsonData['error'] == null) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            MyOrderDetails(values: widget.values),
-                      ),
-                    );
-                  }*/
-                    })
               ],
             ),
           ),
