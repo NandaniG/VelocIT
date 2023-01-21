@@ -10,6 +10,7 @@ import '../Model/BestDealModel.dart';
 import '../Model/CRMModel.dart';
 import '../Model/CategoriesModel.dart';
 import '../Model/CategoriesModel.dart';
+import '../Model/OfferProductModel.dart';
 import '../Model/Orders/ActiveOrdersBasketModel.dart';
 import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
@@ -36,6 +37,7 @@ class DashboardViewModel with ChangeNotifier {
 
   ApiResponse<ProductAllPaginatedModel> productListingResponse =
       ApiResponse.loading();
+  ApiResponse<ProductOfferModel> offerResponse = ApiResponse.loading();
   ApiResponse<ProductFindBySearchTermModel> productByTermResponse =
       ApiResponse.loading();
 
@@ -43,7 +45,6 @@ class DashboardViewModel with ChangeNotifier {
     categoryList = response;
     notifyListeners();
   }
-
 
   setProductListingList(ApiResponse<ProductsListingModel> response) {
     productListingList = response;
@@ -54,27 +55,37 @@ class DashboardViewModel with ChangeNotifier {
     productCategoryList = response;
     notifyListeners();
   }
+
   getServiceCategoryListingList(ApiResponse<ServiceCategoryModel> response) {
     serviceCategoryList = response;
     notifyListeners();
   }
+
   getCRMList(ApiResponse<CRMModel> response) {
     CRMList = response;
     notifyListeners();
   }
 
-
   getProductListing(ApiResponse<ProductAllPaginatedModel> response) {
     productListingResponse = response;
     notifyListeners();
   }
+
+  getOfferListing(ApiResponse<ProductOfferModel> response) {
+    offerResponse = response;
+    notifyListeners();
+  }
+
   getRecommended(ApiResponse<RecommendedForYouModel> response) {
     recommendedList = response;
     notifyListeners();
-  }  getBestDeal(ApiResponse<BestDealModel> response) {
+  }
+
+  getBestDeal(ApiResponse<BestDealModel> response) {
     bestDealList = response;
     notifyListeners();
   }
+
   getSimilarProduct(ApiResponse<SimilarProductModel> response) {
     similarList = response;
     notifyListeners();
@@ -85,51 +96,51 @@ class DashboardViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-
-  Future<void> productListingWithGet(
-      int page, int size) async {
+  Future<void> productListingWithGet(int page, int size) async {
     getProductListing(ApiResponse.loading());
 
-    _myProductListingRepo
-        .getProductListing(page, size)
-        .then((value) async {
+    _myProductListingRepo.getProductListing(page, size).then((value) async {
       getProductListing(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       getProductListing(ApiResponse.error(error.toString()));
     });
   }
 
-  Future<void> recommendedWithGet(
-      int page, int size) async {
+  Future<void> getOfferWithGet() async {
+    getOfferListing(ApiResponse.loading());
+
+    _myProductListingRepo.getOfferRequest().then((value) async {
+      getOfferListing(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      getOfferListing(ApiResponse.error(error.toString()));
+    });
+  }
+
+  Future<void> recommendedWithGet(int page, int size) async {
     getRecommended(ApiResponse.loading());
 
-    _myProductListingRepo
-        .getRecommendedForYou(page, size)
-        .then((value) async {
+    _myProductListingRepo.getRecommendedForYou(page, size).then((value) async {
       getRecommended(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       getRecommended(ApiResponse.error(error.toString()));
     });
   }
 
-  Future<void> bestDealWithGet(
-      int page, int size) async {
+  Future<void> bestDealWithGet(int page, int size) async {
     getBestDeal(ApiResponse.loading());
 
-    _myProductListingRepo
-        .getBestDeal(page, size)
-        .then((value) async {
+    _myProductListingRepo.getBestDeal(page, size).then((value) async {
       getBestDeal(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       getBestDeal(ApiResponse.error(error.toString()));
     });
   }
-  Future<void> similarProductWithGet(
-      int page, int size, int productId) async {
+
+  Future<void> similarProductWithGet(int page, int size, int productId) async {
     getSimilarProduct(ApiResponse.loading());
 
     _myProductListingRepo
-        .getSimilarProduct(page, size,productId)
+        .getSimilarProduct(page, size, productId)
         .then((value) async {
       getSimilarProduct(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
@@ -159,6 +170,7 @@ class DashboardViewModel with ChangeNotifier {
       getProductCategoryListingList(ApiResponse.error(error.toString()));
     });
   }
+
   // Map<dynamic, dynamic> jsonData = {};
 
 /*
@@ -179,7 +191,7 @@ class DashboardViewModel with ChangeNotifier {
     }catch(e){}}
 */
 
-      Future<void> serviceCategoryListingWithGet() async {
+  Future<void> serviceCategoryListingWithGet() async {
     getServiceCategoryListingList(ApiResponse.loading());
 
     _myRepo.getServiceCategoryListing().then((value) async {
@@ -188,6 +200,7 @@ class DashboardViewModel with ChangeNotifier {
       getServiceCategoryListingList(ApiResponse.error(error.toString()));
     });
   }
+
   Future<void> CRMListingWithGet() async {
     getCRMList(ApiResponse.loading());
 

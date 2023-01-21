@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -9,49 +10,52 @@ import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
+import 'package:velocit/Core/Model/CRMModel.dart';
+import 'package:velocit/Core/repository/productlisting_repository.dart';
+import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/utils.dart';
-import '../../../Core/Model/SimmilarProductModel.dart';
-import '../../../Core/Model/scannerModel/SingleProductModel.dart';
-import '../../../Core/ViewModel/cart_view_model.dart';
-import '../../../Core/ViewModel/dashboard_view_model.dart';
-import '../../../Core/ViewModel/product_listing_view_model.dart';
-import '../../../Core/data/responses/status.dart';
-import '../../../Core/repository/cart_repository.dart';
-import '../../../services/models/CartModel.dart';
-import '../../../services/models/JsonModelForApp/HomeModel.dart';
-import '../../../services/models/ProductDetailModel.dart';
-import '../../../services/models/demoModel.dart';
-import '../../../services/providers/Home_Provider.dart';
-import '../../../services/providers/Products_provider.dart';
-import '../../../services/providers/cart_Provider.dart';
-import '../../../utils/ProgressIndicatorLoader.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/routes/routes.dart';
-import '../../../utils/styles.dart';
-import '../../../widgets/global/appBar.dart';
-import '../../../widgets/global/textFormFields.dart';
 
-import '../../screens/dashBoard.dart';
-import '../../screens/cartDetail_Activity.dart';
-import '../Order_CheckOut_Activities/OrderReviewScreen.dart';
-import 'ImageZoomWidget.dart';
+import '../../../../Core/AppConstant/apiMapping.dart';
+import '../../../../Core/Model/CRMModels/CRMSingleIDModel.dart';
+import '../../../../Core/Model/ServiceModels/SingleServiceModel.dart';
+import '../../../../Core/Model/SimmilarProductModel.dart';
 
-class ProductDetailsActivity extends StatefulWidget {
+import '../../../../Core/ViewModel/cart_view_model.dart';
+import '../../../../Core/ViewModel/dashboard_view_model.dart';
+import '../../../../Core/ViewModel/product_listing_view_model.dart';
+import '../../../../Core/data/app_excaptions.dart';
+import '../../../../Core/data/responses/status.dart';
+import '../../../../Core/repository/cart_repository.dart';
+import '../../../../services/models/JsonModelForApp/HomeModel.dart';
+import '../../../../services/models/demoModel.dart';
+import '../../../../services/providers/Home_Provider.dart';
+import '../../../../services/providers/Products_provider.dart';
+import '../../../../utils/ProgressIndicatorLoader.dart';
+import '../../../../utils/constants.dart';
+import '../../../../utils/routes/routes.dart';
+import '../../../../utils/styles.dart';
+import '../../../../widgets/global/appBar.dart';
+import '../../../../widgets/global/textFormFields.dart';
+import '../CRM_ui/CRM_Activity.dart';
+import 'CRMFormScreen.dart';
+import 'package:http/http.dart'as http;
+class CRMDetailsActivity extends StatefulWidget {
   // List<ProductList>? productList;
   // Content? productList;
   final int? id;
 
-  ProductDetailsActivity(
+  CRMDetailsActivity(
       {Key? key,
       // required this.productList,
       required this.id})
       : super(key: key);
 
   @override
-  State<ProductDetailsActivity> createState() => _ProductDetailsActivityState();
+  State<CRMDetailsActivity> createState() => _CRMDetailsActivityState();
 }
 
-class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
+class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
@@ -79,13 +83,13 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     // TODO: implement initState
     super.initState();
     randomNumber = random.nextInt(100);
-    productSpecificListViewModel.productSingleIDListWithGet(
+    productSpecificListViewModel.CRMSingleIDListWithGet(
         context, widget.id.toString());
     print("Random number : " + data.toString());
     print("widget.id! number : " + widget.id!.toString());
     print("Badge,........" + StringConstant.BadgeCounterValue);
     getBadgePref();
-    productListView.similarProductWithGet(0, 10, widget.id!);
+    productListView.similarProductWithGet(0, 10, 10);
   }
 
   CartViewModel cartListView = CartViewModel();
@@ -130,7 +134,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       // "cartId": StringConstant.UserCartID.toString(),
       "cartId": StringConstant.UserCartID.toString(),
       "userId": userId,
-      "productId": widget.id.toString(),
+      "serviceId": widget.id.toString(),
       "merchantId": merchantId.toString(),
       "qty": quantity.toString(),
       "is_new_order": 'true'
@@ -199,8 +203,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(context, appTitle(context, "My Product"),
-            const SizedBox(), setState),
+        child: appBar_backWidget(
+            context, appTitle(context, "CRM"), const SizedBox(), setState),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -211,9 +215,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             child: ChangeNotifierProvider<ProductSpecificListViewModel>.value(
                 value: productSpecificListViewModel,
                 child: Consumer<ProductSpecificListViewModel>(
-                    builder: (context, productSubCategoryProvider, child) {
-                  switch (productSubCategoryProvider
-                      .singleproductSpecificList.status) {
+                    builder: (context, crmSubCategoryProvider, child) {
+                  switch (crmSubCategoryProvider.singleCRMSpecificList.status) {
                     case Status.LOADING:
                       print("Api load");
 
@@ -221,44 +224,14 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     case Status.ERROR:
                       print("Api error");
 
-                      return Text('Service is not available');
+                      return Text(crmSubCategoryProvider
+                          .singleCRMSpecificList.message
+                          .toString());
                     case Status.COMPLETED:
                       print("Api calll");
-                      SingleProductPayload? model = productSubCategoryProvider
-                          .singleproductSpecificList.data!.payload;
-
-                      List<SingleModelMerchants>? merchants =
-                          productSubCategoryProvider.singleproductSpecificList
-                              .data!.payload!.merchants;
-
-                      merchantTemp = [];
-                      //adding selected merchants
-                      for (int i = 0; i < merchants.length; i++) {
-                        if (merchants[i].id ==
-                            productSubCategoryProvider.singleproductSpecificList
-                                .data!.payload!.selectedMerchantId) {
-                          merchantTemp.add(merchants[i]);
-                        }
-                      }
-                      //adding remaining merchant list
-                      for (int i = 0; i < merchants.length; i++) {
-                        if (merchants[i].id !=
-                            productSubCategoryProvider.singleproductSpecificList
-                                .data!.payload!.selectedMerchantId) {
-                          merchantTemp.add(merchants[i]);
-                        }
-                      }
-                      for (int i = 0; i < merchantTemp.length; i++) {
-                        // print("merchantTemp id"+merchantTemp[i].id.toString());
-                        // print("merchantTemp merchantName"+merchantTemp[i].merchantName.toString());
-
-                      }
-// print("merchants length"+productSubCategoryProvider
-//     .singleproductSpecificList.data!.payload!.merchants.length.toString());
-// print("merchants selected index"+productSubCategoryProvider
-//         .singleproductSpecificList.data!.payload!.selectedMerchantId.toString());
-
-                      if (widget.id == model!.id) {
+                      CRMDetailsPayload? model = crmSubCategoryProvider
+                          .singleCRMSpecificList.data!.payload;
+             if (widget.id == model!.id) {
                         return ListView(
                               // mainAxisAlignment: MainAxisAlignment.start,
                               // crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,76 +243,81 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     right: 20,
                                   ),
                                   child: TextFieldUtils().headingTextField(
-                                      model!.shortName!, context),
+                                      model.crm!.shortName!, context),
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                rattingBar(model),
                                 SizedBox(
                                   height: 10,
                                 ),
                                 prices(model),
                                 SizedBox(
-                                  height: height * .01,
+                                  height: 20,
                                 ),
-                                merchantDetails(model),
-                                // Text("Merchant  "+model.merchants![0].merchantName.toString() ),
-                                /*    model.merchants!.isNotEmpty
-                                    ? Padding(
+                                model.crmFormId.toString().isEmpty
+                                    ? Container(
+                                        width: width,
+                                        height: 72,
+                                        color: ThemeApp.whiteColor,
                                         padding: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
+                                            left: 20,
+                                            right: 20,
+                                            top: 5,
+                                            bottom: 5),
+                                        child: Center(
+                                            child: TextFieldUtils()
+                                                .dynamicText(
+                                                    "SERVICE NOT AVAILABLE",
+                                                    context,
+                                                    TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      color:
+                                                          ThemeApp.redColor,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize:
+                                                          height * .035,
+                                                    ))))
+                                    : InkWell(
+                                  onTap: () {
+                                  getCRMForm(model.crmFormId!).then((value){
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CRMFormScreen(shortName:  model.crm!.shortName.toString(),payload:model , ),
+                                      ),
+                                    );
+                                  });
+
+
+                                  },
+                                      child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 20,
+                                            right: 20,
+                                          ),
+                                          child: Container(
+                                              height: 40,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(100),
+                                                ),
+                                                border: Border.all(
+                                                    color:
+                                                        ThemeApp.tealButtonColor),
+                                                color: ThemeApp.tealButtonColor,
+                                              ),
+                                              child: Text(
+                                                "Enquiry",
+                                                style: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  color: ThemeApp.whiteColor,
+                                                ),
+                                              )),
                                         ),
-                                        child: TextFieldUtils()
-                                            .homePageTitlesTextFields(
-                                                model!.merchants![0]
-                                                    .merchantName!,
-                                                context),
-                                      )
-                                    : SizedBox(),
-                                model!.merchants!.isNotEmpty
-                                    ? SizedBox(
-                                        height: height * .01,
-                                      )
-                                    : SizedBox(),
-*/
-                                // prices(model),
-                                /* SizedBox(
-                                  height: height * .01,
-                                ),*/
-                                model.productVariants!.isNotEmpty
-                                    ? availableVariant(model)
-                                    : SizedBox(),
-                                model.productVariants!.isNotEmpty
-                                    ? SizedBox(
-                                        height: height * .01,
-                                      )
-                                    : SizedBox(),
-                                productDescription(model),
-                                SizedBox(
-                                  height: height * .01,
-                                ),
-                                counterWidget(model),
-
-                                //similar product
-
-                                SizedBox(
-                                  height: height * .03,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 20,
-                                    right: 20,
-                                  ),
-                                  child: TextFieldUtils().headingTextField(
-                                      'Similar Products', context),
-                                ),
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * .02,
-                                ),
-                                similarProductList()
+                                    ),
                               ],
                             ) ??
                             SizedBox();
@@ -375,11 +353,53 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
+  Future getCRMForm(int formId) async {
+    dynamic responseJson;
+    try {
+      var url = ApiMapping.getURI(apiEndPoint.crm_form);
+      print(url+formId.toString());
+      final client = http.Client();
+      final response =
+      await client.get(Uri.parse(url)).timeout(Duration(seconds: 30));
+
+      var responseJson = json.decode(response.body.toString());
+      final prefs = await SharedPreferences.getInstance();
+
+
+      print('responseJson'+responseJson['status'].toString());
+      print('responseJson'+responseJson['payload'].toString());
+      print('responseJson'+responseJson['payload'][0]['f1_label'].toString());
+      print('responseJson'+responseJson.toString());
+
+
+
+
+      prefs.setBool('is_f1_enabled', responseJson['payload'][0]['is_f1_enabled']);
+      prefs.setBool('is_f2_enabled', responseJson['payload'][0]['is_f2_enabled']);
+      prefs.setBool('is_f3_enabled', responseJson['payload'][0]['is_f3_enabled']);
+      prefs.setBool('is_f4_enabled', responseJson['payload'][0]['is_f4_enabled']);
+      prefs.setBool('is_f5_enabled', responseJson['payload'][0]['is_f5_enabled']);
+
+      prefs.setString('f1_label', responseJson['payload'][0]['f1_label']);
+      prefs.setString('f2_label', responseJson['payload'][0]['f2_label']);
+      prefs.setString('f3_label', responseJson['payload'][0]['f3_label']);
+      prefs.setString('f4_label', responseJson['payload'][0]['f4_label']);
+      prefs.setString('f5_label', responseJson['payload'][0]['f5_label']);
+
+
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } catch (e) {
+      print("Error on Get : " + e.toString());
+    }
+    return responseJson;
+  }
+
   final CarouselController _carouselController = CarouselController();
   int _currentIndex = 0;
   int _radioValue = 0;
 
-  Widget productImage(SingleProductPayload? model) {
+  Widget productImage(CRMDetailsPayload? model) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
       child: Stack(
@@ -389,7 +409,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             height: height * .28,
             child: CarouselSlider(
                   carouselController: _carouselController,
-                  items: model!.imageUrls!.map<Widget>((e) {
+                  items: model!.crm!.imageUrls!.map<Widget>((e) {
                         return Stack(
                           children: [
                             Container(
@@ -408,8 +428,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                               width: width,
                                               color: Colors.white,
                                               child: InstaImageViewer(
-                                                child: Image.network(
-                                                        e.imageUrl ?? "",
+                                                child: Image.network(e ?? "",
                                                         // fit: BoxFit.fill,
                                                         errorBuilder: ((context,
                                                             error, stackTrace) {
@@ -434,7 +453,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         // _currentIndex = index;
                         setState(() {});
                       },
-                      autoPlay:model.imageUrls!.length>1? true:false,
+                      autoPlay:model.crm!.imageUrls!.length >1? true:false,
                       viewportFraction: 1,
                       height: height * .3),
                 ) ??
@@ -472,7 +491,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
-  Widget rattingBar(SingleProductPayload model) {
+  Widget rattingBar(CRMDetailsPayload model) {
     return Container(
         width: width * .7,
         padding: const EdgeInsets.only(
@@ -483,9 +502,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   }
 
   Widget rattingBarWidget(
-      SingleProductPayload model, int count, double width, double ratingValue) {
+      CRMDetailsPayload model, int count, double width, double ratingValue) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.34,
+      width: width,
       // padding: const EdgeInsets.only(
       //   left: 20,
       //   right: 20,
@@ -516,7 +535,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
   bool isMerchantfive = false;
 
-  Widget merchantDetails(SingleProductPayload model) {
+  Widget merchantDetails(CRMDetailsPayload model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -558,12 +577,6 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     print("radio value " +
                                         _radioValue.toString());
                                     // _radioValue = index;
-                                    print("before change" +
-                                        model.selectedMerchantId.toString());
-                                    model.selectedMerchantId =
-                                        merchantTemp[index].id;
-                                    print("after change" +
-                                        model.selectedMerchantId.toString());
                                   });
                                 },
                               ),
@@ -731,7 +744,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     );
   }
 
-  Widget prices(SingleProductPayload model) {
+  Widget prices(CRMDetailsPayload model) {
     return Container(
       padding: const EdgeInsets.only(
         left: 20,
@@ -740,91 +753,37 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         color: ThemeApp.priceContainerColor,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            model.merchants.isNotEmpty
-                ? TextFieldUtils().dynamicText(
-                    indianRupeesFormat.format(double.parse(
-                            merchantTemp[_radioValue]
-                                .unitOfferPrice
-                                .toString()) ??
-                        '0.0'),
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.blackColor,
-                        fontSize: 34,
-                        letterSpacing: 0.2,
-                        fontWeight: FontWeight.w700))
-                : TextFieldUtils().dynamicText(
-                    indianRupeesFormat.format(
-                        double.parse(model.defaultSellPrice.toString()) ??
-                            '0.0'),
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.blackColor,
-                        fontSize: 34,
-                        letterSpacing: 0.2,
-                        fontWeight: FontWeight.w700)),
-            SizedBox(
-              width: 25,
+            Text(
+              model.crm!.oneliner.toString(),
+              style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 20,
+                  overflow: TextOverflow.ellipsis,
+                  fontWeight: FontWeight.bold),
             ),
-            merchantTemp.isNotEmpty
-                ? TextFieldUtils().dynamicText(
-                    indianRupeesFormat.format(double.parse(
-                            merchantTemp[_radioValue].unitMrp.toString()) ??
-                        '0.0'),
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.lightFontColor,
-                        decoration: TextDecoration.lineThrough,
-                        letterSpacing: 0.2,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700))
-                : TextFieldUtils().dynamicText(
-                    indianRupeesFormat.format(
-                        double.parse(model.defaultMrp.toString()) ?? '0.0'),
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.lightFontColor,
-                        decoration: TextDecoration.lineThrough,
-                        letterSpacing: 0.2,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700)),
             SizedBox(
-              width: 15,
+              height: 10,
             ),
-            merchantTemp.isNotEmpty
-                ? TextFieldUtils().dynamicText(
-                    merchantTemp[_radioValue].unitDiscountPerc.toString() +
-                        "% Off",
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.blackColor,
-                        fontSize: 14,
-                        letterSpacing: 0.2,
-                        fontWeight: FontWeight.w500))
-                : TextFieldUtils().dynamicText(
-                    model.defaultDiscount.toString() + "% Off",
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.blackColor,
-                        fontSize: 14,
-                        letterSpacing: 0.2,
-                        fontWeight: FontWeight.w500)),
+            Padding(
+              padding: const EdgeInsets.only(left: 0),
+              child: Text(model.merchant!.name ?? "",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)) ??
+                  SizedBox(),
+            ),
           ],
         ),
       ),
     );
   }
 
+/*
   Widget availableVariant(SingleProductPayload model) {
     return Container(
       width: width,
@@ -855,8 +814,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       ),
     );
   }
+*/
 
-  Widget productDescription(SingleProductPayload model) {
+  Widget productDescription(CRMDetailsPayload model) {
     return Container(
       width: width,
       decoration: const BoxDecoration(
@@ -879,7 +839,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             SizedBox(
               height: height * .01,
             ),
-            Text(model.oneliner!,
+            Text(model.crm!.oneliner.toString(),
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   color: ThemeApp.lightFontColor,
@@ -894,17 +854,17 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
   List<Widget> listSubImages = [];
 
-  Widget subImages(SingleProductPayload model) {
+  Widget subImages(CRMDetailsPayload model) {
     return Container();
   }
 
-  Widget variantImages(SingleProductPayload model) {
+  Widget variantImages(CRMDetailsPayload model) {
     return Container(
       height: height * .08,
       child: ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: model.imageUrls!.length,
+          itemCount: model.crm!.imageUrls!.length,
           itemBuilder: (BuildContext context, int index) {
             return Row(
               children: [
@@ -925,7 +885,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               const BorderRadius.all(Radius.circular(8)),
                           child: Image.network(
                                   // width: double.infinity,
-                                  model.imageUrls![index].imageUrl ?? "",
+                                  model.crm!.imageUrls![index] ?? "",
                                   fit: BoxFit.fill,
                                   height:
                                       MediaQuery.of(context).size.height * .05,
@@ -994,10 +954,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    if (counterPrice <= 1) {
-                                    } else {
-                                      counterPrice--;
-                                    }
+                                    counterPrice--;
                                     remainingCounters();
 
                                     var data = {
@@ -1077,7 +1034,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                 const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
             child: Center(
               child: TextFieldUtils().dynamicText(
-                  "OUT OF STOCK",
+                  "SERVICE NOT AVAILABLE",
                   context,
                   TextStyle(
                     fontFamily: 'Roboto',
@@ -1308,8 +1265,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 
                           final prefs = await SharedPreferences.getInstance();
                           prefs.setString('isBuyNow', 'true');
-                          prefs.setString(
-                              'isBuyNowFrom', 'Product');
+                          prefs.setString('isBuyNowFrom', 'Services');
                           StringConstant.isUserLoggedIn =
                               (prefs.getInt('isUserLoggedIn')) ?? 0;
 
@@ -1435,7 +1391,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              ProductDetailsActivity(
+                                              CRMDetailsActivity(
                                             id: similarList[index].id,
                                             // productList: subProductList[index],
                                             // productSpecificListViewModel:
@@ -1702,7 +1658,6 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 */
   }
 
-/*
   Widget similarProductListss() {
     return Padding(
       padding: const EdgeInsets.only(
@@ -1822,7 +1777,6 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           }),
     );
   }
-*/
 
   Future<void> addProductInCartBadge(
       ProductProvider productProvider, HomeProvider homeProvider) async {

@@ -7,48 +7,48 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/Model/ServiceModels/FindServicesBySubCategory.dart';
 import 'package:velocit/Core/ViewModel/product_listing_view_model.dart';
-import '../../../Core/Model/CategoriesModel.dart';
-import '../../../Core/Model/FindProductBySubCategoryModel.dart';
-import '../../../Core/Model/ProductCategoryModel.dart';
-import '../../../Core/Model/productSpecificListModel.dart';
-import '../../../Core/data/responses/status.dart';
-import '../../../services/models/CartModel.dart';
-import '../../../services/models/ProductDetailModel.dart';
-import '../../../services/providers/Products_provider.dart';
-import '../../../services/providers/cart_Provider.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/styles.dart';
-import '../../../utils/utils.dart';
-import '../../../widgets/global/appBar.dart';
-import '../../../widgets/global/proceedButtons.dart';
-import '../../../widgets/global/textFormFields.dart';
-import 'FilterScreen_Products.dart';
-import 'ProductDetails_activity.dart';
+import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/service_ui/ServiceDetails_activity.dart';
+import 'package:velocit/pages/Activity/Product_Activities/ProductDetails_activity.dart';
+import 'package:velocit/utils/constants.dart';
+import '../../../../Core/Model/FindProductBySubCategoryModel.dart';
+import '../../../../Core/Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
+import '../../../../Core/data/responses/status.dart';
+import '../../../../utils/styles.dart';
+import '../../../../widgets/global/appBar.dart';
+import '../../../../widgets/global/proceedButtons.dart';
+import '../../../../widgets/global/textFormFields.dart';
+
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
-class ProductListByCategoryActivity extends StatefulWidget {
-  SimpleSubCats? productList;
+import '../../../Core/Model/MerchantModel/MerchantListByIdModel.dart';
+import '../../../Core/Model/MerchantModel/MerchantListModel.dart';
+import '../../../Core/ViewModel/Merchant_viewModel.dart';
+import 'FilterScreen_Merchant.dart';
 
-  ProductListByCategoryActivity({Key? key, this.productList}) : super(key: key);
+class MerchantListByIdActivity extends StatefulWidget {
+  MerchantPayload? merchant;
+
+  MerchantListByIdActivity({Key? key, this.merchant}) : super(key: key);
 
   @override
-  State<ProductListByCategoryActivity> createState() =>
-      _ProductListByCategoryActivityState();
+  State<MerchantListByIdActivity> createState() =>
+      _MerchantListByIdActivityState();
 }
 
-class _ProductListByCategoryActivityState
-    extends State<ProductListByCategoryActivity> {
+class _MerchantListByIdActivityState
+    extends State<MerchantListByIdActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   late ScrollController scrollController = ScrollController();
   double height = 0.0;
   double width = 0.0;
 
   var categoryCode;
-  ProductSpecificListViewModel productSpecificListViewModel =
-      ProductSpecificListViewModel();
+  MerchantViewModel merchantViewModel =
+  MerchantViewModel();
 
   bool isLoading = false;
   int pageCount = 1;
@@ -59,13 +59,12 @@ class _ProductListByCategoryActivityState
     // TODO: implement initState
     super.initState();
 
-    productSpecificListViewModel.productBySubCategoryWithGet(
+    merchantViewModel.merchantByIdWithGet(
       0,
       10,
-      widget.productList!.id!,
+      widget.merchant!.id!,
     );
-
-    print("subProduct.............${widget.productList!.id}");
+    print("subProduct.............${widget.merchant!.id}");
 /*    scrollController = new ScrollController(initialScrollOffset: 5.0)
       ..addListener(_scrollListener);*/
 
@@ -97,8 +96,8 @@ class _ProductListByCategoryActivityState
           pageCount = pageCount + 1;
 
           //// CALL YOUR API HERE FOR THE NEXT FUNCTIONALITY
-          productSpecificListViewModel.productBySubCategoryWithGet(
-              pageCount, 10, widget.productList!.id!);
+          merchantViewModel.merchantByIdWithGet(
+              pageCount, 10, widget.merchant!.id!);
         }
       });
     }
@@ -131,7 +130,7 @@ class _ProductListByCategoryActivityState
               addressWidget(context, StringConstant.placesFromCurrentLocation),
               setState(() {})),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context,0),
+        bottomNavigationBar: bottomNavigationBarWidget(context,3),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(
@@ -262,11 +261,11 @@ class _ProductListByCategoryActivityState
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
-          // border: Border(
-          //   top: BorderSide(color: Colors.grey, width: 1),
-          //   bottom: BorderSide(color: Colors.grey, width: 1),
-          // ),
-          ),
+        // border: Border(
+        //   top: BorderSide(color: Colors.grey, width: 1),
+        //   bottom: BorderSide(color: Colors.grey, width: 1),
+        // ),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -275,9 +274,9 @@ class _ProductListByCategoryActivityState
                 'Sort By  ',
                 context,
                 TextStyle(fontFamily: 'Roboto',
-                  color: ThemeApp.lightFontColor,
-                fontWeight: FontWeight.w400,
-                  fontSize: 12,letterSpacing: -0.08
+                    color: ThemeApp.lightFontColor,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,letterSpacing: -0.08
                 )),
             InkWell(
               onTap: () {
@@ -291,9 +290,9 @@ class _ProductListByCategoryActivityState
                   StringConstant.sortedBy,
                   context,
                   TextStyle(fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                   fontWeight: FontWeight.w400,
-                    fontSize: 12,letterSpacing: -0.08
+                      color: ThemeApp.blackColor,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,letterSpacing: -0.08
                   )),
             ),
             const Icon(Icons.keyboard_arrow_down)
@@ -301,7 +300,7 @@ class _ProductListByCategoryActivityState
           InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const FilterScreen()));
+                  builder: (context) => const Merchant_FilterScreen()));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -314,7 +313,7 @@ class _ProductListByCategoryActivityState
                     context,
                     TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
-                     fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w400,
                       fontSize:12,
                     )),
                 Padding(
@@ -348,84 +347,84 @@ class _ProductListByCategoryActivityState
 
   Widget productListView() {
     return/* LayoutBuilder(builder: (context, constrains) {
-      return*/ ChangeNotifierProvider<ProductSpecificListViewModel>.value(
-        value:  productSpecificListViewModel,
-        child: Consumer<ProductSpecificListViewModel>(
-            builder: (context, productSubCategoryProvider, child) {
-              switch (productSubCategoryProvider.productSubCategory.status) {
+      return*/ ChangeNotifierProvider<MerchantViewModel>.value(
+        value:  merchantViewModel,
+        child: Consumer<MerchantViewModel>(
+            builder: (context, merchantProvider, child) {
+              switch (merchantProvider.merchantListByIdResponse.status) {
                 case Status.LOADING:
                   print("Api load");
 
                   return TextFieldUtils().circularBar(context);
                 case Status.ERROR:
-                  print("Api error");
+                  print("Api error"+merchantProvider
+                      .merchantListByIdResponse.message.toString());
 
-                  return Text(productSubCategoryProvider
-                      .productSubCategory.message
-                      .toString());
+                  return Text('Something went wrong');
                 case Status.COMPLETED:
                   print("Api calll");
-                  List<Content>? subProductList = productSubCategoryProvider
-                      .productSubCategory.data!.payload!.content;
-                  print("subProductList length.......${subProductList!.length}");
+                  List<MerchantIdContent>? merchantList = merchantProvider
+                      .merchantListByIdResponse.data!.payload!.content;
+                  print("merchantList length.......${merchantList!.length}");
                   return Expanded(
 
                     // width: MediaQuery.of(context).size.width,
-                    child: subProductList.length==[]?CircularProgressIndicator(): GridView(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        // childAspectRatio: 1.0,
-                        // childAspectRatio: MediaQuery.of(context).size.height / 900,
-                      ),
-                      shrinkWrap: true,
-                        children: List.generate(subProductList!.length,
+                    child: merchantList.length==0?Center(child: Text('No match found')): GridView(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 30,
+                          // childAspectRatio: 1.0,
+                          childAspectRatio: MediaQuery.of(context).size.height / 900,
+                        ),
+                        shrinkWrap: true,
+                        children: List.generate(merchantList.length,
                               (index) {
-                        return Stack(
-                          children: [
-                            index == subProductList!.length
-                                ? Container(
-                              // width: constrains.minWidth,
-                              height: 20,
-                              // height: MediaQuery.of(context).size.height * .08,
-                              // alignment: Alignment.center,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: ThemeApp.blackColor,
-                                ),
-                              ),
-                            )
-                                : InkWell(
-                              onTap: () {
-                                print(
-                                    "Id ........${subProductList[index].id}");
-
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProductDetailsActivity(
-                                          id: subProductList[index].id,
-                                          // productList: subProductList[index],
-                                          // productSpecificListViewModel:
-                                          //     productSpecificListViewModel,
-                                        ),
+                            return Stack(
+                              children: [
+                                index == merchantList.length
+                                    ? Container(
+                                  // width: constrains.minWidth,
+                                  height: 20,
+                                  // height: MediaQuery.of(context).size.height * .08,
+                                  // alignment: Alignment.center,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: ThemeApp.blackColor,
+                                    ),
                                   ),
-                                );
-                              },
-                              child: Container(
+                                )
+                                    : InkWell(
+                                  onTap: () {
+                                    print(
+                                        "Id ........${merchantList[index].id}");
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductDetailsActivity(
+                                              id: merchantList[index].id,
+                                              // productList: subProductList[index],
+                                              // productSpecificListViewModel:
+                                              //     productSpecificListViewModel,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
 // height: 205,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      /*   Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          /*   Expanded(
                                             flex: 2,
-                                            child:*/ Container(
-                                        height: 133,
-                                        width: 191, /* height: SizeConfig.orientations !=
+                                            child:*/
+                                          Container(
+                                            height: 143,
+                                            width: 191, /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
                                                           .size
@@ -438,101 +437,108 @@ class _ProductListByCategoryActivityState
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,*/
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                        ),
-                                        child: ClipRRect(
+                                            decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                            ),
+                                            child: ClipRRect(
 
-                                          child: subProductList[index]
-                                              .imageUrls![0]
-                                              .imageUrl!.isNotEmpty?Image.network(
-                                            subProductList[index]
-                                                .imageUrls![0]
-                                                .imageUrl!,
-                                            // fit: BoxFit.fill,
-                                            height: (MediaQuery.of(
-                                                context)
-                                                .orientation ==
-                                                Orientation.landscape)
-                                                ? MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                                .26
-                                                : MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                                .1,
-                                          ) :SizedBox(
-                                            // height: height * .28,
-                                              width: width,
-                                              child: Icon(
-                                                Icons.image_outlined,
-                                                size: 50,
-                                              )),
-                                        ),
-                                      ),
-                                      // ),
-                                      Container(      color: ThemeApp.tealButtonColor,
-                                        width: 191,
-                                        height: 66,
-                                        padding: const EdgeInsets.only(
-                                            left: 12, right: 12,),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            TextFieldUtils()
-                                                .listNameHeadingTextField(
-                                                subProductList[index]
-                                                    .shortName!,context),
-                                            SizedBox(height:10),
-                                            Row(
+                                              child: Image.network(
+                                                merchantList[index]
+                                                    .imageUrls![0]
+                                                    .imageUrl!.toString()??"",
+                                                // fit: BoxFit.fill,
+                                                height: (MediaQuery.of(
+                                                    context)
+                                                    .orientation ==
+                                                    Orientation.landscape)
+                                                    ? MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                    .26
+                                                    : MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                    .1,
+                                                errorBuilder:
+                                                    (context, error,
+                                                    stackTrace) {
+                                                  return Icon(
+                                                    Icons.image,
+                                                    color: ThemeApp
+                                                        .appColor,
+                                                  );
+                                                },
+                                              ) ??SizedBox(
+                                                // height: height * .28,
+                                                  width: width,
+                                                  child: Icon(
+                                                    Icons.image_outlined,
+                                                    size: 50,
+                                                  )),
+                                            ),
+                                          ),
+                                          // ),
+                                          Container(      color: ThemeApp.tealButtonColor,
+                                            width: 191,
+                                            height: 66,
+                                            padding: const EdgeInsets.only(
+                                              left: 12, right: 12,),
+                                            child: Column(
                                               mainAxisAlignment:
                                               MainAxisAlignment
-                                                  .spaceBetween,
+                                                  .center,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                               children: [
-                                                TextFieldUtils().listPriceHeadingTextField(
-                                                    indianRupeesFormat
-                                                        .format(subProductList[
-                                                    index]
-                                                        .defaultSellPrice ??
-                                                        0.0),
-                                                    context),
-                                                TextFieldUtils().listScratchPriceHeadingTextField(
-                                                    indianRupeesFormat.format(
-                                                        subProductList[
+                                                TextFieldUtils()
+                                                    .listNameHeadingTextField(
+                                                    merchantList[index]
+                                                        .shortName!,context),
+                                                SizedBox(height:10),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                                  children: [
+                                                    TextFieldUtils().listPriceHeadingTextField(
+                                                        indianRupeesFormat
+                                                            .format(merchantList[
                                                         index]
-                                                            .defaultMrp ??
+                                                            .defaultSellPrice ??
                                                             0.0),
-                                                    context)
+                                                        context),
+                                                    TextFieldUtils().listScratchPriceHeadingTextField(
+                                                        indianRupeesFormat.format(
+                                                            merchantList[
+                                                            index]
+                                                                .defaultMrp ??
+                                                                0.0),
+                                                        context)
+                                                  ],
+                                                )
                                               ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                            ),
+                                          ),
 
-                                    ],
-                                  )),
-                            ),
-                            index == subProductList!.length
-                                ? Container(
-                              // width: constrains.minWidth,
-                              height: 20,
-                              // height: MediaQuery.of(context).size.height * .08,
-                              // alignment: Alignment.center,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: ThemeApp.blackColor,
+                                        ],
+                                      )),
                                 ),
-                              ),
-                            )
-                                : SizedBox()
-                          ],
-                        );
-                        /*else {
+                                index == merchantList!.length
+                                    ? Container(
+                                  // width: constrains.minWidth,
+                                  height: 20,
+                                  // height: MediaQuery.of(context).size.height * .08,
+                                  // alignment: Alignment.center,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: ThemeApp.blackColor,
+                                    ),
+                                  ),
+                                )
+                                    : SizedBox()
+                              ],
+                            );
+                            /*else {
                         return  Container(
                           // width: constrains.minWidth,
                           height: 80,
@@ -547,7 +553,7 @@ class _ProductListByCategoryActivityState
                                   fontWeight: FontWeight.bold)),
                         );
                       }*/
-                      },)
+                          },)
                     ),
                   );
               }
@@ -603,7 +609,7 @@ class _ProductListByCategoryActivityState
                           mainAxisSpacing: 0.5,
                           crossAxisSpacing: 0.5,
                           // width / height: fixed for *all* items
-                          childAspectRatio: 0.75,
+                          childAspectRatio: 0.85,
 
                       crossAxisCount: 2,
                     ),
@@ -863,10 +869,10 @@ class _ProductListByCategoryActivityState
                   setState(() {                        FocusManager.instance.primaryFocus?.unfocus();
 
                   StringConstant.sortByRadio == 1
-                        ? StringConstant.sortedBy = "High to Low"
-                        : 'Low to High';
+                      ? StringConstant.sortedBy = "High to Low"
+                      : 'Low to High';
 
-                    onChangeText(StringConstant.sortByRadio);
+                  onChangeText(StringConstant.sortByRadio);
                   });
                   Navigator.pop(context);
                 })

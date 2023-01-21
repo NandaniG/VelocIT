@@ -11,6 +11,7 @@ import 'package:velocit/utils/utils.dart';
 import '../../pages/Activity/Product_Activities/ProductDetails_activity.dart';
 import '../../utils/constants.dart';
 import '../AppConstant/apiMapping.dart';
+import '../Model/CRMModels/CRMSingleIDModel.dart';
 import '../Model/FindProductBySubCategoryModel.dart';
 import '../Model/CartModel.dart';
 import '../Model/CategoriesModel.dart';
@@ -55,6 +56,53 @@ print(url+productId);
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + productId);
       return response = SingleServiceIDModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+
+ void getCRMForms(
+      String formId) async {
+    var url = ApiMapping.getURI(apiEndPoint.crm_form);
+    print(url+formId);
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url + formId);
+      print('getCRMForm'+response['']);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // Future getCRMForm( String formId) async {
+  //   dynamic responseJson;
+  //   try {
+  //     var url = ApiMapping.getURI(apiEndPoint.crm_form);
+  //     print(url+formId);
+  //     final client = http.Client();
+  //     final response =
+  //     await client.get(Uri.parse(url)).timeout(Duration(seconds: 30));
+  //
+  //     var responseJson = json.decode(response.body.toString());
+  //
+  //     print('responseJson'+responseJson['status'].toString());
+  //     print('responseJson'+responseJson.toString());
+  //   } on SocketException {
+  //     throw FetchDataException('No Internet Connection');
+  //   } catch (e) {
+  //     print("Error on Get : " + e.toString());
+  //   }
+  //   return responseJson;
+  // }
+
+  Future<CRMSingleIDModel> getCRMSpecificList(
+      String productId) async {
+    var url = ApiMapping.getURI(apiEndPoint.single_CRM);
+print(url+productId);
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url + productId);
+      return response = CRMSingleIDModel.fromJson(response);
     } catch (e) {
       throw e;
     }

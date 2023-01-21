@@ -24,10 +24,14 @@ class TextFormFieldsWidget extends StatefulWidget {
   Widget? suffixText;
   Widget? preffixText;
   int? maxLength;
+  VoidCallback? onTap;
+  bool? readOnly;
 
   TextFormFieldsWidget(
       {required this.errorText,
       this.intialvalue,
+      this.onTap,
+      this.readOnly,
       required this.textInputType,
       required this.controller,
       required this.hintText,
@@ -60,7 +64,9 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
         textCapitalization: TextCapitalization.words,
         textInputAction: TextInputAction.next,
         autofocus: false,
+        readOnly: widget.readOnly??false,
         maxLength: widget.maxLength,
+        onTap: widget.onTap,
         // focusNode: focusNode,
         maxLines: widget.maxline,
         onChanged: widget.onChange,
@@ -72,6 +78,7 @@ class _TextFormFieldsWidgetState extends State<TextFormFieldsWidget> {
           //     maxWidth: MediaQuery.of(context).size.width * .3,
           //     minWidth: MediaQuery.of(context).size.width * .3),
           filled: true,
+
           fillColor: Colors.white,
           hintStyle: TextStyle(
               fontFamily: 'Roboto',

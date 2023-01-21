@@ -86,6 +86,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
     print("Cart Id From Order Review" + StringConstant.UserCartID);
 
+    StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+    cartListView.sendAddressWithGet(
+        context, StringConstant.UserLoginId.toString());
+
     print("Cart id in sub order " + widget.cartId.toString());
     cartListView.sendCartForPaymentWithGet(context, widget.cartId.toString());
 ////////////////
@@ -250,8 +254,25 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               ),
                                             );
                                           } else {
-                                            Utils.successToast(
-                                                "Please select delivery address");
+                                            if (isSelfPickUp == true) {
+                                              CartRepository()
+                                                  .putCartForPayment(
+                                                      data,
+                                                      cartForPaymentPayload
+                                                          .orderBasketId!);
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Payment_Creditcard_debitcardScreen(
+                                                          cartForPaymentPayload:
+                                                              cartForPaymentPayload),
+                                                ),
+                                              );
+                                            }
+                                            isSelfPickUp == false
+                                                ? Utils.successToast(
+                                                    "Please select delivery address")
+                                                : '';
                                           }
 
                                           // Navigator.of(context).push(
@@ -622,11 +643,12 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                   SizedBox(
                                                     height: 15,
                                                   ),
+                                                  deliveryAddress(),
 
                                                   /*cartForPaymentPayload
                                                               .isAddressPresent ==
                                                           true*/
-                                                  StringConstant
+                                                  /*    StringConstant
                                                               .selectedFullName !=
                                                           ''
                                                       ? Column(
@@ -637,6 +659,12 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                               MainAxisAlignment
                                                                   .start,
                                                           children: [
+
+
+
+
+
+
                                                             Row(
                                                               children: [
                                                                 TextFieldUtils()
@@ -770,7 +798,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                                   height * .021,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w400)),
+                                                                      .w400)),*/
                                                 ],
                                               ),
                                             )
@@ -909,6 +937,154 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                     );
                   })))),
     );
+  }
+
+  Widget deliveryAddress() {
+    return ChangeNotifierProvider<CartViewModel>.value(
+        value: cartListView,
+        child: Consumer<CartViewModel>(builder: (context, cartProvider, child) {
+          switch (cartProvider.getAddress.status) {
+            case Status.LOADING:
+              print("Api load");
+
+              return Container();
+            case Status.ERROR:
+              print("Api error");
+
+              return Text(cartProvider.getAddress.message.toString());
+            case Status.COMPLETED:
+              print("Api calll");
+              List<AddressContent>? addressList =
+                  cartProvider.getAddress.data!.payload!.content;
+
+              print("addressList" + addressList!.length.toString());
+              return addressList.length > 0
+                  ? Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          addressList.isNotEmpty
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        TextFieldUtils().dynamicText(
+                          StringConstant.selectedFullName.isNotEmpty?StringConstant.selectedFullName: addressList[0].name.toString(),
+                                            context,
+                                            TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 14,
+                                              letterSpacing: -0.08,
+                                              fontWeight: FontWeight.w400,
+                                              color: ThemeApp.blackColor,
+                                            )),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                          // height: height * 0.05,
+
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(100),
+                                            ),
+                                            color: ThemeApp.tealButtonColor,
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                              left: 10,
+                                              right: 10,
+                                              top: 5,
+                                              bottom: 5),
+                                          child: Text(
+                                              StringConstant.selectedTypeOfAddress.isNotEmpty?StringConstant.selectedTypeOfAddress:      addressList[0].addressType.toString(),
+                                              style: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color: ThemeApp.whiteColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400)),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                        // provider.orderCheckOutDetails[0]
+                                        //     ["orderCheckOutDeliveryAddress"],
+                                        StringConstant.selectedFullAddress.isNotEmpty?StringConstant.selectedFullAddress:       "${addressList[0].addressLine1!}, ${addressList[0].addressLine2}, ${addressList[0].stateName},\n ${addressList[0].cityName}, ${addressList[0].pincode}",
+
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            fontSize: 12,
+                                            letterSpacing: -0.08,
+                                            fontWeight: FontWeight.w400,
+                                            color: ThemeApp.blackColor,
+                                            height: 2)),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/appImages/callIcon.svg',
+                                          color: ThemeApp.appColor,
+                                          semanticsLabel: 'Acme Logo',
+                                          theme: SvgTheme(
+                                            currentColor: ThemeApp.appColor,
+                                          ),
+                                          height: height * .025,
+                                        ),
+                                        SizedBox(
+                                          width: width * .03,
+                                        ),
+                                        TextFieldUtils().dynamicText(
+                                            StringConstant.selectedMobile.isNotEmpty?StringConstant.selectedMobile:   "${addressList[0].contactNumber}",
+                                            context,
+                                            TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color: ThemeApp.blackColor,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w700)),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : TextFieldUtils().dynamicText(
+                                  'No Address found',
+                                  context,
+                                  TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.darkGreyTab,
+                                      fontSize: height * .021,
+                                      fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    )
+                  : TextFieldUtils().dynamicText(
+                      'No Address found!',
+                      context,
+                      TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: height * .02,
+                          fontWeight: FontWeight.w400));
+          }
+          return Container(
+            height: height * .8,
+            alignment: Alignment.center,
+            child: TextFieldUtils().dynamicText(
+                'No Address found!',
+                context,
+                TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .03,
+                    fontWeight: FontWeight.bold)),
+          );
+        }));
+
   }
 
   Widget cartProductList(List<CartOrdersForPurchase> cartOrderPurchase) {

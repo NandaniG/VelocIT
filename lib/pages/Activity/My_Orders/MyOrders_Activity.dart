@@ -465,7 +465,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       ],
     );
   }
-
+int indexOfOrders=0;
   Widget activeOrderList(HomeProvider value) {
     return Expanded(
       child: ListView.builder(
@@ -556,7 +556,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           itemBuilder:
                                               (context, indexOrderList) {
                                             subIndexOrderList = indexOrderList;
-                                            return Container(
+                                            return order['orders'][indexOrderList]['cancelled']=='true'?SizedBox(): Container(
                                               decoration: BoxDecoration(
                                                   border: Border.all(
                                                       color:
@@ -694,13 +694,57 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                               : order['orders'].length,
                                       itemBuilder:
                                           (context, indexOrderDetails) {
-                                        return (order['orders'].length > 1)
-                                            ? (!viewMore
-                                                ? Container(
-                                                    child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
+                                            indexOfOrders = indexOrderDetails;
+                                        print("Order Id : "+order['orders'][indexOrderDetails]['order_id'].toString());
+                                        return (order['orders'].length >2)
+                                            ? !viewMore
+                                                ? order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Expanded(
+                                                  child: Container(
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(
                                                             top: 8.0),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Container(width :280,
+                                                              child: Text(
+                                                                  "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                                  style: TextStyle(
+                                                                      fontFamily: 'Roboto',
+                                                                      color:
+                                                                      ThemeApp.blackColor,
+                                                                      fontSize: 12,
+                                                                      fontWeight:
+                                                                      FontWeight.w400,
+                                                                      letterSpacing: -0.25,
+                                                                      overflow: TextOverflow
+                                                                          .ellipsis)),
+                                                            ),
+
+                                                            Text(
+                                                                "* ${order['orders'][indexOrderDetails]["item_qty"]}",
+                                                                style: TextStyle(
+                                                                    fontFamily: 'Roboto',
+                                                                    color:
+                                                                    ThemeApp.blackColor,
+                                                                    fontSize: 12,
+                                                                    fontWeight:
+                                                                    FontWeight.w700,
+                                                                    letterSpacing: -0.25,
+                                                                    overflow: TextOverflow
+                                                                        .ellipsis)),
+                                                          ],
+                                                        ),
+                                                      ))
+                                                )
+                                                : order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Container(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Container(width :280,
                                                     child: Text(
                                                         "${order['orders'][indexOrderDetails]["oneliner"]}",
                                                         style: TextStyle(
@@ -710,35 +754,28 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                                 .blackColor,
                                                             fontSize: 12,
                                                             fontWeight:
-                                                                FontWeight.w400,
-                                                            letterSpacing:
-                                                                -0.25,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis)),
-                                                  ))
-                                                : Container(
-                                                    child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 8.0),
-                                                    child: Text(
-                                                        "${order['orders'][indexOrderDetails]["oneliner"]}",
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Roboto',
-                                                            color: ThemeApp
-                                                                .blackColor,
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            letterSpacing:
-                                                                -0.25,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis)),
-                                                  )))
-                                            : Container(
+                                                            FontWeight.w400,
+                                                            letterSpacing: -0.25,
+                                                            overflow: TextOverflow
+                                                                .ellipsis)),
+                                                  ),
+
+                                                  Text(
+                                                      "* ${order['orders'][indexOrderDetails]["item_qty"]}",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          color:
+                                                          ThemeApp.blackColor,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.w700,
+                                                          letterSpacing: -0.25,
+                                                          overflow: TextOverflow
+                                                              .ellipsis)),
+                                                ],
+                                              ),
+                                            ))
+                                            : order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Container(
                                                 child: Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 8.0),
@@ -961,16 +998,10 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                               )
                                             : InkWell(
                                                 onTap: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              CancelOrderActivity(
-                                                                  values: value.jsonData[
-                                                                              'payload']
-                                                                          [
-                                                                          'consumer_baskets']
-                                                                      [
-                                                                      index])));
+                                                  Navigator.of(context).push(MaterialPageRoute(
+                                                      builder: (context) => CancelOrderActivity(
+                                                          values: value.jsonData['payload']['consumer_baskets']
+                                                          [index], orderList:  order['orders'][indexOfOrders])));
                                                 },
                                                 child: Container(
                                                     padding:
@@ -1234,45 +1265,88 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                       ? !viewMore
                                           ? 1
                                           : order['orders'].length
-                                      : order['orders'].length,
-                                  itemBuilder: (context, indexOrderDetails) {
-                                    return (order['orders'].length >= 1)
-                                        ? !viewMore
-                                            ? Container(
+                                          : order['orders'].length,
+                                      itemBuilder:
+                                          (context, indexOrderDetails) {
+                                        return (order['orders'].length >2)
+                                            ? !viewMore
+                                            ? order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Expanded(
+                                            child: Container(
                                                 child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 8.0),
-                                                child: Text(
-                                                    "${order['orders'][indexOrderDetails]["oneliner"]}",
-                                                    style: TextStyle(
-                                                        fontFamily: 'Roboto',
-                                                        color:
+                                                  padding: const EdgeInsets.only(
+                                                      top: 8.0),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Container(width :280,
+                                                        child: Text(
+                                                            "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                            style: TextStyle(
+                                                                fontFamily: 'Roboto',
+                                                                color:
+                                                                ThemeApp.blackColor,
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                FontWeight.w400,
+                                                                letterSpacing: -0.25,
+                                                                overflow: TextOverflow
+                                                                    .ellipsis)),
+                                                      ),
+
+                                                      Text(
+                                                          "* ${order['orders'][indexOrderDetails]["item_qty"]}",
+                                                          style: TextStyle(
+                                                              fontFamily: 'Roboto',
+                                                              color:
+                                                              ThemeApp.blackColor,
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                              FontWeight.w700,
+                                                              letterSpacing: -0.25,
+                                                              overflow: TextOverflow
+                                                                  .ellipsis)),
+                                                    ],
+                                                  ),
+                                                ))
+                                        )
+                                            : order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Container(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Container(width :280,
+                                                    child: Text(
+                                                        "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                        style: TextStyle(
+                                                            fontFamily: 'Roboto',
+                                                            color:
                                                             ThemeApp.blackColor,
-                                                        fontSize: 12,
-                                                        fontWeight:
+                                                            fontSize: 12,
+                                                            fontWeight:
                                                             FontWeight.w400,
-                                                        letterSpacing: -0.25,
-                                                        overflow: TextOverflow
-                                                            .ellipsis)),
-                                              ))
-                                            : Container(
-                                                child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 8.0),
-                                                child: Text(
-                                                    "${order['orders'][indexOrderDetails]["oneliner"]}",
-                                                    style: TextStyle(
-                                                        fontFamily: 'Roboto',
-                                                        color:
-                                                            ThemeApp.blackColor,
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        letterSpacing: -0.25,
-                                                        overflow: TextOverflow
-                                                            .ellipsis)),
-                                              ))
-                                        : Container(
+                                                            letterSpacing: -0.25,
+                                                            overflow: TextOverflow
+                                                                .ellipsis)),
+                                                  ),
+
+                                                  Text(
+                                                      "* ${order['orders'][indexOrderDetails]["item_qty"]}",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          color:
+                                                          ThemeApp.blackColor,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.w700,
+                                                          letterSpacing: -0.25,
+                                                          overflow: TextOverflow
+                                                              .ellipsis)),
+                                                ],
+                                              ),
+                                            ))
+                                            : order['orders'][indexOrderDetails]['cancelled']=='true'?SizedBox(): Container(
                                             child: Padding(
                                             padding:
                                                 const EdgeInsets.only(top: 8.0),
@@ -1453,12 +1527,9 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                         InkWell(
                                           onTap: () {
                                             Navigator.of(context).push(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ReturnOrderActivity(
-                                                        values: value.jsonData[
-                                                                    'payload'][
-                                                                'consumer_baskets']
-                                                            [index])));
+                                                builder: (context) => CancelOrderActivity(
+                                                    values: value.jsonData['payload']['consumer_baskets']
+                                                    [index],orderList:  order['orders'][indexOfOrders])));
                                           },
                                           child: Container(
                                               padding: const EdgeInsets
@@ -1538,7 +1609,9 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                                           [
                                                                           'consumer_baskets']
                                                                       [
-                                                                      index])));
+                                                                      index],
+                                                                      orderList: order['orders'][indexOfOrders],
+                                                                      )));
                                                 },
                                                 child: Container(
                                                     padding:

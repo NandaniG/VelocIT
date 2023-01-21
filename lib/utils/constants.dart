@@ -48,16 +48,16 @@ static int isUserLoggedIn = 0;
 
   static String placesFromCurrentLocation = '';
   static String selectedFullAddress = '';
-  static String selectedFullAddressPref = 'selectedfullAddressPref';
+  static String selectedFullAddressPref = 'selectedfullAddressPrefs';
 
   static String selectedFullName = '';
-  static String selectedFullNamePref = 'selectedfullNamePref';
+  static String selectedFullNamePref = 'selectedFullNamePrefs';
 
   static String selectedTypeOfAddress = '';
-  static String selectedTypeOfAddressPref = 'SelectedTypeOfAddressPref';
+  static String selectedTypeOfAddressPref = 'SelectedTypeOfAddressPrefs';
 
   static String selectedMobile = '';
-  static String selectedMobilePref = 'selectedMobilePref';
+  static String selectedMobilePref = 'selectedMobilePrefs';
 
   static String addressFromCurrentLocation = '';
   static var getCartList_FromPref;

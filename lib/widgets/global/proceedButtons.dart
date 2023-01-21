@@ -100,10 +100,11 @@ Widget kmAwayOnMerchantImage(String name, BuildContext context) {
       child: Text(
         name,
         style: TextStyle(fontFamily: 'Roboto',
-          fontSize: MediaQuery.of(context).size.height * .020,
+          fontSize: 10,
           color: ThemeApp.whiteColor,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w700,
           overflow: TextOverflow.ellipsis,
+          letterSpacing: -0.08
         ),
       ));
 }

@@ -109,7 +109,7 @@ class HomeProvider with ChangeNotifier {
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(url);
-
+   var  jsonresponse = json.decode(response);
       print("ServiceSubCategory list: " + response.toString());
       print("ServiceSubCategory"+jsonData['service_sub_category_code'].toString());
 

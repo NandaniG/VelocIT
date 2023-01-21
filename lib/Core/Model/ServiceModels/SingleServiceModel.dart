@@ -446,9 +446,9 @@ class SingleModelMerchants {
     id = json['id'];
     merchantCode = json['merchant_code'];
     merchantName = json['merchant_name'];
-    unitMrp = json['unit_mrp'];
+    unitMrp = json['unit_mrp']??0.0;
     unitOfferPrice = json['unit_offer_price']??0.0;
-    deliveryChargesPerOrder = json['delivery_charges_per_order'];
+    deliveryChargesPerOrder = json['delivery_charges_per_order']??0.0;
     deliveryDays = json['delivery_days'];
     merchantRating = json['merchant_rating'];
     productItemId = json['product_item_id'];
@@ -462,7 +462,7 @@ class SingleModelMerchants {
     data['merchant_name'] = this.merchantName??"";
     data['unit_mrp'] = this.unitMrp??0.0;
     data['unit_offer_price'] = this.unitOfferPrice??0.0;
-    data['delivery_charges_per_order'] = this.deliveryChargesPerOrder??"";
+    data['delivery_charges_per_order'] = this.deliveryChargesPerOrder??0.0;
     data['delivery_days'] = this.deliveryDays??"";
     data['merchant_rating'] = this.merchantRating??0.0;
     data['product_item_id'] = this.productItemId??"";

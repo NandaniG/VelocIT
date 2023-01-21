@@ -306,14 +306,11 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
 
   Future<AddressListModel> getAddressList(String id) async {
     // var url = ApiMapping.getURI(apiEndPoint.address_list);
-    https: //velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10
 
     var requestUrl =
         ApiMapping.BaseAPI + '/user/' + id + '/address?page=0&size=10';
 
     print(requestUrl.toString());
-    print(
-        'https://velocitapiqa.fulgorithmapi.com:443/api/v1/user/130/address?page=0&size=10');
     print(id.toString());
     final prefs = await SharedPreferences.getInstance();
 

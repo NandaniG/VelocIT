@@ -7,9 +7,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/Model/OfferProductModel.dart';
 import 'package:velocit/Core/ViewModel/product_listing_view_model.dart';
 import '../../../Core/Model/CategoriesModel.dart';
 import '../../../Core/Model/FindProductBySubCategoryModel.dart';
+import '../../../Core/Model/OfferProductListModel.dart';
 import '../../../Core/Model/ProductCategoryModel.dart';
 import '../../../Core/Model/productSpecificListModel.dart';
 import '../../../Core/data/responses/status.dart';
@@ -23,24 +25,25 @@ import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
-import 'FilterScreen_Products.dart';
-import 'ProductDetails_activity.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
-class ProductListByCategoryActivity extends StatefulWidget {
-  SimpleSubCats? productList;
+import '../Product_Activities/FilterScreen_Products.dart';
+import '../Product_Activities/ProductDetails_activity.dart';
 
-  ProductListByCategoryActivity({Key? key, this.productList}) : super(key: key);
+class OfferListByCategoryActivity extends StatefulWidget {
+  OfferPayload? offerList;
+
+  OfferListByCategoryActivity({Key? key, this.offerList}) : super(key: key);
 
   @override
-  State<ProductListByCategoryActivity> createState() =>
-      _ProductListByCategoryActivityState();
+  State<OfferListByCategoryActivity> createState() =>
+      _OfferListByCategoryActivityState();
 }
 
-class _ProductListByCategoryActivityState
-    extends State<ProductListByCategoryActivity> {
+class _OfferListByCategoryActivityState
+    extends State<OfferListByCategoryActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   late ScrollController scrollController = ScrollController();
   double height = 0.0;
@@ -48,7 +51,7 @@ class _ProductListByCategoryActivityState
 
   var categoryCode;
   ProductSpecificListViewModel productSpecificListViewModel =
-      ProductSpecificListViewModel();
+  ProductSpecificListViewModel();
 
   bool isLoading = false;
   int pageCount = 1;
@@ -59,13 +62,13 @@ class _ProductListByCategoryActivityState
     // TODO: implement initState
     super.initState();
 
-    productSpecificListViewModel.productBySubCategoryWithGet(
+    productSpecificListViewModel.OfferBySubCategoryWithGet(
       0,
       10,
-      widget.productList!.id!,
+      widget.offerList!.id!,
     );
 
-    print("subProduct.............${widget.productList!.id}");
+    print("subProduct.............${widget.offerList!.id}");
 /*    scrollController = new ScrollController(initialScrollOffset: 5.0)
       ..addListener(_scrollListener);*/
 
@@ -97,8 +100,8 @@ class _ProductListByCategoryActivityState
           pageCount = pageCount + 1;
 
           //// CALL YOUR API HERE FOR THE NEXT FUNCTIONALITY
-          productSpecificListViewModel.productBySubCategoryWithGet(
-              pageCount, 10, widget.productList!.id!);
+          productSpecificListViewModel.OfferBySubCategoryWithGet(
+              pageCount, 10, widget.offerList!.id!);
         }
       });
     }
@@ -131,7 +134,7 @@ class _ProductListByCategoryActivityState
               addressWidget(context, StringConstant.placesFromCurrentLocation),
               setState(() {})),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context,0),
+        bottomNavigationBar: bottomNavigationBarWidget(context,2),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(
@@ -262,11 +265,11 @@ class _ProductListByCategoryActivityState
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
-          // border: Border(
-          //   top: BorderSide(color: Colors.grey, width: 1),
-          //   bottom: BorderSide(color: Colors.grey, width: 1),
-          // ),
-          ),
+        // border: Border(
+        //   top: BorderSide(color: Colors.grey, width: 1),
+        //   bottom: BorderSide(color: Colors.grey, width: 1),
+        // ),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -275,9 +278,9 @@ class _ProductListByCategoryActivityState
                 'Sort By  ',
                 context,
                 TextStyle(fontFamily: 'Roboto',
-                  color: ThemeApp.lightFontColor,
-                fontWeight: FontWeight.w400,
-                  fontSize: 12,letterSpacing: -0.08
+                    color: ThemeApp.lightFontColor,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,letterSpacing: -0.08
                 )),
             InkWell(
               onTap: () {
@@ -291,9 +294,9 @@ class _ProductListByCategoryActivityState
                   StringConstant.sortedBy,
                   context,
                   TextStyle(fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                   fontWeight: FontWeight.w400,
-                    fontSize: 12,letterSpacing: -0.08
+                      color: ThemeApp.blackColor,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,letterSpacing: -0.08
                   )),
             ),
             const Icon(Icons.keyboard_arrow_down)
@@ -314,7 +317,7 @@ class _ProductListByCategoryActivityState
                     context,
                     TextStyle(fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
-                     fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w400,
                       fontSize:12,
                     )),
                 Padding(
@@ -352,7 +355,7 @@ class _ProductListByCategoryActivityState
         value:  productSpecificListViewModel,
         child: Consumer<ProductSpecificListViewModel>(
             builder: (context, productSubCategoryProvider, child) {
-              switch (productSubCategoryProvider.productSubCategory.status) {
+              switch (productSubCategoryProvider.offerSubCategory.status) {
                 case Status.LOADING:
                   print("Api load");
 
@@ -361,71 +364,71 @@ class _ProductListByCategoryActivityState
                   print("Api error");
 
                   return Text(productSubCategoryProvider
-                      .productSubCategory.message
+                      .offerSubCategory.message
                       .toString());
                 case Status.COMPLETED:
                   print("Api calll");
-                  List<Content>? subProductList = productSubCategoryProvider
-                      .productSubCategory.data!.payload!.content;
+                  List<OfferListContent>? subProductList = productSubCategoryProvider
+                      .offerSubCategory.data!.payload!.content;
                   print("subProductList length.......${subProductList!.length}");
                   return Expanded(
 
                     // width: MediaQuery.of(context).size.width,
                     child: subProductList.length==[]?CircularProgressIndicator(): GridView(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        // childAspectRatio: 1.0,
-                        // childAspectRatio: MediaQuery.of(context).size.height / 900,
-                      ),
-                      shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 30,
+                          // childAspectRatio: 1.0,
+                          childAspectRatio: MediaQuery.of(context).size.height / 900,
+                        ),
+                        shrinkWrap: true,
                         children: List.generate(subProductList!.length,
                               (index) {
-                        return Stack(
-                          children: [
-                            index == subProductList!.length
-                                ? Container(
-                              // width: constrains.minWidth,
-                              height: 20,
-                              // height: MediaQuery.of(context).size.height * .08,
-                              // alignment: Alignment.center,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: ThemeApp.blackColor,
-                                ),
-                              ),
-                            )
-                                : InkWell(
-                              onTap: () {
-                                print(
-                                    "Id ........${subProductList[index].id}");
-
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProductDetailsActivity(
-                                          id: subProductList[index].id,
-                                          // productList: subProductList[index],
-                                          // productSpecificListViewModel:
-                                          //     productSpecificListViewModel,
-                                        ),
+                            return Stack(
+                              children: [
+                                index == subProductList!.length
+                                    ? Container(
+                                  // width: constrains.minWidth,
+                                  height: 20,
+                                  // height: MediaQuery.of(context).size.height * .08,
+                                  // alignment: Alignment.center,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: ThemeApp.blackColor,
+                                    ),
                                   ),
-                                );
-                              },
-                              child: Container(
+                                )
+                                    : InkWell(
+                                  onTap: () {
+                                    print(
+                                        "Id ........${subProductList[index].id}");
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductDetailsActivity(
+                                              id: subProductList[index].id,
+                                              // productList: subProductList[index],
+                                              // productSpecificListViewModel:
+                                              //     productSpecificListViewModel,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
 // height: 205,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      /*   Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          /*   Expanded(
                                             flex: 2,
                                             child:*/ Container(
-                                        height: 133,
-                                        width: 191, /* height: SizeConfig.orientations !=
+                                            height: 143,
+                                            width: 191, /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
                                                           .size
@@ -438,101 +441,101 @@ class _ProductListByCategoryActivityState
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,*/
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                        ),
-                                        child: ClipRRect(
+                                            decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                            ),
+                                            child: ClipRRect(
 
-                                          child: subProductList[index]
-                                              .imageUrls![0]
-                                              .imageUrl!.isNotEmpty?Image.network(
-                                            subProductList[index]
-                                                .imageUrls![0]
-                                                .imageUrl!,
-                                            // fit: BoxFit.fill,
-                                            height: (MediaQuery.of(
-                                                context)
-                                                .orientation ==
-                                                Orientation.landscape)
-                                                ? MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                                .26
-                                                : MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                                .1,
-                                          ) :SizedBox(
-                                            // height: height * .28,
-                                              width: width,
-                                              child: Icon(
-                                                Icons.image_outlined,
-                                                size: 50,
-                                              )),
-                                        ),
-                                      ),
-                                      // ),
-                                      Container(      color: ThemeApp.tealButtonColor,
-                                        width: 191,
-                                        height: 66,
-                                        padding: const EdgeInsets.only(
-                                            left: 12, right: 12,),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            TextFieldUtils()
-                                                .listNameHeadingTextField(
+                                              child: subProductList[index]
+                                                  .imageUrls![0]
+                                                  .imageUrl!.isNotEmpty?Image.network(
                                                 subProductList[index]
-                                                    .shortName!,context),
-                                            SizedBox(height:10),
-                                            Row(
+                                                    .imageUrls![0]
+                                                    .imageUrl!,
+                                                // fit: BoxFit.fill,
+                                                height: (MediaQuery.of(
+                                                    context)
+                                                    .orientation ==
+                                                    Orientation.landscape)
+                                                    ? MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                    .26
+                                                    : MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                    .1,
+                                              ) :SizedBox(
+                                                // height: height * .28,
+                                                  width: width,
+                                                  child: Icon(
+                                                    Icons.image_outlined,
+                                                    size: 50,
+                                                  )),
+                                            ),
+                                          ),
+                                          // ),
+                                          Container(      color: ThemeApp.tealButtonColor,
+                                            width: 191,
+                                            height: 66,
+                                            padding: const EdgeInsets.only(
+                                              left: 12, right: 12,),
+                                            child: Column(
                                               mainAxisAlignment:
                                               MainAxisAlignment
-                                                  .spaceBetween,
+                                                  .center,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                               children: [
-                                                TextFieldUtils().listPriceHeadingTextField(
-                                                    indianRupeesFormat
-                                                        .format(subProductList[
-                                                    index]
-                                                        .defaultSellPrice ??
-                                                        0.0),
-                                                    context),
-                                                TextFieldUtils().listScratchPriceHeadingTextField(
-                                                    indianRupeesFormat.format(
-                                                        subProductList[
+                                                TextFieldUtils()
+                                                    .listNameHeadingTextField(
+                                                    subProductList[index]
+                                                        .shortName!,context),
+                                                SizedBox(height:10),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                                  children: [
+                                                    TextFieldUtils().listPriceHeadingTextField(
+                                                        indianRupeesFormat
+                                                            .format(subProductList[
                                                         index]
-                                                            .defaultMrp ??
+                                                            .defaultSellPrice ??
                                                             0.0),
-                                                    context)
+                                                        context),
+                                                    TextFieldUtils().listScratchPriceHeadingTextField(
+                                                        indianRupeesFormat.format(
+                                                            subProductList[
+                                                            index]
+                                                                .defaultMrp ??
+                                                                0.0),
+                                                        context)
+                                                  ],
+                                                )
                                               ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                            ),
+                                          ),
 
-                                    ],
-                                  )),
-                            ),
-                            index == subProductList!.length
-                                ? Container(
-                              // width: constrains.minWidth,
-                              height: 20,
-                              // height: MediaQuery.of(context).size.height * .08,
-                              // alignment: Alignment.center,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: ThemeApp.blackColor,
+                                        ],
+                                      )),
                                 ),
-                              ),
-                            )
-                                : SizedBox()
-                          ],
-                        );
-                        /*else {
+                                index == subProductList!.length
+                                    ? Container(
+                                  // width: constrains.minWidth,
+                                  height: 20,
+                                  // height: MediaQuery.of(context).size.height * .08,
+                                  // alignment: Alignment.center,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: ThemeApp.blackColor,
+                                    ),
+                                  ),
+                                )
+                                    : SizedBox()
+                              ],
+                            );
+                            /*else {
                         return  Container(
                           // width: constrains.minWidth,
                           height: 80,
@@ -547,7 +550,7 @@ class _ProductListByCategoryActivityState
                                   fontWeight: FontWeight.bold)),
                         );
                       }*/
-                      },)
+                          },)
                     ),
                   );
               }
@@ -603,7 +606,7 @@ class _ProductListByCategoryActivityState
                           mainAxisSpacing: 0.5,
                           crossAxisSpacing: 0.5,
                           // width / height: fixed for *all* items
-                          childAspectRatio: 0.75,
+                          childAspectRatio: 0.85,
 
                       crossAxisCount: 2,
                     ),
@@ -863,10 +866,10 @@ class _ProductListByCategoryActivityState
                   setState(() {                        FocusManager.instance.primaryFocus?.unfocus();
 
                   StringConstant.sortByRadio == 1
-                        ? StringConstant.sortedBy = "High to Low"
-                        : 'Low to High';
+                      ? StringConstant.sortedBy = "High to Low"
+                      : 'Low to High';
 
-                    onChangeText(StringConstant.sortByRadio);
+                  onChangeText(StringConstant.sortByRadio);
                   });
                   Navigator.pop(context);
                 })

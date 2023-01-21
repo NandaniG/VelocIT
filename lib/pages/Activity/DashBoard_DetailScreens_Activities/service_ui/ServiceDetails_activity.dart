@@ -433,7 +433,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                         // _currentIndex = index;
                         setState(() {});
                       },
-                      autoPlay: true,
+                      autoPlay:model.imageUrls!.length>1? true:false,
                       viewportFraction: 1,
                       height: height * .3),
                 ) ??

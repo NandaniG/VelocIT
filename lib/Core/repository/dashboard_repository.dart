@@ -9,6 +9,7 @@ import '../AppConstant/apiMapping.dart';
 import '../Model/BestDealModel.dart';
 import '../Model/CRMModel.dart';
 import '../Model/CategoriesModel.dart';
+import '../Model/OfferProductModel.dart';
 import '../Model/Orders/ActiveOrdersBasketModel.dart';
 import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
@@ -22,7 +23,7 @@ import '../data/network/networkApiServices.dart';
 class DashBoardRepository {
   BaseApiServices _apiServices = NetworkApiServices();
 
- /* Future<CategoriesModel> getShopByCategories() async {
+  /* Future<CategoriesModel> getShopByCategories() async {
     var url = ApiMapping.getURI(apiEndPoint.get_shopByCategories);
 
     try {
@@ -75,6 +76,7 @@ class DashBoardRepository {
       throw e;
     }
   }
+
   Future<ServiceCategoryModel> getServiceCategoryListing() async {
     var url = ApiMapping.BaseAPI + ApiMapping.ServiceSubCategory;
 
@@ -87,7 +89,9 @@ class DashBoardRepository {
     } catch (e) {
       throw e;
     }
-  }  Future<CRMModel> getCRMListing() async {
+  }
+
+  Future<CRMModel> getCRMListing() async {
     var url = ApiMapping.BaseAPI + ApiMapping.CRMSubCategory;
 
     try {
@@ -117,16 +121,16 @@ class DashBoardRepository {
     }
   }
 */
-  Future<ProductAllPaginatedModel> getProductListing(int page,int size) async {
+  Future<ProductAllPaginatedModel> getProductListing(int page, int size) async {
     Map<String, String> productListingData = {
       'page': page.toString(),
       'size': size.toString(),
     };
-    print("getProductListing Query"+productListingData.toString());
+    print("getProductListing Query" + productListingData.toString());
     var url = '/product/page-query';
     String queryString = Uri(queryParameters: productListingData).query;
 
-    var requestUrl = ApiMapping.BaseAPI +url + '?' + queryString!;
+    var requestUrl = ApiMapping.BaseAPI + url + '?' + queryString!;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -137,16 +141,34 @@ class DashBoardRepository {
       throw e;
     }
   }
-  Future<RecommendedForYouModel> getRecommendedForYou(int page,int size) async {
+
+  Future<ProductOfferModel> getOfferRequest() async {
+    var url = '/product-offers';
+
+    var requestUrl = ApiMapping.BaseAPI + url;
+    print(url);
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(requestUrl);
+      print("getOfferRequest list: " + response.toString());
+
+      return response = ProductOfferModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<RecommendedForYouModel> getRecommendedForYou(
+      int page, int size) async {
     Map<String, String> productListingData = {
       'page': page.toString(),
       'size': size.toString(),
     };
-    print("RecommendedForYouModel Query"+productListingData.toString());
+    print("RecommendedForYouModel Query" + productListingData.toString());
 
     String queryString = Uri(queryParameters: productListingData).query;
 
-    var requestUrl = ApiMapping.BaseAPI +ApiMapping.RecommendForYou + '?' + queryString!;
+    var requestUrl =
+        ApiMapping.BaseAPI + ApiMapping.RecommendForYou + '?' + queryString!;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -157,16 +179,18 @@ class DashBoardRepository {
       throw e;
     }
   }
-  Future<BestDealModel> getBestDeal(int page,int size) async {
+
+  Future<BestDealModel> getBestDeal(int page, int size) async {
     Map<String, String> productListingData = {
       'page': page.toString(),
       'size': size.toString(),
     };
-    print("BestDealModel Query"+productListingData.toString());
+    print("BestDealModel Query" + productListingData.toString());
 
     String queryString = Uri(queryParameters: productListingData).query;
 
-    var requestUrl = ApiMapping.BaseAPI +ApiMapping.BestDeal + '?' + queryString!;
+    var requestUrl =
+        ApiMapping.BaseAPI + ApiMapping.BestDeal + '?' + queryString!;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -178,17 +202,19 @@ class DashBoardRepository {
     }
   }
 
-  Future<SimilarProductModel> getSimilarProduct(int page,int size, int productId) async {
+  Future<SimilarProductModel> getSimilarProduct(
+      int page, int size, int productId) async {
     Map<String, String> productListingData = {
       'page': page.toString(),
       'size': size.toString(),
       'product_id': productId.toString(),
     };
-    print("SimilarProductModel Query"+productListingData.toString());
+    print("SimilarProductModel Query" + productListingData.toString());
 
     String queryString = Uri(queryParameters: productListingData).query;
 
-    var requestUrl = ApiMapping.BaseAPI +ApiMapping.SimilarProducts + '?' + queryString!;
+    var requestUrl =
+        ApiMapping.BaseAPI + ApiMapping.SimilarProducts + '?' + queryString!;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -200,7 +226,8 @@ class DashBoardRepository {
     }
   }
 
-  Future<ProductFindBySearchTermModel> getProductBySearchTerms(int page,int size, String searchString) async {
+  Future<ProductFindBySearchTermModel> getProductBySearchTerms(
+      int page, int size, String searchString) async {
     Map<String, String> productListingData = {
       // 'search_term': searchString.toString(),
       'search_term': searchString.toString(),
@@ -208,11 +235,11 @@ class DashBoardRepository {
       'size': size.toString(),
       // 'searchString':searchString.toString(),
     };
-    print("getProductBySearchTerms Query"+productListingData.toString());
+    print("getProductBySearchTerms Query" + productListingData.toString());
     var url = '/product/findBySearchTerm';
     String queryString = Uri(queryParameters: productListingData).query;
 
-    var requestUrl = ApiMapping.BaseAPI +url + '?' + queryString!;
+    var requestUrl = ApiMapping.BaseAPI + url + '?' + queryString!;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -223,5 +250,4 @@ class DashBoardRepository {
       throw e;
     }
   }
-
 }

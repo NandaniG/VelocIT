@@ -1,12 +1,18 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/pages/Activity/Merchant_Near_Activities/Merchant_List_Screen.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 
+import '../../../Core/Model/MerchantModel/MerchantListModel.dart';
+import '../../../Core/ViewModel/Merchant_viewModel.dart';
+import '../../../Core/data/responses/status.dart';
+import '../../../utils/ProgressIndicatorLoader.dart';
 import '../../../utils/StringUtils.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
@@ -46,7 +52,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
   final Set<Marker> markers = new Set(); //markers for google map
   static const LatLng showLocation =
       const LatLng(27.7089427, 85.3086209); //location to show in map
-
+  MerchantViewModel merchantViewModel = MerchantViewModel();
   @override
   void initState() {
     // TODO: implement initState
@@ -85,12 +91,26 @@ class _MerchantActvityState extends State<MerchantActvity> {
   getLocation() async {
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    print(position.longitude); //Output: 80.24599079
+    print("long" + position.longitude.toString()); //Output: 80.24599079
     print(position.latitude); //Output: 29.6593457
 
     long = position.longitude.toString();
     lat = position.latitude.toString();
-
+    Map data ={};
+if(double.parse(long)<0){
+  data = {
+    "base_latitude":18.626163,
+    "base_longitude":74.098946,
+    "distance_in_hundred_mtrs":100
+  };
+}else{
+  data = {
+    "base_latitude": lat,
+    "base_longitude": long,
+    "distance_in_hundred_mtrs": 100
+  };
+}
+  await  merchantViewModel.getPostMerchantNearMe(context, data);
     setState(() {
       //refresh UI
     });
@@ -275,7 +295,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
                     ],
                   ),
                 ),
-                !isGridView ? budgetBuyList() : mapView(),
+                !isGridView ? merchantList() : mapView(),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .02,
                 ),
@@ -288,126 +308,258 @@ class _MerchantActvityState extends State<MerchantActvity> {
   Widget budgetBuyList() {
     var orientation =
         (MediaQuery.of(context).orientation == Orientation.landscape);
-    return Consumer<HomeProvider>(builder: (context, provider, child) {
-      if (provider.merchantNearYouList[1].length > 0) {
-        widget.merchantList = provider.merchantNearYouList[1];
-        return SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Text(servicestatus? "GPS is Enabled": "GPS is disabled."),
-              // Text(haspermission? "GPS is Enabled": "GPS is disabled."),
-              //
-              // Text("Longitude: $long", style:TextStyle(fontFamily: 'Roboto',fontSize: 20)),
-              // Text("Latitude: $lat", style: TextStyle(fontFamily: 'Roboto',fontSize: 20),),
-              TextFieldUtils().dynamicText(
-                  StringUtils.merchantNearYou,
-                  context,
-                  TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: height * .025,
-                  )),
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Text(servicestatus? "GPS is Enabled": "GPS is disabled."),
+            // Text(haspermission? "GPS is Enabled": "GPS is disabled."),
+            //
+            // Text("Longitude: $long", style:TextStyle(fontFamily: 'Roboto',fontSize: 20)),
+            // Text("Latitude: $lat", style: TextStyle(fontFamily: 'Roboto',fontSize: 20),),
+            TextFieldUtils().dynamicText(
+                StringUtils.merchantNearYou,
+                context,
+                TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  fontWeight: FontWeight.w400,
+                  fontSize: height * .025,
+                )),
 
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .02,
-              ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .02,
+            ),
 
-              Container(
-                  height: MediaQuery.of(context).size.height,
-                  // padding: EdgeInsets.all(12.0),
-                  child: GridView.builder(
-                    itemCount: widget.merchantList["subMerchantList"].length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        // childAspectRatio: 3 / 3.1,
-                        childAspectRatio: orientation
-                            ? width * 3.2 / height * 0.5
-                            : width * 2 / height * 1,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10),
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                          height: orientation ? height * 26 : height * .17,
-                          // MediaQuery.of(context).size.height * .26,
-                          width: MediaQuery.of(context).size.width * .45,
-                          decoration: const BoxDecoration(
-                              color: ThemeApp.tealButtonColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Stack(
-                                alignment: Alignment.topRight,
-                                children: [
-                                  Container(
-                                    height: orientation
-                                        ? height * .25
-                                        : MediaQuery.of(context).size.height *
-                                            .17,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: const BoxDecoration(
-                                        color: ThemeApp.whiteColor,
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                        )),
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.only(
+            Container(
+                height: MediaQuery.of(context).size.height,
+                // padding: EdgeInsets.all(12.0),
+                child: GridView.builder(
+                  itemCount: widget.merchantList["subMerchantList"].length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      // childAspectRatio: 3 / 3.1,
+                      childAspectRatio: orientation
+                          ? width * 3.2 / height * 0.5
+                          : width * 2 / height * 1,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                        height: orientation ? height * 26 : height * .17,
+                        // MediaQuery.of(context).size.height * .26,
+                        width: MediaQuery.of(context).size.width * .45,
+                        decoration: const BoxDecoration(
+                            color: ThemeApp.tealButtonColor,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                Container(
+                                  height: orientation
+                                      ? height * .25
+                                      : MediaQuery.of(context).size.height *
+                                          .17,
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: const BoxDecoration(
+                                      color: ThemeApp.whiteColor,
+                                      borderRadius: BorderRadius.only(
                                         topRight: Radius.circular(10),
                                         topLeft: Radius.circular(10),
-                                      ),
-                                      child: Image.asset(
-                                        // width: double.infinity,
-                                        widget.merchantList["subMerchantList"]
-                                            [index]["subMerchantNearYouImage"],
-                                        // fit: BoxFit.fill,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .07,
-                                      ),
+                                      )),
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      topLeft: Radius.circular(10),
+                                    ),
+                                    child: Image.asset(
+                                      // width: double.infinity,
+                                      widget.merchantList["subMerchantList"]
+                                          [index]["subMerchantNearYouImage"],
+                                      // fit: BoxFit.fill,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .07,
                                     ),
                                   ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(top: 7, right: 7),
-                                    child: kmAwayOnMerchantImage(
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 7, right: 7),
+                                  child: kmAwayOnMerchantImage(
+                                    widget.merchantList["subMerchantList"]
+                                        [index]["subMerchantNearYoukmAWAY"],
+                                    context,
+                                  ),
+                                )
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(7),
+                              child: TextFieldUtils()
+                                  .homePageTitlesTextFieldsWHITE(
                                       widget.merchantList["subMerchantList"]
-                                          [index]["subMerchantNearYoukmAWAY"],
-                                      context,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(7),
-                                child: TextFieldUtils()
-                                    .homePageTitlesTextFieldsWHITE(
-                                        widget.merchantList["subMerchantList"]
-                                            [index]["subMerchantNearYouName"],
-                                        context),
-                              ),
-                            ],
-                          ));
-                    },
-                  ))
-            ],
-          ),
+                                          [index]["subMerchantNearYouName"],
+                                      context),
+                            ),
+                          ],
+                        ));
+                  },
+                ))
+          ],
         ),
-      );
-      } else {
+      ),
+    );
+  }
+  Widget merchantList() {
+    var orientation =
+        (MediaQuery.of(context).orientation == Orientation.landscape);
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+        child:  ChangeNotifierProvider<MerchantViewModel>.value(
+      value: merchantViewModel,
+          child: Consumer<MerchantViewModel>(
+              builder: (context, merchantList, child) {
+                switch (merchantList.merchantResponse.status) {
+                  case Status.LOADING:
+                    if (kDebugMode) {
+                      print("Api load");
+                    }
+                    return ProgressIndicatorLoader(true);
 
-        return Container();
-        
-      }
-    });
+                  case Status.ERROR:
+                    if (kDebugMode) {
+                      print("Api error : " +
+                          merchantList.merchantResponse.message.toString());
+                    }
+                    return Text(merchantList.merchantResponse.message.toString());
+
+                  case Status.COMPLETED:
+                    if (kDebugMode) {
+                      print("Api calll");
+                    }
+
+print("merchantList...."+merchantList.merchantResponse.data.toString());
+                    // List<MerchantPayload> merchantLists=  merchantList.merchantResponse.data!.payload!;
+
+                    return Container(
+                        height: MediaQuery.of(context).size.height,
+                        // padding: EdgeInsets.all(12.0),
+                        child: GridView.builder(
+                          itemCount:merchantList.merchantResponse.data?.payload!.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            // childAspectRatio: 3 / 3.1,
+                              childAspectRatio: orientation
+                                  ? width * 3.2 / height * 0.5
+                                  : width * 2 / height * 1,
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10),
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              onTap: (){
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>  MerchantListByIdActivity(merchant: merchantList.merchantResponse.data?.payload![index],)));
+                              },
+                              child: Container(
+                                  height: orientation ? height * 26 : height * .17,
+                                  // MediaQuery.of(context).size.height * .26,
+                                  width: MediaQuery.of(context).size.width * .45,
+                                  decoration: const BoxDecoration(
+                                      color: ThemeApp.tealButtonColor,
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        alignment: Alignment.topRight,
+                                        children: [
+                                          Container(
+                                            height: orientation
+                                                ? height * .25
+                                                : MediaQuery.of(context).size.height *
+                                                .17,
+                                            width: MediaQuery.of(context).size.width,
+                                            decoration: const BoxDecoration(
+                                                color: ThemeApp.whiteColor,
+                                                borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(10),
+                                                  topLeft: Radius.circular(10),
+                                                )),
+                                            child: ClipRRect(
+                                              borderRadius: const BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              ),
+                                              child: Image.asset(
+                                                // width: double.infinity,
+                                                merchantList.merchantResponse.data?.payload![index].merchantStoreImage.toString()??"",
+                                                // fit: BoxFit.fill,
+                                                height:
+                                                MediaQuery.of(context).size.height *
+                                                    .07,
+                                                errorBuilder:
+                                                    (context, error,
+                                                    stackTrace) {
+                                                  return Icon(
+                                                    Icons.image,
+                                                    color: ThemeApp
+                                                        .appColor,
+                                                  );
+                                                },
+                                              )??SizedBox(),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.only(top: 7, right: 7),
+                                            child: kmAwayOnMerchantImage(
+                                            double.parse(merchantList.merchantResponse.data!.payload![index].distanceInKm.toString()).toString() + ' KM Away'??"",
+                                              context,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(18,11,18,11),
+                                        child: Text(
+                                            merchantList.merchantResponse.data?.payload![index].name.toString()??"",
+
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 12,
+                                                color: ThemeApp.whiteColor,
+                                                fontWeight: FontWeight.w700,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),)
+
+                                      ),
+                                    ],
+                                  )),
+                            );
+                          },
+                        ));
+                  default:
+                    return Text("No Data found!");
+                }
+                return Text("No Data found!");
+              }))
+      ,
+      ),
+    );
   }
 
   Widget mapView() {
