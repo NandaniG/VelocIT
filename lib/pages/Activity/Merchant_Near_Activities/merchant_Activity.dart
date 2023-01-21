@@ -499,6 +499,7 @@ if(merchantList.merchantResponse.data?.status == "OK"){
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10),
                           itemBuilder: (BuildContext context, int index) {
+                            print(merchantList.merchantResponse.data!.payload![index].merchantStoreImage.toString());
                             return InkWell(
                               onTap: (){
                                 Navigator.of(context).push(MaterialPageRoute(
@@ -519,6 +520,7 @@ if(merchantList.merchantResponse.data?.status == "OK"){
                                       Stack(
                                         alignment: Alignment.topRight,
                                         children: [
+
                                           Container(
                                             height: orientation
                                                 ? height * .25
@@ -536,9 +538,9 @@ if(merchantList.merchantResponse.data?.status == "OK"){
                                                 topRight: Radius.circular(10),
                                                 topLeft: Radius.circular(10),
                                               ),
-                                              child: Image.asset(
+                                              child: Image.network(
                                                 // width: double.infinity,
-                                                merchantList.merchantResponse.data?.payload![index].merchantStoreImage.toString()??"",
+                                                merchantList.merchantResponse.data!.payload![index].merchantStoreImage.toString()??"",
                                                 // fit: BoxFit.fill,
                                                 height:
                                                 MediaQuery.of(context).size.height *

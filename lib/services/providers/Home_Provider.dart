@@ -27,7 +27,8 @@ class HomeProvider with ChangeNotifier {
   //---------------------------------------------------------
   //--------------------load json file------------------------
   //----------------------------------------------------------
-
+   bool IsActiveOrderList = true;
+   int PastDays = 0;
   loadJson() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -39,8 +40,8 @@ class HomeProvider with ChangeNotifier {
       StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
       String jsonContents = await OrderBasketRepository().postApiRequest({
         "user_id": StringConstant.UserLoginId,
-        "IsActiveOrderList": true,
-        "from_days_in_past": 3
+        "IsActiveOrderList": IsActiveOrderList,
+        "from_days_in_past": PastDays
       });
 
     // DashBoardRepository().getServiceCategoryListing();

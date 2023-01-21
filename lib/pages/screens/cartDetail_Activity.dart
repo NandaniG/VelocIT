@@ -230,371 +230,395 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: ThemeApp.appBackgroundColor,
-      key: scaffoldGlobalKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .08),
-        child: Consumer<HomeProvider>(builder: (context, provider, child) {
-          return /*provider.isBottomAppCart == false
-                  ? PreferredSize(
-                      preferredSize: Size.fromHeight(height * .08),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        color: ThemeApp.darkGreyTab,
-                        child: AppBar(
-                          centerTitle: false,
-                          elevation: 0,
-                          backgroundColor: ThemeApp.appBackgroundColor,
-                          flexibleSpace: Container(
-                            height: height * .11,
-                            width: width,
-                            decoration: const BoxDecoration(
-                              color: ThemeApp.whiteColor,
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(15),
-                                  bottomRight: Radius.circular(15)),
-                            ),
-                          ),
-                          leadingWidth: 40,
-                          leading: Center(
-                            child: IconButton(
-                                icon: const Icon(
-                                  Icons.arrow_back,
-                                  color: ThemeApp.blackColor,
-                                  size: 30,
-                                ),
-                                onPressed: () {
-                                  setState(() {});
-                                  // Navigator.pop(context);
+    return     WillPopScope(
+      onWillPop: () {
+        Provider.of<CartViewModel>(context, listen: false);
+        setState(() {
 
-                                  Navigator.pop(context,true);
-                                  // Navigator.pushReplacementNamed(context, '/productDetailsActivity').then((_) => setState(() {}));
-                                }),
-                          ),
+        });
+        Navigator.pop(context,true);
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: ThemeApp.appBackgroundColor,
+        key: scaffoldGlobalKey,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(height * .07),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            color: ThemeApp.appBackgroundColor,
+            alignment: Alignment.center,
+            child: AppBar(
+              centerTitle: false,
+              elevation: 0,
+              backgroundColor: ThemeApp.appBackgroundColor,
+              flexibleSpace: Container(
+                height: height * .07,
+                width: width,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: ThemeApp.appBackgroundColor,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15)),
+                ),
+              ),
+              titleSpacing: 0,
+              leading: InkWell(
+                onTap: () {
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) =>
+                  //     const DashboardScreen(),
+                  //   ),
+                  // );
+                  Provider.of<CartViewModel>(context, listen: false);      Navigator.pop(context,true);
+setState(() {
 
-                          // leadingWidth: width * .06,
-                          title: Text("My Cart"),
-                          // Row
-                        ),
-                      ),
-                    )
-                  :*/
-              appBar_backWidget(
-                  context, appTitle(context, "My Cart"), SizedBox(), setState);
-        }),
-      ),
-      bottomNavigationBar:
-          // BottomAppBar(
-          //     color: ThemeApp.appBackgroundColor,
-          //     elevation: 0,
-          //     child:
-          Container(
-        // height: 130,
-        child: ChangeNotifierProvider<CartViewModel>.value(
-            value: cartListView,
-            child: Consumer<CartViewModel>(
-                builder: (context, cartProvider, child) {
-              switch (cartProvider.cartSpecificID.status) {
-                case Status.LOADING:
-                  print("Api load");
+});
 
-                  return Container();
-                case Status.ERROR:
-                  print("Api error");
 
-                  return Text('');
-                case Status.COMPLETED:
-                  print("Api calll");
-                  if (cartProvider.cartSpecificID.data?.status != "ERROR") {
-                    List<OrdersForPurchase>? orderPurchaseList = cartProvider
-                        .cartSpecificID.data?.payload?.ordersForPurchase;
+                  // Navigator.pushReplacementNamed(
+                  //         context, RoutesName.dashboardRoute)
+                  //     .then((value) => setState(() {}));
+                },
+                child: Transform.scale(
+                  scale: 0.7,
+                  child: Image.asset(
+                    'assets/appImages/backArrow.png',
+                    color: ThemeApp.primaryNavyBlackColor,
+                    // height: height*.001,
+                  ),
+                ),
+              ),
 
-                    print("orderPurchaseList" +
-                        orderPurchaseList!.length.toString());
+              // leadingWidth: width * .06,
+              title: TextFieldUtils().dynamicText(
+                  'My Cart',
+                  context,
+                  TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      // fontWeight: FontWeight.w500,
+                      fontSize: MediaQuery.of(context).size.height * .022,
+                      fontWeight: FontWeight.w500)),
+              // Row
+            ),
+          ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+            color: ThemeApp.appBackgroundColor,
+            elevation: 0,
+            child: Container(
+              height: 130,
+              child: ChangeNotifierProvider<CartViewModel>.value(
+                  value: cartListView,
+                  child: Consumer<CartViewModel>(
+                      builder: (context, cartProvider, child) {
+                    switch (cartProvider.cartSpecificID.status) {
+                      case Status.LOADING:
+                        print("Api load");
 
-                    return cartProvider.cartSpecificID.data!.payload!
-                            .ordersForPurchase!.isEmpty
-                        ? bottomNavigationBarWidget(context,4)
-                        : Container(
-                            height: 170,
-                            width: width,
-                            decoration: const BoxDecoration(
-                              color: ThemeApp.tealButtonColor,
-                              // borderRadius: BorderRadius.only(
-                              //     topRight: Radius.circular(15),
-                              //     topLeft: Radius.circular(15)),
-                            ),
-                            child: Stack(
-                              alignment: const FractionalOffset(.5, 1.0),
-                              children: [
-                                Container(
+                        return Container();
+                      case Status.ERROR:
+                        print("Api error");
+
+                        return Text('');
+                      case Status.COMPLETED:
+                        print("Api calll");
+                        List<OrdersForPurchase>? orderPurchaseList = cartProvider
+                            .cartSpecificID.data!.payload!.ordersForPurchase;
+
+                        print("orderPurchaseList" +
+                            orderPurchaseList!.length.toString());
+
+                        return cartProvider.cartSpecificID.data!.payload!
+                                .ordersForPurchase!.isEmpty
+                            ? bottomNavigationBarWidget(context)
+                            : Container(
+                                height: 100,
+                                width: width,
+                                decoration: const BoxDecoration(
                                   color: ThemeApp.tealButtonColor,
-                                  margin: const EdgeInsets.only(
-                                      left: 20, right: 15, top: 15, bottom: 0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              indianRupeesFormat.format(
-                                                  double.parse(cartProvider
-                                                      .cartSpecificID
-                                                      .data!
-                                                      .payload!
-                                                      .totalPayable
-                                                      .toString())),
-                                              style: TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  fontSize: 20,
-                                                  color: ThemeApp
-                                                      .separatedLineColor,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            TextFieldUtils()
-                                                .pricesLineThroughWhite(
-                                              indianRupeesFormat.format(
-                                                  double.parse(cartProvider
-                                                      .cartSpecificID
-                                                      .data!
-                                                      .payload!
-                                                      .totalMrp
-                                                      .toString())),
-                                              context,
-                                              14,
-                                            ),
-                                          ]),
-                                      InkWell(
-                                          onTap: () async {
-                                            final prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-
-                                            StringConstant.isUserLoggedIn =
-                                                (prefs.getInt(
-                                                        'isUserLoggedIn')) ??
-                                                    0;
-                                            print(
-                                                "IS USER LOGGEDIN ..............." +
-                                                    StringConstant
-                                                        .isUserLoggedIn
-                                                        .toString());
-
-                                            if (kDebugMode) {
-                                              print(StringConstant
-                                                  .isUserLoggedIn);
-                                            }
-
-                                            prefs.setString(
-                                                'isUserNavigateFromDetailScreen',
-                                                'Yes');
-                                            if (StringConstant.isUserLoggedIn ==
-                                                1) {
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OrderReviewActivity(
-                                                    cartId: cartProvider
-                                                        .cartSpecificID
-                                                        .data!
-                                                        .payload!
-                                                        .id!,
-                                                  ),
-                                                ),
-                                              );
-                                            } else {
-                                              for (int i = 0;
-                                                  i <
-                                                      cartProvider
+                                  // borderRadius: BorderRadius.only(
+                                  //     topRight: Radius.circular(15),
+                                  //     topLeft: Radius.circular(15)),
+                                ),
+                                child: Stack(
+                                  alignment: const FractionalOffset(.5, 1.0),
+                                  children: [
+                                    Container(
+                                      color: ThemeApp.tealButtonColor,
+                                      margin: const EdgeInsets.only(
+                                          left: 20,
+                                          right: 15,
+                                          top: 15,
+                                          bottom: 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  indianRupeesFormat.format(
+                                                      double.parse(cartProvider
                                                           .cartSpecificID
                                                           .data!
                                                           .payload!
-                                                          .ordersForPurchase!
-                                                          .length;
-                                                  i++) {
-                                                prefs.setString(
-                                                    'CartSpecificUserIdPref',
-                                                    cartProvider.cartSpecificID
-                                                        .data!.payload!.userId
-                                                        .toString());
-                                                prefs.setString(
-                                                    'CartSpecificItem_codePref',
-                                                    cartProvider
-                                                        .cartSpecificID
-                                                        .data!
-                                                        .payload!
-                                                        .ordersForPurchase![i]
-                                                        .productCode
-                                                        .toString());
-                                                prefs.setString(
-                                                    'CartSpecificItemQuantityPref',
-                                                    cartProvider
-                                                        .cartSpecificID
-                                                        .data!
-                                                        .payload!
-                                                        .ordersForPurchase![i]
-                                                        .itemQty
-                                                        .toString());
-
-                                                  /*       Map data = {
-                                                    'user_id': cartProvider
-                                                        .cartSpecificID
-                                                        .data!
-                                                        .payload!
-                                                        .userId,
-                                                    'item_code': cartProvider
-                                                        .cartSpecificID
-                                                        .data!
-                                                        .payload!
-                                                        .ordersForPurchase![i]
-                                                        .productCode,
-                                                    'qty': cartProvider
-                                                        .cartSpecificID
-                                                        .data!
-                                                        .payload!
-                                                        .ordersForPurchase![i]
-                                                        .itemQty
-                                                  };*/
-
-                                                Navigator.pushNamed(context,
-                                                    RoutesName.signInRoute);
-                                                print(cartProvider
-                                                    .cartSpecificID
-                                                    .data!
-                                                    .payload!
-                                                    .totalItemCount);
-                                              }
-
-                                              // cartListView
-                                              //     .cartSpecificIDEmbeddedWithGet(
-                                              //         context,
-                                              //         StringConstant
-                                              //             .UserCartID)
-                                              //     .then((value) =>
-                                              //         setState(() {}));
-
-                                            }
-                                          },
-                                          child: Container(
-                                              // height: height * 0.05,
-                                              height: 40,
-                                              width: 121,
-                                              alignment: Alignment.center,
-                                              decoration: const BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(100),
+                                                          .totalPayable
+                                                          .toString())),
+                                                  style: TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      fontSize: 20,
+                                                      color: ThemeApp
+                                                          .separatedLineColor,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
-                                                color: ThemeApp.whiteColor,
-                                              ),
-                                              // padding: const EdgeInsets.only(
-                                              //     left: 15, right: 15),
-                                              child: TextFieldUtils()
-                                                  .dynamicText(
-                                                      "Checkout",
-                                                      context,
-                                                      TextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          color: ThemeApp
-                                                              .tealButtonColor,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          letterSpacing:
-                                                              -0.25)))),
-                                    ],
-                                  ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                TextFieldUtils()
+                                                    .pricesLineThroughWhite(
+                                                  indianRupeesFormat.format(
+                                                      double.parse(cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .totalMrp
+                                                          .toString())),
+                                                  context,
+                                                  14,
+                                                ),
+                                              ]),
+                                          InkWell(
+                                              onTap: () async {
+                                                final prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+
+                                                StringConstant.isUserLoggedIn =
+                                                    (prefs.getInt(
+                                                            'isUserLoggedIn')) ??
+                                                        0;
+                                                print(
+                                                    "IS USER LOGGEDIN ..............." +
+                                                        StringConstant
+                                                            .isUserLoggedIn
+                                                            .toString());
+
+                                                if (kDebugMode) {
+                                                  print(StringConstant
+                                                      .isUserLoggedIn);
+                                                }
+
+                                                prefs.setString(
+                                                    'isUserNavigateFromDetailScreen',
+                                                    'Yes');
+                                                if (StringConstant
+                                                        .isUserLoggedIn ==
+                                                    1) {
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OrderReviewActivity(
+                                                        cartId: cartProvider
+                                                            .cartSpecificID
+                                                            .data!
+                                                            .payload!
+                                                            .id!,
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  for (int i = 0;
+                                                      i <
+                                                          cartProvider
+                                                              .cartSpecificID
+                                                              .data!
+                                                              .payload!
+                                                              .ordersForPurchase!
+                                                              .length;
+                                                      i++) {
+                                                    prefs.setString(
+                                                        'CartSpecificUserIdPref',
+                                                        cartProvider
+                                                            .cartSpecificID
+                                                            .data!
+                                                            .payload!
+                                                            .userId
+                                                            .toString());
+                                                    prefs.setString(
+                                                        'CartSpecificItem_codePref',
+                                                        cartProvider
+                                                            .cartSpecificID
+                                                            .data!
+                                                            .payload!
+                                                            .ordersForPurchase![i]
+                                                            .productCode
+                                                            .toString());
+                                                    prefs.setString(
+                                                        'CartSpecificItemQuantityPref',
+                                                        cartProvider
+                                                            .cartSpecificID
+                                                            .data!
+                                                            .payload!
+                                                            .ordersForPurchase![i]
+                                                            .itemQty
+                                                            .toString());
+
+                                                    /*       Map data = {
+                                                      'user_id': cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .userId,
+                                                      'item_code': cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .ordersForPurchase![i]
+                                                          .productCode,
+                                                      'qty': cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .ordersForPurchase![i]
+                                                          .itemQty
+                                                    };*/
+
+                                                    Navigator.pushNamed(context,
+                                                        RoutesName.signInRoute);
+                                                    print(cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .totalItemCount);
+                                                  }
+
+                                                  // cartListView
+                                                  //     .cartSpecificIDEmbeddedWithGet(
+                                                  //         context,
+                                                  //         StringConstant
+                                                  //             .UserCartID)
+                                                  //     .then((value) =>
+                                                  //         setState(() {}));
+
+                                                }
+                                              },
+                                              child: Container(
+                                                  // height: height * 0.05,
+                                                  height: 40,
+                                                  width: 121,
+                                                  alignment: Alignment.center,
+                                                  decoration: const BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(100),
+                                                    ),
+                                                    color: ThemeApp.whiteColor,
+                                                  ),
+                                                  // padding: const EdgeInsets.only(
+                                                  //     left: 15, right: 15),
+                                                  child: TextFieldUtils()
+                                                      .dynamicText(
+                                                          "Checkout",
+                                                          context,
+                                                          TextStyle(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              color: ThemeApp
+                                                                  .tealButtonColor,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight.w600,
+                                                              letterSpacing:
+                                                                  -0.25)))),
+                                        ],
+                                      ),
+                                    ),
+                                    bottomNavBarItems(context),
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 20),
+                                      child: Container(
+                                        height: 70,
+                                        width: 70,
+                                        child: FloatingActionButton(
+                                          backgroundColor: ThemeApp.appColor,
+                                          onPressed: () {
+                                            StringConstant().scanQR(context);
+                                            // scanQRCode();
+                                            // scanFile();
+                                            // Navigator.of(context).push(
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => StepperScreen(),
+                                            //   ),
+                                            // );
+
+                                            // showModalBottomSheet(
+                                            //     isDismissible: true,
+                                            //     context: context,
+                                            //     builder: (context) {
+                                            //       return ScannerWidget(state: controller.state);
+                                            //     });
+                                          },
+                                          child: SvgPicture.asset(
+                                            'assets/appImages/bottomApp/scanIcon.svg',
+                                            color: ThemeApp.whiteColor,
+                                            semanticsLabel: 'Acme Logo',
+                                            width: 29,
+                                            height: 29,
+
+                                            // height: height * .03,
+                                          ), /*   child: const Icon(Icons.document_scanner_outlined,
+                  color: ThemeApp.whiteColor),*/
+                                        ),
+                                      ),
+                                    ),
+                                    // bottomNavigationBarWidget(context),
+                                  ],
                                 ),
-                //                 bottomNavBarItems(context),
-                //                 Padding(
-                //                   padding: const EdgeInsets.only(bottom: 20),
-                //                   child: Container(
-                //                     height: 70,
-                //                     width: 70,
-                //                     child: FloatingActionButton(
-                //                       backgroundColor: ThemeApp.appColor,
-                //                       onPressed: () {
-                //                         StringConstant().scanQR(context);
-                //                         // scanQRCode();
-                //                         // scanFile();
-                //                         // Navigator.of(context).push(
-                //                         //   MaterialPageRoute(
-                //                         //     builder: (context) => StepperScreen(),
-                //                         //   ),
-                //                         // );
+                              );
+                    }
+                    return Container(
+                      height: height * .8,
+                      alignment: Alignment.center,
+                      child: TextFieldUtils().dynamicText(
+                          'No Match found!',
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              fontSize: height * .03,
+                              fontWeight: FontWeight.bold)),
+                    );
+                  })),
+            )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        body: SafeArea(
+            child: ChangeNotifierProvider<CartViewModel>.value(
+                value: cartListView,
+                child: Consumer<CartViewModel>(
+                    builder: (context, cartProvider, child) {
+                  switch (cartProvider.cartSpecificID.status) {
+                    case Status.LOADING:
+                      print("Api load");
 
-                //                         // showModalBottomSheet(
-                //                         //     isDismissible: true,
-                //                         //     context: context,
-                //                         //     builder: (context) {
-                //                         //       return ScannerWidget(state: controller.state);
-                //                         //     });
-                //                       },
-                //                       child: SvgPicture.asset(
-                //                         'assets/appImages/bottomApp/scanIcon.svg',
-                //                         color: ThemeApp.whiteColor,
-                //                         semanticsLabel: 'Acme Logo',
-                //                         width: 29,
-                //                         height: 29,
+                      return TextFieldUtils().circularBar(context);
+                      return TextFieldUtils().circularBar(context);
+                    case Status.ERROR:
+                      print("Api error");
 
-                //                         // height: height * .03,
-                //                       ), /*   child: const Icon(Icons.document_scanner_outlined,
-                // color: ThemeApp.whiteColor),*/
-                //                     ),
-                //                   ),
-                //                 ),
-                                bottomNavigationBarWidget(context,4),
-                              ],
-                            ),
-                          );
-                  } else {
-                    return bottomNavigationBarWidget(context,4);
-                  }
-                  default:
-                  return Container(
-                    height: height * .8,
-                    alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
-                  );
-                }})
-                ),
-  ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: SafeArea(
-          child: ChangeNotifierProvider<CartViewModel>.value(
-              value: cartListView,
-              child: Consumer<CartViewModel>(
-                  builder: (context, cartProvider, child) {
-                switch (cartProvider.cartSpecificID.status) {
-                  case Status.LOADING:
-                    print("Api load");
-
-                    return TextFieldUtils().circularBar(context);
-                    return TextFieldUtils().circularBar(context);
-                  case Status.ERROR:
-                    print("Api error");
-
-                    return Text(cartProvider.cartSpecificID.status.toString());
-                  case Status.COMPLETED:
-                    print("Api calll");
-                    if (cartProvider.cartSpecificID.data?.status != "ERROR") {
+                      return Text(cartProvider.cartSpecificID.status.toString());
+                    case Status.COMPLETED:
+                      print("Api calll");
                       List<OrdersForPurchase>? orderPurchaseList = cartProvider
                           .cartSpecificID.data!.payload!.ordersForPurchase;
 
@@ -628,35 +652,22 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                         .cartSpecificID.data!.payload!),
                                   ],
                                 ));
-                    } else {
-                      return Container(
-                        height: height * .5,
-                        alignment: Alignment.center,
-                        child: TextFieldUtils().dynamicText(
-                            "Cart is Empty",
-                            context,
-                            TextStyle(
-                                fontFamily: 'Roboto',
-                                color: ThemeApp.blackColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: height * .03,
-                                overflow: TextOverflow.ellipsis)),
-                      );
-                    }
-                }
-                return Container(
-                  height: height * .8,
-                  alignment: Alignment.center,
-                  child: TextFieldUtils().dynamicText(
-                      'No Match found!',
-                      context,
-                      TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.blackColor,
-                          fontSize: height * .03,
-                          fontWeight: FontWeight.bold)),
-                );
-              }))),
+                  }
+                  default:
+                  return Container(
+                    height: height * .8,
+                    alignment: Alignment.center,
+                    child: TextFieldUtils().dynamicText(
+                        'No Match found!',
+                        context,
+                        TextStyle(
+                            fontFamily: 'Roboto',
+                            color: ThemeApp.blackColor,
+                            fontSize: height * .03,
+                            fontWeight: FontWeight.bold)),
+                  );
+                }))),
+      ),
     );
   }
 

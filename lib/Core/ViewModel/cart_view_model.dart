@@ -9,6 +9,7 @@ import '../Model/CartModels/AddressListModel.dart';
 import '../Model/CartModels/CartCreateRetrieveModel.dart';
 import '../Model/CartModels/CartSpecificIDForEmbeddedModel.dart';
 import '../Model/CartModels/CartSpecificIdModel.dart';
+import '../Model/CartModels/GetDefaultAddressModel.dart';
 import '../Model/CartModels/SendCartForPaymentModel.dart';
 import '../Model/CityModel.dart';
 import '../Model/StateModel.dart';
@@ -24,6 +25,8 @@ class CartViewModel with ChangeNotifier {
   ApiResponse<SendCartForPaymentModel> sendCartForPayment =
       ApiResponse.loading();
   ApiResponse<AddressListModel> getAddress = ApiResponse.loading();
+  ApiResponse<GetDefaultAddressModel> getDefaultAddress = ApiResponse.loading();
+
   ApiResponse<StateModel> getState = ApiResponse.loading();
   ApiResponse<CityModel> getCity = ApiResponse.loading();
 
@@ -45,6 +48,10 @@ class CartViewModel with ChangeNotifier {
 
   getAddressForPayment(ApiResponse<AddressListModel> response) {
     getAddress = response;
+    notifyListeners();
+  }
+  getDefaultAddressForPayment(ApiResponse<GetDefaultAddressModel> response) {
+    getDefaultAddress = response;
     notifyListeners();
   }
   getStateAddress(ApiResponse<StateModel> response) {
@@ -99,6 +106,16 @@ int productBadge=0;
     });
   }
 
+  Future<void> gerDefaultAddressWithGet(BuildContext context, String id) async {
+    getDefaultAddressForPayment(ApiResponse.loading());
+
+    _myRepo.getDefaultAddressList(id).then((value) async {
+      getDefaultAddressForPayment(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      getDefaultAddressForPayment(ApiResponse.error(error.toString()));
+    });
+  }
+
   Future<void> getStateAddressWithGet(BuildContext context) async {
     getStateAddress(ApiResponse.loading());
 
@@ -124,10 +141,13 @@ int productBadge=0;
   loadAddressJson(String consumerUID, String addressId) async {
     try {
       String jsonContents = await setSecondDefaultAddress(consumerUID, addressId);
+      jsonChangeAddressData = json.decode(jsonContents);
 
+      print("____________loadJson______________________");
       jsonChangeAddressData = jsonContents as Map;
       print(
           "___________.loadAddressJson____________________");
+      print(jsonChangeAddressData['status']);
       print(jsonChangeAddressData.toString());
 
       notifyListeners();

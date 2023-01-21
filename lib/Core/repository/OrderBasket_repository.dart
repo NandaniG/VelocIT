@@ -25,6 +25,7 @@ class OrderBasketRepository {
   Future postApiRequest(Map jsonMap) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('jwt_token') ?? '';
+    print(jsonMap);
     // dynamic responseJson;
     var url = ApiMapping.ConstructURI(ApiMapping.consumerBasket);
 
