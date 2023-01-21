@@ -432,11 +432,13 @@ Widget searchBar(BuildContext context) {
                     10,
                     StringConstant.controllerSpeechToText.text.toString(),
                   );
-                  Navigator.of(context).push(
+                  if(value.length > 0){
+                    Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => SearchProductListScreen( searchText: StringConstant.controllerSpeechToText.text, ),
                     ),
                   );
+                  }
               }
               /*  Navigator.of(context).push(
                 MaterialPageRoute(
@@ -1215,17 +1217,18 @@ class _searchBarWidgetState extends State<searchBarWidget> {
                       ),
                     ),
                   );*/
-
                         productCategories.getProductBySearchTermsWithGet(
                           0,
                           10,
                           StringConstant.controllerSpeechToText.text.toString(),
                         );
-                        Navigator.of(context).push(
+                        if(value.length > 0){
+                          Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => SearchProductListScreen( searchText: StringConstant.controllerSpeechToText.text, ),
                           ),
                         );
+                        }
                     }
                     /*  Navigator.of(context).push(
                 MaterialPageRoute(

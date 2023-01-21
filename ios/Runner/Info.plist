@@ -38,6 +38,8 @@
 	<string>mic required for app</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photo library required for app</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Speech Recognition required for app</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
