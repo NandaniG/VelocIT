@@ -134,7 +134,7 @@ class _OfferListByCategoryActivityState
               addressWidget(context, StringConstant.placesFromCurrentLocation),
               setState(() {})),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context),
+        bottomNavigationBar: bottomNavigationBarWidget(context,),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(

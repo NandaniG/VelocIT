@@ -298,6 +298,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     // StringConstant.UserLoginId ==''?SizedBox():   SizedBox(
                                     //   height: 20,
                                     // ),
+
                                     productDetailsUI(),
                                     SizedBox(
                                       height: height * .02,
@@ -710,7 +711,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             setState(() {
                                               const Duration(seconds: 20000);
                                               selected = index;
-                                              isOpen = true;
+                                              // isOpen = true;
                                             });
                                           } else {
                                             setState(() {
@@ -718,9 +719,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             });
                                           }
                                         }),
-                                        initiallyExpanded: isOpen == true
-                                            ? index == selected
-                                            : false,
+                                        initiallyExpanded: /*isOpen == true
+                                            ? */index == selected,
+                                            // : false,
 
                                         // initiallyExpanded: false,
                                         // trailing: selected == true
@@ -746,8 +747,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             Container(
                                               color: ThemeApp
                                                   .containerColor,
-                                              height: 17,
-                                              width: 19,
+                                              height: 25,
+                                              width: 25,
                                               child: Image.network(
                                                 serviceList[index]
                                                     .productCategoryImageId!,
@@ -1021,8 +1022,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),*/
                         Container(color: ThemeApp
                             .appColor,
-                          height: 17,
-                          width: 19,
+                          height:25,
+                          width: 25,
                           // borderRadius:
                           // const BorderRadius.all(
                           //     Radius.circular(50)),
@@ -1031,14 +1032,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 .imageUrl ??
                                 "",
                             // fit: BoxFit.fill,
-                            height: 17,
-                            width: 19,
+                            height: 25,
+                            width: 25,
                             errorBuilder:
                                 (context, error,
                                 stackTrace) {
                               return Container(
-                                height: 17,
-                                width: 19,
+                                height: 25,
+                                width: 25,
                                 child: Icon(
                                   Icons.image,
                                   color: ThemeApp
@@ -1248,16 +1249,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           borderRadius:
                           BorderRadius.all(Radius.circular(10)),
                         ),
-                        color: ThemeApp.whiteColor,
+                        color: ThemeApp.appBackgroundColor,
                         child: ClipRRect(
                             borderRadius: const BorderRadius.all(
                                 Radius.circular(10)),
                             child: Container(
                               width: width,
-                              color: Colors.white,
-                              child: Image.asset(
+                              color: ThemeApp.appBackgroundColor,
+                              child: Image.network(
                                 e["homeSliderImage"],
-                                // fit: BoxFit.fill,
+                                fit: BoxFit.fitWidth,
                                 errorBuilder:
                                     (context, error, stackTrace) {
                                   return Icon(Icons.image_outlined);
@@ -1269,7 +1270,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         '',
 
                     options: CarouselOptions(
-                        autoPlay: false,
+                        autoPlay: true,
                         viewportFraction: 1,
                         height: height * .3),
                   ),

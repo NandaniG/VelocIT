@@ -3088,7 +3088,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
 
                               setState(() {
                                 cartViewModel.loadAddressJson(
-                                    widget.cartForPaymentPayload!.userId
+                                    widget.cartForPaymentPayload.userId
                                         .toString(),
                                     addressList[_value2].id.toString());
 

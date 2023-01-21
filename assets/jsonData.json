@@ -1,13 +1,19 @@
 {
    "homeImageSlider": [
      {
-       "homeSliderImage": "assets/images/laptopImage.jpg"
+       "homeSliderImage": "http://static.fulgorithmapi.com/BannerImages/banner1.png"
      },
      {
-       "homeSliderImage": "assets/images/iphones_Image.jpg"
+       "homeSliderImage": "http://static.fulgorithmapi.com/BannerImages/banner2.png"
      },
      {
-       "homeSliderImage": "assets/images/laptopImage2.jpg"
+       "homeSliderImage": "http://static.fulgorithmapi.com/BannerImages/banner3.png"
+     },
+     {
+       "homeSliderImage": "http://static.fulgorithmapi.com/BannerImages/banner4.png"
+     },
+     {
+       "homeSliderImage": "http://static.fulgorithmapi.com/BannerImages/banner5.png"
      }
    ],
    "shopByCategoryList": [

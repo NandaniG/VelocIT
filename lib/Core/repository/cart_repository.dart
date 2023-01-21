@@ -17,6 +17,7 @@ import '../AppConstant/apiMapping.dart';
 import '../Model/CartModels/AddressListModel.dart';
 import '../Model/CartModels/CartCreateRetrieveModel.dart';
 import '../Model/CartModels/CartSpecificIdModel.dart';
+import '../Model/CartModels/GetDefaultAddressModel.dart';
 import '../Model/CartModels/MergeCartModel.dart';
 import '../Model/CartModels/SendCartForPaymentModel.dart';
 import '../Model/CartModels/updateCartModel.dart';
@@ -315,6 +316,24 @@ class CartRepository {
       print(" AddressListModel : " + response.toString());
 
       return response = AddressListModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  //get default address
+  Future<GetDefaultAddressModel> getDefaultAddressList(String id) async {
+    // var url = ApiMapping.getURI(apiEndPoint.address_list);
+
+    var requestUrl =
+        ApiMapping.BaseAPI + '/user/' + id + '/defaultAddress';
+
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(requestUrl);
+      print(" getDefaultAddressList : " + response.toString());
+
+      return response = GetDefaultAddressModel.fromJson(response);
     } catch (e) {
       throw e;
     }
