@@ -85,7 +85,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     print("widget.id! number : " + widget.id!.toString());
     print("Badge,........" + StringConstant.BadgeCounterValue);
     getBadgePref();
-    productListView.similarProductWithGet(0, 10, 10);
+    productListView.similarProductWithGet(0, 10, widget.id!);
   }
 
   CartViewModel cartListView = CartViewModel();
@@ -1702,6 +1702,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 */
   }
 
+/*
   Widget similarProductListss() {
     return Padding(
       padding: const EdgeInsets.only(
@@ -1821,6 +1822,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           }),
     );
   }
+*/
 
   Future<void> addProductInCartBadge(
       ProductProvider productProvider, HomeProvider homeProvider) async {

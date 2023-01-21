@@ -8,6 +8,7 @@ import '../Model/CRMModels/CRMSingleIDModel.dart';
 import '../Model/CRMModels/FindCRMBySubCategory.dart';
 import '../Model/FindProductBySubCategoryModel.dart';
 import '../Model/CartModel.dart';
+import '../Model/OfferProductListModel.dart';
 import '../Model/ProductAllPaginatedModel.dart';
 import '../Model/ProductCategoryModel.dart';
 import '../Model/ServiceModels/FindServicesBySubCategory.dart';
@@ -40,6 +41,8 @@ class ProductSpecificListViewModel with ChangeNotifier {
       ApiResponse.loading();
 
   ApiResponse<FindCRMbySUbCategoriesModel> CRMSubCategory =
+      ApiResponse.loading();
+  ApiResponse<OfferProductsListModel> offerSubCategory =
       ApiResponse.loading();
   ApiResponse<FindByFMCGCodeScannerModel> singleProductScan = ApiResponse.loading();
   ApiResponse<ProductAllPaginatedModel> productListingResponse =
@@ -76,6 +79,11 @@ class ProductSpecificListViewModel with ChangeNotifier {
   setCRMSubCategoryList(
       ApiResponse<FindCRMbySUbCategoriesModel> response) {
     CRMSubCategory = response;
+    notifyListeners();
+  }
+ setOfferSubCategoryList(
+      ApiResponse<OfferProductsListModel> response) {
+   offerSubCategory = response;
     notifyListeners();
   }
 
@@ -192,6 +200,19 @@ class ProductSpecificListViewModel with ChangeNotifier {
       setCRMSubCategoryList(ApiResponse.completed(value));
     }).onError((error, stackTrace) {
       setCRMSubCategoryList(ApiResponse.error(error.toString()));
+    });
+  }
+
+  Future<void> OfferBySubCategoryWithGet(
+      int page, int size, int subCategoryId) async {
+    setOfferSubCategoryList(ApiResponse.loading());
+
+    _mySubCategoryRepo
+        .getOffersBySubCategoryList(page, size, subCategoryId)
+        .then((value) async {
+      setOfferSubCategoryList(ApiResponse.completed(value));
+    }).onError((error, stackTrace) {
+      setOfferSubCategoryList(ApiResponse.error(error.toString()));
     });
   }
 

@@ -254,7 +254,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               ),
                                             );
                                           } else {
-                                            if (isSelfPickUp == false) {
+                                            if (isSelfPickUp == true) {
                                               CartRepository()
                                                   .putCartForPayment(
                                                       data,
@@ -272,8 +272,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                             isSelfPickUp == false
                                                 ? Utils.successToast(
                                                     "Please select delivery address")
-                                                : Utils.successToast(
-                                                    "Please select PickUp address");
+                                                : '';
                                           }
 
                                           // Navigator.of(context).push(

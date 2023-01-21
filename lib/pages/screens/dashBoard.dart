@@ -3035,8 +3035,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            ProductDetailsActivity(
-                                              id: offerList[index].id,
+                                            OfferActivity(
+                                              // payload: offerList[index],
                                             ),
                                       ),
                                     );
