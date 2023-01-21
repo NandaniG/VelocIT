@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -39,6 +40,8 @@ class _MerchantActvityState extends State<MerchantActvity> {
   bool isGridView = false;
 
   late GoogleMapController mapController; //contrller for Google map
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
 
   bool servicestatus = false;
   bool haspermission = false;
@@ -46,11 +49,12 @@ class _MerchantActvityState extends State<MerchantActvity> {
   late Position position;
   String long = "", lat = "";
   late StreamSubscription<Position> positionStream;
+  Set<Marker> markersList = new Set();
 
   var data;
 
   final Set<Marker> markers = new Set(); //markers for google map
-  static const LatLng showLocation =
+    LatLng showLocation =
       const LatLng(27.7089427, 85.3086209); //location to show in map
   MerchantViewModel merchantViewModel = MerchantViewModel();
   @override
@@ -99,18 +103,21 @@ class _MerchantActvityState extends State<MerchantActvity> {
     Map data ={};
 if(double.parse(long)<0){
   data = {
-    "base_latitude":18.626163,
-    "base_longitude":74.098946,
+    "base_latitude":26.26774119270947,
+    "base_longitude":73.03210171571942,
     "distance_in_hundred_mtrs":100
   };
 }else{
+  setState(() {
+    showLocation = LatLng(position.latitude, position.longitude);
+  });
   data = {
     "base_latitude": lat,
     "base_longitude": long,
     "distance_in_hundred_mtrs": 100
   };
 }
-  await  merchantViewModel.getPostMerchantNearMe(context, data);
+  var responce =  await  merchantViewModel.getPostMerchantNearMe(context, data);
     setState(() {
       //refresh UI
     });
@@ -201,7 +208,7 @@ if(double.parse(long)<0){
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height * 0.7,
             child: ListView(
               children: [
                 Container(
@@ -297,7 +304,7 @@ if(double.parse(long)<0){
                 ),
                 !isGridView ? merchantList() : mapView(),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * .02,
+                  height: 10,
                 ),
               ],
             )),
@@ -450,6 +457,31 @@ if(double.parse(long)<0){
                     }
 
 print("merchantList...."+merchantList.merchantResponse.data.toString());
+if(merchantList.merchantResponse.data?.status == "OK"){
+  if ((merchantList.merchantResponse.data?.payload ?? []).length > 0) {
+    List<MerchantPayload> payload = merchantList.merchantResponse.data!.payload!;
+    // Set<Marker> markers = [] as Set<Marker>;
+    // setState(() {
+      for (var i = 0; i < payload.length; i++) {
+         String name = '${payload[i].name ?? ""}';
+        markersList.add(Marker(
+        markerId: MarkerId(payload[i].id.toString()),
+        position: LatLng(payload[i].latitude ?? 0, payload[i].longitude ?? 0), //position of marker
+        infoWindow:  InfoWindow(
+          //popup info
+          onTap: (() {
+            Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>  MerchantListByIdActivity(merchant: merchantList.merchantResponse.data?.payload![i],)));
+          }),
+          title: name,
+          // snippet: ,
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      ));
+      }
+    // });
+  }
+}
                     // List<MerchantPayload> merchantLists=  merchantList.merchantResponse.data!.payload!;
 
                     return Container(
@@ -564,29 +596,53 @@ print("merchantList...."+merchantList.merchantResponse.data.toString());
 
   Widget mapView() {
     return Container(
-      height: height * .9,
+      height: MediaQuery.of(context).size.height * 0.7,
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: GoogleMap(
-          zoomGesturesEnabled: true,
-          //enable Zoom in, out on map
-          initialCameraPosition: const CameraPosition(
-            //innital position in map
-            target: showLocation, //initial position
-            zoom: 15.0, //initial zoom level
-          ),
-          markers: getmarkers(),
-          //markers to show on map
-          mapType: MapType.normal,
-          //map type
-          onMapCreated: (controller) {
-            //method called when map is created
-            setState(() {
-              mapController = controller;
-            });
+        child: GestureDetector(
+           onVerticalDragStart: (start) {},
+          child: GoogleMap(
+          mapType: MapType.hybrid,
+          myLocationEnabled: true,
+          gestureRecognizers: Set()
+        ..add(Factory<OneSequenceGestureRecognizer>(
+            () => new EagerGestureRecognizer()))
+        ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer()))
+        ..add(
+            Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()))
+        ..add(Factory<TapGestureRecognizer>(() => TapGestureRecognizer()))
+        ..add(Factory<VerticalDragGestureRecognizer>(
+            () => VerticalDragGestureRecognizer())),
+          onMapCreated: (controller){
+            _controller.complete(controller);
           },
-        ),
+          markers: markersList,
+          initialCameraPosition: CameraPosition(
+            target: showLocation,
+            zoom: 12.0,
+          ),
+        // GoogleMap(
+        //   zoomGesturesEnabled: true,
+        //   //enable Zoom in, out on map
+        //   initialCameraPosition: const CameraPosition(
+        //     //innital position in map
+        //     target: showLocation, //initial position
+        //     zoom: 15.0, //initial zoom level
+        //   ),
+        //   markers: getmarkers(),
+        //   //markers to show on map
+        //   mapType: MapType.normal,
+        //   //map type
+        //   onMapCreated: (controller) {
+        //     //method called when map is created
+        //     setState(() {
+        //       mapController = controller;
+        //     });
+        //   },
+        // ),
       ),
+        ),
+      )
     );
   }
 }

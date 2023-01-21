@@ -30,6 +30,8 @@ class MerchantListModel {
 class MerchantPayload {
   int? id;
   double? merchantRating;
+  double? latitude;
+  double? longitude;
   String? merchantCode;
   String? name;
   List<Users>? users;
@@ -41,6 +43,8 @@ class MerchantPayload {
       {this.id,
         this.merchantRating,
         this.merchantCode,
+        this.latitude,
+        this.longitude,
         this.name,
         this.users,
         this.kycInfo,
@@ -52,6 +56,8 @@ class MerchantPayload {
     merchantRating = json['merchantRating'];
     merchantCode = json['merchant_code'];
     name = json['name'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
     if (json['users'] != null) {
       users = <Users>[];
       json['users'].forEach((v) {
@@ -68,6 +74,8 @@ class MerchantPayload {
     data['id'] = this.id;
     data['merchantRating'] = this.merchantRating;
     data['merchant_code'] = this.merchantCode;
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
     data['name'] = this.name;
     if (this.users != null) {
       data['users'] = this.users!.map((v) => v.toJson()).toList();
