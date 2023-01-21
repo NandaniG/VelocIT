@@ -307,7 +307,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                       print("selected state" + newValue!.name.toString());
                       selectedStateId = newValue.id;
                       print(selectedStateId);
-
+stateController.text=newValue.name!;
 
                     });
                   },
@@ -508,7 +508,10 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                                     isExpanded: false,
 
                                     onChanged: (CityPayloadData? newValue) {
-                                      setState(() {});
+                                      setState(() {}
+                                      );
+                                      cityController.text = newValue!.name!;
+
                                     },
                                     decoration: InputDecoration(
                                       counterText: "",
@@ -557,16 +560,13 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                                         .map((CityPayloadData map) {
                                       return DropdownMenuItem<CityPayloadData>(
                                         value: map,
-                                        child: selectedStateId == map.id
-                                            ? Flexible(
-                                          child: Text(
-                                            map.name.toString() ?? "",
-                                            style: TextStyle(
-                                              fontFamily: 'SegoeUi',
-                                            ),
+                                        child:  Text(
+                                          map.name.toString() ?? "",
+                                          style: TextStyle(
+                                            fontFamily: 'SegoeUi',
                                           ),
                                         )
-                                            : Text(''),
+                                         ,
                                       );
                                     }).toList() ??
                                         [],
@@ -646,8 +646,8 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                       mobileController.text.isNotEmpty &&
                       houseBuildingController.text.isNotEmpty &&
                       areaColonyController.text.isNotEmpty &&
-                      stateController.text.isNotEmpty &&
-                      cityController.text.isNotEmpty &&
+                      // stateController.text.isNotEmpty &&
+                      // cityController.text.isNotEmpty &&
                       pincodeController.text.isNotEmpty) {
                     if (widget.isSavedAddress == true) {
                       Map data = {
@@ -665,17 +665,22 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                       print("map address" + data.toString());
 
                       CartRepository()
-                          .createAddressPostAPI(data, userId.toString());
+                          .createAddressPostAPI(data, userId.toString()).then((value) {
+                            setState(() {
 
-                      Utils.successToast("New Address added successfully");
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => SavedAddressDetails(
+                            });
+                        Utils.successToast("New Address added successfully");
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => SavedAddressDetails(
                               /*      cartForPaymentPayload:
                                   widget.cartForPaymentPayload*/
-                              ),
-                        ),
-                      );
+                            ),
+                          ),
+                        );
+                      });
+
+
                     } else {
                       Map data = {
                         "name": fullNameController.text,

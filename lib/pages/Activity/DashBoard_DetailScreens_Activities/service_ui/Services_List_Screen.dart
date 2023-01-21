@@ -46,7 +46,6 @@ class _ServiceListByCategoryActivityState
   var categoryCode;
   ProductSpecificListViewModel productSpecificListViewModel =
   ProductSpecificListViewModel();
-  late Map<String, dynamic> data = new Map<String, dynamic>();
 
   bool isLoading = false;
   int pageCount = 1;
@@ -62,16 +61,6 @@ class _ServiceListByCategoryActivityState
       10,
       widget.productList!.id!,
     );
-
-    data = {
-      "category_code": 'EOLP',
-      "recommended_for_you": "1",
-      "Merchants Near You": "1",
-      "best_deal": "",
-      'budget_buys': ""
-    };
-    // data = {"category_code": widget.productList!.categoryCode,"recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
-    print(data.toString());
     print("subProduct.............${widget.productList!.id}");
 /*    scrollController = new ScrollController(initialScrollOffset: 5.0)
       ..addListener(_scrollListener);*/

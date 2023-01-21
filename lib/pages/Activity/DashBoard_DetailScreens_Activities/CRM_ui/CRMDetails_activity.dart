@@ -231,36 +231,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                       print("Api calll");
                       CRMDetailsPayload? model = crmSubCategoryProvider
                           .singleCRMSpecificList.data!.payload;
-
-/*
-                      merchantTemp = [];
-                      //adding selected merchants
-                      for (int i = 0; i < merchants.length; i++) {
-                        if (merchants[i].id ==
-                            productSubCategoryProvider.singleServiceSpecificList
-                                .data!.payload!.selectedMerchantId) {
-                          merchantTemp.add(merchants[i]);
-                        }
-                      }
-                      //adding remaining merchant list
-                      for (int i = 0; i < merchants.length; i++) {
-                        if (merchants[i].id !=
-                            productSubCategoryProvider.singleServiceSpecificList
-                                .data!.payload!.selectedMerchantId) {
-                          merchantTemp.add(merchants[i]);
-                        }
-                      }
-                      for (int i = 0; i < merchantTemp.length; i++) {
-                        // print("merchantTemp id"+merchantTemp[i].id.toString());
-                        // print("merchantTemp merchantName"+merchantTemp[i].merchantName.toString());
-
-                      }*/
-// print("merchants length"+productSubCategoryProvider
-//     .singleproductSpecificList.data!.payload!.merchants.length.toString());
-// print("merchants selected index"+productSubCategoryProvider
-//         .singleproductSpecificList.data!.payload!.selectedMerchantId.toString());
-
-                      if (widget.id == model!.id) {
+             if (widget.id == model!.id) {
                         return ListView(
                               // mainAxisAlignment: MainAxisAlignment.start,
                               // crossAxisAlignment: CrossAxisAlignment.start,
@@ -482,7 +453,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                         // _currentIndex = index;
                         setState(() {});
                       },
-                      autoPlay: true,
+                      autoPlay:model.crm!.imageUrls!.length >1? true:false,
                       viewportFraction: 1,
                       height: height * .3),
                 ) ??

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
@@ -39,12 +40,19 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
   double height = 0.0;
   double width = 0.0;
   String serviceName = '';
+  var selectedDate='';
+  var selectedTime='';
   TextEditingController serviceController = new TextEditingController();
   TextEditingController nameController = new TextEditingController();
   TextEditingController timeController = new TextEditingController();
   TextEditingController dateController = new TextEditingController();
   TextEditingController mobileNumberController = new TextEditingController();
   TextEditingController email = new TextEditingController();
+  TextEditingController f1_labelController= new TextEditingController();
+  TextEditingController f2_labelController= new TextEditingController();
+  TextEditingController f3_labelController= new TextEditingController();
+  TextEditingController f4_labelController= new TextEditingController();
+  TextEditingController f5_labelController= new TextEditingController();
 
   bool _validateName = false;
   bool _validateMobile = false;
@@ -72,9 +80,10 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
   @override
   void initState() {
     super.initState();
-    // print('dynamicForm'+widget.dynamicForm.toString());
-    // serviceName = widget.shortName;
+    serviceName = widget.shortName;
     serviceController = new TextEditingController(text: serviceName);
+    timeController = new TextEditingController(text: selectedDate);
+    dateController = new TextEditingController(text: selectedTime);
     _bankChoose = bankDataList[0];
     getForm();
   }
@@ -139,8 +148,15 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFieldUtils()
-                      .asteriskTextField(StringUtils.services, context),
+             Text(
+                StringUtils.services,
+                    style: SafeGoogleFont(
+                      'Roboto',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: ThemeApp.primaryNavyBlackColor,
+                    ),
+                  ),
                   CharacterTextFormFieldsWidget(
                       errorText: 'Please enter Name',
                       isEnable: false,
@@ -274,25 +290,25 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                     TextFormFieldsWidget(
                         errorText: '',
                         textInputType: TextInputType.name,
-                        controller: timeController,
+                        controller: f1_labelController,
                         autoValidation: AutovalidateMode.onUserInteraction,
                         hintText: 'F1 label',
                         onChange: (val) {
-                          setState(() {
-                            if (val.isEmpty && timeController.text.isEmpty) {
-                              _validateTime = true;
-                            } else {
-                              _validateTime = false;
-                            }
-                          });
+                          // setState(() {
+                          //   if (val.isEmpty && timeController.text.isEmpty) {
+                          //     _validateTime = true;
+                          //   } else {
+                          //     _validateTime = false;
+                          //   }
+                          // });
                         },
                         validator: (value) {
-                          if (value.isEmpty && timeController.text.isEmpty) {
-                            _validateTime = true;
-                            return 'Please enter time';
-                          } else {
-                            _validateTime = false;
-                          }
+                          // if (value.isEmpty && timeController.text.isEmpty) {
+                          //   _validateTime = true;
+                          //   return 'Please enter time';
+                          // } else {
+                          //   _validateTime = false;
+                          // }
                           return null;
                         }),
                   if (is_f1_enabled == true)   SizedBox(
@@ -311,25 +327,25 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                     TextFormFieldsWidget(
                         errorText: '',
                         textInputType: TextInputType.name,
-                        controller: timeController,
+                        controller: f2_labelController,
                         autoValidation: AutovalidateMode.onUserInteraction,
                         hintText: 'F1 label',
                         onChange: (val) {
-                          setState(() {
-                            if (val.isEmpty && timeController.text.isEmpty) {
-                              _validateTime = true;
-                            } else {
-                              _validateTime = false;
-                            }
-                          });
+                          // setState(() {
+                          //   if (val.isEmpty && timeController.text.isEmpty) {
+                          //     _validateTime = true;
+                          //   } else {
+                          //     _validateTime = false;
+                          //   }
+                          // });
                         },
                         validator: (value) {
-                          if (value.isEmpty && timeController.text.isEmpty) {
-                            _validateTime = true;
-                            return 'Please enter time';
-                          } else {
-                            _validateTime = false;
-                          }
+                          // if (value.isEmpty && timeController.text.isEmpty) {
+                          //   _validateTime = true;
+                          //   return 'Please enter time';
+                          // } else {
+                          //   _validateTime = false;
+                          // }
                           return null;
                         }),
                   if (is_f1_enabled == true) SizedBox(
@@ -348,25 +364,25 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                     TextFormFieldsWidget(
                         errorText: '',
                         textInputType: TextInputType.name,
-                        controller: timeController,
+                        controller: f3_labelController,
                         autoValidation: AutovalidateMode.onUserInteraction,
                         hintText: 'F1 label',
                         onChange: (val) {
-                          setState(() {
-                            if (val.isEmpty && timeController.text.isEmpty) {
-                              _validateTime = true;
-                            } else {
-                              _validateTime = false;
-                            }
-                          });
+                          // setState(() {
+                          //   if (val.isEmpty && timeController.text.isEmpty) {
+                          //     _validateTime = true;
+                          //   } else {
+                          //     _validateTime = false;
+                          //   }
+                          // });
                         },
                         validator: (value) {
-                          if (value.isEmpty && timeController.text.isEmpty) {
-                            _validateTime = true;
-                            return 'Please enter time';
-                          } else {
-                            _validateTime = false;
-                          }
+                          // if (value.isEmpty && timeController.text.isEmpty) {
+                          //   _validateTime = true;
+                          //   return 'Please enter time';
+                          // } else {
+                          //   _validateTime = false;
+                          // }
                           return null;
                         }),
                   if (is_f1_enabled == true)  SizedBox(
@@ -385,25 +401,25 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                     TextFormFieldsWidget(
                         errorText: '',
                         textInputType: TextInputType.name,
-                        controller: timeController,
+                        controller: f4_labelController,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: 'F1 label',
+                        hintText: 'F4 label',
                         onChange: (val) {
-                          setState(() {
-                            if (val.isEmpty && timeController.text.isEmpty) {
-                              _validateTime = true;
-                            } else {
-                              _validateTime = false;
-                            }
-                          });
+                          // setState(() {
+                          //   if (val.isEmpty && timeController.text.isEmpty) {
+                          //     _validateTime = true;
+                          //   } else {
+                          //     _validateTime = false;
+                          //   }
+                          // });
                         },
                         validator: (value) {
-                          if (value.isEmpty && timeController.text.isEmpty) {
-                            _validateTime = true;
-                            return 'Please enter time';
-                          } else {
-                            _validateTime = false;
-                          }
+                          // if (value.isEmpty && timeController.text.isEmpty) {
+                          //   _validateTime = true;
+                          //   return 'Please enter time';
+                          // } else {
+                          //   _validateTime = false;
+                          // }
                           return null;
                         }),
                   if (is_f1_enabled == true)  SizedBox(
@@ -422,25 +438,25 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                     TextFormFieldsWidget(
                         errorText: '',
                         textInputType: TextInputType.name,
-                        controller: timeController,
+                        controller: f5_labelController,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: 'F1 label',
+                        hintText: 'F5label',
                         onChange: (val) {
-                          setState(() {
-                            if (val.isEmpty && timeController.text.isEmpty) {
-                              _validateTime = true;
-                            } else {
-                              _validateTime = false;
-                            }
-                          });
+                          // setState(() {
+                          //   if (val.isEmpty && timeController.text.isEmpty) {
+                          //     _validateTime = true;
+                          //   } else {
+                          //     _validateTime = false;
+                          //   }
+                          // });
                         },
                         validator: (value) {
-                          if (value.isEmpty && timeController.text.isEmpty) {
-                            _validateTime = true;
-                            return 'Please enter time';
-                          } else {
-                            _validateTime = false;
-                          }
+                          // if (value.isEmpty && timeController.text.isEmpty) {
+                          //   _validateTime = true;
+                          //   return 'Please enter time';
+                          // } else {
+                          //   _validateTime = false;
+                          // }
                           return null;
                         }),
                   SizedBox(
@@ -462,7 +478,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
       children: [
         TextFieldUtils().asteriskTextField(StringUtils.name, context),
         CharacterTextFormFieldsWidget(
-            errorText: 'Please enter Name',
+            errorText: 'Please enter a Name',
             textInputType: TextInputType.name,
             controller: nameController,
             autoValidation: AutovalidateMode.onUserInteraction,
@@ -481,10 +497,10 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
             validator: (value) {
               if (value.isEmpty && nameController.text.isEmpty) {
                 _validateName = true;
-                return StringUtils.fullName;
+                return  'Please enter a Name';
               } else if (nameController.text.length < 4) {
                 _validateName = true;
-                return StringUtils.fullName;
+                return 'Please enter a Name';
               } else {
                 _validateName = false;
               }
@@ -504,11 +520,13 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
             children: [
               TextFieldUtils().asteriskTextField(StringUtils.date, context),
               TextFormFieldsWidget(
-                  errorText: 'Please enter date',
+                  errorText: 'Please enter date.',
                   textInputType: TextInputType.name,
                   controller: dateController,
                   autoValidation: AutovalidateMode.onUserInteraction,
-                  hintText: 'MM / YY',
+                  hintText: 'DD / MM / YYYY',
+                  readOnly: true,
+                  onTap: ()=>_selectDate(context),
                   onChange: (val) {
                     setState(() {
                       if (val.isEmpty && dateController.text.isEmpty) {
@@ -523,7 +541,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                   validator: (value) {
                     if (value.isEmpty && dateController.text.isEmpty) {
                       _validateDate = true;
-                      return 'Please enter date';
+                      return 'Please enter date.';
                     } else {
                       _validateDate = false;
                     }
@@ -532,6 +550,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
             ],
           ),
         ),
+        SizedBox(width: 10,),
         Expanded(
           flex: 1,
           child: Column(
@@ -539,11 +558,13 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
             children: [
               TextFieldUtils().asteriskTextField(StringUtils.time, context),
               TextFormFieldsWidget(
-                  errorText: 'Please enter time',
+                  errorText: 'Please enter time.',
                   textInputType: TextInputType.name,
                   controller: timeController,
                   autoValidation: AutovalidateMode.onUserInteraction,
-                  hintText: '00:00',
+                  hintText: '00:00 AM/PM',
+                  readOnly: true,
+                  onTap: ()=>_selectTime(context),
                   onChange: (val) {
                     setState(() {
                       if (val.isEmpty && timeController.text.isEmpty) {
@@ -556,7 +577,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                   validator: (value) {
                     if (value.isEmpty && timeController.text.isEmpty) {
                       _validateTime = true;
-                      return 'Please enter time';
+                      return 'Please enter time.';
                     } else {
                       _validateTime = false;
                     }
@@ -576,7 +597,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
         TextFieldUtils().asteriskTextField(StringUtils.mobileNumber, context),
         MobileNumberTextFormField(
             controller: mobileNumberController,
-            enable: true,
+            enable: true,errorText: 'Please enter a valid mobile.',
             onChanged: (phone) {
               print(phone.completeNumber);
               if (phone.countryCode == "IN") {
@@ -585,9 +606,16 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
               } else {
                 print("india not selected");
               }
+              setState(() {
+                if (phone=='' && mobileNumberController.text.isEmpty) {
+                  _validateMobile = true;
+                } else {
+                  _validateMobile = false;
+                }
+              });
             },
             validator: (value) {
-              if (value == '' && mobileNumberController.text.isEmpty) {
+              if (value==''&& mobileNumberController.text.isEmpty) {
                 _validateMobile = true;
                 return StringUtils.enterMobileNumber;
               } else if (mobileNumberController.text.length < 10) {
@@ -614,15 +642,21 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
         StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
         String result = DateTime.now().toUtc().toString().replaceAll(" ", "T");
         print("Current Date Time " + result.toString());
+        String tempDate = pickedDateForPass.toUtc().toString().replaceAll(" ", "T");
+        // String tempTime = pickedTimeForPass.toString().replaceAll(" ", "T");
 
-        print(result);
+        print(tempDate);
+        // print(tempTime);
         Map data = {
-          "appoint_date": result,
+          "appoint_date": tempDate,
           "appoint_time": result,
           "crm_form_id": widget.payload.crmFormId.toString(),
           "email": email.text,
-          "f1_value": "Super duper",
-          "f2_value": "Hell Storm",
+          "f1_value": f1_labelController.text??"",
+          "f2_value": f1_labelController.text??"",
+          "f3_value": f3_labelController.text??"",
+          "f4_value": f4_labelController.text??"",
+          "f5_value": f5_labelController.text??"",
           "mobile": mobileNumberController.text,
           "name": nameController.text,
           "note": "Be ready!",
@@ -643,10 +677,43 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                       Navigator.pop(context);
                     });
               });*/
+      }else{
+        // if(mobileNumberController.text.isEmpty||mobileNumberController.text.length<10){
+        //
+        //   _validateMobile = true;
+        // }else{_validateMobile=false;}
       }
     });
   }
+  DateTime currentDate = DateTime.now();
+var pickedDateForPass;
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2050));
 
+    pickedDateForPass = pickedDate;
+    String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate!);
+    if (pickedDate != null && pickedDate != currentDate)
+      setState(() {
+
+          dateController.text = formattedDate;
+
+      });
+  }
+  var pickedTimeForPass;
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? result =
+    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (result != null) {
+      setState(() {
+        pickedTimeForPass = result;
+        timeController.text = result.format(context);
+      });
+    }
+  }
   Future apiRequest(Map jsonMap) async {
     var url = ApiMapping.getURI(apiEndPoint.crm_form_data);
     print("CRM form " + url.toString());
