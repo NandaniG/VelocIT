@@ -49,14 +49,14 @@ print(jsonMap);
     Map<String, String> productData = {
       'page': page.toString(),
       'size': size.toString(),
-      'sub_category_id':merchantId.toString(),
+      'merchant_id':merchantId.toString(),
     };
-    print("Product Query$productData");
+    print("Merchant Query$productData");
     var url = '/product/get_by_merchant';
     String queryString = Uri(queryParameters: productData).query;
 
     var requestUrl = '${ApiMapping.BaseAPI}$url?$queryString';
-
+print("Merchant Url "+ requestUrl);
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
       if (kDebugMode) {

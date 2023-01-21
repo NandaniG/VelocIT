@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:velocit/pages/Activity/Merchant_Near_Activities/Merchant_List_Screen.dart';
 
 import '../../../Core/Model/MerchantModel/MerchantListModel.dart';
 import '../../../Core/ViewModel/Merchant_viewModel.dart';
@@ -462,83 +463,89 @@ print("merchantList...."+merchantList.merchantResponse.data.toString());
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10),
                           itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                                height: orientation ? height * 26 : height * .17,
-                                // MediaQuery.of(context).size.height * .26,
-                                width: MediaQuery.of(context).size.width * .45,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.tealButtonColor,
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Stack(
-                                      alignment: Alignment.topRight,
-                                      children: [
-                                        Container(
-                                          height: orientation
-                                              ? height * .25
-                                              : MediaQuery.of(context).size.height *
-                                              .17,
-                                          width: MediaQuery.of(context).size.width,
-                                          decoration: const BoxDecoration(
-                                              color: ThemeApp.whiteColor,
-                                              borderRadius: BorderRadius.only(
+                            return InkWell(
+                              onTap: (){
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>  MerchantListByIdActivity(merchant: merchantList.merchantResponse.data?.payload![index],)));
+                              },
+                              child: Container(
+                                  height: orientation ? height * 26 : height * .17,
+                                  // MediaQuery.of(context).size.height * .26,
+                                  width: MediaQuery.of(context).size.width * .45,
+                                  decoration: const BoxDecoration(
+                                      color: ThemeApp.tealButtonColor,
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        alignment: Alignment.topRight,
+                                        children: [
+                                          Container(
+                                            height: orientation
+                                                ? height * .25
+                                                : MediaQuery.of(context).size.height *
+                                                .17,
+                                            width: MediaQuery.of(context).size.width,
+                                            decoration: const BoxDecoration(
+                                                color: ThemeApp.whiteColor,
+                                                borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(10),
+                                                  topLeft: Radius.circular(10),
+                                                )),
+                                            child: ClipRRect(
+                                              borderRadius: const BorderRadius.only(
                                                 topRight: Radius.circular(10),
                                                 topLeft: Radius.circular(10),
-                                              )),
-                                          child: ClipRRect(
-                                            borderRadius: const BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10),
+                                              ),
+                                              child: Image.asset(
+                                                // width: double.infinity,
+                                                merchantList.merchantResponse.data?.payload![index].merchantStoreImage.toString()??"",
+                                                // fit: BoxFit.fill,
+                                                height:
+                                                MediaQuery.of(context).size.height *
+                                                    .07,
+                                                errorBuilder:
+                                                    (context, error,
+                                                    stackTrace) {
+                                                  return Icon(
+                                                    Icons.image,
+                                                    color: ThemeApp
+                                                        .appColor,
+                                                  );
+                                                },
+                                              )??SizedBox(),
                                             ),
-                                            child: Image.asset(
-                                              // width: double.infinity,
-                                              merchantList.merchantResponse.data?.payload![index].merchantStoreImage.toString()??"",
-                                              // fit: BoxFit.fill,
-                                              height:
-                                              MediaQuery.of(context).size.height *
-                                                  .07,
-                                              errorBuilder:
-                                                  (context, error,
-                                                  stackTrace) {
-                                                return Icon(
-                                                  Icons.image,
-                                                  color: ThemeApp
-                                                      .appColor,
-                                                );
-                                              },
-                                            )??SizedBox(),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                          const EdgeInsets.only(top: 7, right: 7),
-                                          child: kmAwayOnMerchantImage(
-                                          double.parse(merchantList.merchantResponse.data!.payload![index].distanceInKm.toString()).toString() + ' KM Away'??"",
-                                            context,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(18,11,18,11),
-                                      child: Text(
-                                          merchantList.merchantResponse.data?.payload![index].name.toString()??"",
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.only(top: 7, right: 7),
+                                            child: kmAwayOnMerchantImage(
+                                            double.parse(merchantList.merchantResponse.data!.payload![index].distanceInKm.toString()).toString() + ' KM Away'??"",
+                                              context,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(18,11,18,11),
+                                        child: Text(
+                                            merchantList.merchantResponse.data?.payload![index].name.toString()??"",
 
-                                            style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 12,
-                                              color: ThemeApp.whiteColor,
-                                              fontWeight: FontWeight.w700,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),)
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 12,
+                                                color: ThemeApp.whiteColor,
+                                                fontWeight: FontWeight.w700,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),)
 
-                                    ),
-                                  ],
-                                ));
+                                      ),
+                                    ],
+                                  )),
+                            );
                           },
                         ));
                   default:
