@@ -20,7 +20,6 @@ import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
 
-
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
@@ -39,16 +38,14 @@ class MerchantListByIdActivity extends StatefulWidget {
       _MerchantListByIdActivityState();
 }
 
-class _MerchantListByIdActivityState
-    extends State<MerchantListByIdActivity> {
+class _MerchantListByIdActivityState extends State<MerchantListByIdActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   late ScrollController scrollController = ScrollController();
   double height = 0.0;
   double width = 0.0;
 
   var categoryCode;
-  MerchantViewModel merchantViewModel =
-  MerchantViewModel();
+  MerchantViewModel merchantViewModel = MerchantViewModel();
 
   bool isLoading = false;
   int pageCount = 1;
@@ -67,10 +64,6 @@ class _MerchantListByIdActivityState
     print("subProduct.............${widget.merchant!.id}");
 /*    scrollController = new ScrollController(initialScrollOffset: 5.0)
       ..addListener(_scrollListener);*/
-
-
-
-
 
     StringConstant.sortByRadio;
     StringConstant.sortedBy;
@@ -110,7 +103,6 @@ class _MerchantListByIdActivityState
     symbol: '₹',
   );
 
-
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -124,11 +116,12 @@ class _MerchantListByIdActivityState
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .12),
-          child: appBarWidget(
-              context,
-              searchBar(context),
-              addressWidget(context, StringConstant.placesFromCurrentLocation),
-              setState(() {})),
+          child: AppBarWidget(
+            context: context,
+            titleWidget: searchBar(context),
+            location: addressWidget(
+                context, StringConstant.placesFromCurrentLocation),
+          ),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -261,11 +254,11 @@ class _MerchantListByIdActivityState
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
-        // border: Border(
-        //   top: BorderSide(color: Colors.grey, width: 1),
-        //   bottom: BorderSide(color: Colors.grey, width: 1),
-        // ),
-      ),
+          // border: Border(
+          //   top: BorderSide(color: Colors.grey, width: 1),
+          //   bottom: BorderSide(color: Colors.grey, width: 1),
+          // ),
+          ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -273,11 +266,12 @@ class _MerchantListByIdActivityState
             TextFieldUtils().dynamicText(
                 'Sort By  ',
                 context,
-                TextStyle(fontFamily: 'Roboto',
+                TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.lightFontColor,
                     fontWeight: FontWeight.w400,
-                    fontSize: 12,letterSpacing: -0.08
-                )),
+                    fontSize: 12,
+                    letterSpacing: -0.08)),
             InkWell(
               onTap: () {
                 showModalBottomSheet(
@@ -289,11 +283,12 @@ class _MerchantListByIdActivityState
               child: TextFieldUtils().dynamicText(
                   StringConstant.sortedBy,
                   context,
-                  TextStyle(fontFamily: 'Roboto',
+                  TextStyle(
+                      fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontWeight: FontWeight.w400,
-                      fontSize: 12,letterSpacing: -0.08
-                  )),
+                      fontSize: 12,
+                      letterSpacing: -0.08)),
             ),
             const Icon(Icons.keyboard_arrow_down)
           ]),
@@ -311,10 +306,11 @@ class _MerchantListByIdActivityState
                 TextFieldUtils().dynamicText(
                     'Filters',
                     context,
-                    TextStyle(fontFamily: 'Roboto',
+                    TextStyle(
+                      fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontWeight: FontWeight.w400,
-                      fontSize:12,
+                      fontSize: 12,
                     )),
                 Padding(
                   padding: const EdgeInsets.all(2),
@@ -346,19 +342,21 @@ class _MerchantListByIdActivityState
   }
 
   Widget productListView() {
-    return/* LayoutBuilder(builder: (context, constrains) {
-      return*/ ChangeNotifierProvider<MerchantViewModel>.value(
-        value:  merchantViewModel,
-        child: Consumer<MerchantViewModel>(
-            builder: (context, merchantProvider, child) {
+    return /* LayoutBuilder(builder: (context, constrains) {
+      return*/
+        ChangeNotifierProvider<MerchantViewModel>.value(
+            value: merchantViewModel,
+            child: Consumer<MerchantViewModel>(
+                builder: (context, merchantProvider, child) {
               switch (merchantProvider.merchantListByIdResponse.status) {
                 case Status.LOADING:
                   print("Api load");
 
                   return TextFieldUtils().circularBar(context);
                 case Status.ERROR:
-                  print("Api error"+merchantProvider
-                      .merchantListByIdResponse.message.toString());
+                  print("Api error" +
+                      merchantProvider.merchantListByIdResponse.message
+                          .toString());
 
                   return Text('Something went wrong');
                 case Status.COMPLETED:
@@ -367,64 +365,69 @@ class _MerchantListByIdActivityState
                       .merchantListByIdResponse.data!.payload!.content;
                   print("merchantList length.......${merchantList!.length}");
                   return Expanded(
-
                     // width: MediaQuery.of(context).size.width,
-                    child: merchantList.length==0?Center(child: Text('No match found')): GridView(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 30,
-                          // childAspectRatio: 1.0,
-                          childAspectRatio: MediaQuery.of(context).size.height / 900,
-                        ),
-                        shrinkWrap: true,
-                        children: List.generate(merchantList.length,
+                    child: merchantList.length == 0
+                        ? Center(child: Text('No match found'))
+                        : GridView(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 30,
+                              // childAspectRatio: 1.0,
+                              childAspectRatio:
+                                  MediaQuery.of(context).size.height / 900,
+                            ),
+                            shrinkWrap: true,
+                            children: List.generate(
+                              merchantList.length,
                               (index) {
-                            return Stack(
-                              children: [
-                                index == merchantList.length
-                                    ? Container(
-                                  // width: constrains.minWidth,
-                                  height: 20,
-                                  // height: MediaQuery.of(context).size.height * .08,
-                                  // alignment: Alignment.center,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: ThemeApp.blackColor,
-                                    ),
-                                  ),
-                                )
-                                    : InkWell(
-                                  onTap: () {
-                                    print(
-                                        "Id ........${merchantList[index].id}");
-
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProductDetailsActivity(
-                                              id: merchantList[index].id,
-                                              // productList: subProductList[index],
-                                              // productSpecificListViewModel:
-                                              //     productSpecificListViewModel,
+                                return Stack(
+                                  children: [
+                                    index == merchantList.length
+                                        ? Container(
+                                            // width: constrains.minWidth,
+                                            height: 20,
+                                            // height: MediaQuery.of(context).size.height * .08,
+                                            // alignment: Alignment.center,
+                                            child: Center(
+                                              child: CircularProgressIndicator(
+                                                color: ThemeApp.blackColor,
+                                              ),
                                             ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
+                                          )
+                                        : InkWell(
+                                            onTap: () {
+                                              print(
+                                                  "Id ........${merchantList[index].id}");
+
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProductDetailsActivity(
+                                                    id: merchantList[index].id,
+                                                    // productList: subProductList[index],
+                                                    // productSpecificListViewModel:
+                                                    //     productSpecificListViewModel,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
 // height: 205,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          /*   Expanded(
+                                                child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                /*   Expanded(
                                             flex: 2,
                                             child:*/
-                                          Container(
-                                            height: 143,
-                                            width: 191, /* height: SizeConfig.orientations !=
+                                                Container(
+                                                  height: 143,
+                                                  width: 191,
+                                                  /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
                                                           .size
@@ -437,108 +440,122 @@ class _MerchantListByIdActivityState
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,*/
-                                            decoration: const BoxDecoration(
-                                              color: ThemeApp.whiteColor,
-                                            ),
-                                            child: ClipRRect(
-
-                                              child: Image.network(
-                                                merchantList[index]
-                                                    .imageUrls![0]
-                                                    .imageUrl!.toString()??"",
-                                                // fit: BoxFit.fill,
-                                                height: (MediaQuery.of(
-                                                    context)
-                                                    .orientation ==
-                                                    Orientation.landscape)
-                                                    ? MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                    .26
-                                                    : MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                    .1,
-                                                errorBuilder:
-                                                    (context, error,
-                                                    stackTrace) {
-                                                  return Icon(
-                                                    Icons.image,
-                                                    color: ThemeApp
-                                                        .appColor,
-                                                  );
-                                                },
-                                              ) ??SizedBox(
-                                                // height: height * .28,
-                                                  width: width,
-                                                  child: Icon(
-                                                    Icons.image_outlined,
-                                                    size: 50,
-                                                  )),
-                                            ),
-                                          ),
-                                          // ),
-                                          Container(      color: ThemeApp.tealButtonColor,
-                                            width: 191,
-                                            height: 66,
-                                            padding: const EdgeInsets.only(
-                                              left: 12, right: 12,),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .center,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                TextFieldUtils()
-                                                    .listNameHeadingTextField(
-                                                    merchantList[index]
-                                                        .shortName!,context),
-                                                SizedBox(height:10),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                                  children: [
-                                                    TextFieldUtils().listPriceHeadingTextField(
-                                                        indianRupeesFormat
-                                                            .format(merchantList[
-                                                        index]
-                                                            .defaultSellPrice ??
-                                                            0.0),
-                                                        context),
-                                                    TextFieldUtils().listScratchPriceHeadingTextField(
-                                                        indianRupeesFormat.format(
-                                                            merchantList[
-                                                            index]
-                                                                .defaultMrp ??
-                                                                0.0),
-                                                        context)
-                                                  ],
-                                                )
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: ThemeApp.whiteColor,
+                                                  ),
+                                                  child: ClipRRect(
+                                                    child: Image.network(
+                                                          merchantList[index]
+                                                                  .imageUrls![0]
+                                                                  .imageUrl!
+                                                                  .toString() ??
+                                                              "",
+                                                          // fit: BoxFit.fill,
+                                                          height: (MediaQuery.of(
+                                                                          context)
+                                                                      .orientation ==
+                                                                  Orientation
+                                                                      .landscape)
+                                                              ? MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  .26
+                                                              : MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  .1,
+                                                          errorBuilder:
+                                                              (context, error,
+                                                                  stackTrace) {
+                                                            return Icon(
+                                                              Icons.image,
+                                                              color: ThemeApp
+                                                                  .appColor,
+                                                            );
+                                                          },
+                                                        ) ??
+                                                        SizedBox(
+                                                            // height: height * .28,
+                                                            width: width,
+                                                            child: Icon(
+                                                              Icons
+                                                                  .image_outlined,
+                                                              size: 50,
+                                                            )),
+                                                  ),
+                                                ),
+                                                // ),
+                                                Container(
+                                                  color:
+                                                      ThemeApp.tealButtonColor,
+                                                  width: 191,
+                                                  height: 66,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    left: 12,
+                                                    right: 12,
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      TextFieldUtils()
+                                                          .listNameHeadingTextField(
+                                                              merchantList[
+                                                                      index]
+                                                                  .shortName!,
+                                                              context),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          TextFieldUtils().listPriceHeadingTextField(
+                                                              indianRupeesFormat
+                                                                  .format(merchantList[
+                                                                              index]
+                                                                          .defaultSellPrice ??
+                                                                      0.0),
+                                                              context),
+                                                          TextFieldUtils().listScratchPriceHeadingTextField(
+                                                              indianRupeesFormat
+                                                                  .format(merchantList[
+                                                                              index]
+                                                                          .defaultMrp ??
+                                                                      0.0),
+                                                              context)
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
                                               ],
-                                            ),
+                                            )),
                                           ),
-
-                                        ],
-                                      )),
-                                ),
-                                index == merchantList!.length
-                                    ? Container(
-                                  // width: constrains.minWidth,
-                                  height: 20,
-                                  // height: MediaQuery.of(context).size.height * .08,
-                                  // alignment: Alignment.center,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: ThemeApp.blackColor,
-                                    ),
-                                  ),
-                                )
-                                    : SizedBox()
-                              ],
-                            );
-                            /*else {
+                                    index == merchantList!.length
+                                        ? Container(
+                                            // width: constrains.minWidth,
+                                            height: 20,
+                                            // height: MediaQuery.of(context).size.height * .08,
+                                            // alignment: Alignment.center,
+                                            child: Center(
+                                              child: CircularProgressIndicator(
+                                                color: ThemeApp.blackColor,
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox()
+                                  ],
+                                );
+                                /*else {
                         return  Container(
                           // width: constrains.minWidth,
                           height: 80,
@@ -553,8 +570,8 @@ class _MerchantListByIdActivityState
                                   fontWeight: FontWeight.bold)),
                         );
                       }*/
-                          },)
-                    ),
+                              },
+                            )),
                   );
               }
               return Container(
@@ -563,7 +580,8 @@ class _MerchantListByIdActivityState
                 child: TextFieldUtils().dynamicText(
                     'No Match found!',
                     context,
-                    TextStyle(fontFamily: 'Roboto',
+                    TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .03,
                         fontWeight: FontWeight.bold)),
@@ -576,7 +594,7 @@ class _MerchantListByIdActivityState
   Widget productListView() {
     return*/
 /* LayoutBuilder(builder: (context, constrains) {
-      return*//*
+      return*/ /*
  ChangeNotifierProvider<ProductSpecificListViewModel>.value(
           value:  productSpecificListViewModel,
           child: Consumer<ProductSpecificListViewModel>(
@@ -656,7 +674,7 @@ class _MerchantListByIdActivityState
                                        */
 /*   Expanded(
                                             flex: 2,
-                                            child:*//*
+                                            child:*/ /*
  Container(
                                               height: 163,
                                               width: 191, */
@@ -672,7 +690,7 @@ class _MerchantListByIdActivityState
                                                       .1,
                                               width: MediaQuery.of(context)
                                                   .size
-                                                  .width,*//*
+                                                  .width,*/ /*
 
                                               decoration: const BoxDecoration(
                                                   color: ThemeApp.whiteColor,
@@ -782,7 +800,7 @@ class _MerchantListByIdActivityState
                                   fontSize: height * .03,
                                   fontWeight: FontWeight.bold)),
                         );
-                      }*//*
+                      }*/ /*
 
                     },
                   ),
@@ -826,7 +844,8 @@ class _MerchantListByIdActivityState
                 TextFieldUtils().dynamicText(
                     StringUtils.sortByPrice,
                     context,
-                    TextStyle(fontFamily: 'Roboto',
+                    TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: MediaQuery.of(context).size.height * .025,
                         fontWeight: FontWeight.w600)),
@@ -842,7 +861,8 @@ class _MerchantListByIdActivityState
                     });
                   },
                   title: Text("Low to High",
-                      style: TextStyle(fontFamily: 'Roboto',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),
@@ -859,20 +879,22 @@ class _MerchantListByIdActivityState
                     });
                   },
                   title: Text("High to Low",
-                      style: TextStyle(fontFamily: 'Roboto',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),
                 ),
                 proceedButton(
                     "Sort Now", ThemeApp.tealButtonColor, context, false, () {
-                  setState(() {                        FocusManager.instance.primaryFocus?.unfocus();
+                  setState(() {
+                    FocusManager.instance.primaryFocus?.unfocus();
 
-                  StringConstant.sortByRadio == 1
-                      ? StringConstant.sortedBy = "High to Low"
-                      : 'Low to High';
+                    StringConstant.sortByRadio == 1
+                        ? StringConstant.sortedBy = "High to Low"
+                        : 'Low to High';
 
-                  onChangeText(StringConstant.sortByRadio);
+                    onChangeText(StringConstant.sortByRadio);
                   });
                   Navigator.pop(context);
                 })

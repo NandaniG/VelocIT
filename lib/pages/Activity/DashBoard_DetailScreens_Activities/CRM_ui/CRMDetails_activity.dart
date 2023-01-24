@@ -203,8 +203,8 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-            context, appTitle(context, "CRM"), const SizedBox(), setState),
+        child: AppBar_BackWidget(
+           context: context,titleWidget: appTitle(context, "CRM"), location: SizedBox()),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

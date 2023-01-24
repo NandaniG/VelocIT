@@ -99,15 +99,9 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(height * .09),
-            child: appBar_backWidget(
-              context,
-              appTitle(
-                context,
-                "Add New Delivery Address",
-              ),
-              const SizedBox(),
-              setState,
-            )),
+            child:AppBar_BackWidget(
+                context: context,titleWidget: appTitle(context,"Add New Delivery Address"), location: SizedBox()),
+          ),
         body: SafeArea(
           child: Padding(
             padding:

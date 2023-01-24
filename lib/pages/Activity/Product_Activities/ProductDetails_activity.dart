@@ -199,8 +199,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(context, appTitle(context, "My Product"),
-            const SizedBox(), setState),
+        child:
+        AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"My Product"), location: SizedBox()),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

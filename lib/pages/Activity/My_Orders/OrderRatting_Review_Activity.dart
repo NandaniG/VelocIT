@@ -55,9 +55,9 @@ class _OrderRatingReviewActivityState extends State<OrderRatingReviewActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-            context, appTitle(context, "Review and Rating"), SizedBox(),setState),
-      ),
+        child:  AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"Review and Rating"), location: SizedBox()),
+         ),
       body: SafeArea(
         child: Container(
           color: ThemeApp.appBackgroundColor,

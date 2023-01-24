@@ -32,9 +32,9 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
-          child: appBar_backWidget(
-              context, appTitle(context, "Customer Support"), SizedBox(),setState),
-        ),
+          child:  AppBar_BackWidget(
+              context: context,titleWidget: appTitle(context,"Customer Support"), location: SizedBox()),
+            ),
         body: SafeArea(
           child: Consumer<HomeProvider>(builder: (context, value, child) {
             return Container(

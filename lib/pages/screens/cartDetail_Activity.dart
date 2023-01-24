@@ -126,7 +126,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     final DateFormat displayFormater = DateFormat('yyyy-MM-ddTHH:mm:ssZ');
 
     final DateFormat serverFormater =
-        DateFormat('E' + " " + 'd' + ' ' + 'MMM' + " " + 'y');
+    DateFormat('E' + " " + 'd' + ' ' + 'MMM' + " " + 'y');
     final DateTime displayDate = displayFormater.parse(date);
     final String formatted = serverFormater.format(displayDate);
     return formatted;
@@ -199,7 +199,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       FromType = 'FromServices';
       print("This is service ");
     }
-    print("This is FromType "+FromType.toString());
+    print("This is FromType " + FromType.toString());
     if (FromType == 'FromServices') {
       data = {
         // "cartId": StringConstant.UserCartID.toString(),
@@ -228,15 +228,21 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
   @override
   Widget build(BuildContext context) {
-    height = MediaQuery.of(context).size.height;
-    width = MediaQuery.of(context).size.width;
-    return     WillPopScope(
+    height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    return WillPopScope(
       onWillPop: () {
         Provider.of<CartViewModel>(context, listen: false);
         setState(() {
 
         });
-        Navigator.pop(context,true);
+        Navigator.pop(context, true);
         return Future.value(true);
       },
       child: Scaffold(
@@ -245,7 +251,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .07),
           child: Container(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             color: ThemeApp.appBackgroundColor,
             alignment: Alignment.center,
             child: AppBar(
@@ -272,10 +281,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   //     const DashboardScreen(),
                   //   ),
                   // );
-                  Provider.of<CartViewModel>(context, listen: false);      Navigator.pop(context,true);
-setState(() {
+                  Provider.of<CartViewModel>(context, listen: false);
+                  Navigator.pop(context, true);
+                  setState(() {
 
-});
+                  });
 
 
                   // Navigator.pushReplacementNamed(
@@ -300,7 +310,10 @@ setState(() {
                       fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       // fontWeight: FontWeight.w500,
-                      fontSize: MediaQuery.of(context).size.height * .022,
+                      fontSize: MediaQuery
+                          .of(context)
+                          .size
+                          .height * .022,
                       fontWeight: FontWeight.w500)),
               // Row
             ),
@@ -315,166 +328,168 @@ setState(() {
                   value: cartListView,
                   child: Consumer<CartViewModel>(
                       builder: (context, cartProvider, child) {
-                    switch (cartProvider.cartSpecificID.status) {
-                      case Status.LOADING:
-                        print("Api load");
+                        switch (cartProvider.cartSpecificID.status) {
+                          case Status.LOADING:
+                            print("Api load");
 
-                        return Container();
-                      case Status.ERROR:
-                        print("Api error");
+                            return Container();
+                          case Status.ERROR:
+                            print("Api error");
 
-                        return Text('');
-                      case Status.COMPLETED:
-                        print("Api calll");
-                        List<OrdersForPurchase>? orderPurchaseList = cartProvider
-                            .cartSpecificID.data!.payload!.ordersForPurchase;
+                            return Text('');
+                          case Status.COMPLETED:
+                            print("Api calll");
+                            List<
+                                OrdersForPurchase>? orderPurchaseList = cartProvider
+                                .cartSpecificID.data!.payload!
+                                .ordersForPurchase;
 
-                        print("orderPurchaseList" +
-                            orderPurchaseList!.length.toString());
+                            print("orderPurchaseList" +
+                                orderPurchaseList!.length.toString());
 
-                        return cartProvider.cartSpecificID.data!.payload!
+                            return cartProvider.cartSpecificID.data!.payload!
                                 .ordersForPurchase!.isEmpty
-                            ? bottomNavigationBarWidget(context)
-                            : Container(
-                                height: 100,
-                                width: width,
-                                decoration: const BoxDecoration(
-                                  color: ThemeApp.tealButtonColor,
-                                  // borderRadius: BorderRadius.only(
-                                  //     topRight: Radius.circular(15),
-                                  //     topLeft: Radius.circular(15)),
-                                ),
-                                child: Stack(
-                                  alignment: const FractionalOffset(.5, 1.0),
-                                  children: [
-                                    Container(
-                                      color: ThemeApp.tealButtonColor,
-                                      margin: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 15,
-                                          top: 15,
-                                          bottom: 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
+                                ? bottomNavigationBarWidget(context)
+                                : Container(
+                              height: 100,
+                              width: width,
+                              decoration: const BoxDecoration(
+                                color: ThemeApp.tealButtonColor,
+                                // borderRadius: BorderRadius.only(
+                                //     topRight: Radius.circular(15),
+                                //     topLeft: Radius.circular(15)),
+                              ),
+                              child: Stack(
+                                alignment: const FractionalOffset(.5, 1.0),
+                                children: [
+                                  Container(
+                                    color: ThemeApp.tealButtonColor,
+                                    margin: const EdgeInsets.only(
+                                        left: 20,
+                                        right: 15,
+                                        top: 15,
+                                        bottom: 0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                            crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  indianRupeesFormat.format(
-                                                      double.parse(cartProvider
-                                                          .cartSpecificID
-                                                          .data!
-                                                          .payload!
-                                                          .totalPayable
-                                                          .toString())),
-                                                  style: TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      fontSize: 20,
-                                                      color: ThemeApp
-                                                          .separatedLineColor,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                SizedBox(
-                                                  height: 2,
-                                                ),
-                                                TextFieldUtils()
-                                                    .pricesLineThroughWhite(
-                                                  indianRupeesFormat.format(
-                                                      double.parse(cartProvider
-                                                          .cartSpecificID
-                                                          .data!
-                                                          .payload!
-                                                          .totalMrp
-                                                          .toString())),
-                                                  context,
-                                                  14,
-                                                ),
-                                              ]),
-                                          InkWell(
-                                              onTap: () async {
-                                                final prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
+                                            children: [
+                                              Text(
+                                                indianRupeesFormat.format(
+                                                    double.parse(cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .totalPayable
+                                                        .toString())),
+                                                style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontSize: 20,
+                                                    color: ThemeApp
+                                                        .separatedLineColor,
+                                                    overflow:
+                                                    TextOverflow.ellipsis,
+                                                    fontWeight:
+                                                    FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                height: 2,
+                                              ),
+                                              TextFieldUtils()
+                                                  .pricesLineThroughWhite(
+                                                indianRupeesFormat.format(
+                                                    double.parse(cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .totalMrp
+                                                        .toString())),
+                                                context,
+                                                14,
+                                              ),
+                                            ]),
+                                        InkWell(
+                                            onTap: () async {
+                                              final prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
 
-                                                StringConstant.isUserLoggedIn =
-                                                    (prefs.getInt(
-                                                            'isUserLoggedIn')) ??
-                                                        0;
-                                                print(
-                                                    "IS USER LOGGEDIN ..............." +
-                                                        StringConstant
-                                                            .isUserLoggedIn
-                                                            .toString());
+                                              StringConstant.isUserLoggedIn =
+                                                  (prefs.getInt(
+                                                      'isUserLoggedIn')) ??
+                                                      0;
+                                              print(
+                                                  "IS USER LOGGEDIN ..............." +
+                                                      StringConstant
+                                                          .isUserLoggedIn
+                                                          .toString());
 
-                                                if (kDebugMode) {
-                                                  print(StringConstant
-                                                      .isUserLoggedIn);
-                                                }
+                                              if (kDebugMode) {
+                                                print(StringConstant
+                                                    .isUserLoggedIn);
+                                              }
 
-                                                prefs.setString(
-                                                    'isUserNavigateFromDetailScreen',
-                                                    'Yes');
-                                                if (StringConstant
-                                                        .isUserLoggedIn ==
-                                                    1) {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          OrderReviewActivity(
-                                                        cartId: cartProvider
-                                                            .cartSpecificID
-                                                            .data!
-                                                            .payload!
-                                                            .id!,
-                                                      ),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  for (int i = 0;
-                                                      i <
-                                                          cartProvider
+                                              prefs.setString(
+                                                  'isUserNavigateFromDetailScreen',
+                                                  'Yes');
+                                              if (StringConstant
+                                                  .isUserLoggedIn ==
+                                                  1) {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OrderReviewActivity(
+                                                          cartId: cartProvider
                                                               .cartSpecificID
                                                               .data!
                                                               .payload!
-                                                              .ordersForPurchase!
-                                                              .length;
-                                                      i++) {
-                                                    prefs.setString(
-                                                        'CartSpecificUserIdPref',
-                                                        cartProvider
-                                                            .cartSpecificID
-                                                            .data!
-                                                            .payload!
-                                                            .userId
-                                                            .toString());
-                                                    prefs.setString(
-                                                        'CartSpecificItem_codePref',
-                                                        cartProvider
-                                                            .cartSpecificID
-                                                            .data!
-                                                            .payload!
-                                                            .ordersForPurchase![i]
-                                                            .productCode
-                                                            .toString());
-                                                    prefs.setString(
-                                                        'CartSpecificItemQuantityPref',
-                                                        cartProvider
-                                                            .cartSpecificID
-                                                            .data!
-                                                            .payload!
-                                                            .ordersForPurchase![i]
-                                                            .itemQty
-                                                            .toString());
+                                                              .id!,
+                                                        ),
+                                                  ),
+                                                );
+                                              } else {
+                                                for (int i = 0;
+                                                i <
+                                                    cartProvider
+                                                        .cartSpecificID
+                                                        .data!
+                                                        .payload!
+                                                        .ordersForPurchase!
+                                                        .length;
+                                                i++) {
+                                                  prefs.setString(
+                                                      'CartSpecificUserIdPref',
+                                                      cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .userId
+                                                          .toString());
+                                                  prefs.setString(
+                                                      'CartSpecificItem_codePref',
+                                                      cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .ordersForPurchase![i]
+                                                          .productCode
+                                                          .toString());
+                                                  prefs.setString(
+                                                      'CartSpecificItemQuantityPref',
+                                                      cartProvider
+                                                          .cartSpecificID
+                                                          .data!
+                                                          .payload!
+                                                          .ordersForPurchase![i]
+                                                          .itemQty
+                                                          .toString());
 
-                                                    /*       Map data = {
+                                                  /*       Map data = {
                                                       'user_id': cartProvider
                                                           .cartSpecificID
                                                           .data!
@@ -494,112 +509,112 @@ setState(() {
                                                           .itemQty
                                                     };*/
 
-                                                    Navigator.pushNamed(context,
-                                                        RoutesName.signInRoute);
-                                                    print(cartProvider
-                                                        .cartSpecificID
-                                                        .data!
-                                                        .payload!
-                                                        .totalItemCount);
-                                                  }
-
-                                                  // cartListView
-                                                  //     .cartSpecificIDEmbeddedWithGet(
-                                                  //         context,
-                                                  //         StringConstant
-                                                  //             .UserCartID)
-                                                  //     .then((value) =>
-                                                  //         setState(() {}));
-
+                                                  Navigator.pushNamed(context,
+                                                      RoutesName.signInRoute);
+                                                  print(cartProvider
+                                                      .cartSpecificID
+                                                      .data!
+                                                      .payload!
+                                                      .totalItemCount);
                                                 }
-                                              },
-                                              child: Container(
-                                                  // height: height * 0.05,
-                                                  height: 40,
-                                                  width: 121,
-                                                  alignment: Alignment.center,
-                                                  decoration: const BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(100),
-                                                    ),
-                                                    color: ThemeApp.whiteColor,
+
+                                                // cartListView
+                                                //     .cartSpecificIDEmbeddedWithGet(
+                                                //         context,
+                                                //         StringConstant
+                                                //             .UserCartID)
+                                                //     .then((value) =>
+                                                //         setState(() {}));
+
+                                              }
+                                            },
+                                            child: Container(
+                                              // height: height * 0.05,
+                                                height: 40,
+                                                width: 121,
+                                                alignment: Alignment.center,
+                                                decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.all(
+                                                    Radius.circular(100),
                                                   ),
-                                                  // padding: const EdgeInsets.only(
-                                                  //     left: 15, right: 15),
-                                                  child: TextFieldUtils()
-                                                      .dynamicText(
-                                                          "Checkout",
-                                                          context,
-                                                          TextStyle(
-                                                              fontFamily:
-                                                                  'Roboto',
-                                                              color: ThemeApp
-                                                                  .tealButtonColor,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight.w600,
-                                                              letterSpacing:
-                                                                  -0.25)))),
-                                        ],
-                                      ),
+                                                  color: ThemeApp.whiteColor,
+                                                ),
+                                                // padding: const EdgeInsets.only(
+                                                //     left: 15, right: 15),
+                                                child: TextFieldUtils()
+                                                    .dynamicText(
+                                                    "Checkout",
+                                                    context,
+                                                    TextStyle(
+                                                        fontFamily:
+                                                        'Roboto',
+                                                        color: ThemeApp
+                                                            .tealButtonColor,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                        FontWeight.w600,
+                                                        letterSpacing:
+                                                        -0.25)))),
+                                      ],
                                     ),
-                                    bottomNavBarItems(context),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 20),
-                                      child: Container(
-                                        height: 70,
-                                        width: 70,
-                                        child: FloatingActionButton(
-                                          backgroundColor: ThemeApp.appColor,
-                                          onPressed: () {
-                                            StringConstant().scanQR(context);
-                                            // scanQRCode();
-                                            // scanFile();
-                                            // Navigator.of(context).push(
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) => StepperScreen(),
-                                            //   ),
-                                            // );
+                                  ),
+                                  bottomNavBarItems(context),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    child: Container(
+                                      height: 70,
+                                      width: 70,
+                                      child: FloatingActionButton(
+                                        backgroundColor: ThemeApp.appColor,
+                                        onPressed: () {
+                                          StringConstant().scanQR(context);
+                                          // scanQRCode();
+                                          // scanFile();
+                                          // Navigator.of(context).push(
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) => StepperScreen(),
+                                          //   ),
+                                          // );
 
-                                            // showModalBottomSheet(
-                                            //     isDismissible: true,
-                                            //     context: context,
-                                            //     builder: (context) {
-                                            //       return ScannerWidget(state: controller.state);
-                                            //     });
-                                          },
-                                          child: SvgPicture.asset(
-                                            'assets/appImages/bottomApp/scanIcon.svg',
-                                            color: ThemeApp.whiteColor,
-                                            semanticsLabel: 'Acme Logo',
-                                            width: 29,
-                                            height: 29,
+                                          // showModalBottomSheet(
+                                          //     isDismissible: true,
+                                          //     context: context,
+                                          //     builder: (context) {
+                                          //       return ScannerWidget(state: controller.state);
+                                          //     });
+                                        },
+                                        child: SvgPicture.asset(
+                                          'assets/appImages/bottomApp/scanIcon.svg',
+                                          color: ThemeApp.whiteColor,
+                                          semanticsLabel: 'Acme Logo',
+                                          width: 29,
+                                          height: 29,
 
-                                            // height: height * .03,
-                                          ), /*   child: const Icon(Icons.document_scanner_outlined,
+                                          // height: height * .03,
+                                        ), /*   child: const Icon(Icons.document_scanner_outlined,
                   color: ThemeApp.whiteColor),*/
-                                        ),
                                       ),
                                     ),
-                                    // bottomNavigationBarWidget(context),
-                                  ],
-                                ),
-                              );
-                    }
-                    return Container(
-                      height: height * .8,
-                      alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: height * .03,
-                              fontWeight: FontWeight.bold)),
-                    );
-                  })),
+                                  ),
+                                  // bottomNavigationBarWidget(context),
+                                ],
+                              ),
+                            );
+                        }
+                        return Container(
+                          height: height * .8,
+                          alignment: Alignment.center,
+                          child: TextFieldUtils().dynamicText(
+                              'No Match found!',
+                              context,
+                              TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.blackColor,
+                                  fontSize: height * .03,
+                                  fontWeight: FontWeight.bold)),
+                        );
+                      })),
             )),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
@@ -607,65 +622,75 @@ setState(() {
                 value: cartListView,
                 child: Consumer<CartViewModel>(
                     builder: (context, cartProvider, child) {
-                  switch (cartProvider.cartSpecificID.status) {
-                    case Status.LOADING:
-                      print("Api load");
+                      switch (cartProvider.cartSpecificID.status) {
+                        case Status.LOADING:
+                          print("Api load");
 
-                      return TextFieldUtils().circularBar(context);
-                      return TextFieldUtils().circularBar(context);
-                    case Status.ERROR:
-                      print("Api error");
+                          return TextFieldUtils().circularBar(context);
+                          return TextFieldUtils().circularBar(context);
+                        case Status.ERROR:
+                          print("Api error");
 
-                      return Text(cartProvider.cartSpecificID.status.toString());
-                    case Status.COMPLETED:
-                      print("Api calll");
-                      List<OrdersForPurchase>? orderPurchaseList = cartProvider
-                          .cartSpecificID.data!.payload!.ordersForPurchase;
+                          return Text(
+                              cartProvider.cartSpecificID.status.toString());
+                        case Status.COMPLETED:
+                          print("Api calll");
+                          List<
+                              OrdersForPurchase>? orderPurchaseList = cartProvider
+                              .cartSpecificID.data!.payload!.ordersForPurchase;
 
-                      print("orderPurchaseList" +
-                          orderPurchaseList!.length.toString());
-                      return Container(
-                          // height: MediaQuery.of(context).size.height,
-                          padding: const EdgeInsets.all(10),
-                          child: cartProvider.cartSpecificID.data!.payload!
+                          print("orderPurchaseList" +
+                              orderPurchaseList!.length.toString());
+                          return Container(
+                              height: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .height,
+                              padding: const EdgeInsets.all(10),
+                              child: cartProvider.cartSpecificID.data!.payload!
                                   .ordersForPurchase!.isEmpty
-                              ? Container(
-                                  height: height * .5,
-                                  alignment: Alignment.center,
-                                  child: TextFieldUtils().dynamicText(
-                                      "Cart is Empty",
-                                      context,
-                                      TextStyle(
-                                          fontFamily: 'Roboto',
-                                          color: ThemeApp.blackColor,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: height * .03,
-                                          overflow: TextOverflow.ellipsis)),
-                                )
-                              : Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    cartProductList(orderPurchaseList),
-                                    priceDetails(cartProvider
+                                  ? Container(
+                                height: height * .5,
+                                alignment: Alignment.center,
+                                child: TextFieldUtils().dynamicText(
+                                    "Cart is Empty",
+                                    context,
+                                    TextStyle(
+                                        fontFamily: 'Roboto',
+                                        color: ThemeApp.blackColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: height * .03,
+                                        overflow: TextOverflow.ellipsis)),
+                              )
+                                  : Column(
+                                // mainAxisAlignment:
+                                //     MainAxisAlignment.spaceBetween,
+                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(flex: 2,
+                                      child: cartProductList(
+                                      orderPurchaseList)),
+                                  SizedBox(height: 10,),
+                                  Expanded(flex: 1,
+                                    child: priceDetails(cartProvider
                                         .cartSpecificID.data!.payload!),
-                                  ],
-                                ));
-                  }
-                  return Container(
-                    height: height * .8,
-                    alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
-                  );
-                }))),
+                                  ),
+                                ],
+                              ));
+                      }
+                      return Container(
+                        height: height * .8,
+                        alignment: Alignment.center,
+                        child: TextFieldUtils().dynamicText(
+                            'No Match found!',
+                            context,
+                            TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.blackColor,
+                                fontSize: height * .03,
+                                fontWeight: FontWeight.bold)),
+                      );
+                    }))),
       ),
     );
   }
@@ -673,153 +698,156 @@ setState(() {
   Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
     return Container(
         height: 360,
-        child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            physics: ScrollPhysics(),
-            // physics: NeverScrollableScrollPhysics(),
-            itemCount: orderPurchaseList!.length,
-            itemBuilder: (BuildContext context, int index) {
-              return orderPurchaseList.isEmpty
-                  ? const Center(
-                      child: Text(
+        child: SingleChildScrollView(
+          child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: ScrollPhysics(),
+              // physics: NeverScrollableScrollPhysics(),
+              itemCount: orderPurchaseList!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return orderPurchaseList.isEmpty
+                    ? const Center(
+                    child: Text(
                       "No Match",
                     ))
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          // height: height * 0.2,
-                          width: width,
-                          decoration: const BoxDecoration(
-                            color: ThemeApp.whiteColor,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(
-                              15,
+                    : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      // height: height * 0.2,
+                      width: width,
+                      decoration: const BoxDecoration(
+                        color: ThemeApp.whiteColor,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(
+                          15,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(10)),
+                              child: Image.network(
+                                // width: double.infinity,
+                                // snapshot.data![index].serviceImage,
+                                  orderPurchaseList[index]
+                                      .imageUrl
+                                      .toString(),
+                                  // fit: BoxFit.fill,
+                                  // width: width*.18,
+                                  height: 85,
+                                  width: 85, errorBuilder:
+                              ((context, error, stackTrace) {
+                                return Icon(Icons.image_outlined);
+                              })),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  child: Image.network(
-                                      // width: double.infinity,
-                                      // snapshot.data![index].serviceImage,
-                                      orderPurchaseList[index]
-                                          .imageUrl
-                                          .toString(),
-                                      // fit: BoxFit.fill,
-                                      // width: width*.18,
-                                      height: 85,
-                                      width: 85, errorBuilder:
-                                          ((context, error, stackTrace) {
-                                    return Icon(Icons.image_outlined);
-                                  })),
+                            Expanded(
+                              flex: 3,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 15,
                                 ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 15,
+                                child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    TextFieldUtils().dynamicText(
+                                        orderPurchaseList[index]
+                                            .oneliner
+                                            .toString(),
+                                        context,
+                                        TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: ThemeApp
+                                                .primaryNavyBlackColor,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700)),
+
+                                    // SizedBox(
+                                    //   height: height * .005,
+                                    // ),
+                                    /*  rattingBar(
+                                              orderPurchaseList[index], index),*/
+                                    SizedBox(
+                                      height: height * .01,
                                     ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    prices(orderPurchaseList[index], index),
+                                    SizedBox(
+                                      height: height * .01,
+                                    ),
+
+                                    Text(
+                                        'Merchant Name : ${orderPurchaseList[index]
+                                            .merchantName}' ??
+                                            "",
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: ThemeApp.lightFontColor,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500)),
+                                    SizedBox(
+                                      height: height * .01,
+                                    ),
+                                    Row(
                                       children: [
-                                        TextFieldUtils().dynamicText(
-                                            orderPurchaseList[index]
-                                                .oneliner
-                                                .toString(),
-                                            context,
-                                            TextStyle(
-                                                fontFamily: 'Roboto',
-                                                color: ThemeApp
-                                                    .primaryNavyBlackColor,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w700)),
-
-                                        // SizedBox(
-                                        //   height: height * .005,
-                                        // ),
-                                        /*  rattingBar(
-                                            orderPurchaseList[index], index),*/
-                                        SizedBox(
-                                          height: height * .01,
-                                        ),
-                                        prices(orderPurchaseList[index], index),
-                                        SizedBox(
-                                          height: height * .01,
-                                        ),
-
-                                        Text(
-                                            'Merchant Name : ${orderPurchaseList[index].merchantName}' ??
-                                                "",
+                                        Text('Delivery by ',
                                             style: TextStyle(
                                                 fontFamily: 'Roboto',
-                                                color: ThemeApp.lightFontColor,
+                                                color:
+                                                ThemeApp.lightFontColor,
                                                 fontSize: 12,
-                                                fontWeight: FontWeight.w500)),
-                                        SizedBox(
-                                          height: height * .01,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text('Delivery by ',
-                                                style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    color:
-                                                        ThemeApp.lightFontColor,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                            Text(
-                                                convertDateTimeDisplay(
-                                                    orderPurchaseList[index]
-                                                        .deliveryDate
-                                                        .toString()),
-                                                style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    color:
-                                                        ThemeApp.lightFontColor,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ],
-                                        ),
+                                                fontWeight:
+                                                FontWeight.w500)),
+                                        Text(
+                                            convertDateTimeDisplay(
+                                                orderPurchaseList[index]
+                                                    .deliveryDate
+                                                    .toString()),
+                                            style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color:
+                                                ThemeApp.lightFontColor,
+                                                fontSize: 12,
+                                                fontWeight:
+                                                FontWeight.w500)),
                                       ],
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                        Container(
-                          decoration: const BoxDecoration(
-                            color: ThemeApp.whiteColor,
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(10)),
-                          ),
-                          padding: const EdgeInsets.only(
-                              top: 5, left: 15, right: 20, bottom: 20),
-                          child: aadToCartCounter(orderPurchaseList, index),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        )
-                      ],
-                    );
-            }));
+                      ),
+                    ),
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: ThemeApp.whiteColor,
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10)),
+                      ),
+                      padding: const EdgeInsets.only(
+                          top: 5, left: 15, right: 20, bottom: 20),
+                      child: aadToCartCounter(orderPurchaseList, index),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                );
+              }),
+        ));
   }
 
 /*
@@ -990,7 +1018,8 @@ setState(() {
               allowHalfRating: true,
               itemCount: 5,
               itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-              itemBuilder: (context, _) => const Icon(
+              itemBuilder: (context, _) =>
+              const Icon(
                 Icons.star,
                 color: Colors.amber,
               ),
@@ -1016,22 +1045,26 @@ setState(() {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              value.unitOffer.toString().isNotEmpty
+              value.unitOffer
+                  .toString()
+                  .isNotEmpty
                   ? Text(
-                      "${indianRupeesFormat.format(double.parse(value.unitOffer.toString()) ?? 0.0) ?? "0.0"}",
-                      style: TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.blackColor,
-                          fontSize: 22,
-                          letterSpacing: 0.2,
-                          fontWeight: FontWeight.w500))
+                  "${indianRupeesFormat.format(
+                      double.parse(value.unitOffer.toString()) ?? 0.0) ??
+                      "0.0"}",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: 22,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500))
                   : Text('0.0',
-                      style: TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.blackColor,
-                          fontSize: 22,
-                          letterSpacing: 0.2,
-                          fontWeight: FontWeight.w500)),
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: 22,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
               /*      SizedBox(
                 width: 1,
               ),
@@ -1077,24 +1110,27 @@ setState(() {
                       fontSize: 16,
                       letterSpacing: 0.2,
                       fontWeight: FontWeight.w500)),
-              value.mrp.toString().isNotEmpty
+              value.mrp
+                  .toString()
+                  .isNotEmpty
                   ? Text(
-                      "${indianRupeesFormat.format(double.parse(value.unitMrp.toString()) ?? 0.0) ?? "0.0"}",
-                      style: TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.lightFontColor,
-                          fontSize: 16,
-                          decoration: TextDecoration.lineThrough,
-                          letterSpacing: 0.2,
-                          fontWeight: FontWeight.w500))
+                  "${indianRupeesFormat.format(
+                      double.parse(value.unitMrp.toString()) ?? 0.0) ?? "0.0"}",
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      decoration: TextDecoration.lineThrough,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500))
                   : Text('0.0',
-                      style: TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.lightFontColor,
-                          fontSize: 16,
-                          decoration: TextDecoration.lineThrough,
-                          letterSpacing: 0.2,
-                          fontWeight: FontWeight.w500)),
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.lightFontColor,
+                      fontSize: 16,
+                      decoration: TextDecoration.lineThrough,
+                      letterSpacing: 0.2,
+                      fontWeight: FontWeight.w500)),
             ],
           ),
         ],
@@ -1215,7 +1251,7 @@ setState(() {
                 Radius.circular(5),
               ),
               border:
-                  Border.all(color: ThemeApp.separatedLineColor, width: 1.5)),
+              Border.all(color: ThemeApp.separatedLineColor, width: 1.5)),
           child: Padding(
             padding: const EdgeInsets.all(0),
             child: Row(
@@ -1245,7 +1281,7 @@ setState(() {
                             return ConfirmationDialog(
                               heading: "Warning message",
                               subTitle:
-                                  'Are you sure that you want to completely remove the item from the cart?',
+                              'Are you sure that you want to completely remove the item from the cart?',
                               button1: 'Keep',
                               button2: 'Remove',
                               onTap1: () async {
@@ -1265,8 +1301,8 @@ setState(() {
 
                                   Navigator.of(context)
                                       .pushReplacement(MaterialPageRoute(
-                                          builder: (context) =>
-                                              CartDetailsActivity()))
+                                      builder: (context) =>
+                                          CartDetailsActivity()))
                                       .then((value) {
                                     setState(() {});
                                   });
@@ -1299,7 +1335,10 @@ setState(() {
                     value![index].itemQty.toString().padLeft(2, '0'),
                     style: TextStyle(
                         fontFamily: 'Roboto',
-                        fontSize: MediaQuery.of(context).size.height * .016,
+                        fontSize: MediaQuery
+                            .of(context)
+                            .size
+                            .height * .016,
                         fontWeight: FontWeight.bold,
                         overflow: TextOverflow.ellipsis,
                         color: ThemeApp.blackColor),
@@ -1337,7 +1376,7 @@ setState(() {
                   return ConfirmationDialog(
                     heading: "Warning message",
                     subTitle:
-                        'Are you sure that you want to completely remove the item from the cart?',
+                    'Are you sure that you want to completely remove the item from the cart?',
                     button1: 'Keep',
                     button2: 'Remove',
                     onTap1: () async {
@@ -1356,7 +1395,7 @@ setState(() {
 
                         Navigator.of(context)
                             .pushReplacement(MaterialPageRoute(
-                                builder: (context) => CartDetailsActivity()))
+                            builder: (context) => CartDetailsActivity()))
                             .then((value) {
                           setState(() {});
                         });
@@ -1388,166 +1427,358 @@ setState(() {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [*/
-        Container(
-      // height: 180,
-      width: width,
-      decoration: const BoxDecoration(
-        color: ThemeApp.whiteColor,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 11, 10, 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Price Details',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  color: ThemeApp.primaryNavyBlackColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                )),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Price',
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.lightFontColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
-                // TextFieldUtils().homePageTitlesTextFields(
-                //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
-                //     context),
-                Text(
-                    indianRupeesFormat
-                        .format(double.parse(payload.totalMrp.toString())),
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.lightFontColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
-                // TextFieldUtils().homePageTitlesTextFields(
-                //     indianRupeesFormat
-                //         .format(double.parse(payload.totalMrp.toString())),
-                //     context)
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Discount',
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.lightFontColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
-                Text(
-                    "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.lightFontColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
-                /*   TextFieldUtils()
+      Container(
+        // height: 180,
+        width: width,
+        decoration: const BoxDecoration(
+          color: ThemeApp.whiteColor,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 11, 10, 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Price Details',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.primaryNavyBlackColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  )),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Price',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  // TextFieldUtils().homePageTitlesTextFields(
+                  //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
+                  //     context),
+                  Text(
+                      indianRupeesFormat
+                          .format(double.parse(payload.totalMrp.toString())),
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  // TextFieldUtils().homePageTitlesTextFields(
+                  //     indianRupeesFormat
+                  //         .format(double.parse(payload.totalMrp.toString())),
+                  //     context)
+                ],
+              ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Discount',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  Text(
+                      "- ${indianRupeesFormat.format(double.parse(
+                          payload.totalDiscountAmount.toString()))}",
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  /*   TextFieldUtils()
                         .homePageTitlesTextFields("Discount", context),
                     TextFieldUtils().homePageTitlesTextFields(
                         "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
                         context),*/
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Delivery charges',
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.lightFontColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
-                Text(
-                    indianRupeesFormat.format(
-                        double.parse(payload.totalDeliveryCharges.toString())),
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.lightFontColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
-                /* TextFieldUtils()
+                ],
+              ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Delivery charges',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  Text(
+                      indianRupeesFormat.format(
+                          double.parse(
+                              payload.totalDeliveryCharges.toString())),
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.lightFontColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  /* TextFieldUtils()
                         .homePageTitlesTextFields("Delivery charges", context),
                     TextFieldUtils().homePageTitlesTextFields(
                         indianRupeesFormat.format(double.parse(
                             payload.totalDeliveryCharges.toString())),
                         context),*/
-              ],
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Container(
-              width: width,
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: ThemeApp.separatedLineColor,
-                    width: 0.5,
+                ],
+              ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              Container(
+                width: width,
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: ThemeApp.separatedLineColor,
+                      width: 0.5,
+                    ),
+                    bottom: BorderSide(color: Colors.grey, width: 0.5),
                   ),
-                  bottom: BorderSide(color: Colors.grey, width: 0.5),
                 ),
               ),
-            ),
-            SizedBox(
-              height: height * .01,
-            ),
-            Container(
-              // width: width,
-              // decoration: const BoxDecoration(
-              //   color: ThemeApp.whiteColor,
-              //   borderRadius: BorderRadius.only(
-              //       bottomRight: Radius.circular(10),
-              //       bottomLeft: Radius.circular(10)),
+              // SizedBox(
+              //   height: 10,
               // ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Total Amount',
-                      style: TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.blackColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700)),
-                  Text("${indianRupeesFormat.format(payload.totalPayable)} ",
-                      style: TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.appColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700)),
-                  /* TextFieldUtils().titleTextFields("Total Amount", context),
+              Container(
+                // width: width,
+                // decoration: const BoxDecoration(
+                //   color: ThemeApp.whiteColor,
+                //   borderRadius: BorderRadius.only(
+                //       bottomRight: Radius.circular(10),
+                //       bottomLeft: Radius.circular(10)),
+                // ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total Amount',
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            color: ThemeApp.blackColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700)),
+                    Text("${indianRupeesFormat.format(payload.totalPayable)} ",
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            color: ThemeApp.appColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700)),
+                    /* TextFieldUtils().titleTextFields("Total Amount", context),
                       TextFieldUtils().titleTextFields(
                           "${indianRupeesFormat.format(payload.totalPayable)} ",
                           context),*/
-                ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+  }
+/*
+  Widget priceDetails(CartPayLoad payload) {
+    return */
+/*Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [*/ /*
+
+      Column( mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 10,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: ThemeApp.appBackgroundColor,
+              // borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+            child: Container(
+              // height: 180,
+              width: width,
+              decoration: const BoxDecoration(
+                color: ThemeApp.whiteColor,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 11, 30, 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Price Details',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.primaryNavyBlackColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Price',
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        // TextFieldUtils().homePageTitlesTextFields(
+                        //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
+                        //     context),
+                        Text(
+                            indianRupeesFormat
+                                .format(double.parse(payload.totalMrp.toString())),
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        // TextFieldUtils().homePageTitlesTextFields(
+                        //     indianRupeesFormat
+                        //         .format(double.parse(payload.totalMrp.toString())),
+                        //     context)
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Discount',
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        Text(
+                            "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        */
+/*   TextFieldUtils()
+                              .homePageTitlesTextFields("Discount", context),
+                          TextFieldUtils().homePageTitlesTextFields(
+                              "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
+                              context),*/ /*
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Delivery charges',
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        Text(
+                            indianRupeesFormat.format(
+                                double.parse(payload.totalDeliveryCharges.toString())),
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        */
+/* TextFieldUtils()
+                              .homePageTitlesTextFields("Delivery charges", context),
+                          TextFieldUtils().homePageTitlesTextFields(
+                              indianRupeesFormat.format(double.parse(
+                                  payload.totalDeliveryCharges.toString())),
+                              context),*/ /*
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Container(
+                      width: width,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: ThemeApp.separatedLineColor,
+                            width: 0.5,
+                          ),
+                          bottom: BorderSide(color: Colors.grey, width: 0.5),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * .01,
+                    ),
+                    Container(
+                      // width: width,
+                      // decoration: const BoxDecoration(
+                      //   color: ThemeApp.whiteColor,
+                      //   borderRadius: BorderRadius.only(
+                      //       bottomRight: Radius.circular(10),
+                      //       bottomLeft: Radius.circular(10)),
+                      // ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Total Amount',
+                              style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.blackColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700)),
+                          Text("${indianRupeesFormat.format(payload.totalPayable)} ",
+                              style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.appColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700)),
+                          */
+/* TextFieldUtils().titleTextFields("Total Amount", context),
+                            TextFieldUtils().titleTextFields(
+                                "${indianRupeesFormat.format(payload.totalPayable)} ",
+                                context),*/ /*
+
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-    /*  Container(
+          ),
+        ],
+      );
+    */
+/*  Container(
           width: width,
           decoration: const BoxDecoration(
             border: Border(
@@ -1582,11 +1813,15 @@ setState(() {
         ),
         SizedBox(
           height: height * .02,
-        )*/
-    /* ],
-    );*/
+        )*/ /*
+
+    */
+/* ],
+    );*/ /*
+
   }
-}
+*/
+
 /*
 class ConfirmDialog extends StatefulWidget {
   final String text;
@@ -1664,3 +1899,4 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
     );
   }
 }*/
+}

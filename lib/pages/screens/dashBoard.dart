@@ -134,10 +134,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         (prefs.getString('setBadgeCountPrefs')) ?? '';
     setState(() {
       StringConstant.FINALPINCODE =
-      (prefs.getString('CurrentPinCodePref') ?? '');
+          (prefs.getString('CurrentPinCodePref') ?? '');
       print(
-          "placesFromCurrentLocation FINALPINCODE pref...${StringConstant
-              .FINALPINCODE.toString()}");
+          "placesFromCurrentLocation FINALPINCODE pref...${StringConstant.FINALPINCODE.toString()}");
 
       print("StringConstant.CurrentPinCode");
       StringConstant.isUserLoggedIn = (prefs.getInt(isUserLoginPref) ?? 0);
@@ -177,12 +176,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       // print("cartId from Pref" + CARTID.toString());
     });
 
-    await CartViewModel().cartSpecificIDWithGet(
-        context, StringConstant.UserCartID);
+    await CartViewModel()
+        .cartSpecificIDWithGet(context, StringConstant.UserCartID);
   }
 
   var finalPINCODE = '';
-
 
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
@@ -224,33 +222,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (lat == null || lang == null) return "";
     GeoCode geoCode = GeoCode();
     Address address =
-    await geoCode.reverseGeocoding(latitude: lat, longitude: lang);
+        await geoCode.reverseGeocoding(latitude: lat, longitude: lang);
     print("address.streetAddress" + address.streetAddress.toString());
     addressPincode = address.postal!.toString();
-    return "${address.streetAddress}, ${address.city}, ${address
-        .countryName}, ${address.postal}";
+    return "${address.streetAddress}, ${address.city}, ${address.countryName}, ${address.postal}";
   }
 
   @override
   Widget build(BuildContext context) {
-    height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .12),
-          child: appBarWidget(
-              context,
-              searchBarWidget(),
-              addressWidget(context, StringConstant.placesFromCurrentLocation),
-              setState(() {})),
+          child: AppBarWidget(
+            context: context,
+            titleWidget: searchBarWidget(),
+            location: addressWidget(
+                context, StringConstant.placesFromCurrentLocation),
+          ),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -258,52 +250,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
           value: dashboardViewModel,
           child: Consumer<DashboardViewModel>(
               builder: (context, dashboardProvider, child) {
-                // print('object-------------' + provider.jsonData.toString());
-                return data == ''
-                    ? CircularProgressIndicator()
-                    : Consumer<HomeProvider>(
-                    builder: (context, provider, child) {
-                      return (provider.jsonData.isNotEmpty &&
-                          provider.jsonData['error'] == null ||
-                          provider.jsonData.length > 0)
-                          ? SafeArea(
-                          child: Container(
-                            // height: MediaQuery.of(context).size.height,
-                            // padding: const EdgeInsets.only(
-                            //   left: 20,
-                            //   right: 20,
-                            // ),
-                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    productServiceChip(),
-                                    SizedBox(
-                                      height: height * .02,
-                                    ),
-                                    /*  productList(),
+            // print('object-------------' + provider.jsonData.toString());
+            return data == ''
+                ? CircularProgressIndicator()
+                : Consumer<HomeProvider>(builder: (context, provider, child) {
+                    return (provider.jsonData.isNotEmpty &&
+                                provider.jsonData['error'] == null ||
+                            provider.jsonData.length > 0)
+                        ? SafeArea(
+                            child: Container(
+                                // height: MediaQuery.of(context).size.height,
+                                // padding: const EdgeInsets.only(
+                                //   left: 20,
+                                //   right: 20,
+                                // ),
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      productServiceChip(),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      /*  productList(),
                                       SizedBox(
                                         height: height * .02,
                                       ),*/
-                                    imageLists(provider),
-                                    SizedBox(
-                                      height: height * .02,
-                                    ),
-                                    StringConstant.UserLoginId == ''
-                                        ? SizedBox()
-                                        : stepperOfDelivery(provider),
-                                    // StringConstant.UserLoginId ==''?SizedBox():   SizedBox(
-                                    //   height: 20,
-                                    // ),
+                                      imageLists(provider),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      StringConstant.UserLoginId == ''
+                                          ? SizedBox()
+                                          : stepperOfDelivery(provider),
+                                      // StringConstant.UserLoginId ==''?SizedBox():   SizedBox(
+                                      //   height: 20,
+                                      // ),
 
-                                    productDetailsUI(),
-                                    SizedBox(
-                                      height: height * .02,
-                                    ),
-                                    /*    listOfShopByCategories(),
+                                      productDetailsUI(),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      /*    listOfShopByCategories(),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * .02,
@@ -315,15 +307,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       MediaQuery.of(context).size.height * .02,
                                 ),*/
 
-                                    TextFieldUtils().headingTextField(
-                                        StringUtils.recommendedForYou,
-                                        context),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    recommendedList(),
+                                      TextFieldUtils().headingTextField(
+                                          StringUtils.recommendedForYou,
+                                          context),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      recommendedList(),
 
-                                    /*     Row(
+                                      /*     Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -347,33 +339,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       MediaQuery.of(context).size.height * .02,
                                 ),      merchantList(),*/
 
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    TextFieldUtils().headingTextField(
-                                        StringUtils.bestDeal, context),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    bestDealList(),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    TextFieldUtils().headingTextField(
-                                        StringUtils.budgetBuys, context),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    budgetBuyList(),
-                                  ],
-                                ),
-                              )))
-                          : /*provider.jsonData['error'] != null
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      TextFieldUtils().headingTextField(
+                                          StringUtils.bestDeal, context),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      bestDealList(),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      TextFieldUtils().headingTextField(
+                                          StringUtils.budgetBuys, context),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      budgetBuyList(),
+                                    ],
+                                  ),
+                                )))
+                        : /*provider.jsonData['error'] != null
                             ? Container()
                             :*/
-                      Center(child: CircularProgressIndicator());
-                    });
-              }),
+                        Center(child: CircularProgressIndicator());
+                  });
+          }),
         ));
   }
 
@@ -410,10 +402,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   });
                 },
                 child: Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
                   height: double.infinity,
                   decoration: BoxDecoration(
@@ -452,31 +441,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // _isProductListChip = !_isProductListChip;
                     print(
                         "_isProductListChip 2" + _isServiceListChip.toString());
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ShopByCategoryActivity(
-                            ),
-                      ),
-                    ).then((value) =>
-                        setState(() {
-                          _isProductListChip = true;
+                    Navigator.of(context)
+                        .push(
+                          MaterialPageRoute(
+                            builder: (context) => ShopByCategoryActivity(),
+                          ),
+                        )
+                        .then((value) => setState(() {
+                              _isProductListChip = true;
 
-                          _isServiceListChip = false;
-                          _isCRMListChip = false;
-                        }));
+                              _isServiceListChip = false;
+                              _isCRMListChip = false;
+                            }));
                   });
                 },
                 child: Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
                   height: double.infinity,
                   decoration: BoxDecoration(
                     color:
-                    _isServiceListChip ? Color(0xff00a7bf) : Colors.white,
+                        _isServiceListChip ? Color(0xff00a7bf) : Colors.white,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
@@ -508,24 +493,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     _isProductListChip = false;
                     prefs.setString("FromType", 'FromCRM');
                     print("_isProductListChip 3" + _isCRMListChip.toString());
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CRMActivity(),
-                      ),
-                    ).then((value) =>
-                        setState(() {
-                          _isProductListChip = true;
-                          //
-                          _isServiceListChip = false;
-                          _isCRMListChip = false;
-                        }));
+                    Navigator.of(context)
+                        .push(
+                          MaterialPageRoute(
+                            builder: (context) => CRMActivity(),
+                          ),
+                        )
+                        .then((value) => setState(() {
+                              _isProductListChip = true;
+                              //
+                              _isServiceListChip = false;
+                              _isCRMListChip = false;
+                            }));
                   });
                 },
                 child: Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 0),
                   height: double.infinity,
                   decoration: BoxDecoration(
@@ -559,80 +542,78 @@ class _DashboardScreenState extends State<DashboardScreen> {
         value: productCategories,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
-              switch (productCategories.productCategoryList.status) {
-                case Status.LOADING:
-                  if (kDebugMode) {
-                    print("Api load");
-                  }
-                  return ProgressIndicatorLoader(true);
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-                case Status.ERROR:
-                  if (kDebugMode) {
-                    print("Api error");
-                  }
-                  return Text(
-                      '');
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text('');
 
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-                  List<ProductList>? serviceList =
-                      productCategories.productCategoryList.data!.productList;
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
 
-                  return _isProductListChip
-                      ? Container(
-                    height: 40,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: serviceList!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      BookServiceActivity(
-                                          shopByCategoryList: serviceList!,
-                                          shopByCategorySelected: index),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Container(
-                                // height: 40,
+              return _isProductListChip
+                  ? Container(
+                      height: 40,
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: serviceList!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => BookServiceActivity(
+                                        shopByCategoryList: serviceList!,
+                                        shopByCategorySelected: index),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Container(
+                                  // height: 40,
 
-                                padding: const EdgeInsets.fromLTRB(
-                                    15.0, 5, 15.0, 5),
-                                decoration: BoxDecoration(
-                                  color: ThemeApp.containerColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Center(
-                                  child: TextFieldUtils().dynamicText(
-                                      serviceList[index].name!,
-                                      context,
-                                      TextStyle(
-                                        fontFamily: 'Roboto',
-                                        color: ThemeApp.blackColor,
-                                        // fontWeight: FontWeight.w500,
-                                        fontSize: 13,
-                                      )),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      15.0, 5, 15.0, 5),
+                                  decoration: BoxDecoration(
+                                    color: ThemeApp.containerColor,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Center(
+                                    child: TextFieldUtils().dynamicText(
+                                        serviceList[index].name!,
+                                        context,
+                                        TextStyle(
+                                          fontFamily: 'Roboto',
+                                          color: ThemeApp.blackColor,
+                                          // fontWeight: FontWeight.w500,
+                                          fontSize: 13,
+                                        )),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
-                  )
-                      : SizedBox();
-                default:
-                  return Text("No Data found!");
-              }
+                            );
+                          }),
+                    )
+                  : SizedBox();
+            default:
               return Text("No Data found!");
-            }));
+          }
+          return Text("No Data found!");
+        }));
 
     return Container(
       // height: 40,
@@ -654,146 +635,143 @@ class _DashboardScreenState extends State<DashboardScreen> {
         value: productCategories,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
-              switch (productCategories.productCategoryList.status) {
-                case Status.LOADING:
-                  if (kDebugMode) {
-                    print("Api load");
-                  }
-                  return ProgressIndicatorLoader(true);
-
-                case Status.ERROR:
-                  if (kDebugMode) {
-                    print("Api error");
-                  }
-                  return Text(
-                      productCategories.productCategoryList.message.toString());
-
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
-
-                  List<ProductList>? serviceList =
-                      productCategories.productCategoryList.data!.productList;
-
-                  return Container(
-                    // padding: const EdgeInsets.all(10),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextFieldUtils()
-                              .headingTextField('Shop by Categories', context),
-                          SizedBox(
-                            height: height * .02,
-                          ),
-                          ListView.builder(
-                            key: Key('builder ${selected.toString()}'),
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: serviceList!.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 5),
-                                child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      ExpansionTile(
-                                        key: Key(index.toString()),
-                                        onExpansionChanged: ((newState) {
-                                          if (newState) {
-                                            setState(() {
-                                              const Duration(seconds: 20000);
-                                              selected = index;
-                                              // isOpen = true;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              selected = -1;
-                                            });
-                                          }
-                                        }),
-                                        initiallyExpanded: /*isOpen == true
-                                            ? */index == selected,
-                                            // : false,
-
-                                        // initiallyExpanded: false,
-                                        // trailing: selected == true
-                                        //     ? Icon(
-                                        //         Icons.arrow_drop_up,
-                                        //         color:
-                                        //             ThemeApp.textFieldBorderColor,
-                                        //         size: height * .05,
-                                        //       )
-                                        //     : Icon(
-                                        //         Icons.arrow_drop_down,
-                                        //         color:
-                                        //             ThemeApp.textFieldBorderColor,
-                                        //         size: height * .05,
-                                        //       ),
-                                        // tilePadding: const EdgeInsets.symmetric(
-                                        //     horizontal: 15, vertical: 2),
-                                        // childrenPadding: const EdgeInsets.symmetric(
-                                        //     horizontal: 15, vertical: 5),
-                                        textColor: Colors.black,
-                                        title: Row(
-                                          children: [
-                                            Container(
-                                              color: ThemeApp
-                                                  .containerColor,
-                                              height: 25,
-                                              width: 25,
-                                              child: Image.network(
-                                                serviceList[index]
-                                                    .productCategoryImageId!,
-                                                // fit: BoxFit.fill,
-
-                                              ),
-                                            ),
-
-                                            // SvgPicture.asset(
-                                            //   'assets/appImages/appliancesIcon.svg',
-                                            //
-                                            //   height: 17,
-                                            //   width: 26,
-                                            // ),
-                                            SizedBox(
-                                              width: 16,
-                                            ),
-                                            categoryListFont(
-                                                serviceList[index].name!,
-                                                context)
-                                          ],
-                                        ),
-                                        expandedAlignment: Alignment.centerLeft,
-                                        expandedCrossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 0, 10, 15),
-                                            child: subListOfCategories(
-                                                serviceList[index]),
-                                          )
-                                        ],
-                                      ),
-                                    ]),
-                              );
-                            },
-                          )
-                        ]),
-                  );
-                default:
-                  return Text("");
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
               }
-              return Text("No Data found!");
-            }));
+              return ProgressIndicatorLoader(true);
+
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
+
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
+
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
+
+              return Container(
+                // padding: const EdgeInsets.all(10),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFieldUtils()
+                          .headingTextField('Shop by Categories', context),
+                      SizedBox(
+                        height: height * .02,
+                      ),
+                      ListView.builder(
+                        key: Key('builder ${selected.toString()}'),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: serviceList!.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  ExpansionTile(
+                                    key: Key(index.toString()),
+                                    onExpansionChanged: ((newState) {
+                                      if (newState) {
+                                        setState(() {
+                                          const Duration(seconds: 20000);
+                                          selected = index;
+                                          // isOpen = true;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          selected = -1;
+                                        });
+                                      }
+                                    }),
+                                    initiallyExpanded: /*isOpen == true
+                                            ? */
+                                        index == selected,
+                                    // : false,
+
+                                    // initiallyExpanded: false,
+                                    // trailing: selected == true
+                                    //     ? Icon(
+                                    //         Icons.arrow_drop_up,
+                                    //         color:
+                                    //             ThemeApp.textFieldBorderColor,
+                                    //         size: height * .05,
+                                    //       )
+                                    //     : Icon(
+                                    //         Icons.arrow_drop_down,
+                                    //         color:
+                                    //             ThemeApp.textFieldBorderColor,
+                                    //         size: height * .05,
+                                    //       ),
+                                    // tilePadding: const EdgeInsets.symmetric(
+                                    //     horizontal: 15, vertical: 2),
+                                    // childrenPadding: const EdgeInsets.symmetric(
+                                    //     horizontal: 15, vertical: 5),
+                                    textColor: Colors.black,
+                                    title: Row(
+                                      children: [
+                                        Container(
+                                          color: ThemeApp.containerColor,
+                                          height: 25,
+                                          width: 25,
+                                          child: Image.network(
+                                            serviceList[index]
+                                                .productCategoryImageId!,
+                                            // fit: BoxFit.fill,
+                                          ),
+                                        ),
+
+                                        // SvgPicture.asset(
+                                        //   'assets/appImages/appliancesIcon.svg',
+                                        //
+                                        //   height: 17,
+                                        //   width: 26,
+                                        // ),
+                                        SizedBox(
+                                          width: 16,
+                                        ),
+                                        categoryListFont(
+                                            serviceList[index].name!, context)
+                                      ],
+                                    ),
+                                    expandedAlignment: Alignment.centerLeft,
+                                    expandedCrossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 15),
+                                        child: subListOfCategories(
+                                            serviceList[index]),
+                                      )
+                                    ],
+                                  ),
+                                ]),
+                          );
+                        },
+                      )
+                    ]),
+              );
+            default:
+              return Text("");
+          }
+          return Text("No Data found!");
+        }));
   }
 
 /*
@@ -974,94 +952,84 @@ class _DashboardScreenState extends State<DashboardScreen> {
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: productList!.simpleSubCats!.length,*/
-      GridView(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 12,
-            // childAspectRatio: 1.0,
-            childAspectRatio: MediaQuery
-                .of(context)
-                .size
-                .height / 500,
-          ),
-          shrinkWrap: true,
-          children: List.generate(
-            productList!.simpleSubCats!.length,
-                (index) {
-              return InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        ProductListByCategoryActivity(
-                            productList: productList.simpleSubCats![index]),
-                  ));
-                },
-                // child: Padding(
-                // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
-                child: Container(
-                  // width: width * .25,
-                    width: 97,
-                    height: 59,
-                    padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                            color: ThemeApp.containerColor, width: 1.5),
-                        color: ThemeApp.containerColor),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        /*      SvgPicture.asset(
+        GridView(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 12,
+              // childAspectRatio: 1.0,
+              childAspectRatio: MediaQuery.of(context).size.height / 500,
+            ),
+            shrinkWrap: true,
+            children: List.generate(
+              productList!.simpleSubCats!.length,
+              (index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProductListByCategoryActivity(
+                          productList: productList.simpleSubCats![index]),
+                    ));
+                  },
+                  // child: Padding(
+                  // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+                  child: Container(
+                      // width: width * .25,
+                      width: 97,
+                      height: 59,
+                      padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(
+                              color: ThemeApp.containerColor, width: 1.5),
+                          color: ThemeApp.containerColor),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          /*      SvgPicture.asset(
                             'assets/appImages/televisionIcon.svg',
                             color: ThemeApp.blackColor,
 
                             height: 17,
                             width: 19,
                           ),*/
-                        Container(color: ThemeApp
-                            .appColor,
-                          height:25,
-                          width: 25,
-                          // borderRadius:
-                          // const BorderRadius.all(
-                          //     Radius.circular(50)),
-                          child: Image.network(
-                            productList.simpleSubCats![index]
-                                .imageUrl ??
-                                "",
-                            // fit: BoxFit.fill,
+                          Container(
+                            color: ThemeApp.appColor,
                             height: 25,
                             width: 25,
-                            errorBuilder:
-                                (context, error,
-                                stackTrace) {
-                              return Container(
-                                height: 25,
-                                width: 25,
-                                child: Icon(
-                                  Icons.image,
-                                  color: ThemeApp
-                                      .whiteColor,
-                                ),
-                              );
-                            },
+                            // borderRadius:
+                            // const BorderRadius.all(
+                            //     Radius.circular(50)),
+                            child: Image.network(
+                              productList.simpleSubCats![index].imageUrl ?? "",
+                              // fit: BoxFit.fill,
+                              height: 25,
+                              width: 25,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 25,
+                                  width: 25,
+                                  child: Icon(
+                                    Icons.image,
+                                    color: ThemeApp.whiteColor,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 6,),
-                        subCategoryListFont(
-                            productList.simpleSubCats![index].name!,
-                            context),
-
-
-                      ],
-                    )),
-                // ),
-              );
-            },
-          ))
-    // )
+                          SizedBox(
+                            height: 6,
+                          ),
+                          subCategoryListFont(
+                              productList.simpleSubCats![index].name!, context),
+                        ],
+                      )),
+                  // ),
+                );
+              },
+            ))
+        // )
         ;
 
     /*Container(
@@ -1138,77 +1106,75 @@ class _DashboardScreenState extends State<DashboardScreen> {
         value: productCategories,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
-              switch (productCategories.productCategoryList.status) {
-                case Status.LOADING:
-                  if (kDebugMode) {
-                    print("Api load");
-                  }
-                  return ProgressIndicatorLoader(true);
+          switch (productCategories.productCategoryList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-                case Status.ERROR:
-                  if (kDebugMode) {
-                    print("Api error");
-                  }
-                  return Text(
-                      productCategories.productCategoryList.message.toString());
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productCategoryList.message.toString());
 
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-                  List<ProductList>? serviceList =
-                      productCategories.productCategoryList.data!.productList;
+              List<ProductList>? serviceList =
+                  productCategories.productCategoryList.data!.productList;
 
-                  return Container(
-                    height: 40,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: serviceList!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      ShopByCategoryActivity(
-                                      ),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Container(
-                                // height: 40,
-
-                                padding:
-                                const EdgeInsets.fromLTRB(15.0, 5, 15.0, 5),
-                                decoration: BoxDecoration(
-                                  color: ThemeApp.containerColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Center(
-                                  child: TextFieldUtils().dynamicText(
-                                      serviceList[index].name!,
-                                      context,
-                                      TextStyle(
-                                        fontFamily: 'Roboto',
-                                        color: ThemeApp.blackColor,
-                                        // fontWeight: FontWeight.w500,
-                                        fontSize: height * .02,
-                                      )),
-                                ),
-                              ),
+              return Container(
+                height: 40,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: serviceList!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ShopByCategoryActivity(),
                             ),
                           );
-                        }),
-                  );
-                default:
-                  return Text("No Data found!");
-              }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                            // height: 40,
+
+                            padding:
+                                const EdgeInsets.fromLTRB(15.0, 5, 15.0, 5),
+                            decoration: BoxDecoration(
+                              color: ThemeApp.containerColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: TextFieldUtils().dynamicText(
+                                  serviceList[index].name!,
+                                  context,
+                                  TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    // fontWeight: FontWeight.w500,
+                                    fontSize: height * .02,
+                                  )),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+              );
+            default:
               return Text("No Data found!");
-            }));
+          }
+          return Text("No Data found!");
+        }));
 
     return Container(
       // height: 40,
@@ -1226,58 +1192,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return data == ''
         ? CircularProgressIndicator()
         : FutureBuilder(
-        future: provider.homeImageSliderService(),
-        builder: (context, snapShot) {
-          return (provider.homeSliderList != null)
-              ? Container(
-              height: (MediaQuery
-                  .of(context)
-                  .orientation ==
-                  Orientation.landscape)
-                  ? height * .5
-                  : height * 0.2,
-              width: width,
-              child: Stack(
-                children: [
-                  CarouselSlider(
-                    carouselController: _carouselController,
-                    items: provider.homeSliderList["homeImageSlider"]
-                        .map<Widget>((e) {
-                      return Card(
-                        margin: EdgeInsets.zero,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(10)),
-                        ),
-                        color: ThemeApp.appBackgroundColor,
-                        child: ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                                Radius.circular(10)),
-                            child: Container(
-                              width: width,
-                              color: ThemeApp.appBackgroundColor,
-                              child: Image.network(
-                                e["homeSliderImage"],
-                                fit: BoxFit.fitWidth,
-                                errorBuilder:
-                                    (context, error, stackTrace) {
-                                  return Icon(Icons.image_outlined);
-                                },
-                              ),
-                            )),
-                      );
-                    }).toList() ??
-                        '',
-
-                    options: CarouselOptions(
-                        autoPlay: true,
-                        viewportFraction: 1,
-                        height: height * .3),
-                  ),
-                ],
-              ))
-              : SizedBox();
-        });
+            future: provider.homeImageSliderService(),
+            builder: (context, snapShot) {
+              return (provider.homeSliderList != null)
+                  ? Container(
+                      height: (MediaQuery.of(context).orientation ==
+                              Orientation.landscape)
+                          ? height * .5
+                          : height * 0.2,
+                      width: width,
+                      child: Stack(
+                        children: [
+                          CarouselSlider(
+                            carouselController: _carouselController,
+                            items: provider.homeSliderList["homeImageSlider"]
+                                    .map<Widget>((e) {
+                                  return Card(
+                                    margin: EdgeInsets.zero,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    color: ThemeApp.appBackgroundColor,
+                                    child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        child: Container(
+                                          width: width,
+                                          color: ThemeApp.appBackgroundColor,
+                                          child: Image.network(
+                                            e["homeSliderImage"],
+                                            fit: BoxFit.fitWidth,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Icon(Icons.image_outlined);
+                                            },
+                                          ),
+                                        )),
+                                  );
+                                }).toList() ??
+                                '',
+                            options: CarouselOptions(
+                                autoPlay: true,
+                                viewportFraction: 1,
+                                height: height * .3),
+                          ),
+                        ],
+                      ))
+                  : SizedBox();
+            });
   }
 
 /*
@@ -1611,105 +1574,123 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget stepperOfDelivery(HomeProvider value) {
     return /*(value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
             value.jsonData.isNotEmpty)*/
-      value.jsonData['status'] == "EXCEPTION" ? Text("") :
-      Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
-        child: Container(
-          // height: 300,
-          height: value.jsonData['payload']['consumer_baskets'].length - 1 < 0
-              ? 0.0
-              : 161,
+        value.jsonData['status'] == "EXCEPTION"
+            ? Text("")
+            : Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Container(
+                  // height: 300,
+                  height:
+                      value.jsonData['payload']['consumer_baskets'].length - 1 <
+                              0
+                          ? 0.0
+                          : 161,
 
-          child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: value.jsonData['payload']['consumer_baskets'].length,
-              itemBuilder: (_, index) {
-                //
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount:
+                          value.jsonData['payload']['consumer_baskets'].length,
+                      itemBuilder: (_, index) {
+                        //
 
+                        // DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
+                        // DateTime date =
+                        // DateTime.parse(order['earliest_delivery_date']);
+                        // var earliest_delivery_date = format.format(date);
 
-                // DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
-                // DateTime date =
-                // DateTime.parse(order['earliest_delivery_date']);
-                // var earliest_delivery_date = format.format(date);
-
-                return value.jsonData['payload']['consumer_baskets'][index]
-                ['orders'].length - 1 < 0 ? SizedBox() : InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            MyOrderDetails(values: value
-                                .jsonData['payload']['consumer_baskets'][index]),
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: Container(
-                      // width: 300,
-                        width: width * 0.85,
-                        padding: const EdgeInsets.all(15),
-                        decoration: const BoxDecoration(
-                            color: ThemeApp.whiteColor,
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(8))),
-                        child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(0)),
-                                    child: Image.network(
-                                      // width: double.infinity,
-                                      value
-                                          .jsonData['payload']['consumer_baskets'][index]['orders'][0]['image_url'] ??
-                                          "",
-                                      // fit: BoxFit.fill,
-                                      errorBuilder:
-                                      ((context, error, stackTrace) {
-                                        return Icon(Icons.image_outlined);
-                                      }),
-                                      height: MediaQuery
-                                          .of(context)
-                                          .size
-                                          .height *
-                                          .055,
-                                    )),
-                                SizedBox(
-                                  width: 9,
+                        return value
+                                        .jsonData['payload']['consumer_baskets']
+                                            [index]['orders']
+                                        .length -
+                                    1 <
+                                0
+                            ? SizedBox()
+                            : InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => MyOrderDetails(
+                                          values: value.jsonData['payload']
+                                              ['consumer_baskets'][index]),
+                                    ),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 10.0),
+                                  child: Container(
+                                      // width: 300,
+                                      width: width * 0.85,
+                                      padding: const EdgeInsets.all(15),
+                                      decoration: const BoxDecoration(
+                                          color: ThemeApp.whiteColor,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8))),
+                                      child: Column(
+                                        // mainAxisAlignment: MainAxisAlignment.start,
+                                        // crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              ClipRRect(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(0)),
+                                                  child: Image.network(
+                                                    // width: double.infinity,
+                                                    value.jsonData['payload'][
+                                                                    'consumer_baskets']
+                                                                [
+                                                                index]['orders']
+                                                            [0]['image_url'] ??
+                                                        "",
+                                                    // fit: BoxFit.fill,
+                                                    errorBuilder: ((context,
+                                                        error, stackTrace) {
+                                                      return Icon(
+                                                          Icons.image_outlined);
+                                                    }),
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            .055,
+                                                  )),
+                                              SizedBox(
+                                                width: 9,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  "Order ID : ${value.jsonData['payload']['consumer_baskets'][index]['id']}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.start,
+                                                  maxLines: 2,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      fontSize: 12,
+                                                      letterSpacing: -0.25,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          stepperWidget(
+                                              value.jsonData['payload']
+                                                      ['consumer_baskets']
+                                                  [index]['orders'][0],
+                                              value.jsonData['payload']
+                                                  ['consumer_baskets'][index]),
+                                        ],
+                                      )),
                                 ),
-                                Flexible(
-                                  child: Text(
-                                    "Order ID : ${value
-                                        .jsonData['payload']['consumer_baskets'][index]['id']}",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: 12,
-                                        letterSpacing: -0.25,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            stepperWidget(value
-                                .jsonData['payload']['consumer_baskets'][index]['orders'][0],
-                                value
-                                    .jsonData['payload']['consumer_baskets'][index]),
-                          ],
-                        )),
-                  ),
-                );
-                /* ListView.builder(
+                              );
+                        /* ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: value
@@ -1781,9 +1762,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             )),
                       );
                     });*/
-              }),
-        ),
-      );
+                      }),
+                ),
+              );
     /*  : value.jsonData['error'] != null
             ? Container()
             : Center(child: CircularProgressIndicator());*/
@@ -1899,7 +1880,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 */
 
-  Widget stepperWidget(Map subOrders, dynamic jsonData,) {
+  Widget stepperWidget(
+    Map subOrders,
+    dynamic jsonData,
+  ) {
     return Container(
         height: height * .1,
         width: width,
@@ -1929,98 +1913,97 @@ class _DashboardScreenState extends State<DashboardScreen> {
         value: productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
-              switch (productCategories.recommendedList.status) {
-                case Status.LOADING:
-                  if (kDebugMode) {
-                    print("Api load");
-                  }
-                  return ProgressIndicatorLoader(true);
+          switch (productCategories.recommendedList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-                case Status.ERROR:
-                  if (kDebugMode) {
-                    print("Api error");
-                  }
-                  return Text(
-                      productCategories.recommendedList.message.toString());
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(productCategories.recommendedList.message.toString());
 
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-                  List<RecommendedContent>? recommendedList = productCategories
-                      .recommendedList.data!.payload!.content;
+              List<RecommendedContent>? recommendedList =
+                  productCategories.recommendedList.data!.payload!.content;
 
-                  return Container(
-                    height: 228,
-                    child: recommendedList!.isNotEmpty
-                        ? ListView.builder(
+              return Container(
+                height: 228,
+                child: recommendedList!.isNotEmpty
+                    ? ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         itemCount: recommendedList!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProductDetailsActivity(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProductDetailsActivity(
                                             id: recommendedList[index].id,
                                             // productList: subProductList[index],
                                             // productSpecificListViewModel:
                                             //     productSpecificListViewModel,
                                           ),
-                                    ),
-                                  );
-                                },
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: 163,
-                                      width: 191,
-                                      decoration: const BoxDecoration(
-                                        color: ThemeApp.whiteColor,
-                                      ),
-                                      child: ClipRRect(
-                                          child: Image.network(
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 163,
+                                          width: 191,
+                                          decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                          ),
+                                          child: ClipRRect(
+                                              child: Image.network(
                                             // width: double.infinity,
                                             recommendedList[index]
-                                                .imageUrls![0]
-                                                .imageUrl
-                                                .toString() ??
+                                                    .imageUrls![0]
+                                                    .imageUrl
+                                                    .toString() ??
                                                 "",
                                             fit: BoxFit.scaleDown,
                                             errorBuilder:
-                                            ((context, error, stackTrace) {
+                                                ((context, error, stackTrace) {
                                               return Icon(Icons.image_outlined);
                                             }),
                                           )),
-                                    ),
-                                    Container(
-                                      color: ThemeApp.tealButtonColor,
-                                      width: 191,
-                                      height: 65,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            padding:
-                                            const EdgeInsets.fromLTRB(
-                                                21, 9, 21, 4),
-                                            child: TextFieldUtils()
-                                                .listNameHeadingTextField(
-                                                recommendedList[index]
-                                                    .shortName!,
-                                                context) /*Text(
+                                        ),
+                                        Container(
+                                          color: ThemeApp.tealButtonColor,
+                                          width: 191,
+                                          height: 65,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 9, 21, 4),
+                                                child: TextFieldUtils()
+                                                    .listNameHeadingTextField(
+                                                        recommendedList[index]
+                                                            .shortName!,
+                                                        context) /*Text(
                                                     serviceList[index].shortName!,
                                                     maxLines: 1,
                                                     style: TextStyle(fontFamily: 'Roboto',
@@ -2031,62 +2014,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                         fontSize: height * .022,
                                                         fontWeight:
                                                             FontWeight.bold))*/
-                                            ,
-                                          ),
-                                          Container(
-                                            padding:
-                                            const EdgeInsets.fromLTRB(
-                                                21, 0, 21, 9),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                //discount
-                                                TextFieldUtils()
-                                                    .listPriceHeadingTextField(
-                                                    indianRupeesFormat
-                                                        .format(recommendedList[
-                                                    index]
-                                                        .defaultSellPrice ??
-                                                        0.0),
-                                                    context),
+                                                ,
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 0, 21, 9),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    //discount
+                                                    TextFieldUtils()
+                                                        .listPriceHeadingTextField(
+                                                            indianRupeesFormat.format(
+                                                                recommendedList[
+                                                                            index]
+                                                                        .defaultSellPrice ??
+                                                                    0.0),
+                                                            context),
 
-                                                TextFieldUtils()
-                                                    .listScratchPriceHeadingTextField(
-                                                    indianRupeesFormat
-                                                        .format(recommendedList[
-                                                    index]
-                                                        .defaultMrp ??
-                                                        0.0),
-                                                    context),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                                    TextFieldUtils()
+                                                        .listScratchPriceHeadingTextField(
+                                                            indianRupeesFormat.format(
+                                                                recommendedList[
+                                                                            index]
+                                                                        .defaultMrp ??
+                                                                    0.0),
+                                                            context),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width:
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width * .03,
-                              )
-                            ],
-                          ) ??
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .03,
+                                  )
+                                ],
+                              ) ??
                               SizedBox();
                         })
-                        : SizedBox(),
-                  );
-                default:
-                  return Text("No Data found!");
-              }
+                    : SizedBox(),
+              );
+            default:
               return Text("No Data found!");
-            }));
+          }
+          return Text("No Data found!");
+        }));
 
 /*
     return ChangeNotifierProvider<DashboardViewModel>(
@@ -2244,162 +2224,137 @@ class _DashboardScreenState extends State<DashboardScreen> {
         value: productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
-              switch (productCategories.productListingResponse.status) {
-                case Status.LOADING:
-                  if (kDebugMode) {
-                    print("Api load");
-                  }
-                  return ProgressIndicatorLoader(true);
+          switch (productCategories.productListingResponse.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-                case Status.ERROR:
-                  if (kDebugMode) {
-                    print("Api error");
-                  }
-                  return Text(
-                      productCategories.productListingResponse.message
-                          .toString());
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(
+                  productCategories.productListingResponse.message.toString());
 
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-                  List<Content>? serviceList = productCategories
-                      .productListingResponse.data!.payload!.content;
+              List<Content>? serviceList = productCategories
+                  .productListingResponse.data!.payload!.content;
 
-                  return Container(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * .35,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: serviceList!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                            onTap: () {
-                              // Navigator.of(context).push(
-                              //   MaterialPageRoute(
-                              //     builder: (context) => MerchantActvity(
-                              //         merchantList:
-                              //             provider.merchantNearYouList[index]),
-                              //   ),
-                              // );
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                    width: MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width * .45,
-                                    decoration: const BoxDecoration(
-                                        color: ThemeApp.tealButtonColor,
-                                        borderRadius:
+              return Container(
+                height: MediaQuery.of(context).size.height * .35,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: serviceList!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) => MerchantActvity(
+                          //         merchantList:
+                          //             provider.merchantNearYouList[index]),
+                          //   ),
+                          // );
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                                width: MediaQuery.of(context).size.width * .45,
+                                decoration: const BoxDecoration(
+                                    color: ThemeApp.tealButtonColor,
+                                    borderRadius:
                                         BorderRadius.all(Radius.circular(10))),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .start,
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Stack(
+                                      alignment: Alignment.topRight,
                                       children: [
-                                        Stack(
-                                          alignment: Alignment.topRight,
-                                          children: [
-                                            Container(
-                                              height: MediaQuery
-                                                  .of(context)
+                                        Container(
+                                          height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                                  .28,
-                                              width: MediaQuery
-                                                  .of(context)
+                                              .28,
+                                          width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                                  .45,
-                                              decoration: const BoxDecoration(
-                                                  color: ThemeApp.whiteColor,
-                                                  borderRadius: BorderRadius
-                                                      .only(
-                                                    topRight: Radius.circular(
-                                                        10),
-                                                    topLeft: Radius.circular(
-                                                        10),
-                                                  )),
-                                              child: ClipRRect(
-                                                  borderRadius: BorderRadius
-                                                      .only(
-                                                    topRight: Radius.circular(
-                                                        10),
-                                                    topLeft: Radius.circular(
-                                                        10),
-                                                  ),
-                                                  child: Image.network(
-                                                    // width: double.infinity,
-                                                    serviceList[index]
+                                              .45,
+                                          decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              )),
+                                          child: ClipRRect(
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10),
+                                              ),
+                                              child: Image.network(
+                                                // width: double.infinity,
+                                                serviceList[index]
                                                         .imageUrls![0]
                                                         .imageUrl! ??
-                                                        "",
-                                                    // fit: BoxFit.fill,
-                                                    errorBuilder: ((context,
-                                                        error,
-                                                        stackTrace) {
-                                                      return Icon(
-                                                          Icons.image_outlined);
-                                                    }),
-                                                    height: MediaQuery
-                                                        .of(context)
+                                                    "",
+                                                // fit: BoxFit.fill,
+                                                errorBuilder: ((context, error,
+                                                    stackTrace) {
+                                                  return Icon(
+                                                      Icons.image_outlined);
+                                                }),
+                                                height: MediaQuery.of(context)
                                                         .size
                                                         .height *
-                                                        .07,
-                                                  )),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10, right: 10),
-                                              child: kmAwayOnMerchantImage(
-                                                '1.2 km Away',
-                                                context,
-                                              ),
-                                            )
-                                          ],
+                                                    .07,
+                                              )),
                                         ),
-                                        SizedBox(
-                                          height:
-                                          MediaQuery
-                                              .of(context)
-                                              .size
-                                              .height *
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10, right: 10),
+                                          child: kmAwayOnMerchantImage(
+                                            '1.2 km Away',
+                                            context,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
                                               .01,
-                                        ),
-                                        Container(
-                                          alignment: Alignment.centerLeft,
-                                          padding: const EdgeInsets.all(10),
-                                          child: TextFieldUtils()
-                                              .homePageTitlesTextFieldsWHITE(
+                                    ),
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.all(10),
+                                      child: TextFieldUtils()
+                                          .homePageTitlesTextFieldsWHITE(
                                               serviceList[index].shortName!,
                                               context),
-                                        ),
-                                      ],
-                                    )),
-                                SizedBox(
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width * .03,
-                                )
-                              ],
-                            ),
-                          );
-                        }),
-                  );
+                                    ),
+                                  ],
+                                )),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .03,
+                            )
+                          ],
+                        ),
+                      );
+                    }),
+              );
 
-                default:
-                  return Text("No Data found!");
-              }
+            default:
               return Text("No Data found!");
-            }));
+          }
+          return Text("No Data found!");
+        }));
 
 /*
     return ChangeNotifierProvider<DashboardViewModel>.value(
@@ -2677,97 +2632,96 @@ class _DashboardScreenState extends State<DashboardScreen> {
         value: productListView,
         child: Consumer<DashboardViewModel>(
             builder: (context, productCategories, child) {
-              switch (productCategories.bestDealList.status) {
-                case Status.LOADING:
-                  if (kDebugMode) {
-                    print("Api load");
-                  }
-                  return ProgressIndicatorLoader(true);
+          switch (productCategories.bestDealList.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-                case Status.ERROR:
-                  if (kDebugMode) {
-                    print("Api error");
-                  }
-                  return Text(
-                      productCategories.bestDealList.message.toString());
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(productCategories.bestDealList.message.toString());
 
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-                  List<BestDealContent>? serviceList = productCategories
-                      .bestDealList.data!.payload!.content;
+              List<BestDealContent>? serviceList =
+                  productCategories.bestDealList.data!.payload!.content;
 
-                  return Container(
-                    height: 228,
-                    child: serviceList!.isNotEmpty
-                        ? ListView.builder(
+              return Container(
+                height: 228,
+                child: serviceList!.isNotEmpty
+                    ? ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         itemCount: serviceList!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProductDetailsActivity(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProductDetailsActivity(
                                             id: serviceList[index].id,
                                             // productList: subProductList[index],
                                             // productSpecificListViewModel:
                                             //     productSpecificListViewModel,
                                           ),
-                                    ),
-                                  );
-                                },
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: 163,
-                                      width: 191,
-                                      decoration: const BoxDecoration(
-                                        color: ThemeApp.whiteColor,
-                                      ),
-                                      child: ClipRRect(
-                                          child: Image.network(
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 163,
+                                          width: 191,
+                                          decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                          ),
+                                          child: ClipRRect(
+                                              child: Image.network(
                                             // width: double.infinity,
                                             serviceList[index]
                                                 .imageUrls![0]
                                                 .imageUrl
                                                 .toString(),
                                             errorBuilder:
-                                            ((context, error, stackTrace) {
+                                                ((context, error, stackTrace) {
                                               return Icon(Icons.image_outlined);
                                             }),
                                             // fit: BoxFit.fill,
                                           )),
-                                    ),
-                                    Container(
-                                      color: ThemeApp.tealButtonColor,
-                                      width: 191,
-                                      height: 65,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            padding:
-                                            const EdgeInsets.fromLTRB(
-                                                21, 9, 21, 4),
-                                            child: TextFieldUtils()
-                                                .listNameHeadingTextField(
-                                                serviceList[index]
-                                                    .shortName!,
-                                                context) /*Text(
+                                        ),
+                                        Container(
+                                          color: ThemeApp.tealButtonColor,
+                                          width: 191,
+                                          height: 65,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 9, 21, 4),
+                                                child: TextFieldUtils()
+                                                    .listNameHeadingTextField(
+                                                        serviceList[index]
+                                                            .shortName!,
+                                                        context) /*Text(
                                                     serviceList[index].shortName!,
                                                     maxLines: 1,
                                                     style: TextStyle(fontFamily: 'Roboto',
@@ -2778,62 +2732,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                         fontSize: height * .022,
                                                         fontWeight:
                                                             FontWeight.bold))*/
-                                            ,
-                                          ),
-                                          Container(
-                                            padding:
-                                            const EdgeInsets.fromLTRB(
-                                                21, 0, 21, 9),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                //discount
-                                                TextFieldUtils()
-                                                    .listPriceHeadingTextField(
-                                                    indianRupeesFormat
-                                                        .format(serviceList[
-                                                    index]
-                                                        .defaultSellPrice ??
-                                                        0.0),
-                                                    context),
+                                                ,
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        21, 0, 21, 9),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    //discount
+                                                    TextFieldUtils()
+                                                        .listPriceHeadingTextField(
+                                                            indianRupeesFormat
+                                                                .format(serviceList[
+                                                                            index]
+                                                                        .defaultSellPrice ??
+                                                                    0.0),
+                                                            context),
 
-                                                TextFieldUtils()
-                                                    .listScratchPriceHeadingTextField(
-                                                    indianRupeesFormat
-                                                        .format(serviceList[
-                                                    index]
-                                                        .defaultMrp ??
-                                                        0.0),
-                                                    context),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                                    TextFieldUtils()
+                                                        .listScratchPriceHeadingTextField(
+                                                            indianRupeesFormat
+                                                                .format(serviceList[
+                                                                            index]
+                                                                        .defaultMrp ??
+                                                                    0.0),
+                                                            context),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width:
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width * .03,
-                              )
-                            ],
-                          ) ??
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .03,
+                                  )
+                                ],
+                              ) ??
                               SizedBox();
                         })
-                        : SizedBox(),
-                  );
-                default:
-                  return Text("No Data found!");
-              }
+                    : SizedBox(),
+              );
+            default:
               return Text("No Data found!");
-            }));
+          }
+          return Text("No Data found!");
+        }));
 /*
     return ChangeNotifierProvider<DashboardViewModel>(
         value:  dashboardViewModel,
@@ -2985,118 +2936,109 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget budgetBuyList() {
     return ChangeNotifierProvider<DashboardViewModel>.value(
         value: productListView,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, offers, child) {
-              switch (offers.offerResponse.status) {
-                case Status.LOADING:
-                  if (kDebugMode) {
-                    print("Api load");
-                  }
-                  return ProgressIndicatorLoader(true);
+        child: Consumer<DashboardViewModel>(builder: (context, offers, child) {
+          switch (offers.offerResponse.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-                case Status.ERROR:
-                  if (kDebugMode) {
-                    print("Api error");
-                  }
-                  return Text(
-                      offers.offerResponse.message.toString());
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text(offers.offerResponse.message.toString());
 
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-                  List<OfferPayload>? offerList = offers.offerResponse.data!
-                      .payload;
+              List<OfferPayload>? offerList =
+                  offers.offerResponse.data!.payload;
 
-                  return Container(
-                    height: offerList!.length > 2 ? 420 : 240,
-                    child: GridView(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 12,
-                          // childAspectRatio: 1.0,
-                          childAspectRatio:
-                          MediaQuery
-                              .of(context)
-                              .size
-                              .height / 800,
-                        ),
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: List.generate(
-                            offerList.length >= 4 ? 4 : offerList.length,
-                                (index) {
-                              return Container(
-                                // height: 191,
-                                // width: 191,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            OfferActivity(
-                                              // payload: offerList[index],
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      Container(
+              return Container(
+                height: offerList!.length > 2 ? 420 : 240,
+                child: GridView(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 12,
+                      // childAspectRatio: 1.0,
+                      childAspectRatio:
+                          MediaQuery.of(context).size.height / 800,
+                    ),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: List.generate(
+                        offerList.length >= 4 ? 4 : offerList.length, (index) {
+                      return Container(
+                        // height: 191,
+                        // width: 191,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => OfferActivity(
+                                    // payload: offerList[index],
+                                    ),
+                              ),
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 141,
+                                width: 191,
+                                decoration: const BoxDecoration(
+                                  color: ThemeApp.whiteColor,
+                                  // borderRadius: BorderRadius.only(
+                                  //   topRight: Radius.circular(10),
+                                  //   topLeft: Radius.circular(10),
+                                  // )
+                                ),
+                                child: Image.network(
+                                  // width: double.infinity,
+                                  offerList[index].offerImageUrl.toString() ??
+                                      "",
+                                  // fit: BoxFit.fill,
+                                  errorBuilder: ((context, error, stackTrace) {
+                                    return Container(
                                         height: 141,
                                         width: 191,
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                          // borderRadius: BorderRadius.only(
-                                          //   topRight: Radius.circular(10),
-                                          //   topLeft: Radius.circular(10),
-                                          // )
-                                        ),
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          offerList[index].offerImageUrl
-                                              .toString() ?? "",
-                                          // fit: BoxFit.fill,
-                                          errorBuilder: ((context, error,
-                                              stackTrace) {
-                                            return Container(
-                                                height: 141,
-                                                width: 191,
-                                                color: ThemeApp.whiteColor,
-                                                child: Icon(
-                                                  Icons.image_outlined,
-                                                ));
-                                          }),
-                                          // height: 163,
-                                          // width: 191,
-                                        ),
-                                      ),
-                                      SizedBox(),
-                                      Container(
-                                        color: ThemeApp.tealButtonColor,
-                                        width: 191,
-                                        // height: 65,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(
-                                                  21, 10, 21, 0),
-                                              child: TextFieldUtils()
-                                                  .listNameHeadingTextField(
+                                        color: ThemeApp.whiteColor,
+                                        child: Icon(
+                                          Icons.image_outlined,
+                                        ));
+                                  }),
+                                  // height: 163,
+                                  // width: 191,
+                                ),
+                              ),
+                              SizedBox(),
+                              Container(
+                                color: ThemeApp.tealButtonColor,
+                                width: 191,
+                                // height: 65,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          21, 10, 21, 0),
+                                      child: TextFieldUtils()
+                                              .listNameHeadingTextField(
                                                   offerList[index]
-                                                      .productSubCategoryName
-                                                      .toString() ?? "",
-                                                  context) ?? SizedBox() /*Text(
+                                                          .productSubCategoryName
+                                                          .toString() ??
+                                                      "",
+                                                  context) ??
+                                          SizedBox() /*Text(
                                                     serviceList[index].shortName!,
                                                     maxLines: 1,
                                                     style: TextStyle(fontFamily: 'Roboto',
@@ -3107,42 +3049,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                         fontSize: height * .022,
                                                         fontWeight:
                                                             FontWeight.bold))*/
-                                              ,
-                                            ),
-                                            offerList[index].isAmountBased==true?   Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(
-                                                  21, 4, 21, 9),
-                                              child: TextFieldUtils()
-                                                  .listPriceHeadingTextField(
-
-                                                "Under "+  offerList[index]
-                                                    .belowAmountDisplay.toString(),
-                                                  context),
-
-                                            ):Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(
-                                                  21, 4, 21, 9),
-                                              child: TextFieldUtils()
-                                                  .listPriceHeadingTextField(
-
-                                                  "Under "+  offerList[index]
-                                                      .belowDiscountPercentDisplay.toString(),
-                                                  context),
-
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                      ,
+                                    ),
+                                    offerList[index].isAmountBased == true
+                                        ? Container(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                21, 4, 21, 9),
+                                            child: TextFieldUtils()
+                                                .listPriceHeadingTextField(
+                                                    "Under " +
+                                                        offerList[index]
+                                                            .belowAmountDisplay
+                                                            .toString(),
+                                                    context),
+                                          )
+                                        : Container(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                21, 4, 21, 9),
+                                            child: TextFieldUtils()
+                                                .listPriceHeadingTextField(
+                                                    "Under " +
+                                                        offerList[index]
+                                                            .belowDiscountPercentDisplay
+                                                            .toString(),
+                                                    context),
+                                          )
+                                  ],
                                 ),
-                              );
-                            })),
-                  );
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    })),
+              );
 
-              /*    Container(
+            /*    Container(
                       height: serviceList!.length > 2 ? 480 : 240,
                       // width: MediaQuery.of(context).size.width,
                       // padding: EdgeInsets.all(12.0),
@@ -3337,11 +3279,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           );
                         },
                       ));*/
-                default:
-                  return Text("No Data found!");
-              }
+            default:
               return Text("No Data found!");
-            }));
+          }
+          return Text("No Data found!");
+        }));
 /*
     return ChangeNotifierProvider<DashboardViewModel>(
         value:  dashboardViewModel,
@@ -3908,88 +3850,89 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // }
   int checkStepperCount = 0;
 
-  Widget _iconViews(BuildContext context,
-      Map subOrders,) {
+  Widget _iconViews(
+    BuildContext context,
+    Map subOrders,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
             child: Icon(
-              Icons.circle,
-              color: ThemeApp.appColor,
-              size: 20,
-            )
-        ),
+          Icons.circle,
+          color: ThemeApp.appColor,
+          size: 20,
+        )),
         Expanded(
             child: Container(
-              height: 3.0,
-              color: ThemeApp.appColor,
-            )),
+          height: 3.0,
+          color: ThemeApp.appColor,
+        )),
         Container(
           child: subOrders['is_packed'] == true
               ? Icon(
-            Icons.circle,
-            color: subOrders['is_packed'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          )
+                  Icons.circle,
+                  color: subOrders['is_packed'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: subOrders['is_packed'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: subOrders['is_packed'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                ),
         ),
         Expanded(
             child: Container(
-              height: 3.0,
-              color: subOrders['is_packed'] == true
-                  ? ThemeApp.appColor
-                  : ThemeApp.inactiveStepperColor,
-            )),
+          height: 3.0,
+          color: subOrders['is_packed'] == true
+              ? ThemeApp.appColor
+              : ThemeApp.inactiveStepperColor,
+        )),
         Container(
           child: subOrders['is_shipped'] == true
               ? Icon(
-            Icons.circle,
-            color: subOrders['is_shipped'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          )
+                  Icons.circle,
+                  color: subOrders['is_shipped'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: subOrders['is_shipped'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: subOrders['is_shipped'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                ),
         ),
         Expanded(
             child: Container(
-              height: 3.0,
-              color: subOrders['is_shipped'] == true
-                  ? ThemeApp.appColor
-                  : ThemeApp.inactiveStepperColor,
-            )),
+          height: 3.0,
+          color: subOrders['is_shipped'] == true
+              ? ThemeApp.appColor
+              : ThemeApp.inactiveStepperColor,
+        )),
         Container(
           child: subOrders['is_delivered'] == true
               ? Icon(
-            Icons.circle,
-            color: subOrders['is_delivered'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          )
+                  Icons.circle,
+                  color: subOrders['is_delivered'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                )
               : Icon(
-            Icons.radio_button_checked_outlined,
-            color: subOrders['is_delivered'] == true
-                ? ThemeApp.appColor
-                : ThemeApp.inactiveStepperColor,
-            size: 20,
-          ),
+                  Icons.radio_button_checked_outlined,
+                  color: subOrders['is_delivered'] == true
+                      ? ThemeApp.appColor
+                      : ThemeApp.inactiveStepperColor,
+                  size: 20,
+                ),
         ),
       ],
     );
@@ -4090,8 +4033,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return list;
   }*/
 
-  Widget _titleViews(BuildContext context,
-      Map subOrders,) {
+  Widget _titleViews(
+    BuildContext context,
+    Map subOrders,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -4182,8 +4127,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 */
   }
 
-  Widget _stepsViews(BuildContext context,
-      Map subOrders, dynamic jsonData,) {
+  Widget _stepsViews(
+    BuildContext context,
+    Map subOrders,
+    dynamic jsonData,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -4200,8 +4148,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              '${jsonData['orders_packed_completed']
-                  .toString()}/${jsonData['orders_packed_total'].toString()}',
+              '${jsonData['orders_packed_completed'].toString()}/${jsonData['orders_packed_total'].toString()}',
               context,
               subOrders['is_packed'] == true
                   ? ThemeApp.blackColor
@@ -4210,8 +4157,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              '${jsonData['orders_Shipped_completed']
-                  .toString()}/${jsonData['orders_Shipped_total'].toString()}',
+              '${jsonData['orders_Shipped_completed'].toString()}/${jsonData['orders_Shipped_total'].toString()}',
               context,
               subOrders['is_shipped'] == true
                   ? ThemeApp.blackColor
@@ -4220,10 +4166,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              '${jsonData['orders_Delivered_completed']
-                  .toString()}/${jsonData['orders_Delivered_total']
-                  .toString()}',
-
+              '${jsonData['orders_Delivered_completed'].toString()}/${jsonData['orders_Delivered_total'].toString()}',
               context,
               subOrders['is_delivered'] == true
                   ? ThemeApp.blackColor

@@ -42,10 +42,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-            context, appTitle(context, "Add New Card"), SizedBox(),setState),
-      ),
-      body: SafeArea(
+        child: AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"Add New Card"), location: SizedBox()),
+      ),body: SafeArea(
         child: Container(
           color: ThemeApp.appBackgroundColor,
           width: width,
@@ -287,8 +286,8 @@ class _EditCardListScreenState extends State<EditCardListScreen> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-            context, appTitle(context, "Add New Card"), SizedBox(),setState),
+        child:  AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"Add New Card"), location: SizedBox()),
       ),
       body: SafeArea(
         child: Container(

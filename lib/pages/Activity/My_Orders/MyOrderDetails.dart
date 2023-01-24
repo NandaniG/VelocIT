@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_downloader/image_downloader.dart';
 import 'package:intl/intl.dart';
 import 'package:velocit/pages/Activity/My_Orders/QR_download_popup.dart';
+import 'package:velocit/utils/utils.dart';
 
 import '../../../services/models/MyOrdersModel.dart';
 import '../../../utils/styles.dart';
@@ -50,9 +53,9 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .08),
-        child: appBar_backWidget(
-            context, appTitle(context, "Order Details"), SizedBox(), setState),
-      ),
+        child:  AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"Order Details"), location: SizedBox()),
+     ),
       body: SafeArea(child: mainUI()),
     );
   }
@@ -131,37 +134,62 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       SizedBox(
                         width: width * .03,
                       ),
-                      Container(
-                        padding:
-                            const EdgeInsets.fromLTRB(10.0, 7.0, 10.0, 7.0),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20),
+                      InkWell(
+                        onTap: () async {
+
+                          try {
+                            // Saved with this method.
+                            var imageId = await ImageDownloader.downloadImage(
+                                "http://static.fulgorithmapi.com/invoices/invoice.jpg");
+                            if (imageId == null) {
+                              return;
+                            }
+                            // Below is a method of obtaining saved image information.
+                            var fileName =
+                                await ImageDownloader.findName(imageId);
+                            var path = await ImageDownloader.findPath(imageId);
+                            var size =
+                                await ImageDownloader.findByteSize(imageId);
+                            var mimeType =
+                                await ImageDownloader.findMimeType(imageId);
+                            Navigator.pop(context);
+                            Utils.successToast('Image downloaded.');
+                          } on PlatformException catch (error) {
+                            print(error);
+                          }
+                        },
+                        child: Container(
+                          padding:
+                              const EdgeInsets.fromLTRB(10.0, 7.0, 10.0, 7.0),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                            color: ThemeApp.appColor,
                           ),
-                          color: ThemeApp.appColor,
-                        ),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/appImages/downloadIcon.svg',
-                              color: ThemeApp.whiteColor,
-                              semanticsLabel: 'Acme Logo',
-                              height: 16.29,
-                              width: 8.77,
-                            ),
-                            SizedBox(
-                              width: width * .02,
-                            ),
-                            TextFieldUtils().dynamicText(
-                                'Download Invoice',
-                                context,
-                                TextStyle(
-                                    fontFamily: 'Roboto',
-                                    color: ThemeApp.whiteColor,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -0.25)),
-                          ],
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/appImages/downloadIcon.svg',
+                                color: ThemeApp.whiteColor,
+                                semanticsLabel: 'Acme Logo',
+                                height: 16.29,
+                                width: 8.77,
+                              ),
+                              SizedBox(
+                                width: width * .02,
+                              ),
+                              TextFieldUtils().dynamicText(
+                                  'Download Invoice',
+                                  context,
+                                  TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.whiteColor,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: -0.25)),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -228,17 +256,17 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                               height: 62.0,
                               decoration: new BoxDecoration(
                                 borderRadius:
-                                const BorderRadius.all(Radius.circular(2)),
+                                    const BorderRadius.all(Radius.circular(2)),
                                 shape: BoxShape.rectangle,
                               ),
                               child: Image.network(
-                                // width: double.infinity,
+                                  // width: double.infinity,
                                   orders["image_url"] ?? "",
                                   width: 62.0,
                                   height: 62.0,
                                   errorBuilder: ((context, error, stackTrace) {
-                                    return Icon(Icons.image_outlined);
-                                  })),
+                                return Icon(Icons.image_outlined);
+                              })),
                             ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * .03,
@@ -254,13 +282,13 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                                       fontWeight: FontWeight.w400,
                                       overflow: TextOverflow.ellipsis)),
                             ),
-
-
                           ],
                         ),
-                        SizedBox(height: 6,),
+                        SizedBox(
+                          height: 6,
+                        ),
                         TextFieldUtils().dynamicText(
-                            orders["merchant_name"].toString()??"",
+                            orders["merchant_name"].toString() ?? "",
                             context,
                             TextStyle(
                                 fontFamily: 'Roboto',
@@ -296,7 +324,6 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
             ),
             Flexible(child: _titleViews(context, subOrders)),
             Flexible(child: _stepsViews(context, subOrders)),
-
           ],
         ));
   }
@@ -559,7 +586,6 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           width: 50,
           child: TextFieldUtils().stepperTextFields(
               '${widget.values['orders_Shipped_completed'].toString()}/${widget.values['orders_Shipped_total'].toString()}',
-
               context,
               subOrders['is_shipped'] == true
                   ? ThemeApp.blackColor

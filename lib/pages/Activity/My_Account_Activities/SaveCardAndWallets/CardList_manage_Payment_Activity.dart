@@ -34,9 +34,9 @@ class _CardListManagePaymentsState extends State<CardListManagePayments> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-            context, appTitle(context, "Manage Payment Methods"), SizedBox(),setState),
-      ),
+        child:  AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"Manage Payment Methods"), location: SizedBox()),
+             ),
       body: SafeArea(
         child: Container(
           color: ThemeApp.appBackgroundColor,

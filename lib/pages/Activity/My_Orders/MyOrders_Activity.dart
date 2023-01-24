@@ -66,10 +66,11 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
           height: height * .19,
           child: Column(
             children: [
-              appBar_backWidget(context, appTitle(context, "My Orders"),
-                  SizedBox(), setState),
+              AppBar_BackWidget(
+                  context: context,titleWidget: appTitle(context,"My Orders"), location: SizedBox()),
+
               Consumer<HomeProvider>(builder: (context, value, child) {
-                return Container(
+                return  Container(
                   height: height * .077,
                   decoration: BoxDecoration(
                       border: Border.all(color: ThemeApp.appColor, width: 1)),
@@ -502,7 +503,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
     return Expanded(
       child: value.jsonData['status'] == "EXCEPTION"
           ? Text("")
-          : ListView.builder(
+        :ListView.builder(
               itemCount: value.jsonData['payload']['consumer_baskets'].length,
               itemBuilder: (_, index) {
                 Map order =
@@ -512,6 +513,13 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                 var earliest_delivery_date = format.format(date);
 
                 Color colorsStatus = ThemeApp.activeOrderColor;
+                for (var i = 0; i < value.jsonData['payload']['consumer_baskets'][index]['orders'].length-1; i++) {
+
+                  print("order['orders'][i]['cancelled']"+order['orders'][i]['cancelled'].toString());
+                  if(order['orders'][i]['cancelled'] ==true) {
+                        colorsStatus = ThemeApp.separatedLineColor;
+                      }
+                }
                 if (order["overall_status"] == "Acceptance Pending") {
                   colorsStatus = ThemeApp.redColor;
                 }
@@ -728,8 +736,8 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                         height: order['orders'].length > 2
                                             ? !viewMore
                                                 ? 30
-                                                : 59
-                                            : 30,
+                                                : 30
+                                            : 50,
                                         // width: width * .63,
                                         child: ListView.builder(
                                           physics: order['orders'].length > 2
@@ -742,10 +750,10 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                               : order['orders'].length,
                                           itemBuilder:
                                               (context, indexOrderDetails) {
-                                            indexOfOrders = indexOrderDetails;
+                                            indexOfOrders == 0?indexOfOrders-1: indexOfOrders= indexOrderDetails;
                                             print("Order Id : " +
                                                 order['orders']
-                                                            [indexOrderDetails]
+                                                            [indexOfOrders]
                                                         ['order_id']
                                                     .toString());
                                             return (order['orders'].length > 2)
@@ -755,55 +763,54 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                                 ['cancelled'] ==
                                                             'true'
                                                         ? SizedBox()
-                                                        : Expanded(
-                                                            child: Container(
-                                                                child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 8.0),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Container(
-                                                                  width: 280,
-                                                                  child: Text(
-                                                                      "${order['orders'][indexOrderDetails]["oneliner"]}",
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                              'Roboto',
-                                                                          color: ThemeApp
-                                                                              .blackColor,
-                                                                          fontSize:
-                                                                              12,
-                                                                          fontWeight: FontWeight
-                                                                              .w400,
-                                                                          letterSpacing:
-                                                                              -0.25,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis)),
-                                                                ),
-                                                                Text(
-                                                                    "* ${order['orders'][indexOrderDetails]["item_qty"]}",
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Roboto',
-                                                                        color: ThemeApp
-                                                                            .blackColor,
-                                                                        fontSize:
-                                                                            12,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w700,
-                                                                        letterSpacing:
-                                                                            -0.25,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis)),
-                                                              ],
+                                                        : Container(
+                                                            child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                top: 8.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              width: 280,
+                                                              child: Text(
+                                                                  "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Roboto',
+                                                                      color: ThemeApp
+                                                                          .blackColor,
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight: FontWeight
+                                                                          .w400,
+                                                                      letterSpacing:
+                                                                          -0.25,
+                                                                      overflow:
+                                                                          TextOverflow.ellipsis)),
                                                             ),
-                                                          )))
+                                                            Text(
+                                                                "* ${order['orders'][indexOrderDetails]["item_qty"]}",
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Roboto',
+                                                                    color: ThemeApp
+                                                                        .blackColor,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                    letterSpacing:
+                                                                        -0.25,
+                                                                    overflow:
+                                                                        TextOverflow.ellipsis)),
+                                                          ],
+                                                        ),
+                                                          ))
                                                     : order['orders'][
                                                                     indexOrderDetails]
                                                                 ['cancelled'] ==
@@ -1045,9 +1052,15 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                     ),
                                     TextFieldUtils().lineHorizontal(),
                                     // stepperWidget(),
+        /*         stepperWidget(*//*
+                                        order['orders'][subIndexOrderList]*//*subIndexOrderList, order),
+*/
                                     stepperWidget(
-                                        order['orders'][subIndexOrderList], value
-                                        .jsonData['payload']['consumer_baskets'][index]),
+                                        value.jsonData['payload']
+                                        ['consumer_baskets']
+                                        [index]['orders'][0],
+                                        value.jsonData['payload']
+                                        ['consumer_baskets'][index]),
                                     TextFieldUtils().lineHorizontal(),
                                     SizedBox(
                                       height: 6,
@@ -1078,8 +1091,9 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                           12,
                                                       fontWeight:
                                                           FontWeight.w400)),*/
-                                            order['overall_status'] ==
-                                                    'Delivered'
+                                            order[
+                                            'orders'][
+                                            indexOfOrders]['cancelled']==true
                                                 ? Container(
                                                     padding: const EdgeInsets
                                                             .fromLTRB(
@@ -1091,20 +1105,13 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                         Radius.circular(20),
                                                       ),
                                                       color: ThemeApp
-                                                          .tealButtonColor,
+                                                          .redColor,
                                                     ),
                                                     child: Row(
                                                       children: [
-                                                        Icon(
-                                                            Icons.refresh_sharp,
-                                                            color: ThemeApp
-                                                                .whiteColor,
-                                                            size: height * .02),
-                                                        SizedBox(
-                                                          width: width * .01,
-                                                        ),
+
                                                         TextFieldUtils().dynamicText(
-                                                            "Reorder",
+                                                            "Order Canceled",
                                                             context,
                                                             TextStyle(
                                                                 fontFamily:
@@ -1185,7 +1192,18 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
     return Expanded(
       child: value.jsonData['status'] == "EXCEPTION"
           ? Text("")
-          : ListView.builder(
+          :value.jsonData['payload']['consumer_baskets'].length-1<=0? Center(
+            child: TextFieldUtils().dynamicText(
+            'No past orders',
+            context,
+            TextStyle(
+              fontFamily: 'Roboto',
+              color: ThemeApp
+                  .primaryNavyBlackColor,
+              fontWeight: FontWeight.w700,
+              fontSize: 15,
+            )),
+          )      : ListView.builder(
               itemCount: value.jsonData['payload']['consumer_baskets'].length,
               itemBuilder: (_, index) {
                 Map order =
@@ -1425,7 +1443,12 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                               : order['orders'].length,
                                           itemBuilder:
                                               (context, indexOrderDetails) {
-                                            indexOfOrders = indexOrderDetails;
+                                                indexOfOrders == 0?indexOfOrders-1: indexOfOrders= indexOrderDetails;
+                                                print("Order Id : " +
+                                                    order['orders']
+                                                    [indexOfOrders]
+                                                    ['order_id']
+                                                        .toString());
                                             print("Order Id : " +
                                                 order['orders']
                                                             [indexOrderDetails]
@@ -2036,7 +2059,8 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       ),
     );
   }
-  Widget stepperWidget(Map subOrders, dynamic jsonData,) {
+  Widget stepperWidget(Map subOrders,
+      dynamic jsonData,) {
     return Container(
         height: height * .1,
         width: width,
@@ -2090,7 +2114,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
 */
 
   Widget _iconViews(BuildContext context,
-      Map subOrders,) {
+      dynamic subOrders,) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,

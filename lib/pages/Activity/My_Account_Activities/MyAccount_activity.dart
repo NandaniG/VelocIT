@@ -214,8 +214,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                           children: [
                                             Center(
                                               child: Container(
-                                                width: 130.0,
-                                                height: 130.0,
+                                                width: 110.0,
+                                                height: 110.0,
                                                 decoration: new BoxDecoration(
                                                   boxShadow: [
                                                     BoxShadow(
@@ -236,8 +236,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                   child: Image.file(
                                                     imageFile1!,
                                                     fit: BoxFit.fill,
-                                                    width: 110.0,
-                                                    height: 110.0,
+                                                    width: 90.0,
+                                                    height: 90.0,
                                                     errorBuilder: (context, error,
                                                         stackTrace) {
                                                       return Icon(

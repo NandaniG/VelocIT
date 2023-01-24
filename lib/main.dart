@@ -221,9 +221,10 @@ class _SplashScreenState extends State<SplashScreen> {
       StringConstant.RandomUserLoginId =
           (prefs.getString('RandomUserId')) ?? '';
       print("USER LOGIN ID..............." +
-          StringConstant.UserLoginId.toString());
+          StringConstant.UserLoginId.toString());    print("USER RandomUserLoginId ID..............." +
+          StringConstant.RandomUserLoginId.toString());
 
-      if (StringConstant.UserLoginId == '') {
+      if (StringConstant.isUserLoggedIn == 0) {
         if ((StringConstant.RandomUserLoginId == '' ||
             StringConstant.RandomUserLoginId == null)) {
           print('login user is GUEST');

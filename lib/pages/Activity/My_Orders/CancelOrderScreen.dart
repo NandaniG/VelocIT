@@ -58,8 +58,9 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-            context, appTitle(context, "Cancel Order"), SizedBox(),setState),
+        child: AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"Cancel Order"), location: SizedBox()),
+
       ),
       body: SafeArea(
         child: Container(
@@ -232,17 +233,19 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                const Text("I have purchased  a product elsewhere",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      color:
-                                                      ThemeApp.blackColor,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                      FontWeight.w500,
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                    )),
+                                                Flexible(
+                                                  child: const Text("I have purchased  a product elsewhere",maxLines: 1,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        color:
+                                                        ThemeApp.blackColor,
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                        FontWeight.w500,
+                                                        overflow:
+                                                        TextOverflow.ellipsis,
+                                                      )),
+                                                ),
                                               ],
                                             ),
                                             Row(
@@ -268,8 +271,9 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                const Text(
-                                                    "Price for the product has increased",
+                                                const Flexible(
+                                                  child: const Text(
+                                                    "Price for the product has increased",maxLines: 1,
                                                     style: TextStyle(
                                                       fontFamily: 'Roboto',
                                                       color:
@@ -279,7 +283,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                       FontWeight.w500,
                                                       overflow:
                                                       TextOverflow.ellipsis,
-                                                    )),
+                                                    )),)
                                               ],
                                             ),
                                             Row(
@@ -305,18 +309,21 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                const Text(
-                                                    "Expected delivery time is very long",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      color:
-                                                      ThemeApp.blackColor,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                      FontWeight.w500,
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                    )),
+                                                Flexible(
+                                                  child: const Text(
+                                                      "Expected delivery time is very long",
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        color:
+                                                        ThemeApp.blackColor,
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                        FontWeight.w500,
+                                                        overflow:
+                                                        TextOverflow.ellipsis,
+                                                      )),
+                                                ),
                                               ],
                                             ),
                                             Row(
@@ -342,18 +349,21 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                const Text(
-                                                    "I have changed my mind",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      color:
-                                                      ThemeApp.blackColor,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                      FontWeight.w500,
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                    )),
+                                                Flexible(
+                                                  child: const Text(
+                                                      "I have changed my mind",
+
+                                                      maxLines: 1,style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        color:
+                                                        ThemeApp.blackColor,
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                        FontWeight.w500,
+                                                        overflow:
+                                                        TextOverflow.ellipsis,
+                                                      )),
+                                                ),
                                               ],
                                             ),
                                             Row(
@@ -379,18 +389,20 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                const Text(
-                                                    "Added to order by mistake",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      color:
-                                                      ThemeApp.blackColor,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                      FontWeight.w500,
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                    )),
+                                                Flexible(
+                                                  child: const Text(
+                                                      "Added to order by mistake",
+                                                  maxLines: 1,    style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        color:
+                                                        ThemeApp.blackColor,
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                        FontWeight.w500,
+                                                        overflow:
+                                                        TextOverflow.ellipsis,
+                                                      )),
+                                                ),
                                               ],
                                             ),
 

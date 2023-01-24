@@ -28,7 +28,7 @@ class HomeProvider with ChangeNotifier {
   //--------------------load json file------------------------
   //----------------------------------------------------------
    bool IsActiveOrderList = true;
-   int PastDays = 0;
+   int PastDays =7;
   loadJson() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -38,7 +38,11 @@ class HomeProvider with ChangeNotifier {
 
 
       StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-      String jsonContents = await OrderBasketRepository().postApiRequest({
+      String jsonContents = await OrderBasketRepository().postApiRequest(IsActiveOrderList==true?{
+        "user_id": StringConstant.UserLoginId,
+        "IsActiveOrderList": IsActiveOrderList,
+        "from_days_in_past": 0
+      }:{
         "user_id": StringConstant.UserLoginId,
         "IsActiveOrderList": IsActiveOrderList,
         "from_days_in_past": PastDays
@@ -52,7 +56,6 @@ class HomeProvider with ChangeNotifier {
 
       // print(jsonData["payload"]['consumer_baskets'].toString());
 
-      getServiceCategoryListing();
       notifyListeners();
       merchantNearYouListService();
       ///////
@@ -62,26 +65,46 @@ class HomeProvider with ChangeNotifier {
       print(jsonData["payload"].toString());
       // // StringConstant.printObject(jsonData);
 
-      homeImageSliderService();
+      // homeImageSliderService();
       // shopByCategoryService();
       // bookOurServicesService();
       // recommendedListService();
-      bestDealListService();
+      // bestDealListService();
       // cartProductListService();
       // orderCheckOutListService();
       // myOrdersListService();
-      myAddressListService();
-      customerSupportService();
+      // myAddressListService();
+      // customerSupportService();
       accountSettingService();
       notificationsListService();
-      offersListService();
+      // offersListService();
     } catch (e) {
       print("Error in loadJson: $e");
       return {};
     }
   }
 
+  loadJsonForMerchants() async {
+    try {
+      String jsonContents = await OrderBasketRepository().merchantPostAPI({
+        "base_latitude":18.626163,
+        "base_longitude":74.098946,
+        "distance_in_hundred_mtrs":100
+      });
 
+
+      jsonData = json.decode(jsonContents);
+
+      print("____________loadJson______________________");
+      notifyListeners();
+      print("merchantPostAPI");
+      print(jsonData["payload"].toString());
+
+    } catch (e) {
+      print("Error in loadJson: $e");
+      return {};
+    }
+  }
   loadCartForPaymentJson() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -103,84 +126,6 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  BaseApiServices _apiServices = NetworkApiServices();
-
-  Future getServiceCategoryListing() async {
-    var url = ApiMapping.BaseAPI + ApiMapping.ServiceSubCategory;
-
-    try {
-      dynamic response = await _apiServices.getGetApiResponse(url);
-   var  jsonresponse = json.decode(response);
-      print("ServiceSubCategory list: " + response.toString());
-      print("ServiceSubCategory"+jsonData['service_sub_category_code'].toString());
-
-      return response;
-    } catch (e) {
-      throw e;
-    }
-  }
-/*
-  Future putCartForPaymentUpdate(dynamic data, int orderBasketID) async {
-    // var url = ApiMapping.getURI(apiEndPoint.put_carts);
-
-    print("userId" + orderBasketID.toString());
-    var url = '/order-basket/$orderBasketID/update_payment';
-
-    var requestUrl = ApiMapping.BaseAPI + url;
-    print(requestUrl.toString());
-
-    String body = json.encode(data);
-    print("jsonMapbvcbvbcvbcv" + body.toString());
-
-    try {
-      dynamic reply;
-      http.Response response = await http.put(Uri.parse(requestUrl),
-          body: body, headers: {'content-type': 'application/json'});
-      print("response postputCartForPaymentUpdate" + response.body.toString());
-      jsonData = json.decode(response.body);
-      return reply;
-
-      return response;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  Future putCartForPayment(dynamic data,int orderBasketID) async {
-    // var url = ApiMapping.getURI(apiEndPoint.put_carts);
-    final prefs = await SharedPreferences.getInstance();
-
-    print("orderBasketID"+orderBasketID.toString());
-    var url = '/order-basket/$orderBasketID/attempt_payment';
-
-    var requestUrl = ApiMapping.BaseAPI +url;
-    print(requestUrl.toString());
-
-    String body = json.encode(data);
-    print("jsonMapputCartForPayment"+body.toString());
-
-
-    try {
-      dynamic reply;
-      http.Response response = await http.put(Uri.parse(requestUrl)  ,body:body,headers: {'content-type': 'application/json'}) ;
-      print("response post"+response.body.toString());
-      if(response.statusCode ==200) {
-        jsonData = json.decode(response.body);
-        prefs.setString('payment_attempt_id', jsonData['payload']['payment_attempt_id']);
-
-      }else{
-        Utils.successToast('something went wrong');
-
-      }
-      return reply;
-
-      return response ;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-*/
 
   Future setSecondDefaultAddress(String consumerUID, String addressId) async {
 

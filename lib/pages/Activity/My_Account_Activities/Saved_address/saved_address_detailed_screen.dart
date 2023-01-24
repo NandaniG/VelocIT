@@ -73,9 +73,9 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
         backgroundColor: ThemeApp.appBackgroundColor,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
-          child: appBar_backWidget(
-              context, appTitle(context, "Address"), SizedBox(),setState),
-        ),
+          child:  AppBar_BackWidget(
+              context: context,titleWidget: appTitle(context,"Address"), location: SizedBox()),
+            ),
         body: SafeArea(child: deliveryAddress()));
   }
 

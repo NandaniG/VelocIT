@@ -96,12 +96,12 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
           key: scaffoldGlobalKey,
           backgroundColor: ThemeApp.appBackgroundColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(height * .12),
-            child: appBarWidget(
-                context,
-                searchBar(context),
-                addressWidget(context, StringConstant.placesFromCurrentLocation),
-                setState(() {})),
+            preferredSize: Size.fromHeight(height * .12),  child: AppBarWidget(
+            context: context,
+            titleWidget: searchBar(context),
+            location: addressWidget(
+                context, StringConstant.placesFromCurrentLocation),
+          ),
           ),
           bottomNavigationBar: bottomNavigationBarWidget(context),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

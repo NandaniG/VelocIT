@@ -30,11 +30,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .12),
-        child: appBarWidget(
-            context,
-            searchBarWidget(),
-            addressWidget(context, StringConstant.placesFromCurrentLocation),
-            setState(() {})),
+        child: AppBarWidget(
+          context: context,
+          titleWidget: searchBar(context),
+          location: addressWidget(
+              context, StringConstant.placesFromCurrentLocation),
+        ),
       ),
       body: SafeArea(
           child: Padding(

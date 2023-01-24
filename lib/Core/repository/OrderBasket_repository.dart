@@ -36,6 +36,18 @@ class OrderBasketRepository {
     return responseJson;
   }
 
+  Future merchantPostAPI(Map jsonMap) async {
+    var requestUrl = ApiMapping.ConstructURI(ApiMapping.merchantNearMe);
+    print(jsonMap);
+    // dynamic responseJson;
+
+    dynamic responseJson = await _apiServices.getGetApiResponseWithBody(requestUrl, jsonMap);
+
+    // String rawJson = responseJson.toString();
+    print("merchantPostAPI : "+responseJson.toString());
+    return responseJson;
+  }
+
   void cancelOrderApiRequest(
      BuildContext context, Map json, String orderId) async {
     // var url = ApiMapping.getURI(apiEndPoint.cart_by_Embedded_ID);

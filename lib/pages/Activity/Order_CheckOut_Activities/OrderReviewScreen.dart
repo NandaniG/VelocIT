@@ -191,7 +191,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                 'EXCEPTION'
                             ? Text('Please try after some time')
                             : Container(
-                                height: 72,
+                                height: 82,
                                 // height: height * .09,
                                 width: width,
                                 alignment: Alignment.center,

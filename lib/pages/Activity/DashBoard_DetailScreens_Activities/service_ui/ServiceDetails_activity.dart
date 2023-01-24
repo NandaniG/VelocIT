@@ -196,8 +196,9 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(context, appTitle(context, "My Service"),
-            const SizedBox(), setState),
+        child:  AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"My Service"), location: SizedBox()),
+
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

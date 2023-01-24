@@ -16,7 +16,7 @@ class MerchantRepository {
   dynamic orderBasketData;
 
 
-  Future merchantNearMeRequest(dynamic jsonMap) async {
+/*  Future merchantNearMeRequest(dynamic jsonMap) async {
     // dynamic responseJson;
     var url = ApiMapping.ConstructURI(ApiMapping.merchantNearMe);
 print(url);
@@ -26,7 +26,7 @@ print(jsonMap);
     String rawJson = responseJson.toString();
     print("merchantNearMeRequest"+responseJson.toString());
     return responseJson;
-  }
+  }*/
 
   Future<MerchantListModel> merchantPostAPI(Map data) async {
     var requestUrl = ApiMapping.ConstructURI(ApiMapping.merchantNearMe);
@@ -37,7 +37,7 @@ print(jsonMap);
     dynamic reply;
     http.Response response = await http.post(Uri.parse(requestUrl),
         body: body, headers: {'content-type': 'application/json'});
-    print("response post" + response.body.toString());
+    print("merchantPostAPI" + response.body.toString());
     var datas= jsonDecode(response.body);
     // Utils.successToast(response.body.toString());
     // return response = MerchantListModel.fromJson(datas);

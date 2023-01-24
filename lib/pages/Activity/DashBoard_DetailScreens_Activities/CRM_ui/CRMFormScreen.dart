@@ -122,8 +122,9 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(context, appTitle(context, "CRM Appointment"),
-            SizedBox(), setState),
+        child: AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"CRM Appointment"), location: SizedBox()),
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

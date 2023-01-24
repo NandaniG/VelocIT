@@ -56,9 +56,9 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(
-            context, appTitle(context, "Return Order"), SizedBox(),setState),
-      ),
+        child:   AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"Return Order"), location: SizedBox()),
+          ),
       body: SafeArea(
         child: Container(
           color: ThemeApp.appBackgroundColor,
