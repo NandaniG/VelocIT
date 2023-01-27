@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:geocode/geocode.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:http/http.dart' as http;
@@ -182,7 +182,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //   Provider.of<HomeProvider>(context, listen: false).loadJson();
     // });
     // startTime();
-    getCurrentLocation();
+    _getCurrentPosition();
   }
 
   startTime() async {
@@ -212,16 +212,17 @@ class _SplashScreenState extends State<SplashScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       StringConstant.isUserLoggedIn = (prefs.getInt('isUserLoggedIn')) ?? 0;
-      StringConstant.FINALPINCODE =
+      /*     StringConstant.FINALPINCODE =
           (prefs.getString('CurrentPinCodePref')) ?? '';
       print("IS USER LOGGEDIN ..............." +
-          StringConstant.isUserLoggedIn.toString());
+          StringConstant.FINALPINCODE.toString());*/
 
       StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
       StringConstant.RandomUserLoginId =
           (prefs.getString('RandomUserId')) ?? '';
       print("USER LOGIN ID..............." +
-          StringConstant.UserLoginId.toString());    print("USER RandomUserLoginId ID..............." +
+          StringConstant.UserLoginId.toString());
+      print("USER RandomUserLoginId ID..............." +
           StringConstant.RandomUserLoginId.toString());
 
       if (StringConstant.isUserLoggedIn == 0) {
@@ -253,12 +254,12 @@ class _SplashScreenState extends State<SplashScreen> {
       if (StringConstant.isUserLoggedIn != 0) {
         Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute)
             .then((value) {
-          StringConstant.FINALPINCODE;
+          setState(() {});
         });
       } else {
         Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute)
             .then((value) {
-          StringConstant.FINALPINCODE;
+          setState(() {});
         });
         // StringConstant.FINALPINCODE =
         //     (prefs.getString('CurrentPinCodePref')) ?? '';
@@ -271,50 +272,75 @@ class _SplashScreenState extends State<SplashScreen> {
   var locationMessage = "";
   String addressPincode = "";
 
-  Future getCurrentLocation() async {
-    LocationPermission? permission;
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }else{
+      startTime();}
     permission = await Geolocator.checkPermission();
-
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permission are denied');
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
       }
     }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }else{
 
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
 
-    var lastPosition = await Geolocator.getLastKnownPosition();
-    print("lastPosition" + lastPosition.toString());
-    startTime();
-
-    setState(() {
-      locationMessage = "${position.latitude}, ${position.longitude}";
-      // getAddressFromLatLong(
-      //     position.latitude, position.longitude);
-    });
-
-    _getAddress(position.latitude, position.longitude);
+      startTime();}
+    return true;
   }
 
-  Future<String> _getAddress(double? lat, double? lang) async {
-    print("address.streetAddress");
-    if (lat == null || lang == null) return "";
-    GeoCode geoCode = GeoCode();
-    Address address =
-        await geoCode.reverseGeocoding(latitude: lat, longitude: lang);
-    addressPincode = address.postal.toString();
-    print("address.streetAddress" + address.streetAddress.toString());
-    print("address.streetAddress" + address.region.toString());
-    print("address.streetAddress" + address.toString());
-    print("address.streetAddress" + address.toString());
+  Position? _currentPosition;
 
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getLocation(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  _getLocation(Position position) async {
+    final coordinates = new Coordinates(position.latitude, position.longitude);
+    var addresses =
+    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print("address.streetAddress" + first.postalCode.toString());
+    print("${first.featureName} : ${first.addressLine}");
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('CurrentPinCodePref', addressPincode.toString());
+    prefs.setString('CurrentPinCodePrefs', first.postalCode.toString());
 
-    return "${address.streetAddress}, ${address.city}, ${address.countryName}, ${address.postal}";
+    var splitag = first.addressLine.split(",");
+    var houseBuilding = splitag[0]+', '+splitag[1];
+    var areaColony = splitag[2];
+    var state = splitag[3];
+    var city = splitag[4];
+    var pincode = first.postalCode;
+startTime();
+
+    setState(() {
+      prefs.setString('CurrentPinCodePrefs', first.postalCode.toString());
+    });
   }
 
   @override

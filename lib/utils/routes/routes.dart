@@ -5,5 +5,7 @@ class RoutesName{
   static const String signUpRoute = 'signUp';
   static const String otpRoute = 'otpScreen';
   static const String dashboardRoute = 'dashBoardScreenRoute';
+  static const String orderRoute = 'orderScreenRoute';
+  static const String myAccountRoute = 'myAccountRouteRoute';
 
 }

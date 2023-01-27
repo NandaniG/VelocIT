@@ -79,7 +79,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
   }
 
   getPreference() async {
-    setState(() {});
+
     StringConstant.userAccountName =
         (await Prefs.instance.getToken(StringConstant.userAccountNamePref))!;
     StringConstant.userAccountEmail =
@@ -95,6 +95,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
 
     print("StringConstant.userAccountImagePicker");
     print(StringConstant.userAccountImagePicker);
+    setState(() {});
   }
 
   @override
@@ -179,7 +180,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
             ),
           ),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context),
+        bottomNavigationBar: bottomNavigationBarWidget(context,0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: data == ''
             ? CircularProgressIndicator()
@@ -917,7 +918,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
     await prefs.setString('profileImagePrefs', imagePath);
 
     setState(() {
-      imageFile1 = File(image!.path);
+      imageFile1 = File(image.path);
 
       // final   file = File(image!.path);
       //    final bytes =

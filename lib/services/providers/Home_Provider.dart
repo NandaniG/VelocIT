@@ -40,11 +40,11 @@ class HomeProvider with ChangeNotifier {
       StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
       String jsonContents = await OrderBasketRepository().postApiRequest(IsActiveOrderList==true?{
         "user_id": StringConstant.UserLoginId,
-        "IsActiveOrderList": IsActiveOrderList,
+        "IsActiveOrderList": true,
         "from_days_in_past": 0
       }:{
         "user_id": StringConstant.UserLoginId,
-        "IsActiveOrderList": IsActiveOrderList,
+        "IsActiveOrderList": false,
         "from_days_in_past": PastDays
       });
 

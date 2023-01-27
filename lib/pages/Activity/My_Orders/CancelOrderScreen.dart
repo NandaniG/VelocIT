@@ -10,6 +10,7 @@ import '../../../services/models/MyOrdersModel.dart';
 import '../../../services/providers/Home_Provider.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/routes/routes.dart';
 import '../../../utils/styles.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
@@ -53,61 +54,71 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
     DateTime date = DateTime.parse(widget.values['earliest_delivery_date']);
     var earliest_delivery_date = format.format(date);
 
-    return Scaffold(
-      backgroundColor: ThemeApp.appBackgroundColor,
-      key: scaffoldGlobalKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .09),
-        child: AppBar_BackWidget(
-            context: context,titleWidget: appTitle(context,"Cancel Order"), location: SizedBox()),
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).popAndPushNamed(RoutesName.orderRoute).then((value) {
+          setState(() {
 
-      ),
-      body: SafeArea(
-        child: Container(
-          color: ThemeApp.appBackgroundColor,
-          // width: width,
-          child: data == ''
-              ? CircularProgressIndicator()
-              : Consumer<HomeProvider>(builder: (context, provider, child) {
-            return (provider.jsonData.isNotEmpty &&
-                provider.jsonData['error'] == null)
-                ? ListView(
-              children: [
-                Padding(
-                  padding:
-                  const EdgeInsets.only(left: 20, right: 20),
-                  child: TextFieldUtils().dynamicText(
-                      'Cancel Order',
-                      context,
-                      TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.blackColor,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      )),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Padding(
-                  padding:
-                  const EdgeInsets.only(left: 20, right: 20),
-                  child: TextFieldUtils().dynamicText(
-                      'Choose item you want to Cancel',
-                      context,
-                      TextStyle(
+          });
+        });
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: ThemeApp.appBackgroundColor,
+        key: scaffoldGlobalKey,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(height * .09),
+          child: AppBar_BackWidget(
+              context: context,titleWidget: appTitle(context,"Cancel Order"), location: SizedBox()),
+
+        ),
+        body: SafeArea(
+          child: Container(
+            color: ThemeApp.appBackgroundColor,
+            // width: width,
+            child: data == ''
+                ? CircularProgressIndicator()
+                : Consumer<HomeProvider>(builder: (context, provider, child) {
+              return (provider.jsonData.isNotEmpty &&
+                  provider.jsonData['error'] == null)
+                  ? ListView(
+                children: [
+                  Padding(
+                    padding:
+                    const EdgeInsets.only(left: 20, right: 20),
+                    child: TextFieldUtils().dynamicText(
+                        'Cancel Order',
+                        context,
+                        TextStyle(
                           fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
+                          fontWeight: FontWeight.w700,
                           fontSize: 16,
-                          fontWeight: FontWeight.w400)),
-                ),
-                mainUI(provider),
-              ],
-            )
-                : provider.jsonData['error'] != null
-                ? Container()
-                : Center(child: CircularProgressIndicator());
-          }),
+                        )),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Padding(
+                    padding:
+                    const EdgeInsets.only(left: 20, right: 20),
+                    child: TextFieldUtils().dynamicText(
+                        'Choose item you want to Cancel',
+                        context,
+                        TextStyle(
+                            fontFamily: 'Roboto',
+                            color: ThemeApp.blackColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400)),
+                  ),
+                  mainUI(provider),
+                ],
+              )
+                  : provider.jsonData['error'] != null
+                  ? Container()
+                  : Center(child: CircularProgressIndicator());
+            }),
+          ),
         ),
       ),
     );
@@ -493,11 +504,17 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                             print("USER LOGIN ID..............." +
                                                 StringConstant.UserLoginId.toString());
                                             String date = DateTime.now().toUtc().toString().replaceAll(" ", "T");
-                                            OrderBasketRepository().cancelOrderApiRequest(context, {
+                                        var success=    OrderBasketRepository().cancelOrderApiRequest(context, {
                                               "cancellation_date": date,
                                               "reason": _radioVal.toString()
                                             }, widget.orderList['order_id'].toString());
 
+
+                                            Navigator.of(context).popAndPushNamed(RoutesName.orderRoute).then((value) {
+                                              setState(() {
+
+                                              });
+                                            });
                                           })
                                     ]),
                               ),

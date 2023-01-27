@@ -200,7 +200,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
             context: context,titleWidget: appTitle(context,"My Service"), location: SizedBox()),
 
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context),
+      bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(
@@ -991,7 +991,10 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    counterPrice--;
+                                    if (counterPrice <= 1) {
+                                    } else {
+                                      counterPrice--;
+                                    }
                                     remainingCounters();
 
                                     var data = {

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:velocit/main.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
+import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
 import 'package:velocit/pages/auth/OTP_Screen.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/routes/routes.dart';
@@ -24,6 +26,12 @@ class Routes {
       case RoutesName.dashboardRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => DashboardScreen());
+      case RoutesName.orderRoute:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => MyOrdersActivity());
+    case RoutesName.myAccountRoute:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => MyAccountActivity());
 
       // case RoutesName.otpRoute:
       //   return MaterialPageRoute(

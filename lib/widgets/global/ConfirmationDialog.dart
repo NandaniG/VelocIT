@@ -196,7 +196,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
       return ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: 70.0,
-          maxHeight: 200,
+          maxHeight: 230,
           maxWidth: width,
           minWidth: width,
         ),
@@ -218,9 +218,9 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               child: Container(
                 padding:
                 EdgeInsets.all(30),
-                child: ListView(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -244,9 +244,9 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                             ))
                       ],
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -266,9 +266,10 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                 /*   SizedBox(
                       height: 20,
-                    ), Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ),*/
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
                           onTap: widget.onTap1,

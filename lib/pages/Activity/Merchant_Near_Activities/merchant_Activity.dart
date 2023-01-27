@@ -113,16 +113,16 @@ class _MerchantActvityState extends State<MerchantActvity> {
         // showLocation = LatLng(26.26774119270947, 73.03210171571942);
         // showLocation = LatLng(position.latitude, position.longitude);
       });
-      data = {
+     /* data = {
         "base_latitude": lat,
         "base_longitude": long,
         "distance_in_hundred_mtrs": 100
-      };
- /*     data = {
+      };*/
+      data = {
         "base_latitude":26.26774119270947,
         "base_longitude":73.03210171571942,
         "distance_in_hundred_mtrs":100
-      };*/
+      };
     }
     var responce =  await  merchantViewModel.getPostMerchantNearMe(context, data);
     setState(() {
@@ -209,11 +209,9 @@ class _MerchantActvityState extends State<MerchantActvity> {
         child: AppBarWidget(
           context: context,
           titleWidget: searchBar(context),
-          location: addressWidget(
-              context, StringConstant.placesFromCurrentLocation),
-        ),
+          location: const AddressWidgets(),   ),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context),
+      bottomNavigationBar: bottomNavigationBarWidget(context,3),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(

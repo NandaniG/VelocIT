@@ -58,11 +58,16 @@ import 'okPopUp.dart';
 speechToText.SpeechToText? speech;
 
 class AppBarWidget extends StatefulWidget {
-final BuildContext context;
-final Widget titleWidget;
-final Widget location;
+  final BuildContext context;
+  final Widget titleWidget;
+  final Widget location;
 
-  AppBarWidget({Key? key,required this.context,required this.titleWidget,required this.location}) : super(key: key);
+  AppBarWidget(
+      {Key? key,
+      required this.context,
+      required this.titleWidget,
+      required this.location})
+      : super(key: key);
 
   @override
   State<AppBarWidget> createState() => _AppBarWidgetState();
@@ -73,25 +78,24 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getPref();
   }
 
-  getPref() async {    final prefs = await SharedPreferences.getInstance();
-setState(() {
-  StringConstant.ProfilePhoto = prefs.getString('profileImagePrefs')!;
-
-});
-
+  getPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      StringConstant.ProfilePhoto = (prefs.getString('profileImagePrefs'))??"";
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return appBarWidget(context, widget.titleWidget);
   }
 
-
   Widget appBarWidget(
     BuildContext context,
     Widget titleWidget,
-
   ) {
     double height = 0.0;
     double width = 0.0;
@@ -126,10 +130,15 @@ setState(() {
                   ? InkWell(
                       onTap: () {
                         (() {});
+                        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
+                          setState(() {
 
-                        Navigator.of(context).pop();
-                        // Provider.of<ProductProvider>(context, listen: false);
-                      },
+                          });
+                        });
+                        // Navigator.pushReplacementNamed(
+                        //         context, RoutesName.dashboardRoute)
+                        //     .then((value) => setState(() {}));
+                        Provider.of<ProductProvider>(context, listen: false);      },
                       child: Container(
                         margin: const EdgeInsets.only(left: 15),
                         child: Center(
@@ -158,21 +167,20 @@ setState(() {
                     );
                   },
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        right: 15, left: 15),
+                    padding: const EdgeInsets.only(right: 15, left: 15),
                     child: Container(
                       // height: 25,
                       // width: 25,
                       child: SvgPicture.asset(
-                      'assets/appImages/notificationIcon.svg',
-                      color: ThemeApp.primaryNavyBlackColor,
-                      semanticsLabel: 'Acme Logo',
-                      theme: SvgTheme(
-                        currentColor: ThemeApp.primaryNavyBlackColor,
+                        'assets/appImages/notificationIcon.svg',
+                        color: ThemeApp.primaryNavyBlackColor,
+                        semanticsLabel: 'Acme Logo',
+                        theme: SvgTheme(
+                          currentColor: ThemeApp.primaryNavyBlackColor,
+                        ),
+                        height: 28,
+                        width: 28,
                       ),
-                      height: 28,
-                      width: 28,
-                    ),
                     ),
                   ),
                 ),
@@ -216,11 +224,14 @@ setState(() {
                         //             value: product, productList: provider.cartProductList)),
                         //         (route) => false);
                         if (StringConstant.isUserLoggedIn != 0) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const MyAccountActivity(),
-                            ),
-                          );
+                          Navigator.of(context)
+                              .push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MyAccountActivity(),
+                                ),
+                              )
+                              .then((value) => setState(() {}));
                         } else {
                           showDialog(
                               context: context,
@@ -244,20 +255,22 @@ setState(() {
                               ),
                             )
                           : Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: Container(
-                        height: 28,
-                        width: 28,
-                              child: CircleAvatar(backgroundColor: ThemeApp.whiteColor,
-                                child: ClipRRect(
-                                    borderRadius:
-                                        const BorderRadius.all(Radius.circular(100)),
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Container(
+                                height: 28,
+                                width: 28,
+                                child: CircleAvatar(
+                                  backgroundColor: ThemeApp.whiteColor,
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(100)),
                                     child: Image.file(
                                       File(StringConstant.ProfilePhoto),
                                       fit: BoxFit.fill,
                                       height: 25,
                                       width: 25,
-                                      errorBuilder: (context, error, stackTrace) {
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
                                         return Icon(
                                           Icons.image,
                                           color: ThemeApp.whiteColor,
@@ -265,9 +278,9 @@ setState(() {
                                       },
                                     ),
                                   ),
+                                ),
                               ),
                             ),
-                          ),
                       // Padding(
                       //   padding: const EdgeInsets.only(
                       //       top: 13, bottom: 13, right: 15),
@@ -285,39 +298,48 @@ setState(() {
               ],
             ),
           ),
-         widget.location
+          widget.location
         ],
       ),
     );
   }
 }
 
-/////
+class AppBar_BackWidget extends StatefulWidget {
+  final BuildContext context;
+  final Widget titleWidget;
+  final Widget location;
 
-/*Widget appBarWidget(
-  BuildContext context,
-  Widget titleWidget,
-  Widget location,
-  void setState,
-) {
+  AppBar_BackWidget(
+      {Key? key,
+      required this.context,
+      required this.titleWidget,
+      required this.location})
+      : super(key: key);
+
+  @override
+  State<AppBar_BackWidget> createState() => _AppBar_BackWidgetState();
+}
+
+class _AppBar_BackWidgetState extends State<AppBar_BackWidget> {
   double height = 0.0;
   double width = 0.0;
-  height = MediaQuery.of(context).size.height;
-  width = MediaQuery.of(context).size.width;
 
-  return SafeArea(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+  @override
+  Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    return SafeArea(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          color: ThemeApp.appBackgroundColor,
+          color: ThemeApp.darkGreyTab,
           child: AppBar(
-            centerTitle: true,
-            titleSpacing: 5,
-
-            // elevation: 1,
+            centerTitle: false,
+            elevation: 0,
             backgroundColor: ThemeApp.appBackgroundColor,
             flexibleSpace: Container(
               height: height * .08,
@@ -326,362 +348,34 @@ setState(() {
                 color: ThemeApp.appBackgroundColor,
               ),
             ),
-            automaticallyImplyLeading: false,
-            leadingWidth: Navigator.canPop(context) ? width * .1 : 0,
 
-            leading: Navigator.canPop(context)
-                ? InkWell(
-                    onTap: () {
-                      (() {});
-                      Navigator.of(context).pop();
-                      // Provider.of<ProductProvider>(context, listen: false);
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Center(
-                        child: Transform.scale(
-                          scale: 1.5,
-                          child: Image.asset(
-                            'assets/appImages/backArrow.png',
-                            color: ThemeApp.primaryNavyBlackColor,
-                            // height: height*.001,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                : SizedBox(),
-
-            title: titleWidget,
-            // Row
-            actions: [
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationScreen(),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 13, bottom: 13, right: 15, left: 15),
-                  child: Image.asset(
-                    'assets/appImages/bellIcon.png',
-                    // width: double.infinity,
-                    height: 15,
-                    width: 13.6,
-                    color: ThemeApp.primaryNavyBlackColor,
-                    fit: BoxFit.fill,
-                  ),
+            titleSpacing: 1,
+            leading: InkWell(
+              onTap: () {
+                Navigator.pop(context, () {
+                  setState(() {});
+                }); // Provider.of<ProductProvider>(context, listen: false);
+              },
+              child: Transform.scale(
+                scale: 0.7,
+                child: Image.asset(
+                  'assets/appImages/backArrow.png',
+                  color: ThemeApp.primaryNavyBlackColor,
+                  // height: height*.001,
                 ),
-              ),
-              Consumer<HomeProvider>(builder: (context, provider, child) {
-                return Consumer<ProductProvider>(
-                    builder: (context, product, child) {
-                  return *//*StringConstant.isLogIn == false
-                        ? const SizedBox(
-                            width: 0,
-                          )
-                        : *//*
-                      InkWell(
-                    onTap: () async {
-                      /// locale languages
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //       builder: (context) => FlutterLocalizationDemo()),
-                      // );
-
-                      if (kDebugMode) {
-                        print("provider.cartProductList");
-                        // print(provider.cartProductList);
-                      }
-                      product.badgeFinalCount;
-
-                      provider.isBottomAppCart = true;
-                      provider.isHome = true;
-
-                      final prefs = await SharedPreferences.getInstance();
-                      StringConstant.loginUserName =
-                          (prefs.getString('usernameLogin')) ?? '';
-                      StringConstant.loginUserEmail =
-                          (prefs.getString('emailLogin')) ?? '';
-
-                      StringConstant.isUserLoggedIn =
-                          (prefs.getInt('isUserLoggedIn')) ?? 0;
-                      // Navigator.pushAndRemoveUntil(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => CartDetailsActivity(
-                      //             value: product, productList: provider.cartProductList)),
-                      //         (route) => false);
-                      if (StringConstant.isUserLoggedIn != 0) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const MyAccountActivity(),
-                          ),
-                        );
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AccountVerificationDialog();
-                            });
-                      }
-                    },
-                    child: StringConstant.ProfilePhoto == ''
-                        ? Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: SvgPicture.asset(
-                              'assets/appImages/profileIcon.svg',
-                              color: ThemeApp.primaryNavyBlackColor,
-                              semanticsLabel: 'Acme Logo',
-                              theme: SvgTheme(
-                                currentColor: ThemeApp.primaryNavyBlackColor,
-                              ),
-                              height: 15,
-                              width: 13.6,
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(100)),
-                            child: Image.file(
-                              File(StringConstant.ProfilePhoto),
-                              fit: BoxFit.fill,
-                              height: 15,
-                              width: 13.6,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.image,
-                                  color: ThemeApp.whiteColor,
-                                );
-                              },
-                            ),
-                          ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //       top: 13, bottom: 13, right: 15),
-                    //   child: Image.asset(
-                    //     'assets/appImages/userIcon.png',
-                    //     // width: double.infinity,
-                    //     height: height * .1,
-                    //     color: ThemeApp.primaryNavyBlackColor,
-                    //     fit: BoxFit.fill,
-                    //   ),
-                    // ),
-                  );
-                });
-              }),
-*//*              Consumer<HomeProvider>(builder: (context, provider, child) {
-                return Consumer<ProductProvider>(
-                    builder: (context, product, child) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: Stack(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            /// locale languages
-                            // Navigator.of(context).push(
-                            //   MaterialPageRoute(
-                            //       builder: (context) => FlutterLocalizationDemo()),
-                            // );
-
-                            if (kDebugMode) {
-                              print("provider.cartProductList");
-                              print(provider.cartProductList);
-                            }
-                            product.badgeFinalCount;
-
-                            provider.isBottomAppCart = true;
-                            provider.isHome = true;
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CartDetailsActivity(
-                                      value: product,
-                                      productList: provider.cartProductList)),
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 13, bottom: 13, right: 15),
-                            child: Image.asset(
-                              'assets/appImages/shoppingCart.png',
-                              // width: double.infinity,
-                              height: height * .11,
-                              color: ThemeApp.primaryNavyBlackColor,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
-                        product.badgeFinalCount == 0
-                            ? SizedBox()
-                            : Positioned(
-                                right: 5,
-                                top: 2,
-                                child: Container(
-                                  padding: EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  constraints: BoxConstraints(
-                                      minWidth: 22,
-                                      minHeight: 10,
-                                      maxHeight: 25,
-                                      maxWidth: 25),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(1),
-                                    child: Text(
-                                      '${product.badgeFinalCount}',
-                                      style: TextStyle(fontFamily: 'Roboto',
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              )
-                      ],
-                    ),
-                  );
-                });
-              }),*//*
-            ],
-          ),
-        ),
-        location
-      ],
-    ),
-  );
-}*/
-class AppBar_BackWidget extends StatefulWidget {
-  final BuildContext context;
-final Widget titleWidget;
-final     Widget location;
-   AppBar_BackWidget({Key? key,required this.context, required this.titleWidget,required this.location}) : super(key: key);
-
-  @override
-  State<AppBar_BackWidget> createState() => _AppBar_BackWidgetState();
-}
-
-class _AppBar_BackWidgetState extends State<AppBar_BackWidget> {
-  double height = 0.0;
-double width = 0.0;
-  @override
-  Widget build(BuildContext context) {
-  height = MediaQuery.of(context).size.height;
-  width = MediaQuery.of(context).size.width;
-    return SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              color: ThemeApp.darkGreyTab,
-              child: AppBar(
-                centerTitle: false,
-                elevation: 0,
-                backgroundColor: ThemeApp.appBackgroundColor,
-                flexibleSpace: Container(
-                  height: height * .08,
-                  width: width,
-                  decoration: const BoxDecoration(
-                    color: ThemeApp.appBackgroundColor,
-                  ),
-                ),
-
-                titleSpacing: 1,
-                leading: InkWell(
-                  onTap: () {
-                    Navigator.pop(context, () {
-                      setState(() {});
-                    }); // Provider.of<ProductProvider>(context, listen: false);
-                  },
-                  child: Transform.scale(
-                    scale: 0.7,
-                    child: Image.asset(
-                      'assets/appImages/backArrow.png',
-                      color: ThemeApp.primaryNavyBlackColor,
-                      // height: height*.001,
-                    ),
-                  ),
-                ),
-
-                // leadingWidth: width * .06,
-                title: widget.titleWidget,
-                // Row
               ),
             ),
-            widget.location
-          ],
-        ));
+
+            // leadingWidth: width * .06,
+            title: widget.titleWidget,
+            // Row
+          ),
+        ),
+        widget.location
+      ],
+    ));
   }
 }
-/*
-Widget appBar_backWidget(
-  BuildContext context,
-  Widget titleWidget,
-  Widget location,
-  StateSetter setState,
-) {
-  double height = 0.0;
-  double width = 0.0;
-  height = MediaQuery.of(context).size.height;
-  width = MediaQuery.of(context).size.width;
-  final GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey();
-
-  return SafeArea(
-      child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      Container(
-        width: MediaQuery.of(context).size.width,
-        color: ThemeApp.darkGreyTab,
-        child: AppBar(
-          centerTitle: false,
-          elevation: 0,
-          backgroundColor: ThemeApp.appBackgroundColor,
-          flexibleSpace: Container(
-            height: height * .08,
-            width: width,
-            decoration: const BoxDecoration(
-              color: ThemeApp.appBackgroundColor,
-            ),
-          ),
-
-          titleSpacing: 1,
-          leading: InkWell(
-            onTap: () {
-              Navigator.pop(context, () {
-                setState(() {});
-              }); // Provider.of<ProductProvider>(context, listen: false);
-            },
-            child: Transform.scale(
-              scale: 0.7,
-              child: Image.asset(
-                'assets/appImages/backArrow.png',
-                color: ThemeApp.primaryNavyBlackColor,
-                // height: height*.001,
-              ),
-            ),
-          ),
-
-          // leadingWidth: width * .06,
-          title: titleWidget,
-          // Row
-        ),
-      ),
-      location
-    ],
-  ));
-}*/
 
 Widget appTitle(BuildContext context, String text) {
   return Container(
@@ -698,7 +392,7 @@ Widget appTitle(BuildContext context, String text) {
   );
 }
 
-//codeElan.velocIT
+
 Widget searchBar(BuildContext context) {
   double height = 0.0;
   double width = 0.0;
@@ -866,69 +560,111 @@ Widget searchBar(BuildContext context) {
   );
 }
 
-Widget addressWidget(BuildContext context, String addressString) {
-  double height = 0.0;
-  double width = 0.0;
-  height = MediaQuery.of(context).size.height;
-  width = MediaQuery.of(context).size.width;
-  String pc = '';
-  return InkWell(
-    onTap: () {
+class AddressWidgets extends StatefulWidget {
+  const AddressWidgets({Key? key}) : super(key: key);
+
+  @override
+  State<AddressWidgets> createState() => _AddressWidgetsState();
+}
+
+class _AddressWidgetsState extends State<AddressWidgets> {
+String finalPicode='';
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPref();
+  }
+
+  getPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      StringConstant.FINALPINCODE =
+      (prefs.getString('CurrentPinCodePrefs') ?? '');
+      finalPicode = StringConstant.FINALPINCODE;
+      print(
+          "placesFromCurrentLocation FINALPINCODE pref...${StringConstant.FINALPINCODE.toString()}");
+
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return addressWidget(context, );
+  }Widget addressWidget(BuildContext context, ) {
+    double height = 0.0;
+    double width = 0.0;
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    String pc = '';
+    return InkWell(
+      onTap: () async {
+        final prefs = await SharedPreferences.getInstance();
+
       showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AutoSearchPlacesPopUp();
-          });
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(
-      //     builder: (context) => AddressScreen(),
-      //   ),
-      // );
-    },
-    child: Center(
-      child: Container(
-        height: height * .036,
-        color: ThemeApp.appBackgroundColor,
-        width: width,
-        padding: const EdgeInsets.all(2),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: width * .02,
-            ),
-            InkWell(
-              onTap: () async {
-                final prefs = await SharedPreferences.getInstance();
-                StringConstant.FINALPINCODE =
-                    (prefs.getString('CurrentPinCodePref') ?? '');
-                print("StringConstant.CurrentPinCode" +
-                    StringConstant.FINALPINCODE);
-                print("StringConstant.CurrentPinCode" +
-                    StringConstant.CurrentPinCode);
-                // controller.getCurrentLocation();
-              },
-              child: Icon(
-                Icons.not_listed_location_outlined,
-                color: ThemeApp.tealButtonColor,
-                size: MediaQuery.of(context).size.height * .028,
+            context: context,
+            builder: (BuildContext context) {
+              return AutoSearchPlacesPopUp();
+            });
+        StringConstant.placesFromCurrentLocation =
+        (await Prefs.instance
+            .getToken(StringConstant.pinCodePref))!;
+        StringConstant.FINALPINCODE =
+        (prefs.getString('CurrentPinCodePrefs') ?? '');
+
+       if(StringConstant.placesFromCurrentLocation==''){
+         finalPicode= StringConstant.FINALPINCODE;
+       }else{finalPicode=StringConstant.placesFromCurrentLocation;}
+
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => AddressScreen(),
+        //   ),
+        // );
+      },
+      child: Center(
+        child: Container(
+          height: height * .036,
+          color: ThemeApp.appBackgroundColor,
+          width: width,
+          padding: const EdgeInsets.all(2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: width * .02,
               ),
-            ),
-            SizedBox(
-              width: width * .01,
-            ),
-            SizedBox(
-              child: TextFieldUtils().dynamicText(
-                  "Deliver to - ${StringConstant.FINALPINCODE} ",
-                  context,
-                  TextStyle(
-                      fontFamily: 'Roboto',
-                      color: ThemeApp.tealButtonColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400)),
-            ),
-            /*   SizedBox(
+              InkWell(
+                onTap: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  StringConstant.FINALPINCODE =
+                  (prefs.getString('CurrentPinCodePrefs') ?? '');
+                  print("StringConstant.CurrentPinCode" +
+                      StringConstant.FINALPINCODE);
+                  print("StringConstant.CurrentPinCode" +
+                      StringConstant.CurrentPinCode);
+                  // controller.getCurrentLocation();
+                },
+                child: Icon(
+                  Icons.not_listed_location_outlined,
+                  color: ThemeApp.tealButtonColor,
+                  size: MediaQuery.of(context).size.height * .028,
+                ),
+              ),
+              SizedBox(
+                width: width * .01,
+              ),
+              SizedBox(
+                child: TextFieldUtils().dynamicText(
+                    "Deliver to - ${StringConstant.FINALPINCODE} ",
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.tealButtonColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400)),
+              ),
+              /*   SizedBox(
               child: TextFieldUtils().dynamicText(
 
                   "Deliver to - ${StringConstant.FINALPINCODE.toString().isEmpty ? StringConstant.CurrentPinCode.toString() : StringConstant.FINALPINCODE} ",
@@ -938,24 +674,372 @@ Widget addressWidget(BuildContext context, String addressString) {
                       fontSize: 12,
                       fontWeight: FontWeight.w400)),
             ),*/
-            //Text(StringConstant.placesFromCurrentLocation),
-            SizedBox(
-              width: width * .01,
-            ),
-            Icon(
-              Icons.keyboard_arrow_down_sharp,
-              color: ThemeApp.tealButtonColor,
-              // size: 20,
-              size: MediaQuery.of(context).size.height * .028,
-            ),
-          ],
+              //Text(StringConstant.placesFromCurrentLocation),
+              SizedBox(
+                width: width * .01,
+              ),
+              Icon(
+                Icons.keyboard_arrow_down_sharp,
+                color: ThemeApp.tealButtonColor,
+                // size: 20,
+                size: MediaQuery.of(context).size.height * .028,
+              ),
+            ],
+          ),
         ),
       ),
-    ),
+    );
+  }
+}
+
+Widget bottomNavBarItems(BuildContext context, int indexSelected) {
+  (() {
+    final dashBoardData =
+    Provider.of<DashboardViewModel>(context, listen: false);
+    dashBoardData.productCategoryListingWithGet();
+  });
+
+  int _currentIndex = indexSelected;
+  final dashBoardData = Provider.of<DashboardViewModel>(context);
+
+  // return Consumer<HomeProvider>(builder: (context, provider, child) {
+  //   return Consumer<ProductProvider>(builder: (context, product, child) {
+  //     return Consumer<DashboardViewModel>(
+  //         builder: (context, productCategories, child) {
+
+  //     });
+  //   });
+  // });
+  return BottomNavigationBar(
+    backgroundColor: ThemeApp.whiteColor,
+    type: BottomNavigationBarType.fixed,
+    selectedItemColor: ThemeApp.appColor,
+    unselectedItemColor: ThemeApp.unSelectedBottomBarItemColor,
+    currentIndex: _currentIndex,
+    onTap: (int index) async {
+      final preference = await SharedPreferences.getInstance();
+      _currentIndex = index;
+
+      if (_currentIndex == 0) {
+        // Navigator.pushNamed(context, '/dashBoardScreen');
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const DashboardScreen(),
+            ),
+                (route) => false);
+        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
+
+      }
+      if (_currentIndex == 1) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const OfferActivity(),
+            ),
+                (route) => false);
+      }
+      if (_currentIndex == 3) {
+        // final dashBoardData = Provider.of<DashboardViewModel>(context, listen: false).productCategoryList;
+        // List<ProductList>? serviceListss;
+        // colors = ThemeApp.blackColor;
+        // List<ProductList>? serviceList =
+        //     productCategories.productCategoryList.data!.productList;
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MerchantActvity(
+              ),
+            ),
+                (route) => false);
+
+        /*    Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopByCategoryActivity(
+                        shopByCategoryList: serviceListss,
+
+                        // provider.jsonData["shopByCategoryList"],
+                        shopByCategorySelected: 0),
+                  ),
+                  (route) => false);*/
+      }
+      /*      if (_currentIndex == 4) {
+              if (StringConstant.isLogIn == true) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const MyAccountActivity(),
+                  ),
+                );
+              }
+            }*/
+
+      if (_currentIndex == 4) {
+        // colors = ThemeApp.blackColor;
+
+        StringConstant.BadgeCounterValue =
+            (preference.getString('setBadgeCountPrefs')) ?? '';
+        print("Badge,........" + StringConstant.BadgeCounterValue);
+        if (kDebugMode) {}
+        // product.badgeFinalCount;
+
+        // provider.isBottomAppCart = true;
+        // provider.isHome = true;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CartDetailsActivity(
+                /* value: product,
+                          productList: provider.cartProductList*/
+              )),
+        );
+      }
+    },
+    items: [
+      BottomNavigationBarItem(
+        backgroundColor: Colors.white,
+        icon: _currentIndex == 0
+            ?
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0, ),
+          child: SvgPicture.asset(
+            'assets/appImages/bottomApp/homeIcon.svg',
+            color: _currentIndex == 0 ? ThemeApp.appColor : ThemeApp.unSelectedBottomBarItemColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+              currentColor:  ThemeApp.appColor,
+            ),
+            height: 25,
+            width: 25,
+          ),
+        )
+            : Padding(
+          padding: const EdgeInsets.only(top: 8.0, ),
+          child: SvgPicture.asset(
+            'assets/appImages/bottomApp/homeIcon.svg',
+            color: ThemeApp.unSelectedBottomBarItemColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+              currentColor: ThemeApp.unSelectedBottomBarItemColor,
+            ),
+            height: 25,
+            width: 25,
+          ),
+        ),
+        label: 'HOME',
+      ),
+      BottomNavigationBarItem(
+        backgroundColor: Colors.white,
+        icon: _currentIndex == 1
+            ? Padding(
+          padding: const EdgeInsets.only(top: 8.0, ),
+          child: SvgPicture.asset(
+            'assets/appImages/bottomApp/offerIcon.svg',
+            color: ThemeApp.appColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+              currentColor: ThemeApp.appColor,
+            ),
+            height: 25,
+            width: 25,
+          ),
+        )
+            : Padding(
+          padding: const EdgeInsets.only(top: 8.0, ),
+          child: SvgPicture.asset(
+            'assets/appImages/bottomApp/offerIcon.svg',
+            color: ThemeApp.unSelectedBottomBarItemColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+              currentColor: ThemeApp.appColor,
+            ),
+            height: 25,
+            width: 25,
+          ),
+        ),
+        label: 'OFFER',
+      ),
+      BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          icon: _currentIndex == 2
+              ? Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Icon(Icons.add, color: Colors.transparent),
+          )
+              : Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Icon(Icons.add, color: Colors.transparent),
+          ),
+          label: ''),
+      BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          icon: _currentIndex == 3
+              ? Padding(
+            padding: const EdgeInsets.only(top: 8.0, ),
+            child: SvgPicture.asset(
+              'assets/appImages/bottomApp/shopIcon.svg',
+              color: ThemeApp.appColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.appColor,
+              ),
+              height: 25,
+              width: 25,
+            ),
+          )
+              : Padding(
+            padding: const EdgeInsets.only(top: 8.0, ),
+            child: SvgPicture.asset(
+              'assets/appImages/bottomApp/shopIcon.svg',
+              color: ThemeApp.unSelectedBottomBarItemColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.unSelectedBottomBarItemColor,
+              ),
+              height: 25,
+              width: 25,
+            ),
+          ),
+          label: 'SHOP'),
+      BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          icon: Stack(
+            children: <Widget>[
+              _currentIndex == 4
+                  ? Padding(
+                padding: const EdgeInsets.only(top: 8.0, right: 8),
+                child: SvgPicture.asset(
+                  'assets/appImages/bottomApp/cartIcons.svg',
+                  color: ThemeApp.appColor,
+                  semanticsLabel: 'Acme Logo',
+                  theme: SvgTheme(
+                    currentColor: ThemeApp.appColor,
+                  ),
+                  height: 25,
+                  width: 25,
+                ),
+              )
+                  : Padding(
+                padding: const EdgeInsets.only(top: 8.0, right: 8),
+                child: SvgPicture.asset(
+                  'assets/appImages/bottomApp/cartIcons.svg',
+                  color: ThemeApp.unSelectedBottomBarItemColor,
+                  semanticsLabel: 'Acme Logo',
+                  theme: SvgTheme(
+                    currentColor: ThemeApp.unSelectedBottomBarItemColor,
+                  ),
+                  height: 25,
+                  width: 25,
+                ),
+              ),
+              StringConstant.BadgeCounterValue == '0' ||
+                  StringConstant.BadgeCounterValue == ''
+                  ? SizedBox()
+                  : Positioned(
+                right: 0,
+                top: 0,
+                child: ClipRRect(
+                  borderRadius:
+                  const BorderRadius.all(Radius.circular(100)),
+                  child: Container(
+                    width: 20.0,
+                    height: 20.0,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                    ),
+                    // constraints: BoxConstraints(
+                    //     minWidth: 15,
+                    //     minHeight: 15,
+                    //     maxHeight: 18,
+                    //     maxWidth: 18),
+                    child: Padding(
+                      padding: const EdgeInsets.all(1),
+                      child: Center(
+                        child: Text(
+                          // CartRepository().badgeLength.toString(),
+                          '${StringConstant.BadgeCounterValue}',
+                          style: TextStyle(fontFamily: 'Roboto',
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          label: 'CART'),
+    ],
   );
 }
 
-Widget bottomNavBarItems(BuildContext context) {
+Widget bottomNavigationBarWidget(BuildContext context,int indexSelected) {
+  final controller = BarcodeFinderController();
+  return Container(
+    // height: MediaQuery.of(context).size.height,
+
+    // color: Colors.red,
+    child: Stack(
+      alignment: AlignmentDirectional.bottomCenter,
+
+      // alignment: const FractionalOffset(.5, 1.0),
+      // alignment: const FractionalOffset(.5, - 4.5),
+      children: [
+        bottomNavBarItems(context,indexSelected),
+        Positioned(
+          // right: 0,
+          // left: 0,
+          // top: -26,
+          // alignment: Alignment(0, -2),
+          // child: Padding(
+          // padding: const EdgeInsets.only(bottom: 20),
+          child: Container(
+            margin: EdgeInsets.only(bottom:30),
+            height: 70,
+            width: 70,
+            // color: Colors.yellow,
+            child: FloatingActionButton(
+              backgroundColor: ThemeApp.appColor,
+              onPressed: () {
+                StringConstant().scanQR(context);
+                // scanQRCode();
+                // scanFile();
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => StepperScreen(),
+                //   ),
+                // );
+
+                // showModalBottomSheet(
+                //     isDismissible: true,
+                //     context: context,
+                //     builder: (context) {
+                //       return ScannerWidget(state: controller.state);
+                //     });
+              },
+              child:  SvgPicture.asset(
+                'assets/appImages/bottomApp/scanIcon.svg',
+                color: ThemeApp.whiteColor,
+                semanticsLabel: 'Acme Logo',
+                width: 29,
+                height: 29,
+
+                // height: height * .03,
+              ),/*   child: const Icon(Icons.document_scanner_outlined,
+                color: ThemeApp.whiteColor),*/
+            ),
+          ),
+          // ),
+        ),
+      ],
+    ),
+  );
+}
+/*Widget bottomNavBarItems(BuildContext context) {
   (() {
     final dashBoardData =
         Provider.of<DashboardViewModel>(context, listen: false);
@@ -1005,12 +1089,11 @@ Widget bottomNavBarItems(BuildContext context) {
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MerchantActvity(
-                      ),
+                    builder: (context) => MerchantActvity(),
                   ),
                   (route) => false);
 
-              /*    Navigator.pushAndRemoveUntil(
+              *//*    Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ShopByCategoryActivity(
@@ -1019,9 +1102,9 @@ Widget bottomNavBarItems(BuildContext context) {
                         // provider.jsonData["shopByCategoryList"],
                         shopByCategorySelected: 0),
                   ),
-                  (route) => false);*/
+                  (route) => false);*//*
             }
-            /*      if (_currentIndex == 4) {
+            *//*      if (_currentIndex == 4) {
               if (StringConstant.isLogIn == true) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -1029,7 +1112,7 @@ Widget bottomNavBarItems(BuildContext context) {
                   ),
                 );
               }
-            }*/
+            }*//*
 
             if (_currentIndex == 4) {
               // colors = ThemeApp.blackColor;
@@ -1047,8 +1130,8 @@ Widget bottomNavBarItems(BuildContext context) {
                 context,
                 MaterialPageRoute(
                     builder: (context) => CartDetailsActivity(
-                        /* value: product,
-                          productList: provider.cartProductList*/
+                        *//* value: product,
+                          productList: provider.cartProductList*//*
                         )),
               );
             }
@@ -1288,14 +1371,14 @@ Widget bottomNavigationBarWidget(BuildContext context) {
               height: 29,
 
               // height: height * .03,
-            ), /*   child: const Icon(Icons.document_scanner_outlined,
-                color: ThemeApp.whiteColor),*/
+            ), *//*   child: const Icon(Icons.document_scanner_outlined,
+                color: ThemeApp.whiteColor),*//*
           ),
         ),
       ),
     ],
   );
-}
+}*/
 
 /*
 class ScannerWidget extends StatefulWidget {
@@ -1656,6 +1739,7 @@ class _searchBarWidgetState extends State<searchBarWidget> {
   }
 }
 
+/*
 class LocationController extends GetxController {
   Position? currentPosition;
   var _isLoading = false.obs;
@@ -1706,3 +1790,4 @@ class LocationController extends GetxController {
     }
   }
 }
+*/

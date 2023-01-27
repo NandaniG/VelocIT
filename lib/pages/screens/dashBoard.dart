@@ -102,7 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     print(url.toString());
     print('datassss.toString()');
     print(basketRepo.orderBasketData.toString());
-    getCurrentLocation();
+    // getCurrentLocation();
 // if()
 
     productCategories.productCategoryListingWithGet();
@@ -129,14 +129,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString("FromType", 'FromProduct');
+    StringConstant.FINALPINCODE =
+        (prefs.getString('CurrentPinCodePrefs')) ?? '';
+    print("IS FINALPINCODE ..............." +
+        StringConstant.FINALPINCODE.toString());
 
     StringConstant.BadgeCounterValue =
         (prefs.getString('setBadgeCountPrefs')) ?? '';
     setState(() {
-      StringConstant.FINALPINCODE =
-          (prefs.getString('CurrentPinCodePref') ?? '');
-      print(
-          "placesFromCurrentLocation FINALPINCODE pref...${StringConstant.FINALPINCODE.toString()}");
+      // StringConstant.FINALPINCODE =
+      //     (prefs.getString('CurrentPinCodePref') ?? '');
+      // print(
+      //     "placesFromCurrentLocation FINALPINCODE pref...${StringConstant.FINALPINCODE.toString()}");
 
       print("StringConstant.CurrentPinCode");
       StringConstant.isUserLoggedIn = (prefs.getInt(isUserLoginPref) ?? 0);
@@ -240,11 +244,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: AppBarWidget(
             context: context,
             titleWidget: searchBarWidget(),
-            location: addressWidget(
-                context, StringConstant.placesFromCurrentLocation),
+            location: AddressWidgets(),
           ),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context),
+        bottomNavigationBar: bottomNavigationBarWidget(context,0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: ChangeNotifierProvider<DashboardViewModel>.value(
           value: dashboardViewModel,
@@ -1571,7 +1574,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }*/
   int indexForItems = 0;
 
-  Widget stepperOfDelivery(HomeProvider value) {
+  Widget stepperOfDelivery(HomeProvider value) {    var dataOfOrders;
+    // for (int i =0; i<value.jsonData['payload']['consumer_baskets'].length; i++ ){
+    //   dataOfOrders= value.jsonData['payload']['consumer_baskets'][i]['orders'].length;
+    // }
+
     return /*(value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
             value.jsonData.isNotEmpty)*/
         value.jsonData['status'] == "EXCEPTION"
@@ -1581,8 +1588,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Container(
                   // height: 300,
                   height:
-                      value.jsonData['payload']['consumer_baskets'].length - 1 <
-                              0
+                      value.jsonData['payload']['consumer_baskets'].length-1 <
+                              0/*||dataOfOrders-1<0*/
                           ? 0.0
                           : 161,
 

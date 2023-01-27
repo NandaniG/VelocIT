@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -305,7 +306,7 @@ class CartRepository {
     // var url = ApiMapping.getURI(apiEndPoint.address_list);
 
     var requestUrl =
-        ApiMapping.BaseAPI + '/user/' + id + '/address?page=0&size=10';
+        ApiMapping.BaseAPI + '/user/' + id + '/address?page=0&size=50';
 
     print(requestUrl.toString());
     print(id.toString());
@@ -331,11 +332,13 @@ class CartRepository {
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
-      print(" getDefaultAddressList : " + response.toString());
+      if (kDebugMode) {
+        print(" getDefaultAddressList : $response");
+      }
 
       return response = GetDefaultAddressModel.fromJson(response);
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -347,7 +350,9 @@ class CartRepository {
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
-      print(" State AddressListModel : " + response.toString());
+      if (kDebugMode) {
+        print(" State AddressListModel : " + response.toString());
+      }
 
       return response = StateModel.fromJson(response);
     } catch (e) {
@@ -363,7 +368,9 @@ class CartRepository {
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
-      print(" CityModel AddressListModel : " + response.toString());
+      if (kDebugMode) {
+        print(" CityModel AddressListModel : " + response.toString());
+      }
 
       return response = CityModel.fromJson(response);
     } catch (e) {
@@ -409,17 +416,24 @@ class CartRepository {
 */
 
   Future createAddressPostAPI(Map data, String userId) async {
-    print("userId" + userId.toString());
+    if (kDebugMode) {
+      print("userId" + userId.toString());
+    }
     var url = '/address/user/' + userId.toString();
     var requestUrl = ApiMapping.BaseAPI + url;
 
     String body = json.encode(data);
-    print("jsonMap" + body.toString());
+    if (kDebugMode) {
+      print("jsonMap" + body.toString());
+      print("requestUrl" + requestUrl.toString());
+    }
 
     dynamic reply;
     http.Response response = await http.post(Uri.parse(requestUrl),
         body: body, headers: {'content-type': 'application/json'});
-    print("response post" + response.body.toString());
+    if (kDebugMode) {
+      print("response Created address" + response.body.toString());
+    }
     // Utils.successToast(response.body.toString());
     return reply;
   }
@@ -428,11 +442,15 @@ class CartRepository {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
     final prefs = await SharedPreferences.getInstance();
 
-    print("userId" + orderBasketID.toString());
+    if (kDebugMode) {
+      print("userId" + orderBasketID.toString());
+    }
     var url = '/order-basket/$orderBasketID/attempt_payment';
 
     var requestUrl = ApiMapping.BaseAPI + url;
-    print(requestUrl.toString());
+    if (kDebugMode) {
+      print(requestUrl.toString());
+    }
 
     String body = json.encode(data);
     print("putCartForPayment jsonMap" + body.toString());

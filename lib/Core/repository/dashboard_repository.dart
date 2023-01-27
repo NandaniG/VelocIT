@@ -130,7 +130,7 @@ class DashBoardRepository {
     var url = '/product/page-query';
     String queryString = Uri(queryParameters: productListingData).query;
 
-    var requestUrl = ApiMapping.BaseAPI + url + '?' + queryString!;
+    var requestUrl = ApiMapping.BaseAPI + url + '?' + queryString;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -168,7 +168,7 @@ class DashBoardRepository {
     String queryString = Uri(queryParameters: productListingData).query;
 
     var requestUrl =
-        ApiMapping.BaseAPI + ApiMapping.RecommendForYou + '?' + queryString!;
+        ApiMapping.BaseAPI + ApiMapping.RecommendForYou + '?' + queryString;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -190,7 +190,7 @@ class DashBoardRepository {
     String queryString = Uri(queryParameters: productListingData).query;
 
     var requestUrl =
-        ApiMapping.BaseAPI + ApiMapping.BestDeal + '?' + queryString!;
+        ApiMapping.BaseAPI + ApiMapping.BestDeal + '?' + queryString;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
@@ -214,7 +214,7 @@ class DashBoardRepository {
     String queryString = Uri(queryParameters: productListingData).query;
 
     var requestUrl =
-        ApiMapping.BaseAPI + ApiMapping.SimilarProducts + '?' + queryString!;
+        ApiMapping.BaseAPI + ApiMapping.SimilarProducts + '?' + queryString;
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);

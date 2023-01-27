@@ -494,15 +494,16 @@ class _SignUpState extends State<SignUp> {
                                     password.clear();
                                     confirmPassword.clear();
                                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                        builder: (context) => SignIn_Screen()));
+                                        builder: (context) => SignIn_Screen())).then((value) => setState((){}));
                                   },
                                   child: Text(
                                     "Sign In",
                                     style: TextStyle(
                                         fontFamily: 'Roboto',
-                                        color: ThemeApp.primaryNavyBlackColor,
+                                        color: ThemeApp.tealButtonColor,
                                         fontSize: 14,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.underline),
                                   ),
                                 ),
                               ],
@@ -537,7 +538,7 @@ class _SignUpState extends State<SignUp> {
                                   onTap: (){
                                     Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
-                                            builder: (context) => DashboardScreen()));
+                                            builder: (context) => DashboardScreen())).then((value) => setState((){}));
                                   },
                                   child: Text(
                                     "Guest",
@@ -775,7 +776,8 @@ class _SignUpState extends State<SignUp> {
         MobileNumberTextFormField(
             errorText: StringUtils.enterMobileNumber,
             controller: mobileNumberController,
-            enable: true,        onChanged: (phone) {
+            enable: true,
+            onChanged: (phone) {
               print('phone.completeNumber');
               print(phone.completeNumber);
         if (phone.countryCode == "IN") {
@@ -783,7 +785,15 @@ class _SignUpState extends State<SignUp> {
           print(phone.completeNumber);
         } else {
           print("india not selected");
-        }
+        }     if (phone==''  && mobileNumberController.text.isEmpty) {
+              _validateMobile = true;
+              return StringUtils.enterMobileNumber;
+              } else if (mobileNumberController.text.length < 10) {
+              _validateMobile = true;
+              return StringUtils.enterMobileNumber;
+              } else {
+              _validateMobile = false;
+              }
         },
             validator: (value) {
               if (value==''  && mobileNumberController.text.isEmpty) {
@@ -826,14 +836,14 @@ class _SignUpState extends State<SignUp> {
     dynamic reply = await response.transform(utf8.decoder).join();
     String rawJson = reply.toString();
     print(reply);
-    // Utils.successToast(rawJson.toString());
 
-    Map<String, dynamic> map = jsonDecode(rawJson);
-    String name = map['message'];
-    // Utils.successToast(name.toString());
-    // print("SignUp response " + name.toString());
+
 
     if (response.statusCode == 200) {
+      Map<String, dynamic> map = jsonDecode(rawJson);
+      String name = map['message'];
+      Utils.successToast(name.toString());
+      print("SignUp response " + name.toString());
 
       // Utils.successToast(name.toString());
       Navigator.of(context)

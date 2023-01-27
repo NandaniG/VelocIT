@@ -132,11 +132,11 @@ class AuthRepository {
 
     StringConstant.prettyPrintJson(
         responseJson.toString(), 'Login Using Mobile OTP Response:');
-    Utils.successToast(jsonData['payload']['otp'].toString());
     if (jsonData['status'].toString() == 'OK') {
       prefs.setString(
           StringConstant.setOtp, jsonData['payload']['otp'].toString());
       String mobile = jsonMap['mobile'].toString();
+      Utils.successToast(jsonData['payload']['otp'].toString());
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => OTPScreen(
@@ -175,12 +175,12 @@ class AuthRepository {
 
     StringConstant.prettyPrintJson(
         responseJson.toString(), 'Login Using Email OTP Response:');
-    Utils.successToast(jsonData['payload']['otp'].toString());
+
     if (jsonData['status'].toString() == 'OK') {
       prefs.setString(
           StringConstant.setOtp, jsonData['payload']['otp'].toString());
       String mobile = jsonMap['email'].toString();
-
+      Utils.successToast(jsonData['payload']['otp'].toString());
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => OTPScreen(
                 mobileNumber: mobile.toString(),
@@ -204,7 +204,7 @@ class AuthRepository {
     dynamic responseJson;
     var url = ApiMapping.BASEAPI + ApiMapping.validateOTP;
     print(url);
-    print(jsonMap['email']);
+    print(jsonMap);
     HttpClient httpClient = new HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json');
@@ -218,7 +218,7 @@ class AuthRepository {
 
     StringConstant.prettyPrintJson(
         responseJson.toString(), 'Validate OTP Response:');
-    if(response.statusCode == 200){}else{}
+    if(response.statusCode == 200){
 
     if (jsonData['status'].toString() == 'OK') {
 
@@ -287,6 +287,11 @@ class AuthRepository {
             MaterialPageRoute(builder: (context) => DashboardScreen()));
       }
     } else {
+      Utils.errorToast("Please enter valid details.");
+
+      httpClient.close();
+      return responseJson;
+    }}else {
       Utils.errorToast("Please enter valid details.");
 
       httpClient.close();

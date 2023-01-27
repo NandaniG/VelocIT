@@ -349,7 +349,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
 
                             return cartProvider.cartSpecificID.data!.payload!
                                 .ordersForPurchase!.isEmpty
-                                ? bottomNavigationBarWidget(context)
+                                ? bottomNavigationBarWidget(context,4)
                                 : Container(
                               height: 100,
                               width: width,
@@ -559,7 +559,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                       ],
                                     ),
                                   ),
-                                  bottomNavBarItems(context),
+
+                                  bottomNavBarItems(context,4),
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 20),
                                     child: Container(

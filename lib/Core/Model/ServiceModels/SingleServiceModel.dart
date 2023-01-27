@@ -307,7 +307,7 @@ class SingleProductPayload {
     if (json['merchants'] != null) {
       merchants = <SingleModelMerchants>[];
       json['merchants'].forEach((v) {
-        merchants!.add(new SingleModelMerchants.fromJson(v));
+        merchants.add(new SingleModelMerchants.fromJson(v));
       });
     }
     if (json['productVariants'] != null) {
@@ -348,11 +348,11 @@ class SingleProductPayload {
           this.productsubCategory!.map((v) => v.toJson()).toList();
     }
     if (this.merchants != null) {
-      data['merchants'] = this.merchants!.map((v) => v.toJson()).toList();
+      data['merchants'] = this.merchants.map((v) => v.toJson()).toList();
     }
     if (this.productVariants != null) {
       data['productVariants'] =
-          this.productVariants!.map((v) => v.toJson()).toList();
+          this.productVariants.map((v) => v.toJson()).toList();
     }
     data['id'] = this.id;
     data['product_code'] = this.productCode;

@@ -33,9 +33,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
         child: AppBarWidget(
           context: context,
           titleWidget: searchBar(context),
-          location: addressWidget(
-              context, StringConstant.placesFromCurrentLocation),
-        ),
+          location: const AddressWidgets(),  ),
       ),
       body: SafeArea(
           child: Padding(

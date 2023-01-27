@@ -206,7 +206,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
         child: AppBar_BackWidget(
            context: context,titleWidget: appTitle(context, "CRM"), location: SizedBox()),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context),
+      bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(

@@ -124,11 +124,9 @@ class _ServiceListByCategoryActivityState
           child: AppBarWidget(
             context: context,
             titleWidget: searchBar(context),
-            location: addressWidget(
-                context, StringConstant.placesFromCurrentLocation),
-          ),
+            location: const AddressWidgets(), ),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context),
+        bottomNavigationBar: bottomNavigationBarWidget(context,0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(
@@ -375,11 +373,11 @@ class _ServiceListByCategoryActivityState
                           childAspectRatio: MediaQuery.of(context).size.height / 900,
                         ),
                         shrinkWrap: true,
-                        children: List.generate(subProductList!.length,
+                        children: List.generate(subProductList.length,
                               (index) {
                             return Stack(
                               children: [
-                                index == subProductList!.length
+                                index == subProductList.length
                                     ? Container(
                                   // width: constrains.minWidth,
                                   height: 20,
@@ -512,7 +510,7 @@ class _ServiceListByCategoryActivityState
                                         ],
                                       )),
                                 ),
-                                index == subProductList!.length
+                                index == subProductList.length
                                     ? Container(
                                   // width: constrains.minWidth,
                                   height: 20,

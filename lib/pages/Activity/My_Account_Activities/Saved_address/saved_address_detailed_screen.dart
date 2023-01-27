@@ -58,6 +58,7 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
       StringConstant.UserLoginId =
           (prefs.getString('isUserId')) ?? '';
       StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+      print(" StringConstant.UserCartID"+ StringConstant.UserLoginId);
       cartViewModel.sendAddressWithGet(
           context, StringConstant.UserLoginId.toString());
   });

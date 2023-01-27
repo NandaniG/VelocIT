@@ -64,10 +64,9 @@ class _OfferActivityState extends State<OfferActivity> {
             child: AppBarWidget(
             context:     context,
                titleWidget:  searchBar(context),
-        location:         addressWidget(
-                    context, StringConstant.placesFromCurrentLocation),
+              location: const AddressWidgets(),
 )),
-        bottomNavigationBar: bottomNavigationBarWidget(context),
+        bottomNavigationBar: bottomNavigationBarWidget(context,1),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
         body:

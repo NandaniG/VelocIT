@@ -149,50 +149,52 @@ class _OTPScreenState extends State<OTPScreen> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .04,
                 ),
-                PinCodeTextField(
-                  autofocus: false,
-                  controller: controller,
-                  hideCharacter: true,
-                  highlight: false,
-                  defaultBorderColor: ThemeApp.whiteColor,
-                  hasTextBorderColor: controller.text.length <= 5
-                      ? Colors.red
-                      : ThemeApp.innertextfieldbordercolor,
+                FittedBox(fit: BoxFit.fitWidth,
+                  child: PinCodeTextField(
+                    autofocus: false,
+                    controller: controller,
+                    hideCharacter: true,
+                    highlight: false,
+                    defaultBorderColor: ThemeApp.whiteColor,
+                    hasTextBorderColor: controller.text.length <= 5
+                        ? Colors.red
+                        : ThemeApp.innertextfieldbordercolor,
 
-                  // highlightPinBoxColor: Colors.orange,
-                  maxLength: 6,
-                  hasError: hasError,
-                  focusNode: focusNode,
-                  onTextChanged: (value) {
-                    setState(() {
-                      if (value.length <= 5) {
-                        otpMsg = StringUtils.verificationError;
-                      } else {
-                        otpMsg = '';
-                      }
-                      currentText = value;
-                    });
-                  },
-                  onDone: (text) {
-                    print("OTP :  $text");
-                    print("OTP CONTROLLER ${controller.text}");
-                  },
-                  pinBoxWidth: 50,
-                  pinBoxHeight: 60,
-                  hasUnderline: false,
-                  wrapAlignment: WrapAlignment.spaceAround,
-                  pinBoxDecoration:
-                      ProvidedPinBoxDecoration.defaultPinBoxDecoration,
-                  pinTextStyle: TextStyle(fontFamily: 'Roboto',fontSize: 22.0),
-                  pinTextAnimatedSwitcherTransition:
-                      ProvidedPinBoxTextAnimation.scalingTransition,
-                  pinBoxRadius: 10,
+                    // highlightPinBoxColor: Colors.orange,
+                    maxLength: 6,
+                    hasError: hasError,
+                    focusNode: focusNode,
+                    onTextChanged: (value) {
+                      setState(() {
+                        if (value.length <= 5) {
+                          otpMsg = StringUtils.verificationError;
+                        } else {
+                          otpMsg = '';
+                        }
+                        currentText = value;
+                      });
+                    },
+                    onDone: (text) {
+                      print("OTP :  $text");
+                      print("OTP CONTROLLER ${controller.text}");
+                    },
+                    // pinBoxWidth: 40,
+                    // pinBoxHeight: 60,
+                    hasUnderline: false,
+                    wrapAlignment: WrapAlignment.spaceBetween,
+                    pinBoxDecoration:
+                        ProvidedPinBoxDecoration.defaultPinBoxDecoration,
+                    pinTextStyle: TextStyle(fontFamily: 'Roboto',fontSize: 22.0),
+                    pinTextAnimatedSwitcherTransition:
+                        ProvidedPinBoxTextAnimation.scalingTransition,
+                    pinBoxRadius: 10,
 //                    pinBoxColor: Colors.green[100],
-                  pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
+                    pinTextAnimatedSwitcherDuration: Duration(milliseconds: 300),
 //                    highlightAnimation: true,
-                  highlightAnimationBeginColor: Colors.black,
-                  highlightAnimationEndColor: Colors.white,
-                  keyboardType: TextInputType.number,
+                    highlightAnimationBeginColor: Colors.black,
+                    highlightAnimationEndColor: Colors.white,
+                    keyboardType: TextInputType.number,
+                  ),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .01,
@@ -241,6 +243,35 @@ class _OTPScreenState extends State<OTPScreen> {
                               _start = 120;
                               isLoading = true;
                               startTimer();
+
+
+                              Map emaildata = {
+                                'email': widget.mobileNumber,
+                              };
+                              Map mobileData = {
+                                'mobile': widget.mobileNumber,
+                              };
+                              if (StringConstant()
+                                  .isNumeric(widget.mobileNumber)) {
+                                print(mobileData);
+
+                                AuthRepository().postApiForMobileOTPRequest(
+                                    mobileData, context).then((value) => setState((){}));
+
+                                print("Digit found");
+                              } else {
+                                print(emaildata);
+
+                                AuthRepository().postApiForEmailOTPRequest(
+                                    emaildata, context).then((value) => setState((){}));
+                                // Navigator.of(context).push(
+                                //     MaterialPageRoute(builder: (context) => OTPScreen(mobileNumber:    mobileController.text))).then((value) => setState((){}));
+
+                                print("Digit not found");
+                                // email.clear();
+                                // mobileController.clear();
+                                // password.clear();
+                              }
                             });
                           },
                           child: Text(
@@ -272,7 +303,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
                     Map passOtpData = {
                       'username': widget.Uname,
-                      'otp': widget.OTP,
+                      'otp': controller.text,
                       'user_id': widget.UID,
                     };
                     AuthRepository()

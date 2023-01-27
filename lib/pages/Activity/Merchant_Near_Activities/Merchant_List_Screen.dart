@@ -119,11 +119,9 @@ class _MerchantListByIdActivityState extends State<MerchantListByIdActivity> {
           child: AppBarWidget(
             context: context,
             titleWidget: searchBar(context),
-            location: addressWidget(
-                context, StringConstant.placesFromCurrentLocation),
-          ),
+            location: const AddressWidgets(),   ),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context),
+        bottomNavigationBar: bottomNavigationBarWidget(context,3),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(

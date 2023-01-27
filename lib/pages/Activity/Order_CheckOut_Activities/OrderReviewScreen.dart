@@ -239,21 +239,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                     .cart!.totalPayable,
                                             "is_self_pickup": isSelfPickUp,
                                           };
-                                          if (StringConstant.selectedFullName !=
-                                              '') {
-                                            CartRepository().putCartForPayment(
-                                                data,
-                                                cartForPaymentPayload
-                                                    .orderBasketId!);
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Payment_Creditcard_debitcardScreen(
-                                                        cartForPaymentPayload:
-                                                            cartForPaymentPayload),
-                                              ),
-                                            );
-                                          } else {
+                                          print("defaultAddressList ..."+defaultAddressList!.length.toString());
+
                                             if (isSelfPickUp == true) {
                                               CartRepository()
                                                   .putCartForPayment(
@@ -268,12 +255,28 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                               cartForPaymentPayload),
                                                 ),
                                               );
-                                            }
-                                            isSelfPickUp == false
-                                                ? Utils.successToast(
+                                            }else{
+                                              if (defaultAddressList!.length-1>0) {
+                                                CartRepository().putCartForPayment(
+                                                    data,
+                                                    cartForPaymentPayload
+                                                        .orderBasketId!);
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Payment_Creditcard_debitcardScreen(
+                                                            cartForPaymentPayload:
+                                                            cartForPaymentPayload),
+                                                  ),
+                                                );
+                                              }  else{
+                                                isSelfPickUp == false
+                                                    ? Utils.successToast(
                                                     "Please select delivery address")
-                                                : '';
-                                          }
+                                                    : '';
+                                              }                                           }
+
+
 
                                           // Navigator.of(context).push(
                                           //   MaterialPageRoute(
@@ -336,7 +339,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    */ /*  Column(
+                    */
+            /*  Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -571,7 +575,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                             //   ),
                                                             // );
                                                             print("widget.cartForPaymentPayload!.cartId11" +
-                                                                widget!.cartId
+                                                                widget.cartId
                                                                     .toString());
 
                                                             showModalBottomSheet(
@@ -938,7 +942,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                   })))),
     );
   }
-
+  List<AddressContent>? defaultAddressList;
   Widget deliveryAddress() {
     return ChangeNotifierProvider<CartViewModel>.value(
         value: cartListView,
@@ -956,7 +960,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
               print("Api calll");
               List<AddressContent>? addressList =
                   cartProvider.getAddress.data!.payload!.content;
-
+              defaultAddressList =  cartProvider.getAddress.data!.payload!.content;
               print("addressList" + addressList!.length.toString());
               return addressList.length > 0
                   ? Container(
@@ -1095,7 +1099,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: cartOrderPurchase.length,
             itemBuilder: (BuildContext context, int index) {
-              if (cartOrderPurchase!.length < 0) {
+              if (cartOrderPurchase.length < 0) {
                 return const Center(
                     child: CircularProgressIndicator(
                   color: ThemeApp.darkGreyColor,
@@ -1197,7 +1201,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                   ),
                                   TextFieldUtils().dynamicText(
                                       StringConstant().convertDateTimeDisplay(
-                                          cartOrderPurchase![index]
+                                          cartOrderPurchase[index]
                                               .deliveryDate
                                               .toString()),
                                       context,
@@ -1253,10 +1257,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              cartOrderPurchase![index].offer.toString().isNotEmpty
+              cartOrderPurchase[index].offer.toString().isNotEmpty
                   ? TextFieldUtils().dynamicText(
                       indianRupeesFormat.format(double.parse(
-                                  cartOrderPurchase![index].offer.toString()) ??
+                                  cartOrderPurchase[index].offer.toString()) ??
                               0.0) ??
                           "0.0",
                       context,
@@ -1273,7 +1277,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                 width: 5,
               ),
               TextFieldUtils().dynamicText(
-                  "(${cartOrderPurchase![index].discountPercent.toString().toString()} % Off)",
+                  "(${cartOrderPurchase[index].discountPercent.toString().toString()} % Off)",
                   context,
                   TextStyle(
                     fontFamily: 'Roboto',
@@ -2621,7 +2625,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     // TODO: implement initState
     super.initState();
     cartViewModel.sendAddressWithGet(
-        context, widget.cartForPaymentPayload!.userId.toString());
+        context, widget.cartForPaymentPayload.userId.toString());
   }
 
   @override

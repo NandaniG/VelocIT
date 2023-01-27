@@ -99,11 +99,9 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
             preferredSize: Size.fromHeight(height * .12),  child: AppBarWidget(
             context: context,
             titleWidget: searchBar(context),
-            location: addressWidget(
-                context, StringConstant.placesFromCurrentLocation),
+            location: const AddressWidgets(), ),
           ),
-          ),
-          bottomNavigationBar: bottomNavigationBarWidget(context),
+          bottomNavigationBar: bottomNavigationBarWidget(context,0),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           body: SafeArea(
             child: SingleChildScrollView(
