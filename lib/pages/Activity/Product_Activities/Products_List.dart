@@ -372,7 +372,11 @@ class _ProductListByCategoryActivityState
                   return Expanded(
 
                     // width: MediaQuery.of(context).size.width,
-                    child: subProductList.length==[]?CircularProgressIndicator(): GridView(
+                    child: subProductList.isEmpty?Center(
+                        child: Text(
+                          "Match not found",
+                          style: TextStyle(fontSize: 20),
+                        )): GridView(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 16,

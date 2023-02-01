@@ -10,6 +10,7 @@ import 'package:velocit/pages/screens/dashBoard.dart';
 import '../../Core/repository/auth_repository.dart';
 import '../../utils/StringUtils.dart';
 import '../../utils/constants.dart';
+import '../../utils/routes/routes.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/proceedButtons.dart';
@@ -918,9 +919,11 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         ),
                         InkWell(
                           onTap: (){
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => DashboardScreen()));
+                            Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
+                              setState(() {
+
+                              });
+                            });
                           },
                           child: Text(
                             "Guest",

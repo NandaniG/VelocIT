@@ -10,6 +10,7 @@ import '../../pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import '../../pages/auth/OTP_Screen.dart';
 import '../../pages/screens/dashBoard.dart';
 import '../../utils/constants.dart';
+import '../../utils/routes/routes.dart';
 import '../../utils/utils.dart';
 import '../AppConstant/apiMapping.dart';
 import '../ViewModel/cart_view_model.dart';
@@ -283,9 +284,9 @@ class AuthRepository {
         CartRepository().buyNowGetRequest(userId.toString(), context);
 
       } else {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => DashboardScreen()));
-      }
+        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
+
+        });      }
     } else {
       Utils.errorToast("Please enter valid details.");
 

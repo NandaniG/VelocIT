@@ -377,6 +377,77 @@ class _AppBar_BackWidgetState extends State<AppBar_BackWidget> {
   }
 }
 
+///back with route
+
+class AppBar_Back_RouteWidget extends StatefulWidget {
+  final BuildContext context;
+  final Widget titleWidget;
+  final Widget location;
+  final VoidCallback onTap;
+
+  AppBar_Back_RouteWidget(
+      {Key? key,
+        required this.context,
+        required this.titleWidget,
+        required this.location,required this.onTap})
+      : super(key: key);
+
+  @override
+  State<AppBar_Back_RouteWidget> createState() => _AppBar_Back_RouteWidgetState();
+}
+
+class _AppBar_Back_RouteWidgetState extends State<AppBar_Back_RouteWidget> {
+  double height = 0.0;
+  double width = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    return SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              color: ThemeApp.darkGreyTab,
+              child: AppBar(
+                centerTitle: false,
+                elevation: 0,
+                backgroundColor: ThemeApp.appBackgroundColor,
+                flexibleSpace: Container(
+                  height: height * .08,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    color: ThemeApp.appBackgroundColor,
+                  ),
+                ),
+
+                titleSpacing: 1,
+                leading: InkWell(
+                  onTap:widget.onTap,
+                  child: Transform.scale(
+                    scale: 0.7,
+                    child: Image.asset(
+                      'assets/appImages/backArrow.png',
+                      color: ThemeApp.primaryNavyBlackColor,
+                      // height: height*.001,
+                    ),
+                  ),
+                ),
+
+                // leadingWidth: width * .06,
+                title: widget.titleWidget,
+                // Row
+              ),
+            ),
+            widget.location
+          ],
+        ));
+  }
+}
+
 Widget appTitle(BuildContext context, String text) {
   return Container(
     alignment: Alignment.centerLeft,
@@ -568,7 +639,8 @@ class AddressWidgets extends StatefulWidget {
 }
 
 class _AddressWidgetsState extends State<AddressWidgets> {
-String finalPicode='';
+var finalPicode;
+@override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -578,11 +650,9 @@ String finalPicode='';
   getPref() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      StringConstant.FINALPINCODE =
-      (prefs.getString('CurrentPinCodePrefs') ?? '');
-      finalPicode = StringConstant.FINALPINCODE;
+      finalPicode =prefs.getString('CurrentPinCodePrefs');
       print(
-          "placesFromCurrentLocation FINALPINCODE pref...${StringConstant.FINALPINCODE.toString()}");
+          "placesFromCurrentLocation FINALPINCODE pref...${finalPicode.toString()}");
 
     });
   }
@@ -656,7 +726,7 @@ String finalPicode='';
               ),
               SizedBox(
                 child: TextFieldUtils().dynamicText(
-                    "Deliver to - ${StringConstant.FINALPINCODE} ",
+                    "Deliver to - ${finalPicode} ",
                     context,
                     TextStyle(
                         fontFamily: 'Roboto',

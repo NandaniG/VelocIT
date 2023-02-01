@@ -522,7 +522,7 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
                   print("USER LOGIN ID..............." +
                       StringConstant.UserLoginId.toString());
                   Utils.successToast(
-                      'Return order request submitted successfuly');
+                      'Return order request submitted successfully');
 
                   /*           Map jsonMap = {
                     "user_id": StringConstant.UserLoginId,

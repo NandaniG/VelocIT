@@ -139,16 +139,17 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
-          setState(() {
-
-          });
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(
+                RoutesName.dashboardRoute, (route) => false)
+            .then((value) {
+          setState(() {});
         });
         return Future.value(true);
       },
       child: Scaffold(
           backgroundColor: ThemeApp.appBackgroundColor,
-     /*     key: scaffoldGlobalKey,
+          /*     key: scaffoldGlobalKey,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(height * .12),
             child: AppBarWidget(
@@ -191,10 +192,11 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                         //   ),
                         // );
 
-                        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
-                          setState(() {
-
-                          });
+                        Navigator.of(context)
+                            .pushNamedAndRemoveUntil(
+                                RoutesName.dashboardRoute, (route) => false)
+                            .then((value) {
+                          setState(() {});
                         });
                         // Navigator.pushReplacementNamed(
                         //         context, RoutesName.dashboardRoute)
@@ -212,7 +214,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                     ),
 
                     // leadingWidth: width * .06,
-                    title:  searchBar(context),
+                    title: searchBar(context),
                     actions: [
                       InkWell(
                         onTap: () {
@@ -240,77 +242,80 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                           ),
                         ),
                       ),
-                      Consumer<HomeProvider>(builder: (context, provider, child) {
+                      Consumer<HomeProvider>(
+                          builder: (context, provider, child) {
                         return Consumer<ProductProvider>(
                             builder: (context, product, child) {
-                              return /*StringConstant.isLogIn == false
+                          return /*StringConstant.isLogIn == false
                         ? const SizedBox(
                             width: 0,
                           )
                         : */
-                                InkWell(
-                                  onTap: () async {
-                                    /// locale languages
-                                    // Navigator.of(context).push(
-                                    //   MaterialPageRoute(
-                                    //       builder: (context) => FlutterLocalizationDemo()),
-                                    // );
+                              InkWell(
+                            onTap: () async {
+                              /// locale languages
+                              // Navigator.of(context).push(
+                              //   MaterialPageRoute(
+                              //       builder: (context) => FlutterLocalizationDemo()),
+                              // );
 
-                                    if (kDebugMode) {
-                                      print("provider.cartProductList");
-                                      // print(provider.cartProductList);
-                                    }
-                                    product.badgeFinalCount;
+                              if (kDebugMode) {
+                                print("provider.cartProductList");
+                                // print(provider.cartProductList);
+                              }
+                              product.badgeFinalCount;
 
-                                    provider.isBottomAppCart = true;
-                                    provider.isHome = true;
+                              provider.isBottomAppCart = true;
+                              provider.isHome = true;
 
-                                    final prefs = await SharedPreferences.getInstance();
-                                    StringConstant.loginUserName =
-                                        (prefs.getString('usernameLogin')) ?? '';
-                                    StringConstant.loginUserEmail =
-                                        (prefs.getString('emailLogin')) ?? '';
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              StringConstant.loginUserName =
+                                  (prefs.getString('usernameLogin')) ?? '';
+                              StringConstant.loginUserEmail =
+                                  (prefs.getString('emailLogin')) ?? '';
 
-                                    StringConstant.isUserLoggedIn =
-                                        (prefs.getInt('isUserLoggedIn')) ?? 0;
-                                    // Navigator.pushAndRemoveUntil(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) => CartDetailsActivity(
-                                    //             value: product, productList: provider.cartProductList)),
-                                    //         (route) => false);
-                                    if (StringConstant.isUserLoggedIn != 0) {
-                                      Navigator.of(context)
-                                          .push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                          const MyAccountActivity(),
-                                        ),
-                                      )
-                                          .then((value) => setState(() {}));
-                                    } else {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AccountVerificationDialog();
-                                          });
-                                    }
-                                  },
-                                  child: StringConstant.ProfilePhoto == ''
-                                      ? Padding(
+                              StringConstant.isUserLoggedIn =
+                                  (prefs.getInt('isUserLoggedIn')) ?? 0;
+                              // Navigator.pushAndRemoveUntil(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => CartDetailsActivity(
+                              //             value: product, productList: provider.cartProductList)),
+                              //         (route) => false);
+                              if (StringConstant.isUserLoggedIn != 0) {
+                                Navigator.of(context)
+                                    .push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MyAccountActivity(),
+                                      ),
+                                    )
+                                    .then((value) => setState(() {}));
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AccountVerificationDialog();
+                                    });
+                              }
+                            },
+                            child: StringConstant.ProfilePhoto == ''
+                                ? Padding(
                                     padding: const EdgeInsets.only(right: 10),
                                     child: SvgPicture.asset(
                                       'assets/appImages/profileIcon.svg',
                                       color: ThemeApp.primaryNavyBlackColor,
                                       semanticsLabel: 'Acme Logo',
                                       theme: SvgTheme(
-                                        currentColor: ThemeApp.primaryNavyBlackColor,
+                                        currentColor:
+                                            ThemeApp.primaryNavyBlackColor,
                                       ),
                                       height: 28,
                                       width: 28,
                                     ),
                                   )
-                                      : Padding(
+                                : Padding(
                                     padding: const EdgeInsets.only(right: 10),
                                     child: Container(
                                       height: 28,
@@ -337,30 +342,32 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                       ),
                                     ),
                                   ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(
-                                  //       top: 13, bottom: 13, right: 15),
-                                  //   child: Image.asset(
-                                  //     'assets/appImages/userIcon.png',
-                                  //     // width: double.infinity,
-                                  //     height: height * .1,
-                                  //     color: ThemeApp.primaryNavyBlackColor,
-                                  //     fit: BoxFit.fill,
-                                  //   ),
-                                  // ),
-                                );
-                            });
+                            // Padding(
+                            //   padding: const EdgeInsets.only(
+                            //       top: 13, bottom: 13, right: 15),
+                            //   child: Image.asset(
+                            //     'assets/appImages/userIcon.png',
+                            //     // width: double.infinity,
+                            //     height: height * .1,
+                            //     color: ThemeApp.primaryNavyBlackColor,
+                            //     fit: BoxFit.fill,
+                            //   ),
+                            // ),
+                          );
+                        });
                       }),
                     ],
                   ),
-                const AddressWidgets(),                ],
+                  const AddressWidgets(),
+                ],
               ),
             ),
           ),
-          bottomNavigationBar: bottomNavigationBarWidget(context,0),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: bottomNavigationBarWidget(context, 0),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           body: SafeArea(
-            child:  Container(
+            child: Container(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.start,
@@ -386,7 +393,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
 
   Widget listOfMobileDevices() {
     return ChangeNotifierProvider<DashboardViewModel>.value(
-        value:  dashboardViewModel,
+        value: dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, productSearchProvider, child) {
           switch (productSearchProvider.productByTermResponse.status) {
@@ -411,7 +418,8 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                       child: TextFieldUtils().dynamicText(
                           'No Match found!',
                           context,
-                          TextStyle(fontFamily: 'Roboto',
+                          TextStyle(
+                              fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
                               fontSize: height * .03,
                               fontWeight: FontWeight.bold)),
@@ -450,8 +458,10 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                               searchProductList[index]
                                                   .imageUrls![0]
                                                   .imageUrl!,
-                                              errorBuilder: ((context, error, stackTrace) {
-                                                return Icon(Icons.image_outlined);
+                                              errorBuilder: ((context, error,
+                                                  stackTrace) {
+                                                return Icon(
+                                                    Icons.image_outlined);
                                               }),
                                               fit: BoxFit.fill,
 
@@ -472,7 +482,8 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                                                 searchProductList[index]
                                                     .shortName!,
                                                 context,
-                                                TextStyle(fontFamily: 'Roboto',
+                                                TextStyle(
+                                                  fontFamily: 'Roboto',
                                                   color: ThemeApp.darkGreyColor,
                                                   // fontWeight: FontWeight.w500,
                                                   fontSize: height * .02,
@@ -496,7 +507,8 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
             child: TextFieldUtils().dynamicText(
                 'No Match found!',
                 context,
-                TextStyle(fontFamily: 'Roboto',
+                TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .03,
                     fontWeight: FontWeight.bold)),
@@ -520,7 +532,8 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
             TextFieldUtils().dynamicText(
                 'Sort By  ',
                 context,
-                TextStyle(fontFamily: 'Roboto',
+                TextStyle(
+                  fontFamily: 'Roboto',
                   color: ThemeApp.lightFontColor,
                   // fontWeight: FontWeight.w500,
                   fontSize: height * .02,
@@ -536,7 +549,8 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
               child: TextFieldUtils().dynamicText(
                   StringConstant.sortedBy,
                   context,
-                  TextStyle(fontFamily: 'Roboto',
+                  TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     // fontWeight: FontWeight.w500,
                     fontSize: height * .022,
@@ -558,7 +572,8 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                 TextFieldUtils().dynamicText(
                     'Filters',
                     context,
-                    TextStyle(fontFamily: 'Roboto',
+                    TextStyle(
+                      fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       // fontWeight: FontWeight.w500,
                       fontSize: height * .022,
@@ -594,7 +609,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
 
   Widget productListView() {
     return ChangeNotifierProvider<DashboardViewModel>.value(
-        value:  dashboardViewModel,
+        value: dashboardViewModel,
         child: Consumer<DashboardViewModel>(
             builder: (context, productSearchProvider, child) {
           switch (productSearchProvider.productByTermResponse.status) {
@@ -612,7 +627,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
               List<SearchProduct>? searchProductList = productSearchProvider
                   .productByTermResponse.data!.payload!.content;
 
-           /*   if (searchProductList!.length == 0) {
+              /*   if (searchProductList!.length == 0) {
                 print("productSearchProvider length" +
                     searchProductList!.length.toString());
               } else {
@@ -620,63 +635,74 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                     searchProductList!.length.toString());
               }*/
 
-print("searchProductList ,.,.,"+searchProductList!.length.toString());
+              print("searchProductList ,.,.," +
+                  searchProductList!.length.toString());
               return Expanded(
-                child: searchProductList!.length==[]?CircularProgressIndicator(): GridView(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 30,
-                      // childAspectRatio: 1.0,
-                      childAspectRatio: MediaQuery.of(context).size.height / 900,
-                    ),
-                    shrinkWrap: true,
-                    children: List.generate(searchProductList.length,
+                child: searchProductList.isEmpty
+                    ? Center(
+                        child: Text(
+                        "Match not found",
+                        style: TextStyle(fontSize: 20),
+                      ))
+                    : GridView(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 30,
+                          // childAspectRatio: 1.0,
+                          childAspectRatio:
+                              MediaQuery.of(context).size.height / 900,
+                        ),
+                        shrinkWrap: true,
+                        children: List.generate(
+                          searchProductList.length,
                           (index) {
-                        return Stack(
-                          children: [
-                            index == searchProductList.length
-                                ? Container(
-                              // width: constrains.minWidth,
-                              height: 20,
-                              // height: MediaQuery.of(context).size.height * .08,
-                              // alignment: Alignment.center,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: ThemeApp.blackColor,
-                                ),
-                              ),
-                            )
-                                : InkWell(
-                              onTap: () {
-                                print(
-                                    "Id ........${searchProductList[index].id}");
-
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProductDetailsActivity(
-                                          id: searchProductList[index].id,
-                                          // productList: subProductList[index],
-                                          // productSpecificListViewModel:
-                                          //     productSpecificListViewModel,
+                            return Stack(
+                              children: [
+                                index == searchProductList.length
+                                    ? Container(
+                                        // width: constrains.minWidth,
+                                        height: 20,
+                                        // height: MediaQuery.of(context).size.height * .08,
+                                        // alignment: Alignment.center,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: ThemeApp.blackColor,
+                                          ),
                                         ),
-                                  ),
-                                );
-                              },
-                              child: Container(
+                                      )
+                                    : InkWell(
+                                        onTap: () {
+                                          print(
+                                              "Id ........${searchProductList[index].id}");
+
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProductDetailsActivity(
+                                                id: searchProductList[index].id,
+                                                // productList: subProductList[index],
+                                                // productSpecificListViewModel:
+                                                //     productSpecificListViewModel,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
 // height: 205,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      /*   Expanded(
+                                            child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            /*   Expanded(
                                               flex: 2,
-                                              child:*/ Container(
-                                        height: 143,
-                                        width: 191, /* height: SizeConfig.orientations !=
+                                              child:*/
+                                            Container(
+                                              height: 143,
+                                              width: 191,
+                                              /* height: SizeConfig.orientations !=
                                                         Orientation.landscape
                                                     ? MediaQuery.of(context)
                                                             .size
@@ -689,101 +715,104 @@ print("searchProductList ,.,.,"+searchProductList!.length.toString());
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,*/
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                        ),
-                                        child: ClipRRect(
-
-                                          child: Image.network(
-                                            searchProductList[index]
-                                                .imageUrls![0]
-                                                .imageUrl.toString()??"",
-                                            // fit: BoxFit.fill,
-                                            height: (MediaQuery.of(
-                                                context)
-                                                .orientation ==
-                                                Orientation.landscape)
-                                                ? MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                                .26
-                                                : MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                                .1,
-                            errorBuilder: ((context,
-                            error, stackTrace) {
-                            return Container(
-                            height: 79,
-                            width: 79,
-                            child: Icon(
-                            Icons.image_outlined));
-                            })
-                                          )
-                                        ),
-                                      ),
-                                      // ),
-                                      Container(      color: ThemeApp.tealButtonColor,
-                                        width: 191,
-                                        height: 66,
-                                        padding: const EdgeInsets.only(
-                                          left: 12, right: 12,),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            TextFieldUtils()
-                                                .listNameHeadingTextField(
-                                                searchProductList[index]
-                                                    .shortName!,context),
-                                            SizedBox(height:10),
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                TextFieldUtils().listPriceHeadingTextField(
-                                                    indianRupeesFormat
-                                                        .format(searchProductList[
-                                                    index]
-                                                        .defaultSellPrice ??
-                                                        0.0),
-                                                    context),
-                                                TextFieldUtils().listScratchPriceHeadingTextField(
-                                                    indianRupeesFormat.format(
-                                                        searchProductList[
-                                                        index]
-                                                            .defaultMrp ??
-                                                            0.0),
-                                                    context)
-                                              ],
-                                            )
+                                              decoration: const BoxDecoration(
+                                                color: ThemeApp.whiteColor,
+                                              ),
+                                              child: ClipRRect(
+                                                  child: Image.network(
+                                                      searchProductList[index]
+                                                              .imageUrls![0]
+                                                              .imageUrl
+                                                              .toString() ??
+                                                          "",
+                                                      // fit: BoxFit.fill,
+                                                      height: (MediaQuery.of(
+                                                                      context)
+                                                                  .orientation ==
+                                                              Orientation
+                                                                  .landscape)
+                                                          ? MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              .26
+                                                          : MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              .1, errorBuilder:
+                                                          ((context, error,
+                                                              stackTrace) {
+                                                return Container(
+                                                    height: 79,
+                                                    width: 79,
+                                                    child: Icon(
+                                                        Icons.image_outlined));
+                                              }))),
+                                            ),
+                                            // ),
+                                            Container(
+                                              color: ThemeApp.tealButtonColor,
+                                              width: 191,
+                                              height: 66,
+                                              padding: const EdgeInsets.only(
+                                                left: 12,
+                                                right: 12,
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  TextFieldUtils()
+                                                      .listNameHeadingTextField(
+                                                          searchProductList[
+                                                                  index]
+                                                              .shortName!,
+                                                          context),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      TextFieldUtils().listPriceHeadingTextField(
+                                                          indianRupeesFormat.format(
+                                                              searchProductList[
+                                                                          index]
+                                                                      .defaultSellPrice ??
+                                                                  0.0),
+                                                          context),
+                                                      TextFieldUtils().listScratchPriceHeadingTextField(
+                                                          indianRupeesFormat.format(
+                                                              searchProductList[
+                                                                          index]
+                                                                      .defaultMrp ??
+                                                                  0.0),
+                                                          context)
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
                                           ],
-                                        ),
+                                        )),
                                       ),
-
-                                    ],
-                                  )),
-                            ),
-                            index == searchProductList!.length
-                                ? Container(
-                              // width: constrains.minWidth,
-                              height: 20,
-                              // height: MediaQuery.of(context).size.height * .08,
-                              // alignment: Alignment.center,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: ThemeApp.blackColor,
-                                ),
-                              ),
-                            )
-                                : SizedBox()
-                          ],
-                        );
-                        /*else {
+                                index == searchProductList!.length
+                                    ? Container(
+                                        // width: constrains.minWidth,
+                                        height: 20,
+                                        // height: MediaQuery.of(context).size.height * .08,
+                                        // alignment: Alignment.center,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: ThemeApp.blackColor,
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox()
+                              ],
+                            );
+                            /*else {
                           return  Container(
                             // width: constrains.minWidth,
                             height: 80,
@@ -798,8 +827,8 @@ print("searchProductList ,.,.,"+searchProductList!.length.toString());
                                     fontWeight: FontWeight.bold)),
                           );
                         }*/
-                      },)
-                ),
+                          },
+                        )),
               );
           }
           return Container(
@@ -808,7 +837,8 @@ print("searchProductList ,.,.,"+searchProductList!.length.toString());
             child: TextFieldUtils().dynamicText(
                 'No Match found!',
                 context,
-                TextStyle(fontFamily: 'Roboto',
+                TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .03,
                     fontWeight: FontWeight.bold)),
@@ -838,7 +868,8 @@ print("searchProductList ,.,.,"+searchProductList!.length.toString());
                 TextFieldUtils().dynamicText(
                     StringUtils.sortByPrice,
                     context,
-                    TextStyle(fontFamily: 'Roboto',
+                    TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: MediaQuery.of(context).size.height * .025,
                         fontWeight: FontWeight.w600)),
@@ -854,7 +885,8 @@ print("searchProductList ,.,.,"+searchProductList!.length.toString());
                     });
                   },
                   title: Text("Low to High",
-                      style: TextStyle(fontFamily: 'Roboto',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),
@@ -871,7 +903,8 @@ print("searchProductList ,.,.,"+searchProductList!.length.toString());
                     });
                   },
                   title: Text("High to Low",
-                      style: TextStyle(fontFamily: 'Roboto',
+                      style: TextStyle(
+                          fontFamily: 'Roboto',
                           color: ThemeApp.darkGreyColor,
                           fontSize: MediaQuery.of(context).size.height * .02,
                           fontWeight: FontWeight.w400)),
@@ -896,7 +929,6 @@ print("searchProductList ,.,.,"+searchProductList!.length.toString());
       );
     });
   }
-
 
   void onChangeText(int sortByRadio) {
     setState(() {});

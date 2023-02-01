@@ -7,6 +7,7 @@ import 'package:velocit/pages/auth/OTP_Screen.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/routes/routes.dart';
 
+import '../../pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import '../../pages/auth/Sign_Up.dart';
 import '../../pages/auth/sign_in.dart';
 import '../../pages/screens/launch_Screen.dart';
@@ -32,6 +33,9 @@ class Routes {
     case RoutesName.myAccountRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => MyAccountActivity());
+    case RoutesName.saveAddressRoute:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => SavedAddressDetails());
 
       // case RoutesName.otpRoute:
       //   return MaterialPageRoute(

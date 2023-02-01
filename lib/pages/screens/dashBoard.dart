@@ -152,7 +152,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       print("IS USER LOG-IN ..............." +
           StringConstant.isUserLoggedIn.toString());
-      print("ISRANDOM ID............" +
+      print("ISRANDOM ID IN DashBoard............" +
           StringConstant.RandomUserLoginId.toString());
 
       StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';

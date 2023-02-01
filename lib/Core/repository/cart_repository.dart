@@ -58,7 +58,7 @@ class CartRepository {
 
     var userData = CartCreateRetrieveModel.fromJson(map);
     prefs.setString('CartIdPref', userData.payload!.id.toString());
-    print("Cart Id From Cart Create and retrieve " + StringConstant.UserCartID);
+    print("Cart Id From Cart Create and retrieve " +userData.payload!.id.toString());
     print(userData.payload!.id.toString());
 
     // if (response.statusCode == 200) {

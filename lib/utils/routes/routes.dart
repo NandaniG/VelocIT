@@ -7,5 +7,6 @@ class RoutesName{
   static const String dashboardRoute = 'dashBoardScreenRoute';
   static const String orderRoute = 'orderScreenRoute';
   static const String myAccountRoute = 'myAccountRouteRoute';
+  static const String saveAddressRoute = 'saveAddressRouteRoute';
 
 }

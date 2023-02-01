@@ -10,6 +10,7 @@ import '../../../../Core/ViewModel/cart_view_model.dart';
 import '../../../../Core/data/responses/status.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/constants.dart';
+import '../../../../utils/routes/routes.dart';
 import '../../../../utils/styles.dart';
 import '../../../../utils/utils.dart';
 import '../../../../widgets/global/appBar.dart';
@@ -70,14 +71,30 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-        backgroundColor: ThemeApp.appBackgroundColor,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .09),
-          child:  AppBar_BackWidget(
-              context: context,titleWidget: appTitle(context,"Address"), location: SizedBox()),
-            ),
-        body: SafeArea(child: deliveryAddress()));
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.myAccountRoute, (route) => false).then((value) {
+          setState(() {
+
+          });
+        });
+        return Future.value(true);
+      },
+      child: Scaffold(
+          backgroundColor: ThemeApp.appBackgroundColor,
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(height * .09),
+            child:  AppBar_Back_RouteWidget(
+                context: context,titleWidget: appTitle(context,"Address"), location: SizedBox(),onTap: (){
+              Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.myAccountRoute, (route) => false).then((value) {
+                setState(() {
+
+                });
+              });
+            }),
+              ),
+          body: SafeArea(child: deliveryAddress())),
+    );
   }
 
   CartViewModel cartViewModel = CartViewModel();

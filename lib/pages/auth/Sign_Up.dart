@@ -12,6 +12,7 @@ import 'package:velocit/utils/StringUtils.dart';
 
 import '../../Core/AppConstant/apiMapping.dart';
 import '../../utils/constants.dart';
+import '../../utils/routes/routes.dart';
 import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/textFormFields.dart';
@@ -536,10 +537,11 @@ class _SignUpState extends State<SignUp> {
                                 ),
                                 InkWell(
                                   onTap: (){
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) => DashboardScreen())).then((value) => setState((){}));
-                                  },
+                                    Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
+                                      setState(() {
+
+                                      });
+                                    });   },
                                   child: Text(
                                     "Guest",
                                     style: TextStyle(

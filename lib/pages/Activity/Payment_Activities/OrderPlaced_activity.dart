@@ -58,39 +58,39 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
 
     return WillPopScope(
       onWillPop: () {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return NavBackConfirmationFromPayment();
-            });
-        return Future.value(true);
+        // showDialog(
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       return NavBackConfirmationFromPayment();
+        //     });
+        return Future.value(false);
       },
       child: Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
-        appBar: AppBar(
+        appBar: AppBar(automaticallyImplyLeading: false,
           backgroundColor: ThemeApp.appBackgroundColor,
           elevation: 0,
-          leading: InkWell(
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return NavBackConfirmationFromPayment();
-                  });
-
-
-              // Provider.of<ProductProvider>(context, listen: false);
-            },
-            child: Transform.scale(
-              scale: 0.7,
-              child: Image.asset(
-                'assets/appImages/backArrow.png',
-                color: ThemeApp.primaryNavyBlackColor,
-                // height: height*.001,
-              ),
-            ),
-          ),
+//           leading: InkWell(
+//             onTap: () {
+//               // showDialog(
+//               //     context: context,
+//               //     builder: (BuildContext context) {
+//               //       return NavBackConfirmationFromPayment();
+//               //     });
+//               Future.value(false);
+// // Navigator.of(context).pop(false);
+//               // Provider.of<ProductProvider>(context, listen: false);
+//             },
+//             child: Transform.scale(
+//               scale: 0.7,
+//               child: Image.asset(
+//                 'assets/appImages/backArrow.png',
+//                 color: ThemeApp.primaryNavyBlackColor,
+//                 // height: height*.001,
+//               ),
+//             ),
+//           ),
           title: TextFieldUtils().dynamicText(
               'Order Checkout',
               context,
