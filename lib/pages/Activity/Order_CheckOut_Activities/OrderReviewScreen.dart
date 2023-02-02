@@ -62,6 +62,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
   );
   CartViewModel cartListView = CartViewModel();
   bool isSelfPickUp = false;
+  String FromType = '';
+  String isTypeService = '';
 
   @override
   void initState() {
@@ -110,6 +112,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
         .getDoubleToken(StringConstant.totalFinalPricePref))!;
 
     print('StringConstant.totalFinalPrice${StringConstant.totalFinalPrice}');
+
+    ///
+    FromType = (prefs.getString('FromType')) ?? '';
+    print("FromType in order review: " + FromType.toString());
   }
 
   @override
@@ -186,6 +192,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                         List<CartOrdersForPurchase> cartOrderPurchase =
                             cartProvider.sendCartForPayment.data!.payload!.cart!
                                 .ordersForPurchase!;
+                        for (int i = 0; i < cartOrderPurchase.length; i++) {
+                          print(cartOrderPurchase[i].serviceId);
+                          print(cartOrderPurchase[i].productId);
+                        }
 
                         return cartProvider.sendCartForPayment.data!.status ==
                                 'EXCEPTION'
@@ -239,9 +249,26 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                     .cart!.totalPayable,
                                             "is_self_pickup": isSelfPickUp,
                                           };
-                                          print("defaultAddressList ..."+defaultAddressList!.length.toString());
+                                          print("defaultAddressList ..." +
+                                              defaultAddressList!.length
+                                                  .toString());
 
-                                            if (isSelfPickUp == true) {
+                                          if (isSelfPickUp == true) {
+                                            CartRepository().putCartForPayment(
+                                                data,
+                                                cartForPaymentPayload
+                                                    .orderBasketId!);
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Payment_Creditcard_debitcardScreen(
+                                                        cartForPaymentPayload:
+                                                            cartForPaymentPayload),
+                                              ),
+                                            );
+                                          } else {
+                                            if (defaultAddressList!.length - 1 >
+                                                0) {
                                               CartRepository()
                                                   .putCartForPayment(
                                                       data,
@@ -255,28 +282,13 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                               cartForPaymentPayload),
                                                 ),
                                               );
-                                            }else{
-                                              if (defaultAddressList!.length-1>0) {
-                                                CartRepository().putCartForPayment(
-                                                    data,
-                                                    cartForPaymentPayload
-                                                        .orderBasketId!);
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Payment_Creditcard_debitcardScreen(
-                                                            cartForPaymentPayload:
-                                                            cartForPaymentPayload),
-                                                  ),
-                                                );
-                                              }  else{
-                                                isSelfPickUp == false
-                                                    ? Utils.successToast(
-                                                    "Please select delivery address")
-                                                    : '';
-                                              }                                           }
-
-
+                                            } else {
+                                              isSelfPickUp == false
+                                                  ? Utils.successToast(
+                                                      "Please select delivery address")
+                                                  : '';
+                                            }
+                                          }
 
                                           // Navigator.of(context).push(
                                           //   MaterialPageRoute(
@@ -340,7 +352,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     */
-            /*  Column(
+              /*  Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -422,73 +434,51 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                         List<CartOrdersForPurchase> cartOrderPurchase =
                             cartProvider.sendCartForPayment.data!.payload!.cart!
                                 .ordersForPurchase!;
-
-                        return Container(
-                          color: ThemeApp.appBackgroundColor,
-                          width: width,
-                          child: ListView(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                // StepperGlobalWidget(),
-                                stepperWidget(),
-                                Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  isSelfPickUp = true;
-                                                  isSelfPickUp = !isSelfPickUp;
-
-                                                  // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
-                                                });
-                                              },
-                                              child: Container(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          0, 15.0, 0, 15.0),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(100),
-                                                      bottomLeft:
-                                                          Radius.circular(100),
-                                                    ),
-                                                    color: isSelfPickUp
-                                                        ? Colors.white
-                                                        : ThemeApp.appColor,
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                        'Deliver to Address',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Roboto',
-                                                            fontSize: 14,
-                                                            color: isSelfPickUp
-                                                                ? ThemeApp
-                                                                    .blackColor
-                                                                : Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            letterSpacing:
-                                                                -0.08)),
-                                                  )),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: InkWell(
+                        for (int i = 0; i < cartOrderPurchase.length; i++) {
+                          print(cartOrderPurchase[i].serviceId);
+                          print(cartOrderPurchase[i].productId);
+                          if (cartOrderPurchase[i].serviceId.toString() != 'null' &&
+                              cartOrderPurchase[i].productId.toString() != 'null') {
+                            isTypeService = 'Both';
+                            print(isTypeService);
+                          } else if (cartOrderPurchase[i].serviceId.toString() == 'null' &&
+                              cartOrderPurchase[i].productId != null) {
+                            isTypeService = 'Products';
+                            print(isTypeService);
+                          } else if (cartOrderPurchase[i].productId.toString() == 'null') {
+                            isTypeService = 'Service';
+                            print(isTypeService);
+                          } else {
+                            isTypeService = 'not';
+                            print(isTypeService);
+                          }
+                          return Container(
+                            color: ThemeApp.appBackgroundColor,
+                            width: width,
+                            child: ListView(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                // crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  // StepperGlobalWidget(),
+                                  stepperWidget(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: InkWell(
                                                 onTap: () {
                                                   setState(() {
                                                     isSelfPickUp = true;
+                                                    isSelfPickUp =
+                                                        !isSelfPickUp;
+
+                                                    // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
                                                   });
                                                 },
                                                 child: Container(
@@ -499,160 +489,211 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                       borderRadius:
                                                           const BorderRadius
                                                               .only(
-                                                        topRight:
+                                                        topLeft:
                                                             Radius.circular(
                                                                 100),
-                                                        bottomRight:
+                                                        bottomLeft:
                                                             Radius.circular(
                                                                 100),
                                                       ),
                                                       color: isSelfPickUp
-                                                          ? ThemeApp.appColor
-                                                          : ThemeApp.whiteColor,
+                                                          ? Colors.white
+                                                          : ThemeApp.appColor,
                                                     ),
                                                     child: Center(
                                                       child: Text(
-                                                          'Pickup from Store',
+                                                          'Deliver to Address',
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   'Roboto',
                                                               fontSize: 14,
                                                               color: isSelfPickUp
                                                                   ? ThemeApp
-                                                                      .whiteColor
-                                                                  : ThemeApp
-                                                                      .blackColor,
+                                                                      .blackColor
+                                                                  : Colors
+                                                                      .white,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500,
                                                               letterSpacing:
                                                                   -0.08)),
-                                                    ))),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 18,
-                                      ),
-                                      isSelfPickUp != true
-                                          ? Container(
-                                              // height: height * 0.5,
-                                              width: width,
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      10, 10, 10, 13),
-                                              decoration: const BoxDecoration(
-                                                color: ThemeApp.whiteColor,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(10)),
+                                                    )),
                                               ),
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                          StringUtils
-                                                              .deliveryDetails,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Roboto',
-                                                              color: ThemeApp
-                                                                  .blackColor,
-                                                              fontSize: 16,
-                                                              letterSpacing:
-                                                                  -0.25,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700)),
-                                                      InkWell(
-                                                          onTap: () {
-                                                            // Navigator.of(context).push(
-                                                            //   MaterialPageRoute(
-                                                            //     builder: (context) => AddNewDeliveryAddress(),
-                                                            //   ),
-                                                            // );
-                                                            print("widget.cartForPaymentPayload!.cartId11" +
-                                                                widget.cartId
-                                                                    .toString());
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: InkWell(
+                                                  onTap: isTypeService == 'Yes'
+                                                      ? () {}
+                                                      : () {
+                                                          setState(() {
+                                                            isSelfPickUp = true;
+                                                          });
+                                                        },
+                                                  child: Container(
+                                                      padding: const EdgeInsets
+                                                              .fromLTRB(
+                                                          0, 15.0, 0, 15.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .only(
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  100),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  100),
+                                                        ),
+                                                        color: isSelfPickUp
+                                                            ? ThemeApp.appColor
+                                                            : ThemeApp
+                                                                .whiteColor,
+                                                      ),
+                                                      child: Center(
+                                                        child: Text(
+                                                            'Pickup from Store',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Roboto',
+                                                                fontSize: 14,
+                                                                color: isSelfPickUp
+                                                                    ? ThemeApp
+                                                                        .whiteColor
+                                                                    : ThemeApp
+                                                                        .blackColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                letterSpacing:
+                                                                    -0.08)),
+                                                      ))),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 18,
+                                        ),
+                                        isSelfPickUp != true
+                                            ? Container(
+                                                // height: height * 0.5,
+                                                width: width,
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 10, 13),
+                                                decoration: const BoxDecoration(
+                                                  color: ThemeApp.whiteColor,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(10)),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                            StringUtils
+                                                                .deliveryDetails,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Roboto',
+                                                                color: ThemeApp
+                                                                    .blackColor,
+                                                                fontSize: 16,
+                                                                letterSpacing:
+                                                                    -0.25,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700)),
+                                                        InkWell(
+                                                            onTap: () {
+                                                              // Navigator.of(context).push(
+                                                              //   MaterialPageRoute(
+                                                              //     builder: (context) => AddNewDeliveryAddress(),
+                                                              //   ),
+                                                              // );
+                                                              print("widget.cartForPaymentPayload!.cartId11" +
+                                                                  widget.cartId
+                                                                      .toString());
 
-                                                            showModalBottomSheet(
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              60.0),
-                                                                ),
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .transparent,
-                                                                context:
-                                                                    scaffoldGlobalKey
-                                                                        .currentContext!,
-                                                                builder:
-                                                                    (context) {
-                                                                  return ChangeAddressBottomSheet(
-                                                                      cartForPaymentPayload:
-                                                                          cartForPaymentPayload,
-                                                                      cartId: widget
-                                                                          .cartId);
-                                                                });
-                                                          },
-                                                          child: Container(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
+                                                              showModalBottomSheet(
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
                                                                     borderRadius:
-                                                                        BorderRadius
-                                                                            .all(
-                                                                      Radius.circular(
-                                                                          20),
-                                                                    ),
-                                                                    border: Border.all(
-                                                                        color: ThemeApp
-                                                                            .appColor)
-                                                                    // color:
-                                                                    //     ThemeApp.blackColor,
-                                                                    ),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    10,
-                                                                    5,
-                                                                    10,
-                                                                    5),
-                                                            child: TextFieldUtils().dynamicText(
-                                                                StringUtils
-                                                                    .changeAddress,
-                                                                context,
-                                                                TextStyle(
-                                                                    fontFamily:
-                                                                        'Roboto',
-                                                                    color: ThemeApp
-                                                                        .appColor,
-                                                                    fontSize:
-                                                                        10,
-                                                                    letterSpacing:
-                                                                        -0.08,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700)),
-                                                          )),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  deliveryAddress(),
+                                                                        BorderRadius.circular(
+                                                                            60.0),
+                                                                  ),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  context:
+                                                                      scaffoldGlobalKey
+                                                                          .currentContext!,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return ChangeAddressBottomSheet(
+                                                                        cartForPaymentPayload:
+                                                                            cartForPaymentPayload,
+                                                                        cartId:
+                                                                            widget.cartId);
+                                                                  });
+                                                            },
+                                                            child: Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .all(
+                                                                        Radius.circular(
+                                                                            20),
+                                                                      ),
+                                                                      border: Border.all(
+                                                                          color:
+                                                                              ThemeApp.appColor)
+                                                                      // color:
+                                                                      //     ThemeApp.blackColor,
+                                                                      ),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .fromLTRB(
+                                                                      10,
+                                                                      5,
+                                                                      10,
+                                                                      5),
+                                                              child: TextFieldUtils().dynamicText(
+                                                                  StringUtils
+                                                                      .changeAddress,
+                                                                  context,
+                                                                  TextStyle(
+                                                                      fontFamily:
+                                                                          'Roboto',
+                                                                      color: ThemeApp
+                                                                          .appColor,
+                                                                      fontSize:
+                                                                          10,
+                                                                      letterSpacing:
+                                                                          -0.08,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700)),
+                                                            )),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    deliveryAddress(),
 
-                                                  /*cartForPaymentPayload
+                                                    /*cartForPaymentPayload
                                                               .isAddressPresent ==
                                                           true*/
-                                                  /*    StringConstant
+                                                    /*    StringConstant
                                                               .selectedFullName !=
                                                           ''
                                                       ? Column(
@@ -803,42 +844,72 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400)),*/
-                                                ],
-                                              ),
-                                            )
-                                          : SizedBox(),
-                                      SizedBox(
-                                        height: height * .02,
-                                      ),
-                                      Container(
-                                          // height: height * 0.6,
-                                          width: width,
-                                          padding: const EdgeInsets.fromLTRB(
-                                              15, 12, 15, 20),
-                                          decoration: const BoxDecoration(
-                                            color: ThemeApp.whiteColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10)),
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // TextFieldUtils().dynamicText(
-                                              //     StringUtils.orderSummary,
-                                              //     context,
-                                              //     TextStyle(fontFamily: 'Roboto',
-                                              //         color: Colors.grey.shade700,
-                                              //         fontSize: height * .023,
-                                              //         fontWeight:
-                                              //             FontWeight.bold)),
-                                              cartProductList(
-                                                  cartOrderPurchase),
-                                            ],
-                                          )),
+                                                  ],
+                                                ),
+                                              )
+                                            : SizedBox(),
+                                        SizedBox(
+                                          height: height * .02,
+                                        ),
 
-                                      //apply promo code
-                                      /*   SizedBox(
+                                        /*  cartOrderPurchase[i]
+                                            .serviceId
+                                            .toString() !=
+                                            "null"
+                                            ? Text(
+                                                'Pickup from Store is not available for services',
+                                                style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    color: ThemeApp.redColor,
+                                                    fontSize: 16,
+                                                    letterSpacing: -0.25,
+                                                    fontWeight:
+                                                        FontWeight.w700))
+                                            : SizedBox(),*/
+
+                                        isTypeService == 'Both'||isTypeService=="Service"
+                                            ? Text(
+                                                'Pickup from Store is not available for services',
+                                                style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    color: ThemeApp.redColor,
+                                                    fontSize: 16,
+                                                    letterSpacing: -0.25,
+                                                    fontWeight:
+                                                        FontWeight.w700))
+                                            : SizedBox(),
+                                        SizedBox(
+                                          height: height * .02,
+                                        ),
+                                        Container(
+                                            // height: height * 0.6,
+                                            width: width,
+                                            padding: const EdgeInsets.fromLTRB(
+                                                15, 12, 15, 20),
+                                            decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // TextFieldUtils().dynamicText(
+                                                //     StringUtils.orderSummary,
+                                                //     context,
+                                                //     TextStyle(fontFamily: 'Roboto',
+                                                //         color: Colors.grey.shade700,
+                                                //         fontSize: height * .023,
+                                                //         fontWeight:
+                                                //             FontWeight.bold)),
+                                                cartProductList(
+                                                    cartOrderPurchase),
+                                              ],
+                                            )),
+
+                                        //apply promo code
+                                        /*   SizedBox(
                             height: height * .02,
                           ),
                           Container(
@@ -917,15 +988,16 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                   )
                                 ]),
                           ),*/
-                                      SizedBox(
-                                        height: height * .02,
-                                      ),
-                                      priceDetails(cartForPaymentPayload),
-                                    ],
+                                        SizedBox(
+                                          height: height * .02,
+                                        ),
+                                        priceDetails(cartForPaymentPayload),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ]),
-                        );
+                                ]),
+                          );
+                        }
                     }
                     return Container(
                       height: height * .8,
@@ -942,7 +1014,9 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                   })))),
     );
   }
+
   List<AddressContent>? defaultAddressList;
+
   Widget deliveryAddress() {
     return ChangeNotifierProvider<CartViewModel>.value(
         value: cartListView,
@@ -960,7 +1034,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
               print("Api calll");
               List<AddressContent>? addressList =
                   cartProvider.getAddress.data!.payload!.content;
-              defaultAddressList =  cartProvider.getAddress.data!.payload!.content;
+              defaultAddressList =
+                  cartProvider.getAddress.data!.payload!.content;
               print("addressList" + addressList!.length.toString());
               return addressList.length > 0
                   ? Container(
@@ -975,7 +1050,13 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                     Row(
                                       children: [
                                         TextFieldUtils().dynamicText(
-                          StringConstant.selectedFullName.isNotEmpty?StringConstant.selectedFullName: addressList[0].name.toString(),
+                                            StringConstant
+                                                    .selectedFullName.isNotEmpty
+                                                ? StringConstant
+                                                    .selectedFullName
+                                                : addressList[0]
+                                                    .name
+                                                    .toString(),
                                             context,
                                             TextStyle(
                                               fontFamily: 'Roboto',
@@ -1002,7 +1083,14 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               top: 5,
                                               bottom: 5),
                                           child: Text(
-                                              StringConstant.selectedTypeOfAddress.isNotEmpty?StringConstant.selectedTypeOfAddress:      addressList[0].addressType.toString(),
+                                              StringConstant
+                                                      .selectedTypeOfAddress
+                                                      .isNotEmpty
+                                                  ? StringConstant
+                                                      .selectedTypeOfAddress
+                                                  : addressList[0]
+                                                      .addressType
+                                                      .toString(),
                                               style: TextStyle(
                                                   fontFamily: 'Roboto',
                                                   color: ThemeApp.whiteColor,
@@ -1017,8 +1105,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                     Text(
                                         // provider.orderCheckOutDetails[0]
                                         //     ["orderCheckOutDeliveryAddress"],
-                                        StringConstant.selectedFullAddress.isNotEmpty?StringConstant.selectedFullAddress:       "${addressList[0].addressLine1!}, ${addressList[0].addressLine2}, ${addressList[0].stateName},\n ${addressList[0].cityName}, ${addressList[0].pincode}",
-
+                                        StringConstant
+                                                .selectedFullAddress.isNotEmpty
+                                            ? StringConstant.selectedFullAddress
+                                            : "${addressList[0].addressLine1!}, ${addressList[0].addressLine2}, ${addressList[0].stateName},\n ${addressList[0].cityName}, ${addressList[0].pincode}",
                                         style: TextStyle(
                                             fontFamily: 'Roboto',
                                             fontSize: 12,
@@ -1044,7 +1134,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                           width: width * .03,
                                         ),
                                         TextFieldUtils().dynamicText(
-                                            StringConstant.selectedMobile.isNotEmpty?StringConstant.selectedMobile:   "${addressList[0].contactNumber}",
+                                            StringConstant
+                                                    .selectedMobile.isNotEmpty
+                                                ? StringConstant.selectedMobile
+                                                : "${addressList[0].contactNumber}",
                                             context,
                                             TextStyle(
                                                 fontFamily: 'Roboto',
@@ -1088,7 +1181,6 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                     fontWeight: FontWeight.bold)),
           );
         }));
-
   }
 
   Widget cartProductList(List<CartOrdersForPurchase> cartOrderPurchase) {

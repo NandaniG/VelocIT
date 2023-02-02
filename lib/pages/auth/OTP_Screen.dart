@@ -40,7 +40,7 @@ class _OTPScreenState extends State<OTPScreen> {
   String otpMsg = "";
 
   late Timer _timer;
-  int _start = 5;
+  int _start = 120;
   bool isLoading = false;
   TextEditingController controller = TextEditingController(text: "");
   FocusNode focusNode = FocusNode();

@@ -965,7 +965,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             shrinkWrap: true,
             children: List.generate(
-              productList!.simpleSubCats!.length,
+              // productList.simpleSubCats!.length,
+              productList.simpleSubCats!.length,
               (index) {
                 return InkWell(
                   onTap: () {

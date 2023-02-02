@@ -345,7 +345,7 @@ class CartOrdersForPurchase {
   int? productItemId;
   var serviceItemId;
   int? productId;
- var serviceId;
+ int? serviceId;
   int? merchantId;
   String? oneliner;
   String? shortName;

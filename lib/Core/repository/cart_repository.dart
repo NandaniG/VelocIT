@@ -120,7 +120,7 @@ class CartRepository {
 
   Future<CartSpecificIdModel> getCartSpecificIDList(String id) async {
     var url = ApiMapping.getURI(apiEndPoint.cart_by_ID);
-    print("Cart specific ID : " + id.toString());
+    print("Cart specific ID : " +url+ id.toString());
     final prefs = await SharedPreferences.getInstance();
 
     var isNavFromBuyNow = prefs.getString('isBuyNow');
@@ -209,6 +209,7 @@ class CartRepository {
         prefs.setString(
             'directCartIdPref', jsonData['payload']['id'].toString());
         var directCartId = prefs.getString('directCartIdPref');
+        print("directCartId"+directCartId.toString());
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => OrderReviewActivity(
                 cartId: int.parse(jsonData['payload']['id'].toString()))));
