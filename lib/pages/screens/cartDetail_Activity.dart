@@ -415,64 +415,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                   print(StringConstant
                                                       .isUserLoggedIn);
                                                 }
-                                                for (int i = 0;
-                                                    i <
-                                                        cartProvider
-                                                            .cartSpecificID
-                                                            .data!
-                                                            .payload!
-                                                            .ordersForPurchase!
-                                                            .length;
-                                                    i++) {
-                                                  print("BOTH ID........." +
-                                                      cartProvider
-                                                          .cartSpecificID
-                                                          .data!
-                                                          .payload!
-                                                          .ordersForPurchase![
-                                                      i]
-                                                          .productId
-                                                          .toString() +
-                                                      "SerciceId" +
-                                                      cartProvider
-                                                          .cartSpecificID
-                                                          .data!
-                                                          .payload!
-                                                          .ordersForPurchase![
-                                                      i]
-                                                          .serviceId
-                                                          .toString());
 
-                                                  if (cartProvider
-                                                          .cartSpecificID
-                                                          .data!
-                                                          .payload!
-                                                          .ordersForPurchase![i]
-                                                          .serviceId
-                                                          .toString() !=
-                                                      '') {
-                                                   print("services in cart");
-                                                    prefs.setString(
-                                                        'isServiceAvailable',
-                                                        'ServiceInCart');
-                                                  }
-                                                  if (cartProvider
-                                                          .cartSpecificID
-                                                          .data!
-                                                          .payload!
-                                                          .ordersForPurchase![i]
-                                                          .productId
-                                                          .toString() !=
-                                                      '') {
-                                                    setState(() {
-                                                      print("Product in cart");
-
-                                                      prefs.setString(
-                                                          'isServiceAvailable',
-                                                          'ProductInCart');
-                                                    });
-                                                  }
-                                                }
                                                 prefs.setString(
                                                     'isUserNavigateFromDetailScreen',
                                                     'Yes');

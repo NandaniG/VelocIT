@@ -42,6 +42,7 @@ import '../../widgets/global/textFormFields.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/CRM_ui/CRMFormScreen.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/CRM_ui/CRM_Activity.dart';
+import '../Activity/DashBoard_DetailScreens_Activities/Product_ui/Product_detail_screen.dart';
 import '../Activity/Merchant_Near_Activities/merchant_Activity.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Categories_Activity.dart';
 import '../Activity/My_Orders/MyOrderDetails.dart';
@@ -247,7 +248,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             location: AddressWidgets(),
           ),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context,0),
+        bottomNavigationBar: bottomNavigationBarWidget(context, 0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: ChangeNotifierProvider<DashboardViewModel>.value(
           value: dashboardViewModel,
@@ -678,16 +679,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         itemCount: serviceList!.length,
                         itemBuilder: (context, index) {
                           return Card(
+
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 5),
+                            // margin: const EdgeInsets.symmetric(
+                            //     horizontal: 5, vertical: 5),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  ExpansionTile(
+                                  serviceList[index].simpleSubCats!.isEmpty?SizedBox():    Padding(
+                                    padding: const EdgeInsets.symmetric(
+                           horizontal: 15, vertical: 15),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          color: ThemeApp.containerColor,
+                                          height: 25,
+                                          width: 25,
+                                          child: Image.network(
+                                            serviceList[index]
+                                                .productCategoryImageId!,
+                                            // fit: BoxFit.fill,
+                                          ),
+                                        ),
+
+                                        // SvgPicture.asset(
+                                        //   'assets/appImages/appliancesIcon.svg',
+                                        //
+                                        //   height: 17,
+                                        //   width: 26,
+                                        // ),
+                                        SizedBox(
+                                          width: 16,
+                                        ),
+                                        categoryListFont(
+                                            serviceList[index].name!, context)
+                                      ],
+                                    ),
+                                  ),
+                                  serviceList[index].simpleSubCats!.isEmpty?SizedBox():   subListOfCategories(
+                                      serviceList[index])
+                          /*        ExpansionTile(
                                     key: Key(index.toString()),
                                     onExpansionChanged: ((newState) {
                                       if (newState) {
@@ -702,9 +736,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         });
                                       }
                                     }),
-                                    initiallyExpanded: /*isOpen == true
-                                            ? */
-                                        index == selected,
+                                    // initiallyExpanded: index == selected,
+                                    // initiallyExpanded: true,
                                     // : false,
 
                                     // initiallyExpanded: false,
@@ -763,7 +796,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             serviceList[index]),
                                       )
                                     ],
-                                  ),
+                                  ),*/
                                 ]),
                           );
                         },
@@ -944,96 +977,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  var _displayAll = true;
+
   Widget subListOfCategories(ProductList productList) {
-    return /* Container(
-        height: 200,
+    // final size = _displayAll ?     productList.simpleSubCats!.length :  productList.simpleSubCats!.length - 2;
+
+    final size = productList.simpleSubCats!.length > 3
+        ? 3
+        : productList.simpleSubCats!.length;
+    final contactsWidget = List.generate(
+        size, (index) => detailsGrid(productList.simpleSubCats![index]))
+      ..add(productList.simpleSubCats!.length > 3
+          ? _seeNoSeeMore(productList)
+          : SizedBox());
+    return Container(
+        height: productList.simpleSubCats!.length > 3?200:90,
         // height: 200,
         width: double.infinity,
         alignment: Alignment.center,
-        color: ThemeApp.whiteColor,
-        child:*/ /*ListView.builder(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+        child:/*ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: productList!.simpleSubCats!.length,*/
-        GridView(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 12,
-              // childAspectRatio: 1.0,
-              childAspectRatio: MediaQuery.of(context).size.height / 500,
-            ),
-            shrinkWrap: true,
-            children: List.generate(
-              // productList.simpleSubCats!.length,
-              productList.simpleSubCats!.length,
-              (index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ProductListByCategoryActivity(
-                          productList: productList.simpleSubCats![index]),
-                    ));
-                  },
-                  // child: Padding(
-                  // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
-                  child: Container(
-                      // width: width * .25,
-                      width: 97,
-                      height: 59,
-                      padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                              color: ThemeApp.containerColor, width: 1.5),
-                          color: ThemeApp.containerColor),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          /*      SvgPicture.asset(
-                            'assets/appImages/televisionIcon.svg',
-                            color: ThemeApp.blackColor,
-
-                            height: 17,
-                            width: 19,
-                          ),*/
-                          Container(
-                            color: ThemeApp.appColor,
-                            height: 25,
-                            width: 25,
-                            // borderRadius:
-                            // const BorderRadius.all(
-                            //     Radius.circular(50)),
-                            child: Image.network(
-                              productList.simpleSubCats![index].imageUrl ?? "",
-                              // fit: BoxFit.fill,
-                              height: 25,
-                              width: 25,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  height: 25,
-                                  width: 25,
-                                  child: Icon(
-                                    Icons.image,
-                                    color: ThemeApp.whiteColor,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 6,
-                          ),
-                          subCategoryListFont(
-                              productList.simpleSubCats![index].name!, context),
-                        ],
-                      )),
-                  // ),
-                );
-              },
-            ))
-        // )
+      GridView(physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 12,
+            // childAspectRatio: 1.0,
+            childAspectRatio: MediaQuery.of(context).size.height / 500,
+          ),
+          shrinkWrap: true,
+          children: contactsWidget)
+        )
         ;
 
     /*Container(
@@ -1104,6 +1084,262 @@ class _DashboardScreenState extends State<DashboardScreen> {
           },
         ));*/
   }
+
+  Widget detailsGrid(SimpleSubCats simpleSubCats) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              ProductListByCategoryActivity(productList: simpleSubCats),
+        ));
+      },
+      // child: Padding(
+      // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+      child: Container(
+          // width: width * .25,
+          width: 97,
+          height: 59,
+          padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: ThemeApp.containerColor, width: 1.5),
+              color: ThemeApp.containerColor),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              /*      SvgPicture.asset(
+                            'assets/appImages/televisionIcon.svg',
+                            color: ThemeApp.blackColor,
+
+                            height: 17,
+                            width: 19,
+                          ),*/
+              Container(
+                color: ThemeApp.appColor,
+                height: 25,
+                width: 25,
+                // borderRadius:
+                // const BorderRadius.all(
+                //     Radius.circular(50)),
+                child: Image.network(
+                  simpleSubCats.imageUrl ?? "",
+                  // fit: BoxFit.fill,
+                  height: 25,
+                  width: 25,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      height: 25,
+                      width: 25,
+                      child: Icon(
+                        Icons.image,
+                        color: ThemeApp.whiteColor,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              subCategoryListFont(simpleSubCats.name!, context),
+            ],
+          )),
+      // ),
+    );
+  }
+
+  Widget _seeNoSeeMore(ProductList productList) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AllProductDetailScreen(productList: productList),
+        ));
+      },
+      child: Container(
+        width: 97,
+        height: 59,
+        padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: ThemeApp.containerColor, width: 1.5),
+            color: ThemeApp.containerColor),
+        child: Center(
+          child: Text(
+            'View All',
+            style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 14,
+                overflow: TextOverflow.ellipsis,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.25,
+                color: ThemeApp.tealButtonColor),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Widget subListOfCategories(ProductList productList) {
+  //   return /* Container(
+  //       height: 200,
+  //       // height: 200,
+  //       width: double.infinity,
+  //       alignment: Alignment.center,
+  //       color: ThemeApp.whiteColor,
+  //       child:*/ /*ListView.builder(
+  //         shrinkWrap: true,
+  //         scrollDirection: Axis.horizontal,
+  //         itemCount: productList!.simpleSubCats!.length,*/
+  //       GridView(
+  //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 3,
+  //             crossAxisSpacing: 16,
+  //             mainAxisSpacing: 12,
+  //             // childAspectRatio: 1.0,
+  //             childAspectRatio: MediaQuery.of(context).size.height / 500,
+  //           ),
+  //           shrinkWrap: true,
+  //           children: List.generate(
+  //             // productList.simpleSubCats!.length,
+  //             productList.simpleSubCats!.length,
+  //             (index) {
+  //               return InkWell(
+  //                 onTap: () {
+  //                   Navigator.of(context).push(MaterialPageRoute(
+  //                     builder: (context) => ProductListByCategoryActivity(
+  //                         productList: productList.simpleSubCats![index]),
+  //                   ));
+  //                 },
+  //                 // child: Padding(
+  //                 // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+  //                 child: Container(
+  //                     // width: width * .25,
+  //                     width: 97,
+  //                     height: 59,
+  //                     padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+  //                     decoration: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(5),
+  //                         border: Border.all(
+  //                             color: ThemeApp.containerColor, width: 1.5),
+  //                         color: ThemeApp.containerColor),
+  //                     child: Column(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         /*      SvgPicture.asset(
+  //                           'assets/appImages/televisionIcon.svg',
+  //                           color: ThemeApp.blackColor,
+  //
+  //                           height: 17,
+  //                           width: 19,
+  //                         ),*/
+  //                         Container(
+  //                           color: ThemeApp.appColor,
+  //                           height: 25,
+  //                           width: 25,
+  //                           // borderRadius:
+  //                           // const BorderRadius.all(
+  //                           //     Radius.circular(50)),
+  //                           child: Image.network(
+  //                             productList.simpleSubCats![index].imageUrl ?? "",
+  //                             // fit: BoxFit.fill,
+  //                             height: 25,
+  //                             width: 25,
+  //                             errorBuilder: (context, error, stackTrace) {
+  //                               return Container(
+  //                                 height: 25,
+  //                                 width: 25,
+  //                                 child: Icon(
+  //                                   Icons.image,
+  //                                   color: ThemeApp.whiteColor,
+  //                                 ),
+  //                               );
+  //                             },
+  //                           ),
+  //                         ),
+  //                         SizedBox(
+  //                           height: 6,
+  //                         ),
+  //                         subCategoryListFont(
+  //                             productList.simpleSubCats![index].name!, context),
+  //                       ],
+  //                     )),
+  //                 // ),
+  //               );
+  //             },
+  //           ))
+  //       // )
+  //       ;
+  //
+  //   /*Container(
+  //       height: 200,
+  //       alignment: Alignment.center,color: ThemeApp.whiteColor,
+  //       child: GridView.builder(
+  //         itemCount: productList!.simpleSubCats!.length,
+  //         physics: const AlwaysScrollableScrollPhysics(),
+  //         gridDelegate:
+  //         const SliverGridDelegateWithFixedCrossAxisCount(
+  //           mainAxisSpacing: 20,
+  //           crossAxisSpacing: 10,
+  //           childAspectRatio: 1.5,
+  //           crossAxisCount: 3,
+  //         ),
+  //         itemBuilder: (BuildContext context, int index) {
+  //           return InkWell(
+  //             onTap: () {
+  //               Navigator.of(context).push(MaterialPageRoute(
+  //                 builder: (context) => ProductListByCategoryActivity(
+  //                     productList: productList!.simpleSubCats![index]),
+  //               ));
+  //             },
+  //             child: Container(
+  //                 padding: const EdgeInsets.all(3.0),
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(10),
+  //                   border: Border.all(
+  //                       color: ThemeApp.containerColor,
+  //                       width: 1.5),color: ThemeApp.containerColor
+  //                 ),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   crossAxisAlignment: CrossAxisAlignment.center,
+  //                   children: [
+  //                     Expanded(
+  //                       flex: 2,
+  //                       child: ClipRRect(
+  //                         borderRadius: const BorderRadius.all(
+  //                             Radius.circular(50)),
+  //                         child: Image.network(
+  //                           productList.simpleSubCats![index]
+  //                               .imageUrl! ??
+  //                               '',
+  //                           fit: BoxFit.fill,
+  //                           height:
+  //                           MediaQuery.of(context).size.height *
+  //                               .07,
+  //                         )??SizedBox(),
+  //                       ),
+  //                     ),
+  //                     Expanded(
+  //                       flex: 1,
+  //                       child: Center(
+  //                         child: TextFieldUtils().dynamicText(
+  //                             productList.simpleSubCats![index].name!,
+  //                             context,
+  //                             TextStyle(fontFamily: 'Roboto',
+  //                               color: ThemeApp.blackColor,
+  //                               // fontWeight: FontWeight.w500,
+  //                               fontSize: height * .02,
+  //                             )),
+  //                       ),
+  //                     )
+  //                   ],
+  //                 )),
+  //           );
+  //         },
+  //       ));*/
+  // }
 
   Widget serviceList() {
     return ChangeNotifierProvider<DashboardViewModel>.value(
@@ -1575,7 +1811,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }*/
   int indexForItems = 0;
 
-  Widget stepperOfDelivery(HomeProvider value) {    var dataOfOrders;
+  Widget stepperOfDelivery(HomeProvider value) {
+    var dataOfOrders;
     // for (int i =0; i<value.jsonData['payload']['consumer_baskets'].length; i++ ){
     //   dataOfOrders= value.jsonData['payload']['consumer_baskets'][i]['orders'].length;
     // }
@@ -1589,8 +1826,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Container(
                   // height: 300,
                   height:
-                      value.jsonData['payload']['consumer_baskets'].length-1 <
-                              0/*||dataOfOrders-1<0*/
+                      value.jsonData['payload']['consumer_baskets'].length - 1 <
+                              0 /*||dataOfOrders-1<0*/
                           ? 0.0
                           : 161,
 

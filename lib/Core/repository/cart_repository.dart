@@ -13,6 +13,7 @@ import 'package:velocit/utils/constants.dart';
 import '../../pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import '../../pages/screens/cartDetail_Activity.dart';
 import '../../services/providers/Products_provider.dart';
+import '../../utils/routes/routes.dart';
 import '../../utils/utils.dart';
 import '../AppConstant/apiMapping.dart';
 import '../Model/CartModels/AddressListModel.dart';
@@ -252,8 +253,12 @@ class CartRepository {
       print("Cart Id From Merge Cart " + StringConstant.UserCartID);
 
       if (response['status'].toString() == 'OK') {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CartDetailsActivity()));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CartDetailsActivity(),
+            ));
+
       }
 
       return response = MergeCartModel.fromJson(response);

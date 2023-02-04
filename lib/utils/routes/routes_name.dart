@@ -4,6 +4,7 @@ import 'package:velocit/main.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
 import 'package:velocit/pages/auth/OTP_Screen.dart';
+import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/routes/routes.dart';
 
@@ -36,6 +37,9 @@ class Routes {
     case RoutesName.saveAddressRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => SavedAddressDetails());
+        case RoutesName.cartScreenRoute:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => CartDetailsActivity());
 
       // case RoutesName.otpRoute:
       //   return MaterialPageRoute(

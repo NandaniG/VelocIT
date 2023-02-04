@@ -1028,8 +1028,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                       child: Center(
                         child: Text(
                           // CartRepository().badgeLength.toString(),
-                          '${StringConstant.BadgeCounterValue}',
-                          style: TextStyle(fontFamily: 'Roboto',
+                          StringConstant.BadgeCounterValue,
+                          style: const TextStyle(fontFamily: 'Roboto',
                             color: Colors.white,
                             fontSize: 12,
                           ),

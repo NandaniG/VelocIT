@@ -63,19 +63,32 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
   CartViewModel cartListView = CartViewModel();
   bool isSelfPickUp = false;
   String FromType = '';
-  String isTypeService = '';
+  bool isTypeServiceOnly = false;
+  bool isTypeService = false;
+  bool isTypeProduct = false;
+
+  bool isProduct = false,
+      isService = false,
+      isServiceOnly = false,
+      isProductOnly = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    isTypeService = false;
+    isTypeServiceOnly = false;
+    isTypeProduct = false;
+    getPreferences();
+    isProduct = false;
+    isService = false;
+    isServiceOnly = false;
+    isProductOnly = false;
     StringConstant.addressFromCurrentLocation;
     StringConstant.selectedFullName;
     StringConstant.selectedFullAddress;
     StringConstant.selectedTypeOfAddress;
     StringConstant.selectedMobile;
-    getPreferences();
   }
 
   var address =
@@ -267,8 +280,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               ),
                                             );
                                           } else {
-                                            if (defaultAddressList!.length - 1 >
-                                                0) {
+                                            if (defaultAddressList!.length>0) {
                                               CartRepository()
                                                   .putCartForPayment(
                                                       data,
@@ -435,52 +447,114 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                             cartProvider.sendCartForPayment.data!.payload!.cart!
                                 .ordersForPurchase!;
                         for (int i = 0; i < cartOrderPurchase.length; i++) {
-                          print(cartOrderPurchase[i].serviceId);
-                          print(cartOrderPurchase[i].productId);
-                          if (cartOrderPurchase[i].serviceId.toString() != 'null' &&
-                              cartOrderPurchase[i].productId.toString() != 'null') {
-                            isTypeService = 'Both';
-                            print(isTypeService);
-                          } else if (cartOrderPurchase[i].serviceId.toString() == 'null' &&
-                              cartOrderPurchase[i].productId != null) {
-                            isTypeService = 'Products';
-                            print(isTypeService);
-                          } else if (cartOrderPurchase[i].productId.toString() == 'null') {
-                            isTypeService = 'Service';
-                            print(isTypeService);
+                          if (cartOrderPurchase[i].serviceId != null) {
+                            isService = true;
                           } else {
-                            isTypeService = 'not';
-                            print(isTypeService);
+                            isProduct = true;
                           }
-                          return Container(
-                            color: ThemeApp.appBackgroundColor,
-                            width: width,
-                            child: ListView(
-                                // mainAxisAlignment: MainAxisAlignment.start,
-                                // crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  // StepperGlobalWidget(),
-                                  stepperWidget(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 1,
-                                              child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    isSelfPickUp = true;
-                                                    isSelfPickUp =
-                                                        !isSelfPickUp;
+                        }
+                        print("isService " + isService.toString());
+                        print("isProduct " + isProduct.toString());
 
-                                                    // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
-                                                  });
-                                                },
+                        if (isService == true && isProduct == false) {
+                          isServiceOnly = true;
+                        } else if (isService == false && isProduct == true) {
+                          isProductOnly = true;
+                        } else {
+                          isServiceOnly = false;
+                          isProductOnly = false;
+                        }
+
+                        if (isServiceOnly == false && isProductOnly == false) {
+                          print("check : some product and some service");
+                          //show msg
+                          //on click
+                        } else if (isServiceOnly == true &&
+                            isProductOnly == false) {
+                          print("check : all service");
+
+                          // show msg
+                          // no Click
+                        } else if (isServiceOnly == false &&
+                            isProductOnly == true) {
+                          print("check : all product");
+
+                          // no show msg
+                          // on Click
+                        }
+
+                        return Container(
+                          color: ThemeApp.appBackgroundColor,
+                          width: width,
+                          child: ListView(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // StepperGlobalWidget(),
+                                stepperWidget(),
+                                Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  isSelfPickUp = true;
+                                                  isSelfPickUp = !isSelfPickUp;
+
+                                                  // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
+                                                });
+                                              },
+                                              child: Container(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          0, 15.0, 0, 15.0),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(100),
+                                                      bottomLeft:
+                                                          Radius.circular(100),
+                                                    ),
+                                                    color: isSelfPickUp
+                                                        ? Colors.white
+                                                        : ThemeApp.appColor,
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                        'Deliver to Address',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Roboto',
+                                                            fontSize: 14,
+                                                            color: isSelfPickUp
+                                                                ? ThemeApp
+                                                                    .blackColor
+                                                                : Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            letterSpacing:
+                                                                -0.08)),
+                                                  )),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
+                                                onTap: isServiceOnly == true
+                                                    ? () {}
+                                                    : () {
+                                                        setState(() {
+                                                          isSelfPickUp = true;
+                                                        });
+                                                      },
                                                 child: Container(
                                                     padding: const EdgeInsets
                                                             .fromLTRB(
@@ -489,211 +563,160 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                       borderRadius:
                                                           const BorderRadius
                                                               .only(
-                                                        topLeft:
+                                                        topRight:
                                                             Radius.circular(
                                                                 100),
-                                                        bottomLeft:
+                                                        bottomRight:
                                                             Radius.circular(
                                                                 100),
                                                       ),
                                                       color: isSelfPickUp
-                                                          ? Colors.white
-                                                          : ThemeApp.appColor,
+                                                          ? ThemeApp.appColor
+                                                          : ThemeApp.whiteColor,
                                                     ),
                                                     child: Center(
                                                       child: Text(
-                                                          'Deliver to Address',
+                                                          'Pickup from Store',
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   'Roboto',
                                                               fontSize: 14,
                                                               color: isSelfPickUp
                                                                   ? ThemeApp
-                                                                      .blackColor
-                                                                  : Colors
-                                                                      .white,
+                                                                      .whiteColor
+                                                                  : ThemeApp
+                                                                      .blackColor,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500,
                                                               letterSpacing:
                                                                   -0.08)),
-                                                    )),
+                                                    ))),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 18,
+                                      ),
+                                      isSelfPickUp != true
+                                          ? Container(
+                                              // height: height * 0.5,
+                                              width: width,
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      10, 10, 10, 13),
+                                              decoration: const BoxDecoration(
+                                                color: ThemeApp.whiteColor,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10)),
                                               ),
-                                            ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: InkWell(
-                                                  onTap: isTypeService == 'Yes'
-                                                      ? () {}
-                                                      : () {
-                                                          setState(() {
-                                                            isSelfPickUp = true;
-                                                          });
-                                                        },
-                                                  child: Container(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          0, 15.0, 0, 15.0),
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                .only(
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  100),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  100),
-                                                        ),
-                                                        color: isSelfPickUp
-                                                            ? ThemeApp.appColor
-                                                            : ThemeApp
-                                                                .whiteColor,
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                            'Pickup from Store',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Roboto',
-                                                                fontSize: 14,
-                                                                color: isSelfPickUp
-                                                                    ? ThemeApp
-                                                                        .whiteColor
-                                                                    : ThemeApp
-                                                                        .blackColor,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                letterSpacing:
-                                                                    -0.08)),
-                                                      ))),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 18,
-                                        ),
-                                        isSelfPickUp != true
-                                            ? Container(
-                                                // height: height * 0.5,
-                                                width: width,
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 10, 10, 13),
-                                                decoration: const BoxDecoration(
-                                                  color: ThemeApp.whiteColor,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(10)),
-                                                ),
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                            StringUtils
-                                                                .deliveryDetails,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Roboto',
-                                                                color: ThemeApp
-                                                                    .blackColor,
-                                                                fontSize: 16,
-                                                                letterSpacing:
-                                                                    -0.25,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                        InkWell(
-                                                            onTap: () {
-                                                              // Navigator.of(context).push(
-                                                              //   MaterialPageRoute(
-                                                              //     builder: (context) => AddNewDeliveryAddress(),
-                                                              //   ),
-                                                              // );
-                                                              print("widget.cartForPaymentPayload!.cartId11" +
-                                                                  widget.cartId
-                                                                      .toString());
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                          StringUtils
+                                                              .deliveryDetails,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              color: ThemeApp
+                                                                  .blackColor,
+                                                              fontSize: 16,
+                                                              letterSpacing:
+                                                                  -0.25,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700)),
+                                                      InkWell(
+                                                          onTap: () {
+                                                            // Navigator.of(context).push(
+                                                            //   MaterialPageRoute(
+                                                            //     builder: (context) => AddNewDeliveryAddress(),
+                                                            //   ),
+                                                            // );
+                                                            print("widget.cartForPaymentPayload!.cartId11" +
+                                                                widget.cartId
+                                                                    .toString());
 
-                                                              showModalBottomSheet(
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
+                                                            showModalBottomSheet(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              60.0),
+                                                                ),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                context:
+                                                                    scaffoldGlobalKey
+                                                                        .currentContext!,
+                                                                builder:
+                                                                    (context) {
+                                                                  return ChangeAddressBottomSheet(
+                                                                      cartForPaymentPayload:
+                                                                          cartForPaymentPayload,
+                                                                      cartId: widget
+                                                                          .cartId);
+                                                                });
+                                                          },
+                                                          child: Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
                                                                     borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            60.0),
-                                                                  ),
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  context:
-                                                                      scaffoldGlobalKey
-                                                                          .currentContext!,
-                                                                  builder:
-                                                                      (context) {
-                                                                    return ChangeAddressBottomSheet(
-                                                                        cartForPaymentPayload:
-                                                                            cartForPaymentPayload,
-                                                                        cartId:
-                                                                            widget.cartId);
-                                                                  });
-                                                            },
-                                                            child: Container(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .all(
-                                                                        Radius.circular(
-                                                                            20),
-                                                                      ),
-                                                                      border: Border.all(
-                                                                          color:
-                                                                              ThemeApp.appColor)
-                                                                      // color:
-                                                                      //     ThemeApp.blackColor,
-                                                                      ),
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .fromLTRB(
-                                                                      10,
-                                                                      5,
-                                                                      10,
-                                                                      5),
-                                                              child: TextFieldUtils().dynamicText(
-                                                                  StringUtils
-                                                                      .changeAddress,
-                                                                  context,
-                                                                  TextStyle(
-                                                                      fontFamily:
-                                                                          'Roboto',
-                                                                      color: ThemeApp
-                                                                          .appColor,
-                                                                      fontSize:
-                                                                          10,
-                                                                      letterSpacing:
-                                                                          -0.08,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700)),
-                                                            )),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 15,
-                                                    ),
-                                                    deliveryAddress(),
+                                                                        BorderRadius
+                                                                            .all(
+                                                                      Radius.circular(
+                                                                          20),
+                                                                    ),
+                                                                    border: Border.all(
+                                                                        color: ThemeApp
+                                                                            .appColor)
+                                                                    // color:
+                                                                    //     ThemeApp.blackColor,
+                                                                    ),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    10,
+                                                                    5,
+                                                                    10,
+                                                                    5),
+                                                            child: TextFieldUtils().dynamicText(
+                                                                StringUtils
+                                                                    .changeAddress,
+                                                                context,
+                                                                TextStyle(
+                                                                    fontFamily:
+                                                                        'Roboto',
+                                                                    color: ThemeApp
+                                                                        .appColor,
+                                                                    fontSize:
+                                                                        10,
+                                                                    letterSpacing:
+                                                                        -0.08,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700)),
+                                                          )),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 15,
+                                                  ),
+                                                  deliveryAddress(),
 
-                                                    /*cartForPaymentPayload
+                                                  /*cartForPaymentPayload
                                                               .isAddressPresent ==
                                                           true*/
-                                                    /*    StringConstant
+                                                  /*    StringConstant
                                                               .selectedFullName !=
                                                           ''
                                                       ? Column(
@@ -844,15 +867,15 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400)),*/
-                                                  ],
-                                                ),
-                                              )
-                                            : SizedBox(),
-                                        SizedBox(
-                                          height: height * .02,
-                                        ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
 
-                                        /*  cartOrderPurchase[i]
+                                      /*  cartOrderPurchase[i]
                                             .serviceId
                                             .toString() !=
                                             "null"
@@ -867,49 +890,51 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                         FontWeight.w700))
                                             : SizedBox(),*/
 
-                                        isTypeService == 'Both'||isTypeService=="Service"
-                                            ? Text(
-                                                'Pickup from Store is not available for services',
-                                                style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    color: ThemeApp.redColor,
-                                                    fontSize: 16,
-                                                    letterSpacing: -0.25,
-                                                    fontWeight:
-                                                        FontWeight.w700))
-                                            : SizedBox(),
-                                        SizedBox(
-                                          height: height * .02,
-                                        ),
-                                        Container(
-                                            // height: height * 0.6,
-                                            width: width,
-                                            padding: const EdgeInsets.fromLTRB(
-                                                15, 12, 15, 20),
-                                            decoration: const BoxDecoration(
-                                              color: ThemeApp.whiteColor,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10)),
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                // TextFieldUtils().dynamicText(
-                                                //     StringUtils.orderSummary,
-                                                //     context,
-                                                //     TextStyle(fontFamily: 'Roboto',
-                                                //         color: Colors.grey.shade700,
-                                                //         fontSize: height * .023,
-                                                //         fontWeight:
-                                                //             FontWeight.bold)),
-                                                cartProductList(
-                                                    cartOrderPurchase),
-                                              ],
-                                            )),
+                                      (isServiceOnly == false && isProductOnly == false)||(isServiceOnly == true)
+                                          ? Center(
+                                              child: Text(
+                                                  'Your cart containing service(s), hence Pickup from store option is not available for selected service(s).',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      color: ThemeApp.redColor,
+                                                      fontSize: 16,
+                                                      letterSpacing: -0.25,
+                                                      fontWeight:
+                                                          FontWeight.w700)),
+                                            )
+                                          : SizedBox(),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      Container(
+                                          // height: height * 0.6,
+                                          width: width,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              15, 12, 15, 20),
+                                          decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // TextFieldUtils().dynamicText(
+                                              //     StringUtils.orderSummary,
+                                              //     context,
+                                              //     TextStyle(fontFamily: 'Roboto',
+                                              //         color: Colors.grey.shade700,
+                                              //         fontSize: height * .023,
+                                              //         fontWeight:
+                                              //             FontWeight.bold)),
+                                              cartProductList(
+                                                  cartOrderPurchase),
+                                            ],
+                                          )),
 
-                                        //apply promo code
-                                        /*   SizedBox(
+                                      //apply promo code
+                                      /*   SizedBox(
                             height: height * .02,
                           ),
                           Container(
@@ -988,16 +1013,15 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                   )
                                 ]),
                           ),*/
-                                        SizedBox(
-                                          height: height * .02,
-                                        ),
-                                        priceDetails(cartForPaymentPayload),
-                                      ],
-                                    ),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
+                                      priceDetails(cartForPaymentPayload),
+                                    ],
                                   ),
-                                ]),
-                          );
-                        }
+                                ),
+                              ]),
+                        );
                     }
                     return Container(
                       height: height * .8,

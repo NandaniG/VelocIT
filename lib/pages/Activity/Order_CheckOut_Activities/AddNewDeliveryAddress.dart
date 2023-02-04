@@ -862,7 +862,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                         // pincodeController.clear();
                         Utils.successToast("New Address added successfully");
                         Navigator.of(context)
-                            .pushNamed(RoutesName.saveAddressRoute);
+                            .pushNamed(RoutesName.saveAddressRoute).then((value) => setState((){}));
 
                         // Navigator.of(context).pushReplacement(
                         //   MaterialPageRoute(

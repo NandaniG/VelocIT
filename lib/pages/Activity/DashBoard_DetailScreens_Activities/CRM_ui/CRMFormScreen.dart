@@ -43,11 +43,11 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
   var selectedDate='';
   var selectedTime='';
   TextEditingController serviceController = new TextEditingController();
-  TextEditingController nameController = new TextEditingController();
+  TextEditingController nameController = new TextEditingController(text: StringConstant.loginUserName);
   TextEditingController timeController = new TextEditingController();
   TextEditingController dateController = new TextEditingController();
   TextEditingController mobileNumberController = new TextEditingController();
-  TextEditingController email = new TextEditingController();
+  TextEditingController email = new TextEditingController(text:  StringConstant.loginUserEmail);
   TextEditingController f1_labelController= new TextEditingController();
   TextEditingController f2_labelController= new TextEditingController();
   TextEditingController f3_labelController= new TextEditingController();
@@ -108,7 +108,8 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
       f4_label = prefs.getString('f4_label');
       f5_label = prefs.getString('f5_label');
     });
-
+    StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
+    StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
     is_f5_enabled = prefs.getBool('is_f5_enabled');
     print(is_f5_enabled);
   }

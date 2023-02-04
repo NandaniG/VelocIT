@@ -89,7 +89,7 @@ class AuthRepository {
         CartRepository().mergeCartList(
             StringConstant.RandomUserLoginId, userId.toString(), data, context);
       } else if (StringConstant.isUserNavigateFromDetailScreen == 'BN') {
- /*       Map data = {'userId': jsonData['payload']['body']['id'].toString()};
+        /*       Map data = {'userId': jsonData['payload']['body']['id'].toString()};
         print("create cart data pass for Direct buy now: " + data.toString());
         CartRepository()
             .mergeCartList(StringConstant.RandomUserLoginId, userId.toString(),
@@ -98,7 +98,6 @@ class AuthRepository {
           CartRepository().buyNowGetRequest(userId.toString(), context);
         });*/
         CartRepository().buyNowGetRequest(userId.toString(), context);
-
       } else {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => DashboardScreen()));
@@ -139,7 +138,7 @@ class AuthRepository {
       String mobile = jsonMap['mobile'].toString();
       Utils.successToast(jsonData['payload']['otp'].toString());
 
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => OTPScreen(
                 mobileNumber: mobile.toString(),
                 OTP: jsonData['payload']['otp'].toString(),
@@ -182,7 +181,7 @@ class AuthRepository {
           StringConstant.setOtp, jsonData['payload']['otp'].toString());
       String mobile = jsonMap['email'].toString();
       Utils.successToast(jsonData['payload']['otp'].toString());
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => OTPScreen(
                 mobileNumber: mobile.toString(),
                 OTP: jsonData['payload']['otp'].toString(),
@@ -219,61 +218,58 @@ class AuthRepository {
 
     StringConstant.prettyPrintJson(
         responseJson.toString(), 'Validate OTP Response:');
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
+      if (jsonData['status'].toString() == 'OK') {
+        prefs.setString(
+            StringConstant.testId, jsonData['payload']['id'].toString());
+        // Prefs.instance.setToken(StringConstant.userId, id.toString());
 
-    if (jsonData['status'].toString() == 'OK') {
+        var loginId = await Prefs.instance.getToken(StringConstant.userId);
+        final preferences = await SharedPreferences.getInstance();
+        preferences.setInt('isUserLoggedIn', 1);
+        preferences.setString('isUserId', jsonData['payload']['id'].toString());
+        preferences.setString(
+            'usernameLogin', jsonData['payload']['username'].toString());
+        preferences.setString(
+            'emailLogin', jsonData['payload']['email'].toString());
 
-      prefs.setString(
-          StringConstant.testId, jsonData['payload']['id'].toString());
-      // Prefs.instance.setToken(StringConstant.userId, id.toString());
+        print("LoginId : .. " + loginId.toString());
 
-      var loginId = await Prefs.instance.getToken(StringConstant.userId);
-      final preferences = await SharedPreferences.getInstance();
-      preferences.setInt('isUserLoggedIn', 1);
-      preferences.setString(
-          'isUserId', jsonData['payload']['id'].toString());
-      preferences.setString(
-          'usernameLogin', jsonData['payload']['username'].toString());
-      preferences.setString(
-          'emailLogin', jsonData['payload']['email'].toString());
+        StringConstant.isLogIn = true;
+        Utils.successToast('User login successfully');
 
-      print("LoginId : .. " + loginId.toString());
+        StringConstant.isUserNavigateFromDetailScreen =
+            (prefs.getString('isUserNavigateFromDetailScreen')) ?? "";
+        StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+        print("Cart Id From Login usinh Email " + StringConstant.UserCartID);
+        print("StringConstant.isUserNavigateFromDetailScreen" +
+            StringConstant.isUserNavigateFromDetailScreen);
+        var userId = preferences.getString('isUserId');
+        if (StringConstant.isUserNavigateFromDetailScreen == 'Yes') {
+          var cartUserId = prefs.getString('CartSpecificUserIdPref');
+          var itemCode = prefs.getString('CartSpecificItem_codePref');
+          var itemQuanity = prefs.getString('CartSpecificItemQuantityPref');
+          StringConstant.RandomUserLoginId =
+              (prefs.getString('RandomUserId')) ?? '';
+          Map data = {
+            'user_id': jsonData['payload']['id'],
+            'item_code': itemCode,
+            'qty': itemQuanity
+          };
 
-      StringConstant.isLogIn = true;
-      Utils.successToast('User login successfully');
+          data = {'userId': jsonData['payload']['id'].toString()};
+          print('login user is NOT GUEST');
 
-      StringConstant.isUserNavigateFromDetailScreen =
-          (prefs.getString('isUserNavigateFromDetailScreen')) ?? "";
-      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-      print("Cart Id From Login usinh Email " + StringConstant.UserCartID);
-      print("StringConstant.isUserNavigateFromDetailScreen" +
-          StringConstant.isUserNavigateFromDetailScreen);
-      var userId = preferences.getString('isUserId');
-      if (StringConstant.isUserNavigateFromDetailScreen == 'Yes') {
-        var cartUserId = prefs.getString('CartSpecificUserIdPref');
-        var itemCode = prefs.getString('CartSpecificItem_codePref');
-        var itemQuanity = prefs.getString('CartSpecificItemQuantityPref');
-        StringConstant.RandomUserLoginId =
-            (prefs.getString('RandomUserId')) ?? '';
-        Map data = {
-          'user_id': jsonData['payload']['id'],
-          'item_code': itemCode,
-          'qty': itemQuanity
-        };
+          print("create cart data pass : " + data.toString());
+          //create cart
+          CartRepository().cartPostRequest(data, context);
+          //merge cart
+          print("Random ID : " + StringConstant.RandomUserLoginId);
 
-        data = {'userId': jsonData['payload']['id'].toString()};
-        print('login user is NOT GUEST');
-
-        print("create cart data pass : " + data.toString());
-        //create cart
-        CartRepository().cartPostRequest(data, context);
-        //merge cart
-        print("Random ID : " + StringConstant.RandomUserLoginId);
-
-        CartRepository().mergeCartList(
-            StringConstant.RandomUserLoginId, userId.toString(), data, context);
-      } else if (StringConstant.isUserNavigateFromDetailScreen == 'BN') {
-        /*       Map data = {'userId': jsonData['payload']['body']['id'].toString()};
+          CartRepository().mergeCartList(StringConstant.RandomUserLoginId,
+              userId.toString(), data, context);
+        } else if (StringConstant.isUserNavigateFromDetailScreen == 'BN') {
+          /*       Map data = {'userId': jsonData['payload']['body']['id'].toString()};
         print("create cart data pass for Direct buy now: " + data.toString());
         CartRepository()
             .mergeCartList(StringConstant.RandomUserLoginId, userId.toString(),
@@ -281,24 +277,25 @@ class AuthRepository {
             .then((value) {
           CartRepository().buyNowGetRequest(userId.toString(), context);
         });*/
-        CartRepository().buyNowGetRequest(userId.toString(), context);
-
+          CartRepository().buyNowGetRequest(userId.toString(), context);
+        } else {
+          Navigator.of(context)
+              .pushReplacementNamed(RoutesName.dashboardRoute)
+              .then((value) {});
+        }
       } else {
-        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
+        Utils.errorToast("Please enter valid details.");
 
-        });      }
+        httpClient.close();
+        return responseJson;
+      }
     } else {
       Utils.errorToast("Please enter valid details.");
 
       httpClient.close();
       return responseJson;
-    }}else {
-      Utils.errorToast("Please enter valid details.");
-
-      httpClient.close();
-      return responseJson;
     }
- /*   if (jsonData['status'].toString() == 'OK') {
+    /*   if (jsonData['status'].toString() == 'OK') {
       prefs.setString(
           StringConstant.testId, jsonData['payload']['id'].toString());
       // Prefs.instance.setToken(StringConstant.userId, id.toString());
