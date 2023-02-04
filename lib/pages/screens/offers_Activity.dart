@@ -174,14 +174,14 @@ class _OfferActivityState extends State<OfferActivity> {
                     child: GridView(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 5,
                           // childAspectRatio: 1.0,
-                          childAspectRatio:
-                          MediaQuery
-                              .of(context)
-                              .size
-                              .height / 800,
+                          // childAspectRatio:
+                          // MediaQuery
+                          //     .of(context)
+                          //     .size
+                          //     .height / 800,
                         ),
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -737,7 +737,7 @@ Widget productList(List<OfferPayload>? offerList){
     return Consumer<HomeProvider>(builder: (context, provider, child) {
       if (provider.offerListDetails != null) {
         return  Container(
-          height:400,
+          height:410,
           // padding: EdgeInsets.all(12.0),
           child: GridView.builder(
             itemCount: orientation?2:4,
@@ -749,10 +749,10 @@ Widget productList(List<OfferPayload>? offerList){
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10*/
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
+              mainAxisSpacing: 5,
+              crossAxisSpacing: 3,
               // width / height: fixed for *all* items
-              childAspectRatio: 1,
+              // childAspectRatio: 1,
 
               crossAxisCount: 2,
             ),

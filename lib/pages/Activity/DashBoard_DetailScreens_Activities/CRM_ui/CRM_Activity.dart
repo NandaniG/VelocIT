@@ -104,7 +104,7 @@ class _CRMActivityState extends State<CRMActivity> {
                 addressWidget(context, StringConstant.placesFromCurrentLocation),
                 setState(() {})),
           ),
-          bottomNavigationBar: bottomNavigationBarWidget(context),
+          bottomNavigationBar: bottomNavigationBarWidget(context,0),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           body: SafeArea(
             child: SingleChildScrollView(
@@ -576,10 +576,10 @@ class _CRMActivityState extends State<CRMActivity> {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 12,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 5,
         // childAspectRatio: 1.0,
-        childAspectRatio: MediaQuery.of(context).size.height / 500,
+        // childAspectRatio: MediaQuery.of(context).size.height / 500,
       ),
       itemCount: servicePayload.simpleSubCats!.length,
       shrinkWrap: true,

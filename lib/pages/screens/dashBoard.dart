@@ -689,7 +689,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           TextFieldUtils()
                               .headingTextField('Shop by Categories', context),
                           SizedBox(
-                            height: height * .02,
+                            height: 10,
                           ),
                           ListView.builder(
                             key: Key('builder ${selected.toString()}'),
@@ -981,13 +981,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       GridView(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 12,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 5,
             // childAspectRatio: 1.0,
-            childAspectRatio: MediaQuery
-                .of(context)
-                .size
-                .height / 500,
+            // childAspectRatio: MediaQuery
+            //     .of(context)
+            //     .size
+            //     .height / 500,
           ),
           shrinkWrap: true,
           children: List.generate(
@@ -1006,7 +1006,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Container(
                   // width: width * .25,
                     width: 97,
-                    height: 59,
+                    height: 70,
                     padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
@@ -3018,8 +3018,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: GridView(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
                           // childAspectRatio: 1.0,
                           childAspectRatio:
                           MediaQuery

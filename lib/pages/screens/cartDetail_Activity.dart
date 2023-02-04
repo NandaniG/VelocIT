@@ -306,11 +306,13 @@ setState(() {
             ),
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-            color: ThemeApp.appBackgroundColor,
-            elevation: 0,
-            child: Container(
-              height: 130,
+        bottomNavigationBar: 
+        // BottomAppBar(
+        //     color: ThemeApp.appBackgroundColor,
+        //     elevation: 0,
+        //     child: 
+            Container(
+              height: 160,
               child: ChangeNotifierProvider<CartViewModel>.value(
                   value: cartListView,
                   child: Consumer<CartViewModel>(
@@ -334,9 +336,9 @@ setState(() {
 
                         return cartProvider.cartSpecificID.data!.payload!
                                 .ordersForPurchase!.isEmpty
-                            ? bottomNavigationBarWidget(context)
+                            ? bottomNavigationBarWidget(context,4)
                             : Container(
-                                height: 100,
+                                height: 200,
                                 width: width,
                                 decoration: const BoxDecoration(
                                   color: ThemeApp.tealButtonColor,
@@ -353,7 +355,7 @@ setState(() {
                                           left: 20,
                                           right: 15,
                                           top: 15,
-                                          bottom: 0),
+                                          bottom: 5),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -544,45 +546,45 @@ setState(() {
                                         ],
                                       ),
                                     ),
-                                    bottomNavBarItems(context),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 20),
-                                      child: Container(
-                                        height: 70,
-                                        width: 70,
-                                        child: FloatingActionButton(
-                                          backgroundColor: ThemeApp.appColor,
-                                          onPressed: () {
-                                            StringConstant().scanQR(context);
-                                            // scanQRCode();
-                                            // scanFile();
-                                            // Navigator.of(context).push(
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) => StepperScreen(),
-                                            //   ),
-                                            // );
+                  //                   bottomNavBarItems(context,4),
+                  //                   Padding(
+                  //                     padding: const EdgeInsets.only(bottom: 20),
+                  //                     child: Container(
+                  //                       height: 70,
+                  //                       width: 70,
+                  //                       child: FloatingActionButton(
+                  //                         backgroundColor: ThemeApp.appColor,
+                  //                         onPressed: () {
+                  //                           StringConstant().scanQR(context);
+                  //                           // scanQRCode();
+                  //                           // scanFile();
+                  //                           // Navigator.of(context).push(
+                  //                           //   MaterialPageRoute(
+                  //                           //     builder: (context) => StepperScreen(),
+                  //                           //   ),
+                  //                           // );
 
-                                            // showModalBottomSheet(
-                                            //     isDismissible: true,
-                                            //     context: context,
-                                            //     builder: (context) {
-                                            //       return ScannerWidget(state: controller.state);
-                                            //     });
-                                          },
-                                          child: SvgPicture.asset(
-                                            'assets/appImages/bottomApp/scanIcon.svg',
-                                            color: ThemeApp.whiteColor,
-                                            semanticsLabel: 'Acme Logo',
-                                            width: 29,
-                                            height: 29,
+                  //                           // showModalBottomSheet(
+                  //                           //     isDismissible: true,
+                  //                           //     context: context,
+                  //                           //     builder: (context) {
+                  //                           //       return ScannerWidget(state: controller.state);
+                  //                           //     });
+                  //                         },
+                  //                         child: SvgPicture.asset(
+                  //                           'assets/appImages/bottomApp/scanIcon.svg',
+                  //                           color: ThemeApp.whiteColor,
+                  //                           semanticsLabel: 'Acme Logo',
+                  //                           width: 29,
+                  //                           height: 29,
 
-                                            // height: height * .03,
-                                          ), /*   child: const Icon(Icons.document_scanner_outlined,
-                  color: ThemeApp.whiteColor),*/
-                                        ),
-                                      ),
-                                    ),
-                                    // bottomNavigationBarWidget(context),
+                  //                           // height: height * .03,
+                  //                         ), /*   child: const Icon(Icons.document_scanner_outlined,
+                  // color: ThemeApp.whiteColor),*/
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                                    bottomNavigationBarWidget(context,0),
                                   ],
                                 ),
                               );
@@ -600,7 +602,8 @@ setState(() {
                               fontWeight: FontWeight.bold)),
                     );
                   })),
-            )),
+            ),
+            // ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
             child: ChangeNotifierProvider<CartViewModel>.value(
@@ -653,7 +656,7 @@ setState(() {
                                   ],
                                 ));
                   }
-                  default:
+                  // default:
                   return Container(
                     height: height * .8,
                     alignment: Alignment.center,

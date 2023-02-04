@@ -372,10 +372,10 @@ class _CRMistByCategoryActivityState
                     child: subProductList.length==0?Center(child: Text('No match found')): GridView(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 30,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
                           // childAspectRatio: 1.0,
-                          childAspectRatio: MediaQuery.of(context).size.height / 900,
+                          // childAspectRatio: MediaQuery.of(context).size.height / 900,
                         ),
                         shrinkWrap: true,
                         children: List.generate(subProductList!.length,
@@ -421,7 +421,7 @@ class _CRMistByCategoryActivityState
                                           /*   Expanded(
                                             flex: 2,
                                             child:*/ Container(
-                                            height: 143,
+                                            height: 123,
                                             width: 191, /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)

@@ -424,8 +424,8 @@ class _ProductListByCategoryActivityState
                                       /*   Expanded(
                                             flex: 2,
                                             child:*/ Container(
-                                        height: 133,
-                                        width: 191, /* height: SizeConfig.orientations !=
+                                        height: 123,
+                                        width: 181, /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
                                                           .size
@@ -473,7 +473,7 @@ class _ProductListByCategoryActivityState
                                       ),
                                       // ),
                                       Container(      color: ThemeApp.tealButtonColor,
-                                        width: 191,
+                                        width: 181,
                                         height: 66,
                                         padding: const EdgeInsets.only(
                                             left: 12, right: 12,),
