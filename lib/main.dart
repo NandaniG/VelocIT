@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geocoder/geocoder.dart';
 // import 'package:geolocator/geolocator.dart';
 
@@ -41,13 +43,21 @@ import 'L10n/l10n.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'l10n/localeProvider.dart';
+import 'notificationservices/local_notification_service.dart';
 import 'pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import 'services/providers/Products_provider.dart';
 
-late SharedPreferences sp;
 
-void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
+Future<void> backgroundHandler(RemoteMessage message) async {
+  print('FirebaseMessaging : '+message.data.toString());
+  print('FirebaseMessaging : ' +message.notification!.title.toString());
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+  LocalNotificationService.initialize();
   runApp(MyApp());
 // getpref();
 }
@@ -68,20 +78,8 @@ getpref() async {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-/*  ProductSpecificListViewModel productViewModel =
-      ProductSpecificListViewModel();
-  Map data = {
-    "category_code": "EOLP",
-    "recommended_for_you": "1",
-    "Merchants Near You": "1",
-    "best_deal": "",
-    'budget_buys': ""
-  };*/
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // productViewModel.productSpecificListWithGet(context, data);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -136,7 +134,7 @@ class MyApp extends StatelessWidget {
               // initialRoute: StringConstant.isLogIn != true?RoutesName.signInRoute:RoutesName.dashboardRoute,
               initialRoute: RoutesName.splashScreenRoute,
               onGenerateRoute: Routes.generateRoute,
-              routes: {
+       /*       routes: {
                 // '/': (context) => StringConstant.isLogIn != true
                 //     ? SignIn_Screen()
                 //     : DashboardScreen(),
@@ -163,7 +161,7 @@ class MyApp extends StatelessWidget {
                 '/cartScreen': (context) => CartDetailsActivity(),
                 // '/orderReviewSubActivity': (context) => OrderReviewSubActivity(
                 //     cartPayLoad: value, cartListFromHome: provider.productList),
-              },
+              },*/
             );
             // });
           });
@@ -180,11 +178,56 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   Provider.of<HomeProvider>(context, listen: false).loadJson();
-    // });
-    // startTime();
-    // getCurrentLocation();
+
+    // 1. This method call when app in terminated state and you get a notification
+    // when you click on notification app open from terminated state and you can get notification data in this method
+
+    FirebaseMessaging.instance.getInitialMessage().then(
+          (message) {
+        print("FirebaseMessaging.instance.getInitialMessage");
+        if (message != null) {
+          print("New Notification");
+          // if (message.data['_id'] != null) {
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(
+          //       builder: (context) => DemoScreen(
+          //         id: message.data['_id'],
+          //       ),
+          //     ),
+          //   );
+          // }
+        }
+      },
+    );
+
+    // 2. This method only call when App in forground it mean app must be opened
+    FirebaseMessaging.onMessage.listen(
+          (message) {
+        print("FirebaseMessaging.onMessage.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data11 ${message.data}");
+          LocalNotificationService.createanddisplaynotification(message);
+
+        }
+      },
+    );
+
+    // 3. This method only call when App in background and not terminated(not closed)
+    FirebaseMessaging.onMessageOpenedApp.listen(
+          (message) {
+        print("FirebaseMessaging.onMessageOpenedApp.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data22 ${message.data['_id']}");
+        }
+      },
+    );
+
+
+
     _getCurrentPosition();
   }
 

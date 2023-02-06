@@ -31,6 +31,9 @@ static int isUserLoggedIn = 0;
   static String BadgeCounterValue = '';
   static String ScannedProductId = '';
   static String ProfilePhoto = '';
+  static String userProfileName = '';
+  static String userProfileEmail = '';
+  static String userProfileMobile = '';
 
   ////////////////////////old strings
   static bool isLogIn = true;
@@ -70,9 +73,9 @@ static int isUserLoggedIn = 0;
   static String userAccountMobilePref = 'userAccountMobilePref';
   static String userAccountPassPref = 'userAccountPassPref';
 
-  static String userAccountName = 'use name';
-  static String userAccountEmail = 'test@gmail.com';
-  static String userAccountMobile = '7990916338';
+  static String userAccountName = '';
+  static String userAccountEmail = '';
+  static String userAccountMobile = '';
   static String userAccountPass = '';
   static String userAccountImagePicker = '';
   static String userAccountImagePickerPref = 'userAccountImagePickerPref';

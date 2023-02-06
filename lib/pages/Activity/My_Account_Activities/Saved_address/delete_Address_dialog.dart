@@ -8,6 +8,7 @@ import 'package:velocit/utils/StringUtils.dart';
 import '../../../../services/models/AddressListModel.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/providers/Products_provider.dart';
+import '../../../../utils/routes/routes.dart';
 import '../../../../utils/styles.dart';
 import '../../../../utils/utils.dart';
 import '../../../../widgets/global/proceedButtons.dart';
@@ -100,7 +101,7 @@ class _DeleteAddressDialogState extends State<DeleteAddressDialog> {
                               setState(() {
                               print(widget.addressList.length);
                               value.deleteAddress(widget.index);
-                              Navigator.pushReplacementNamed(context, '/myAccountActivity');
+                              Navigator.pushReplacementNamed(context, RoutesName.myAccountRoute);
                               /*Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) =>

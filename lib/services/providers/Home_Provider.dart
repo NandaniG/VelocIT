@@ -28,7 +28,7 @@ class HomeProvider with ChangeNotifier {
   //--------------------load json file------------------------
   //----------------------------------------------------------
    bool IsActiveOrderList = true;
-   int PastDays =0;
+   int PastDays =7;
   loadJson() async {
     try {
       final prefs = await SharedPreferences.getInstance();

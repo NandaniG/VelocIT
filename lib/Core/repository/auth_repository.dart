@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/Core/repository/cart_repository.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 
@@ -13,9 +14,14 @@ import '../../utils/constants.dart';
 import '../../utils/routes/routes.dart';
 import '../../utils/utils.dart';
 import '../AppConstant/apiMapping.dart';
+import '../Model/userModel.dart';
 import '../ViewModel/cart_view_model.dart';
-
+import '../data/network/baseApiServices.dart';
+import '../data/network/networkApiServices.dart';
+import 'package:http/http.dart'as http;
 class AuthRepository {
+  BaseApiServices _apiServices = NetworkApiServices();
+
   /// FINAL API FOR LOGIN USING EMAIL AND PASSWORD
 
   Future postApiUsingEmailPasswordRequest(
@@ -39,6 +45,7 @@ class AuthRepository {
     StringConstant.prettyPrintJson(responseJson.toString(), 'Login Response:');
 
     if (jsonData['status'].toString() == 'OK') {
+      AuthRepository().getUserDetailsById(jsonData['payload']['body']['id'].toString());
       prefs.setString(
           StringConstant.testId, jsonData['payload']['body']['id'].toString());
       // Prefs.instance.setToken(StringConstant.userId, id.toString());
@@ -220,6 +227,8 @@ class AuthRepository {
         responseJson.toString(), 'Validate OTP Response:');
     if (response.statusCode == 200) {
       if (jsonData['status'].toString() == 'OK') {
+        AuthRepository().getUserDetailsById(jsonData['payload']['id'].toString());
+
         prefs.setString(
             StringConstant.testId, jsonData['payload']['id'].toString());
         // Prefs.instance.setToken(StringConstant.userId, id.toString());
@@ -351,4 +360,51 @@ class AuthRepository {
       return responseJson;
     }*/
   }
+
+
+
+//get user details
+  Future<UserModel> getUserDetailsById(String id) async {
+    var url = ApiMapping.getURI(apiEndPoint.user_get);
+    print("user specific ID : " +url+ id.toString());
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(url + id);
+      print("user Specific Id : " + response.toString());
+      print("user Specific email : " + response['payload']['email']);
+
+
+
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setString('userProfileNamePrefs', response['payload']['username'].toString() );
+      await prefs.setString('userProfileEmailPrefs', response['payload']['email'].toString() );
+      await prefs.setString('userProfileMobilePrefs', response['payload']['mobile'].toString() );
+
+
+      return response = UserModel.fromJson(response);
+    } catch (e) {
+      throw e;
+    }
+  }
+  // Future<UserModel> fetchAlbum(String id) async {
+  //   final response = await http
+  //       .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1',));
+  //
+  //   response.body = json.encode(id);
+  //   var url = ApiMapping.getURI(apiEndPoint.user_get);
+  //   if (response.statusCode == 200) {
+  //     // print("user specific ID : " +url+ id.toString());
+  //
+  //     // If the server did return a 200 OK response,
+  //     // then parse the JSON.
+  //     return UserModel.fromJson(jsonDecode(response.body));
+  //
+  //   } else {
+  //     // If the server did not return a 200 OK response,
+  //     // then throw an exception.
+  //     throw Exception('Failed to load album');
+  //   }
+  // }
 }

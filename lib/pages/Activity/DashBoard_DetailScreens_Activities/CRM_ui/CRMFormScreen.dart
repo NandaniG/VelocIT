@@ -43,11 +43,11 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
   var selectedDate='';
   var selectedTime='';
   TextEditingController serviceController = new TextEditingController();
-  TextEditingController nameController = new TextEditingController(text: StringConstant.loginUserName);
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController mobileNumberController = new TextEditingController();
+  TextEditingController email = new TextEditingController();
   TextEditingController timeController = new TextEditingController();
   TextEditingController dateController = new TextEditingController();
-  TextEditingController mobileNumberController = new TextEditingController();
-  TextEditingController email = new TextEditingController(text:  StringConstant.loginUserEmail);
   TextEditingController f1_labelController= new TextEditingController();
   TextEditingController f2_labelController= new TextEditingController();
   TextEditingController f3_labelController= new TextEditingController();
@@ -81,11 +81,15 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
   void initState() {
     super.initState();
     serviceName = widget.shortName;
+   _bankChoose = bankDataList[0];
+    getForm();
     serviceController = new TextEditingController(text: serviceName);
+
+
+
     timeController = new TextEditingController(text: selectedDate);
     dateController = new TextEditingController(text: selectedTime);
-    _bankChoose = bankDataList[0];
-    getForm();
+
   }
 
   void _onDropDownItemSelected(BankListDataModel newSelectedBank) {
@@ -107,8 +111,17 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
       f3_label = prefs.getString('f3_label');
       f4_label = prefs.getString('f4_label');
       f5_label = prefs.getString('f5_label');
+
+
+      StringConstant.userProfileName = prefs.getString('userProfileNamePrefs')??"";
+      StringConstant.userProfileEmail = prefs.getString('userProfileEmailPrefs')??"";
+      StringConstant.userProfileMobile = prefs.getString('userProfileMobilePrefs')??"";
+      nameController = TextEditingController(text: StringConstant.userProfileName);
+      mobileNumberController = TextEditingController(text: StringConstant.userProfileEmail);
+      email = TextEditingController(text: StringConstant.userProfileMobile);
+
     });
-    StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
+     StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
     StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
     is_f5_enabled = prefs.getBool('is_f5_enabled');
     print(is_f5_enabled);
