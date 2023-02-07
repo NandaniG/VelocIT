@@ -655,9 +655,9 @@ class _AddressWidgetsState extends State<AddressWidgets> {
   getPref() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      // finalPicode = prefs.getString('CurrentPinCodePrefs');
-      // print(
-      //     "placesFromCurrentLocation CurrentPinCode pref...${finalPicode.toString()}");
+      finalPicode = prefs.getString('CurrentPinCodePrefs');
+      print(
+          "placesFromCurrentLocation CurrentPinCode pref...${finalPicode.toString()}");
 
       StringConstant.placesFromCurrentLocation =
       (prefs.getString('SearchedPinCodePrefs'))!;

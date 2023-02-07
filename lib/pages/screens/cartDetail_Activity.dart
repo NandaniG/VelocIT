@@ -20,6 +20,7 @@ import '../../widgets/global/appBar.dart';
 import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
 import '../Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
+import 'dashBoard.dart';
 
 class CartDetailsActivity extends StatefulWidget {
   /* final dynamic productList;
@@ -231,10 +232,19 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return WillPopScope(
-      onWillPop: () {
+      onWillPop: () async {
+        final prefs = await SharedPreferences.getInstance();
+
         Provider.of<CartViewModel>(context, listen: false);
         setState(() {});
-        Navigator.pop(context, true);
+        var isRandomUser = prefs.getString('isRandomUser') ?? "";
+        print("isRandomUser" + isRandomUser.toString());
+        if (isRandomUser == 'Yes') {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => DashboardScreen()));
+        } else {
+          Navigator.pop(context, true);
+        }
         return Future.value(true);
       },
       child: Scaffold(
@@ -263,16 +273,25 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               ),
               titleSpacing: 0,
               leading: InkWell(
-                onTap: () {
+                onTap: () async{
                   // Navigator.of(context).push(
                   //   MaterialPageRoute(
                   //     builder: (context) =>
                   //     const DashboardScreen(),
                   //   ),
                   // );
+                  final prefs = await SharedPreferences.getInstance();
+
                   Provider.of<CartViewModel>(context, listen: false);
-                  Navigator.pop(context, true);
                   setState(() {});
+                  var isRandomUser = prefs.getString('isRandomUser') ?? "";
+                  print("isRandomUser" + isRandomUser.toString());
+                  if (isRandomUser == 'Yes') {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) => DashboardScreen()));
+                  } else {
+                    Navigator.pop(context, true);
+                  }
 
                   // Navigator.pushReplacementNamed(
                   //         context, RoutesName.dashboardRoute)
@@ -493,8 +512,12 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                           .itemQty
                                                     };*/
 
-                                                    Navigator.pushNamed(context,
-                                                        RoutesName.signInRoute);
+                                                    Navigator.pushReplacementNamed(
+                                                            context,
+                                                            RoutesName
+                                                                .signInRoute)
+                                                        .then((value) =>
+                                                            setState(() {}));
                                                     print(cartProvider
                                                         .cartSpecificID
                                                         .data!

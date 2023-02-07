@@ -10,6 +10,7 @@ import 'package:velocit/Core/repository/cart_repository.dart';
 import 'package:velocit/pages/homePage.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
+import 'package:velocit/widgets/global/ConfirmationDialog.dart';
 
 import '../../../Core/Model/CartModels/AddressListModel.dart';
 import '../../../Core/Model/CartModels/CartSpecificIdModel.dart';
@@ -141,7 +142,52 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return NavBackConfirmationFromPayment();
+              return ConfirmationDialog(
+                heading: "Alert message",
+                subTitle:
+                    'Are you sure you want to exit ? ',
+                button1: 'No',
+                button2: 'Yes',
+                onTap1: () async {
+                  Navigator.pop(context);
+                },
+                onTap2: () async {
+                  final prefs = await SharedPreferences.getInstance();
+
+                  setState(() {
+                    prefs.setString('isUserNavigateFromDetailScreen', '');
+                    prefs.setString('directCartIdPref', '');
+                    prefs.setString('directCartIdIsTrue', '');
+                    prefs.setString('isBuyNow', 'false');
+                    StringConstant.UserLoginId =
+                        (prefs.getString('isUserId')) ?? '';
+                    var userLoginId = StringConstant.UserLoginId;
+                    Map data = {'userId': userLoginId};
+                    print("cart data passOrderPlaced : " + data.toString());
+
+                    CartRepository()
+                        .cartPostRequest(data, context)
+                        .then((value) {
+                      StringConstant.UserCartID =
+                          (prefs.getString('CartIdPref')) ?? '';
+                      print("Cart Id From OrderPlaced Activity " +
+                          StringConstant.UserCartID);
+                      // print("cartId from Pref" + CARTID.toString());
+                      CartViewModel()
+                          .cartSpecificIDWithGet(
+                              context, StringConstant.UserCartID)
+                          .then((value) {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DashboardScreen(),
+                            ),
+                            (Route<dynamic> route) => false);
+                      });
+                    });
+                  });
+                },
+              );
             });
         return Future.value(true);
       },
@@ -155,7 +201,52 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return NavBackConfirmationFromPayment();
+                      return ConfirmationDialog(
+                        heading: "Alert message",
+                        subTitle:
+                        'Are you sure you want to exit ? ',
+                        button1: 'No',
+                        button2: 'Yes',
+                        onTap1: () async {
+                          Navigator.pop(context);
+                        },
+                        onTap2: () async {
+                          final prefs = await SharedPreferences.getInstance();
+
+                          setState(() {
+                            prefs.setString('isUserNavigateFromDetailScreen', '');
+                            prefs.setString('directCartIdPref', '');
+                            prefs.setString('directCartIdIsTrue', '');
+                            prefs.setString('isBuyNow', 'false');
+                            StringConstant.UserLoginId =
+                                (prefs.getString('isUserId')) ?? '';
+                            var userLoginId = StringConstant.UserLoginId;
+                            Map data = {'userId': userLoginId};
+                            print("cart data passOrderPlaced : " + data.toString());
+
+                            CartRepository()
+                                .cartPostRequest(data, context)
+                                .then((value) {
+                              StringConstant.UserCartID =
+                                  (prefs.getString('CartIdPref')) ?? '';
+                              print("Cart Id From OrderPlaced Activity " +
+                                  StringConstant.UserCartID);
+                              // print("cartId from Pref" + CARTID.toString());
+                              CartViewModel()
+                                  .cartSpecificIDWithGet(
+                                  context, StringConstant.UserCartID)
+                                  .then((value) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DashboardScreen(),
+                                    ),
+                                        (Route<dynamic> route) => false);
+                              });
+                            });
+                          });
+                        },
+                      );
                     });
 
                 // Provider.of<ProductProvider>(context, listen: false);
@@ -280,7 +371,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               ),
                                             );
                                           } else {
-                                            if (defaultAddressList!.length>0) {
+                                            if (defaultAddressList!.length >
+                                                0) {
                                               CartRepository()
                                                   .putCartForPayment(
                                                       data,
@@ -890,7 +982,9 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                         FontWeight.w700))
                                             : SizedBox(),*/
 
-                                      (isServiceOnly == false && isProductOnly == false)||(isServiceOnly == true)
+                                      (isServiceOnly == false &&
+                                                  isProductOnly == false) ||
+                                              (isServiceOnly == true)
                                           ? Center(
                                               child: Text(
                                                   'Your cart containing service(s), hence Pickup from store option is not available for selected service(s).',

@@ -253,14 +253,20 @@ class CartRepository {
       print("Cart Id From Merge Cart " + StringConstant.UserCartID);
 
       if (response['status'].toString() == 'OK') {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CartDetailsActivity(),
-            ));
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => CartDetailsActivity(),
+        //     ));
+       await prefs.setString(
+            'isRandomUser',
+            'Yes').then((value) {
+          Navigator.of(context)
+              .pushReplacementNamed(
+              RoutesName.cartScreenRoute);
+        });
 
       }
-
       return response = MergeCartModel.fromJson(response);
     } catch (e) {
       print("Merge cart error: " + e.toString());
