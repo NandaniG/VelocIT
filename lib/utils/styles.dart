@@ -29,7 +29,7 @@ class ThemeApp {
 
 
  static const textFieldBorderColor = const Color.fromRGBO(199, 195, 195, 1);
- static const backgroundColor = const Color.fromRGBO(240, 237, 237, 1);
+ // static const backgroundColor = const Color.fromRGBO(240, 237, 237, 1);
  static const lightGreyTab = const Color.fromRGBO(235, 232, 232, 1);
  static const darkGreyTab = const Color.fromRGBO(135, 134, 134, 1);
  static const darkGreyColor = const Color.fromRGBO(90, 90, 90, 1);

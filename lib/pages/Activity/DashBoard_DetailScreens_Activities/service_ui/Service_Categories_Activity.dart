@@ -96,12 +96,10 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
           key: scaffoldGlobalKey,
           backgroundColor: ThemeApp.appBackgroundColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(height * .12),
-            child: appBarWidget(
-                context,
-                searchBar(context),
-                addressWidget(context, StringConstant.placesFromCurrentLocation),
-                setState(() {})),
+            preferredSize: Size.fromHeight(height * .12),  child: AppBarWidget(
+            context: context,
+            titleWidget: searchBar(context),
+            location: const AddressWidgets(), ),
           ),
           bottomNavigationBar: bottomNavigationBarWidget(context,0),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -168,120 +166,53 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                         ListView.builder(
                                           key: Key('builder ${selected.toString()}'),
                                           shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemCount: productCategories
-                                              .serviceCategoryList
-                                              .data!
-                                              .payload!
-                                              .length,
+                                          physics: const NeverScrollableScrollPhysics(),
+                                          itemCount: servicePayload!.length,
                                           itemBuilder: (context, index) {
                                             return Card(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              margin: const EdgeInsets.symmetric(
-                                                  horizontal: 5, vertical: 5),
-                                              child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    ExpansionTile(
-                                                      key: Key(index.toString()),
-                                                      onExpansionChanged:
-                                                          ((newState) {
-                                                        if (newState) {
-                                                          setState(() {
-                                                            const Duration(
-                                                                seconds: 20000);
-                                                            selected = index;
-                                                          });
-                                                        } else {
-                                                          setState(() {
-                                                            selected = -1;
-                                                          });
-                                                        }
-                                                      }),
-                                                      initiallyExpanded:
-                                                          index == selected,
 
-                                                      // initiallyExpanded: selected,
-                                                      // trailing: selected == true
-                                                      //     ? Icon(
-                                                      //         Icons.arrow_drop_up,
-                                                      //         color:
-                                                      //             ThemeApp.textFieldBorderColor,
-                                                      //         size: height * .05,
-                                                      //       )
-                                                      //     : Icon(
-                                                      //         Icons.arrow_drop_down,
-                                                      //         color:
-                                                      //             ThemeApp.textFieldBorderColor,
-                                                      //         size: height * .05,
-                                                      //       ),
-                                                      // tilePadding: const EdgeInsets.symmetric(
-                                                      //     horizontal: 15, vertical: 2),
-                                                      // childrenPadding: const EdgeInsets.symmetric(
-                                                      //     horizontal: 15, vertical: 5),
-                                                      textColor: Colors.black,
-                                                      title: Row(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              // margin: const EdgeInsets.symmetric(
+                                              //     horizontal: 5, vertical: 5),
+                                              child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    servicePayload[index].simpleSubCats!.isEmpty?SizedBox():    Padding(
+                                                      padding: const EdgeInsets.symmetric(
+                                                          horizontal: 15, vertical: 15),
+                                                      child: Row(
                                                         children: [
-                                                          Container( color: ThemeApp
-                                                              .appColor,
+                                                          Container(
+                                                            color: ThemeApp.containerColor,
                                                             height: 25,
                                                             width: 25,
-                                                            // borderRadius:
-                                                            // const BorderRadius.all(
-                                                            //     Radius.circular(50)),
                                                             child: Image.network(
                                                               servicePayload[index]
-                                                                      .serviceCategoryImageId ??
-                                                                  "",
+                                                                  .serviceCategoryImageId!,
                                                               // fit: BoxFit.fill,
-                                                              height: 25,
-                                                              width: 25,
-                                                              errorBuilder:
-                                                                  (context, error,
-                                                                      stackTrace) {
-                                                                return Icon(
-                                                                  Icons.image,
-                                                                  color: ThemeApp
-                                                                      .appColor,
-                                                                );
-                                                              },
                                                             ),
                                                           ),
-                                                        /*  SvgPicture.asset(
-                                                            'assets/appImages/appliancesIcon.svg',
-                                                            height: 17,
-                                                            width: 26,
-                                                          ),*/
+
+                                                          // SvgPicture.asset(
+                                                          //   'assets/appImages/appliancesIcon.svg',
+                                                          //
+                                                          //   height: 17,
+                                                          //   width: 26,
+                                                          // ),
                                                           SizedBox(
                                                             width: 16,
                                                           ),
                                                           categoryListFont(
-                                                              servicePayload[index]
-                                                                  .name!,
-                                                              context)
+                                                              servicePayload[index].name!, context)
                                                         ],
                                                       ),
-                                                      expandedAlignment:
-                                                          Alignment.centerLeft,
-                                                      expandedCrossAxisAlignment:
-                                                          CrossAxisAlignment.start,
-                                                      children: [
-                                                         Padding(
-                                                          padding: const EdgeInsets.fromLTRB(
-                                                              10, 0, 10, 15),
-                                                          child: subListOfCategories(
-                                                              productCategories
-                                                                  .serviceCategoryList.data!.payload![index]),
-                                                        )
-                                                      ],
                                                     ),
+                                                    servicePayload[index].simpleSubCats!.isEmpty?SizedBox():   subListOfCategories(
+                                                        servicePayload[index])
+
                                                   ]),
                                             );
                                           },
@@ -636,6 +567,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
         });
   }*/
 
+/*
   Widget subListOfCategories(ServicePayload servicePayload) {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -713,4 +645,440 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
         );
 
   }
+*/
+
+  Widget subListOfCategories(ServicePayload servicePayload) {
+    // final size = _displayAll ?     productList.simpleSubCats!.length :  productList.simpleSubCats!.length - 2;
+
+    final size = servicePayload.simpleSubCats!.length > 6
+        ? 5
+        : servicePayload.simpleSubCats!.length;
+    final contactsWidget = List.generate(
+        size, (index) => detailsGrid(servicePayload.simpleSubCats![index]))
+      ..add(servicePayload.simpleSubCats!.length >6
+          ? _seeNoSeeMore(servicePayload)
+          : SizedBox());
+    return Container(
+        height: servicePayload.simpleSubCats!.length > 3?200:90,
+        // height: 200,
+        width: double.infinity,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+        child:/*ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: productList!.simpleSubCats!.length,*/
+        GridView(physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 12,
+              // childAspectRatio: 1.0,
+              childAspectRatio: MediaQuery.of(context).size.height / 500,
+            ),
+            shrinkWrap: true,
+            children: contactsWidget)
+    )
+    ;
+
+    /*Container(
+        height: 200,
+        alignment: Alignment.center,color: ThemeApp.whiteColor,
+        child: GridView.builder(
+          itemCount: productList!.simpleSubCats!.length,
+          physics: const AlwaysScrollableScrollPhysics(),
+          gridDelegate:
+          const SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1.5,
+            crossAxisCount: 3,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProductListByCategoryActivity(
+                      productList: productList!.simpleSubCats![index]),
+                ));
+              },
+              child: Container(
+                  padding: const EdgeInsets.all(3.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: ThemeApp.containerColor,
+                        width: 1.5),color: ThemeApp.containerColor
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(50)),
+                          child: Image.network(
+                            productList.simpleSubCats![index]
+                                .imageUrl! ??
+                                '',
+                            fit: BoxFit.fill,
+                            height:
+                            MediaQuery.of(context).size.height *
+                                .07,
+                          )??SizedBox(),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: TextFieldUtils().dynamicText(
+                              productList.simpleSubCats![index].name!,
+                              context,
+                              TextStyle(fontFamily: 'Roboto',
+                                color: ThemeApp.blackColor,
+                                // fontWeight: FontWeight.w500,
+                                fontSize: height * .02,
+                              )),
+                        ),
+                      )
+                    ],
+                  )),
+            );
+          },
+        ));*/
+  }
+
+  Widget detailsGrid(ServiceSimpleSubCats simpleSubCats) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              ServiceListByCategoryActivity(serviceList: simpleSubCats),
+        ));
+      },
+      // child: Padding(
+      // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
+      child: Container(
+        // width: width * .25,
+          width: 97,
+          height: 59,
+          padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: ThemeApp.containerColor, width: 1.5),
+              color: ThemeApp.containerColor),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              /*      SvgPicture.asset(
+                            'assets/appImages/televisionIcon.svg',
+                            color: ThemeApp.blackColor,
+
+                            height: 17,
+                            width: 19,
+                          ),*/
+              Container(
+                color: ThemeApp.appColor,
+                height: 25,
+                width: 25,
+                // borderRadius:
+                // const BorderRadius.all(
+                //     Radius.circular(50)),
+                child: Image.network(
+                  simpleSubCats.imageUrl ?? "",
+                  // fit: BoxFit.fill,
+                  height: 25,
+                  width: 25,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      height: 25,
+                      width: 25,
+                      child: Icon(
+                        Icons.image,
+                        color: ThemeApp.whiteColor,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              subCategoryListFont(simpleSubCats.name!, context),
+            ],
+          )),
+      // ),
+    );
+  }
+
+  Widget _seeNoSeeMore(ServicePayload servicePayload) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AllServiceSubCategoryScreen(serviceList: servicePayload),
+        ));
+      },
+      child: Container(
+        width: 97,
+        height: 59,
+        padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(color: ThemeApp.containerColor, width: 1.5),
+            color: ThemeApp.containerColor),
+        child: Center(
+          child: Text(
+            'View All',
+            style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 14,
+                overflow: TextOverflow.ellipsis,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.25,
+                color: ThemeApp.tealButtonColor),
+          ),
+        ),
+      ),
+    );
+  }
+}
+class AllServiceSubCategoryScreen extends StatefulWidget {
+  final ServicePayload serviceList;
+
+  AllServiceSubCategoryScreen({Key? key, required this.serviceList}) : super(key: key);
+
+  @override
+  State<AllServiceSubCategoryScreen> createState() => _AllServiceSubCategoryScreenState();
+}
+
+class _AllServiceSubCategoryScreenState extends State<AllServiceSubCategoryScreen> {
+  GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
+  double height = 0.0;
+  double width = 0.0;
+  @override
+  Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;  return Scaffold(
+      backgroundColor: ThemeApp.appBackgroundColor,
+      key: scaffoldGlobalKey,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(height * .12),
+        child: AppBarWidget(
+          context:    context,
+          titleWidget:    searchBar(context),
+          location: const AddressWidgets(),     ),
+      ),
+      bottomNavigationBar: bottomNavigationBarWidget(context,0),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      body: SafeArea(
+        child: Padding(
+          padding:  EdgeInsets.fromLTRB(10,20,10,10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFieldUtils()
+                  .headingTextField(widget.serviceList.name.toString(), context),
+
+              SizedBox(
+                height: 10,
+              ),
+              subListOfCategories()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget subListOfCategories() {
+    return Expanded(
+      // width: MediaQuery.of(context).size.width,
+      child: widget.serviceList.simpleSubCats!.isEmpty
+          ? Center(
+          child: Text(
+            "Match not found",
+            style: TextStyle(fontSize: 20),
+          ))
+          : GridView(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 30,
+            // childAspectRatio: 1.0,
+            childAspectRatio: MediaQuery.of(context).size.height / 900,
+          ),
+          shrinkWrap: true,
+          children: List.generate(
+            widget.serviceList.simpleSubCats!.length,
+                (index) {
+              return Stack(
+                children: [
+                  index == widget.serviceList.simpleSubCats!.length
+                      ? Container(
+                    // width: constrains.minWidth,
+                    height: 20,
+                    // height: MediaQuery.of(context).size.height * .08,
+                    // alignment: Alignment.center,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: ThemeApp.blackColor,
+                      ),
+                    ),
+                  )
+                      : InkWell(
+                    onTap: () {
+                      print(
+                          "Id ........${widget.serviceList.simpleSubCats![index].id}");
+
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ServiceListByCategoryActivity(
+                                serviceList: widget
+                                    .serviceList.simpleSubCats![index],
+
+                                // serviceList: subProductList[index],
+                                // productSpecificListViewModel:
+                                //     productSpecificListViewModel,
+                              ),
+                        ),
+                      );
+                    },
+                    child: Container(
+// height: 205,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /*   Expanded(
+                                            flex: 2,
+                                            child:*/
+                            Container(
+                              height: 143,
+                              width: 191,
+                              /* height: SizeConfig.orientations !=
+                                                      Orientation.landscape
+                                                  ? MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .25
+                                                  : MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .1,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,*/
+                              decoration: const BoxDecoration(
+                                color: ThemeApp.whiteColor,
+                              ),
+                              child: ClipRRect(
+                                child: widget
+                                    .serviceList
+                                    .simpleSubCats![index]
+                                    .imageUrl!
+                                    .isNotEmpty
+                                    ? Image.network(
+                                  widget
+                                      .serviceList
+                                      .simpleSubCats![index]
+
+                                      .imageUrl!,
+                                  // fit: BoxFit.fill,
+                                  height: (MediaQuery.of(context)
+                                      .orientation ==
+                                      Orientation.landscape)
+                                      ? MediaQuery.of(context)
+                                      .size
+                                      .height *
+                                      .26
+                                      : MediaQuery.of(context)
+                                      .size
+                                      .height *
+                                      .1,
+                                )
+                                    : SizedBox(
+                                  // height: height * .28,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Icon(
+                                      Icons.image_outlined,
+                                      size: 50,
+                                    )),
+                              ),
+                            ),
+                            // ),
+                            Container(
+                              color: ThemeApp.tealButtonColor,
+                              width: 191,
+                              height: 56,
+                              padding: const EdgeInsets.only(
+                                left: 12,
+                                right: 12,
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.center,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  TextFieldUtils()
+                                      .listNameHeadingTextField(
+                                      widget
+                                          .serviceList
+                                          .simpleSubCats![index]
+                                          .name!,
+                                      context),
+                                  SizedBox(height: 10),
+
+                                ],
+                              ),
+                            ),
+                          ],
+                        )),
+                  ),
+                  index == widget
+                      .serviceList
+                      .simpleSubCats!.length
+                      ? Container(
+                    // width: constrains.minWidth,
+                    height: 20,
+                    // height: MediaQuery.of(context).size.height * .08,
+                    // alignment: Alignment.center,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: ThemeApp.blackColor,
+                      ),
+                    ),
+                  )
+                      : SizedBox()
+                ],
+              );
+              /*else {
+                        return  Container(
+                          // width: constrains.minWidth,
+                          height: 80,
+                          // height: MediaQuery.of(context).size.height * .08,
+                          // alignment: Alignment.center,
+                          child: TextFieldUtils().dynamicText(
+                              'Nothing more to load',
+                              context,
+                              TextStyle(fontFamily: 'Roboto',
+                                  color: ThemeApp.blackColor,
+                                  fontSize: height * .03,
+                                  fontWeight: FontWeight.bold)),
+                        );
+                      }*/
+            },
+          )),
+    );
+  }
+
 }

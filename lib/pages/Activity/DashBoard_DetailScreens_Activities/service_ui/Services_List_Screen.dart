@@ -27,9 +27,9 @@ import '../../Product_Activities/ProductDetails_activity.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 class ServiceListByCategoryActivity extends StatefulWidget {
-  ServiceSimpleSubCats? productList;
+  ServiceSimpleSubCats? serviceList;
 
-  ServiceListByCategoryActivity({Key? key, this.productList}) : super(key: key);
+  ServiceListByCategoryActivity({Key? key, this.serviceList}) : super(key: key);
 
   @override
   State<ServiceListByCategoryActivity> createState() =>
@@ -59,9 +59,9 @@ class _ServiceListByCategoryActivityState
     productSpecificListViewModel.serviceBySubCategoryWithGet(
       0,
       10,
-      widget.productList!.id!,
+      widget.serviceList!.id!,
     );
-    print("subProduct.............${widget.productList!.id}");
+    print("subProduct.............${widget.serviceList!.id}");
 /*    scrollController = new ScrollController(initialScrollOffset: 5.0)
       ..addListener(_scrollListener);*/
 
@@ -94,7 +94,7 @@ class _ServiceListByCategoryActivityState
 
           //// CALL YOUR API HERE FOR THE NEXT FUNCTIONALITY
           productSpecificListViewModel.serviceBySubCategoryWithGet(
-              pageCount, 10, widget.productList!.id!);
+              pageCount, 10, widget.serviceList!.id!);
         }
       });
     }
@@ -121,11 +121,10 @@ class _ServiceListByCategoryActivityState
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .12),
-          child: appBarWidget(
-              context,
-              searchBar(context),
-              addressWidget(context, StringConstant.placesFromCurrentLocation),
-              setState(() {})),
+          child: AppBarWidget(
+            context: context,
+            titleWidget: searchBar(context),
+            location: const AddressWidgets(), ),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context,0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -365,7 +364,16 @@ class _ServiceListByCategoryActivityState
                   return Expanded(
 
                     // width: MediaQuery.of(context).size.width,
-                    child: subProductList.length==0?Center(child: Text('No match found')): GridView(
+                    child: subProductList.length==0?Container(
+                        height: height * .08,
+                        alignment: Alignment.center,
+                        child: TextFieldUtils().dynamicText(
+                            'No Match found!',
+                            context,
+                            TextStyle(fontFamily: 'Roboto',
+                                color: ThemeApp.blackColor,
+                                fontSize: height * .03,
+                                fontWeight: FontWeight.bold))): GridView(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 10,
@@ -374,11 +382,11 @@ class _ServiceListByCategoryActivityState
                           childAspectRatio: MediaQuery.of(context).size.height / 900,
                         ),
                         shrinkWrap: true,
-                        children: List.generate(subProductList!.length,
+                        children: List.generate(subProductList.length,
                               (index) {
                             return Stack(
                               children: [
-                                index == subProductList!.length
+                                index == subProductList.length
                                     ? Container(
                                   // width: constrains.minWidth,
                                   height: 20,
@@ -511,7 +519,7 @@ class _ServiceListByCategoryActivityState
                                         ],
                                       )),
                                 ),
-                                index == subProductList!.length
+                                index == subProductList.length
                                     ? Container(
                                   // width: constrains.minWidth,
                                   height: 20,

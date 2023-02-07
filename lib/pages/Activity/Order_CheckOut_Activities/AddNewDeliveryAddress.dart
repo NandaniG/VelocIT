@@ -5,6 +5,9 @@ import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +25,7 @@ import '../../../services/models/AddressListModel.dart';
 import '../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/routes/routes.dart';
 import '../../../utils/styles.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
@@ -60,9 +64,13 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
   TextEditingController cityController = TextEditingController();
   TextEditingController pincodeController = TextEditingController();
 
-  bool _validateFullName = false;
+  bool _isfullNameValidate = false;
   bool _validateMobile = false;
-  bool _validateEmail = false;
+  bool _ishouseBuildingValidate = false;
+  bool _isareaColonyValidate = false;
+  bool _isstateValidate = false;
+  bool _iscityValidate = false;
+  bool _ispincodeValidate = false;
 
   final _formKey = GlobalKey<FormState>();
   CartViewModel cartViewModel = CartViewModel();
@@ -71,6 +79,77 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
 
   CityModel cityData = CityModel();
   var data;
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  String? _currentAddress;
+  Position? _currentPosition;
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getLocation(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  _getLocation(Position position) async {
+    final coordinates = new Coordinates(position.latitude, position.longitude);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print("address.streetAddress" + first.postalCode.toString());
+    print("${first.featureName} : ${first.addressLine}");
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('CurrentPinCodePrefs', first.postalCode.toString());
+
+    var splitag = first.addressLine!.split(",");
+    var houseBuilding = splitag[0] + ', ' + splitag[1];
+    var areaColony = splitag[2];
+    var state = splitag[3];
+    var city = splitag[4];
+    var pincode = first.postalCode;
+
+    setState(() {
+      houseBuildingController = TextEditingController(text: houseBuilding);
+      areaColonyController = TextEditingController(text: areaColony);
+      stateController = TextEditingController(text: state);
+      cityController = TextEditingController(text: city);
+      pincodeController = TextEditingController(text: pincode);
+    });
+  }
 
   @override
   void initState() {
@@ -98,16 +177,12 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(height * .09),
-            child: appBar_backWidget(
-              context,
-              appTitle(
-                context,
-                "Add New Delivery Address",
-              ),
-              const SizedBox(),
-              setState,
-            )),
+          preferredSize: Size.fromHeight(height * .09),
+          child: AppBar_BackWidget(
+              context: context,
+              titleWidget: appTitle(context, "Add New Delivery Address"),
+              location: SizedBox()),
+        ),
         body: SafeArea(
           child: Padding(
             padding:
@@ -178,14 +253,34 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   controller: fullNameController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: 'Type your name',
-                  onChange: (val) {},
+                  onChange: (val) {
+                    setState(() {
+                      if (val.isEmpty && fullNameController.text.isEmpty) {
+                        _isfullNameValidate = true;
+                      } else if (fullNameController.text.length <= 4) {
+                        _isfullNameValidate = true;
+                      } else {
+                        _isfullNameValidate = false;
+                      }
+                    });
+                  },
                   validator: (value) {
+                    if (value.isEmpty && fullNameController.text.isEmpty) {
+                      _isfullNameValidate = true;
+                      return StringUtils.enterFullName;
+                    } else if (fullNameController.text.length < 4) {
+                      _isfullNameValidate = true;
+                      return StringUtils.enterFullName;
+                    } else {
+                      _isfullNameValidate = false;
+                    }
                     return null;
                   }),
               //Mobile Number
               TextFieldUtils()
                   .asteriskTextField(StringUtils.mobileNumber, context),
               MobileNumberTextFormField(
+                  errorText: StringUtils.enterMobileNumber,
                   controller: mobileController,
                   enable: true,
                   onChanged: (phone) {
@@ -198,17 +293,19 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     }
                   },
                   validator: (value) {
-                    if (value == '' && mobileController.text.isEmpty) {
+                    if (mobileController.text.isEmpty) {
                       _validateMobile = true;
-                      return StringUtils.enterMobileNumber;
-                    } else if (mobileController.text.length < 10) {
+                      return StringUtils.mobileError;
+                    } else if (!StringConstant()
+                        .isPhone(mobileController.text)) {
                       _validateMobile = true;
-                      return StringUtils.enterMobileNumber;
+                      return StringUtils.mobileError;
                     } else {
                       _validateMobile = false;
                     }
                     return null;
                   }),
+
               SizedBox(
                 height: height * .02,
               ),
@@ -232,6 +329,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                         //     builder: (context) => AddNewCardScreen(),
                         //   ),
                         // );
+                        _getCurrentPosition();
                       },
                       child: Container(
                         // height: height * 0.05,
@@ -259,25 +357,63 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
               TextFieldUtils()
                   .asteriskTextField(StringUtils.houseBuildingNo, context),
               TextFormFieldsWidget(
-                  errorText: StringUtils.houseBuildingNo,
+                  errorText: StringUtils.enterhouseBuildingNo,
                   textInputType: TextInputType.text,
                   controller: houseBuildingController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: '305, Lokseva Apartments',
-                  onChange: (val) {},
+                  onChange: (val) {
+                    setState(() {
+                      if (val.isEmpty && houseBuildingController.text.isEmpty) {
+                        _ishouseBuildingValidate = true;
+                      } else if (houseBuildingController.text.length < 5) {
+                        _ishouseBuildingValidate = true;
+                      } else {
+                        _ishouseBuildingValidate = false;
+                      }
+                    });
+                  },
                   validator: (value) {
+                    if (value.isEmpty && houseBuildingController.text.isEmpty) {
+                      _ishouseBuildingValidate = true;
+                      return StringUtils.enterhouseBuildingNo;
+                    } else if (houseBuildingController.text.length < 5) {
+                      _ishouseBuildingValidate = true;
+                      return StringUtils.enterhouseBuildingNo;
+                    } else {
+                      _ishouseBuildingValidate = false;
+                    }
                     return null;
                   }),
               TextFieldUtils()
                   .asteriskTextField(StringUtils.areaColonyName, context),
               TextFormFieldsWidget(
-                  errorText: StringUtils.areaColonyName,
+                  errorText: StringUtils.enterAreaName,
                   textInputType: TextInputType.text,
                   controller: areaColonyController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: 'Telecom Housing Society',
-                  onChange: (val) {},
+                  onChange: (val) {
+                    setState(() {
+                      if (val.isEmpty && areaColonyController.text.isEmpty) {
+                        _isareaColonyValidate = true;
+                      } else if (areaColonyController.text.length < 5) {
+                        _isareaColonyValidate = true;
+                      } else {
+                        _isareaColonyValidate = false;
+                      }
+                    });
+                  },
                   validator: (value) {
+                    if (value.isEmpty && areaColonyController.text.isEmpty) {
+                      _isareaColonyValidate = true;
+                      return StringUtils.enterAreaName;
+                    } else if (areaColonyController.text.length < 5) {
+                      _isareaColonyValidate = true;
+                      return StringUtils.enterAreaName;
+                    } else {
+                      _isareaColonyValidate = false;
+                    }
                     return null;
                   }),
 
@@ -296,7 +432,7 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                 padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                 child: DropdownButtonHideUnderline(
                     child: DropdownButtonFormField<StatePayload>(
-                  //value: _companyDataResponseModel,
+                  hint: Text(stateController.text.toString()),
                   isDense: true,
                   onChanged: (StatePayload? newValue) {
                     //   for(int i =0; i<stateDetailList.length; i++){
@@ -307,9 +443,21 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                       print("selected state" + newValue!.name.toString());
                       selectedStateId = newValue.id;
                       print(selectedStateId);
-stateController.text=newValue.name!;
-
+                      stateController.text = newValue.name!;
+                      if (stateController.text.isEmpty) {
+                        _isstateValidate = true;
+                      } else {
+                        _isstateValidate = false;
+                      }
                     });
+                  },
+                  validator: (value) {
+                    if (stateController.text.isEmpty) {
+                      _isstateValidate = true;
+                      return StringUtils.enterState;
+                    } else {
+                      _isstateValidate = false;
+                    }
                   },
                   decoration: InputDecoration(
                     counterText: "",
@@ -317,7 +465,9 @@ stateController.text=newValue.name!;
                     fillColor: Colors.white,
                     hintStyle: TextStyle(
                         fontFamily: 'Roboto',
-                        color: Colors.grey,
+                        color: stateController.text.toString().isNotEmpty
+                            ? Colors.black
+                            : Colors.grey,
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
                     hintText: 'State',
@@ -482,123 +632,159 @@ stateController.text=newValue.name!;
                   value: cartViewModel,
                   child: Consumer<CartViewModel>(
                       builder: (context, cartData, child) {
-                        switch (cartData.getCity.status) {
-                          case Status.LOADING:
-                            print("Api load");
+                    switch (cartData.getCity.status) {
+                      case Status.LOADING:
+                        print("Api load");
 
-                            return SizedBox();
-                          case Status.ERROR:
-                            print("Api error");
+                        return SizedBox();
+                      case Status.ERROR:
+                        print("Api error");
 
-                            return Text(cartData.getCity.message.toString());
-                          case Status.COMPLETED:
-                            print("Api calll");
-                            var citySelectedId;
-                            cartData.getCity.data!.payload!
-                                .map((CityPayloadData map) {
-                              citySelectedId = map.id;
-                            });
-                            // List<StatePayload>? statePayloadList=   cartData.getState.data!.payload;
-                            return     Padding(
-                              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                        return Text(cartData.getCity.message.toString());
+                      case Status.COMPLETED:
+                        print("Api calll");
+                        var citySelectedId;
+                        cartData.getCity.data!.payload!
+                            .map((CityPayloadData map) {
+                          citySelectedId = map.id;
+                        });
+                        // List<StatePayload>? statePayloadList=   cartData.getState.data!.payload;
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          child: DropdownButtonHideUnderline(
+                              child: DropdownButtonFormField<CityPayloadData>(
+                            isDense: true,
+                            isExpanded: false,
+                            hint: Text(cityController.text),
+                            onChanged: (CityPayloadData? newValue) {
+                              cityController.text = newValue!.name!;
 
-                              child: DropdownButtonHideUnderline(
-                                  child: DropdownButtonFormField<CityPayloadData>(
-                                    isDense: true,
-                                    isExpanded: false,
-
-                                    onChanged: (CityPayloadData? newValue) {
-                                      setState(() {}
-                                      );
-                                      cityController.text = newValue!.name!;
-
-                                    },
-                                    decoration: InputDecoration(
-                                      counterText: "",
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      hintStyle: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          color: Colors.grey,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400),
-                                      hintText: 'City',
-                                      errorStyle: TextStyle(
-                                          fontFamily: 'Roboto',
-                                          color: ThemeApp.redColor,
-                                          fontSize:
-                                          MediaQuery.of(context).size.height * 0.020),
-                                      errorMaxLines: 2,
-                                      contentPadding: const EdgeInsets.fromLTRB(
-                                          20.0, 12.0, 11.0, 12.0),
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(5),
-                                          borderSide: const BorderSide(
-                                            color: ThemeApp.separatedLineColor,
-                                          )),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(5),
-                                          borderSide: const BorderSide(
-                                              color: ThemeApp.separatedLineColor,
-                                              width: 1)),
-                                      disabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(5),
-                                          borderSide: const BorderSide(
-                                              color: ThemeApp.separatedLineColor,
-                                              width: 1)),
-                                      errorBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(5),
-                                          borderSide: const BorderSide(
-                                              color: ThemeApp.redColor, width: 1)),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(5),
-                                          borderSide: const BorderSide(
-                                              color: ThemeApp.separatedLineColor,
-                                              width: 1)),
-                                    ),
-                                    items: cartData.getCity.data!.payload!
-                                        .map((CityPayloadData map) {
-                                      return DropdownMenuItem<CityPayloadData>(
-                                        value: map,
-                                        child:  Text(
-                                          map.name.toString() ?? "",
-                                          style: TextStyle(
-                                            fontFamily: 'SegoeUi',
-                                          ),
-                                        )
-                                         ,
-                                      );
-                                    }).toList() ??
-                                        [],
-                                    // items: [],
-                                  )),
-                            );
-                        }
-                        return Container(
-                          height: height * .8,
-                          alignment: Alignment.center,
-                          child: TextFieldUtils().dynamicText(
-                              'No Match found!',
-                              context,
-                              TextStyle(
+                              if (cityController.text.isEmpty) {
+                                _iscityValidate = true;
+                              } else {
+                                _iscityValidate = false;
+                              }
+                            },
+                            validator: (value) {
+                              if (cityController.text.isEmpty) {
+                                _iscityValidate = true;
+                                return StringUtils.enterCity;
+                              } else {
+                                _iscityValidate = false;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              counterText: "",
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintStyle: TextStyle(
                                   fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .03,
-                                  fontWeight: FontWeight.bold)),
+                                  color: cityController.text == ''
+                                      ? ThemeApp.blackColor
+                                      : ThemeApp.blackColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                              hintText: 'City',
+                              labelStyle: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: cityController.text == ''
+                                      ? ThemeApp.blackColor
+                                      : ThemeApp.blackColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                              errorStyle: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.redColor,
+                                  fontSize: MediaQuery.of(context).size.height *
+                                      0.020),
+                              errorMaxLines: 2,
+                              contentPadding: const EdgeInsets.fromLTRB(
+                                  20.0, 12.0, 11.0, 12.0),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: const BorderSide(
+                                    color: ThemeApp.separatedLineColor,
+                                  )),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: const BorderSide(
+                                      color: ThemeApp.separatedLineColor,
+                                      width: 1)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: const BorderSide(
+                                      color: ThemeApp.separatedLineColor,
+                                      width: 1)),
+                              errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: const BorderSide(
+                                      color: ThemeApp.redColor, width: 1)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: const BorderSide(
+                                      color: ThemeApp.separatedLineColor,
+                                      width: 1)),
+                            ),
+                            items: cartData.getCity.data!.payload!
+                                    .map((CityPayloadData map) {
+                                  return DropdownMenuItem<CityPayloadData>(
+                                    value: map,
+                                    child: Text(
+                                      map.name.toString() ?? "",
+                                      style: TextStyle(
+                                        fontFamily: 'SegoeUi',
+                                      ),
+                                    ),
+                                  );
+                                }).toList() ??
+                                [],
+                            // items: [],
+                          )),
                         );
-                      })),
-
-
+                    }
+                    return Container(
+                      height: height * .8,
+                      alignment: Alignment.center,
+                      child: TextFieldUtils().dynamicText(
+                          'No Match found!',
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              fontSize: height * .03,
+                              fontWeight: FontWeight.bold)),
+                    );
+                  })),
 
               TextFieldUtils().asteriskTextField(StringUtils.pincode, context),
               TextFormFieldsWidget(
-                  errorText: StringUtils.pincode,
-                  textInputType: TextInputType.text,
+                  errorText: StringUtils.enterPincode,
+                  maxLength: 6,
+                  textInputType: TextInputType.number,
                   controller: pincodeController,
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: '365214',
-                  onChange: (val) {},
+                  onChange: (val) {
+                    setState(() {
+                      if (val.isEmpty && pincodeController.text.isEmpty) {
+                        _ispincodeValidate = true;
+                      } else if (pincodeController.text.length < 6) {
+                        _ispincodeValidate = true;
+                      } else {
+                        _ispincodeValidate = false;
+                      }
+                    });
+                  },
                   validator: (value) {
+                    if (value.isEmpty && pincodeController.text.isEmpty) {
+                      _ispincodeValidate = true;
+                      return StringUtils.enterPincode;
+                    } else if (pincodeController.text.length < 6) {
+                      _ispincodeValidate = true;
+                      return StringUtils.enterPincode;
+                    } else {
+                      _ispincodeValidate = false;
+                    }
                     return null;
                   }),
               SizedBox(
@@ -624,7 +810,6 @@ stateController.text=newValue.name!;
                   ThemeApp.tealButtonColor, context, false, () async {
                 FocusManager.instance.primaryFocus?.unfocus();
                 final prefs = await SharedPreferences.getInstance();
-
                 setState(() {
                   StringConstant.UserLoginId =
                       (prefs.getString('isUserId')) ?? '';
@@ -646,8 +831,8 @@ stateController.text=newValue.name!;
                       mobileController.text.isNotEmpty &&
                       houseBuildingController.text.isNotEmpty &&
                       areaColonyController.text.isNotEmpty &&
-                      // stateController.text.isNotEmpty &&
-                      // cityController.text.isNotEmpty &&
+                      stateController.text.isNotEmpty &&
+                      cityController.text.isNotEmpty &&
                       pincodeController.text.isNotEmpty) {
                     if (widget.isSavedAddress == true) {
                       Map data = {
@@ -665,22 +850,30 @@ stateController.text=newValue.name!;
                       print("map address" + data.toString());
 
                       CartRepository()
-                          .createAddressPostAPI(data, userId.toString()).then((value) {
-                            setState(() {
-
-                            });
+                          .createAddressPostAPI(data, userId.toString())
+                          .then((value) {
+                        setState(() {});
+                        // fullNameController.clear();
+                        // mobileController.clear();
+                        // houseBuildingController.clear();
+                        // areaColonyController.clear();
+                        // stateController.clear();
+                        // cityController.clear();
+                        // pincodeController.clear();
                         Utils.successToast("New Address added successfully");
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => SavedAddressDetails(
-                              /*      cartForPaymentPayload:
-                                  widget.cartForPaymentPayload*/
-                            ),
-                          ),
-                        );
-                      });
+                        Navigator.of(context)
+                            .pushNamed(RoutesName.saveAddressRoute).then((value) => setState((){}));
 
-
+                        // Navigator.of(context).pushReplacement(
+                        //   MaterialPageRoute(
+                        //     builder: (context) =>
+                        //         SavedAddressDetails(
+                        //           /* cartForPaymentPayload:
+                        //       widget.cartForPaymentPayload*/
+                        //         ),
+                        //   ),
+                        // );
+                      }).then((value) {});
                     } else {
                       Map data = {
                         "name": fullNameController.text,
@@ -699,16 +892,33 @@ stateController.text=newValue.name!;
                           userId.toString());
 
                       CartRepository()
-                          .createAddressPostAPI(data, userId.toString());
+                          .createAddressPostAPI(data, userId.toString())
+                          .then((value) {
+                        Utils.successToast("New Address added successfully");
+                      });
+                      // Navigator.of(context).pushNamed(RoutesName.saveAddressRoute);
 
-                      Utils.successToast("New Address added successfully");
-                      Navigator.of(context).pushReplacement(
+                      var isBuyNow = prefs.getString('isBuyNow');
+                      var directCartId = prefs.getString('directCartIdPref');
+                      if (isBuyNow == 'true') {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => OrderReviewActivity(
+                              cartId: int.parse(directCartId.toString()),
+                            ),
+                          ),
+                        );
+                      } else {
+                        Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => OrderReviewActivity(
                             cartId: int.parse(StringConstant.UserCartID),
                           ),
                         ),
-                      );
+                      );}
+
+                      // Navigator.pop(context);
+                      // Navigator.pop(context);
                     }
                     Prefs.instance.setToken(
                         StringConstant.selectedFullAddressPref,
@@ -724,14 +934,6 @@ stateController.text=newValue.name!;
                     Prefs.instance.setToken(
                         StringConstant.selectedTypeOfAddressPref,
                         StringConstant.selectedTypeOfAddress);
-
-                    fullNameController.clear();
-                    mobileController.clear();
-                    houseBuildingController.clear();
-                    areaColonyController.clear();
-                    stateController.clear();
-                    cityController.clear();
-                    pincodeController.clear();
                   } else {
                     Utils.flushBarErrorMessage(
                         "Please enter all details", context);
@@ -870,6 +1072,84 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
   TextEditingController cityController = new TextEditingController();
   TextEditingController pincodeController = new TextEditingController();
 
+  bool _isfullNameValidate = false;
+  bool _ismobileValidate = false;
+  bool _ishouseBuildingValidate = false;
+  bool _isareaColonyValidate = false;
+  bool _isstateValidate = false;
+  bool _iscityValidate = false;
+  bool _ispincodeValidate = false;
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Position? _currentPosition;
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getLocation(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  _getLocation(Position position) async {
+    final coordinates = new Coordinates(position.latitude, position.longitude);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print("address.streetAddress" + first.postalCode.toString());
+    print("${first.featureName} : ${first.addressLine}");
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('CurrentPinCodePrefs', first.postalCode.toString());
+
+    var splitag = first.addressLine!.split(",");
+    var houseBuilding = splitag[0] + ', ' + splitag[1];
+    var areaColony = splitag[2];
+    var state = splitag[3];
+    var city = splitag[4];
+    var pincode = first.postalCode;
+
+    setState(() {
+      houseBuildingController = TextEditingController(text: houseBuilding);
+      areaColonyController = TextEditingController(text: areaColony);
+      stateController = TextEditingController(text: state);
+      cityController = TextEditingController(text: city);
+      pincodeController = TextEditingController(text: pincode);
+    });
+  }
+
   @override
   void initState() {
     fullNameController = TextEditingController();
@@ -973,6 +1253,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
 
   Widget mainUi() {
     return Form(
+      key: _formKey,
       child: Consumer<ProductProvider>(builder: (context, value, child) {
         return SingleChildScrollView(
             child: Column(
@@ -995,8 +1276,27 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                 controller: fullNameController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 hintText: 'Type your name',
-                onChange: (val) {},
+                onChange: (val) {
+                  setState(() {
+                    if (val.isEmpty && fullNameController.text.isEmpty) {
+                      _isfullNameValidate = true;
+                    } else if (fullNameController.text.length <= 4) {
+                      _isfullNameValidate = true;
+                    } else {
+                      _isfullNameValidate = false;
+                    }
+                  });
+                },
                 validator: (value) {
+                  if (value.isEmpty && fullNameController.text.isEmpty) {
+                    _isfullNameValidate = true;
+                    return StringUtils.enterFullName;
+                  } else if (fullNameController.text.length < 4) {
+                    _isfullNameValidate = true;
+                    return StringUtils.enterFullName;
+                  } else {
+                    _isfullNameValidate = false;
+                  }
                   return null;
                 }),
             //Mobile Number
@@ -1021,15 +1321,15 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   }
                 },
                 validator: (value) {
-                  // if (value.isEmpty && mobileController.text.isEmpty) {
-                  //   _validateMobile = true;
-                  //   return StringUtils.enterMobileNumber;
-                  // } else if (mobileController.text.length < 10) {
-                  //   _validateMobile = true;
-                  //   return StringUtils.enterMobileNumber;
-                  // } else {
-                  //   _validateMobile = false;
-                  // }
+                  if (value == '' && mobileController.text.isEmpty) {
+                    _ismobileValidate = true;
+                    return StringUtils.enterMobileNumber;
+                  } else if (mobileController.text.length < 10) {
+                    _ismobileValidate = true;
+                    return StringUtils.enterMobileNumber;
+                  } else {
+                    _ismobileValidate = false;
+                  }
                   return null;
                 }),
 
@@ -1058,6 +1358,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                         //     builder: (context) => AddNewCardScreen(),
                         //   ),
                         // );
+                        _getCurrentPosition();
                       },
                       child: Container(
                         height: height * 0.05,
@@ -1201,80 +1502,96 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
 
               StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
               StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+              if (_formKey.currentState!.validate() &&
+                  fullNameController.text.isNotEmpty &&
+                  mobileController.text.isNotEmpty &&
+                  houseBuildingController.text.isNotEmpty &&
+                  areaColonyController.text.isNotEmpty &&
+                  stateController.text.isNotEmpty &&
+                  cityController.text.isNotEmpty &&
+                  pincodeController.text.isNotEmpty) {
+                var userId;
+                if (StringConstant.UserLoginId.toString() == '' ||
+                    StringConstant.UserLoginId.toString() == null) {
+                  userId = StringConstant.RandomUserLoginId;
+                } else {
+                  userId = StringConstant.UserLoginId;
+                }
 
-              var userId;
-              if (StringConstant.UserLoginId.toString() == '' ||
-                  StringConstant.UserLoginId.toString() == null) {
-                userId = StringConstant.RandomUserLoginId;
-              } else {
-                userId = StringConstant.UserLoginId;
-              }
+                FocusManager.instance.primaryFocus?.unfocus();
 
-              FocusManager.instance.primaryFocus?.unfocus();
+                widget.model.myAddressFullName =
+                    fullNameController.text.toString();
+                widget.model.myAddressPhoneNumber =
+                    mobileController.text.toString();
+                widget.model.myAddressHouseNoBuildingName =
+                    houseBuildingController.text.toString();
+                widget.model.myAddressAreaColony =
+                    areaColonyController.text.toString();
+                widget.model.myAddressState = stateController.text.toString();
+                widget.model.myAddressCity = cityController.text.toString();
+                widget.model.myAddressPincode =
+                    pincodeController.text.toString();
+                print(fullNameController.text);
+                print(value.fullNameController.text);
+                //
+                // print("value.addressList" + value.addressList.length.toString());
+                //
+                // var copyOfAddressList = value.addressList.map((v) => v).toList();
+                // String encodedMap = json.encode(copyOfAddressList);
+                // StringConstant.prettyPrintJson(encodedMap.toString());
 
-              widget.model.myAddressFullName =
-                  fullNameController.text.toString();
-              widget.model.myAddressPhoneNumber =
-                  mobileController.text.toString();
-              widget.model.myAddressHouseNoBuildingName =
-                  houseBuildingController.text.toString();
-              widget.model.myAddressAreaColony =
-                  areaColonyController.text.toString();
-              widget.model.myAddressState = stateController.text.toString();
-              widget.model.myAddressCity = cityController.text.toString();
-              widget.model.myAddressPincode = pincodeController.text.toString();
-              print(fullNameController.text);
-              print(value.fullNameController.text);
-              //
-              // print("value.addressList" + value.addressList.length.toString());
-              //
-              // var copyOfAddressList = value.addressList.map((v) => v).toList();
-              // String encodedMap = json.encode(copyOfAddressList);
-              // StringConstant.prettyPrintJson(encodedMap.toString());
+                if (widget.isSavedAddress == true) {
+                  Map data = {
+                    "name": fullNameController.text,
+                    "address_line_1": houseBuildingController.text,
+                    "address_line_2": areaColonyController.text,
+                    "city_name": cityController.text,
+                    "state_name": stateController.text,
+                    "address_type": selectedAddressIs,
+                    "pincode": pincodeController.text,
+                    "contact_number": "+91 " + mobileController.text,
+                    "latitude": 24.2342525,
+                    "longitude": 52.2342523
+                  };
+                  print("map address" + data.toString());
 
-              if (widget.isSavedAddress == true) {
-                Map data = {
-                  "name": fullNameController.text,
-                  "address_line_1": houseBuildingController.text,
-                  "address_line_2": areaColonyController.text,
-                  "city_name": cityController.text,
-                  "state_name": stateController.text,
-                  "address_type": selectedAddressIs,
-                  "pincode": pincodeController.text,
-                  "contact_number": "+91 " + mobileController.text,
-                  "latitude": 24.2342525,
-                  "longitude": 52.2342523
-                };
-                print("map address" + data.toString());
+                  CartRepository()
+                      .createAddressPostAPI(data, userId.toString())
+                      .then((value) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => SavedAddressDetails(
+                            /*   cartForPaymentPayload: widget.cartForPaymentPayload!*/),
+                      ),
+                    );
+                    Utils.successToast('Address update successfully!');
+                  });
 
-                CartRepository().createAddressPostAPI(data, userId.toString());
+                  // Utils.successToast("New Address added successfully");
 
-                Utils.successToast("New Address added successfully");
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => SavedAddressDetails(
-                        /*   cartForPaymentPayload: widget.cartForPaymentPayload!*/),
-                  ),
-                );
-                Utils.successToast('Address update successfully!');
-              } else {
-                Map data = {
-                  "name": fullNameController.text,
-                  "address_line_1": houseBuildingController.text,
-                  "address_line_2": areaColonyController.text,
-                  "city_name": cityController.text,
-                  "state_name": stateController.text,
-                  "address_type": selectedAddressIs,
-                  "pincode": pincodeController.text,
-                  "contact_number": "+91 " + mobileController.text,
-                  "latitude": 24.2342525,
-                  "longitude": 52.2342523
-                };
-                print("map address" + data.toString());
+                } else {
+                  Map data = {
+                    "name": fullNameController.text,
+                    "address_line_1": houseBuildingController.text,
+                    "address_line_2": areaColonyController.text,
+                    "city_name": cityController.text,
+                    "state_name": stateController.text,
+                    "address_type": selectedAddressIs,
+                    "pincode": pincodeController.text,
+                    "contact_number": "+91 " + mobileController.text,
+                    "latitude": 24.2342525,
+                    "longitude": 52.2342523
+                  };
+                  print("map address" + data.toString());
 
-                CartRepository().createAddressPostAPI(data, userId.toString());
+                  CartRepository()
+                      .createAddressPostAPI(data, userId.toString())
+                      .then((value) {
+                    Utils.successToast("New Address added successfully");
+                  });
+                }
 
-                Utils.successToast("New Address added successfully");
                 //comment because need to manage apis
 
                 /*       Navigator.of(context).push(

@@ -79,7 +79,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
   }
 
   getPreference() async {
-    setState(() {});
+
     StringConstant.userAccountName =
         (await Prefs.instance.getToken(StringConstant.userAccountNamePref))!;
     StringConstant.userAccountEmail =
@@ -95,6 +95,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
 
     print("StringConstant.userAccountImagePicker");
     print(StringConstant.userAccountImagePicker);
+    setState(() {});
   }
 
   @override
@@ -214,8 +215,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                           children: [
                                             Center(
                                               child: Container(
-                                                width: 130.0,
-                                                height: 130.0,
+                                                width: 110.0,
+                                                height: 110.0,
                                                 decoration: new BoxDecoration(
                                                   boxShadow: [
                                                     BoxShadow(
@@ -236,8 +237,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                   child: Image.file(
                                                     imageFile1!,
                                                     fit: BoxFit.fill,
-                                                    width: 110.0,
-                                                    height: 110.0,
+                                                    width: 90.0,
+                                                    height: 90.0,
                                                     errorBuilder: (context, error,
                                                         stackTrace) {
                                                       return Icon(
@@ -917,7 +918,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
     await prefs.setString('profileImagePrefs', imagePath);
 
     setState(() {
-      imageFile1 = File(image!.path);
+      imageFile1 = File(image.path);
 
       // final   file = File(image!.path);
       //    final bytes =

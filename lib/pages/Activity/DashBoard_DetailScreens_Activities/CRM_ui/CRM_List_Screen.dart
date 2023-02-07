@@ -126,11 +126,10 @@ class _CRMistByCategoryActivityState
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .12),
-          child: appBarWidget(
-              context,
-              searchBar(context),
-              addressWidget(context, StringConstant.placesFromCurrentLocation),
-              setState(() {})),
+          child: AppBarWidget(
+            context: context,
+            titleWidget: searchBar(context),
+            location: const AddressWidgets(),  ),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context,0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -378,11 +377,11 @@ class _CRMistByCategoryActivityState
                           // childAspectRatio: MediaQuery.of(context).size.height / 900,
                         ),
                         shrinkWrap: true,
-                        children: List.generate(subProductList!.length,
+                        children: List.generate(subProductList.length,
                               (index) {
                             return Stack(
                               children: [
-                                index == subProductList!.length
+                                index == subProductList.length
                                     ? Container(
                                   // width: constrains.minWidth,
                                   height: 20,
@@ -514,7 +513,7 @@ class _CRMistByCategoryActivityState
                                         ],
                                       )),
                                 ),
-                                index == subProductList!.length
+                                index == subProductList.length
                                     ? Container(
                                   // width: constrains.minWidth,
                                   height: 20,

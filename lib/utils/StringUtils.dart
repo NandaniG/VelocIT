@@ -15,6 +15,7 @@ class StringUtils {
   static String usingPass = "Email";
   static String usingOTP = "Phone Number";
   static String emailORMobile = "Email Address / Mobile Number";
+  static String emailORMobileHint = "Email / Mobile";
   static String email = "Email";
   static String password = "Password";
   // static String emailError = "Email ID field cannot be blank.";
@@ -105,6 +106,11 @@ class StringUtils {
   static String enterFullName = "Please enter full name.";
   static String enterEmailAddress = "Please enter email address.";
   static String enterMobileNumber = "Please enter valid mobile number.";
+  static String enterhouseBuildingNo = "Please enter valid House No., Building Name.";
+  static String enterAreaName = "Please enter valid Area, Colony Name.";
+  static String enterState = "Please select State.";
+  static String enterCity = "Please select City.";
+  static String enterPincode = "Please enter valid Pincode.";
   static String addressDetails = "Address Details";
   static String useMyLocation = "Use my Location";
   static String houseBuildingNo = "House No., Building Name";

@@ -125,11 +125,10 @@ class _ProductListByCategoryActivityState
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .12),
-          child: appBarWidget(
-              context,
-              searchBar(context),
-              addressWidget(context, StringConstant.placesFromCurrentLocation),
-              setState(() {})),
+          child: AppBarWidget(
+           context:    context,
+           titleWidget:    searchBar(context),
+            location: const AddressWidgets(),     ),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context,0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -367,11 +366,17 @@ class _ProductListByCategoryActivityState
                   print("Api calll");
                   List<Content>? subProductList = productSubCategoryProvider
                       .productSubCategory.data!.payload!.content;
+
+
                   print("subProductList length.......${subProductList!.length}");
                   return Expanded(
 
                     // width: MediaQuery.of(context).size.width,
-                    child: subProductList.length==[]?CircularProgressIndicator(): GridView(
+                    child: subProductList.isEmpty?Center(
+                        child: Text(
+                          "Match not found",
+                          style: TextStyle(fontSize: 20),
+                        )): GridView(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 10,
@@ -380,7 +385,7 @@ class _ProductListByCategoryActivityState
                         // childAspectRatio: MediaQuery.of(context).size.height / 900,
                       ),
                       shrinkWrap: true,
-                        children: List.generate(subProductList!.length,
+                        children: List.generate(subProductList.length,
                               (index) {
                         return Stack(
                           children: [
@@ -517,7 +522,7 @@ class _ProductListByCategoryActivityState
                                     ],
                                   )),
                             ),
-                            index == subProductList!.length
+                            index == subProductList.length
                                 ? Container(
                               // width: constrains.minWidth,
                               height: 20,

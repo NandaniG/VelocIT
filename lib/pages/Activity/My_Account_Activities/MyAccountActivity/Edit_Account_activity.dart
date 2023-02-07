@@ -451,7 +451,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
     await prefs.setString('profileImagePrefs', imagePath);
 
     setState(() {
-      imageFile1 = File(image!.path);
+      imageFile1 = File(image.path);
 
       // final   file = File(image!.path);
       //    final bytes =

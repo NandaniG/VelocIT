@@ -399,6 +399,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  geocoder:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "443b875d8ec80ce525cc6e8f17dfbbbbe7fa3028"
+      url: "https://github.com/nguyenxdat/flutter_geocoder.git"
+    source: git
+    version: "0.3.0"
   geocoding:
     dependency: "direct main"
     description:
@@ -574,6 +583,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
+  image_downloader:
+    dependency: "direct main"
+    description:
+      name: image_downloader
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.31.0"
   image_picker:
     dependency: "direct main"
     description:

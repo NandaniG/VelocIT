@@ -55,8 +55,8 @@ class Utils {
         timeInSecForIosWeb: 10000 * 5,
 
         fontSize: 20,
-        backgroundColor: Colors.green,
-        textColor: Colors.white);
+        backgroundColor: ThemeApp.inactiveStepperColor,
+        textColor: ThemeApp.tealButtonColor);
   }
 
   static void flushBarErrorMessage(String message, BuildContext context) {

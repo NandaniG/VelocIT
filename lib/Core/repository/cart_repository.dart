@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,7 @@ import 'package:velocit/utils/constants.dart';
 import '../../pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import '../../pages/screens/cartDetail_Activity.dart';
 import '../../services/providers/Products_provider.dart';
+import '../../utils/routes/routes.dart';
 import '../../utils/utils.dart';
 import '../AppConstant/apiMapping.dart';
 import '../Model/CartModels/AddressListModel.dart';
@@ -56,10 +58,9 @@ class CartRepository {
     Map<String, dynamic> map = jsonDecode(rawJson);
 
     var userData = CartCreateRetrieveModel.fromJson(map);
-    prefs.setString('CartIdPref', (userData.payload?.id).toString());
-    print(userData.payload?.id.toString());
-    // Prefs.instance.setToken(Prefs.prefCartId, (userData.payload?.id ?? 0).toString());
-
+    prefs.setString('CartIdPref', userData.payload!.id.toString());
+    print("Cart Id From Cart Create and retrieve " +userData.payload!.id.toString());
+    print(userData.payload!.id.toString());
 
     // if (response.statusCode == 200) {
     //   print(responseJson.toString());
@@ -120,7 +121,7 @@ class CartRepository {
 
   Future<CartSpecificIdModel> getCartSpecificIDList(String id) async {
     var url = ApiMapping.getURI(apiEndPoint.cart_by_ID);
-    print("Cart specific ID : " + id.toString());
+    print("Cart specific ID : " +url+ id.toString());
     final prefs = await SharedPreferences.getInstance();
 
     var isNavFromBuyNow = prefs.getString('isBuyNow');
@@ -212,6 +213,7 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
         prefs.setString(
             'directCartIdPref', jsonData['payload']['id'].toString());
         var directCartId = prefs.getString('directCartIdPref');
+        print("directCartId"+directCartId.toString());
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => OrderReviewActivity(
                 cartId: int.parse(jsonData['payload']['id'].toString()))));
@@ -254,8 +256,12 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
       print("Cart Id From Merge Cart " + StringConstant.UserCartID);
 
       if (response['status'].toString() == 'OK') {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CartDetailsActivity()));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CartDetailsActivity(),
+            ));
+
       }
 
       return response = MergeCartModel.fromJson(response);
@@ -309,7 +315,7 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
     // var url = ApiMapping.getURI(apiEndPoint.address_list);
 
     var requestUrl =
-        ApiMapping.BaseAPI + '/user/' + id + '/address?page=0&size=10';
+        ApiMapping.BaseAPI + '/user/' + id + '/address?page=0&size=50';
 
     print(requestUrl.toString());
     print(id.toString());
@@ -335,11 +341,13 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
-      print(" getDefaultAddressList : " + response.toString());
+      if (kDebugMode) {
+        print(" getDefaultAddressList : $response");
+      }
 
       return response = GetDefaultAddressModel.fromJson(response);
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -351,7 +359,9 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
-      print(" State AddressListModel : " + response.toString());
+      if (kDebugMode) {
+        print(" State AddressListModel : " + response.toString());
+      }
 
       return response = StateModel.fromJson(response);
     } catch (e) {
@@ -367,7 +377,9 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
-      print(" CityModel AddressListModel : " + response.toString());
+      if (kDebugMode) {
+        print(" CityModel AddressListModel : " + response.toString());
+      }
 
       return response = CityModel.fromJson(response);
     } catch (e) {
@@ -413,17 +425,24 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
 */
 
   Future createAddressPostAPI(Map data, String userId) async {
-    print("userId" + userId.toString());
+    if (kDebugMode) {
+      print("userId" + userId.toString());
+    }
     var url = '/address/user/' + userId.toString();
     var requestUrl = ApiMapping.BaseAPI + url;
 
     String body = json.encode(data);
-    print("jsonMap" + body.toString());
+    if (kDebugMode) {
+      print("jsonMap" + body.toString());
+      print("requestUrl" + requestUrl.toString());
+    }
 
     dynamic reply;
     http.Response response = await http.post(Uri.parse(requestUrl),
         body: body, headers: {'content-type': 'application/json'});
-    print("response post" + response.body.toString());
+    if (kDebugMode) {
+      print("response Created address" + response.body.toString());
+    }
     // Utils.successToast(response.body.toString());
     return reply;
   }
@@ -432,11 +451,15 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
     final prefs = await SharedPreferences.getInstance();
 
-    print("userId" + orderBasketID.toString());
+    if (kDebugMode) {
+      print("userId" + orderBasketID.toString());
+    }
     var url = '/order-basket/$orderBasketID/attempt_payment';
 
     var requestUrl = ApiMapping.BaseAPI + url;
-    print(requestUrl.toString());
+    if (kDebugMode) {
+      print(requestUrl.toString());
+    }
 
     String body = json.encode(data);
     print("putCartForPayment jsonMap" + body.toString());

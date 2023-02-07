@@ -84,11 +84,11 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
       backgroundColor: ThemeApp.appBackgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .12),
-        child: appBarWidget(
-            context,
-            searchBar(context),
-            addressWidget(context, StringConstant.placesFromCurrentLocation),
-            setState(() {})),
+        child: AppBarWidget(
+          context: context,
+          titleWidget: searchBar(context),
+          location: const AddressWidgets(),
+        ),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -270,7 +270,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
           scrollDirection: Axis.horizontal,
           itemCount: productList!.simpleSubCats!.length,*/
         GridView.builder(
-          itemCount: productList!.simpleSubCats!.length,
+          itemCount: productList.simpleSubCats!.length,
           scrollDirection: Axis.vertical,
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 150,
@@ -282,7 +282,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ProductListByCategoryActivity(
-                      productList: productList!.simpleSubCats![index]),
+                      productList: productList.simpleSubCats![index]),
                 ));
               },
               child: Padding(

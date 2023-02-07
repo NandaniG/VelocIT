@@ -69,6 +69,14 @@ dependencies:
   google_maps_flutter: ^2.2.3
   location: ^4.4.0
   geolocator: ^9.0.2
+  # geocoder: ^0.2.1
+  geocoder: 
+   git: 
+     url: https://github.com/nguyenxdat/flutter_geocoder.git
+     ref: master
+
+
+
   geocoding: ^2.0.5
   geocode: ^1.0.2
   get: ^4.6.5
@@ -82,6 +90,8 @@ dependencies:
   get_it: ^7.2.0
   country_state_city_picker: ^1.2.8
   csc_picker: ^0.2.6
+  image_downloader: ^0.31.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

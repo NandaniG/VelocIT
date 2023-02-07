@@ -199,7 +199,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
       FromType = 'FromServices';
       print("This is service ");
     }
-    print("This is FromType "+FromType.toString());
+    print("This is FromType " + FromType.toString());
     if (FromType == 'FromServices') {
       data = {
         // "cartId": StringConstant.UserCartID.toString(),
@@ -230,13 +230,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return     WillPopScope(
+    return WillPopScope(
       onWillPop: () {
         Provider.of<CartViewModel>(context, listen: false);
-        setState(() {
-
-        });
-        Navigator.pop(context,true);
+        setState(() {});
+        Navigator.pop(context, true);
         return Future.value(true);
       },
       child: Scaffold(
@@ -272,11 +270,9 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   //     const DashboardScreen(),
                   //   ),
                   // );
-                  Provider.of<CartViewModel>(context, listen: false);      Navigator.pop(context,true);
-setState(() {
-
-});
-
+                  Provider.of<CartViewModel>(context, listen: false);
+                  Navigator.pop(context, true);
+                  setState(() {});
 
                   // Navigator.pushReplacementNamed(
                   //         context, RoutesName.dashboardRoute)
@@ -328,15 +324,16 @@ setState(() {
                         return Text('');
                       case Status.COMPLETED:
                         print("Api calll");
-                        List<OrdersForPurchase>? orderPurchaseList = cartProvider
-                            .cartSpecificID.data!.payload!.ordersForPurchase;
+                        List<OrdersForPurchase>? orderPurchaseList =
+                            cartProvider.cartSpecificID.data!.payload!
+                                .ordersForPurchase;
 
                         print("orderPurchaseList" +
                             orderPurchaseList!.length.toString());
 
                         return cartProvider.cartSpecificID.data!.payload!
                                 .ordersForPurchase!.isEmpty
-                            ? bottomNavigationBarWidget(context,4)
+                            ? bottomNavigationBarWidget(context, 4)
                             : Container(
                                 height: 200,
                                 width: width,
@@ -463,7 +460,8 @@ setState(() {
                                                             .cartSpecificID
                                                             .data!
                                                             .payload!
-                                                            .ordersForPurchase![i]
+                                                            .ordersForPurchase![
+                                                                i]
                                                             .productCode
                                                             .toString());
                                                     prefs.setString(
@@ -472,7 +470,8 @@ setState(() {
                                                             .cartSpecificID
                                                             .data!
                                                             .payload!
-                                                            .ordersForPurchase![i]
+                                                            .ordersForPurchase![
+                                                                i]
                                                             .itemQty
                                                             .toString());
 
@@ -520,7 +519,8 @@ setState(() {
                                                   height: 40,
                                                   width: 121,
                                                   alignment: Alignment.center,
-                                                  decoration: const BoxDecoration(
+                                                  decoration:
+                                                      const BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.all(
                                                       Radius.circular(100),
@@ -540,7 +540,8 @@ setState(() {
                                                                   .tealButtonColor,
                                                               fontSize: 16,
                                                               fontWeight:
-                                                                  FontWeight.w600,
+                                                                  FontWeight
+                                                                      .w600,
                                                               letterSpacing:
                                                                   -0.25)))),
                                         ],
@@ -619,7 +620,8 @@ setState(() {
                     case Status.ERROR:
                       print("Api error");
 
-                      return Text(cartProvider.cartSpecificID.status.toString());
+                      return Text(
+                          cartProvider.cartSpecificID.status.toString());
                     case Status.COMPLETED:
                       print("Api calll");
                       List<OrdersForPurchase>? orderPurchaseList = cartProvider
@@ -628,7 +630,7 @@ setState(() {
                       print("orderPurchaseList" +
                           orderPurchaseList!.length.toString());
                       return Container(
-                          // height: MediaQuery.of(context).size.height,
+                          height: MediaQuery.of(context).size.height,
                           padding: const EdgeInsets.all(10),
                           child: cartProvider.cartSpecificID.data!.payload!
                                   .ordersForPurchase!.isEmpty
@@ -646,13 +648,22 @@ setState(() {
                                           overflow: TextOverflow.ellipsis)),
                                 )
                               : Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  // mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceBetween,
+                                  // crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    cartProductList(orderPurchaseList),
-                                    priceDetails(cartProvider
-                                        .cartSpecificID.data!.payload!),
+                                    Expanded(
+                                        flex: 2,
+                                        child:
+                                            cartProductList(orderPurchaseList)),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: priceDetails(cartProvider
+                                          .cartSpecificID.data!.payload!),
+                                    ),
                                   ],
                                 ));
                   }
@@ -1413,9 +1424,9 @@ setState(() {
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
                 )),
-            SizedBox(
-              height: 10,
-            ),
+            // SizedBox(
+            //   height: 10,
+            // ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1443,9 +1454,9 @@ setState(() {
                 //     context)
               ],
             ),
-            SizedBox(
-              height: 16,
-            ),
+            // SizedBox(
+            //   height: 10,
+            // ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1470,9 +1481,9 @@ setState(() {
                         context),*/
               ],
             ),
-            SizedBox(
-              height: 16,
-            ),
+            // SizedBox(
+            //   height: 10,
+            // ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1499,9 +1510,9 @@ setState(() {
                         context),*/
               ],
             ),
-            SizedBox(
-              height: 16,
-            ),
+            // SizedBox(
+            //   height: 10,
+            // ),
             Container(
               width: width,
               decoration: const BoxDecoration(
@@ -1514,9 +1525,9 @@ setState(() {
                 ),
               ),
             ),
-            SizedBox(
-              height: height * .01,
-            ),
+            // SizedBox(
+            //   height: 10,
+            // ),
             Container(
               // width: width,
               // decoration: const BoxDecoration(
@@ -1552,7 +1563,197 @@ setState(() {
         ),
       ),
     );
-    /*  Container(
+  }
+/*
+  Widget priceDetails(CartPayLoad payload) {
+    return */
+/*Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [*/ /*
+
+      Column( mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 10,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: ThemeApp.appBackgroundColor,
+              // borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+            child: Container(
+              // height: 180,
+              width: width,
+              decoration: const BoxDecoration(
+                color: ThemeApp.whiteColor,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 11, 30, 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Price Details',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.primaryNavyBlackColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Price',
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        // TextFieldUtils().homePageTitlesTextFields(
+                        //     "Price (${payload.ordersForPurchase!.length.toString()} items)",
+                        //     context),
+                        Text(
+                            indianRupeesFormat
+                                .format(double.parse(payload.totalMrp.toString())),
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        // TextFieldUtils().homePageTitlesTextFields(
+                        //     indianRupeesFormat
+                        //         .format(double.parse(payload.totalMrp.toString())),
+                        //     context)
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Discount',
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        Text(
+                            "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        */
+/*   TextFieldUtils()
+                              .homePageTitlesTextFields("Discount", context),
+                          TextFieldUtils().homePageTitlesTextFields(
+                              "- ${indianRupeesFormat.format(double.parse(payload.totalDiscountAmount.toString()))}",
+                              context),*/ /*
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Delivery charges',
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        Text(
+                            indianRupeesFormat.format(
+                                double.parse(payload.totalDeliveryCharges.toString())),
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                color: ThemeApp.lightFontColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                        */
+/* TextFieldUtils()
+                              .homePageTitlesTextFields("Delivery charges", context),
+                          TextFieldUtils().homePageTitlesTextFields(
+                              indianRupeesFormat.format(double.parse(
+                                  payload.totalDeliveryCharges.toString())),
+                              context),*/ /*
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Container(
+                      width: width,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: ThemeApp.separatedLineColor,
+                            width: 0.5,
+                          ),
+                          bottom: BorderSide(color: Colors.grey, width: 0.5),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * .01,
+                    ),
+                    Container(
+                      // width: width,
+                      // decoration: const BoxDecoration(
+                      //   color: ThemeApp.whiteColor,
+                      //   borderRadius: BorderRadius.only(
+                      //       bottomRight: Radius.circular(10),
+                      //       bottomLeft: Radius.circular(10)),
+                      // ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Total Amount',
+                              style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.blackColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700)),
+                          Text("${indianRupeesFormat.format(payload.totalPayable)} ",
+                              style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.appColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700)),
+                          */
+/* TextFieldUtils().titleTextFields("Total Amount", context),
+                            TextFieldUtils().titleTextFields(
+                                "${indianRupeesFormat.format(payload.totalPayable)} ",
+                                context),*/ /*
+
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    */
+/*  Container(
           width: width,
           decoration: const BoxDecoration(
             border: Border(
@@ -1587,11 +1788,15 @@ setState(() {
         ),
         SizedBox(
           height: height * .02,
-        )*/
-    /* ],
-    );*/
+        )*/ /*
+
+    */
+/* ],
+    );*/ /*
+
   }
-}
+*/
+
 /*
 class ConfirmDialog extends StatefulWidget {
   final String text;
@@ -1669,3 +1874,4 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
     );
   }
 }*/
+}

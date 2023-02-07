@@ -61,12 +61,11 @@ class _OfferActivityState extends State<OfferActivity> {
         // resizeToAvoidBottomInset: false,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(height * .12),
-            child: appBarWidget(
-                context,
-                searchBar(context),
-                addressWidget(
-                    context, StringConstant.placesFromCurrentLocation),
-                setState(() {}))),
+            child: AppBarWidget(
+            context:     context,
+               titleWidget:  searchBar(context),
+              location: const AddressWidgets(),
+)),
         bottomNavigationBar: bottomNavigationBarWidget(context,1),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 

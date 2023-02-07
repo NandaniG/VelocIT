@@ -29,10 +29,23 @@ class OrderBasketRepository {
     // dynamic responseJson;
     var url = ApiMapping.ConstructURI(ApiMapping.consumerBasket);
 
+    print(url);
     dynamic responseJson = await _apiServices.getGetApiResponseWithBody(url, jsonMap);
 
     String rawJson = responseJson.toString();
     print("consumerBasket : "+responseJson.toString());
+    return responseJson;
+  }
+
+  Future merchantPostAPI(Map jsonMap) async {
+    var requestUrl = ApiMapping.ConstructURI(ApiMapping.merchantNearMe);
+    print(jsonMap);
+    // dynamic responseJson;
+
+    dynamic responseJson = await _apiServices.getGetApiResponseWithBody(requestUrl, jsonMap);
+
+    // String rawJson = responseJson.toString();
+    print("merchantPostAPI : "+responseJson.toString());
     return responseJson;
   }
 
@@ -51,8 +64,6 @@ class OrderBasketRepository {
 
         Utils.successToast(
             'Order cancelled successful');
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MyOrdersActivity()));
 
       }
     } catch (e) {
@@ -61,7 +72,7 @@ class OrderBasketRepository {
     }
   }
 
-  Future cancelOrderPutApiResponse(
+/*  Future cancelOrderPutApiResponse(
   BuildContext context, dynamic json, String orderId) async {
     dynamic responseJson;
     var url = ApiMapping.BaseAPI + '/order/$orderId/cancel';
@@ -92,6 +103,7 @@ class OrderBasketRepository {
     }
     return responseJson;
   }
+
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
@@ -107,7 +119,7 @@ class OrderBasketRepository {
       default:
         throw FetchDataException(
             'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
-    }}
+    }}*/
 
   // Future<ActiveOrderBasketModel> getOrderBasketApi(
   //     dynamic data) async {

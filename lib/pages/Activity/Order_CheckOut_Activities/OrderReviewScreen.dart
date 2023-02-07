@@ -62,18 +62,33 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
   );
   CartViewModel cartListView = CartViewModel();
   bool isSelfPickUp = false;
+  String FromType = '';
+  bool isTypeServiceOnly = false;
+  bool isTypeService = false;
+  bool isTypeProduct = false;
+
+  bool isProduct = false,
+      isService = false,
+      isServiceOnly = false,
+      isProductOnly = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    isTypeService = false;
+    isTypeServiceOnly = false;
+    isTypeProduct = false;
+    getPreferences();
+    isProduct = false;
+    isService = false;
+    isServiceOnly = false;
+    isProductOnly = false;
     StringConstant.addressFromCurrentLocation;
     StringConstant.selectedFullName;
     StringConstant.selectedFullAddress;
     StringConstant.selectedTypeOfAddress;
     StringConstant.selectedMobile;
-    getPreferences();
   }
 
   var address =
@@ -110,6 +125,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
         .getDoubleToken(StringConstant.totalFinalPricePref))!;
 
     print('StringConstant.totalFinalPrice${StringConstant.totalFinalPrice}');
+
+    ///
+    FromType = (prefs.getString('FromType')) ?? '';
+    print("FromType in order review: " + FromType.toString());
   }
 
   @override
@@ -186,12 +205,16 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                         List<CartOrdersForPurchase> cartOrderPurchase =
                             cartProvider.sendCartForPayment.data!.payload!.cart!
                                 .ordersForPurchase!;
+                        for (int i = 0; i < cartOrderPurchase.length; i++) {
+                          print(cartOrderPurchase[i].serviceId);
+                          print(cartOrderPurchase[i].productId);
+                        }
 
                         return cartProvider.sendCartForPayment.data!.status ==
                                 'EXCEPTION'
                             ? Text('Please try after some time')
                             : Container(
-                                height: 72,
+                                height: 82,
                                 // height: height * .09,
                                 width: width,
                                 alignment: Alignment.center,
@@ -239,8 +262,11 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                     .cart!.totalPayable,
                                             "is_self_pickup": isSelfPickUp,
                                           };
-                                          if (StringConstant.selectedFullName !=
-                                              '') {
+                                          print("defaultAddressList ..." +
+                                              defaultAddressList!.length
+                                                  .toString());
+
+                                          if (isSelfPickUp == true) {
                                             CartRepository().putCartForPayment(
                                                 data,
                                                 cartForPaymentPayload
@@ -254,7 +280,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               ),
                                             );
                                           } else {
-                                            if (isSelfPickUp == true) {
+                                            if (defaultAddressList!.length>0) {
                                               CartRepository()
                                                   .putCartForPayment(
                                                       data,
@@ -268,11 +294,12 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                               cartForPaymentPayload),
                                                 ),
                                               );
+                                            } else {
+                                              isSelfPickUp == false
+                                                  ? Utils.successToast(
+                                                      "Please select delivery address")
+                                                  : '';
                                             }
-                                            isSelfPickUp == false
-                                                ? Utils.successToast(
-                                                    "Please select delivery address")
-                                                : '';
                                           }
 
                                           // Navigator.of(context).push(
@@ -336,7 +363,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    */ /*  Column(
+                    */
+              /*  Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -418,6 +446,42 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                         List<CartOrdersForPurchase> cartOrderPurchase =
                             cartProvider.sendCartForPayment.data!.payload!.cart!
                                 .ordersForPurchase!;
+                        for (int i = 0; i < cartOrderPurchase.length; i++) {
+                          if (cartOrderPurchase[i].serviceId != null) {
+                            isService = true;
+                          } else {
+                            isProduct = true;
+                          }
+                        }
+                        print("isService " + isService.toString());
+                        print("isProduct " + isProduct.toString());
+
+                        if (isService == true && isProduct == false) {
+                          isServiceOnly = true;
+                        } else if (isService == false && isProduct == true) {
+                          isProductOnly = true;
+                        } else {
+                          isServiceOnly = false;
+                          isProductOnly = false;
+                        }
+
+                        if (isServiceOnly == false && isProductOnly == false) {
+                          print("check : some product and some service");
+                          //show msg
+                          //on click
+                        } else if (isServiceOnly == true &&
+                            isProductOnly == false) {
+                          print("check : all service");
+
+                          // show msg
+                          // no Click
+                        } else if (isServiceOnly == false &&
+                            isProductOnly == true) {
+                          print("check : all product");
+
+                          // no show msg
+                          // on Click
+                        }
 
                         return Container(
                           color: ThemeApp.appBackgroundColor,
@@ -431,6 +495,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                 Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -482,11 +548,13 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                           Expanded(
                                             flex: 1,
                                             child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    isSelfPickUp = true;
-                                                  });
-                                                },
+                                                onTap: isServiceOnly == true
+                                                    ? () {}
+                                                    : () {
+                                                        setState(() {
+                                                          isSelfPickUp = true;
+                                                        });
+                                                      },
                                                 child: Container(
                                                     padding: const EdgeInsets
                                                             .fromLTRB(
@@ -571,7 +639,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                             //   ),
                                                             // );
                                                             print("widget.cartForPaymentPayload!.cartId11" +
-                                                                widget!.cartId
+                                                                widget.cartId
                                                                     .toString());
 
                                                             showModalBottomSheet(
@@ -806,6 +874,38 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                       SizedBox(
                                         height: height * .02,
                                       ),
+
+                                      /*  cartOrderPurchase[i]
+                                            .serviceId
+                                            .toString() !=
+                                            "null"
+                                            ? Text(
+                                                'Pickup from Store is not available for services',
+                                                style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    color: ThemeApp.redColor,
+                                                    fontSize: 16,
+                                                    letterSpacing: -0.25,
+                                                    fontWeight:
+                                                        FontWeight.w700))
+                                            : SizedBox(),*/
+
+                                      (isServiceOnly == false && isProductOnly == false)||(isServiceOnly == true)
+                                          ? Center(
+                                              child: Text(
+                                                  'Your cart containing service(s), hence Pickup from store option is not available for selected service(s).',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      color: ThemeApp.redColor,
+                                                      fontSize: 16,
+                                                      letterSpacing: -0.25,
+                                                      fontWeight:
+                                                          FontWeight.w700)),
+                                            )
+                                          : SizedBox(),
+                                      SizedBox(
+                                        height: height * .02,
+                                      ),
                                       Container(
                                           // height: height * 0.6,
                                           width: width,
@@ -939,6 +1039,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     );
   }
 
+  List<AddressContent>? defaultAddressList;
+
   Widget deliveryAddress() {
     return ChangeNotifierProvider<CartViewModel>.value(
         value: cartListView,
@@ -956,7 +1058,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
               print("Api calll");
               List<AddressContent>? addressList =
                   cartProvider.getAddress.data!.payload!.content;
-
+              defaultAddressList =
+                  cartProvider.getAddress.data!.payload!.content;
               print("addressList" + addressList!.length.toString());
               return addressList.length > 0
                   ? Container(
@@ -971,7 +1074,13 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                     Row(
                                       children: [
                                         TextFieldUtils().dynamicText(
-                          StringConstant.selectedFullName.isNotEmpty?StringConstant.selectedFullName: addressList[0].name.toString(),
+                                            StringConstant
+                                                    .selectedFullName.isNotEmpty
+                                                ? StringConstant
+                                                    .selectedFullName
+                                                : addressList[0]
+                                                    .name
+                                                    .toString(),
                                             context,
                                             TextStyle(
                                               fontFamily: 'Roboto',
@@ -998,7 +1107,14 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               top: 5,
                                               bottom: 5),
                                           child: Text(
-                                              StringConstant.selectedTypeOfAddress.isNotEmpty?StringConstant.selectedTypeOfAddress:      addressList[0].addressType.toString(),
+                                              StringConstant
+                                                      .selectedTypeOfAddress
+                                                      .isNotEmpty
+                                                  ? StringConstant
+                                                      .selectedTypeOfAddress
+                                                  : addressList[0]
+                                                      .addressType
+                                                      .toString(),
                                               style: TextStyle(
                                                   fontFamily: 'Roboto',
                                                   color: ThemeApp.whiteColor,
@@ -1013,8 +1129,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                     Text(
                                         // provider.orderCheckOutDetails[0]
                                         //     ["orderCheckOutDeliveryAddress"],
-                                        StringConstant.selectedFullAddress.isNotEmpty?StringConstant.selectedFullAddress:       "${addressList[0].addressLine1!}, ${addressList[0].addressLine2}, ${addressList[0].stateName},\n ${addressList[0].cityName}, ${addressList[0].pincode}",
-
+                                        StringConstant
+                                                .selectedFullAddress.isNotEmpty
+                                            ? StringConstant.selectedFullAddress
+                                            : "${addressList[0].addressLine1!}, ${addressList[0].addressLine2}, ${addressList[0].stateName},\n ${addressList[0].cityName}, ${addressList[0].pincode}",
                                         style: TextStyle(
                                             fontFamily: 'Roboto',
                                             fontSize: 12,
@@ -1040,7 +1158,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                           width: width * .03,
                                         ),
                                         TextFieldUtils().dynamicText(
-                                            StringConstant.selectedMobile.isNotEmpty?StringConstant.selectedMobile:   "${addressList[0].contactNumber}",
+                                            StringConstant
+                                                    .selectedMobile.isNotEmpty
+                                                ? StringConstant.selectedMobile
+                                                : "${addressList[0].contactNumber}",
                                             context,
                                             TextStyle(
                                                 fontFamily: 'Roboto',
@@ -1084,7 +1205,6 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                     fontWeight: FontWeight.bold)),
           );
         }));
-
   }
 
   Widget cartProductList(List<CartOrdersForPurchase> cartOrderPurchase) {
@@ -1095,7 +1215,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: cartOrderPurchase.length,
             itemBuilder: (BuildContext context, int index) {
-              if (cartOrderPurchase!.length < 0) {
+              if (cartOrderPurchase.length < 0) {
                 return const Center(
                     child: CircularProgressIndicator(
                   color: ThemeApp.darkGreyColor,
@@ -1197,7 +1317,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                   ),
                                   TextFieldUtils().dynamicText(
                                       StringConstant().convertDateTimeDisplay(
-                                          cartOrderPurchase![index]
+                                          cartOrderPurchase[index]
                                               .deliveryDate
                                               .toString()),
                                       context,
@@ -1253,10 +1373,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              cartOrderPurchase![index].offer.toString().isNotEmpty
+              cartOrderPurchase[index].offer.toString().isNotEmpty
                   ? TextFieldUtils().dynamicText(
                       indianRupeesFormat.format(double.parse(
-                                  cartOrderPurchase![index].offer.toString()) ??
+                                  cartOrderPurchase[index].offer.toString()) ??
                               0.0) ??
                           "0.0",
                       context,
@@ -1273,7 +1393,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                 width: 5,
               ),
               TextFieldUtils().dynamicText(
-                  "(${cartOrderPurchase![index].discountPercent.toString().toString()} % Off)",
+                  "(${cartOrderPurchase[index].discountPercent.toString().toString()} % Off)",
                   context,
                   TextStyle(
                     fontFamily: 'Roboto',
@@ -2621,7 +2741,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
     // TODO: implement initState
     super.initState();
     cartViewModel.sendAddressWithGet(
-        context, widget.cartForPaymentPayload!.userId.toString());
+        context, widget.cartForPaymentPayload.userId.toString());
   }
 
   @override

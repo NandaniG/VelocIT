@@ -4,6 +4,7 @@ import 'package:velocit/pages/screens/dashBoard.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../utils/StringUtils.dart';
+import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../widgets/global/okPopUp.dart';
 import '../../widgets/global/proceedButtons.dart';
@@ -165,18 +166,21 @@ Navigator.pop(context);
                         controller: _newPass,
                         autoValidation: AutovalidateMode.onUserInteraction,
                         hintText: 'New Password',
-                        onChange: (val) {
-                          setState(() {
-                            if (val.isNotEmpty && _newPass.text.isNotEmpty) {
-                              if (val == _currentPass.text) {
-                                _validateNewPassword = true;
-                              } else {
-                                _validateNewPassword = false;
-                              }
-                            } else {
-                              _validateNewPassword = true;
-                            }
-                          });
+                        onChange: (val) {setState(() {
+                          _checkPassword(val);
+
+                        });
+                          // setState(() {
+                          //   if (val.isNotEmpty && _newPass.text.isNotEmpty) {
+                          //     if (val == _currentPass.text) {
+                          //       _validateNewPassword = true;
+                          //     } else {
+                          //       _validateNewPassword = false;
+                          //     }
+                          //   } else {
+                          //     _validateNewPassword = true;
+                          //   }
+                          // });
                         },
                         validator: (value) {
                           if (value.isNotEmpty && _newPass.text.isNotEmpty) {
@@ -192,12 +196,25 @@ Navigator.pop(context);
                           }
                           return null;
                         }),
-                    SizedBox(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * .02,
+                    const SizedBox(
+                      height: 10,
                     ),
+                    // The strength indicator bar
+                    _newPass.text.length > 0
+                        ? LinearProgressIndicator(
+                      value: _strength,
+                      backgroundColor: Colors.grey[300],
+                      color: _strength <= 1 / 4
+                          ? Colors.red
+                          : _strength == 2 / 4
+                          ? Colors.yellow
+                          : _strength == 3 / 4
+                          ? Colors.blue
+                          : Colors.green,
+                      minHeight: 5,
+                    )
+                        : SizedBox(),
+                    SizedBox(height: 20),
                     TextFieldUtils()
                         .titleTextFields('Confirm Password *', context),
                     PasswordTextFormFieldsWidget(
@@ -285,6 +302,62 @@ Navigator.pop(context);
         ),
       ),
     );
+  }
+
+  late String _password;
+  double _strength = 0;
+
+  RegExp numReg = RegExp(r".*[0-9].*");
+  RegExp letterReg = RegExp(r".*[A-Za-z].*");
+
+  String _displayText = 'Please enter a password';
+
+  void _checkPassword(String value) {
+    _password = value.trim();
+
+    if (_password.isEmpty && _newPass.text.isEmpty) {
+      print("strength 1");
+    } else if (!StringConstant().isPass(_password)) {
+      //if password not match with regex show red bar
+      print("strength 2");
+      setState(() {
+        _strength = 1 / 4;
+        _displayText = 'Your password is too short';
+      });
+    }/* else if (StringConstant().isPass(_password)) {
+      print("strength 3");
+
+      setState(() {
+        _strength = 2 / 4;
+        _displayText = 'Your password is acceptable but not strong';
+      });
+    }  */else if (_password.length > 7&& _password.length<12) {
+      // password match with regex and greater than 7 to 12 then show yellow bar
+      setState(() {
+        _strength = 2 / 4;
+        _displayText = 'Your password is acceptable but not strong';
+      });
+    }else if(_password.length>11){
+
+      if (!letterReg.hasMatch(_password) || !numReg.hasMatch(_password)) {
+        setState(() {
+          // Password length >= 8
+          // But doesn't contain both letter and digit characters
+          _strength = 3 / 4;
+          _displayText = 'Your password is strong';
+        });
+      } else {
+        //password match and greater than 11 , show green bar
+        // Password length >= 8
+        // Password contains both letter and digit characters
+        setState(() {
+          _strength = 1;
+          _displayText = 'Your password is great';
+        });
+      }
+    }
+
+
   }
 
   /*static Future<Position> determinePosition() async {

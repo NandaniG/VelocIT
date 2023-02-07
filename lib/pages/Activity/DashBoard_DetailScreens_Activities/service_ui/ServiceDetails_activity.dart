@@ -196,8 +196,9 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(context, appTitle(context, "My Service"),
-            const SizedBox(), setState),
+        child:  AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"My Service"), location: SizedBox()),
+
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -990,7 +991,10 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    counterPrice--;
+                                    if (counterPrice <= 1) {
+                                    } else {
+                                      counterPrice--;
+                                    }
                                     remainingCounters();
 
                                     var data = {

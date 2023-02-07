@@ -199,8 +199,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child: appBar_backWidget(context, appTitle(context, "My Product"),
-            const SizedBox(), setState),
+        child:
+        AppBar_BackWidget(
+            context: context,titleWidget: appTitle(context,"My Product"), location: SizedBox()),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -769,9 +770,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         fontSize: 34,
                         letterSpacing: 0.2,
                         fontWeight: FontWeight.w700)),
-            SizedBox(
-              width: 25,
-            ),
+            // SizedBox(
+            //   width: 25,
+            // ),
             merchantTemp.isNotEmpty
                 ? TextFieldUtils().dynamicText(
                     indianRupeesFormat.format(double.parse(
@@ -796,9 +797,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         letterSpacing: 0.2,
                         fontSize: 22,
                         fontWeight: FontWeight.w700)),
-            SizedBox(
-              width: 15,
-            ),
+            // SizedBox(
+            //   width: 15,
+            // ),
             merchantTemp.isNotEmpty
                 ? TextFieldUtils().dynamicText(
                     merchantTemp[_radioValue].unitDiscountPerc.toString() +

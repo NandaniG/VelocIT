@@ -139,7 +139,8 @@ class SearchProduct {
       json['image_urls'].forEach((v) {
         imageUrls!.add(new ImageUrls.fromJson(v));
       });
-    }
+    }else{ imageUrls = <ImageUrls>[];}
+
     if (json['productCategory'] != null) {
       productCategory = [];
       // json['productCategory'].forEach((v) {
@@ -230,7 +231,7 @@ class ImageUrls {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['image_url'] = this.imageUrl;
+    data['image_url'] = this.imageUrl??"";
     return data;
   }
 }
