@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 
@@ -200,6 +201,7 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                       return GestureDetector(
                         onTap: () async {
                           final result = _placeList[index];
+                          final prefs = await SharedPreferences.getInstance();
 
                           // _controller.text =   _placeList[index]["description"] ;
                           final placeDetails =
@@ -212,7 +214,9 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                             _street = placeDetails.street;
                             _city = placeDetails.city;
                             _zipCode = placeDetails.zipCode;
-                            setState(() {
+    prefs.setString('SearchedPinCodePrefs', placeDetails.zipCode.toString());});
+
+    /*    setState(() {
 
 
                               Prefs.instance.setToken(
@@ -228,10 +232,9 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                             if (kDebugMode) {
                               print("response zipcode $_zipCode");
                             }
-                          });
+                          });*/
                           StringConstant.placesFromCurrentLocation =
-                              (await Prefs.instance
-                                  .getToken(StringConstant.pinCodePref))!;
+                              prefs.getString('SearchedPinCodePrefs')??"";
                           if (kDebugMode) {
                             print(
                                 "placesFromCurrentLocation pref...${StringConstant.placesFromCurrentLocation.toString()}");
@@ -252,6 +255,7 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                 ),
                 proceedButton("Cancel", ThemeApp.tealButtonColor, context, false,
                     () {
+
                   Navigator.pop(context);
                 })
 

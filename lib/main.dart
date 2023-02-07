@@ -47,10 +47,9 @@ import 'notificationservices/local_notification_service.dart';
 import 'pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
 import 'services/providers/Products_provider.dart';
 
-
 Future<void> backgroundHandler(RemoteMessage message) async {
-  print('FirebaseMessaging : '+message.data.toString());
-  print('FirebaseMessaging : ' +message.notification!.title.toString());
+  print('FirebaseMessaging : ' + message.data.toString());
+  print('FirebaseMessaging : ' + message.notification!.title.toString());
 }
 
 void main() async {
@@ -134,7 +133,7 @@ class MyApp extends StatelessWidget {
               // initialRoute: StringConstant.isLogIn != true?RoutesName.signInRoute:RoutesName.dashboardRoute,
               initialRoute: RoutesName.splashScreenRoute,
               onGenerateRoute: Routes.generateRoute,
-       /*       routes: {
+              /*       routes: {
                 // '/': (context) => StringConstant.isLogIn != true
                 //     ? SignIn_Screen()
                 //     : DashboardScreen(),
@@ -175,6 +174,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  String deviceTokenToSendPushNotification = '';
+
   @override
   void initState() {
     super.initState();
@@ -183,7 +184,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // when you click on notification app open from terminated state and you can get notification data in this method
 
     FirebaseMessaging.instance.getInitialMessage().then(
-          (message) {
+      (message) {
         print("FirebaseMessaging.instance.getInitialMessage");
         if (message != null) {
           print("New Notification");
@@ -202,21 +203,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // 2. This method only call when App in forground it mean app must be opened
     FirebaseMessaging.onMessage.listen(
-          (message) {
+      (message) {
         print("FirebaseMessaging.onMessage.listen");
         if (message.notification != null) {
           print(message.notification!.title);
           print(message.notification!.body);
           print("message.data11 ${message.data}");
           LocalNotificationService.createanddisplaynotification(message);
-
         }
       },
     );
 
     // 3. This method only call when App in background and not terminated(not closed)
     FirebaseMessaging.onMessageOpenedApp.listen(
-          (message) {
+      (message) {
         print("FirebaseMessaging.onMessageOpenedApp.listen");
         if (message.notification != null) {
           print(message.notification!.title);
@@ -226,10 +226,19 @@ class _SplashScreenState extends State<SplashScreen> {
       },
     );
 
-
-
     _getCurrentPosition();
   }
+
+  // Step 1.  Get the device token
+
+  Future<void> getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+    final token = await _fcm.getToken();
+    deviceTokenToSendPushNotification = token.toString();
+    print("Token Value $deviceTokenToSendPushNotification");
+  }
+
+  //splash to home timer
 
   startTime() async {
     final prefs = await SharedPreferences.getInstance();
@@ -239,7 +248,7 @@ class _SplashScreenState extends State<SplashScreen> {
         (prefs.getString('setBadgeCountPrefs')) ?? '';
     print("Splash LoginId : " + loginId.toString());
 
-    var _duration = const Duration(seconds: 3);
+    var _duration = const Duration(seconds: 2);
     return Timer(_duration, navigationPage);
   }
 
@@ -265,14 +274,14 @@ class _SplashScreenState extends State<SplashScreen> {
       print("USER LOGIN ID..............." +
           StringConstant.UserLoginId.toString());
 
-
       print("USER RandomUserLoginId ID..............." +
           StringConstant.RandomUserLoginId.toString());
 
       if (StringConstant.isUserLoggedIn == 0) {
         if ((StringConstant.RandomUserLoginId == '')) {
           print('login user is GUEST ');
-          print('ISNOT logged in..'+ StringConstant.RandomUserLoginId.toString());
+          print('ISNOT logged in..' +
+              StringConstant.RandomUserLoginId.toString());
           rnd = new Random();
           var r = min + rnd.nextInt(max - min);
 
@@ -280,7 +289,8 @@ class _SplashScreenState extends State<SplashScreen> {
           ID = r;
           print("cartId empty UserID" + ID.toString());
         } else {
-          print('Existing USER.....'+ StringConstant.RandomUserLoginId.toString());
+          print('Existing USER.....' +
+              StringConstant.RandomUserLoginId.toString());
           ID = StringConstant.RandomUserLoginId.toString();
         }
       } else {
@@ -315,6 +325,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   var locationMessage = "";
   String addressPincode = "";
+
 /*  Future getCurrentLocation() async {
     LocationPermission? permission;
 
@@ -407,32 +418,29 @@ class _SplashScreenState extends State<SplashScreen> {
     if (permission == LocationPermission.denied) {
       _getCurrentPosition();
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {  _getCurrentPosition();
+      if (permission == LocationPermission.denied) {
+        _getCurrentPosition();
         return Future.error('Location permission are denied');
       }
     }
 
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high) .then((Position position) {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
       setState(() => _currentPosition = position);
       _getLocation(_currentPosition!);
     }).catchError((e) {
       debugPrint(e);
     });
-
-
-
   }
 
   _getLocation(Position position) async {
     final coordinates = new Coordinates(position.latitude, position.longitude);
     var addresses =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     print("address.streetAddress" + first.postalCode.toString());
     print("${first.featureName} : ${first.addressLine}");
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('CurrentPinCodePrefs', first.postalCode.toString());
 
     var splitag = first.addressLine.split(",");
     // var houseBuilding = splitag[0]+', '+splitag[1];
@@ -442,14 +450,17 @@ class _SplashScreenState extends State<SplashScreen> {
     var pincode = first.postalCode;
 
     setState(() {
-      startTime();
+      prefs.setString('CurrentPinCodePrefs', first.postalCode.toString()).then((value) {
+        startTime();
+      });
 
-    prefs.setString('CurrentPinCodePrefs', first.postalCode.toString());
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    getDeviceTokenToSendNotification();
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
