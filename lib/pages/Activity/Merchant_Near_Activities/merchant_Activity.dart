@@ -17,6 +17,7 @@ import '../../../utils/ProgressIndicatorLoader.dart';
 import '../../../utils/StringUtils.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
@@ -41,7 +42,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
 
   late GoogleMapController mapController; //contrller for Google map
   final Completer<GoogleMapController> _controller =
-  Completer<GoogleMapController>();
+      Completer<GoogleMapController>();
 
   bool servicestatus = false;
   bool haspermission = false;
@@ -54,77 +55,101 @@ class _MerchantActvityState extends State<MerchantActvity> {
   var data;
 
   final Set<Marker> markers = new Set(); //markers for google map
-  LatLng showLocation =
-  const LatLng(26.26774119270947, 73.03210171571942); //location to show in map
+  LatLng showLocation = const LatLng(
+      26.26774119270947, 73.03210171571942); //location to show in map
   MerchantViewModel merchantViewModel = MerchantViewModel();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     data = Provider.of<HomeProvider>(context, listen: false).loadJson();
-    getmarkers();
+    // getmarkers();
+    getGPSInfo();
   }
 
   getGPSInfo() async {
     bool servicestatus = await Geolocator.isLocationServiceEnabled();
+    LocationPermission permission = await Geolocator.checkPermission();
+    setState(() {
 
+    });
     if (servicestatus) {
+      getLocation();
+
       print("GPS service is enabled");
     } else {
       print("GPS service is disabled.");
+
+
+      permission = await Geolocator.checkPermission();
+      if( servicestatus ==false){
+        permission = await Geolocator.requestPermission();
+        print('Location requestPermissiondenied');
+        if (permission == LocationPermission.denied) {
+          permission = await Geolocator.requestPermission();
+          if (permission == LocationPermission.denied) {
+            print('Location permissions are denied');
+            permission = await Geolocator.requestPermission();
+            if (permission == LocationPermission.deniedForever) {
+              Utils.errorToast(
+                  'You need to enable location for merchants near you');
+
+              print("'Location permissions are permanently denied");
+            } else {
+              print("GPS Location service is granted");
+              getLocation();
+            }
+          } else {
+            print("GPS Location service is granted");
+            getLocation();
+          }
+        } else {
+
+          getLocation();
+          print("GPS Location permission granted.");
+        }
+      }
+
     }
     //
-    LocationPermission permission = await Geolocator.checkPermission();
 
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        print('Location permissions are denied');
-      } else if (permission == LocationPermission.deniedForever) {
-        print("'Location permissions are permanently denied");
-      } else {
-        print("GPS Location service is granted");
-        getLocation();
-      }
-    } else {
-      getLocation();
-      print("GPS Location permission granted.");
-    }
+
   }
 
   getLocation() async {
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     print("long" + position.longitude.toString()); //Output: 80.24599079
-    print("current lat"+position.latitude.toString()); //Output: 29.6593457
+    print("current lat" + position.latitude.toString()); //Output: 29.6593457
 
     long = position.longitude.toString();
     lat = position.latitude.toString();
 
-    Map data ={};
-    if(double.parse(long)<0){
+    Map data = {};
+    if (double.parse(long) < 0) {
       data = {
-        "base_latitude":26.26774119270947,
-        "base_longitude":73.03210171571942,
-        "distance_in_hundred_mtrs":100
+        "base_latitude": 26.26774119270947,
+        "base_longitude": 73.03210171571942,
+        "distance_in_hundred_mtrs": 100
       };
-    }else{
+    } else {
       setState(() {
         // showLocation = LatLng(26.26774119270947, 73.03210171571942);
         // showLocation = LatLng(position.latitude, position.longitude);
       });
-     /* data = {
+      /* data = {
         "base_latitude": lat,
         "base_longitude": long,
         "distance_in_hundred_mtrs": 100
       };*/
       data = {
-        "base_latitude":26.26774119270947,
-        "base_longitude":73.03210171571942,
-        "distance_in_hundred_mtrs":100
+        "base_latitude": 26.26774119270947,
+        "base_longitude": 73.03210171571942,
+        "distance_in_hundred_mtrs": 100
       };
     }
-    var responce =  await  merchantViewModel.getPostMerchantNearMe(context, data);
+    var responce = await merchantViewModel.getPostMerchantNearMe(context, data);
     setState(() {
       //refresh UI
     });
@@ -136,8 +161,8 @@ class _MerchantActvityState extends State<MerchantActvity> {
     );
 
     StreamSubscription<Position> positionStream =
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position position) {
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position position) {
       print(position.longitude); //Output: 80.24599079
       print(position.latitude); //Output: 29.6593457
 
@@ -150,7 +175,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
     });
   }
 
-  Set<Marker> getmarkers() {
+/*  Set<Marker> getmarkers() {
     getGPSInfo();
     //markers to place on map
     setState(() {
@@ -194,7 +219,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
     });
 
     return markers;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -203,15 +228,15 @@ class _MerchantActvityState extends State<MerchantActvity> {
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
-
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .12),
         child: AppBarWidget(
           context: context,
           titleWidget: searchBar(context),
-          location: const AddressWidgets(),   ),
+          location: const AddressWidgets(),
+        ),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context,3),
+      bottomNavigationBar: bottomNavigationBarWidget(context, 3),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(
@@ -284,20 +309,20 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                        const Merchant_FilterScreen(),
+                                            const Merchant_FilterScreen(),
                                       ),
                                     );
                                   },
                                   child: Padding(
                                     padding:
-                                    const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                                        const EdgeInsets.fromLTRB(10, 2, 10, 2),
                                     child: SvgPicture.asset(
                                       'assets/appImages/filterIcon.svg',
                                       color: ThemeApp.primaryNavyBlackColor,
                                       semanticsLabel: 'Acme Logo',
                                       theme: SvgTheme(
                                         currentColor:
-                                        ThemeApp.primaryNavyBlackColor,
+                                            ThemeApp.primaryNavyBlackColor,
                                       ),
                                       height: height * .03,
                                     ),
@@ -321,141 +346,197 @@ class _MerchantActvityState extends State<MerchantActvity> {
 
   Widget merchantList() {
     var orientation =
-    (MediaQuery.of(context).orientation == Orientation.landscape);
+        (MediaQuery.of(context).orientation == Orientation.landscape);
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        child:  ChangeNotifierProvider<MerchantViewModel>.value(
+        child: ChangeNotifierProvider<MerchantViewModel>.value(
             value: merchantViewModel,
             child: Consumer<MerchantViewModel>(
                 builder: (context, merchantList, child) {
-                  switch (merchantList.merchantResponse.status) {
-                    case Status.LOADING:
-                      if (kDebugMode) {
-                        print("Api load");
-                      }
-                      return ProgressIndicatorLoader(true);
+              switch (merchantList.merchantResponse.status) {
+                case Status.LOADING:
+                  if (kDebugMode) {
+                    print("Api load");
+                  }
+                  return ProgressIndicatorLoader(true);
 
-                    case Status.ERROR:
-                      if (kDebugMode) {
-                        print("Api error : " +
-                            merchantList.merchantResponse.message.toString());
-                      }
-                      return Text(merchantList.merchantResponse.message.toString());
+                case Status.ERROR:
+                  if (kDebugMode) {
+                    print("Api error : " +
+                        merchantList.merchantResponse.message.toString());
+                  }
+                  return Text(merchantList.merchantResponse.message.toString());
 
-                    case Status.COMPLETED:
-                      if (kDebugMode) {
-                        print("Api calll");
-                      }
+                case Status.COMPLETED:
+                  if (kDebugMode) {
+                    print("Api calll");
+                  }
 
-                      print("merchantList...."+merchantList.merchantResponse.data.toString());
-                      if(merchantList.merchantResponse.data?.status == "OK"){
-                        if ((merchantList.merchantResponse.data?.payload ?? []).length > 0) {
-                          List<MerchantPayload> payload = merchantList.merchantResponse.data!.payload!;
-                          // Set<Marker> markers = [] as Set<Marker>;
-                          // setState(() {
-                          for (var i = 0; i < payload.length; i++) {
-                            String name = '${payload[i].name ?? ""}';
-                            markersList.add(Marker(
-                              markerId: MarkerId(payload[i].id.toString()),
-                              position: LatLng(payload[i].latitude ?? 0, payload[i].longitude ?? 0), //position of marker
-                              infoWindow:  InfoWindow(
-                                //popup info
-                                onTap: (() {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>  MerchantListByIdActivity(merchant: merchantList.merchantResponse.data?.payload![i],)));
-                                }),
-                                title: name,
-                                // snippet: ,
-                              ),
-                              icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-                            ));
-                          }
-                          // });
-                        }
+                  print("merchantList...." +
+                      merchantList.merchantResponse.data.toString());
+                  if (merchantList.merchantResponse.data?.status == "OK") {
+                    if ((merchantList.merchantResponse.data?.payload ?? [])
+                            .length >
+                        0) {
+                      List<MerchantPayload> payload =
+                          merchantList.merchantResponse.data!.payload!;
+                      // Set<Marker> markers = [] as Set<Marker>;
+                      // setState(() {
+                      for (var i = 0; i < payload.length; i++) {
+                        String name = '${payload[i].name ?? ""}';
+                        markersList.add(Marker(
+                          markerId: MarkerId(payload[i].id.toString()),
+                          position: LatLng(payload[i].latitude ?? 0,
+                              payload[i].longitude ?? 0),
+                          //position of marker
+                          infoWindow: InfoWindow(
+                            //popup info
+                            onTap: (() {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      MerchantListByIdActivity(
+                                        merchant: merchantList
+                                            .merchantResponse.data?.payload![i],
+                                      )));
+                            }),
+                            title: name,
+                            // snippet: ,
+                          ),
+                          icon:
+                              BitmapDescriptor.defaultMarker, //Icon for Marker
+                        ));
                       }
-                      List<MerchantPayload> merchantLists=  merchantList.merchantResponse.data!.payload!;
+                      // });
+                    }
+                  }
+                  List<MerchantPayload> merchantLists =
+                      merchantList.merchantResponse.data!.payload!;
 
-                      return merchantLists.isEmpty?Container(height: height/1.5,alignment: Alignment.center, child: Text("No merchant available near you")): Container(
+                  return markersList.isEmpty
+                      ? Container(
+                      height: height,
+                      alignment: Alignment.center,
+                      child: Text("No merchant available near you"))
+                      :Container(
                           height: MediaQuery.of(context).size.height,
                           // padding: EdgeInsets.all(12.0),
                           child: GridView.builder(
-                            itemCount:merchantList.merchantResponse.data?.payload!.length,
+                            itemCount: merchantList
+                                .merchantResponse.data?.payload!.length,
                             physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              // childAspectRatio: 3 / 3.1,
-                                childAspectRatio: orientation
-                                    ? width * 3.2 / height * 0.5
-                                    : width * 2 / height * 1,
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    // childAspectRatio: 3 / 3.1,
+                                    childAspectRatio: orientation
+                                        ? width * 3.2 / height * 0.5
+                                        : width * 2 / height * 1,
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10),
                             itemBuilder: (BuildContext context, int index) {
-                              print(merchantList.merchantResponse.data!.payload![index].merchantStoreImage.toString());
+                              print(merchantList.merchantResponse.data!
+                                  .payload![index].merchantStoreImage
+                                  .toString());
                               return InkWell(
-                                onTap: (){
+                                onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>  MerchantListByIdActivity(merchant: merchantList.merchantResponse.data?.payload![index],)));
+                                      builder: (context) =>
+                                          MerchantListByIdActivity(
+                                            merchant: merchantList
+                                                .merchantResponse
+                                                .data
+                                                ?.payload![index],
+                                          )));
                                 },
                                 child: Container(
-                                    height: orientation ? height *36 : height * .30,
+                                    height: orientation
+                                        ? height * 36
+                                        : height * .30,
                                     // MediaQuery.of(context).size.height * .26,
-                                    width: MediaQuery.of(context).size.width * .45,
+                                    width:
+                                        MediaQuery.of(context).size.width * .45,
                                     decoration: const BoxDecoration(
                                         color: ThemeApp.tealButtonColor,
-                                        borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Expanded(
                                           flex: 2,
                                           child: Stack(
                                             alignment: Alignment.topRight,
                                             children: [
-
                                               Container(
                                                 height: orientation
                                                     ? height * .25
-                                                    : MediaQuery.of(context).size.height *
-                                                    .17,
-                                                width: MediaQuery.of(context).size.width,
+                                                    : MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        .17,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
                                                 decoration: const BoxDecoration(
                                                     color: ThemeApp.whiteColor,
-                                                    borderRadius: BorderRadius.only(
-                                                      topRight: Radius.circular(10),
-                                                      topLeft: Radius.circular(10),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topRight:
+                                                          Radius.circular(10),
+                                                      topLeft:
+                                                          Radius.circular(10),
                                                     )),
                                                 child: ClipRRect(
-                                                  borderRadius: const BorderRadius.only(
-                                                    topRight: Radius.circular(10),
-                                                    topLeft: Radius.circular(10),
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(10),
+                                                    topLeft:
+                                                        Radius.circular(10),
                                                   ),
                                                   child: Image.network(
-                                                    // width: double.infinity,
-                                                    merchantList.merchantResponse.data!.payload![index].merchantStoreImage.toString()??"",
-                                                    // fit: BoxFit.fill,
-                                                    // height:
-                                                    // MediaQuery.of(context).size.height *
-                                                    //     .07,
-                                                    errorBuilder:
-                                                        (context, error,
-                                                        stackTrace) {
-                                                      return Icon(
-                                                        Icons.image,
-                                                        color: ThemeApp
-                                                            .appColor,
-                                                      );
-                                                    },
-                                                  )??SizedBox(),
+                                                        // width: double.infinity,
+                                                        merchantList
+                                                                .merchantResponse
+                                                                .data!
+                                                                .payload![index]
+                                                                .merchantStoreImage
+                                                                .toString() ??
+                                                            "",
+                                                        // fit: BoxFit.fill,
+                                                        // height:
+                                                        // MediaQuery.of(context).size.height *
+                                                        //     .07,
+                                                        errorBuilder: (context,
+                                                            error, stackTrace) {
+                                                          return Icon(
+                                                            Icons.image,
+                                                            color: ThemeApp
+                                                                .appColor,
+                                                          );
+                                                        },
+                                                      ) ??
+                                                      SizedBox(),
                                                 ),
                                               ),
                                               Padding(
-                                                padding:
-                                                const EdgeInsets.only(top: 7, right: 7),
+                                                padding: const EdgeInsets.only(
+                                                    top: 7, right: 7),
                                                 child: kmAwayOnMerchantImage(
-                                                  double.parse(merchantList.merchantResponse.data!.payload![index].distanceInKm.toString()).toString() + ' KM Away'??"",
+                                                  double.parse(merchantList
+                                                                  .merchantResponse
+                                                                  .data!
+                                                                  .payload![
+                                                                      index]
+                                                                  .distanceInKm
+                                                                  .toString())
+                                                              .toString() +
+                                                          ' KM Away' ??
+                                                      "",
                                                   context,
                                                 ),
                                               )
@@ -463,30 +544,31 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                           ),
                                         ),
                                         Padding(
-                                            padding: const EdgeInsets.fromLTRB(18,11,18,11),
+                                            padding: const EdgeInsets.fromLTRB(
+                                                18, 11, 18, 11),
                                             child: Text(
-                                              merchantList.merchantResponse.data?.payload![index].name.toString()??"",
-
+                                              merchantList.merchantResponse.data
+                                                      ?.payload![index].name
+                                                      .toString() ??
+                                                  "",
                                               style: TextStyle(
                                                 fontFamily: 'Roboto',
                                                 fontSize: 12,
                                                 color: ThemeApp.whiteColor,
                                                 fontWeight: FontWeight.w700,
                                                 overflow: TextOverflow.ellipsis,
-                                              ),)
-
-                                        ),
+                                              ),
+                                            )),
                                       ],
                                     )),
                               );
                             },
                           ));
-                    default:
-                      return Text("No Data found!");
-                  }
+                default:
                   return Text("No Data found!");
-                }))
-        ,
+              }
+              return Text("No Data found!");
+            })),
       ),
     );
   }
@@ -496,50 +578,56 @@ class _MerchantActvityState extends State<MerchantActvity> {
         height: MediaQuery.of(context).size.height * 0.7,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child:markersList.isEmpty?Container(height: height,alignment: Alignment.center, child: Text("No merchant available near you")): GestureDetector(
-            onVerticalDragStart: (start) {},
-            child: GoogleMap(
-              mapType: MapType.hybrid,
-              myLocationEnabled: true,
-              gestureRecognizers: Set()
-                ..add(Factory<OneSequenceGestureRecognizer>(
-                        () => new EagerGestureRecognizer()))
-                ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer()))
-                ..add(
-                    Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()))
-                ..add(Factory<TapGestureRecognizer>(() => TapGestureRecognizer()))
-                ..add(Factory<VerticalDragGestureRecognizer>(
-                        () => VerticalDragGestureRecognizer())),
-              onMapCreated: (controller){
-                _controller.complete(controller);
-              },
-              markers: markersList,
-              initialCameraPosition: CameraPosition(
-                target: showLocation,
-                zoom: 12.0,
-              ),
-              // GoogleMap(
-              //   zoomGesturesEnabled: true,
-              //   //enable Zoom in, out on map
-              //   initialCameraPosition: const CameraPosition(
-              //     //innital position in map
-              //     target: showLocation, //initial position
-              //     zoom: 15.0, //initial zoom level
-              //   ),
-              //   markers: getmarkers(),
-              //   //markers to show on map
-              //   mapType: MapType.normal,
-              //   //map type
-              //   onMapCreated: (controller) {
-              //     //method called when map is created
-              //     setState(() {
-              //       mapController = controller;
-              //     });
-              //   },
-              // ),
-            ),
-          ),
-        )
-    );
+          child: markersList.isEmpty
+              ? Container(
+                  height: height,
+                  alignment: Alignment.center,
+                  child: Text("No merchant available near you"))
+              : GestureDetector(
+                  onVerticalDragStart: (start) {},
+                  child: GoogleMap(
+                    mapType: MapType.hybrid,
+                    myLocationEnabled: true,
+                    gestureRecognizers: Set()
+                      ..add(Factory<OneSequenceGestureRecognizer>(
+                          () => new EagerGestureRecognizer()))
+                      ..add(Factory<PanGestureRecognizer>(
+                          () => PanGestureRecognizer()))
+                      ..add(Factory<ScaleGestureRecognizer>(
+                          () => ScaleGestureRecognizer()))
+                      ..add(Factory<TapGestureRecognizer>(
+                          () => TapGestureRecognizer()))
+                      ..add(Factory<VerticalDragGestureRecognizer>(
+                          () => VerticalDragGestureRecognizer())),
+                    onMapCreated: (controller) {
+                      _controller.complete(controller);
+                    },
+                    markers: markersList,
+                    initialCameraPosition: CameraPosition(
+                      target: showLocation,
+                      zoom: 12.0,
+                    ),
+                    // GoogleMap(
+                    //   zoomGesturesEnabled: true,
+                    //   //enable Zoom in, out on map
+                    //   initialCameraPosition: const CameraPosition(
+                    //     //innital position in map
+                    //     target: showLocation, //initial position
+                    //     zoom: 15.0, //initial zoom level
+                    //   ),
+                    //   markers: getmarkers(),
+                    //   //markers to show on map
+                    //   mapType: MapType.normal,
+                    //   //map type
+                    //   onMapCreated: (controller) {
+                    //     //method called when map is created
+                    //     setState(() {
+                    //       mapController = controller;
+                    //     });
+                    //   },
+                    // ),
+                  ),
+                ),
+        ));
   }
 }

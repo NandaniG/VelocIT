@@ -643,7 +643,7 @@ class AddressWidgets extends StatefulWidget {
 }
 
 class _AddressWidgetsState extends State<AddressWidgets> {
-  var finalPicode;
+  var finalPicode='';
 
   @override
   void initState() {
@@ -655,12 +655,12 @@ class _AddressWidgetsState extends State<AddressWidgets> {
   getPref() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      finalPicode = prefs.getString('CurrentPinCodePrefs');
+      finalPicode = prefs.getString('CurrentPinCodePrefs')??"";
       print(
           "placesFromCurrentLocation CurrentPinCode pref...${finalPicode.toString()}");
 
       StringConstant.placesFromCurrentLocation =
-      (prefs.getString('SearchedPinCodePrefs'))!;
+      (prefs.getString('SearchedPinCodePrefs'))??"";
       StringConstant.CurrentPinCode =
       (prefs.getString('CurrentPinCodePrefs') ?? '');
 /*
