@@ -347,5 +347,16 @@ class ManagePermissions {
       await Permission.storage.request();
     }
   }
+  static Future<void> askLocationPermission() async {
+    if (await Permission.location.isDenied) {
+      await Permission.location.request();
+    }
+    if (await Permission.location.isPermanentlyDenied) {
+      await openAppSettings();
+    }
+    if (await Permission.location.isRestricted) {
+      await Permission.location.request();
+    }
+  }
 }
 
