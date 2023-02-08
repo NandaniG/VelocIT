@@ -10,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/Core/repository/dashboard_repository.dart';
 import 'package:velocit/utils/ProgressIndicatorLoader.dart';
 import '../../Core/AppConstant/apiMapping.dart';
 import '../../Core/Model/BestDealModel.dart';
@@ -76,8 +77,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   double height = 0.0;
   double width = 0.0;
 
-  // String location = 'Null, Press Button';
-  // String Address = 'search';
   var homeData;
   bool _isProductListChip = false;
   bool _isServiceListChip = false;
@@ -113,6 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       'size': '10',
     };
     print("getProductListing Query" + productListingData.toString());
+
     productListView.productListingWithGet(0, 10);
     productListView.recommendedWithGet(0, 10);
     productListView.bestDealWithGet(0, 10);
@@ -186,7 +186,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         .cartSpecificIDWithGet(context, StringConstant.UserCartID);
   }
 
-  var finalPINCODE = '';
 
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
@@ -194,50 +193,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     decimalDigits: 0, // change it to get decimal places
     symbol: '₹',
   );
-  var locationMessage = "";
-  String addressPincode = "";
-
-  Future getCurrentLocation() async {
-    LocationPermission? permission;
-
-    permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permission are denied');
-      }
-    }
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-
-    var lastPosition = await Geolocator.getLastKnownPosition();
-    print("lastPosition" + lastPosition.toString());
-
-    setState(() {
-      locationMessage = "${position.latitude}, ${position.longitude}";
-      // getAddressFromLatLong(
-      //     position.latitude, position.longitude);
-    });
-
-    _getAddress(position.latitude, position.longitude);
-  }
-
-  Future<String> _getAddress(double? lat, double? lang) async {
-    print("address.streetAddress");
-    if (lat == null || lang == null) return "";
-    GeoCode geoCode = GeoCode();
-    Address address = Address();
-    try {
-     address =
-        await geoCode.reverseGeocoding(latitude: lat, longitude: lang); 
-    } catch (e) {
-      print(e);
-    }
-    print("address.streetAddress" + address.streetAddress.toString());
-    addressPincode = address.postal.toString();
-    return "${address.streetAddress}, ${address.city}, ${address.countryName}, ${address.postal}";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -968,7 +923,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ? _seeNoSeeMore(productList)
           : SizedBox());
     return Container(
-        height: productList.simpleSubCats!.length > 3?200:90,
+        height: productList.simpleSubCats!.length > 3 ? 200 : 90,
         // height: 200,
         width: double.infinity,
         alignment: Alignment.center,
@@ -976,7 +931,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           borderRadius: BorderRadius.circular(10),
         ),
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child:/*ListView.builder(
+        child: /*ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: productList!.simpleSubCats!.length,*/
@@ -1133,7 +1088,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AllProductDetailScreen(productList: productList),
+          builder: (context) =>
+              AllProductDetailScreen(productList: productList),
         ));
       },
       child: Container(
