@@ -24,7 +24,7 @@ class SignIn_Screen extends StatefulWidget {
 
 class _SignIn_ScreenState extends State<SignIn_Screen> {
   TextEditingController email = TextEditingController();
-  TextEditingController emailUsingOtpController = TextEditingController();
+  // TextEditingController emailUsingOtpController = TextEditingController();
   TextEditingController password = TextEditingController();
   bool _usingPassVisible = false;
   // int? _radioIndex = 2;
@@ -52,7 +52,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
     super.dispose();
 
     email.dispose();
-    emailUsingOtpController.dispose();
+    // emailUsingOtpController.dispose();
     password.dispose();
   }
 
@@ -270,7 +270,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             StringUtils.emailORMobile, context),
                     /*TextFieldUtils().asteriskTextField(
                             StringUtils.mobileNumber, context),*/
-                    isOtp == false?
+               /*     isOtp == false?
                     TextFormFieldsWidget(
                         errorText:StringUtils.validemailORMobileError,
                         textInputType: TextInputType.emailAddress,
@@ -319,7 +319,56 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             _validateEmail = false;
                           }
                           return null;
-                        }):  TextFormFieldsWidget(
+                        }): */TextFormFieldsWidget(
+                        errorText:StringUtils.validemailORMobileError,
+                        textInputType: TextInputType.emailAddress,
+                        controller: email,
+                        autoValidation: AutovalidateMode.onUserInteraction,
+                        hintText: StringUtils.emailORMobileHint,
+                        preffixText: Padding(
+                          padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
+                          child: SvgPicture.asset(
+                            'assets/appImages/Username.svg',
+                            width: 16.56,
+                            height: 16.56,
+                          ),
+                        ),
+                        suffixText:(!StringConstant().isEmail(email.text) &&
+                            !StringConstant().isPhone(email.text))?SizedBox(): Padding(
+                          padding:
+                          const EdgeInsets.fromLTRB(11.73, 12.73, 11.73, 12.73),
+                          child: SvgPicture.asset(
+                            'assets/appImages/emailValidateIcon.svg',
+                            width: 15.54,
+                            height: 15.54,
+                          ),
+                        ),
+                        onChange: (val) {
+                          setState(() {
+                            if (val.isEmpty && email.text.isEmpty) {
+                              _validateEmail = true;
+                            } else if (!StringConstant().isEmail(val) &&
+                                !StringConstant().isPhone(val)) {
+                              _validateEmail = true;
+                            } else {
+                              _validateEmail = false;
+                            }
+                          });
+                        },
+                        validator: (value) {
+                          if (value.isEmpty && email.text.isEmpty) {
+                            _validateEmail = true;
+                            return StringUtils.validEmailError;
+                          } else if (!StringConstant().isEmail(value) &&
+                              !StringConstant().isPhone(value)) {
+                            _validateEmail = true;
+                            return StringUtils.validEmailError;
+                          } else {
+                            _validateEmail = false;
+                          }
+                          return null;
+                        }),
+                   /* TextFormFieldsWidget(
                         errorText:StringUtils.validemailORMobileError,
                         textInputType: TextInputType.emailAddress,
                         controller: emailUsingOtpController,
@@ -367,190 +416,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             _validateEmail = false;
                           }
                           return null;
-                        }),
-                    // isOtp == false
-                    //     ? EmailTextFormFieldsWidget(
-                    //         errorText: StringUtils.validEmailError,
-                    //         textInputType: TextInputType.text,
-                    //         controller: email,
-                    //         autoValidation: AutovalidateMode.onUserInteraction,
-                    //         hintText: StringUtils.emailAddress,
-                    //         // preffixText: Padding(
-                    //         //   padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
-                    //         //   child: SvgPicture.asset(
-                    //         //     'assets/appImages/Username.svg',
-                    //         //     width: 16.56,
-                    //         //     height: 16.56,
-                    //         //   ),
-                    //         // ),
-                    //         // suffixText:!StringConstant().isEmail(email.text)?SizedBox(): Padding(
-                    //         //   padding: const EdgeInsets.fromLTRB(11.73,12.73,11.73,12.73),
-                    //         //   child: SvgPicture.asset(
-                    //         //     'assets/appImages/emailValidateIcon.svg',
-                    //         //     width: 15.54,
-                    //         //     height: 15.54,
-                    //         //   ),
-                    //         // ),
-                    //         onChange: (val) {
-                    //           setState(() {
-                    //             if (val.isEmpty && email.text.isEmpty) {
-                    //               _validateEmail = true;
-                    //             } else if (!StringConstant().isEmail(val)) {
-                    //               _validateEmail = true;
-                    //             } else {
-                    //               _validateEmail = false;
-                    //             }
-                    //           });
-                    //         },
-                    //         validator: (value) {
-                    //           if (value.isEmpty && email.text.isEmpty) {
-                    //             _validateEmail = true;
-                    //             return StringUtils.validEmailError;
-                    //           } else if (!StringConstant().isEmail(value)) {
-                    //             _validateEmail = true;
-                    //             return StringUtils.validEmailError;
-                    //           } else {
-                    //             _validateEmail = false;
-                    //           }
-                    //           return null;
-                    //         })
-                    //     //both email and phone
-                    //
-                    //     /*      TextFormFieldsWidget(
-                    //     errorText:StringUtils.validEmailError,
-                    //     textInputType: TextInputType.emailAddress,
-                    //     controller: email,
-                    //     autoValidation: AutovalidateMode.onUserInteraction,
-                    //     hintText: StringUtils.emailAddress,
-                    //     preffixText: Padding(
-                    //       padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
-                    //       child: SvgPicture.asset(
-                    //         'assets/appImages/Username.svg',
-                    //         width: 16.56,
-                    //         height: 16.56,
-                    //       ),
-                    //     ),
-                    //     suffixText:(!StringConstant().isEmail(email.text) &&
-                    //         !StringConstant().isPhone(email.text))?SizedBox(): Padding(
-                    //       padding:
-                    //       const EdgeInsets.fromLTRB(11.73, 12.73, 11.73, 12.73),
-                    //       child: SvgPicture.asset(
-                    //         'assets/appImages/emailValidateIcon.svg',
-                    //         width: 15.54,
-                    //         height: 15.54,
-                    //       ),
-                    //     ),
-                    //     onChange: (val) {
-                    //       setState(() {
-                    //         if (val.isEmpty && email.text.isEmpty) {
-                    //           _validateEmail = true;
-                    //         } else if (!StringConstant().isEmail(val) &&
-                    //             !StringConstant().isPhone(val)) {
-                    //           _validateEmail = true;
-                    //         } else {
-                    //           _validateEmail = false;
-                    //         }
-                    //       });
-                    //     },
-                    //     validator: (value) {
-                    //       if (value.isEmpty && email.text.isEmpty) {
-                    //         _validateEmail = true;
-                    //         return StringUtils.validEmailError;
-                    //       } else if (!StringConstant().isEmail(value) &&
-                    //           !StringConstant().isPhone(value)) {
-                    //         _validateEmail = true;
-                    //         return StringUtils.validEmailError;
-                    //       } else {
-                    //         _validateEmail = false;
-                    //       }
-                    //       return null;
-                    //     })*/
-                    //     : const SizedBox(
-                    //         height: 0,
-                    //       ),
-                    // isOtp == false
-                    //     ? const SizedBox(
-                    //         height: 0,
-                    //       )
-                    //     :
-                    //     //using both email phone
-                    //
-                    //     /* TextFormFieldsWidget(
-                    //     errorText:StringUtils.validemailORMobileError,
-                    //     textInputType: TextInputType.emailAddress,
-                    //     controller: mobileController,
-                    //     autoValidation: AutovalidateMode.onUserInteraction,
-                    //     hintText: StringUtils.emailORMobile,
-                    //     preffixText: Padding(
-                    //       padding: const EdgeInsets.fromLTRB(11.73,12.73,6.36,12.73),
-                    //       child: SvgPicture.asset(
-                    //         'assets/appImages/Username.svg',
-                    //         width: 16.56,
-                    //         height: 16.56,
-                    //       ),
-                    //     ),
-                    //     suffixText:(!StringConstant().isEmail(mobileController.text) &&
-                    //         !StringConstant().isPhone(mobileController.text))?SizedBox(): Padding(
-                    //       padding:
-                    //       const EdgeInsets.fromLTRB(11.73, 12.73, 11.73, 12.73),
-                    //       child: SvgPicture.asset(
-                    //         'assets/appImages/emailValidateIcon.svg',
-                    //         width: 15.54,
-                    //         height: 15.54,
-                    //       ),
-                    //     ),
-                    //     onChange: (val) {
-                    //       setState(() {
-                    //         if (val.isEmpty && mobileController.text.isEmpty) {
-                    //           _validateMobile = true;
-                    //         } else if (!StringConstant().isEmail(val) &&
-                    //             !StringConstant().isPhone(val)) {
-                    //           _validateMobile = true;
-                    //         } else {
-                    //           _validateMobile = false;
-                    //         }
-                    //       });
-                    //     },
-                    //     validator: (value) {
-                    //       if (value.isEmpty && mobileController.text.isEmpty) {
-                    //         _validateMobile = true;
-                    //         return StringUtils.validemailORMobileError;
-                    //       } else if (!StringConstant().isEmail(value) &&
-                    //           !StringConstant().isPhone(value)) {
-                    //         _validateMobile = true;
-                    //         return StringUtils.validemailORMobileError;
-                    //       } else {
-                    //         _validateMobile = false;
-                    //       }
-                    //       return null;
-                    //     }),*/
-                    //
-                    //     MobileNumberTextFormField(
-                    //         errorText: StringUtils.enterMobileNumber,
-                    //         controller: mobileController,
-                    //         enable: true,
-                    //         onChanged: (phone) {
-                    //           print(phone.completeNumber);
-                    //           if (phone.countryCode == "IN") {
-                    //             print("india selected");
-                    //             print(phone.completeNumber);
-                    //           } else {
-                    //             print("india not selected");
-                    //           }
-                    //         },
-                    //         validator: (value) {
-                    //           if (mobileController.text.isEmpty) {
-                    //             _validateMobile = true;
-                    //             return StringUtils.mobileError;
-                    //           } else if (!StringConstant()
-                    //               .isPhone(mobileController.text)) {
-                    //             _validateMobile = true;
-                    //             return StringUtils.mobileError;
-                    //           } else {
-                    //             _validateMobile = false;
-                    //           }
-                    //           return null;
-                    //         }),
+                        }),*/
 
                     isOtp == false
                         ? SizedBox(
@@ -744,15 +610,15 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         : proceedButton(StringUtils.sendOtp,
                             ThemeApp.tealButtonColor, context, false, () {
                             if (_formKey.currentState!.validate() &&
-                                emailUsingOtpController.text.isNotEmpty) {
+                                email.text.isNotEmpty) {
                               Map emaildata = {
-                                'email': emailUsingOtpController.text,
+                                'email': email.text,
                               };
                               Map mobileData = {
-                                'mobile': emailUsingOtpController.text,
+                                'mobile': email.text,
                               };
                               if (StringConstant()
-                                  .isNumeric(emailUsingOtpController.text)) {
+                                  .isNumeric(email.text)) {
                                 print(mobileData);
 
                                 AuthRepository().postApiForMobileOTPRequest(
@@ -873,7 +739,6 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                         InkWell(
                           onTap: () {
                             email.clear();
-                            emailUsingOtpController.clear();
                             password.clear();
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(

@@ -60,7 +60,7 @@ static String BaseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
       //   break;
 
       case apiEndPoint.user_get:
-        retVal = ConstructURI("/users");
+        retVal = ConstructURI("/user/");
         break;
       case apiEndPoint.user_post:
         retVal = ConstructURI("/users");

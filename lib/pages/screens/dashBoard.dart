@@ -178,6 +178,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       // var CARTID = prefs.getString('CartIdPref');
       StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
       print("Cart Id From DashBoard Activity " + StringConstant.UserCartID);
+
       // print("cartId from Pref" + CARTID.toString());
     });
 

@@ -6,6 +6,7 @@ import 'package:velocit/pages/screens/dashBoard.dart';
 import '../../utils/StringUtils.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
+import '../../utils/utils.dart';
 import '../../widgets/global/okPopUp.dart';
 import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
@@ -112,7 +113,7 @@ Navigator.pop(context);
             height: MediaQuery
                 .of(context)
                 .size
-                .height * .6,
+                .height * .7,
             decoration: BoxDecoration(
               color: ThemeApp.whiteColor,
               borderRadius: BorderRadius.circular(10),
@@ -125,7 +126,7 @@ Navigator.pop(context);
                 child: ListView(
                   children: [
                     TextFieldUtils()
-                        .titleTextFields(StringUtils
+                        .asteriskTextField(StringUtils
                         .currentPassword, context),
                     PasswordTextFormFieldsWidget(
                         errorText: StringUtils
@@ -159,7 +160,7 @@ Navigator.pop(context);
                           .size
                           .height * .02,
                     ),
-                    TextFieldUtils().titleTextFields('New Password *', context),
+                    TextFieldUtils().asteriskTextField('New Password', context),
                     PasswordTextFormFieldsWidget(
                         errorText: 'please enter new password',
                         textInputType: TextInputType.text,
@@ -216,7 +217,7 @@ Navigator.pop(context);
                         : SizedBox(),
                     SizedBox(height: 20),
                     TextFieldUtils()
-                        .titleTextFields('Confirm Password *', context),
+                        .asteriskTextField('Confirm Password', context),
                     PasswordTextFormFieldsWidget(
                         errorText: 'please enter password',
                         textInputType: TextInputType.text,
@@ -256,7 +257,7 @@ Navigator.pop(context);
                       height: MediaQuery
                           .of(context)
                           .size
-                          .height * .025,
+                          .height * .1,
                     ),
                     proceedButton('Change Password',ThemeApp.tealButtonColor, context, false,() async{                        FocusManager.instance.primaryFocus?.unfocus();
 
@@ -272,12 +273,7 @@ Navigator.pop(context);
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
 
                         } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return OkDialog(
-                                    text: "Please enter correct data");
-                              });
+                      Utils.errorToast('Please enter valid details');
                         }
                       } else {
                         if (_currentPass.text == _newPass.text) {
@@ -286,13 +282,9 @@ Navigator.pop(context);
                         if (_confirmPass.text != _newPass.text) {
                           _validateConfirmPassword = true;
                         }
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return OkDialog(
-                                  text: "Please enter all details Sign In");
-                            });
-                      }
+                        Utils.errorToast('Please enter valid details');
+
+                    }
                     }),
                   ],
                 ),

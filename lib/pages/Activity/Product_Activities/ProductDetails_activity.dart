@@ -1113,7 +1113,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                             onTap: () async {
                               final prefs =
                                   await SharedPreferences.getInstance();
-
+                             await prefs.setString(
+                                  'isRandomUser',
+                                  'No');
                               setState(() {
                                 updateCart(
                                     model.selectedMerchantId,

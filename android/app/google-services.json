@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "911869295716",
+    "project_id": "velocitt-fa119",
+    "storage_bucket": "velocitt-fa119.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911869295716:android:d06600b38032a667e5f371",
+        "android_client_info": {
+          "package_name": "com.codeelan.velocit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911869295716-agr0be1g8169477tpnm0929a6pqth1ac.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqPEB0FM8tK0I4SOGBE0CCEHBV6OodhKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911869295716-agr0be1g8169477tpnm0929a6pqth1ac.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

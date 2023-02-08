@@ -289,7 +289,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                 setState(() {
                                   _start = 120;
                                   isLoading = true;
-                                  startTimer();
+
 
                                   Map emaildata = {
                                     'email': widget.mobileNumber,
@@ -304,7 +304,9 @@ class _OTPScreenState extends State<OTPScreen> {
                                     AuthRepository()
                                         .postApiForMobileOTPRequest(
                                             mobileData, context)
-                                        .then((value) => setState(() {}));
+                                        .then((value) {
+                                      startTimer();
+                                    });
 
                                     print("Digit found");
                                   } else {
@@ -313,7 +315,9 @@ class _OTPScreenState extends State<OTPScreen> {
                                     AuthRepository()
                                         .postApiForEmailOTPRequest(
                                             emaildata, context)
-                                        .then((value) => setState(() {}));
+                                        .then((value) {
+                                      startTimer();
+                                    });
                                     // Navigator.of(context).push(
                                     //     MaterialPageRoute(builder: (context) => OTPScreen(mobileNumber:    mobileController.text))).then((value) => setState((){}));
 

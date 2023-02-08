@@ -40,8 +40,8 @@ class StringUtils {
   static String validateRegisteredEmail = "Please enter registered Email Address";
   static String resetPassword = "Send a new Password";
   static String changePassword = "Change Password";
-  static String currentPassword = "Current Password *";
-  static String newPassword = "New Password *";
+  static String currentPassword = "Current Password";
+  static String newPassword = "New Password";
   static String confirmPassword = "Confirm Password";
   static String newPasswordError = "please enter new password";
   static String lowerPriceOfTheDay = "Lower price of the day";

@@ -542,11 +542,9 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                 Color colorsStatus = ThemeApp.activeOrderColor;
                 for (var i = 0;
                     i <
-                        value
-                                .jsonData['payload']['consumer_baskets'][index]
+                        value.jsonData['payload']['consumer_baskets'][index]
                                     ['orders']
-                                .length -
-                            1;
+                                .length;
                     i++) {
                   print("order['orders'][i]['cancelled']" +
                       order['orders'][i]['cancelled'].toString());
@@ -1253,6 +1251,8 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                   itemBuilder: (_, index) {
                     Map order =
                         value.jsonData['payload']['consumer_baskets'][index];
+
+
                     DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
                     DateTime date =
                         DateTime.parse(order['earliest_delivery_date']);

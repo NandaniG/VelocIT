@@ -926,7 +926,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                           child: Image.network(
                                   // width: double.infinity,
                                   model.imageUrls![index].imageUrl ?? "",
-                                  fit: BoxFit.fill,
+                                  // fit: BoxFit.fill,
                                   height:
                                       MediaQuery.of(context).size.height * .05,
                                   width: width * .1,
@@ -1754,7 +1754,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                           child: Image.asset(
                                             // width: double.infinity,
                                             snapshot.data![index].serviceImage,
-                                            fit: BoxFit.fill,
+                                            // fit: BoxFit.fill,
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *
