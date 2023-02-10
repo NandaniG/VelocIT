@@ -176,7 +176,7 @@ class _AllProductDetailScreenState extends State<AllProductDetailScreen> {
                                   Container(
                                     color: ThemeApp.tealButtonColor,
                                     width: 191,
-                                    height: 56,
+                                    height: 46,
                                     padding: const EdgeInsets.only(
                                       left: 12,
                                       right: 12,
