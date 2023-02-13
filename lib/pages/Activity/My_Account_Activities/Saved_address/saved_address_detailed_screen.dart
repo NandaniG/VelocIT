@@ -8,6 +8,7 @@ import '../../../../Core/Model/CartModels/AddressListModel.dart';
 import '../../../../Core/Model/CartModels/SendCartForPaymentModel.dart';
 import '../../../../Core/ViewModel/cart_view_model.dart';
 import '../../../../Core/data/responses/status.dart';
+import '../../../../Core/repository/cart_repository.dart';
 import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/routes/routes.dart';
@@ -26,8 +27,10 @@ import 'delete_Address_dialog.dart';
 class SavedAddressDetails extends StatefulWidget {
   // final CartForPaymentPayload cartForPaymentPayload;
 
-  SavedAddressDetails({Key? key, /*required this.cartForPaymentPayload*/})
-      : super(key: key);
+  SavedAddressDetails({
+    Key? key,
+    /*required this.cartForPaymentPayload*/
+  }) : super(key: key);
 
   @override
   _SavedAddressDetailsState createState() => _SavedAddressDetailsState();
@@ -55,15 +58,12 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
     final prefs = await SharedPreferences.getInstance();
 
     setState(() {
-
-      StringConstant.UserLoginId =
-          (prefs.getString('isUserId')) ?? '';
+      StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
       StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-      print(" StringConstant.UserCartID"+ StringConstant.UserLoginId);
+      print(" StringConstant.UserCartID" + StringConstant.UserLoginId);
       cartViewModel.sendAddressWithGet(
           context, StringConstant.UserLoginId.toString());
-  });
-
+    });
   }
 
   @override
@@ -73,10 +73,11 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.myAccountRoute, (route) => false).then((value) {
-          setState(() {
-
-          });
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(
+                RoutesName.myAccountRoute, (route) => false)
+            .then((value) {
+          setState(() {});
         });
         return Future.value(true);
       },
@@ -84,276 +85,24 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
           backgroundColor: ThemeApp.appBackgroundColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(height * .09),
-            child:  AppBar_Back_RouteWidget(
-                context: context,titleWidget: appTitle(context,"Address"), location: SizedBox(),onTap: (){
-              Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.myAccountRoute, (route) => false).then((value) {
-                setState(() {
-
-                });
-              });
-            }),
-              ),
+            child: AppBar_Back_RouteWidget(
+                context: context,
+                titleWidget: appTitle(context, "Address"),
+                location: SizedBox(),
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(
+                          RoutesName.myAccountRoute, (route) => false)
+                      .then((value) {
+                    setState(() {});
+                  });
+                }),
+          ),
           body: SafeArea(child: deliveryAddress())),
     );
   }
 
   CartViewModel cartViewModel = CartViewModel();
-
-/*  Widget deliveryAddress() {
-    return Consumer<ProductProvider>(builder: (context, value, child) {
-      return Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                child: TextFieldUtils().dynamicText(
-                    StringUtils.deliveryAddress,
-                    context,
-                    TextStyle(fontFamily: 'Roboto',
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .03,
-                        fontWeight: FontWeight.bold)),
-              ),
-              Container(
-                width: width,
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: ThemeApp.lightGreyTab,
-                      width: 0.5,
-                    ),
-                    bottom: BorderSide(color: ThemeApp.darkGreyTab, width: 0.5),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  if(value.addressList.length<=4){
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            AddNewDeliveryAddress(isSavedAddress: isSavedAddress,cartForPaymentPayload: widget.cartForPaymentPayload),
-                      ),
-                    );
-                  }else{
-                    Utils.errorToast('You can add only 5 addresse');
-
-
-                  }
-
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                  child: Container(
-                    width: width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: ThemeApp.darkGreyColor,
-                    ),alignment: Alignment.center,
-                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    child: TextFieldUtils().dynamicText(
-                        "+ ${StringUtils.addNewAddress}",
-                        context,
-                        TextStyle(fontFamily: 'Roboto',
-                            color: ThemeApp.whiteColor,
-                            fontSize: height * .023,
-                            fontWeight: FontWeight.w400)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: height * .02,
-              ),
-              value.addressList.length > 0
-                  ? Expanded(
-                      child: ListView.builder(
-                          itemCount: value.addressList.length,
-                          itemBuilder: (_, index) {
-                            var fullAddress =
-                                value.addressList[index].myAddressHouseNoBuildingName! +
-                                    ", " +
-                                    value.addressList[index].myAddressAreaColony! +
-                                    ", " +
-                                    value.addressList[index].myAddressCity! +
-                                    ",\n" +
-                                    value.addressList[index].myAddressState!;
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: ThemeApp.whiteColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                                child: InkWell(
-                                  onLongPress: () {
-                                    setState(() {
-                                      value.addressList.removeAt(index);
-                                    });
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Center(
-                                        child: Container(
-                                          // padding: const EdgeInsets.fromLTRB(
-                                          //     20, 20, 20, 20),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  TextFieldUtils().dynamicText(
-                                                      value.addressList[index]
-                                                          .myAddressFullName!,
-                                                      context,
-                                                      TextStyle(fontFamily: 'Roboto',
-                                                          color: ThemeApp
-                                                              .blackColor,
-                                                          fontSize:
-                                                              height * .023,
-                                                          fontWeight:
-                                                              FontWeight.w400)),
-                                                  SizedBox(
-                                                    width: width * .02,
-                                                  ),
-                                                  Container(
-                                                    // height: height * 0.05,
-                                                    alignment: Alignment.center,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(5),
-                                                      ),
-                                                      color:
-                                                          ThemeApp.darkGreyTab,
-                                                    ),
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 10,
-                                                            right: 10,
-                                                            top: 5,
-                                                            bottom: 5),
-                                                    child: TextFieldUtils()
-                                                        .dynamicText(
-                                                            value
-                                                                .addressList[
-                                                                    index]
-                                                                .myAddressTypeOfAddress!,
-                                                            context,
-                                                            TextStyle(fontFamily: 'Roboto',
-                                                                color: ThemeApp
-                                                                    .whiteColor,
-                                                                fontSize:
-                                                                    height *
-                                                                        .02,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400)),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  InkWell(
-                                                    onTap: () {
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return DeleteAddressDialog(
-                                                              index: index,
-                                                              addressList: value
-                                                                  .addressList,
-                                                            );
-                                                          });
-                                                    },
-                                                    child: Icon(
-                                                      Icons.delete,
-                                                      color:
-                                                          ThemeApp.darkGreyTab,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: width * .03,
-                                                  ),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      Navigator.of(context)
-                                                          .pushReplacement(
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              EditDeliveryAddress(
-                                                            model: value
-                                                                    .addressList[
-                                                                index],
-                                                            isSavedAddress:
-                                                                isSavedAddress, cartForPaymentPayload: null,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: Icon(
-                                                      Icons.edit_note_rounded,
-                                                      color:
-                                                          ThemeApp.darkGreyTab,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: height * .02,
-                                      ),
-                                      TextFieldUtils().dynamicText(
-                                          fullAddress,
-                                          context,
-                                          TextStyle(fontFamily: 'Roboto',
-                                              color: ThemeApp.darkGreyTab,
-                                              fontSize: height * .021,
-                                              fontWeight: FontWeight.w400)),
-                                      SizedBox(
-                                        height: height * .02,
-                                      ),
-                                      TextFieldUtils().dynamicText(
-                                          "${StringUtils.contactNumber + ' : ' + value.addressList[index].myAddressPhoneNumber!}",
-                                          context,
-                                          TextStyle(fontFamily: 'Roboto',
-                                              color: ThemeApp.blackColor,
-                                              fontSize: height * .021,
-                                              fontWeight: FontWeight.w400)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }))
-                  :   Center(
-                    child: TextFieldUtils().dynamicText(
-                    'No data found',
-                    context,
-                    TextStyle(fontFamily: 'Roboto',
-                        color: ThemeApp.darkGreyTab,
-                        fontSize: height * .03,
-                        fontWeight: FontWeight.w400)),
-                  ),
-            ],
-          ),
-        ],
-      );
-    });
-  }*/
-  int _value2 = 0;
 
   Widget deliveryAddress() {
     return ChangeNotifierProvider<CartViewModel>.value(
@@ -393,9 +142,10 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => AddNewDeliveryAddress(
-                                      isSavedAddress: isSavedAddress,
-                                     /* cartForPaymentPayload:
-                                          widget.cartForPaymentPayload!*/),
+                                    isSavedAddress: isSavedAddress,
+                                    /* cartForPaymentPayload:
+                                          widget.cartForPaymentPayload!*/
+                                  ),
                                 ),
                               );
                             },
@@ -412,7 +162,8 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                     color: ThemeApp.whiteColor,
                                   ),
                                   Text(StringUtils.addNewAddress,
-                                      style: TextStyle(fontFamily: 'Roboto',
+                                      style: TextStyle(
+                                          fontFamily: 'Roboto',
                                           color: ThemeApp.whiteColor,
                                           // fontWeight: FontWeight.w500,
                                           fontSize: 14,
@@ -480,7 +231,9 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                             addressList[index]
                                                                 .name!,
                                                             context,
-                                                            TextStyle(fontFamily: 'Roboto',
+                                                            TextStyle(
+                                                                fontFamily:
+                                                                    'Roboto',
                                                                 color: ThemeApp
                                                                     .blackColor,
                                                                 fontSize: 14,
@@ -517,7 +270,9 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                               addressList[index]
                                                                   .addressType!,
                                                               context,
-                                                              TextStyle(fontFamily: 'Roboto',
+                                                              TextStyle(
+                                                                  fontFamily:
+                                                                      'Roboto',
                                                                   color: ThemeApp
                                                                       .packedButtonColor,
                                                                   fontSize: 10,
@@ -532,16 +287,21 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                 TextFieldUtils().dynamicText(
                                                     "${addressList[index].addressLine1!}, ${addressList[index].addressLine2}, ${addressList[index].stateName},\n ${addressList[index].cityName}, ${addressList[index].pincode}",
                                                     context,
-                                                    TextStyle(fontFamily: 'Roboto',
+                                                    TextStyle(
+                                                        fontFamily: 'Roboto',
                                                         color:
                                                             ThemeApp.blackColor,
                                                         fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.w400,
                                                         height: 1.5,
-                                                        letterSpacing: -0.25)),SizedBox(height: 9,),
+                                                        letterSpacing: -0.25)),
+                                                SizedBox(
+                                                  height: 9,
+                                                ),
                                                 Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
                                                   children: [
                                                     SvgPicture.asset(
                                                       'assets/appImages/callIcon.svg',
@@ -552,7 +312,8 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                         currentColor:
                                                             ThemeApp.appColor,
                                                       ),
-                                                      height: 12,width: 12,
+                                                      height: 12,
+                                                      width: 12,
                                                     ),
                                                     SizedBox(
                                                       width: 12,
@@ -560,14 +321,16 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                     TextFieldUtils().dynamicText(
                                                         "${addressList[index].contactNumber}",
                                                         context,
-                                                        TextStyle(fontFamily: 'Roboto',
+                                                        TextStyle(
+                                                            fontFamily:
+                                                                'Roboto',
                                                             color: ThemeApp
                                                                 .blackColor,
-                                                            fontSize:12,
+                                                            fontSize: 12,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .w700,
-                                                        letterSpacing: 0.2 )),
+                                                                FontWeight.w700,
+                                                            letterSpacing:
+                                                                0.2)),
                                                   ],
                                                 ),
                                                 SizedBox(height: 9),
@@ -578,11 +341,25 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                       MainAxisAlignment.end,
                                                   children: [
                                                     InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          addressList
-                                                              .removeAt(index);
-                                                        });
+                                                      onTap: () async {
+                                                        // Map data = {
+                                                        //   "name": addressList[index].name??"",
+                                                        //   "address_line_1": addressList[index].addressLine1??"",
+                                                        //   "address_line_2":addressList[index].addressLine2??"",
+                                                        //   "city_name": addressList[index].cityName??"",
+                                                        //   "state_name": addressList[index].stateName??"",
+                                                        //   "address_type": addressList[index].addressType??"",
+                                                        //   "pincode": addressList[index].pincode??0,
+                                                        //   "contact_number":addressList[index].contactNumber??0,
+                                                        //   "latitude": addressList[index].latitude??0.0,
+                                                        //   "longitude":addressList[index].longitude??0.0,
+                                                        // };
+
+                                                        CartRepository()
+                                                            .deleteAddressApi(
+
+                                                            addressList[index].id!,context,true).then((value) {
+                                                       });
                                                       },
                                                       child: SvgPicture.asset(
                                                         'assets/appImages/deleteIcon.svg',
@@ -602,15 +379,20 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                                     ),
                                                     InkWell(
                                                       onTap: () {
-                                                        // Navigator.of(context).push(
-                                                        //   MaterialPageRoute(
-                                                        //     builder: (context) =>
-                                                        //         EditDeliveryAddress(
-                                                        //           cartForPaymentPayload: widget.cartForPaymentPayload,
-                                                        //           model: addressList,isSavedAddress: ture,
-                                                        //         ),
-                                                        //   ),
-                                                        // );
+                                                        Navigator.of(context)
+                                                            .push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                EditDeliveryAddress(
+                                                              addressList:
+                                                                  addressList[
+                                                                      index],
+                                                              // cartForPaymentPayload: widget.cartForPaymentPayload,
+                                                              isSavedAddress:
+                                                                  true,
+                                                            ),
+                                                          ),
+                                                        );
                                                       },
                                                       child: SvgPicture.asset(
                                                         'assets/appImages/editIcon.svg',
@@ -634,13 +416,16 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                                       ),
                                     );
                                   }))
-                          : TextFieldUtils().dynamicText(
-                              'No Address found',
-                              context,
-                              TextStyle(fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .02,
-                                  fontWeight: FontWeight.w400)),
+                          : Center(
+                            child: TextFieldUtils().dynamicText(
+                                'No Address found',
+                                context,
+                                TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    fontSize: height * .02,
+                                    fontWeight: FontWeight.w400)),
+                          ),
                     ],
                   ),
                 ),
@@ -652,7 +437,8 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
             child: TextFieldUtils().dynamicText(
                 'No Match found!',
                 context,
-                TextStyle(fontFamily: 'Roboto',
+                TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     fontSize: height * .03,
                     fontWeight: FontWeight.bold)),
@@ -1034,9 +820,10 @@ class _SavedAddressDetailsState extends State<SavedAddressDetails> {
                 ),
               ),
               IconButton(
-                  onPressed: () {                        FocusManager.instance.primaryFocus?.unfocus();
+                  onPressed: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
 
-                  setState(() {
+                    setState(() {
                       allAddress.add(_textEditingController.text);
                       _textEditingController.text = "";
                     });

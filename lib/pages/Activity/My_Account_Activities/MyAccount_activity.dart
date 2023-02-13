@@ -28,7 +28,6 @@ import '../../auth/change_password.dart';
 import '../../homePage.dart';
 import '../../screens/dashBoard.dart';
 import '../../screens/offers_Activity.dart';
-import '../../tabs/tabs.dart';
 import '../My_Orders/MyOrders_Activity.dart';
 import 'AccountSetting/AccountSettingScreen.dart';
 import 'SaveCardAndWallets/CardList_manage_Payment_Activity.dart';
@@ -57,7 +56,6 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
     // TODO: implement initState
     super.initState();
     getCartId();
-
   }
 
   getCartId() async {
@@ -81,7 +79,6 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
   }
 
   getPreference() async {
-
     StringConstant.userAccountName =
         (await Prefs.instance.getToken(StringConstant.userAccountNamePref))!;
     StringConstant.userAccountEmail =
@@ -107,10 +104,11 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
-          setState(() {
-
-          });
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(
+                RoutesName.dashboardRoute, (route) => false)
+            .then((value) {
+          setState(() {});
         });
         return Future.value(true);
       },
@@ -148,10 +146,11 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                   //   ),
                   // );
 
-                  Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
-                    setState(() {
-
-                    });
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(
+                          RoutesName.dashboardRoute, (route) => false)
+                      .then((value) {
+                    setState(() {});
                   });
                   // Navigator.pushReplacementNamed(
                   //         context, RoutesName.dashboardRoute)
@@ -182,200 +181,226 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
             ),
           ),
         ),
-        bottomNavigationBar: bottomNavigationBarWidget(context,0),
+        bottomNavigationBar: bottomNavigationBarWidget(context, 0),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
-                child: Consumer<HomeProvider>(builder: (context, value, child) {
-                  return  FutureBuilder<UserModel>(
-                      future: AuthRepository().getUserDetailsById(StringConstant.UserLoginId), builder: (context, snapshot) {
-                    if (snapshot.hasError) print(snapshot.error);
+          child: Consumer<HomeProvider>(builder: (context, value, child) {
+            return FutureBuilder<UserModel>(
+                future: AuthRepository()
+                    .getUserDetailsById(StringConstant.UserLoginId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
 
-                    return snapshot.hasData ? Container(
-                        color: ThemeApp.appBackgroundColor,
-                        width: width,
-                        child: SingleChildScrollView(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
+                  return snapshot.hasData
+                      ? Container(
+                          color: ThemeApp.appBackgroundColor,
+                          width: width,
+                          child: SingleChildScrollView(
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
                                   Container(
-                                      height: 227,
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.fromLTRB(0, 25, 0, 25),
-                                      decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(20),
-                                          bottomRight: Radius.circular(20),
-                                        ),
-                                        color: ThemeApp.whiteColor,
+                                    height: 227,
+                                    alignment: Alignment.center,
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 25, 0, 25),
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(20),
+                                        bottomRight: Radius.circular(20),
                                       ),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          imageFile1 != null
-                                              ? Stack(
-                                                  // alignment: Alignment.center,
-                                                  children: [
-                                                    Center(
-                                                      child: Container(
-                                                        width: 110.0,
-                                                        height: 110.0,
-                                                        decoration: new BoxDecoration(
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                                color:
-                                                                    Colors.grey.shade600,
-                                                                spreadRadius: 1,
-                                                                blurRadius: 5)
-                                                          ],
-                                                          border: Border.all(
-                                                              color: ThemeApp.whiteColor,
-                                                              width: 4),
-                                                          shape: BoxShape.circle,
-                                                        ),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              const BorderRadius.all(
-                                                                  Radius.circular(100)),
-                                                          child: Image.file(
-                                                            imageFile1!,
-                                                            fit: BoxFit.fitWidth,
-                                                            width: 90.0,
-                                                            height: 90.0,
-                                                            errorBuilder: (context, error,
-                                                                stackTrace) {
-                                                              return Icon(
-                                                                Icons.image,
-                                                                color:
-                                                                    ThemeApp.whiteColor,
-                                                              );
-                                                            },
-                                                          ),
+                                      color: ThemeApp.whiteColor,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        imageFile1 != null
+                                            ? Stack(
+                                                // alignment: Alignment.center,
+                                                children: [
+                                                  Center(
+                                                    child: Container(
+                                                      width: 110.0,
+                                                      height: 110.0,
+                                                      decoration:
+                                                          new BoxDecoration(
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              color: Colors.grey
+                                                                  .shade600,
+                                                              spreadRadius: 1,
+                                                              blurRadius: 5)
+                                                        ],
+                                                        border: Border.all(
+                                                            color: ThemeApp
+                                                                .whiteColor,
+                                                            width: 4),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    100)),
+                                                        child: Image.file(
+                                                          imageFile1!,
+                                                          fit: BoxFit.fitWidth,
+                                                          width: 90.0,
+                                                          height: 90.0,
+                                                          errorBuilder:
+                                                              (context, error,
+                                                                  stackTrace) {
+                                                            return Icon(
+                                                              Icons.image,
+                                                              color: ThemeApp
+                                                                  .whiteColor,
+                                                            );
+                                                          },
                                                         ),
                                                       ),
                                                     ),
-                                                    Positioned(
-                                                      bottom: 0, right: width / 2.5,
-                                                      // width: 130.0,
+                                                  ),
+                                                  Positioned(
+                                                    bottom: 0,
+                                                    right: width / 2.5,
+                                                    // width: 130.0,
 
-                                                      // height: 40.0,
-                                                      child: InkWell(
-                                                          onTap: () {
-                                                            _getFromCamera();
-                                                          },
-                                                          child: Container(
-                                                            height: 32,
-                                                            width: 32,
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                        30),
-                                                                color: ThemeApp.appColor),
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets.all(7),
-                                                              child: SvgPicture.asset(
-                                                                'assets/appImages/cameraIcon.svg',
-                                                                color:
-                                                                    ThemeApp.whiteColor,
-                                                                semanticsLabel:
-                                                                    'Acme Logo',
+                                                    // height: 40.0,
+                                                    child: InkWell(
+                                                        onTap: () {
+                                                          _getFromCamera();
+                                                        },
+                                                        child: Container(
+                                                          height: 32,
+                                                          width: 32,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30),
+                                                              color: ThemeApp
+                                                                  .appColor),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(7),
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              'assets/appImages/cameraIcon.svg',
+                                                              color: ThemeApp
+                                                                  .whiteColor,
+                                                              semanticsLabel:
+                                                                  'Acme Logo',
 
-                                                                // height: height * .03,
-                                                              ),
+                                                              // height: height * .03,
                                                             ),
-                                                          )),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Stack(
-                                                  // alignment: Alignment.center,
-                                                  children: [
-                                                    Center(
-                                                      child: Container(
-                                                        width: 110.0,
-                                                        height: 110.0,
-                                                        decoration: new BoxDecoration(
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                                color: ThemeApp
-                                                                    .appBackgroundColor,
-                                                                spreadRadius: 1,
-                                                                blurRadius: 15)
-                                                          ],
-                                                          color:
-                                                              ThemeApp.appBackgroundColor,
-                                                          border: Border.all(
-                                                              color: ThemeApp.whiteColor,
-                                                              width: 7),
-                                                          shape: BoxShape.circle,
-                                                        ),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              const BorderRadius.all(
-                                                                  Radius.circular(100)),
-                                                          child: Image.file(
-                                                            File(StringConstant
-                                                                .ProfilePhoto),
-                                                            fit: BoxFit.fitWidth,
-                                                            width: 130.0,
-                                                            height: 130.0,
-                                                            errorBuilder: (context, error,
-                                                                stackTrace) {
-                                                              return Icon(
-                                                                Icons.image,
-                                                                color:
-                                                                    ThemeApp.whiteColor,
-                                                              );
-                                                            },
                                                           ),
+                                                        )),
+                                                  ),
+                                                ],
+                                              )
+                                            : Stack(
+                                                // alignment: Alignment.center,
+                                                children: [
+                                                  Center(
+                                                    child: Container(
+                                                      width: 110.0,
+                                                      height: 110.0,
+                                                      decoration:
+                                                          new BoxDecoration(
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                              color: ThemeApp
+                                                                  .appBackgroundColor,
+                                                              spreadRadius: 1,
+                                                              blurRadius: 15)
+                                                        ],
+                                                        color: ThemeApp
+                                                            .appBackgroundColor,
+                                                        border: Border.all(
+                                                            color: ThemeApp
+                                                                .whiteColor,
+                                                            width: 7),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    100)),
+                                                        child: Image.file(
+                                                          File(StringConstant
+                                                              .ProfilePhoto),
+                                                          fit: BoxFit.fitWidth,
+                                                          width: 130.0,
+                                                          height: 130.0,
+                                                          errorBuilder:
+                                                              (context, error,
+                                                                  stackTrace) {
+                                                            return Icon(
+                                                              Icons.image,
+                                                              color: ThemeApp
+                                                                  .whiteColor,
+                                                            );
+                                                          },
                                                         ),
                                                       ),
                                                     ),
-                                                    Positioned(
-                                                      bottom: 0, right: width / 2.5,
-                                                      // width: 130.0,
+                                                  ),
+                                                  Positioned(
+                                                    bottom: 0,
+                                                    right: width / 2.5,
+                                                    // width: 130.0,
 
-                                                      // height: 40.0,
-                                                      child: InkWell(
-                                                          onTap: () {
-                                                            _getFromCamera();
-                                                          },
-                                                          child: Container(
-                                                            height: 32,
-                                                            width: 32,
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                        30),
-                                                                color: ThemeApp.appColor),
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets.all(7),
-                                                              child: SvgPicture.asset(
-                                                                'assets/appImages/cameraIcon.svg',
-                                                                color:
-                                                                    ThemeApp.whiteColor,
-                                                                semanticsLabel:
-                                                                    'Acme Logo',
+                                                    // height: 40.0,
+                                                    child: InkWell(
+                                                        onTap: () {
+                                                          _getFromCamera();
+                                                        },
+                                                        child: Container(
+                                                          height: 32,
+                                                          width: 32,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30),
+                                                              color: ThemeApp
+                                                                  .appColor),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(7),
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              'assets/appImages/cameraIcon.svg',
+                                                              color: ThemeApp
+                                                                  .whiteColor,
+                                                              semanticsLabel:
+                                                                  'Acme Logo',
 
-                                                                // height: height * .03,
-                                                              ),
+                                                              // height: height * .03,
                                                             ),
-                                                          )
-                                                          /*; Container(
+                                                          ),
+                                                        )
+                                                        /*; Container(
                                                   // alignment: Alignment.bottomCenter,
                                                   color: ThemeApp.primaryNavyBlackColor,
                                                   alignment: const Alignment(-2, -0.1),
                                                   child: iconsUtils(
                                                       'assets/appImages/editIcon.svg'),
                                                 ),*/
-                                                          ),
-                                                    ),
-                                                  ],
-                                                ),
-                                          /*        Center(
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                        /*        Center(
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
@@ -419,8 +444,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                             SizedBox(),
                                       ),
                                     ),*/
-                                          //with edit icon
-                                          /*      Stack(
+                                        //with edit icon
+                                        /*      Stack(
                                       // alignment: Alignment.center,
                                       children: [
                                         Center(
@@ -509,116 +534,123 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                         ),
                                       ],
                                     ),*/
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          TextFieldUtils().dynamicText(
-                                              snapshot.data!.payload!.username.toString(),
-                                              // StringConstant.loginUserName,
-                                              context,
-                                              TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color: ThemeApp.blackColor,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 16,
-                                                  letterSpacing: -0.25)),
-                                          SizedBox(
-                                            height: 3,
-                                          ),
-                                          TextFieldUtils().dynamicText(
-                                              snapshot.data!.payload!.email.toString(),
-                                              // StringConstant.loginUserEmail,
-                                              context,
-                                              TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color: ThemeApp.lightFontColor,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400,
-                                                  letterSpacing: 0.5)),
-                                        ],
-                                      ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextFieldUtils().dynamicText(
+                                            snapshot.data!.payload!.username
+                                                .toString(),
+                                            // StringConstant.loginUserName,
+                                            context,
+                                            TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color: ThemeApp.blackColor,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 16,
+                                                letterSpacing: -0.25)),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        TextFieldUtils().dynamicText(
+                                            snapshot.data!.payload!.email
+                                                .toString(),
+                                            // StringConstant.loginUserEmail,
+                                            context,
+                                            TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color: ThemeApp.lightFontColor,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                letterSpacing: 0.5)),
+                                      ],
                                     ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  child: Column(
-                                    children: [
-                                      //push notifications
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const NotificationScreen(),
-                                            ),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  iconsUtils(
-                                                      'assets/appImages/notificationIcon.svg',
-                                                      17,
-                                                      15.41),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  accountTextList('Notifications'),
-                                                ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        //push notifications
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const NotificationScreen(),
                                               ),
-                                              Transform.scale(
-                                                scale: 1.1,
-                                                child: Switch(
-                                                  // This bool value toggles the switch.
-                                                  value: isNotification,
-                                                  activeColor: ThemeApp.appLightColor,
-                                                  inactiveTrackColor:
-                                                      ThemeApp.appLightColor,
-                                                  inactiveThumbColor:
-                                                      ThemeApp.whiteColor,
-                                                  onChanged: (bool val) {
-                                                    // This is called when the user toggles the switch.
-                                                    setState(() {
-                                                      isNotification = val;
-                                                    });
-                                                  },
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    iconsUtils(
+                                                        'assets/appImages/notificationIcon.svg',
+                                                        17,
+                                                        15.41),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    accountTextList(
+                                                        'Notifications'),
+                                                  ],
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      //my orders
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const MyOrdersActivity(),
+                                                Transform.scale(
+                                                  scale: 1.1,
+                                                  child: Switch(
+                                                    // This bool value toggles the switch.
+                                                    value: isNotification,
+                                                    activeColor:
+                                                        ThemeApp.appLightColor,
+                                                    inactiveTrackColor:
+                                                        ThemeApp.appLightColor,
+                                                    inactiveThumbColor:
+                                                        ThemeApp.whiteColor,
+                                                    onChanged: (bool val) {
+                                                      // This is called when the user toggles the switch.
+                                                      setState(() {
+                                                        isNotification = val;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Row(
-                                            children: [
-                                              iconsUtils(
-                                                  'assets/appImages/myOrderIcon.svg',
-                                                  18.65,
-                                                  18),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              accountTextList('My Orders'),
-                                            ],
                                           ),
                                         ),
-                                      ),
-                                      /*  ChangeNotifierProvider<CartViewModel>.value(
+                                        //my orders
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MyOrdersActivity(),
+                                              ),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/myOrderIcon.svg',
+                                                    18.65,
+                                                    18),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList('My Orders'),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        /*  ChangeNotifierProvider<CartViewModel>.value(
                                   value: cartListView,
                                   child: Consumer<CartViewModel>(
                                       builder: (context, cartProvider, child) {
@@ -679,109 +711,115 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 ),*/
 //address
 
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SavedAddressDetails(),
-                                            ),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Row(
-                                            children: [
-                                              iconsUtils(
-                                                  'assets/appImages/savedAddressIcon.svg',
-                                                  20,
-                                                  15.26),
-                                              SizedBox(
-                                                width: 10,
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SavedAddressDetails(),
                                               ),
-                                              accountTextList('Saved Addresses'),
-                                            ],
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/savedAddressIcon.svg',
+                                                    20,
+                                                    15.26),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList(
+                                                    'Saved Addresses'),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      //edit profile
-                                      InkWell(
-                                        onTap: () async {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                   EditAccountActivity(payload: snapshot.data!.payload , ),
-                                            ),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Row(
-                                            children: [
-                                              iconsUtils(
-                                                  'assets/appImages/settingIcon.svg',
-                                                  20,
-                                                  18),
-                                              SizedBox(
-                                                width: 10,
+                                        //edit profile
+                                        InkWell(
+                                          onTap: () async {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditAccountActivity(
+                                                  payload:
+                                                      snapshot.data!.payload,
+                                                ),
                                               ),
-                                              accountTextList('Edit profile'),
-                                            ],
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/settingIcon.svg',
+                                                    20,
+                                                    18),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList('Edit profile'),
+                                              ],
+                                            ),
+                                          ),
+                                        ), //change password
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const ChangePassword(),
+                                              ),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/changePassIcon.svg',
+                                                    21.59,
+                                                    19),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList(
+                                                    'Change Password'),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ), //change password
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const ChangePassword(),
-                                            ),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Row(
-                                            children: [
-                                              iconsUtils(
-                                                  'assets/appImages/changePassIcon.svg',
-                                                  21.59,
-                                                  19),
-                                              SizedBox(
-                                                width: 10,
+                                        //customer support
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CustomerSupportActivity(),
                                               ),
-                                              accountTextList('Change Password'),
-                                            ],
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/headPhoneIcon.svg',
+                                                    18,
+                                                    18),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList(
+                                                    'Customer Support'),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      //customer support
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const CustomerSupportActivity(),
-                                            ),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Row(
-                                            children: [
-                                              iconsUtils(
-                                                  'assets/appImages/headPhoneIcon.svg',
-                                                  18,
-                                                  18),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              accountTextList('Customer Support'),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      /*    //account settings
+                                        /*    //account settings
                                 InkWell(
                                   onTap: () {
                                     Navigator.of(context).push(
@@ -792,7 +830,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                     );
                                   },
                                   */
-                                      /*     onTap: () {
+                                        /*     onTap: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
@@ -815,70 +853,78 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                   ),
                                 ),*/
 
-                                      //sign out
-                                      InkWell(
-                                        onTap: () async {
-                                          final prefs =
-                                              await SharedPreferences.getInstance();
-                                          prefs.setInt('isUserLoggedIn', 0);
-                                          prefs.setString('RandomUserId', '');
-                                          StringConstant.UserLoginId = '';
-                                          StringConstant.RandomUserLoginId = '';
-                                          StringConstant.UserCartID = '';
-                                          StringConstant.BadgeCounterValue = '';
-                                          StringConstant.ScannedProductId = '';
-                                          final pref =
-                                              await SharedPreferences.getInstance();
-                                          Utils.successToast('You are signed out');
-                                          await pref.clear();
+                                        //sign out
+                                        InkWell(
+                                          onTap: () async {
+                                            final prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            prefs.setInt('isUserLoggedIn', 0);
+                                            prefs.setString('RandomUserId', '');
+                                            StringConstant.UserLoginId = '';
+                                            StringConstant.RandomUserLoginId =
+                                                '';
+                                            StringConstant.UserCartID = '';
+                                            StringConstant.BadgeCounterValue =
+                                                '';
+                                            StringConstant.ScannedProductId =
+                                                '';
+                                            final pref = await SharedPreferences
+                                                .getInstance();
+                                            Utils.successToast(
+                                                'You are signed out');
+                                            await pref.clear();
 
-                                          late Random rnd;
-                                          var min = 100000000;
-                                          int max = 1000000000;
+                                            late Random rnd;
+                                            var min = 100000000;
+                                            int max = 1000000000;
 
-                                          var ID;
-                                          String finalId = '';
-                                          rnd = new Random();
-                                          var r = min + rnd.nextInt(max - min);
+                                            var ID;
+                                            String finalId = '';
+                                            rnd = new Random();
+                                            var r =
+                                                min + rnd.nextInt(max - min);
 
-                                          print(
-                                              "$r is in the range of $min and $max");
-                                          ID = r;
-                                          print("cartId empty UserID" + ID.toString());
-                                          // 715223688
-                                          finalId = ID.toString();
-                                          prefs.setString(
-                                              'RandomUserId', finalId.toString());
+                                            print(
+                                                "$r is in the range of $min and $max");
+                                            ID = r;
+                                            print("cartId empty UserID" +
+                                                ID.toString());
+                                            // 715223688
+                                            finalId = ID.toString();
+                                            prefs.setString('RandomUserId',
+                                                finalId.toString());
 
-                                          Navigator.pushReplacementNamed(
-                                              context, RoutesName.dashboardRoute);
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Row(
-                                            children: [
-                                              iconsUtils(
-                                                  'assets/appImages/signOutIcon.svg',
-                                                  18,
-                                                  18),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              accountTextList('Sign Out'),
-                                            ],
+                                            Navigator.pushReplacementNamed(
+                                                context,
+                                                RoutesName.dashboardRoute);
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/signOutIcon.svg',
+                                                    18,
+                                                    18),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList('Sign Out'),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ]),
-                        ),
-                      ):SizedBox();
-                    }
-                  );
-                }),
-              ),
+                                ]),
+                          ),
+                        )
+                      : SizedBox();
+                });
+          }),
+        ),
       ),
     );
   }
@@ -922,7 +968,11 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
     String imagePath = image!.path;
 
     await prefs.setString('profileImagePrefs', imagePath);
+    Map data = {
+      "imgUrl": image.path,
+    };
 
+    AuthRepository().updateProfileImageApi(data, StringConstant.UserLoginId);
     setState(() {
       imageFile1 = File(image.path);
 

@@ -9,5 +9,6 @@ class RoutesName{
   static const String myAccountRoute = 'myAccountRoute';
   static const String saveAddressRoute = 'saveAddressRoute';
   static const String cartScreenRoute = 'cartScreenRoute';
+  static const String changeForgotPassRoute = 'changeForgotPass';
 
 }

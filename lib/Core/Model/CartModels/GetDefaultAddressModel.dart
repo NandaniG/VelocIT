@@ -1,6 +1,6 @@
 class GetDefaultAddressModel {
   String? status;
-  Payload? payload;
+  DefaultAddressPayload? payload;
   String? timestamp;
 
   GetDefaultAddressModel({this.status, this.payload, this.timestamp});
@@ -8,7 +8,7 @@ class GetDefaultAddressModel {
   GetDefaultAddressModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     payload =
-    json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+    json['payload'] != null ? new DefaultAddressPayload.fromJson(json['payload']) : null;
     timestamp = json['timestamp'];
   }
 
@@ -23,7 +23,7 @@ class GetDefaultAddressModel {
   }
 }
 
-class Payload {
+class DefaultAddressPayload {
   String? addressLine1;
   String? addressLine2;
   String? addressType;
@@ -37,7 +37,7 @@ class Payload {
   String? pincode;
   String? stateName;
 
-  Payload(
+  DefaultAddressPayload(
       {this.addressLine1,
         this.addressLine2,
         this.addressType,
@@ -51,7 +51,7 @@ class Payload {
         this.pincode,
         this.stateName});
 
-  Payload.fromJson(Map<String, dynamic> json) {
+  DefaultAddressPayload.fromJson(Map<String, dynamic> json) {
     addressLine1 = json['address_line_1'];
     addressLine2 = json['address_line_2'];
     addressType = json['address_type'];

@@ -42,6 +42,7 @@ static int isUserLoggedIn = 0;
   static String userIdPref = 'userIdPref';
   static String testId = 'testIdPref';
   static String setOtp = 'setOtpPref';
+  static String setForgotPassOtp = 'setForgotPassOtpPref';
   static int sortByRadio = 0;
   static String sortedBy = "Low to High";
 

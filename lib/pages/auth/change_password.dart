@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../Core/repository/auth_repository.dart';
 import '../../utils/StringUtils.dart';
 import '../../utils/constants.dart';
 import '../../utils/styles.dart';
@@ -28,30 +30,32 @@ class _ChangePasswordState extends State<ChangePassword> {
   bool _validateConfirmPassword = false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+    getPref();
+  }
+
+  var userEmail;
+  var userMobile;
+
+  getPref() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    userEmail = prefs.getString('userProfileEmailPrefs');
+    userMobile = prefs.getString('userProfileMobilePrefs');
+    print(userMobile);
+    print(userEmail);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
-/*      appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: Container(
-            color: ThemeApp.whiteColor,
-            child: Row(
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    icon:
-                    Icon(Icons.arrow_back, color: ThemeApp.blackColor),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ),
-                TextFieldUtils().appBarTextField(StringUtils
-                    .changePassword, context),
-              ],
-            ),
-          )),*/
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .07),
+        preferredSize:
+            Size.fromHeight(MediaQuery.of(context).size.height * .07),
         child: Container(
           width: MediaQuery.of(context).size.width,
           color: ThemeApp.appBackgroundColor,
@@ -74,14 +78,13 @@ class _ChangePasswordState extends State<ChangePassword> {
             titleSpacing: 0,
             leading: InkWell(
               onTap: () {
-Navigator.pop(context);
+                Navigator.pop(context);
                 // Navigator.of(context).push(
                 //   MaterialPageRoute(
                 //     builder: (context) =>
                 //     const DashboardScreen(),
                 //   ),
                 // );
-
               },
               child: Transform.scale(
                 scale: 0.7,
@@ -97,7 +100,8 @@ Navigator.pop(context);
             title: TextFieldUtils().dynamicText(
                 'Change password',
                 context,
-                TextStyle(fontFamily: 'Roboto',
+                TextStyle(
+                    fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
                     // fontWeight: FontWeight.w500,
                     fontSize: MediaQuery.of(context).size.height * .022,
@@ -110,10 +114,7 @@ Navigator.pop(context);
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * .7,
+            height: MediaQuery.of(context).size.height * .7,
             decoration: BoxDecoration(
               color: ThemeApp.whiteColor,
               borderRadius: BorderRadius.circular(10),
@@ -125,17 +126,14 @@ Navigator.pop(context);
                     left: 20, right: 20, top: 30, bottom: 30),
                 child: ListView(
                   children: [
-                    TextFieldUtils()
-                        .asteriskTextField(StringUtils
-                        .currentPassword, context),
+                    TextFieldUtils().asteriskTextField(
+                        StringUtils.currentPassword, context),
                     PasswordTextFormFieldsWidget(
-                        errorText: StringUtils
-                            .passwordError,
+                        errorText: StringUtils.passwordError,
                         textInputType: TextInputType.text,
                         controller: _currentPass,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: StringUtils
-                            .currentPassword,
+                        hintText: StringUtils.currentPassword,
                         onChange: (val) {
                           setState(() {
                             if (val.isEmpty && _currentPass.text.isEmpty) {
@@ -155,10 +153,7 @@ Navigator.pop(context);
                           return null;
                         }),
                     SizedBox(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * .02,
+                      height: MediaQuery.of(context).size.height * .02,
                     ),
                     TextFieldUtils().asteriskTextField('New Password', context),
                     PasswordTextFormFieldsWidget(
@@ -167,10 +162,10 @@ Navigator.pop(context);
                         controller: _newPass,
                         autoValidation: AutovalidateMode.onUserInteraction,
                         hintText: 'New Password',
-                        onChange: (val) {setState(() {
-                          _checkPassword(val);
-
-                        });
+                        onChange: (val) {
+                          setState(() {
+                            _checkPassword(val);
+                          });
                           // setState(() {
                           //   if (val.isNotEmpty && _newPass.text.isNotEmpty) {
                           //     if (val == _currentPass.text) {
@@ -203,17 +198,17 @@ Navigator.pop(context);
                     // The strength indicator bar
                     _newPass.text.length > 0
                         ? LinearProgressIndicator(
-                      value: _strength,
-                      backgroundColor: Colors.grey[300],
-                      color: _strength <= 1 / 4
-                          ? Colors.red
-                          : _strength == 2 / 4
-                          ? Colors.yellow
-                          : _strength == 3 / 4
-                          ? Colors.blue
-                          : Colors.green,
-                      minHeight: 5,
-                    )
+                            value: _strength,
+                            backgroundColor: Colors.grey[300],
+                            color: _strength <= 1 / 4
+                                ? Colors.red
+                                : _strength == 2 / 4
+                                    ? Colors.yellow
+                                    : _strength == 3 / 4
+                                        ? Colors.blue
+                                        : Colors.green,
+                            minHeight: 5,
+                          )
                         : SizedBox(),
                     SizedBox(height: 20),
                     TextFieldUtils()
@@ -254,26 +249,50 @@ Navigator.pop(context);
                           return null;
                         }),
                     SizedBox(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * .1,
+                      height: MediaQuery.of(context).size.height * .1,
                     ),
-                    proceedButton('Change Password',ThemeApp.tealButtonColor, context, false,() async{                        FocusManager.instance.primaryFocus?.unfocus();
+                    proceedButton('Change Password', ThemeApp.tealButtonColor,
+                        context, false, () async {
+                      FocusManager.instance.primaryFocus?.unfocus();
 
-                    if (_formKey.currentState!.validate() &&
+                      if (_formKey.currentState!.validate() &&
                           _currentPass.text.isNotEmpty &&
                           _newPass.text.isNotEmpty &&
                           _confirmPass.text.isNotEmpty) {
                         if (_formKey.currentState!.validate() &&
                             _currentPass.text != _newPass.text &&
                             _confirmPass.text == _newPass.text) {
+                          Map emaildata = {
+                            "cred": userEmail,
+                            "credtype": "email",
+                            "newpassword": _newPass.text
+                          };
+                          Map mobileData = {
+                            "cred": userMobile,
+                            "credtype": "email",
+                            "newpassword": _newPass.text
+                          };
+                          if (userEmail.toString().isEmpty) {
+                            print(mobileData);
 
+                            AuthRepository()
+                                .resetPassRequest(mobileData,true, context)
+                                .then((value) => setState(() {
 
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => DashboardScreen(),), (route) => false);
+                                    }));
 
+                            print("Digit found");
+                          } else {
+                            print(emaildata);
+
+                            AuthRepository()
+                                .resetPassRequest(emaildata,false, context)
+                                .then((value) => setState(() {
+
+                                    }));
+                          }
                         } else {
-                      Utils.errorToast('Please enter valid details');
+                          Utils.errorToast('Please enter valid details');
                         }
                       } else {
                         if (_currentPass.text == _newPass.text) {
@@ -283,8 +302,7 @@ Navigator.pop(context);
                           _validateConfirmPassword = true;
                         }
                         Utils.errorToast('Please enter valid details');
-
-                    }
+                      }
                     }),
                   ],
                 ),
@@ -316,21 +334,22 @@ Navigator.pop(context);
         _strength = 1 / 4;
         _displayText = 'Your password is too short';
       });
-    }/* else if (StringConstant().isPass(_password)) {
+    }
+    /* else if (StringConstant().isPass(_password)) {
       print("strength 3");
 
       setState(() {
         _strength = 2 / 4;
         _displayText = 'Your password is acceptable but not strong';
       });
-    }  */else if (_password.length > 7&& _password.length<12) {
+    }  */
+    else if (_password.length > 7 && _password.length < 12) {
       // password match with regex and greater than 7 to 12 then show yellow bar
       setState(() {
         _strength = 2 / 4;
         _displayText = 'Your password is acceptable but not strong';
       });
-    }else if(_password.length>11){
-
+    } else if (_password.length > 11) {
       if (!letterReg.hasMatch(_password) || !numReg.hasMatch(_password)) {
         setState(() {
           // Password length >= 8
@@ -348,80 +367,5 @@ Navigator.pop(context);
         });
       }
     }
-
-
   }
-
-  /*static Future<Position> determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
-      await Geolocator.openLocationSettings();
-      // return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    // StreamSubscription<Position> streamSubscription = Geolocator.getPositionStream()
-    //                 .listen((Position position) {
-    //      position.latitude;
-    //      position.longitude;
-    // });
-  }
-
-  Future<String> getAddressFromLatLng() async {
-    String _currentPlace = '';
-    try {
-      final newPosition = await determinePosition();
-
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          newPosition.latitude, newPosition.longitude);
-
-      Placemark place = placemarks[0];
-      setState(() async {
-        //J5GF+W62, Dholewadi, Maharashtra, 422608, India
-        _currentPlace =
-        "${place.street}, ${place.locality}, ${place.administrativeArea} ${place.postalCode}, ${place.country}"; //here you can used place.country and other things also
-
-        print("_currentPlace--$place");
-        StringConstant.placesFromCurrentLocation = place.postalCode.toString();
-
-        print("placesFromCurrentLocation--" +
-            StringConstant.placesFromCurrentLocation);
-        Prefs.instance.setToken(StringConstant.pinCodePref,
-            place.postalCode.toString());
-         });
-    } catch (e) {
-      print(e);
-    }
-    return _currentPlace;
-  }*/
-
 }

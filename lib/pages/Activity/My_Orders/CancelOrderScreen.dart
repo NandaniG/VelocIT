@@ -504,7 +504,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                             print("USER LOGIN ID..............." +
                                                 StringConstant.UserLoginId.toString());
                                             String date = DateTime.now().toUtc().toString().replaceAll(" ", "T");
-                                        var success=    OrderBasketRepository().cancelOrderApiRequest(context, {
+                                     OrderBasketRepository().cancelOrderApiRequest(context, {
                                               "cancellation_date": date,
                                               "reason": _radioVal.toString()
                                             }, widget.orderList['order_id'].toString());

@@ -173,17 +173,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
       //597723544
       print("cart data pass : " + data.toString());
-      CartRepository().cartPostRequest(data, context);
+      CartRepository().cartPostRequest(data, context).then((value) {
+        StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+        print("Cart Id From DashBoard Activity " + StringConstant.UserCartID);
+
+        CartViewModel()
+            .cartSpecificIDWithGet(context, StringConstant.UserCartID);
+      });
 
       // var CARTID = prefs.getString('CartIdPref');
-      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-      print("Cart Id From DashBoard Activity " + StringConstant.UserCartID);
 
       // print("cartId from Pref" + CARTID.toString());
     });
 
-    await CartViewModel()
-        .cartSpecificIDWithGet(context, StringConstant.UserCartID);
+
   }
 
 
@@ -623,7 +626,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   productCategories.productCategoryList.data!.productList;
 
               return Container(
-                // padding: const EdgeInsets.all(10),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -643,9 +645,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            // margin: const EdgeInsets.symmetric(
-                            //     horizontal: 5, vertical: 5),
-                            child: Column(
+                           child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
@@ -663,17 +663,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 child: Image.network(
                                                   serviceList[index]
                                                       .productCategoryImageId!,
-                                                  // fit: BoxFit.fill,
                                                 ),
-                                              ),
-
-                                              // SvgPicture.asset(
-                                              //   'assets/appImages/appliancesIcon.svg',
-                                              //
-                                              //   height: 17,
-                                              //   width: 26,
-                                              // ),
-                                              SizedBox(
+                                              ), SizedBox(
                                                 width: 16,
                                               ),
                                               categoryListFont(
@@ -685,82 +676,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   serviceList[index].simpleSubCats!.isEmpty
                                       ? SizedBox()
                                       : subListOfCategories(serviceList[index])
-                                  /*        ExpansionTile(
-                                    key: Key(index.toString()),
-                                    onExpansionChanged: ((newState) {
-                                      if (newState) {
-                                        setState(() {
-                                          const Duration(seconds: 20000);
-                                          selected = index;
-                                          // isOpen = true;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          selected = -1;
-                                        });
-                                      }
-                                    }),
-                                    // initiallyExpanded: index == selected,
-                                    // initiallyExpanded: true,
-                                    // : false,
 
-                                    // initiallyExpanded: false,
-                                    // trailing: selected == true
-                                    //     ? Icon(
-                                    //         Icons.arrow_drop_up,
-                                    //         color:
-                                    //             ThemeApp.textFieldBorderColor,
-                                    //         size: height * .05,
-                                    //       )
-                                    //     : Icon(
-                                    //         Icons.arrow_drop_down,
-                                    //         color:
-                                    //             ThemeApp.textFieldBorderColor,
-                                    //         size: height * .05,
-                                    //       ),
-                                    // tilePadding: const EdgeInsets.symmetric(
-                                    //     horizontal: 15, vertical: 2),
-                                    // childrenPadding: const EdgeInsets.symmetric(
-                                    //     horizontal: 15, vertical: 5),
-                                    textColor: Colors.black,
-                                    title: Row(
-                                      children: [
-                                        Container(
-                                          color: ThemeApp.containerColor,
-                                          height: 25,
-                                          width: 25,
-                                          child: Image.network(
-                                            serviceList[index]
-                                                .productCategoryImageId!,
-                                            // fit: BoxFit.fill,
-                                          ),
-                                        ),
-
-                                        // SvgPicture.asset(
-                                        //   'assets/appImages/appliancesIcon.svg',
-                                        //
-                                        //   height: 17,
-                                        //   width: 26,
-                                        // ),
-                                        SizedBox(
-                                          width: 16,
-                                        ),
-                                        categoryListFont(
-                                            serviceList[index].name!, context)
-                                      ],
-                                    ),
-                                    expandedAlignment: Alignment.centerLeft,
-                                    expandedCrossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 0, 10, 15),
-                                        child: subListOfCategories(
-                                            serviceList[index]),
-                                      )
-                                    ],
-                                  ),*/
                                 ]),
                           );
                         },

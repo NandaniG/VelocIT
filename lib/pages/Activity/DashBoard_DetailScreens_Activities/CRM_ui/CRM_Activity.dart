@@ -767,7 +767,7 @@ class _CRMActivityState extends State<CRMActivity> {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
-             CRMistByCategoryActivity(productList: simpleSubCats),
+             CRMistByCategoryActivity(crmList: simpleSubCats),
         ));
       },
       // child: Padding(
@@ -1035,12 +1035,8 @@ class _AllCRMSubCategoryScreenState extends State<AllCRMSubCategoryScreen> {
                         MaterialPageRoute(
                           builder: (context) =>
                               CRMistByCategoryActivity(
-                                productList: widget
+                                crmList: widget
                                     .serviceList.simpleSubCats![index],
-
-                                // serviceList: subProductList[index],
-                                // productSpecificListViewModel:
-                                //     productSpecificListViewModel,
                               ),
                         ),
                       );
@@ -1057,19 +1053,7 @@ class _AllCRMSubCategoryScreenState extends State<AllCRMSubCategoryScreen> {
                             Container(
                               height: 143,
                               width: 191,
-                              /* height: SizeConfig.orientations !=
-                                                      Orientation.landscape
-                                                  ? MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      .25
-                                                  : MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      .1,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,*/
+
                               decoration: const BoxDecoration(
                                 color: ThemeApp.whiteColor,
                               ),
@@ -1154,21 +1138,6 @@ class _AllCRMSubCategoryScreenState extends State<AllCRMSubCategoryScreen> {
                       : SizedBox()
                 ],
               );
-              /*else {
-                        return  Container(
-                          // width: constrains.minWidth,
-                          height: 80,
-                          // height: MediaQuery.of(context).size.height * .08,
-                          // alignment: Alignment.center,
-                          child: TextFieldUtils().dynamicText(
-                              'Nothing more to load',
-                              context,
-                              TextStyle(fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .03,
-                                  fontWeight: FontWeight.bold)),
-                        );
-                      }*/
             },
           )),
     );

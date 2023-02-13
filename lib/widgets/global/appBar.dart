@@ -33,12 +33,10 @@ import '../../pages/Activity/My_Account_Activities/SaveCardAndWallets/CardList_m
 import '../../pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import '../../pages/Activity/My_Account_Activities/is_My_account_login_dialog.dart';
 import '../../pages/Activity/Product_Activities/ProductDetails_activity.dart';
-import '../../pages/Activity/Product_Activities/Products_List.dart';
 import '../../pages/SearchContent/searchProductListScreen.dart';
 import '../../pages/homePage.dart';
 import '../../pages/screens/dashBoard.dart';
 import '../../pages/screens/offers_Activity.dart';
-import '../../pages/tabs/tabs.dart';
 import '../../services/providers/Home_Provider.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/constants.dart';
@@ -176,27 +174,31 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     child: Center(
                       // height: 25,
                       // width: 25,
-                      child: badges.Badge(
-                        badgeContent: Text(0.toString(), style: const TextStyle(
-                          fontFamily: 'Roboto',
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                          // textAlign: TextAlign.center,
-                        ),
-                        badgeStyle:
-                        badges.BadgeStyle(badgeColor: ThemeApp.redColor,padding:EdgeInsets.all(7), ),
-                        child: SvgPicture.asset(
-                          'assets/appImages/notificationIcon.svg',
-                          color: ThemeApp.primaryNavyBlackColor,
-                          semanticsLabel: 'Acme Logo',
-                          theme: SvgTheme(
-                            currentColor: ThemeApp.primaryNavyBlackColor,
-                          ),
-                          height: 28,
-                          width: 28,
-                        ),
-                      ),
+                      child:badges.Badge(
+                              badgeContent: Text(
+                                0.toString(),
+                                style: const TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                                // textAlign: TextAlign.center,
+                              ),
+                              badgeStyle: badges.BadgeStyle(
+                                badgeColor: ThemeApp.redColor,
+                                padding: EdgeInsets.all(7),
+                              ),
+                              child: SvgPicture.asset(
+                                'assets/appImages/notificationIcon.svg',
+                                color: ThemeApp.primaryNavyBlackColor,
+                                semanticsLabel: 'Acme Logo',
+                                theme: SvgTheme(
+                                  currentColor: ThemeApp.primaryNavyBlackColor,
+                                ),
+                                height: 28,
+                                width: 28,
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -345,51 +347,59 @@ class _AppBar_BackWidgetState extends State<AppBar_BackWidget> {
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
-    return SafeArea(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          color: ThemeApp.darkGreyTab,
-          child: AppBar(
-            centerTitle: false,
-            elevation: 0,
-            backgroundColor: ThemeApp.appBackgroundColor,
-            flexibleSpace: Container(
-              height: height * .08,
-              width: width,
-              decoration: const BoxDecoration(
-                color: ThemeApp.appBackgroundColor,
-              ),
-            ),
-
-            titleSpacing: 1,
-            leading: InkWell(
-              onTap: () {
-                Navigator.pop(context, () {
-                  setState(() {});
-                }); // Provider.of<ProductProvider>(context, listen: false);
-              },
-              child: Transform.scale(
-                scale: 0.7,
-                child: Image.asset(
-                  'assets/appImages/backArrow.png',
-                  color: ThemeApp.primaryNavyBlackColor,
-                  // height: height*.001,
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context, () {
+          setState(() {});
+        });
+        return Future.value(true);
+      },
+      child: SafeArea(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            color: ThemeApp.darkGreyTab,
+            child: AppBar(
+              centerTitle: false,
+              elevation: 0,
+              backgroundColor: ThemeApp.appBackgroundColor,
+              flexibleSpace: Container(
+                height: height * .08,
+                width: width,
+                decoration: const BoxDecoration(
+                  color: ThemeApp.appBackgroundColor,
                 ),
               ),
-            ),
 
-            // leadingWidth: width * .06,
-            title: widget.titleWidget,
-            // Row
+              titleSpacing: 1,
+              leading: InkWell(
+                onTap: () {
+                  Navigator.pop(context, () {
+                    setState(() {});
+                  }); // Provider.of<ProductProvider>(context, listen: false);
+                },
+                child: Transform.scale(
+                  scale: 0.7,
+                  child: Image.asset(
+                    'assets/appImages/backArrow.png',
+                    color: ThemeApp.primaryNavyBlackColor,
+                    // height: height*.001,
+                  ),
+                ),
+              ),
+
+              // leadingWidth: width * .06,
+              title: widget.titleWidget,
+              // Row
+            ),
           ),
-        ),
-        widget.location
-      ],
-    ));
+          widget.location
+        ],
+      )),
+    );
   }
 }
 
@@ -1044,60 +1054,84 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
           label: 'SHOP'),
       BottomNavigationBarItem(
           backgroundColor: Colors.white,
-          icon:            _currentIndex == 4
+          icon: _currentIndex == 4
               ? Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 8),
-            child: badges.Badge(position: badges.BadgePosition.topEnd(),
-              badgeContent: Text(
-                StringConstant.BadgeCounterValue.toString(),
-                style: const TextStyle(
-                  fontFamily: 'Roboto',
-                  color: Colors.white,
-                  fontSize: 12,
+                  padding: const EdgeInsets.only(top: 8.0, right: 8),
+                  child:StringConstant.BadgeCounterValue == '0' ||
+                      StringConstant.BadgeCounterValue == ''||StringConstant.BadgeCounterValue ==0
+                      ? SvgPicture.asset(
+                    'assets/appImages/bottomApp/cartIcons.svg',
+                    color: ThemeApp.appColor,
+                    semanticsLabel: 'Acme Logo',
+                    theme: SvgTheme(
+                      currentColor: ThemeApp.appColor,
+                    ),
+                    height: 25,
+                    width: 25,
+                  ):  badges.Badge(
+                    position: badges.BadgePosition.topEnd(),
+                    badgeContent: Text(
+                      StringConstant.BadgeCounterValue.toString(),
+                      style: const TextStyle(
+                        fontFamily: 'Roboto',
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                    badgeStyle: badges.BadgeStyle(
+                      badgeColor: ThemeApp.redColor,
+                      padding: EdgeInsets.all(7),
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/appImages/bottomApp/cartIcons.svg',
+                      color: ThemeApp.appColor,
+                      semanticsLabel: 'Acme Logo',
+                      theme: SvgTheme(
+                        currentColor: ThemeApp.appColor,
+                      ),
+                      height: 25,
+                      width: 25,
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 8.0, right: 8),
+                  child: StringConstant.BadgeCounterValue == '0' ||
+                      StringConstant.BadgeCounterValue == ''||StringConstant.BadgeCounterValue ==0
+                      ? SvgPicture.asset(
+                    'assets/appImages/bottomApp/cartIcons.svg',
+                    color: ThemeApp.unSelectedBottomBarItemColor,
+                    semanticsLabel: 'Acme Logo',
+                    theme: SvgTheme(
+                      currentColor: ThemeApp.unSelectedBottomBarItemColor,
+                    ),
+                    height: 25,
+                    width: 25,
+                  ):  badges.Badge(
+                    badgeContent: Text(
+                      StringConstant.BadgeCounterValue.toString(),
+                      style: const TextStyle(
+                        fontFamily: 'Roboto',
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                    badgeStyle: badges.BadgeStyle(
+                      badgeColor: ThemeApp.redColor,
+                      padding: EdgeInsets.all(7),
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/appImages/bottomApp/cartIcons.svg',
+                      color: ThemeApp.unSelectedBottomBarItemColor,
+                      semanticsLabel: 'Acme Logo',
+                      theme: SvgTheme(
+                        currentColor: ThemeApp.unSelectedBottomBarItemColor,
+                      ),
+                      height: 25,
+                      width: 25,
+                    ),
+                  ),
                 ),
-                // textAlign: TextAlign.center,
-              ),
-              badgeStyle:
-              badges.BadgeStyle(badgeColor: ThemeApp.redColor,padding:EdgeInsets.all(7), ),
-              child: SvgPicture.asset(
-                'assets/appImages/bottomApp/cartIcons.svg',
-                color: ThemeApp.appColor,
-                semanticsLabel: 'Acme Logo',
-                theme: SvgTheme(
-                  currentColor: ThemeApp.appColor,
-                ),
-                height: 25,
-                width: 25,
-              ),
-            ),
-          )
-              :Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 8),
-            child: badges.Badge(
-              badgeContent: Text(
-                StringConstant.BadgeCounterValue.toString(),
-                style: const TextStyle(
-                  fontFamily: 'Roboto',
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              badgeStyle:
-              badges.BadgeStyle(badgeColor: ThemeApp.redColor,padding:EdgeInsets.all(7), ),
-
-              child: SvgPicture.asset(
-                'assets/appImages/bottomApp/cartIcons.svg',
-                color: ThemeApp.unSelectedBottomBarItemColor,
-                semanticsLabel: 'Acme Logo',
-                theme: SvgTheme(
-                  currentColor: ThemeApp.unSelectedBottomBarItemColor,
-                ),
-                height: 25,
-                width: 25,
-              ),
-            ),
-          ),
           label: 'CART'),
     ],
   );

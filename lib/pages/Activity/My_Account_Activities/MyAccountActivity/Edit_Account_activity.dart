@@ -28,8 +28,9 @@ import 'OTP_verification_Popup.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 class EditAccountActivity extends StatefulWidget {
- final Payload? payload;
-   EditAccountActivity( {Key? key, this.payload}) : super(key: key);
+  final Payload? payload;
+
+  EditAccountActivity({Key? key, this.payload}) : super(key: key);
 
   @override
   State<EditAccountActivity> createState() => _EditAccountActivityState();
@@ -41,7 +42,6 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
   final picker = ImagePicker();
   late File _profileImage;
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
-
 
   TextEditingController userNameController = new TextEditingController();
   TextEditingController mobileController = new TextEditingController();
@@ -56,9 +56,12 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
     // TODO: implement initState
 
     getPrefValue();
-    userNameController = new TextEditingController(text: widget.payload!.username??"");
-    mobileController = new TextEditingController(text:  widget.payload!.mobile??"");
-    emailController = new TextEditingController(text: widget.payload!.email??"");
+    userNameController =
+        new TextEditingController(text: widget.payload!.username ?? "");
+    mobileController =
+        new TextEditingController(text: widget.payload!.mobile ?? "");
+    emailController =
+        new TextEditingController(text: widget.payload!.email ?? "");
     super.initState();
   }
 
@@ -156,12 +159,10 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                               fit: BoxFit.fill,
                               width: 110.0,
                               height: 110.0,
-                              errorBuilder: (context, error,
-                                  stackTrace) {
+                              errorBuilder: (context, error, stackTrace) {
                                 return Icon(
                                   Icons.image,
-                                  color:
-                                  ThemeApp.whiteColor,
+                                  color: ThemeApp.whiteColor,
                                 );
                               },
                             ),
@@ -169,110 +170,109 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                         ),
                       ),
                       Positioned(
-                        bottom: 0, right: width/ 2.7,
+                        bottom: 0, right: width / 2.7,
                         // width: 130.0,
 
-                            // height: 40.0,
-                            child: InkWell(
-                                onTap: () {
-                                  _getFromCamera();
-                                },
-                                child: Container(
-                                  height: 32,
-                                  width: 32,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: ThemeApp.appColor),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(7),
-                                    child: SvgPicture.asset(
-                                      'assets/appImages/cameraIcon.svg',
-                                      color: ThemeApp.whiteColor,
-                                      semanticsLabel: 'Acme Logo',
-
-                                      // height: height * .03,
-                                    ),
-                                  ),
-                                )),
-                          ),
-                        ],
-                      )
-                    : Stack(
-                        // alignment: Alignment.center,
-                        children: [
-                          Center(
+                        // height: 40.0,
+                        child: InkWell(
+                            onTap: () {
+                              _getFromCamera();
+                            },
                             child: Container(
-                              width: 110.0,
-                              height: 110.0,
-                              decoration: new BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      color:ThemeApp.appBackgroundColor,
-                                      spreadRadius: 1,
-                                      blurRadius: 15)
-                                ],
-                                color: ThemeApp.appBackgroundColor,
-                                border: Border.all(
-                                    color: ThemeApp.whiteColor, width: 7),
-                                shape: BoxShape.circle,
-                              ),
-                              child: ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(100)),
-                                child: Image.file(
-                                  File(StringConstant.ProfilePhoto),
-                                  fit: BoxFit.fitWidth,
-                                  width: 110.0,
-                                  height: 110.0,     errorBuilder: (context, error,
-                                    stackTrace) {
-                                  return Icon(
-                                    Icons.image,
-                                    color:
-                                    ThemeApp.whiteColor,
-                                  );
-                                },
+                              height: 32,
+                              width: 32,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: ThemeApp.appColor),
+                              child: Padding(
+                                padding: const EdgeInsets.all(7),
+                                child: SvgPicture.asset(
+                                  'assets/appImages/cameraIcon.svg',
+                                  color: ThemeApp.whiteColor,
+                                  semanticsLabel: 'Acme Logo',
+
+                                  // height: height * .03,
                                 ),
                               ),
+                            )),
+                      ),
+                    ],
+                  )
+                : Stack(
+                    // alignment: Alignment.center,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 110.0,
+                          height: 110.0,
+                          decoration: new BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: ThemeApp.appBackgroundColor,
+                                  spreadRadius: 1,
+                                  blurRadius: 15)
+                            ],
+                            color: ThemeApp.appBackgroundColor,
+                            border: Border.all(
+                                color: ThemeApp.whiteColor, width: 7),
+                            shape: BoxShape.circle,
+                          ),
+                          child: ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(100)),
+                            child: Image.file(
+                              File(StringConstant.ProfilePhoto),
+                              fit: BoxFit.fitWidth,
+                              width: 110.0,
+                              height: 110.0,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.image,
+                                  color: ThemeApp.whiteColor,
+                                );
+                              },
                             ),
                           ),
-                          Positioned(
-                            bottom: 0, right: width/ 2.7,
-                            // width: 130.0,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0, right: width / 2.7,
+                        // width: 130.0,
 
-                            // height: 40.0,
-                            child: InkWell(
-                                onTap: () {
-                                  _getFromCamera();
-                                },
-                                child: Container(
-                                  height: 32,
-                                  width: 32,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: ThemeApp.appColor),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(7),
-                                    child: SvgPicture.asset(
-                                      'assets/appImages/cameraIcon.svg',
-                                      color: ThemeApp.whiteColor,
-                                      semanticsLabel: 'Acme Logo',
+                        // height: 40.0,
+                        child: InkWell(
+                            onTap: () {
+                              _getFromCamera();
+                            },
+                            child: Container(
+                              height: 32,
+                              width: 32,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: ThemeApp.appColor),
+                              child: Padding(
+                                padding: const EdgeInsets.all(7),
+                                child: SvgPicture.asset(
+                                  'assets/appImages/cameraIcon.svg',
+                                  color: ThemeApp.whiteColor,
+                                  semanticsLabel: 'Acme Logo',
 
-                                      // height: height * .03,
-                                    ),
-                                  ),
-                                )
-                                /*; Container(
+                                  // height: height * .03,
+                                ),
+                              ),
+                            )
+                            /*; Container(
                                             // alignment: Alignment.bottomCenter,
                                             color: ThemeApp.primaryNavyBlackColor,
                                             alignment: const Alignment(-2, -0.1),
                                             child: iconsUtils(
                                                 'assets/appImages/editIcon.svg'),
                                           ),*/
-                                ),
-                          ),
-                        ],
+                            ),
                       ),
-                /*     imageFile1 != null
+                    ],
+                  ),
+            /*     imageFile1 != null
                     ? Align(
                         alignment: Alignment.center,
                         child: Container(
@@ -311,114 +311,111 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                                 color: ThemeApp.backgroundColor,
                               ),
                             ))),*/
-                SizedBox(
-                  height: height * .03,
-                ),
-                TextFieldUtils().asteriskTextField(
-                  StringUtils.fullName,
-                  context,
-                ),
-                CharacterTextFormFieldsWidget(
-                    // isEnable: true,
-                    errorText: StringUtils.enterFullName,
-                    textInputType: TextInputType.name,
-                    controller:userNameController,
-                    autoValidation: AutovalidateMode.onUserInteraction,
-                    intialvalue: 'Testing Name',
-                    hintText: 'Full Name',
-                    onChange: (val) {
-                      setState(() {
-                        if (val.isEmpty && userNameController.text.isEmpty) {
-                          _validateFullName = true;
-                        }  else {
-                          _validateFullName = false;
-                        }
-                      });
-                    },
-                    validator: (value) {
-                      if (value.isEmpty && userNameController.text.isEmpty) {
-                        _validateFullName = true;
-                        return StringUtils.validUserNameError;
-                      }  else {
-                        _validateFullName = false;
-                      }
-                      return null;
-                    }),
-                SizedBox(
-                  height: height * .02,
-                ),
-
-
-                Text(
-           StringUtils.mobileNumber,
-                  style: SafeGoogleFont(
-                    'Roboto',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: ThemeApp.primaryNavyBlackColor,
-                  ),
-                ),
-                MobileNumberTextFormField(
-                    controller: mobileController,
-                    enable: false,
-                    onChanged: (phone) {   print(phone.completeNumber);
-                    if (phone.countryCode == "IN") {
-                      print("india selected");
-                      print(phone.completeNumber);
-                    } else {
-                      print("india not selected");
-                    }
-                    }, validator: (value) {
-
-                      return null;
-                    }),
-                SizedBox(
-                  height:5,
-                ),
-                Text(
-                  "In order to prevent unauthorized access of personal information, request you to contact admin for changing the registered mobile number and email address.",
-                  style: SafeGoogleFont(
-                    'Roboto',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: ThemeApp.lightFontColor,
-                  ),
-                ),
-                SizedBox(
-                  height: height * .02,
-                ),
-                Text(
-                  StringUtils.emailAddress,
-                  style: SafeGoogleFont(
-                    'Roboto',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: ThemeApp.primaryNavyBlackColor,
-                  ),
-                ),
-                EmailTextFormFieldsWidget(
-                  enabled: false,
-                    errorText: StringUtils.validEmailError,
-                    textInputType: TextInputType.emailAddress,
-                    controller: emailController,
-                    autoValidation: AutovalidateMode.onUserInteraction,
-                    hintText: '',
-                    onChange: (val) {},
-                    validator: (val) {
-
-                      return null;
-                    }),
-                SizedBox(
-                  height: height * .03,
-                ),
-                updateButton(provider),
-                SizedBox(
-                  height: height * .02,
-                ),
-              ],
+            SizedBox(
+              height: height * .03,
             ),
-          ),
-
+            TextFieldUtils().asteriskTextField(
+              StringUtils.fullName,
+              context,
+            ),
+            CharacterTextFormFieldsWidget(
+                // isEnable: true,
+                errorText: StringUtils.enterFullName,
+                textInputType: TextInputType.name,
+                controller: userNameController,
+                autoValidation: AutovalidateMode.onUserInteraction,
+                intialvalue: 'Testing Name',
+                hintText: 'Full Name',
+                onChange: (val) {
+                  setState(() {
+                    if (val.isEmpty && userNameController.text.isEmpty) {
+                      _validateFullName = true;
+                    } else {
+                      _validateFullName = false;
+                    }
+                  });
+                },
+                validator: (value) {
+                  if (value.isEmpty && userNameController.text.isEmpty) {
+                    _validateFullName = true;
+                    return StringUtils.validUserNameError;
+                  } else {
+                    _validateFullName = false;
+                  }
+                  return null;
+                }),
+            SizedBox(
+              height: height * .02,
+            ),
+            Text(
+              StringUtils.emailAddress,
+              style: SafeGoogleFont(
+                'Roboto',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: ThemeApp.primaryNavyBlackColor,
+              ),
+            ),
+            EmailTextFormFieldsWidget(
+                enabled: false,
+                errorText: StringUtils.validEmailError,
+                textInputType: TextInputType.emailAddress,
+                controller: emailController,
+                autoValidation: AutovalidateMode.onUserInteraction,
+                hintText: '',
+                onChange: (val) {},
+                validator: (val) {
+                  return null;
+                }),
+            SizedBox(
+              height: height * .02,
+            ),
+            Text(
+              StringUtils.mobileNumber,
+              style: SafeGoogleFont(
+                'Roboto',
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: ThemeApp.primaryNavyBlackColor,
+              ),
+            ),
+            MobileNumberTextFormField(
+                controller: mobileController,
+                enable: false,
+                onChanged: (phone) {
+                  print(phone.completeNumber);
+                  if (phone.countryCode == "IN") {
+                    print("india selected");
+                    print(phone.completeNumber);
+                  } else {
+                    print("india not selected");
+                  }
+                },
+                validator: (value) {
+                  return null;
+                }),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              "In order to prevent unauthorized access of personal information, request you to contact admin for changing the registered mobile number and email address.",
+              style: SafeGoogleFont(
+                'Roboto',
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: ThemeApp.lightFontColor,
+              ),
+            ),
+            SizedBox(
+              height: height * .03,
+            ),
+            updateButton(provider),
+            SizedBox(
+              height: height * .02,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -442,7 +439,7 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
   // }
 
   Future _getFromCamera() async {
-    var image = await picker.pickImage(source: ImageSource.camera );
+    var image = await picker.pickImage(source: ImageSource.camera);
     final prefs = await SharedPreferences.getInstance();
     // StringConstant.CurrentPinCode = (prefs.getString('CurrentPinCodePref') ?? '');
     String imagePath = image!.path;

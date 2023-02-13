@@ -6,6 +6,7 @@ import 'package:velocit/Core/data/app_excaptions.dart';
 import 'package:velocit/Core/data/network/baseApiServices.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../utils/constants.dart';
 import '../../../utils/utils.dart';
 
 class NetworkApiServices extends BaseApiServices {
@@ -74,6 +75,7 @@ class NetworkApiServices extends BaseApiServices {
       case 200:
         var responseJson = json.decode(response.body.toString());
         print(responseJson);
+
         return responseJson;
       case 400:
         throw BadRequestException(response.body.toString());
