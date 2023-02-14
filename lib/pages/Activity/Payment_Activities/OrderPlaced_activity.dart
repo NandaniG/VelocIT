@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/CartModels/SendCartForPaymentModel.dart';
+import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/routes/routes.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
@@ -336,11 +337,11 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
         ),
         proceedButton(
             "View my orders", ThemeApp.tealButtonColor, context, false, () {
-          // Navigator.of(context).pushReplacement(
-          //   MaterialPageRoute(
-          //     builder: (context) => DashboardScreen(),
-          //   ),
-          // );
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => MyOrdersActivity(),
+            ),
+          );
         }),
       ]),
     );

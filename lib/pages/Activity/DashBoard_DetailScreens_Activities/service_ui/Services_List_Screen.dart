@@ -229,9 +229,9 @@ class _ServiceListByCategoryActivityState
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      /*    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             TextFieldUtils().dynamicText(
                 'Sort By  ',
                 context,
@@ -260,7 +260,7 @@ class _ServiceListByCategoryActivityState
                       letterSpacing: -0.08)),
             ),
             const Icon(Icons.keyboard_arrow_down)
-          ]),
+          ]),*/
           InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
@@ -354,10 +354,7 @@ class _ServiceListByCategoryActivityState
                         );
                       },
                       child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: ThemeApp.tealButtonColor,
-                              )),
+// height: 205,
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,8 +363,8 @@ class _ServiceListByCategoryActivityState
                                             flex: 2,
                                             child:*/
                           Container(
-                            height: 149,
-                            width: double.infinity,
+                            height: 143,
+                            width: 191,
                             /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
@@ -381,8 +378,9 @@ class _ServiceListByCategoryActivityState
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,*/
-                            decoration: const BoxDecoration(
-                              color: ThemeApp.whiteColor,
+                            decoration:  BoxDecoration(
+                              color: ThemeApp.whiteColor,                                border: Border.all(color: ThemeApp.tealButtonColor)
+
                             ),
                             child: ClipRRect(
                               child: subServiceList[index]
@@ -394,7 +392,13 @@ class _ServiceListByCategoryActivityState
                                           .imageUrls![0]
                                           .imageUrl!,
                                       // fit: BoxFit.fill,
-
+                                      height: (MediaQuery.of(context)
+                                                  .orientation ==
+                                              Orientation.landscape)
+                                          ? MediaQuery.of(context).size.height *
+                                              .26
+                                          : MediaQuery.of(context).size.height *
+                                              .1,
                                     )
                                   : SizedBox(
                                       // height: height * .28,
@@ -408,8 +412,8 @@ class _ServiceListByCategoryActivityState
                           // ),
                           Container(
                             color: ThemeApp.tealButtonColor,
-                            width: double.infinity,
-                            height: 67,
+                            width: 191,
+                            height: 66,
                             padding: const EdgeInsets.only(
                               left: 12,
                               right: 12,

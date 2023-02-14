@@ -42,7 +42,7 @@ class _OTPScreenState extends State<OTPScreen> {
   String otpMsg = "";
 
   late Timer _timer;
-  int _start = 130;
+  int _start = 90;
   bool isLoading = false;
   TextEditingController controller = TextEditingController(text: "");
   FocusNode focusNode = FocusNode();
@@ -304,7 +304,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                         .postApiForMobileOTPRequest(
                                             mobileData,widget.isForgotPass, context)
                                         .then((value) {
-                                      _start = 130;
+                                      _start = 90;
                                       isLoading = true;
 
                                       controller.clear();
@@ -319,7 +319,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                         .postApiForEmailOTPRequest(
                                             emaildata,widget.isForgotPass, context)
                                         .then((value) {
-                                      _start = 130;
+                                      _start = 90;
                                       isLoading = true;
 
                                       controller.clear();

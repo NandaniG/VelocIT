@@ -381,10 +381,7 @@ class _ProductListByCategoryActivityState
                         );
                       },
                       child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: ThemeApp.tealButtonColor,
-                              )),
+// height: 205,
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,11 +390,13 @@ class _ProductListByCategoryActivityState
                                         flex: 2,
                                         child:*/
                           Container(
-                            height: 159,
+                            height: 143,
                             width: 191,
 
-                            decoration: const BoxDecoration(
+                            decoration:  BoxDecoration(
                               color: ThemeApp.whiteColor,
+                                border: Border.all(color: ThemeApp.tealButtonColor)
+
                             ),
                             child: ClipRRect(
                               child: subCategoryList[index]
@@ -408,9 +407,15 @@ class _ProductListByCategoryActivityState
                                       subCategoryList[index]
                                           .imageUrls![0]
                                           .imageUrl!,
-                                fit: BoxFit.scaleDown,
-
-                              )
+                                      // fit: BoxFit.fill,
+                                      height: (MediaQuery.of(context)
+                                                  .orientation ==
+                                              Orientation.landscape)
+                                          ? MediaQuery.of(context).size.height *
+                                              .26
+                                          : MediaQuery.of(context).size.height *
+                                              .1,
+                                    )
                                   : SizedBox(
                                       // height: height * .28,
                                       width: width,
@@ -423,18 +428,20 @@ class _ProductListByCategoryActivityState
                           // ),
                           Container(
                             color: ThemeApp.tealButtonColor,
-                            height: 57.2,
-
-                            padding:  const EdgeInsets.fromLTRB(
-                                21, 0, 21, 0),
+                            width: 191,
+                            height: 66,
+                            padding: const EdgeInsets.only(
+                              left: 12,
+                              right: 12,
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 TextFieldUtils().listNameHeadingTextField(
                                     subCategoryList[index].shortName!, context),
-
-                                SizedBox(height: 5),Row(
+                                SizedBox(height: 10),
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [

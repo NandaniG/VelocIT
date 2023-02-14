@@ -283,7 +283,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                                       context) {
                                                                 return ProfileImageDialog(
                                                                     imageFile1:
-                                                                        imageFile1);
+                                                                        imageFile1,isEditAccount: true,);
                                                               });
                                                         },
                                                         child: Container(
@@ -380,7 +380,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                               context) {
                                                                 return ProfileImageDialog(
                                                                     imageFile1:
-                                                                    imageFile1);
+                                                                    imageFile1,isEditAccount: true,);
                                                               });
                                                         },
                                                         child: Container(
@@ -764,8 +764,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     EditAccountActivity(
-                                                  payload:
-                                                      snapshot.data!.payload,
+                                                  // payload:
+                                                  //     snapshot.data!.payload,
                                                 ),
                                               ),
                                             );

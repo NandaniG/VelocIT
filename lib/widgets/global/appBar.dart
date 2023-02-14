@@ -174,7 +174,16 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     child: Center(
                       // height: 25,
                       // width: 25,
-                      child:badges.Badge(
+                      child: SvgPicture.asset(
+                        'assets/appImages/notificationIcon.svg',
+                        color: ThemeApp.primaryNavyBlackColor,
+                        semanticsLabel: 'Acme Logo',
+                        theme: SvgTheme(
+                          currentColor: ThemeApp.primaryNavyBlackColor,
+                        ),
+                        height: 28,
+                        width: 28,
+                      ), /*badges.Badge(
                               badgeContent: Text(
                                 0.toString(),
                                 style: const TextStyle(
@@ -198,7 +207,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                 height: 28,
                                 width: 28,
                               ),
-                            ),
+                            ),*/
                     ),
                   ),
                 ),
@@ -678,7 +687,12 @@ class _AddressWidgetsState extends State<AddressWidgets> {
   getPref() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      finalPicode = prefs.getString('CurrentPinCodePrefs') ?? "";
+      finalPicode =
+          prefs.getString('CurrentPinCodePrefs') ?? "Please select location";
+
+    if(finalPicode=='null'){
+      finalPicode= "Please select location";
+    }
       print(
           "placesFromCurrentLocation CurrentPinCode pref...${finalPicode.toString()}");
 
@@ -791,7 +805,7 @@ class _AddressWidgetsState extends State<AddressWidgets> {
               SizedBox(
                 width: width * .01,
               ),
-              SizedBox(
+              finalPicode!='null'?     SizedBox(
                 child: TextFieldUtils().dynamicText(
                     "Deliver to - ${finalPicode} ",
                     context,
@@ -800,6 +814,15 @@ class _AddressWidgetsState extends State<AddressWidgets> {
                         color: ThemeApp.tealButtonColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w400)),
+              ):    SizedBox(
+                child: TextFieldUtils().dynamicText(
+                    "Deliver to - Please select location ",
+                    context,
+                    TextStyle(
+                        fontFamily: 'Roboto',
+                        color: ThemeApp.tealButtonColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500)),
               ),
               /*   SizedBox(
               child: TextFieldUtils().dynamicText(
@@ -1057,80 +1080,85 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
           icon: _currentIndex == 4
               ? Padding(
                   padding: const EdgeInsets.only(top: 8.0, right: 8),
-                  child:StringConstant.BadgeCounterValue == '0' ||
-                      StringConstant.BadgeCounterValue == ''||StringConstant.BadgeCounterValue ==0
+                  child: StringConstant.BadgeCounterValue == '0' ||
+                          StringConstant.BadgeCounterValue == '' ||
+                          StringConstant.BadgeCounterValue == 0
                       ? SvgPicture.asset(
-                    'assets/appImages/bottomApp/cartIcons.svg',
-                    color: ThemeApp.appColor,
-                    semanticsLabel: 'Acme Logo',
-                    theme: SvgTheme(
-                      currentColor: ThemeApp.appColor,
-                    ),
-                    height: 25,
-                    width: 25,
-                  ):  badges.Badge(
-                    position: badges.BadgePosition.topEnd(),
-                    badgeContent: Text(
-                      StringConstant.BadgeCounterValue.toString(),
-                      style: const TextStyle(
-                        fontFamily: 'Roboto',
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                    badgeStyle: badges.BadgeStyle(
-                      badgeColor: ThemeApp.redColor,
-                      padding: EdgeInsets.all(7),
-                    ),
-                    child: SvgPicture.asset(
-                      'assets/appImages/bottomApp/cartIcons.svg',
-                      color: ThemeApp.appColor,
-                      semanticsLabel: 'Acme Logo',
-                      theme: SvgTheme(
-                        currentColor: ThemeApp.appColor,
-                      ),
-                      height: 25,
-                      width: 25,
-                    ),
-                  ),
+                          'assets/appImages/bottomApp/cartIcons.svg',
+                          color: ThemeApp.appColor,
+                          semanticsLabel: 'Acme Logo',
+                          theme: SvgTheme(
+                            currentColor: ThemeApp.appColor,
+                          ),
+                          height: 25,
+                          width: 25,
+                        )
+                      : badges.Badge(
+                          position: badges.BadgePosition.topEnd(),
+                          badgeContent: Text(
+                            StringConstant.BadgeCounterValue.toString(),
+                            style: const TextStyle(
+                              fontFamily: 'Roboto',
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                          badgeStyle: badges.BadgeStyle(
+                            badgeColor: ThemeApp.redColor,
+                            padding: EdgeInsets.all(7),
+                          ),
+                          child: SvgPicture.asset(
+                            'assets/appImages/bottomApp/cartIcons.svg',
+                            color: ThemeApp.appColor,
+                            semanticsLabel: 'Acme Logo',
+                            theme: SvgTheme(
+                              currentColor: ThemeApp.appColor,
+                            ),
+                            height: 25,
+                            width: 25,
+                          ),
+                        ),
                 )
               : Padding(
                   padding: const EdgeInsets.only(top: 8.0, right: 8),
                   child: StringConstant.BadgeCounterValue == '0' ||
-                      StringConstant.BadgeCounterValue == ''||StringConstant.BadgeCounterValue ==0
+                          StringConstant.BadgeCounterValue == '' ||
+                          StringConstant.BadgeCounterValue == 0
                       ? SvgPicture.asset(
-                    'assets/appImages/bottomApp/cartIcons.svg',
-                    color: ThemeApp.unSelectedBottomBarItemColor,
-                    semanticsLabel: 'Acme Logo',
-                    theme: SvgTheme(
-                      currentColor: ThemeApp.unSelectedBottomBarItemColor,
-                    ),
-                    height: 25,
-                    width: 25,
-                  ):  badges.Badge(
-                    badgeContent: Text(
-                      StringConstant.BadgeCounterValue.toString(),
-                      style: const TextStyle(
-                        fontFamily: 'Roboto',
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                    badgeStyle: badges.BadgeStyle(
-                      badgeColor: ThemeApp.redColor,
-                      padding: EdgeInsets.all(7),
-                    ),
-                    child: SvgPicture.asset(
-                      'assets/appImages/bottomApp/cartIcons.svg',
-                      color: ThemeApp.unSelectedBottomBarItemColor,
-                      semanticsLabel: 'Acme Logo',
-                      theme: SvgTheme(
-                        currentColor: ThemeApp.unSelectedBottomBarItemColor,
-                      ),
-                      height: 25,
-                      width: 25,
-                    ),
-                  ),
+                          'assets/appImages/bottomApp/cartIcons.svg',
+                          color: ThemeApp.unSelectedBottomBarItemColor,
+                          semanticsLabel: 'Acme Logo',
+                          theme: SvgTheme(
+                            currentColor: ThemeApp.unSelectedBottomBarItemColor,
+                          ),
+                          height: 25,
+                          width: 25,
+                        )
+                      : badges.Badge(
+                          badgeContent: Text(
+                            StringConstant.BadgeCounterValue.toString(),
+                            style: const TextStyle(
+                              fontFamily: 'Roboto',
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                          badgeStyle: badges.BadgeStyle(
+                            badgeColor: ThemeApp.redColor,
+                            padding: EdgeInsets.all(7),
+                          ),
+                          child: SvgPicture.asset(
+                            'assets/appImages/bottomApp/cartIcons.svg',
+                            color: ThemeApp.unSelectedBottomBarItemColor,
+                            semanticsLabel: 'Acme Logo',
+                            theme: SvgTheme(
+                              currentColor:
+                                  ThemeApp.unSelectedBottomBarItemColor,
+                            ),
+                            height: 25,
+                            width: 25,
+                          ),
+                        ),
                 ),
           label: 'CART'),
     ],
@@ -1784,7 +1812,12 @@ class _searchBarWidgetState extends State<searchBarWidget> {
                     productCategories.getProductBySearchTermsWithGet(
                       0,
                       10,
-                      StringConstant.controllerSpeechToText.text.toString(),
+                      StringConstant.controllerSpeechToText.text
+                          .toString()
+                          .replaceFirst(
+                              StringConstant.controllerSpeechToText.text[0],
+                              StringConstant.controllerSpeechToText.text[0]
+                                  .toUpperCase()),
                     );
                     Navigator.of(context).push(
                       MaterialPageRoute(

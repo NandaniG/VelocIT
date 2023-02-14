@@ -35,7 +35,7 @@ class StringUtils {
   static String verificationError = "Enter verification code";
   static String verifyOTP = "Verify OTP";
   static String resendOTP = "Re-send OTP";
-  static String forgotPasswordSubHeading = "Don't worry, we are here to help you\n\nPlease enter your registered email address. We'll send you a temporary password.";
+  static String forgotPasswordSubHeading = "Don't worry, we are here to help you\n\nPlease enter your registered email address / mobile number. We'll send you a temporary password.";
   static String registeredEmailAddress = "Registered Email Address";
   static String validateRegisteredEmail = "Please enter registered Email Address";
   static String resetPassword = "Send a new OTP";

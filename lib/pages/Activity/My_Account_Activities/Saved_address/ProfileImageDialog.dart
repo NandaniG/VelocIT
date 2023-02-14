@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 
 import '../../../../Core/AppConstant/apiMapping.dart';
@@ -19,12 +20,14 @@ import '../../../../utils/utils.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/dynamicPopUp.dart';
 import '../../../../widgets/global/textFormFields.dart';
+import '../MyAccountActivity/Edit_Account_activity.dart';
 
 class ProfileImageDialog extends StatefulWidget {
   File? imageFile1;
+  bool isEditAccount;
 
   ProfileImageDialog({
-    required this.imageFile1,
+    required this.imageFile1,required this.isEditAccount
   });
 
   @override
@@ -85,7 +88,19 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
 
                   setState(() {
                     widget.imageFile1 = File(image.path);
-                    Navigator.pop(context);
+                    if(widget.isEditAccount ==true) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const MyAccountActivity(),
+                        ),
+                      );
+                    }else{
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>  EditAccountActivity(),
+                        ),
+                      );
+                    }
 
                   });
                 }),
@@ -104,8 +119,19 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                       final file = File(filePath);
 
                       widget.imageFile1 = file;
-                      Navigator.pop(context);
-
+                      if(widget.isEditAccount ==true) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const MyAccountActivity(),
+                          ),
+                        );
+                      }else{
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) =>  EditAccountActivity(),
+                          ),
+                        );
+                      }
                     }
                   }
                 }),

@@ -456,9 +456,9 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                     // MediaQuery.of(context).size.height * .26,
                                     width:
                                         MediaQuery.of(context).size.width * .45,
-                                    decoration:  BoxDecoration(
+                                    decoration: const BoxDecoration(
                                         color: ThemeApp.tealButtonColor,
-border: Border.all(color: ThemeApp.tealButtonColor)
+
                                         /*borderRadius: BorderRadius.all(
                                             Radius.circular(10))*/),
                                     child: Column(
@@ -482,14 +482,16 @@ border: Border.all(color: ThemeApp.tealButtonColor)
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                decoration: const BoxDecoration(
+                                                decoration:  BoxDecoration(
                                                     color: ThemeApp.whiteColor,
+                                                    border: Border.all(color: ThemeApp.tealButtonColor)
+
                                                 ),
                                                 child: ClipRRect(
                                                   borderRadius:
                                                       const BorderRadius.only(
                                                     topRight:
-                                                        Radius.circular(0),
+                                                        Radius.circular(10),
                                                     topLeft:
                                                         Radius.circular(0),
                                                   ),

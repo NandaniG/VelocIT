@@ -309,6 +309,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             AuthRepository()
                                 .resetPassRequest(mobileData,true, context)
                                 .then((value) => setState(() {
+                              Utils.successToast('Password Change successfully');
 
                                     }));
 
@@ -319,6 +320,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             AuthRepository()
                                 .resetPassRequest(emaildata,false, context)
                                 .then((value) => setState(() {
+                              Utils.successToast('Password Change successfully');
 
                                     }));
                           }

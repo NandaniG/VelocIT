@@ -102,7 +102,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                               SizedBox(
                                 height: 5,
                               ),
-                     /*         Padding(
+                              /*         Padding(
                                 padding:
                                     const EdgeInsets.only(left: 20, right: 20),
                                 child: TextFieldUtils().dynamicText(
@@ -534,7 +534,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                       SizedBox(
                                         height: 20,
                                       ),
-                                      orders['cancelled'] == true
+                                      orders['cancelled'] == false
                                           ? proceedButton(
                                               "Submit",
                                               ThemeApp.tealButtonColor,
@@ -572,23 +572,17 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                       widget
                                                           .orderList['order_id']
                                                           .toString());
-
-                                              Navigator.of(context)
-                                                  .popAndPushNamed(
-                                                      RoutesName.orderRoute)
-                                                  .then((value) {
-                                                setState(() {});
-                                              });
                                             })
                                           : Center(
-                                            child: Text(
+                                              child: Text(
                                                 "Your order is already cancelled",
                                                 style: TextStyle(
                                                     color: ThemeApp.redColor,
                                                     fontSize: 15,
-                                                fontWeight: FontWeight.w700),
+                                                    fontWeight:
+                                                        FontWeight.w700),
                                               ),
-                                          )
+                                            )
                                     ]),
                               ),
                             ),

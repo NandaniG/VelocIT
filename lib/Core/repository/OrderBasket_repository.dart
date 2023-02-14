@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';import '../../pages/Activity/My_Orders/MyOrders_Activity.dart';
 import '../../utils/constants.dart';
+import '../../utils/routes/routes.dart';
 import '../../utils/utils.dart';
 
 
@@ -64,7 +65,12 @@ class OrderBasketRepository {
 
         Utils.successToast(
             'Order cancelled successful');
+        Navigator.of(context)
+            .popAndPushNamed(
+            RoutesName.orderRoute)
+            .then((value) {
 
+        });
       }
     } catch (e) {
       print("Merge cart error: " + e.toString());

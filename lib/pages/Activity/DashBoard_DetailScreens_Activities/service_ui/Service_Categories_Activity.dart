@@ -150,7 +150,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                           height: height * .02,
                                         ),
                                         TextFieldUtils().dynamicText(
-                                            'Services',
+                                            'Book our Services',
                                             context,
                                             TextStyle(
                                               fontFamily: 'Roboto',

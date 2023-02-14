@@ -94,7 +94,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 // Text(StringUtils!.helloWorld);
                 Text(
                   StringUtils.forgotPasswordSubHeading,
-                  maxLines: 4,
+                  maxLines: 6,
                   style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 14,
@@ -396,7 +396,8 @@ class _ForgotSuccessDialogState extends State<ForgotSuccessDialog> {
 
 class ChangeForgotPassword extends StatefulWidget {
   final String cred;
-   ChangeForgotPassword({Key? key, required this.cred}) : super(key: key);
+
+  ChangeForgotPassword({Key? key, required this.cred}) : super(key: key);
 
   @override
   State<ChangeForgotPassword> createState() => _ChangeForgotPasswordState();
@@ -496,14 +497,15 @@ class _ChangeForgotPasswordState extends State<ChangeForgotPassword> {
                     ),
                     Row(
                       children: [
-                        TextFieldUtils().asteriskTextField('New Password', context),
+                        TextFieldUtils()
+                            .asteriskTextField('New Password', context),
                         SizedBox(
                           width: 5,
                         ),
                         Tooltip(
                           key: tooltipkey,
                           message:
-                          'Enter Password that must be\n\u2022 8-16 characters long\n\u2022 Must contain a number\n\u2022 Must contain a capital and small letter\n\u2022 Must contain a special character',
+                              'Enter Password that must be\n\u2022 8-16 characters long\n\u2022 Must contain a number\n\u2022 Must contain a capital and small letter\n\u2022 Must contain a special character',
                           padding: const EdgeInsets.all(15),
                           margin: const EdgeInsets.only(
                               top: 30, left: 30, right: 30),
@@ -518,7 +520,8 @@ class _ChangeForgotPasswordState extends State<ChangeForgotPassword> {
                               letterSpacing: 1.2,
                               fontWeight: FontWeight.w400,
                               color: Colors.white),
-                          child: Icon(Icons.info_outline,color: ThemeApp.appColor),
+                          child: Icon(Icons.info_outline,
+                              color: ThemeApp.appColor),
                         )
                       ],
                     ),
@@ -624,27 +627,33 @@ class _ChangeForgotPasswordState extends State<ChangeForgotPassword> {
                           Map emaildata = {
                             "cred": widget.cred,
                             "credtype": "email",
-                            "newpassword":_newPass.text
+                            "newpassword": _newPass.text
                           };
                           Map mobileData = {
                             "cred": widget.cred,
                             "credtype": "mobile",
-                            "newpassword":_newPass.text
+                            "newpassword": _newPass.text
                           };
                           if (StringConstant().isNumeric(widget.cred)) {
                             print(mobileData);
 
                             AuthRepository()
-                                .resetPassRequest(mobileData, true,context)
-                                .then((value) => setState(() { }));
+                                .resetPassRequest(mobileData, true, context)
+                                .then((value) => setState(() {
+                                      Utils.successToast(
+                                          'Password reset successfully');
+                                    }));
 
                             print("Digit found");
                           } else {
                             print(emaildata);
 
                             AuthRepository()
-                                .resetPassRequest(emaildata,true, context)
-                                .then((value) => setState(() {  }));
+                                .resetPassRequest(emaildata, true, context)
+                                .then((value) => setState(() {
+                                      Utils.successToast(
+                                          'Password reset successfully');
+                                    }));
                           }
                         } else {
                           Utils.errorToast('Please enter valid details');
@@ -1076,9 +1085,7 @@ class _ForgotPassOTPState extends State<ForgotPassOTP> {
 
                                     AuthRepository()
                                         .forgotPassRequest(mobileData, context)
-                                        .then((value) => setState(() {
-
-                                            }));
+                                        .then((value) => setState(() {}));
 
                                     print("Digit found");
                                   } else {
@@ -1186,10 +1193,11 @@ class _ForgotPassOTPState extends State<ForgotPassOTP> {
                     if (controller.text.length >= 6) {
                       print(widget.OTP);
                       print(controller.text);
-                      if (controller.text==widget.OTP) {
-
+                      if (controller.text == widget.OTP) {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) => ChangeForgotPassword(cred: widget.mobileNumber)));
+                            builder: (BuildContext context) =>
+                                ChangeForgotPassword(
+                                    cred: widget.mobileNumber)));
                       } else {
                         Utils.errorToast("Please enter valid details.");
                       }

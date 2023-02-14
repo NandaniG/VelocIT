@@ -403,30 +403,30 @@ class _ReportAnIssueState extends State<ReportAnIssue> {
                                 // errorStyle: TextStyle(fontFamily: 'Roboto',
                                 //     color: Colors.redAccent, fontSize: 16.0),
                                 border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0))),
+                                    borderRadius: BorderRadius.circular(5))),
                             child: DropdownButtonHideUnderline(
-                              child: DropdownButton<BankListDataModel>(
+                              child: DropdownButton<ReasonListDataModel>(
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.grey,
                                   fontFamily: "verdana_regular",
                                 ),
                                 hint: Text(
-                                  "Select Bank",
+                                  "Select Reason",
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 16,
                                   ),
                                 ),
-                                items: bankDataList
-                                    .map<DropdownMenuItem<BankListDataModel>>(
-                                        (BankListDataModel value) {
+                                items: changeDataList
+                                    .map<DropdownMenuItem<ReasonListDataModel>>(
+                                        (ReasonListDataModel value) {
                                   return DropdownMenuItem(
                                     value: value,
                                     child: Row(
                                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(value.bank_name),
+                                        Text(value.reason_name),
                                       ],
                                     ),
                                   );
@@ -434,10 +434,10 @@ class _ReportAnIssueState extends State<ReportAnIssue> {
                                 isExpanded: true,
                                 isDense: true,
                                 onChanged:
-                                    (BankListDataModel? newSelectedBank) {
+                                    (ReasonListDataModel? newSelectedBank) {
                                   _onDropDownItemSelected(newSelectedBank!);
                                 },
-                                value: _bankChoose,
+                                value: _reasonChoose,
                               ),
                             ),
                           );
@@ -562,25 +562,25 @@ class _ReportAnIssueState extends State<ReportAnIssue> {
     );
   }
 
-  List<BankListDataModel> bankDataList = [
-    BankListDataModel("AC repair"),
-    BankListDataModel("Sofa cleaning"),
-    BankListDataModel("Fridge repair"),
+  List<ReasonListDataModel> changeDataList = [
+    ReasonListDataModel("AC repair"),
+    ReasonListDataModel("Sofa cleaning"),
+    ReasonListDataModel("Fridge repair"),
     //BankListDataModel("Canara","https://bankforms.org/wp-content/uploads/2019/10/Canara-Bank.png")
   ];
-  BankListDataModel? _bankChoose;
+  ReasonListDataModel? _reasonChoose;
 
-  void _onDropDownItemSelected(BankListDataModel newSelectedBank) {
+  void _onDropDownItemSelected(ReasonListDataModel newSelectedReason) {
     setState(() {
-      _bankChoose = newSelectedBank;
+      _reasonChoose = newSelectedReason;
     });
   }
 }
 
-class BankListDataModel {
-  String bank_name;
+class ReasonListDataModel {
+  String reason_name;
 
-  BankListDataModel(
-    this.bank_name,
+  ReasonListDataModel(
+    this.reason_name,
   );
 }
