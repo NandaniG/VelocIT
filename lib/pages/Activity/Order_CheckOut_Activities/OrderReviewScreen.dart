@@ -356,8 +356,6 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                     .cart!.totalPayable,
                                             "is_self_pickup": isSelfPickUp,
                                           };
-                                          print("defaultAddressList ...${defaultAddressList.toString().isEmpty}");
-
                                           if (isSelfPickUp == true) {
                                             CartRepository().putCartForPayment(
                                                 data,
@@ -372,7 +370,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               ),
                                             );
                                           } else {
-                                            if (defaultAddressList.toString().isNotEmpty) {
+                                            if (addressStatus == 'OK') {
                                               CartRepository()
                                                   .putCartForPayment(
                                                       data,
@@ -388,7 +386,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               );
                                             } else {
                                               isSelfPickUp == false
-                                                  ? Utils.successToast(
+                                                  ? Utils.errorToast(
                                                       "Please select delivery address")
                                                   : '';
                                             }
@@ -985,7 +983,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               (isServiceOnly == true)
                                           ? Center(
                                               child: Text(
-                                                  'Pickup from store option is not available for service(s).',
+                                                  'Pick-up from Store option not available for Services in your cart.',
                                                   style: TextStyle(
                                                       fontFamily: 'Roboto',
                                                       color: ThemeApp.redColor,
@@ -1131,8 +1129,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     );
   }
 
- late DefaultAddressPayload defaultAddressList;
-
+GetDefaultAddressModel defaultAddressList= GetDefaultAddressModel();
+String addressStatus='';
   Widget deliveryAddress() {
     return ChangeNotifierProvider<CartViewModel>.value(
         value: cartListView,
@@ -1143,16 +1141,24 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
 
               return Container();
             case Status.ERROR:
-              print("Api error");
+              print("Api error"+cartProvider.getDefaultAddress.message.toString());
+              addressStatus ="Exception";
 
-              return Text(cartProvider.getDefaultAddress.message.toString());
+              return TextFieldUtils().dynamicText(
+                  'No Address found!',
+                  context,
+                  TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w400));
             case Status.COMPLETED:
+              addressStatus ='OK';
               print("addressList Api calll");
               DefaultAddressPayload addressList =
                   cartProvider.getDefaultAddress.data!.payload!;
-              defaultAddressList =addressList;
-              print("addressList  ...${addressList.name}");
-              return cartProvider.getDefaultAddress.data!.payload.toString().isNotEmpty
+              defaultAddressList =cartProvider.getDefaultAddress.data!;
+              return addressList.toString().isNotEmpty
                   ? Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2774,7 +2780,7 @@ final List<String> titles = [
   'Order review',
   'Delivery detail',
   'Payment',
-  'Order confirmation',
+  'Order Placed',
 ];
 int _curStep = 1;
 

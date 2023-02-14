@@ -42,7 +42,7 @@ class _OTPScreenState extends State<OTPScreen> {
   String otpMsg = "";
 
   late Timer _timer;
-  int _start = 120;
+  int _start = 130;
   bool isLoading = false;
   TextEditingController controller = TextEditingController(text: "");
   FocusNode focusNode = FocusNode();
@@ -289,9 +289,6 @@ class _OTPScreenState extends State<OTPScreen> {
                           : InkWell(
                               onTap: () {
                                 setState(() {
-                                  _start = 120;
-                                  isLoading = true;
-
 
                                   Map emaildata = {
                                     'email': widget.mobileNumber,
@@ -307,6 +304,10 @@ class _OTPScreenState extends State<OTPScreen> {
                                         .postApiForMobileOTPRequest(
                                             mobileData,widget.isForgotPass, context)
                                         .then((value) {
+                                      _start = 130;
+                                      isLoading = true;
+
+                                      controller.clear();
                                       startTimer();
                                     });
 
@@ -318,6 +319,10 @@ class _OTPScreenState extends State<OTPScreen> {
                                         .postApiForEmailOTPRequest(
                                             emaildata,widget.isForgotPass, context)
                                         .then((value) {
+                                      _start = 130;
+                                      isLoading = true;
+
+                                      controller.clear();
                                       startTimer();
                                     });
                                     // Navigator.of(context).push(

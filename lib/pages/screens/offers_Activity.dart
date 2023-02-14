@@ -201,100 +201,106 @@ class _OfferActivityState extends State<OfferActivity> {
                                       ),
                                     );
                                   },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      Container(
-                                        height: 141,
-                                        width: 191,
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                          // borderRadius: BorderRadius.only(
-                                          //   topRight: Radius.circular(10),
-                                          //   topLeft: Radius.circular(10),
-                                          // )
+                                  child:  Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: ThemeApp.tealButtonColor,
+                                        )),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start,
+                                      children: [
+                                        Container(
+                                          height: 139,
+                                          width: double.infinity,
+                                          decoration: const BoxDecoration(
+                                            color: ThemeApp.whiteColor,
+                                            // borderRadius: BorderRadius.only(
+                                            //   topRight: Radius.circular(10),
+                                            //   topLeft: Radius.circular(10),
+                                            // )
+                                          ),
+                                          child: Image.network(
+                                            // width: double.infinity,
+                                            offerList[index].offerImageUrl
+                                                .toString() ?? "",
+                                            // fit: BoxFit.fill,
+                                            errorBuilder: ((context, error,
+                                                stackTrace) {
+                                              return Container(
+                                                  height: 139,
+                                                  width: 191,
+                                                  color: ThemeApp.whiteColor,
+                                                  child: Icon(
+                                                    Icons.image_outlined,
+                                                  ));
+                                            }),
+                                            // height: 163,
+                                            // width: 191,
+                                          ),
                                         ),
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          offerList[index].offerImageUrl
-                                              .toString() ?? "",
-                                          // fit: BoxFit.fill,
-                                          errorBuilder: ((context, error,
-                                              stackTrace) {
-                                            return Container(
-                                                height: 141,
-                                                width: 191,
-                                                color: ThemeApp.whiteColor,
-                                                child: Icon(
-                                                  Icons.image_outlined,
-                                                ));
-                                          }),
-                                          // height: 163,
-                                          // width: 191,
+                                        SizedBox(),
+                                        Container(
+                                          color: ThemeApp.tealButtonColor,
+                                          width: double.infinity,
+                                          // height: 65,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment
+                                                .start,
+                                            children: [
+                                              Container(
+                                                padding: const EdgeInsets
+                                                    .fromLTRB(
+                                                    21, 10, 21, 0),
+                                                child: TextFieldUtils()
+                                                    .listNameHeadingTextField(
+                                                    offerList[index]
+                                                        .productSubCategoryName
+                                                        .toString() ?? "",
+                                                    context) ?? SizedBox() /*Text(
+                                                      serviceList[index].shortName!,
+                                                      maxLines: 1,
+                                                      style: TextStyle(fontFamily: 'Roboto',
+                                                          overflow:
+                                                              TextOverflow.ellipsis,
+                                                          color:
+                                                              ThemeApp.whiteColor,
+                                                          fontSize: height * .022,
+                                                          fontWeight:
+                                                              FontWeight.bold))*/
+                                                ,
+                                              ),
+                                              offerList[index].isAmountBased==true?   Container(
+                                                padding: const EdgeInsets
+                                                    .fromLTRB(
+                                                    21, 4, 21, 9),
+                                                child: TextFieldUtils()
+                                                    .listPriceHeadingTextField(
+
+                                                    "Under "+  offerList[index]
+                                                        .belowAmountDisplay.toString(),
+                                                    context),
+
+                                              ):Container(
+                                                padding: const EdgeInsets
+                                                    .fromLTRB(
+                                                    21, 4, 21, 9),
+                                                child: TextFieldUtils()
+                                                    .listPriceHeadingTextField(
+
+                                                    "Under "+  offerList[index]
+                                                        .belowDiscountPercentDisplay.toString(),
+                                                    context),
+
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(),
-                                      Container(
-                                        color: ThemeApp.tealButtonColor,
-                                        width: 191,
-                                        // height: 65,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(
-                                                  21, 10, 21, 0),
-                                              child: TextFieldUtils()
-                                                  .listNameHeadingTextField(
-                                                  offerList[index]
-                                                      .productSubCategoryName
-                                                      .toString() ?? "",
-                                                  context) ?? SizedBox() /*Text(
-                                                    serviceList[index].shortName!,
-                                                    maxLines: 1,
-                                                    style: TextStyle(fontFamily: 'Roboto',
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
-                                                        color:
-                                                            ThemeApp.whiteColor,
-                                                        fontSize: height * .022,
-                                                        fontWeight:
-                                                            FontWeight.bold))*/
-                                              ,
-                                            ),
-                                            offerList[index].isAmountBased==true?   Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(
-                                                  21, 4, 21, 9),
-                                              child: TextFieldUtils()
-                                                  .listPriceHeadingTextField(
-
-                                                  "Under "+  offerList[index]
-                                                      .belowAmountDisplay.toString(),
-                                                  context),
-
-                                            ):Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(
-                                                  21, 4, 21, 9),
-                                              child: TextFieldUtils()
-                                                  .listPriceHeadingTextField(
-
-                                                  "Under "+  offerList[index]
-                                                      .belowDiscountPercentDisplay.toString(),
-                                                  context),
-
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );

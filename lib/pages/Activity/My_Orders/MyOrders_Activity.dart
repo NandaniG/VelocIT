@@ -594,7 +594,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                 var earliest_delivery_date = format.format(date);
 
                 Color colorsStatus = ThemeApp.activeOrderColor;
-                for (var i = 0;
+          /*      for (var i = 0;
                     i <
                         value
                             .jsonData['payload']['consumer_baskets'][index]
@@ -606,7 +606,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                   if (order['orders'][i]['cancelled'] == true) {
                     colorsStatus = ThemeApp.separatedLineColor;
                   }
-                }
+                }*/
                 if (order["overall_status"] == "Acceptance Pending") {
                   colorsStatus = ThemeApp.redColor;
                 }
@@ -614,6 +614,8 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                   colorsStatus = ThemeApp.shippedOrderColor;
                 }
                 if (order["overall_status"] == "Completed") {
+                  colorsStatus = ThemeApp.lightFontColor;
+                } if (order["overall_status"] == "Canceled") {
                   colorsStatus = ThemeApp.lightFontColor;
                 }
 
@@ -1189,9 +1191,10 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                           12,
                                                       fontWeight:
                                                           FontWeight.w400)),*/
-                                            order['orders'][indexOfOrders]
-                                                        ['cancelled'] ==
-                                                    true
+
+
+                                            order['overall_status'] == 'Canceled'
+
                                                 ? Container(
                                                     padding: const EdgeInsets
                                                             .fromLTRB(

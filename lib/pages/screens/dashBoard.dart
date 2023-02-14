@@ -185,10 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       // print("cartId from Pref" + CARTID.toString());
     });
-
-
   }
-
 
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
@@ -645,7 +642,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                           child: Column(
+                            child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
@@ -664,7 +661,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   serviceList[index]
                                                       .productCategoryImageId!,
                                                 ),
-                                              ), SizedBox(
+                                              ),
+                                              SizedBox(
                                                 width: 16,
                                               ),
                                               categoryListFont(
@@ -676,7 +674,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   serviceList[index].simpleSubCats!.isEmpty
                                       ? SizedBox()
                                       : subListOfCategories(serviceList[index])
-
                                 ]),
                           );
                         },
@@ -2083,98 +2080,105 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ),
                                       );
                                     },
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 163,
-                                          width: 191,
-                                          decoration: const BoxDecoration(
-                                            color: ThemeApp.whiteColor,
-                                          ),
-                                          child: ClipRRect(
-                                              child: Image.network(
-                                            // width: double.infinity,
-                                            recommendedList[index]
-                                                    .imageUrls![0]
-                                                    .imageUrl
-                                                    .toString() ??
-                                                "",
-                                            fit: BoxFit.scaleDown,
-                                            errorBuilder:
-                                                ((context, error, stackTrace) {
-                                              return Icon(Icons.image_outlined);
-                                            }),
+                                    child: Container(
+                                      height: 230,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: ThemeApp.tealButtonColor,
                                           )),
-                                        ),
-                                        Container(
-                                          color: ThemeApp.tealButtonColor,
-                                          width: 191,
-                                          height: 65,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        21, 9, 21, 4),
-                                                child: TextFieldUtils()
-                                                    .listNameHeadingTextField(
-                                                        recommendedList[index]
-                                                            .shortName!,
-                                                        context) /*Text(
-                                                    serviceList[index].shortName!,
-                                                    maxLines: 1,
-                                                    style: TextStyle(fontFamily: 'Roboto',
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
-                                                        color:
-                                                            ThemeApp.whiteColor,
-                                                        fontSize: height * .022,
-                                                        fontWeight:
-                                                            FontWeight.bold))*/
-                                                ,
-                                              ),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        21, 0, 21, 9),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    //discount
-                                                    TextFieldUtils()
-                                                        .listPriceHeadingTextField(
-                                                            indianRupeesFormat.format(
-                                                                recommendedList[
-                                                                            index]
-                                                                        .defaultSellPrice ??
-                                                                    0.0),
-                                                            context),
-
-                                                    TextFieldUtils()
-                                                        .listScratchPriceHeadingTextField(
-                                                            indianRupeesFormat.format(
-                                                                recommendedList[
-                                                                            index]
-                                                                        .defaultMrp ??
-                                                                    0.0),
-                                                            context),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 163,
+                                            width: 191,
+                                            decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                            ),
+                                            child: ClipRRect(
+                                                child: Image.network(
+                                              // width: double.infinity,
+                                              recommendedList[index]
+                                                      .imageUrls![0]
+                                                      .imageUrl
+                                                      .toString() ??
+                                                  "",
+                                              fit: BoxFit.scaleDown,
+                                              errorBuilder:
+                                                  ((context, error, stackTrace) {
+                                                return Icon(Icons.image_outlined);
+                                              }),
+                                            )),
                                           ),
-                                        ),
-                                      ],
+                                          Container(
+                                            color: ThemeApp.tealButtonColor,
+                                            width: 191,
+                                            height: 63,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          21, 9, 21, 4),
+                                                  child: TextFieldUtils()
+                                                      .listNameHeadingTextField(
+                                                          recommendedList[index]
+                                                              .shortName!,
+                                                          context) /*Text(
+                                                      serviceList[index].shortName!,
+                                                      maxLines: 1,
+                                                      style: TextStyle(fontFamily: 'Roboto',
+                                                          overflow:
+                                                              TextOverflow.ellipsis,
+                                                          color:
+                                                              ThemeApp.whiteColor,
+                                                          fontSize: height * .022,
+                                                          fontWeight:
+                                                              FontWeight.bold))*/
+                                                  ,
+                                                ),
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          21, 0, 21, 9),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      //discount
+                                                      TextFieldUtils()
+                                                          .listPriceHeadingTextField(
+                                                              indianRupeesFormat.format(
+                                                                  recommendedList[
+                                                                              index]
+                                                                          .defaultSellPrice ??
+                                                                      0.0),
+                                                              context),
+
+                                                      TextFieldUtils()
+                                                          .listScratchPriceHeadingTextField(
+                                                              indianRupeesFormat.format(
+                                                                  recommendedList[
+                                                                              index]
+                                                                          .defaultMrp ??
+                                                                      0.0),
+                                                              context),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -2802,97 +2806,104 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ),
                                       );
                                     },
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 163,
-                                          width: 191,
-                                          decoration: const BoxDecoration(
-                                            color: ThemeApp.whiteColor,
+                                    child: Container(
+                                      height: 230,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                        color: ThemeApp.tealButtonColor,
+                                      )),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 162,
+                                            width: 191,
+                                            decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                            ),
+                                            child: ClipRRect(
+                                                child: Image.network(
+                                              // width: double.infinity,
+                                              serviceList[index]
+                                                  .imageUrls![0]
+                                                  .imageUrl
+                                                  .toString(),
+                                              errorBuilder: ((context, error,
+                                                  stackTrace) {
+                                                return Icon(
+                                                    Icons.image_outlined);
+                                              }),
+                                              // fit: BoxFit.fill,
+                                            )),
                                           ),
-                                          child: ClipRRect(
-                                              child: Image.network(
-                                            // width: double.infinity,
-                                            serviceList[index]
-                                                .imageUrls![0]
-                                                .imageUrl
-                                                .toString(),
-                                            errorBuilder:
-                                                ((context, error, stackTrace) {
-                                              return Icon(Icons.image_outlined);
-                                            }),
-                                            // fit: BoxFit.fill,
-                                          )),
-                                        ),
-                                        Container(
-                                          color: ThemeApp.tealButtonColor,
-                                          width: 191,
-                                          height: 65,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        21, 9, 21, 4),
-                                                child: TextFieldUtils()
-                                                    .listNameHeadingTextField(
-                                                        serviceList[index]
-                                                            .shortName!,
-                                                        context) /*Text(
-                                                    serviceList[index].shortName!,
-                                                    maxLines: 1,
-                                                    style: TextStyle(fontFamily: 'Roboto',
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
-                                                        color:
-                                                            ThemeApp.whiteColor,
-                                                        fontSize: height * .022,
-                                                        fontWeight:
-                                                            FontWeight.bold))*/
-                                                ,
-                                              ),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        21, 0, 21, 9),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    //discount
-                                                    TextFieldUtils()
-                                                        .listPriceHeadingTextField(
-                                                            indianRupeesFormat
-                                                                .format(serviceList[
-                                                                            index]
-                                                                        .defaultSellPrice ??
-                                                                    0.0),
-                                                            context),
-
-                                                    TextFieldUtils()
-                                                        .listScratchPriceHeadingTextField(
-                                                            indianRupeesFormat
-                                                                .format(serviceList[
-                                                                            index]
-                                                                        .defaultMrp ??
-                                                                    0.0),
-                                                            context),
-                                                  ],
+                                          Container(
+                                            color: ThemeApp.tealButtonColor,
+                                            width: 191,
+                                            height: 64,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          21, 9, 21, 4),
+                                                  child: TextFieldUtils()
+                                                      .listNameHeadingTextField(
+                                                          serviceList[index]
+                                                              .shortName!,
+                                                          context) /*Text(
+                                                      serviceList[index].shortName!,
+                                                      maxLines: 1,
+                                                      style: TextStyle(fontFamily: 'Roboto',
+                                                          overflow:
+                                                              TextOverflow.ellipsis,
+                                                          color:
+                                                              ThemeApp.whiteColor,
+                                                          fontSize: height * .022,
+                                                          fontWeight:
+                                                              FontWeight.bold))*/
+                                                  ,
                                                 ),
-                                              )
-                                            ],
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          21, 0, 21, 9),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      //discount
+                                                      TextFieldUtils().listPriceHeadingTextField(
+                                                          indianRupeesFormat
+                                                              .format(serviceList[
+                                                                          index]
+                                                                      .defaultSellPrice ??
+                                                                  0.0),
+                                                          context),
+
+                                                      TextFieldUtils().listScratchPriceHeadingTextField(
+                                                          indianRupeesFormat
+                                                              .format(serviceList[
+                                                                          index]
+                                                                      .defaultMrp ??
+                                                                  0.0),
+                                                          context),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -2910,152 +2921,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
           return Text("No Data found!");
         }));
-/*
-    return ChangeNotifierProvider<DashboardViewModel>(
-        value:  dashboardViewModel,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, dashboardProvider, child) {
-          return Consumer<DashboardViewModel>(
-              builder: (context, dashboardProvider, child) {
-            switch (dashboardViewModel.productListingList.status) {
-              case Status.LOADING:
-                if (kDebugMode) {
-                  print("Api load");
-                }
-                return ProgressIndicatorLoader(true);
-
-              case Status.ERROR:
-                if (kDebugMode) {
-                  print("Api error");
-                }
-                return Text(
-                    dashboardViewModel.productListingList.message.toString());
-
-              case Status.COMPLETED:
-                if (kDebugMode) {
-                  print("Api calll");
-                }
-
-                List<ProductListing>? productListing = dashboardViewModel
-                    .productListingList.data!.response!.body!.productListing;
-
-                return Container(
-                  height: MediaQuery.of(context).size.height * .35,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: productListing!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Row(
-                          children: [
-                            Container(
-                                // height: MediaQuery.of(context).size.height * .3,
-
-                                // width: 200,
-                                width: MediaQuery.of(context).size.width * .45,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.whiteColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .26,
-                                      width: MediaQuery.of(context).size.width *
-                                          .45,
-                                      decoration: const BoxDecoration(
-                                          color: ThemeApp.textFieldBorderColor,
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            topLeft: Radius.circular(10),
-                                          )),
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                        ),
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          productListing[index].image1Url!,
-                                          fit: BoxFit.fill,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .07,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 10),
-                                      child: TextFieldUtils()
-                                          .homePageTitlesTextFields(
-                                              productListing[index].shortName!,
-                                              context),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextFieldUtils().dynamicText(
-                                              indianRupeesFormat.format(
-                                                  productListing[index]
-                                                          .scrappedPrice ??
-                                                      0.0),
-                                              context,
-                                              TextStyle(fontFamily: 'Roboto',
-                                                  color: ThemeApp.primaryNavyBlackColor
-                                                  fontSize: height * .022,
-                                                  fontWeight: FontWeight.bold)),
-                                          TextFieldUtils().dynamicText(
-                                              indianRupeesFormat.format(
-                                                  productListing[index]
-                                                          .currentPrice ??
-                                                      0.0),
-                                              context,
-                                              TextStyle(fontFamily: 'Roboto',
-                                                  color: ThemeApp.darkGreyTab,
-                                                  fontSize: height * .02,
-                                                  fontWeight: FontWeight.w500,
-                                                  decoration: TextDecoration
-                                                      .lineThrough,
-                                                  decorationThickness: 1.5)),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * .03,
-                            )
-                          ],
-                        );
-                      }),
-                );
-              default:
-                return Text("No Data found!");
-            }
-            return Text("No Data found!");
-          });
-        }));
-*/
   }
 
   Widget budgetBuyList() {
@@ -3111,868 +2976,120 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             );
                           },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 141,
-                                width: 191,
-                                decoration: const BoxDecoration(
-                                  color: ThemeApp.whiteColor,
-                                  // borderRadius: BorderRadius.only(
-                                  //   topRight: Radius.circular(10),
-                                  //   topLeft: Radius.circular(10),
-                                  // )
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: ThemeApp.tealButtonColor)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 139,
+                                  width: width,
+                                  decoration: const BoxDecoration(
+                                    color: ThemeApp.whiteColor,
+                                    // borderRadius: BorderRadius.only(
+                                    //   topRight: Radius.circular(10),
+                                    //   topLeft: Radius.circular(10),
+                                    // )
+                                  ),
+                                  child: Image.network(
+                                    // width: double.infinity,
+                                    offerList[index].offerImageUrl.toString() ??
+                                        "",
+                                    // fit: BoxFit.fill,
+                                    errorBuilder:
+                                        ((context, error, stackTrace) {
+                                      return Container(
+                                          height: 139,
+                                          width: 191,
+                                          color: ThemeApp.whiteColor,
+                                          child: Icon(
+                                            Icons.image_outlined,
+                                          ));
+                                    }),
+                                    // height: 163,
+                                    // width: 191,
+                                  ),
                                 ),
-                                child: Image.network(
-                                  // width: double.infinity,
-                                  offerList[index].offerImageUrl.toString() ??
-                                      "",
-                                  // fit: BoxFit.fill,
-                                  errorBuilder: ((context, error, stackTrace) {
-                                    return Container(
-                                        height: 141,
-                                        width: 191,
-                                        color: ThemeApp.whiteColor,
-                                        child: Icon(
-                                          Icons.image_outlined,
-                                        ));
-                                  }),
-                                  // height: 163,
-                                  // width: 191,
+                                SizedBox(),
+                                Container(
+                                  color: ThemeApp.tealButtonColor,
+                                  width: width,
+                                  // height: 63,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            21, 10, 21, 0),
+                                        child: TextFieldUtils()
+                                                .listNameHeadingTextField(
+                                                    offerList[index]
+                                                            .productSubCategoryName
+                                                            .toString() ??
+                                                        "",
+                                                    context) ??
+                                            SizedBox() /*Text(
+                                                      serviceList[index].shortName!,
+                                                      maxLines: 1,
+                                                      style: TextStyle(fontFamily: 'Roboto',
+                                                          overflow:
+                                                              TextOverflow.ellipsis,
+                                                          color:
+                                                              ThemeApp.whiteColor,
+                                                          fontSize: height * .022,
+                                                          fontWeight:
+                                                              FontWeight.bold))*/
+                                        ,
+                                      ),
+                                      offerList[index].isAmountBased == true
+                                          ? Container(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      21, 4, 21, 9),
+                                              child: TextFieldUtils()
+                                                  .listPriceHeadingTextField(
+                                                      "Under " +
+                                                          offerList[index]
+                                                              .belowAmountDisplay
+                                                              .toString(),
+                                                      context),
+                                            )
+                                          : Container(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      21, 4, 21, 9),
+                                              child: TextFieldUtils()
+                                                  .listPriceHeadingTextField(
+                                                      "Under " +
+                                                          offerList[index]
+                                                              .belowDiscountPercentDisplay
+                                                              .toString(),
+                                                      context),
+                                            )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(),
-                              Container(
-                                color: ThemeApp.tealButtonColor,
-                                width: 191,
-                                // height: 65,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          21, 10, 21, 0),
-                                      child: TextFieldUtils()
-                                              .listNameHeadingTextField(
-                                                  offerList[index]
-                                                          .productSubCategoryName
-                                                          .toString() ??
-                                                      "",
-                                                  context) ??
-                                          SizedBox() /*Text(
-                                                    serviceList[index].shortName!,
-                                                    maxLines: 1,
-                                                    style: TextStyle(fontFamily: 'Roboto',
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
-                                                        color:
-                                                            ThemeApp.whiteColor,
-                                                        fontSize: height * .022,
-                                                        fontWeight:
-                                                            FontWeight.bold))*/
-                                      ,
-                                    ),
-                                    offerList[index].isAmountBased == true
-                                        ? Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                21, 4, 21, 9),
-                                            child: TextFieldUtils()
-                                                .listPriceHeadingTextField(
-                                                    "Under " +
-                                                        offerList[index]
-                                                            .belowAmountDisplay
-                                                            .toString(),
-                                                    context),
-                                          )
-                                        : Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                21, 4, 21, 9),
-                                            child: TextFieldUtils()
-                                                .listPriceHeadingTextField(
-                                                    "Under " +
-                                                        offerList[index]
-                                                            .belowDiscountPercentDisplay
-                                                            .toString(),
-                                                    context),
-                                          )
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
                     })),
               );
 
-            /*    Container(
-                      height: serviceList!.length > 2 ? 480 : 240,
-                      // width: MediaQuery.of(context).size.width,
-                      // padding: EdgeInsets.all(12.0),
-                      child: GridView.builder(
-                        itemCount: 4,
-                        physics: const NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisSpacing: 0.5,
-                          crossAxisSpacing: 0.5,
-                          // width / height: fixed for *all* items
-                          childAspectRatio: 0.85,
-
-                          crossAxisCount: 2,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetailsActivity(
-                                    id: serviceList[index].id,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 163,
-                                    width: 191,
-                                    decoration: const BoxDecoration(
-                                        color: ThemeApp.textFieldBorderColor,
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                        )),
-                                    child: ClipRRect(
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          serviceList[index]
-                                              .imageUrls![0]
-                                              .imageUrl
-                                              .toString(),
-                                          fit: BoxFit.fill,
-                                          errorBuilder: ((context, error, stackTrace) {
-                                            return Icon(Icons.image_outlined);
-                                          }),
-                                        )),
-                                  ),
-                                  Container(
-                                    color: ThemeApp.tealButtonColor,
-                                    width: 191,
-                                    height: 65,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              21, 9, 21, 4),
-                                          child: TextFieldUtils()
-                                              .listNameHeadingTextField(
-                                              serviceList[index].shortName!,
-                                              context) */ /*Text(
-                                                    serviceList[index].shortName!,
-                                                    maxLines: 1,
-                                                    style: TextStyle(fontFamily: 'Roboto',
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
-                                                        color:
-                                                            ThemeApp.whiteColor,
-                                                        fontSize: height * .022,
-                                                        fontWeight:
-                                                            FontWeight.bold))*/ /*
-                                          ,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              21, 0, 21, 9),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              //discount
-                                              TextFieldUtils()
-                                                  .listPriceHeadingTextField(
-                                                  indianRupeesFormat.format(
-                                                      serviceList[index]
-                                                          .defaultSellPrice ??
-                                                          0.0),
-                                                  context),
-
-                                              TextFieldUtils()
-                                                  .listScratchPriceHeadingTextField(
-                                                  indianRupeesFormat.format(
-                                                      serviceList[index]
-                                                          .defaultMrp ??
-                                                          0.0),
-                                                  context),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              */ /* Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Stack(
-                                    alignment: Alignment.topRight,
-                                    children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .25,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: const BoxDecoration(
-                                            color: ThemeApp.whiteColor,
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10),
-                                            )),
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            topLeft: Radius.circular(10),
-                                          ),
-                                          child: serviceList[index]
-                                                  .imageUrls![0]
-                                                  .imageUrl!
-                                                  .isNotEmpty
-                                              ? Image.network(
-                                                  // width: double.infinity,
-                                                  serviceList![index]
-                                                      .imageUrls![0]
-                                                      .imageUrl!,
-                                                  fit: BoxFit.fill,
-                                                )
-                                              : SizedBox(
-                                                  // height: height * .28,
-                                                  width: width,
-                                                  child: Icon(
-                                                    Icons.image_outlined,
-                                                    size: 50,
-                                                  )),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  // flex: 1,
-                                  child: Container(
-                                    padding: const EdgeInsets.only(
-                                        left: 12, right: 12),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextFieldUtils()
-                                            .homePageTitlesTextFieldsWHITE(
-                                                serviceList[index].shortName!,
-                                                context),
-                                        TextFieldUtils().dynamicText(
-                                            "under 9532",
-                                            context,
-                                            TextStyle(fontFamily: 'Roboto',
-                                                color: ThemeApp.whiteColor,
-                                                fontSize: height * .022,
-                                                fontWeight: FontWeight.bold)),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )*/ /*
-                            ),
-                          );
-                        },
-                      ));*/
             default:
               return Text("No Data found!");
           }
           return Text("No Data found!");
         }));
-/*
-    return ChangeNotifierProvider<DashboardViewModel>(
-        value:  dashboardViewModel,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, dashboardProvider, child) {
-          return Consumer<DashboardViewModel>(
-              builder: (context, dashboardProvider, child) {
-            switch (dashboardViewModel.productListingList.status) {
-              case Status.LOADING:
-                if (kDebugMode) {
-                  print("Api load");
-                }
-                return ProgressIndicatorLoader(true);
-
-              case Status.ERROR:
-                if (kDebugMode) {
-                  print("Api error");
-                }
-                return Text(
-                    dashboardViewModel.productListingList.message.toString());
-
-              case Status.COMPLETED:
-                if (kDebugMode) {
-                  print("Api calll");
-                }
-
-                List<ProductListing>? productListing = dashboardViewModel
-                    .productListingList.data!.response!.body!.productListing;
-
-                return Container(
-                    height: 580,
-                    // width: MediaQuery.of(context).size.width,
-                    // padding: EdgeInsets.all(12.0),
-                    child: GridView.builder(
-                      itemCount: 4,
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        mainAxisSpacing: 20,
-                        crossAxisSpacing: 10,
-                        // width / height: fixed for *all* items
-                        childAspectRatio: 0.75,
-
-                        crossAxisCount: 2,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                            width: MediaQuery.of(context).size.width,
-                            decoration: const BoxDecoration(
-                                color: ThemeApp.darkGreyTab,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Stack(
-                                    alignment: Alignment.topRight,
-                                    children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .25,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: const BoxDecoration(
-                                            color: ThemeApp.whiteColor,
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10),
-                                            )),
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            topLeft: Radius.circular(10),
-                                          ),
-                                          child: Image.network(
-                                            // width: double.infinity,
-                                            productListing![index].image1Url!,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10, right: 10),
-                                        child: kmAwayOnMerchantImage(
-                                          '1.1 KM away',
-                                          context,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  // flex: 1,
-                                  child: Container(
-                                    padding: const EdgeInsets.only(
-                                        left: 12, right: 12),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextFieldUtils()
-                                            .homePageTitlesTextFieldsWHITE(
-                                                productListing[index]
-                                                    .shortName!,
-                                                context),
-                                        TextFieldUtils().dynamicText(
-                                            indianRupeesFormat.format(
-                                                productListing[index]
-                                                    .currentPrice),
-                                            context,
-                                            TextStyle(fontFamily: 'Roboto',
-                                                color: ThemeApp.whiteColor,
-                                                fontSize: height * .022,
-                                                fontWeight: FontWeight.bold)),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ));
-                      },
-                    ));
-              default:
-                return Text("No Data found!");
-            }
-            return Text("No Data found!");
-          });
-        }));
-*/
   }
 
-/*
-  Widget budgetBuyList() {
-    return ChangeNotifierProvider<DashboardViewModel>.value(
-        value: productListView,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, productCategories, child) {
-          switch (productCategories.productListingResponse.status) {
-            case Status.LOADING:
-              if (kDebugMode) {
-                print("Api load");
-              }
-              return ProgressIndicatorLoader(true);
-
-            case Status.ERROR:
-              if (kDebugMode) {
-                print("Api error");
-              }
-              return Text(
-                  productCategories.productListingResponse.message.toString());
-
-            case Status.COMPLETED:
-              if (kDebugMode) {
-                print("Api calll");
-              }
-
-              List<Content>? serviceList = productCategories
-                  .productListingResponse.data!.payload!.content;
-
-              return Container(
-                  height: serviceList!.length > 2 ? 480 : 240,
-                  // width: MediaQuery.of(context).size.width,
-                  // padding: EdgeInsets.all(12.0),
-                  child: GridView.builder(
-                    itemCount: 4,
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 0.5,
-                      crossAxisSpacing: 0.5,
-                      // width / height: fixed for *all* items
-                      childAspectRatio: 0.85,
-
-                      crossAxisCount: 2,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ProductDetailsActivity(
-                                id: serviceList[index].id,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 163,
-                                width: 191,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.textFieldBorderColor,
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      topLeft: Radius.circular(10),
-                                    )),
-                                child: ClipRRect(
-                                    child: Image.network(
-                                  // width: double.infinity,
-                                  serviceList[index]
-                                      .imageUrls![0]
-                                      .imageUrl
-                                      .toString(),
-                                  fit: BoxFit.fill,
-                                  errorBuilder: ((context, error, stackTrace) {
-                                    return Icon(Icons.image_outlined);
-                                  }),
-                                )),
-                              ),
-                              Container(
-                                color: ThemeApp.tealButtonColor,
-                                width: 191,
-                                height: 65,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          21, 9, 21, 4),
-                                      child: TextFieldUtils()
-                                          .listNameHeadingTextField(
-                                              serviceList[index].shortName!,
-                                              context) */
-/*Text(
-                                                    serviceList[index].shortName!,
-                                                    maxLines: 1,
-                                                    style: TextStyle(fontFamily: 'Roboto',
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
-                                                        color:
-                                                            ThemeApp.whiteColor,
-                                                        fontSize: height * .022,
-                                                        fontWeight:
-                                                            FontWeight.bold))*/ /*
-
-                                      ,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          21, 0, 21, 9),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          //discount
-                                          TextFieldUtils()
-                                              .listPriceHeadingTextField(
-                                                  indianRupeesFormat.format(
-                                                      serviceList[index]
-                                                              .defaultSellPrice ??
-                                                          0.0),
-                                                  context),
-
-                                          TextFieldUtils()
-                                              .listScratchPriceHeadingTextField(
-                                                  indianRupeesFormat.format(
-                                                      serviceList[index]
-                                                              .defaultMrp ??
-                                                          0.0),
-                                                  context),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          */
-/* Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Stack(
-                                    alignment: Alignment.topRight,
-                                    children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .25,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: const BoxDecoration(
-                                            color: ThemeApp.whiteColor,
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10),
-                                            )),
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            topLeft: Radius.circular(10),
-                                          ),
-                                          child: serviceList[index]
-                                                  .imageUrls![0]
-                                                  .imageUrl!
-                                                  .isNotEmpty
-                                              ? Image.network(
-                                                  // width: double.infinity,
-                                                  serviceList![index]
-                                                      .imageUrls![0]
-                                                      .imageUrl!,
-                                                  fit: BoxFit.fill,
-                                                )
-                                              : SizedBox(
-                                                  // height: height * .28,
-                                                  width: width,
-                                                  child: Icon(
-                                                    Icons.image_outlined,
-                                                    size: 50,
-                                                  )),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  // flex: 1,
-                                  child: Container(
-                                    padding: const EdgeInsets.only(
-                                        left: 12, right: 12),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextFieldUtils()
-                                            .homePageTitlesTextFieldsWHITE(
-                                                serviceList[index].shortName!,
-                                                context),
-                                        TextFieldUtils().dynamicText(
-                                            "under 9532",
-                                            context,
-                                            TextStyle(fontFamily: 'Roboto',
-                                                color: ThemeApp.whiteColor,
-                                                fontSize: height * .022,
-                                                fontWeight: FontWeight.bold)),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )*/ /*
-
-                        ),
-                      );
-                    },
-                  ));
-            default:
-              return Text("No Data found!");
-          }
-          return Text("No Data found!");
-        }));
-*/
-/*
-    return ChangeNotifierProvider<DashboardViewModel>(
-        value:  dashboardViewModel,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, dashboardProvider, child) {
-          return Consumer<DashboardViewModel>(
-              builder: (context, dashboardProvider, child) {
-            switch (dashboardViewModel.productListingList.status) {
-              case Status.LOADING:
-                if (kDebugMode) {
-                  print("Api load");
-                }
-                return ProgressIndicatorLoader(true);
-
-              case Status.ERROR:
-                if (kDebugMode) {
-                  print("Api error");
-                }
-                return Text(
-                    dashboardViewModel.productListingList.message.toString());
-
-              case Status.COMPLETED:
-                if (kDebugMode) {
-                  print("Api calll");
-                }
-
-                List<ProductListing>? productListing = dashboardViewModel
-                    .productListingList.data!.response!.body!.productListing;
-
-                return Container(
-                    height: 580,
-                    // width: MediaQuery.of(context).size.width,
-                    // padding: EdgeInsets.all(12.0),
-                    child: GridView.builder(
-                      itemCount: 4,
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        mainAxisSpacing: 20,
-                        crossAxisSpacing: 10,
-                        // width / height: fixed for *all* items
-                        childAspectRatio: 0.75,
-
-                        crossAxisCount: 2,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                            width: MediaQuery.of(context).size.width,
-                            decoration: const BoxDecoration(
-                                color: ThemeApp.darkGreyTab,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Stack(
-                                    alignment: Alignment.topRight,
-                                    children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .25,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: const BoxDecoration(
-                                            color: ThemeApp.whiteColor,
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10),
-                                            )),
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            topLeft: Radius.circular(10),
-                                          ),
-                                          child: Image.network(
-                                            // width: double.infinity,
-                                            productListing![index].image1Url!,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10, right: 10),
-                                        child: kmAwayOnMerchantImage(
-                                          '1.1 KM away',
-                                          context,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  // flex: 1,
-                                  child: Container(
-                                    padding: const EdgeInsets.only(
-                                        left: 12, right: 12),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextFieldUtils()
-                                            .homePageTitlesTextFieldsWHITE(
-                                                productListing[index]
-                                                    .shortName!,
-                                                context),
-                                        TextFieldUtils().dynamicText(
-                                            indianRupeesFormat.format(
-                                                productListing[index]
-                                                    .currentPrice),
-                                            context,
-                                            TextStyle(fontFamily: 'Roboto',
-                                                color: ThemeApp.whiteColor,
-                                                fontSize: height * .022,
-                                                fontWeight: FontWeight.bold)),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ));
-                      },
-                    ));
-              default:
-                return Text("No Data found!");
-            }
-            return Text("No Data found!");
-          });
-        }));
-*/ /*
-
-  }
-*/
-
-  // List<Widget> _iconViews() {
-  //   var list = <Widget>[];
-  //   titles.asMap().forEach((i, icon) {
-  //     var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
-  //         ? ThemeApp.darkGreyTab
-  //         : ThemeApp.lightGreyTab;
-  //     var lineColor =
-  //         _curStep > i + 1 ? ThemeApp.appColor : ThemeApp.containerColor;
-  //     var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
-  //         ? ThemeApp.appColor
-  //         : ThemeApp.containerColor;
-  //
-  //     list.add(
-  //       Container(
-  //         width: 20.0,
-  //         height: 20.0,
-  //         padding: const EdgeInsets.all(0),
-  //         // decoration:(i == 0 || _curStep > i + 1) ? new  BoxDecoration(
-  //         //
-  //         // ):BoxDecoration(   /* color: circleColor,*/
-  //         //   borderRadius: new BorderRadius.all(new Radius.circular(22.0)),
-  //         //   border: new Border.all(
-  //         //     color: circleColor,
-  //         //     width: 2.0,
-  //         //   ),),
-  //         child: (i == 0 || i == 1 || _curStep > i + 1)
-  //             ? Icon(
-  //                 Icons.circle,
-  //                 color: iconColor,
-  //                 size: 15.0,
-  //               )
-  //             : Icon(
-  //                 Icons.radio_button_checked_outlined,
-  //                 color: iconColor,
-  //                 size: 15.0,
-  //               ),
-  //       ),
-  //     );
-  //
-  //     //line between icons
-  //     if (i != titles.length - 1) {
-  //       list.add(Expanded(
-  //           child: Container(
-  //         height: 3.0,
-  //         color: lineColor,
-  //       )));
-  //     }
-  //   });
-  //
-  //   return list;
-  // }
   int checkStepperCount = 0;
 
   Widget _iconViews(

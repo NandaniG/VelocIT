@@ -363,7 +363,10 @@ class _CRMistByCategoryActivityState
                   );
                 },
                 child: Container(
-// height: 205,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: ThemeApp.tealButtonColor,
+                        )),
                     child: Column(
                       mainAxisAlignment:
                       MainAxisAlignment.start,
@@ -373,8 +376,8 @@ class _CRMistByCategoryActivityState
                         /*   Expanded(
                                             flex: 2,
                                             child:*/ Container(
-                          height: 143,
-                          width: 191, /* height: SizeConfig.orientations !=
+                          height: 149,
+                          width: double.infinity, /* height: SizeConfig.orientations !=
                                                       Orientation.landscape
                                                   ? MediaQuery.of(context)
                                                           .size
@@ -399,18 +402,7 @@ class _CRMistByCategoryActivityState
                                   .imageUrls![0]
                                   .imageUrl!,
                               // fit: BoxFit.fill,
-                              height: (MediaQuery.of(
-                                  context)
-                                  .orientation ==
-                                  Orientation.landscape)
-                                  ? MediaQuery.of(context)
-                                  .size
-                                  .height *
-                                  .26
-                                  : MediaQuery.of(context)
-                                  .size
-                                  .height *
-                                  .1,
+
                             ) :SizedBox(
                               // height: height * .28,
                                 width: width,
@@ -422,8 +414,8 @@ class _CRMistByCategoryActivityState
                         ),
                         // ),
                         Container(      color: ThemeApp.tealButtonColor,
-                          width: 191,
-                          height: 66,
+                          width: double.infinity,
+                          height: 67,
                           padding: const EdgeInsets.only(
                             left: 12, right: 12,),
                           child: Column(
