@@ -214,6 +214,14 @@ class _AutoSearchPlacesPopUpState extends State<AutoSearchPlacesPopUp> {
                             _street = placeDetails.street;
                             _city = placeDetails.city;
                             _zipCode = placeDetails.zipCode;
+                            if(_zipCode ==null){
+                              print("placeDetails.zipCode.toString()");
+
+                            }else{
+                              print(placeDetails.zipCode.toString()??"placeDetails.zipCode.toString()");
+
+                            }
+
     prefs.setString('SearchedPinCodePrefs', placeDetails.zipCode.toString());});
 
     /*    setState(() {

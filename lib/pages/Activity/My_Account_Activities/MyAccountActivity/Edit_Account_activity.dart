@@ -24,13 +24,14 @@ import '../../../../utils/utils.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/proceedButtons.dart';
 import '../../../../widgets/global/textFormFields.dart';
+import '../Saved_address/ProfileImageDialog.dart';
 import 'OTP_verification_Popup.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 class EditAccountActivity extends StatefulWidget {
-  final Payload? payload;
+  // final Payload? payload;
 
-  EditAccountActivity({Key? key, this.payload}) : super(key: key);
+  EditAccountActivity({Key? key, /*this.payload*/}) : super(key: key);
 
   @override
   State<EditAccountActivity> createState() => _EditAccountActivityState();
@@ -56,15 +57,11 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
     // TODO: implement initState
 
     getPrefValue();
-    userNameController =
-        new TextEditingController(text: widget.payload!.username ?? "");
-    mobileController =
-        new TextEditingController(text: widget.payload!.mobile ?? "");
-    emailController =
-        new TextEditingController(text: widget.payload!.email ?? "");
+
+
     super.initState();
   }
-
+var userName,MobileNumber,Email;
   getPrefValue() async {
     final prefs = await SharedPreferences.getInstance();
     bool check = prefs.containsKey('profileImagePrefs');
@@ -72,6 +69,17 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
       setState(() {
         print("yes/./././.");
         StringConstant.ProfilePhoto = prefs.getString('profileImagePrefs')!;
+
+        userName=  prefs.getString('userProfileNamePrefs');
+        MobileNumber=  prefs.getString('userProfileEmailPrefs');
+        Email= prefs.getString('userProfileMobilePrefs');
+
+        userNameController =
+        new TextEditingController(text: userName?? "");
+        mobileController =
+        new TextEditingController(text: MobileNumber ?? "");
+        emailController =
+        new TextEditingController(text: Email?? "");
       });
       return;
     }
@@ -176,7 +184,14 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                         // height: 40.0,
                         child: InkWell(
                             onTap: () {
-                              _getFromCamera();
+                              // _getFromCamera();
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ProfileImageDialog(
+                                        imageFile1: imageFile1,
+                                        isEditAccount: false);
+                                  });
                             },
                             child: Container(
                               height: 32,
@@ -242,7 +257,14 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
                         // height: 40.0,
                         child: InkWell(
                             onTap: () {
-                              _getFromCamera();
+                              // _getFromCamera();
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ProfileImageDialog(
+                                        imageFile1: imageFile1,
+                                        isEditAccount: false);
+                                  });
                             },
                             child: Container(
                               height: 32,

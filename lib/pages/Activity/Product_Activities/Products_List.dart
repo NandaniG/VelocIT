@@ -393,8 +393,10 @@ class _ProductListByCategoryActivityState
                             height: 143,
                             width: 191,
 
-                            decoration: const BoxDecoration(
+                            decoration:  BoxDecoration(
                               color: ThemeApp.whiteColor,
+                                border: Border.all(color: ThemeApp.tealButtonColor)
+
                             ),
                             child: ClipRRect(
                               child: subCategoryList[index]

@@ -458,8 +458,9 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                         MediaQuery.of(context).size.width * .45,
                                     decoration: const BoxDecoration(
                                         color: ThemeApp.tealButtonColor,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))),
+
+                                        /*borderRadius: BorderRadius.all(
+                                            Radius.circular(10))*/),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -481,22 +482,18 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                decoration: const BoxDecoration(
+                                                decoration:  BoxDecoration(
                                                     color: ThemeApp.whiteColor,
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      topRight:
-                                                          Radius.circular(10),
-                                                      topLeft:
-                                                          Radius.circular(10),
-                                                    )),
+                                                    border: Border.all(color: ThemeApp.tealButtonColor)
+
+                                                ),
                                                 child: ClipRRect(
                                                   borderRadius:
                                                       const BorderRadius.only(
                                                     topRight:
                                                         Radius.circular(10),
                                                     topLeft:
-                                                        Radius.circular(10),
+                                                        Radius.circular(0),
                                                   ),
                                                   child: Image.network(
                                                         // width: double.infinity,

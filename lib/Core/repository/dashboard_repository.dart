@@ -230,7 +230,7 @@ class DashBoardRepository {
       int page, int size, String searchString) async {
     Map<String, String> productListingData = {
       // 'search_term': searchString.toString(),
-      'search_term': searchString.toString(),
+      'search_term': searchString.toString().replaceFirst(searchString[0], searchString[0].toUpperCase()),
       'page': page.toString(),
       'size': size.toString(),
       // 'searchString':searchString.toString(),

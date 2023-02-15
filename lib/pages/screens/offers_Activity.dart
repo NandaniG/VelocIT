@@ -209,12 +209,10 @@ class _OfferActivityState extends State<OfferActivity> {
                                       Container(
                                         height: 141,
                                         width: 191,
-                                        decoration: const BoxDecoration(
+                                        decoration:  BoxDecoration(
                                           color: ThemeApp.whiteColor,
-                                          // borderRadius: BorderRadius.only(
-                                          //   topRight: Radius.circular(10),
-                                          //   topLeft: Radius.circular(10),
-                                          // )
+                                            border: Border.all(color: ThemeApp.tealButtonColor)
+
                                         ),
                                         child: Image.network(
                                           // width: double.infinity,

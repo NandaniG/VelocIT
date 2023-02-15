@@ -64,6 +64,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
   );
   CartViewModel cartListView = CartViewModel();
   bool isSelfPickUp = false;
+  bool isShowSteppers = false;
   String FromType = '';
   bool isTypeServiceOnly = false;
   bool isTypeService = false;
@@ -79,6 +80,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     // TODO: implement initState
     super.initState();
     isTypeService = false;
+    isShowSteppers = true;
     isTypeServiceOnly = false;
     isTypeProduct = false;
     getPreferences();
@@ -176,7 +178,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                         .then((value) {
                       StringConstant.UserCartID =
                           (prefs.getString('CartIdPref')) ?? '';
-                      print("Cart Id From OrderPlaced Activity ${StringConstant.UserCartID}");
+                      print(
+                          "Cart Id From OrderPlaced Activity ${StringConstant.UserCartID}");
                       // print("cartId from Pref" + CARTID.toString());
                       CartViewModel()
                           .cartSpecificIDWithGet(
@@ -234,7 +237,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                 .then((value) {
                               StringConstant.UserCartID =
                                   (prefs.getString('CartIdPref')) ?? '';
-                              print("Cart Id From OrderPlaced Activity ${StringConstant.UserCartID}");
+                              print(
+                                  "Cart Id From OrderPlaced Activity ${StringConstant.UserCartID}");
                               // print("cartId from Pref" + CARTID.toString());
                               CartViewModel()
                                   .cartSpecificIDWithGet(
@@ -356,8 +360,6 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                     .cart!.totalPayable,
                                             "is_self_pickup": isSelfPickUp,
                                           };
-                                          print("defaultAddressList ...${defaultAddressList.toString().isEmpty}");
-
                                           if (isSelfPickUp == true) {
                                             CartRepository().putCartForPayment(
                                                 data,
@@ -372,7 +374,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               ),
                                             );
                                           } else {
-                                            if (defaultAddressList.toString().isNotEmpty) {
+                                            if (addressStatus == 'OK') {
                                               CartRepository()
                                                   .putCartForPayment(
                                                       data,
@@ -388,7 +390,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               );
                                             } else {
                                               isSelfPickUp == false
-                                                  ? Utils.successToast(
+                                                  ? Utils.errorToast(
                                                       "Please select delivery address")
                                                   : '';
                                             }
@@ -583,7 +585,9 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                               // crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 // StepperGlobalWidget(),
-                                stepperWidget(),
+                                isShowSteppers == true
+                                    ? stepperWidget()
+                                    : SizedBox(),
                                 Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Column(
@@ -599,7 +603,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                 setState(() {
                                                   isSelfPickUp = true;
                                                   isSelfPickUp = !isSelfPickUp;
-
+                                                  isShowSteppers = true;
                                                   // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
                                                 });
                                               },
@@ -645,6 +649,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                     : () {
                                                         setState(() {
                                                           isSelfPickUp = true;
+                                                          isShowSteppers =
+                                                              false;
                                                         });
                                                       },
                                                 child: Container(
@@ -730,7 +736,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                             //     builder: (context) => AddNewDeliveryAddress(),
                                                             //   ),
                                                             // );
-                                                            print("widget.cartForPaymentPayload!.cartId11${widget.cartId}");
+                                                            print(
+                                                                "widget.cartForPaymentPayload!.cartId11${widget.cartId}");
 
                                                             showModalBottomSheet(
                                                                 shape:
@@ -985,7 +992,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                               (isServiceOnly == true)
                                           ? Center(
                                               child: Text(
-                                                  'Pickup from store option is not available for service(s).',
+                                                  'Pick-up from Store option not available for Services in your cart.',
                                                   style: TextStyle(
                                                       fontFamily: 'Roboto',
                                                       color: ThemeApp.redColor,
@@ -1131,7 +1138,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     );
   }
 
- late DefaultAddressPayload defaultAddressList;
+  GetDefaultAddressModel defaultAddressList = GetDefaultAddressModel();
+  String addressStatus = '';
 
   Widget deliveryAddress() {
     return ChangeNotifierProvider<CartViewModel>.value(
@@ -1143,111 +1151,112 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
 
               return Container();
             case Status.ERROR:
-              print("Api error");
+              print("Api error" +
+                  cartProvider.getDefaultAddress.message.toString());
+              addressStatus = "Exception";
 
-              return Text(cartProvider.getDefaultAddress.message.toString());
+              return TextFieldUtils().dynamicText(
+                  'No Address found!',
+                  context,
+                  TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w400));
             case Status.COMPLETED:
+              addressStatus = 'OK';
               print("addressList Api calll");
               DefaultAddressPayload addressList =
                   cartProvider.getDefaultAddress.data!.payload!;
-              defaultAddressList =addressList;
-              print("addressList  ...${addressList.name}");
-              return cartProvider.getDefaultAddress.data!.payload.toString().isNotEmpty
+              defaultAddressList = cartProvider.getDefaultAddress.data!;
+              return addressList.toString().isNotEmpty
                   ? Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                        Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        TextFieldUtils().dynamicText(
-                                           addressList
-                                                    .name
-                                                    .toString(),
-                                            context,
-                                            TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 14,
-                                              letterSpacing: -0.08,
-                                              fontWeight: FontWeight.w400,
-                                              color: ThemeApp.blackColor,
-                                            )),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          // height: height * 0.05,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  TextFieldUtils().dynamicText(
+                                      addressList.name.toString(),
+                                      context,
+                                      TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontSize: 14,
+                                        letterSpacing: -0.08,
+                                        fontWeight: FontWeight.w400,
+                                        color: ThemeApp.blackColor,
+                                      )),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    // height: height * 0.05,
 
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(100),
-                                            ),
-                                            color: ThemeApp.tealButtonColor,
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                              left: 10,
-                                              right: 10,
-                                              top: 5,
-                                              bottom: 5),
-                                          child: Text(
-                                              addressList
-                                                  .addressType
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color: ThemeApp.whiteColor,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w400)),
-                                        ),
-                                      ],
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(100),
+                                      ),
+                                      color: ThemeApp.tealButtonColor,
                                     ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                        // provider.orderCheckOutDetails[0]
-                                        //     ["orderCheckOutDeliveryAddress"],
-                                         "${addressList.addressLine1!}, ${addressList.addressLine2}, ${addressList.stateName},\n ${addressList.cityName}, ${addressList.pincode}",
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10, top: 5, bottom: 5),
+                                    child: Text(
+                                        addressList.addressType.toString(),
                                         style: TextStyle(
                                             fontFamily: 'Roboto',
-                                            fontSize: 12,
-                                            letterSpacing: -0.08,
-                                            fontWeight: FontWeight.w400,
-                                            color: ThemeApp.blackColor,
-                                            height: 2)),
-                                    SizedBox(
-                                      height: 20,
+                                            color: ThemeApp.whiteColor,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400)),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                  // provider.orderCheckOutDetails[0]
+                                  //     ["orderCheckOutDeliveryAddress"],
+                                  "${addressList.addressLine1!}, ${addressList.addressLine2}, ${addressList.stateName},\n ${addressList.cityName}, ${addressList.pincode}",
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: 12,
+                                      letterSpacing: -0.08,
+                                      fontWeight: FontWeight.w400,
+                                      color: ThemeApp.blackColor,
+                                      height: 2)),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/appImages/callIcon.svg',
+                                    color: ThemeApp.appColor,
+                                    semanticsLabel: 'Acme Logo',
+                                    theme: SvgTheme(
+                                      currentColor: ThemeApp.appColor,
                                     ),
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/appImages/callIcon.svg',
-                                          color: ThemeApp.appColor,
-                                          semanticsLabel: 'Acme Logo',
-                                          theme: SvgTheme(
-                                            currentColor: ThemeApp.appColor,
-                                          ),
-                                          height: height * .025,
-                                        ),
-                                        SizedBox(
-                                          width: width * .03,
-                                        ),
-                                        TextFieldUtils().dynamicText(
-                                         "${addressList.contactNumber}",
-                                            context,
-                                            TextStyle(
-                                                fontFamily: 'Roboto',
-                                                color: ThemeApp.blackColor,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w700)),
-                                      ],
-                                    ),
-                                  ],
-                                )
-
+                                    height: height * .025,
+                                  ),
+                                  SizedBox(
+                                    width: width * .03,
+                                  ),
+                                  TextFieldUtils().dynamicText(
+                                      "${addressList.contactNumber}",
+                                      context,
+                                      TextStyle(
+                                          fontFamily: 'Roboto',
+                                          color: ThemeApp.blackColor,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700)),
+                                ],
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     )
@@ -2774,7 +2783,7 @@ final List<String> titles = [
   'Order review',
   'Delivery detail',
   'Payment',
-  'Order confirmation',
+  'Order Placed',
 ];
 int _curStep = 1;
 
@@ -2840,7 +2849,14 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
             case Status.ERROR:
               print("Api error");
 
-              return Text(cartProvider.getAddress.message.toString());
+              return TextFieldUtils().dynamicText(
+                  'No Address found!',
+                  context,
+                  TextStyle(
+                      fontFamily: 'Roboto',
+                      color: ThemeApp.blackColor,
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w400));
             case Status.COMPLETED:
               print("Api calll");
               List<AddressContent>? addressList =
@@ -2883,7 +2899,6 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                       builder: (context) =>
                                           AddNewDeliveryAddress(
                                         isSavedAddress: false,
-
                                       ),
                                     ),
                                   );
@@ -2916,7 +2931,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                               )
                             ],
                           ),
-                       SizedBox(
+                          SizedBox(
                             height: 11,
                           ),
                           addressList.isNotEmpty
@@ -2925,17 +2940,15 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                       itemCount: addressList.length,
                                       itemBuilder: (_, index) {
                                         return Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 15),
+                                          padding:
+                                              const EdgeInsets.only(bottom: 15),
                                           child: Container(
                                             decoration: BoxDecoration(
                                                 border: Border.all(
                                                   color: ThemeApp.appColor,
                                                 ),
-                                                borderRadius:
-                                                    BorderRadius.all(
-                                                        Radius.circular(
-                                                            10.0))),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.fromLTRB(
@@ -2954,8 +2967,7 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
 
                                                       // padding: EdgeInsets.symmetric(
                                                       //     horizontal: 10, vertical: 7),
-                                                      decoration:
-                                                          BoxDecoration(
+                                                      decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10),
@@ -2969,8 +2981,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                               value: index,
                                                               groupValue:
                                                                   _value2,
-                                                              onChanged: (int?
-                                                                  value) {
+                                                              onChanged:
+                                                                  (int? value) {
                                                                 setState(() {
                                                                   _value2 =
                                                                       value!;
@@ -2984,8 +2996,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                       StringConstant
                                                                           .selectedFullAddress);
 
-                                                                  print("selected Address ${StringConstant
-                                                                          .selectedFullAddress}");
+                                                                  print(
+                                                                      "selected Address ${StringConstant.selectedFullAddress}");
                                                                 });
                                                               }),
                                                           Row(
@@ -3003,7 +3015,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                       fontSize:
                                                                           14,
                                                                       fontWeight:
-                                                                          FontWeight.w400)),
+                                                                          FontWeight
+                                                                              .w400)),
                                                               SizedBox(
                                                                 width: 23,
                                                               ),
@@ -3017,19 +3030,23 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                                   borderRadius:
                                                                       BorderRadius
                                                                           .all(
-                                                                    Radius.circular(
-                                                                        100),
+                                                                    Radius
+                                                                        .circular(
+                                                                            100),
                                                                   ),
                                                                   color: ThemeApp
                                                                       .appColor,
                                                                 ),
-                                                                padding: const EdgeInsets
-                                                                        .only(
-                                                                    left: 10,
-                                                                    right: 10,
-                                                                    top: 5,
-                                                                    bottom:
-                                                                        5),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            10,
+                                                                        right:
+                                                                            10,
+                                                                        top: 5,
+                                                                        bottom:
+                                                                            5),
                                                                 child: TextFieldUtils().dynamicText(
                                                                     addressList[
                                                                             index]
@@ -3056,21 +3073,22 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                         const EdgeInsets.only(
                                                             left: 50,
                                                             right: 20),
-                                                    child: TextFieldUtils().dynamicText(
-                                                        "${addressList[index].addressLine1!}, ${addressList[index].addressLine2}, ${addressList[index].stateName},\n ${addressList[index].cityName}, ${addressList[index].pincode}",
-                                                        context,
-                                                        TextStyle(
-                                                            fontFamily:
-                                                                'Roboto',
-                                                            color: ThemeApp
-                                                                .blackColor,
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400,
-                                                            letterSpacing:
-                                                                -0.25,
-                                                            height: 1.5)),
+                                                    child: TextFieldUtils()
+                                                        .dynamicText(
+                                                            "${addressList[index].addressLine1!}, ${addressList[index].addressLine2}, ${addressList[index].stateName},\n ${addressList[index].cityName}, ${addressList[index].pincode}",
+                                                            context,
+                                                            TextStyle(
+                                                                fontFamily:
+                                                                    'Roboto',
+                                                                color: ThemeApp
+                                                                    .blackColor,
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                letterSpacing:
+                                                                    -0.25,
+                                                                height: 1.5)),
                                                   ),
                                                   Padding(
                                                     padding:
@@ -3082,8 +3100,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                       children: [
                                                         SvgPicture.asset(
                                                           'assets/appImages/callIcon.svg',
-                                                          color: ThemeApp
-                                                              .appColor,
+                                                          color:
+                                                              ThemeApp.appColor,
                                                           semanticsLabel:
                                                               'Acme Logo',
                                                           theme: SvgTheme(
@@ -3117,25 +3135,26 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                   ),
                                                   Row(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .end,
+                                                        CrossAxisAlignment.end,
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.end,
                                                     children: [
                                                       InkWell(
-                                                        onTap: () {
+                                                        onTap: () async {
+                                                          final prefs =
+                                                              await SharedPreferences
+                                                              .getInstance();
                                                           CartRepository()
                                                               .deleteAddressApi(
                                                                   addressList[
                                                                           index]
                                                                       .id!,
                                                                   context,
-                                                                  false)
-                                                              .then(
-                                                                  (value) {});
+                                                                  false);
+
+
                                                         },
-                                                        child:
-                                                            SvgPicture.asset(
+                                                        child: SvgPicture.asset(
                                                           'assets/appImages/deleteIcon.svg',
                                                           color: ThemeApp
                                                               .lightFontColor,
@@ -3155,13 +3174,11 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                       ),
                                                       InkWell(
                                                         onTap: () {
-                                                          Navigator.of(
-                                                                  context)
+                                                          Navigator.of(context)
                                                               .push(
                                                             MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      EditDeliveryAddress(
+                                                              builder: (context) =>
+                                                                  EditDeliveryAddress(
                                                                 addressList:
                                                                     addressList[
                                                                         index],
@@ -3171,11 +3188,10 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                                             ),
                                                           );
                                                         },
-                                                        child:
-                                                            SvgPicture.asset(
+                                                        child: SvgPicture.asset(
                                                           'assets/appImages/editIcon.svg',
-                                                          color: ThemeApp
-                                                              .appColor,
+                                                          color:
+                                                              ThemeApp.appColor,
                                                           semanticsLabel:
                                                               'Acme Logo',
                                                           theme: SvgTheme(
@@ -3241,7 +3257,8 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
                                     StringConstant.selectedTypeOfAddress);*/
                               });
                               Navigator.pop(context); //closes bottom sheet
-                              print("widget.cartForPaymentPayload!.cartId${widget.cartId}");
+                              print(
+                                  "widget.cartForPaymentPayload!.cartId${widget.cartId}");
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => OrderReviewActivity(

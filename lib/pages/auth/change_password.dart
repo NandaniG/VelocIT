@@ -22,6 +22,8 @@ class ChangePassword extends StatefulWidget {
 
 class _ChangePasswordState extends State<ChangePassword> {
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
+
   final TextEditingController _currentPass = TextEditingController();
   final TextEditingController _newPass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
@@ -128,6 +130,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                   children: [
                     TextFieldUtils().asteriskTextField(
                         StringUtils.currentPassword, context),
+
+
                     PasswordTextFormFieldsWidget(
                         errorText: StringUtils.passwordError,
                         textInputType: TextInputType.text,
@@ -155,7 +159,34 @@ class _ChangePasswordState extends State<ChangePassword> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .02,
                     ),
-                    TextFieldUtils().asteriskTextField('New Password', context),
+                    Row(
+                      children: [
+                        TextFieldUtils().asteriskTextField('New Password', context),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Tooltip(
+                          key: tooltipkey,
+                          message:
+                          'Enter Password that must be\n\u2022 8-16 characters long\n\u2022 Must contain a number\n\u2022 Must contain a capital and small letter\n\u2022 Must contain a special character',
+                          padding: const EdgeInsets.all(15),
+                          margin: const EdgeInsets.only(
+                              top: 30, left: 30, right: 30),
+                          triggerMode: TooltipTriggerMode.tap,
+                          showDuration: const Duration(seconds: 2),
+                          decoration: BoxDecoration(
+                              color: ThemeApp.appColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          textStyle: const TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 12,
+                              letterSpacing: 1.2,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white),
+                          child: Icon(Icons.info_outline,color: ThemeApp.appColor),
+                        )
+                      ],
+                    ),
                     PasswordTextFormFieldsWidget(
                         errorText: 'please enter new password',
                         textInputType: TextInputType.text,
@@ -278,6 +309,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             AuthRepository()
                                 .resetPassRequest(mobileData,true, context)
                                 .then((value) => setState(() {
+                              Utils.successToast('Password Change successfully');
 
                                     }));
 
@@ -288,6 +320,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             AuthRepository()
                                 .resetPassRequest(emaildata,false, context)
                                 .then((value) => setState(() {
+                              Utils.successToast('Password Change successfully');
 
                                     }));
                           }

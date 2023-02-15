@@ -11,6 +11,7 @@ import 'package:velocit/Core/Model/userModel.dart';
 import 'package:velocit/Core/repository/auth_repository.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/CustomerSupport/CustomerSupportActivity.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/Saved_address/ProfileImageDialog.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 
 import '../../../Core/Model/CartModels/SendCartForPaymentModel.dart';
@@ -273,7 +274,17 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                     // height: 40.0,
                                                     child: InkWell(
                                                         onTap: () {
-                                                          _getFromCamera();
+                                                          // _getFromCamera();
+
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                return ProfileImageDialog(
+                                                                    imageFile1:
+                                                                        imageFile1,isEditAccount: true,);
+                                                              });
                                                         },
                                                         child: Container(
                                                           height: 32,
@@ -361,7 +372,16 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                     // height: 40.0,
                                                     child: InkWell(
                                                         onTap: () {
-                                                          _getFromCamera();
+                                                          // _getFromCamera();
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                              context) {
+                                                                return ProfileImageDialog(
+                                                                    imageFile1:
+                                                                    imageFile1,isEditAccount: true,);
+                                                              });
                                                         },
                                                         child: Container(
                                                           height: 32,
@@ -744,8 +764,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     EditAccountActivity(
-                                                  payload:
-                                                      snapshot.data!.payload,
+                                                  // payload:
+                                                  //     snapshot.data!.payload,
                                                 ),
                                               ),
                                             );

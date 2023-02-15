@@ -45,13 +45,16 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
     super.initState();
     getPref();
   }
-getPref() async {    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+  getPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  cartListView.gerDefaultAddressWithGet(
-      context, StringConstant.UserLoginId.toString());
-}
+    StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+
+    cartListView.gerDefaultAddressWithGet(
+        context, StringConstant.UserLoginId.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -62,9 +65,11 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .08),
-        child:  AppBar_BackWidget(
-            context: context,titleWidget: appTitle(context,"Order Details"), location: SizedBox()),
-     ),
+        child: AppBar_BackWidget(
+            context: context,
+            titleWidget: appTitle(context, "Order Details"),
+            location: SizedBox()),
+      ),
       body: SafeArea(child: mainUI()),
     );
   }
@@ -86,7 +91,7 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFieldUtils().dynamicText(
-                          "Order Id : "+widget.values["id"].toString(),
+                          "Order Id : " + widget.values["id"].toString(),
                           context,
                           TextStyle(
                               fontFamily: 'Roboto',
@@ -96,7 +101,7 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
                       SizedBox(
                         height: 4,
                       ),
-                /*      Container(
+                      /*      Container(
                         padding:
                             const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
                         decoration: BoxDecoration(
@@ -121,7 +126,7 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
                   ),
                   Row(
                     children: [
-                     /* InkWell(
+                      /* InkWell(
                         onTap: () {
                           showDialog(
                               context: context,
@@ -145,7 +150,6 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
                       ),*/
                       InkWell(
                         onTap: () async {
-
                           try {
                             // Saved with this method.
                             var imageId = await ImageDownloader.downloadImage(
@@ -694,12 +698,12 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
                   color: ThemeApp.blackColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w400)),
-
           deliveryAddress()
         ],
       ),
     );
   }
+
   Widget deliveryAddress() {
     return ChangeNotifierProvider<CartViewModel>.value(
         value: cartListView,
@@ -712,112 +716,7 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
             case Status.ERROR:
               print("Api error");
 
-              return Text(cartProvider.getDefaultAddress.message.toString());
-            case Status.COMPLETED:
-              print("addressList Api calll");
-              DefaultAddressPayload addressList =
-              cartProvider.getDefaultAddress.data!.payload!;
-              print("addressList  ...${addressList.name}");
-              return cartProvider.getDefaultAddress.data!.payload.toString().isNotEmpty
-                  ? Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            TextFieldUtils().dynamicText(
-                                addressList
-                                    .name
-                                    .toString(),
-                                context,
-                                TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontSize: 14,
-                                  letterSpacing: -0.08,
-                                  fontWeight: FontWeight.w400,
-                                  color: ThemeApp.blackColor,
-                                )),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              // height: height * 0.05,
-
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(100),
-                                ),
-                                color: ThemeApp.tealButtonColor,
-                              ),
-                              padding: const EdgeInsets.only(
-                                  left: 10,
-                                  right: 10,
-                                  top: 5,
-                                  bottom: 5),
-                              child: Text(
-                                  addressList
-                                      .addressType
-                                      .toString(),
-                                  style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      color: ThemeApp.whiteColor,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400)),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          // provider.orderCheckOutDetails[0]
-                          //     ["orderCheckOutDeliveryAddress"],
-                            "${addressList.addressLine1!}, ${addressList.addressLine2}, ${addressList.stateName},\n ${addressList.cityName}, ${addressList.pincode}",
-                            style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 12,
-                                letterSpacing: -0.08,
-                                fontWeight: FontWeight.w400,
-                                color: ThemeApp.blackColor,
-                                height: 2)),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/appImages/callIcon.svg',
-                              color: ThemeApp.appColor,
-                              semanticsLabel: 'Acme Logo',
-                              theme: SvgTheme(
-                                currentColor: ThemeApp.appColor,
-                              ),
-                              height: height * .025,
-                            ),
-                            SizedBox(
-                              width: width * .03,
-                            ),
-                            TextFieldUtils().dynamicText(
-                                "${addressList.contactNumber}",
-                                context,
-                                TextStyle(
-                                    fontFamily: 'Roboto',
-                                    color: ThemeApp.blackColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700)),
-                          ],
-                        ),
-                      ],
-                    )
-
-                  ],
-                ),
-              )
-                  : TextFieldUtils().dynamicText(
+              return TextFieldUtils().dynamicText(
                   'No Address found!',
                   context,
                   TextStyle(
@@ -825,6 +724,112 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
                       color: ThemeApp.blackColor,
                       fontSize: height * .02,
                       fontWeight: FontWeight.w400));
+            case Status.COMPLETED:
+              print("addressList Api calll");
+              DefaultAddressPayload addressList =
+                  cartProvider.getDefaultAddress.data!.payload!;
+              print("addressList  ...${addressList.name}");
+              return cartProvider.getDefaultAddress.data!.payload
+                      .toString()
+                      .isNotEmpty
+                  ? Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  TextFieldUtils().dynamicText(
+                                      addressList.name.toString(),
+                                      context,
+                                      TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontSize: 14,
+                                        letterSpacing: -0.08,
+                                        fontWeight: FontWeight.w400,
+                                        color: ThemeApp.blackColor,
+                                      )),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    // height: height * 0.05,
+
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(100),
+                                      ),
+                                      color: ThemeApp.tealButtonColor,
+                                    ),
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10, top: 5, bottom: 5),
+                                    child: Text(
+                                        addressList.addressType.toString(),
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: ThemeApp.whiteColor,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400)),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                  // provider.orderCheckOutDetails[0]
+                                  //     ["orderCheckOutDeliveryAddress"],
+                                  "${addressList.addressLine1!}, ${addressList.addressLine2}, ${addressList.stateName},\n ${addressList.cityName}, ${addressList.pincode}",
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: 12,
+                                      letterSpacing: -0.08,
+                                      fontWeight: FontWeight.w400,
+                                      color: ThemeApp.blackColor,
+                                      height: 2)),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/appImages/callIcon.svg',
+                                    color: ThemeApp.appColor,
+                                    semanticsLabel: 'Acme Logo',
+                                    theme: SvgTheme(
+                                      currentColor: ThemeApp.appColor,
+                                    ),
+                                    height: height * .025,
+                                  ),
+                                  SizedBox(
+                                    width: width * .03,
+                                  ),
+                                  TextFieldUtils().dynamicText(
+                                      "${addressList.contactNumber}",
+                                      context,
+                                      TextStyle(
+                                          fontFamily: 'Roboto',
+                                          color: ThemeApp.blackColor,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700)),
+                                ],
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  : TextFieldUtils().dynamicText(
+                      'No Address found!',
+                      context,
+                      TextStyle(
+                          fontFamily: 'Roboto',
+                          color: ThemeApp.blackColor,
+                          fontSize: height * .02,
+                          fontWeight: FontWeight.w400));
           }
           return Container(
             height: height * .8,
@@ -877,15 +882,16 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
-                      child: Text(
-                          widget.values["orders"][index]['oneliner'],
-                          maxLines: 1,overflow: TextOverflow.ellipsis,
+                      child: Text(widget.values["orders"][index]['oneliner'],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              overflow: TextOverflow.ellipsis,height: 3,
+                              overflow: TextOverflow.ellipsis,
+                              height: 3,
                               letterSpacing: -0.25)),
                     ),
                     SizedBox(
@@ -928,7 +934,10 @@ StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
                       letterSpacing: 0.2)),
               TextFieldUtils().dynamicText(
                   // 'total amount',
-                  indianRupeesFormat.format(double.parse(widget.values['mrp'].toString())).toString()??'',
+                  indianRupeesFormat
+                          .format(double.parse(widget.values['mrp'].toString()))
+                          .toString() ??
+                      '',
                   context,
                   TextStyle(
                       fontFamily: 'Roboto',

@@ -16,7 +16,7 @@ Widget proceedButton(String name, Color color, BuildContext context,
           border: Border.all(
               color: color== ThemeApp.tealButtonColor?ThemeApp.tealButtonColor: ThemeApp.whiteColor,
           ),
-          color: color== ThemeApp.tealButtonColor?ThemeApp.tealButtonColor: ThemeApp.whiteColor,
+          color: color== ThemeApp.tealButtonColor?ThemeApp.tealButtonColor: color,
         ),
         child: loading
             ? Center(
@@ -29,7 +29,7 @@ Widget proceedButton(String name, Color color, BuildContext context,
               fontSize: 16,
               fontWeight: FontWeight.w700,
               overflow: TextOverflow.ellipsis,
-              color: color== ThemeApp.tealButtonColor?ThemeApp.whiteColor: ThemeApp.tealButtonColor,
+              color: color== ThemeApp.tealButtonColor?ThemeApp.whiteColor: ThemeApp.whiteColor,
               letterSpacing: -0.25
           ),
         )),

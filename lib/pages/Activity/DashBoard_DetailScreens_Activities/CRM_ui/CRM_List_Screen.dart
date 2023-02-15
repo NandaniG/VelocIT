@@ -387,8 +387,9 @@ class _CRMistByCategoryActivityState
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,*/
-                          decoration: const BoxDecoration(
-                            color: ThemeApp.whiteColor,
+                          decoration:  BoxDecoration(
+                            color: ThemeApp.whiteColor,                                border: Border.all(color: ThemeApp.tealButtonColor)
+
                           ),
                           child: ClipRRect(
 

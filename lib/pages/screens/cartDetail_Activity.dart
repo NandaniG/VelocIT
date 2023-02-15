@@ -612,7 +612,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   //                       ),
                   //                     ),
                   //                   ),
-                                    bottomNavigationBarWidget(context,0),
+                                    bottomNavigationBarWidget(context,4),
                                   ],
                                 ),
                               );

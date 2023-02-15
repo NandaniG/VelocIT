@@ -280,10 +280,10 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
     final prefs = await SharedPreferences.getInstance();
     print(" SendCartForPaymentModel url: " + url + id.toString());
     print(" SendCartForPaymentModel id: " + id.toString());
-
+ //   2191
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
-      print(" SendCartForPaymentModel : " + response.toString());
+      print(" getSendCartForPaymentList : " + response.toString());
 
       // prefs.setString(
       //   'setBadgeCountPrefs',
@@ -302,7 +302,7 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
 
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
-      print(" SendCartForPaymentModel : " + response.toString());
+      print(" getSendCartForPaymentLists : " + response.toString());
 
       // prefs.setString(
       //   'setBadgeCountPrefs',
@@ -518,6 +518,9 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
         // print("response delete jsonData" + jsonData['payload'].toString());
         StringConstant.UserCartID =
             (prefs.getString('CartIdPref')) ?? '';
+     var cartId  =   prefs.getString(
+            'directCartIdPref');
+   var isBuyNowCart =  prefs.getString('isBuyNow');
       if( isAddress== true) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -525,11 +528,19 @@ print(" total_item_count Badge"+response['payload']['total_item_count'].toString
           ),
         );
       }else{
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => OrderReviewActivity(cartId:int.parse( StringConstant.UserCartID)),
-          ),
-        );
+        if(isBuyNowCart=='true'){
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => OrderReviewActivity(cartId:int.parse( cartId.toString())),
+            ),
+          );}else{
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => OrderReviewActivity(cartId:int.parse(  StringConstant.UserCartID.toString())),
+            ),
+          );
+        }
       }
         Utils.successToast('Address deleted successfully');
 

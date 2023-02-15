@@ -22,7 +22,8 @@ class CancelOrderActivity extends StatefulWidget {
   final dynamic values;
   final dynamic orderList;
 
-  CancelOrderActivity({Key? key, required this.values,required this.orderList}) : super(key: key);
+  CancelOrderActivity({Key? key, required this.values, required this.orderList})
+      : super(key: key);
 
   @override
   State<CancelOrderActivity> createState() => _CancelOrderActivityState();
@@ -56,10 +57,10 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context).popAndPushNamed(RoutesName.orderRoute).then((value) {
-          setState(() {
-
-          });
+        Navigator.of(context)
+            .popAndPushNamed(RoutesName.orderRoute)
+            .then((value) {
+          setState(() {});
         });
         return Future.value(true);
       },
@@ -69,8 +70,9 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .09),
           child: AppBar_BackWidget(
-              context: context,titleWidget: appTitle(context,"Cancel Order"), location: SizedBox()),
-
+              context: context,
+              titleWidget: appTitle(context, "Cancel Order"),
+              location: SizedBox()),
         ),
         body: SafeArea(
           child: Container(
@@ -79,45 +81,62 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
             child: data == ''
                 ? CircularProgressIndicator()
                 : Consumer<HomeProvider>(builder: (context, provider, child) {
-              return (provider.jsonData.isNotEmpty &&
-                  provider.jsonData['error'] == null)
-                  ? ListView(
-                children: [
-                  Padding(
-                    padding:
-                    const EdgeInsets.only(left: 20, right: 20),
-                    child: TextFieldUtils().dynamicText(
-                        'Cancel Order',
-                        context,
-                        TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.blackColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        )),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding:
-                    const EdgeInsets.only(left: 20, right: 20),
-                    child: TextFieldUtils().dynamicText(
-                        'Choose item you want to Cancel',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400)),
-                  ),
-                  mainUI(provider),
-                ],
-              )
-                  : provider.jsonData['error'] != null
-                  ? Container()
-                  : Center(child: CircularProgressIndicator());
-            }),
+                    return (provider.jsonData.isNotEmpty &&
+                            provider.jsonData['error'] == null)
+                        ? ListView(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: TextFieldUtils().dynamicText(
+                                    "Basket ID : " +
+                                        widget.values['id'].toString(),
+                                    context,
+                                    TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.blackColor,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    )),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              /*         Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: TextFieldUtils().dynamicText(
+                                    'Cancel Order',
+                                    context,
+                                    TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.blackColor,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    )),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),*/
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: TextFieldUtils().dynamicText(
+                                    'Choose item you want to Cancel',
+                                    context,
+                                    TextStyle(
+                                        fontFamily: 'Roboto',
+                                        color: ThemeApp.blackColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400)),
+                              ),
+                              mainUI(provider),
+                            ],
+                          )
+                        : provider.jsonData['error'] != null
+                            ? Container()
+                            : Center(child: CircularProgressIndicator());
+                  }),
           ),
         ),
       ),
@@ -130,7 +149,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
       child: /*Column(
         children: [
 */
-      SingleChildScrollView(
+          SingleChildScrollView(
         child: Container(
           height: height * .75,
           child: Padding(
@@ -140,7 +159,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                 Expanded(
                   child: ListView.builder(
 
-                    // physics: NeverScrollableScrollPhysics(),
+                      // physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       itemCount: widget.values["orders"].length,
                       itemBuilder: (_, index) {
@@ -159,8 +178,23 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
+                                      Text(
+                                          "Order ID : " +
+                                              orders["order_id"].toString(),
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              overflow: TextOverflow.ellipsis,
+                                              color: ThemeApp
+                                                  .primaryNavyBlackColor,
+                                              fontSize: 15,
+                                              letterSpacing: -0.25,
+                                              fontWeight: FontWeight.w700)),
+                                      SizedBox(
+                                        height: 17,
+                                      ),
                                       Row(
                                         children: [
                                           Container(
@@ -168,7 +202,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                             width: 79,
                                             child: ClipRRect(
                                               borderRadius:
-                                              const BorderRadius.all(
+                                                  const BorderRadius.all(
                                                 Radius.circular(10),
                                               ),
                                               child: Image.network(
@@ -176,12 +210,12 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                   fit: BoxFit.fill,
                                                   errorBuilder: ((context,
                                                       error, stackTrace) {
-                                                    return Container(
-                                                        height: 79,
-                                                        width: 79,
-                                                        child: Icon(
-                                                            Icons.image_outlined));
-                                                  })),
+                                                return Container(
+                                                    height: 79,
+                                                    width: 79,
+                                                    child: Icon(
+                                                        Icons.image_outlined));
+                                              })),
                                             ),
                                           ),
                                           SizedBox(
@@ -193,13 +227,13 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 style: TextStyle(
                                                     fontFamily: 'Roboto',
                                                     overflow:
-                                                    TextOverflow.ellipsis,
+                                                        TextOverflow.ellipsis,
                                                     color: ThemeApp
                                                         .primaryNavyBlackColor,
                                                     fontSize: 12,
                                                     letterSpacing: -0.25,
                                                     fontWeight:
-                                                    FontWeight.w700)),
+                                                        FontWeight.w700)),
                                           ),
                                         ],
                                       ),
@@ -209,17 +243,17 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                       Container(
                                         decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(8),
+                                                BorderRadius.circular(8),
                                             border: Border.all(
                                                 color:
-                                                ThemeApp.lightBorderColor)),
+                                                    ThemeApp.lightBorderColor)),
                                         padding:
-                                        EdgeInsets.fromLTRB(10, 20, 10, 20),
+                                            EdgeInsets.fromLTRB(10, 20, 10, 20),
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               children: [
@@ -230,12 +264,13 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                     value: 1,
                                                     groupValue: _radioIndex,
                                                     activeColor:
-                                                    ThemeApp.appColor,
+                                                        ThemeApp.appColor,
                                                     onChanged: (value) {
                                                       setState(() {
                                                         _radioIndex =
-                                                        value as int;
-                                                        _radioVal = 'I have purchased  a product elsewhere';
+                                                            value as int;
+                                                        _radioVal =
+                                                            'I have purchased  a product elsewhere';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -245,16 +280,18 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                   width: 10,
                                                 ),
                                                 Flexible(
-                                                  child: const Text("I have purchased  a product elsewhere",maxLines: 1,
+                                                  child: const Text(
+                                                      "I have purchased  a product elsewhere",
+                                                      maxLines: 1,
                                                       style: TextStyle(
                                                         fontFamily: 'Roboto',
                                                         color:
-                                                        ThemeApp.blackColor,
+                                                            ThemeApp.blackColor,
                                                         fontSize: 13,
                                                         fontWeight:
-                                                        FontWeight.w500,
-                                                        overflow:
-                                                        TextOverflow.ellipsis,
+                                                            FontWeight.w500,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       )),
                                                 ),
                                               ],
@@ -268,12 +305,13 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                     value: 2,
                                                     groupValue: _radioIndex,
                                                     activeColor:
-                                                    ThemeApp.appColor,
+                                                        ThemeApp.appColor,
                                                     onChanged: (value) {
                                                       setState(() {
                                                         _radioIndex =
-                                                        value as int;
-                                                        _radioVal = 'Price for the product has increased';
+                                                            value as int;
+                                                        _radioVal =
+                                                            'Price for the product has increased';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -284,17 +322,19 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 ),
                                                 const Flexible(
                                                   child: const Text(
-                                                    "Price for the product has increased",maxLines: 1,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      color:
-                                                      ThemeApp.blackColor,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                      FontWeight.w500,
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                    )),)
+                                                      "Price for the product has increased",
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        color:
+                                                            ThemeApp.blackColor,
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      )),
+                                                )
                                               ],
                                             ),
                                             Row(
@@ -306,12 +346,13 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                     value: 3,
                                                     groupValue: _radioIndex,
                                                     activeColor:
-                                                    ThemeApp.appColor,
+                                                        ThemeApp.appColor,
                                                     onChanged: (value) {
                                                       setState(() {
                                                         _radioIndex =
-                                                        value as int;
-                                                        _radioVal = 'Expected delivery time is very long';
+                                                            value as int;
+                                                        _radioVal =
+                                                            'Expected delivery time is very long';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -327,12 +368,12 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                       style: TextStyle(
                                                         fontFamily: 'Roboto',
                                                         color:
-                                                        ThemeApp.blackColor,
+                                                            ThemeApp.blackColor,
                                                         fontSize: 13,
                                                         fontWeight:
-                                                        FontWeight.w500,
-                                                        overflow:
-                                                        TextOverflow.ellipsis,
+                                                            FontWeight.w500,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       )),
                                                 ),
                                               ],
@@ -346,12 +387,13 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                     value: 4,
                                                     groupValue: _radioIndex,
                                                     activeColor:
-                                                    ThemeApp.appColor,
+                                                        ThemeApp.appColor,
                                                     onChanged: (value) {
                                                       setState(() {
                                                         _radioIndex =
-                                                        value as int;
-                                                        _radioVal = 'I have changed my mind';
+                                                            value as int;
+                                                        _radioVal =
+                                                            'I have changed my mind';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -363,16 +405,16 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 Flexible(
                                                   child: const Text(
                                                       "I have changed my mind",
-
-                                                      maxLines: 1,style: TextStyle(
+                                                      maxLines: 1,
+                                                      style: TextStyle(
                                                         fontFamily: 'Roboto',
                                                         color:
-                                                        ThemeApp.blackColor,
+                                                            ThemeApp.blackColor,
                                                         fontSize: 13,
                                                         fontWeight:
-                                                        FontWeight.w500,
-                                                        overflow:
-                                                        TextOverflow.ellipsis,
+                                                            FontWeight.w500,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       )),
                                                 ),
                                               ],
@@ -386,12 +428,13 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                     value: 5,
                                                     groupValue: _radioIndex,
                                                     activeColor:
-                                                    ThemeApp.appColor,
+                                                        ThemeApp.appColor,
                                                     onChanged: (value) {
                                                       setState(() {
                                                         _radioIndex =
-                                                        value as int;
-                                                        _radioVal = 'Added to order by mistake';
+                                                            value as int;
+                                                        _radioVal =
+                                                            'Added to order by mistake';
                                                         print(_radioVal);
                                                       });
                                                     },
@@ -403,20 +446,20 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 Flexible(
                                                   child: const Text(
                                                       "Added to order by mistake",
-                                                  maxLines: 1,    style: TextStyle(
+                                                      maxLines: 1,
+                                                      style: TextStyle(
                                                         fontFamily: 'Roboto',
                                                         color:
-                                                        ThemeApp.blackColor,
+                                                            ThemeApp.blackColor,
                                                         fontSize: 13,
                                                         fontWeight:
-                                                        FontWeight.w500,
-                                                        overflow:
-                                                        TextOverflow.ellipsis,
+                                                            FontWeight.w500,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       )),
                                                 ),
                                               ],
                                             ),
-
                                           ],
                                         ),
                                       ),
@@ -425,9 +468,9 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                       ),
                                       Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           TextFieldUtils().dynamicText(
                                               'Comment',
@@ -470,12 +513,12 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                           focusedBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                   color:
-                                                  ThemeApp.lightBorderColor,
+                                                      ThemeApp.lightBorderColor,
                                                   width: 1)),
                                           disabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                   color:
-                                                  ThemeApp.lightBorderColor,
+                                                      ThemeApp.lightBorderColor,
                                                   width: 1)),
                                           errorBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -484,38 +527,62 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                           enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                   color:
-                                                  ThemeApp.lightBorderColor,
+                                                      ThemeApp.lightBorderColor,
                                                   width: 1)),
                                         ),
                                       ),
                                       SizedBox(
                                         height: 20,
                                       ),
-                                      proceedButton(
-                                          "Submit", ThemeApp.tealButtonColor, context, false,
-                                              () async {
-                                            FocusManager.instance.primaryFocus?.unfocus();
+                                      orders['cancelled'] == false
+                                          ? proceedButton(
+                                              "Submit",
+                                              ThemeApp.tealButtonColor,
+                                              context,
+                                              false, () async {
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
 
-                                            final prefs = await SharedPreferences.getInstance();
+                                              final prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
 
-                                            StringConstant.UserLoginId =
-                                                (prefs.getString('isUserId')) ?? '';
+                                              StringConstant.UserLoginId =
+                                                  (prefs.getString(
+                                                          'isUserId')) ??
+                                                      '';
 
-                                            print("USER LOGIN ID..............." +
-                                                StringConstant.UserLoginId.toString());
-                                            String date = DateTime.now().toUtc().toString().replaceAll(" ", "T");
-                                     OrderBasketRepository().cancelOrderApiRequest(context, {
-                                              "cancellation_date": date,
-                                              "reason": _radioVal.toString()
-                                            }, widget.orderList['order_id'].toString());
-
-
-                                            Navigator.of(context).popAndPushNamed(RoutesName.orderRoute).then((value) {
-                                              setState(() {
-
-                                              });
-                                            });
-                                          })
+                                              print(
+                                                  "USER LOGIN ID..............." +
+                                                      StringConstant.UserLoginId
+                                                          .toString());
+                                              String date = DateTime.now()
+                                                  .toUtc()
+                                                  .toString()
+                                                  .replaceAll(" ", "T");
+                                              OrderBasketRepository()
+                                                  .cancelOrderApiRequest(
+                                                      context,
+                                                      {
+                                                        "cancellation_date":
+                                                            date,
+                                                        "reason":
+                                                            _radioVal.toString()
+                                                      },
+                                                      widget
+                                                          .orderList['order_id']
+                                                          .toString());
+                                            })
+                                          : Center(
+                                              child: Text(
+                                                "Your order is already cancelled",
+                                                style: TextStyle(
+                                                    color: ThemeApp.redColor,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                            )
                                     ]),
                               ),
                             ),
@@ -523,7 +590,6 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                         );
                       }),
                 ),
-
               ],
             ),
           ),

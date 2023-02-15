@@ -229,9 +229,9 @@ class _ServiceListByCategoryActivityState
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      /*    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             TextFieldUtils().dynamicText(
                 'Sort By  ',
                 context,
@@ -260,7 +260,7 @@ class _ServiceListByCategoryActivityState
                       letterSpacing: -0.08)),
             ),
             const Icon(Icons.keyboard_arrow_down)
-          ]),
+          ]),*/
           InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
@@ -378,8 +378,9 @@ class _ServiceListByCategoryActivityState
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,*/
-                            decoration: const BoxDecoration(
-                              color: ThemeApp.whiteColor,
+                            decoration:  BoxDecoration(
+                              color: ThemeApp.whiteColor,                                border: Border.all(color: ThemeApp.tealButtonColor)
+
                             ),
                             child: ClipRRect(
                               child: subServiceList[index]
