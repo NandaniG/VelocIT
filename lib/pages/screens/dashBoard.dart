@@ -173,17 +173,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
       //597723544
       print("cart data pass : " + data.toString());
-      CartRepository().cartPostRequest(data, context);
+      CartRepository().cartPostRequest(data, context).then((value) {
+        StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+        print("Cart Id From DashBoard Activity " + StringConstant.UserCartID);
+
+        CartViewModel()
+            .cartSpecificIDWithGet(context, StringConstant.UserCartID);
+      });
 
       // var CARTID = prefs.getString('CartIdPref');
-      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-      print("Cart Id From DashBoard Activity " + StringConstant.UserCartID);
 
       // print("cartId from Pref" + CARTID.toString());
     });
 
-    await CartViewModel()
-        .cartSpecificIDWithGet(context, StringConstant.UserCartID);
+
   }
 
   final indianRupeesFormat = NumberFormat.currency(
@@ -637,7 +640,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Column(
+                           child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
@@ -669,6 +672,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   serviceList[index].simpleSubCats!.isEmpty
                                       ? SizedBox()
                                       : subListOfCategories(serviceList[index])
+
                                 ]),
                           );
                         },

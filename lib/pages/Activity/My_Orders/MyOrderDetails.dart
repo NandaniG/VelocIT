@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/Activity/My_Orders/QR_download_popup.dart';
 import 'package:velocit/utils/utils.dart';
 
+import '../../../Core/Model/CartModels/GetDefaultAddressModel.dart';
+import '../../../Core/ViewModel/auth_viewmodel.dart';
+import '../../../Core/ViewModel/cart_view_model.dart';
+import '../../../Core/data/responses/status.dart';
 import '../../../services/models/MyOrdersModel.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
@@ -28,21 +36,22 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
+  CartViewModel cartListView = CartViewModel();
 
   @override
   void initState() {
     // TODO: implement initState
     totalAmount;
     super.initState();
-    // totalAmount = 0;
-    // for (int i = 0; i < widget.values["myOrderDetailList"].length; i++) {
-    //   totalAmount =
-    //       int.parse(widget.values["myOrderDetailList"][i]["price"].toString()) +
-    //           totalAmount;
-    //   print(totalAmount);
-    // }
+    getPref();
   }
+getPref() async {    SharedPreferences prefs = await SharedPreferences.getInstance();
 
+StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+
+  cartListView.gerDefaultAddressWithGet(
+      context, StringConstant.UserLoginId.toString());
+}
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -73,11 +82,11 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFieldUtils().dynamicText(
-                          widget.values["id"].toString(),
+                          "Order Id : "+widget.values["id"].toString(),
                           context,
                           TextStyle(
                               fontFamily: 'Roboto',
@@ -87,7 +96,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       SizedBox(
                         height: 4,
                       ),
-                      Container(
+                /*      Container(
                         padding:
                             const EdgeInsets.fromLTRB(15.0, 5.0, 15.0, 5.0),
                         decoration: BoxDecoration(
@@ -107,12 +116,12 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                                 color: ThemeApp.orderStatusColor,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700)),
-                      ),
+                      ),*/
                     ],
                   ),
                   Row(
                     children: [
-                      InkWell(
+                     /* InkWell(
                         onTap: () {
                           showDialog(
                               context: context,
@@ -133,7 +142,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       ),
                       SizedBox(
                         width: width * .03,
-                      ),
+                      ),*/
                       InkWell(
                         onTap: () async {
 
@@ -685,29 +694,151 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                   color: ThemeApp.blackColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w400)),
-          SizedBox(
-            height: height * .02,
-          ),
-          TextFieldUtils().dynamicText(
-                  " ${widget.values["delivery_address_line1"] ?? ''} ${widget.values["delivery_address_line2"] ?? ""} ${widget.values["delivery_address_city"] ?? ""}${widget.values["delivery_address_line2"] ?? ""}${widget.values["delivery_address_pincode"] ?? ""}",
-                  // "${
-                  //        widget.values["delivery_address_line1"]??""} ${widget.values["delivery_address_line2"] ??
-                  //            ''} ${widget.values["delivery_address_city"] ??
-                  //            ""} ${widget.values["delivery_address_state"] ??
-                  //            ""} ${widget.values["delivery_address_pincode"].toString()
-                  //      }" ??"",
+
+          deliveryAddress()
+        ],
+      ),
+    );
+  }
+  Widget deliveryAddress() {
+    return ChangeNotifierProvider<CartViewModel>.value(
+        value: cartListView,
+        child: Consumer<CartViewModel>(builder: (context, cartProvider, child) {
+          switch (cartProvider.getDefaultAddress.status) {
+            case Status.LOADING:
+              print("Api load");
+
+              return Container();
+            case Status.ERROR:
+              print("Api error");
+
+              return Text(cartProvider.getDefaultAddress.message.toString());
+            case Status.COMPLETED:
+              print("addressList Api calll");
+              DefaultAddressPayload addressList =
+              cartProvider.getDefaultAddress.data!.payload!;
+              print("addressList  ...${addressList.name}");
+              return cartProvider.getDefaultAddress.data!.payload.toString().isNotEmpty
+                  ? Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            TextFieldUtils().dynamicText(
+                                addressList
+                                    .name
+                                    .toString(),
+                                context,
+                                TextStyle(
+                                  fontFamily: 'Roboto',
+                                  fontSize: 14,
+                                  letterSpacing: -0.08,
+                                  fontWeight: FontWeight.w400,
+                                  color: ThemeApp.blackColor,
+                                )),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              // height: height * 0.05,
+
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(100),
+                                ),
+                                color: ThemeApp.tealButtonColor,
+                              ),
+                              padding: const EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                  top: 5,
+                                  bottom: 5),
+                              child: Text(
+                                  addressList
+                                      .addressType
+                                      .toString(),
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      color: ThemeApp.whiteColor,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          // provider.orderCheckOutDetails[0]
+                          //     ["orderCheckOutDeliveryAddress"],
+                            "${addressList.addressLine1!}, ${addressList.addressLine2}, ${addressList.stateName},\n ${addressList.cityName}, ${addressList.pincode}",
+                            style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontSize: 12,
+                                letterSpacing: -0.08,
+                                fontWeight: FontWeight.w400,
+                                color: ThemeApp.blackColor,
+                                height: 2)),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/appImages/callIcon.svg',
+                              color: ThemeApp.appColor,
+                              semanticsLabel: 'Acme Logo',
+                              theme: SvgTheme(
+                                currentColor: ThemeApp.appColor,
+                              ),
+                              height: height * .025,
+                            ),
+                            SizedBox(
+                              width: width * .03,
+                            ),
+                            TextFieldUtils().dynamicText(
+                                "${addressList.contactNumber}",
+                                context,
+                                TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+                      ],
+                    )
+
+                  ],
+                ),
+              )
+                  : TextFieldUtils().dynamicText(
+                  'No Address found!',
                   context,
                   TextStyle(
                       fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: -0.25,
-                      height: 1.5)) ??
-              SizedBox(),
-        ],
-      ),
-    );
+                      fontSize: height * .02,
+                      fontWeight: FontWeight.w400));
+          }
+          return Container(
+            height: height * .8,
+            alignment: Alignment.center,
+            child: TextFieldUtils().dynamicText(
+                'No Address found!',
+                context,
+                TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.blackColor,
+                    fontSize: height * .03,
+                    fontWeight: FontWeight.bold)),
+          );
+        }));
   }
 
   int totalAmount = 0;
@@ -746,15 +877,15 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
-                      child: TextFieldUtils().dynamicText(
+                      child: Text(
                           widget.values["orders"][index]['oneliner'],
-                          context,
-                          TextStyle(
+                          maxLines: 1,overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
                               fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              overflow: TextOverflow.ellipsis,
+                              overflow: TextOverflow.ellipsis,height: 3,
                               letterSpacing: -0.25)),
                     ),
                     SizedBox(
@@ -793,17 +924,17 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                       letterSpacing: 0.2)),
               TextFieldUtils().dynamicText(
-                  'total amount',
-                  // indianRupeesFormat.format(double.parse(widget.values["orders"][i]['mrp'])).toString()??'',
+                  // 'total amount',
+                  indianRupeesFormat.format(double.parse(widget.values['mrp'].toString())).toString()??'',
                   context,
                   TextStyle(
                       fontFamily: 'Roboto',
                       color: ThemeApp.darkGreyColor,
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                       letterSpacing: 0.2)),
             ],
           ),

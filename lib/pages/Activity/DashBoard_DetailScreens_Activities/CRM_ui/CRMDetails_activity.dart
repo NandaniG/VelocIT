@@ -204,7 +204,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: AppBar_BackWidget(
-           context: context,titleWidget: appTitle(context, "CRM"), location: SizedBox()),
+           context: context,titleWidget: appTitle(context, "CRM"), location: const SizedBox()),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context,0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -245,11 +245,11 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                   child: TextFieldUtils().headingTextField(
                                       model.crm!.shortName!, context),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 prices(model),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                                 model.crmFormId.toString().isEmpty
@@ -298,7 +298,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                               height: 40,
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
+                                                borderRadius: const BorderRadius.all(
                                                   Radius.circular(100),
                                                 ),
                                                 border: Border.all(
@@ -306,7 +306,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                                         ThemeApp.tealButtonColor),
                                                 color: ThemeApp.tealButtonColor,
                                               ),
-                                              child: Text(
+                                              child: const Text(
                                                 "Enquiry",
                                                 style: TextStyle(
                                                   fontFamily: 'Roboto',
@@ -320,7 +320,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                     ),
                               ],
                             ) ??
-                            SizedBox();
+                            const SizedBox();
                       } else {
                         return Container(
                           height: height * .8,
@@ -360,7 +360,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
       print(url+formId.toString());
       final client = http.Client();
       final response =
-      await client.get(Uri.parse(url)).timeout(Duration(seconds: 30));
+      await client.get(Uri.parse(url)).timeout(const Duration(seconds: 30));
 
       var responseJson = json.decode(response.body.toString());
       final prefs = await SharedPreferences.getInstance();
@@ -432,15 +432,15 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                                         // fit: BoxFit.fill,
                                                         errorBuilder: ((context,
                                                             error, stackTrace) {
-                                                      return Icon(
+                                                      return const Icon(
                                                           Icons.image_outlined);
                                                     })) ??
-                                                    SizedBox(),
+                                                    const SizedBox(),
                                               ),
                                             ) ??
-                                            SizedBox()),
+                                            const SizedBox()),
                                   ) ??
-                                  SizedBox(),
+                                  const SizedBox(),
                             ),
                           ],
                         );
@@ -457,7 +457,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                       viewportFraction: 1,
                       height: height * .3),
                 ) ??
-                SizedBox(),
+                const SizedBox(),
           ),
 
           // Card(
@@ -541,7 +541,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
       children: [
         ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             itemCount: isMerchantfive == false && merchantTemp.length < 5
                 ? merchantTemp.length
@@ -585,12 +585,12 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                               padding: const EdgeInsets.only(left: 0),
                               child: Text(
                                       merchantTemp[index].merchantName ?? "",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500)) ??
-                                  SizedBox(),
+                                  const SizedBox(),
                             ),
                           ],
                         ),
@@ -604,7 +604,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                             Text(
                                 merchantTemp[index].deliveryDays.toString() +
                                     " Day(s)",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
@@ -621,12 +621,12 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                                 .unitOfferPrice
                                                 .toString()) ??
                                         0.0),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400))
-                                : Text('0.0',
+                                : const Text('0.0',
                                     style: TextStyle(
                                         fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
@@ -666,7 +666,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                         .unitDiscountPerc
                                         .toString() +
                                     "% Off",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
@@ -689,12 +689,12 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                       ],
                     ),
                   ) ??
-                  SizedBox();
+                  const SizedBox();
             }),
         Container(
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
-          decoration: BoxDecoration(),
+          decoration: const BoxDecoration(),
           child: merchantTemp.length > 5 && isMerchantfive == false
               ? InkWell(
                   onTap: () {
@@ -705,7 +705,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                   child: TextFieldUtils().dynamicText(
                       'View more',
                       context,
-                      TextStyle(
+                      const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.tealButtonColor,
                         fontSize: 12,
@@ -729,7 +729,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                   child: TextFieldUtils().dynamicText(
                       'View less',
                       context,
-                      TextStyle(
+                      const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.tealButtonColor,
                         fontSize: 12,
@@ -758,24 +758,24 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
           children: [
             Text(
               model.crm!.oneliner.toString(),
-              style: TextStyle(
+              style: const TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 20,
                   overflow: TextOverflow.ellipsis,
                   fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 0),
               child: Text(model.merchant!.name ?? "",
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontFamily: 'Roboto',
                           color: ThemeApp.blackColor,
                           fontSize: 12,
                           fontWeight: FontWeight.w500)) ??
-                  SizedBox(),
+                  const SizedBox(),
             ),
           ],
         ),
@@ -830,7 +830,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Product Description",
+            const Text("Product Description",
                 style: TextStyle(
                     fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
@@ -840,7 +840,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
               height: height * .01,
             ),
             Text(model.crm!.oneliner.toString(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Roboto',
                   color: ThemeApp.lightFontColor,
                   // fontWeight: FontWeight.w500,
@@ -891,12 +891,12 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                       MediaQuery.of(context).size.height * .05,
                                   width: width * .1,
                                   errorBuilder: ((context, error, stackTrace) {
-                                return Icon(Icons.image_outlined);
+                                return const Icon(Icons.image_outlined);
                               })) ??
-                              SizedBox(),
+                              const SizedBox(),
                         ),
                       ) ??
-                      SizedBox(),
+                      const SizedBox(),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * .01,
@@ -925,13 +925,13 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                       TextFieldUtils().dynamicText(
                           'Quantity : ',
                           context,
-                          TextStyle(
+                          const TextStyle(
                               fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
                               // fontWeight: FontWeight.w500,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
-                      SizedBox(
+                      const SizedBox(
                         width: 11,
                       ),
                       Container(
@@ -939,7 +939,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                         // width: width * .2,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(5),
                             ),
                             border: Border.all(
@@ -967,10 +967,10 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                     //     context, data);
                                   });
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
+                                child: const Padding(
+                                  padding: EdgeInsets.only(
                                       left: 8.0, right: 8),
-                                  child: const Icon(Icons.remove,
+                                  child: Icon(Icons.remove,
                                       // size: 20,
                                       color: ThemeApp.lightFontColor),
                                 ),
@@ -978,7 +978,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                               Container(
                                 height: 30,
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.fromLTRB(
+                                padding: const EdgeInsets.fromLTRB(
                                   20,
                                   0,
                                   20,
@@ -1004,10 +1004,10 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                     remainingCounters();
                                   });
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
+                                child: const Padding(
+                                  padding: EdgeInsets.only(
                                       left: 8.0, right: 8),
-                                  child: const Icon(Icons.add,
+                                  child: Icon(Icons.add,
                                       // size: 20,
                                       color: ThemeApp.lightFontColor),
                                 ),
@@ -1019,7 +1019,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 addToCart(model),
@@ -1088,14 +1088,14 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                 height: 40,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
+                                  borderRadius: const BorderRadius.all(
                                     Radius.circular(100),
                                   ),
                                   border: Border.all(
                                       color: ThemeApp.tealButtonColor),
                                   color: ThemeApp.containerColor,
                                 ),
-                                child: Text(
+                                child: const Text(
                                   "Add to Cart",
                                   style: TextStyle(
                                     fontFamily: 'Roboto',
@@ -1306,14 +1306,14 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                             height: 40,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                 Radius.circular(100),
                               ),
                               border:
                                   Border.all(color: ThemeApp.tealButtonColor),
                               color: ThemeApp.tealButtonColor,
                             ),
-                            child: Text(
+                            child: const Text(
                               "Buy now",
                               style: TextStyle(
                                 fontFamily: 'Roboto',
@@ -1423,7 +1423,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                             fit: BoxFit.scaleDown,
                                             errorBuilder:
                                                 ((context, error, stackTrace) {
-                                              return Icon(Icons.image_outlined);
+                                              return const Icon(Icons.image_outlined);
                                             }),
                                           )),
                                         ),
@@ -1497,14 +1497,14 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                   )
                                 ],
                               ) ??
-                              SizedBox();
+                              const SizedBox();
                         })
-                    : SizedBox(),
+                    : const SizedBox(),
               );
             default:
-              return Text("No Data found!");
+              return const Text("No Data found!");
           }
-          return Text("No Data found!");
+          return const Text("No Data found!");
         }));
 
 /*

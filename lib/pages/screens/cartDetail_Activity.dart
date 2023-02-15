@@ -159,6 +159,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
           context, StringConstant.UserCartID);
     }
     print("Cart Id ForDirect" + getDirectCartID.toString());
+
+    StringConstant.BadgeCounterValue =
+        (prefs.getString('setBadgeCountPrefs')) ?? '';
+    print("Badge,........" + StringConstant.BadgeCounterValue);
   }
 
   @override

@@ -126,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen> {
           print('login user is GUEST ');
           print('ISNOT logged in..' +
               StringConstant.RandomUserLoginId.toString());
-          rnd = new Random();
+          rnd = Random();
           var r = min + rnd.nextInt(max - min);
 
           print("$r is in the range of $min and $max");
@@ -300,7 +300,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _getLocation(Position position) async {
-    final coordinates = new Coordinates(position.latitude, position.longitude);
+    final coordinates = Coordinates(position.latitude, position.longitude);
     var addresses =
     await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;

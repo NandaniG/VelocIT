@@ -495,7 +495,7 @@ class _SignUpState extends State<SignUp> {
                                     password.clear();
                                     confirmPassword.clear();
                                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                        builder: (context) => SignIn_Screen())).then((value) => setState((){}));
+                                        builder: (context) => SignIn_Screen()));
                                   },
                                   child: Text(
                                     "Sign In",

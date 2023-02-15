@@ -17,17 +17,19 @@ import '../../widgets/global/textFormFields.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 class OTPScreen extends StatefulWidget {
-  final String UID;
-  final String mobileNumber;
-  final String OTP;
-  final String Uname;
+   String UID='';
+   String mobileNumber='';
+   String OTP='';
+   String Uname='';
+   bool isForgotPass;
 
   OTPScreen(
       {Key? key,
       required this.UID,
       required this.mobileNumber,
       required this.OTP,
-      required this.Uname})
+      required this.Uname,
+      required this.isForgotPass})
       : super(key: key);
 
   @override
@@ -303,7 +305,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
                                     AuthRepository()
                                         .postApiForMobileOTPRequest(
-                                            mobileData, context)
+                                            mobileData,widget.isForgotPass, context)
                                         .then((value) {
                                       startTimer();
                                     });
@@ -314,7 +316,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
                                     AuthRepository()
                                         .postApiForEmailOTPRequest(
-                                            emaildata, context)
+                                            emaildata,widget.isForgotPass, context)
                                         .then((value) {
                                       startTimer();
                                     });
@@ -430,7 +432,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         'user_id': widget.UID,
                       };
                       AuthRepository()
-                          .postApiForValidateOTP(passOtpData, context);
+                          .postApiForValidateOTP(passOtpData,widget.isForgotPass, context);
                       // if (authViewModel.getOTP == controller.text) {
                       //   Map data = {'username': 'testuser@test.com'};
                       //   authViewModel.loginApiWithPost(data, context);

@@ -137,7 +137,8 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                                 fontWeight: FontWeight.w400),
                           ),
                           InkWell(
-                            onTap: () {
+                            onTap: ()async {
+
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (context) => SignIn_Screen()));

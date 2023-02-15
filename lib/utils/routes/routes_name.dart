@@ -10,6 +10,7 @@ import 'package:velocit/utils/routes/routes.dart';
 
 import '../../pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import '../../pages/auth/Sign_Up.dart';
+import '../../pages/auth/forgot_password.dart';
 import '../../pages/auth/sign_in.dart';
 import '../../pages/screens/launch_Screen.dart';
 
@@ -19,27 +20,28 @@ class Routes {
       case RoutesName.splashScreenRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => SplashScreen());
-        case RoutesName.signUpRoute:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => SignUp());
+      case RoutesName.signUpRoute:
+        return MaterialPageRoute(builder: (BuildContext context) => SignUp());
       case RoutesName.signInRoute:
         return MaterialPageRoute(
-            builder: (BuildContext context) => SignIn_Screen(),);
+          builder: (BuildContext context) => SignIn_Screen(),
+        );
       case RoutesName.dashboardRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => DashboardScreen());
       case RoutesName.orderRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => MyOrdersActivity());
-    case RoutesName.myAccountRoute:
+      case RoutesName.myAccountRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => MyAccountActivity());
-    case RoutesName.saveAddressRoute:
+      case RoutesName.saveAddressRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => SavedAddressDetails());
-        case RoutesName.cartScreenRoute:
+      case RoutesName.cartScreenRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => CartDetailsActivity());
+
 
       // case RoutesName.otpRoute:
       //   return MaterialPageRoute(

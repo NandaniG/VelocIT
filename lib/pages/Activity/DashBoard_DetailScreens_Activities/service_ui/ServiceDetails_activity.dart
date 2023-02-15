@@ -197,7 +197,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child:  AppBar_BackWidget(
-            context: context,titleWidget: appTitle(context,"My Service"), location: SizedBox()),
+            context: context,titleWidget: appTitle(context,"My Service"), location: const SizedBox()),
 
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context,0),
@@ -272,11 +272,11 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                   child: TextFieldUtils().headingTextField(
                                       model.shortName!, context),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 rattingBar(model),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 prices(model),
@@ -310,12 +310,12 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                 ),*/
                                 model.productVariants.isNotEmpty
                                     ? availableVariant(model)
-                                    : SizedBox(),
+                                    : const SizedBox(),
                                 model.productVariants.isNotEmpty
                                     ? SizedBox(
                                         height: height * .01,
                                       )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                                 productDescription(model),
                                 SizedBox(
                                   height: height * .01,
@@ -343,7 +343,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                 // similarProductList()
                               ],
                             ) ??
-                            SizedBox();
+                            const SizedBox();
                       } else {
                         return Container(
                           height: height * .8,
@@ -413,15 +413,15 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                                         // fit: BoxFit.fill,
                                                         errorBuilder: ((context,
                                                             error, stackTrace) {
-                                                      return Icon(
+                                                      return const Icon(
                                                           Icons.image_outlined);
                                                     })) ??
-                                                    SizedBox(),
+                                                    const SizedBox(),
                                               ),
                                             ) ??
-                                            SizedBox()),
+                                            const SizedBox()),
                                   ) ??
-                                  SizedBox(),
+                                  const SizedBox(),
                             ),
                           ],
                         );
@@ -438,7 +438,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                       viewportFraction: 1,
                       height: height * .3),
                 ) ??
-                SizedBox(),
+                const SizedBox(),
           ),
 
           // Card(
@@ -522,7 +522,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
       children: [
         ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             itemCount: isMerchantfive == false && merchantTemp.length < 5
                 ? merchantTemp.length
@@ -572,12 +572,12 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                               padding: const EdgeInsets.only(left: 0),
                               child: Text(
                                       merchantTemp[index].merchantName ?? "",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500)) ??
-                                  SizedBox(),
+                                  const SizedBox(),
                             ),
                           ],
                         ),
@@ -591,7 +591,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                             Text(
                                 merchantTemp[index].deliveryDays.toString() +
                                     " Day(s)",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
@@ -608,12 +608,12 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                                 .unitOfferPrice
                                                 .toString()) ??
                                         0.0),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400))
-                                : Text('0.0',
+                                : const Text('0.0',
                                     style: TextStyle(
                                         fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
@@ -653,7 +653,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                         .unitDiscountPerc
                                         .toString() +
                                     "% Off",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
@@ -676,12 +676,12 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                       ],
                     ),
                   ) ??
-                  SizedBox();
+                  const SizedBox();
             }),
         Container(
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
-          decoration: BoxDecoration(),
+          decoration: const BoxDecoration(),
           child: merchantTemp.length > 5 && isMerchantfive == false
               ? InkWell(
                   onTap: () {
@@ -692,7 +692,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                   child: TextFieldUtils().dynamicText(
                       'View more',
                       context,
-                      TextStyle(
+                      const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.tealButtonColor,
                         fontSize: 12,
@@ -716,7 +716,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                   child: TextFieldUtils().dynamicText(
                       'View less',
                       context,
-                      TextStyle(
+                      const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.tealButtonColor,
                         fontSize: 12,
@@ -752,7 +752,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                 .toString()) ??
                         '0.0'),
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: 34,
@@ -763,13 +763,13 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                         double.parse(model.defaultSellPrice.toString()) ??
                             '0.0'),
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: 34,
                         letterSpacing: 0.2,
                         fontWeight: FontWeight.w700)),
-            SizedBox(
+            const SizedBox(
               width: 25,
             ),
             merchantTemp.isNotEmpty
@@ -778,7 +778,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                             merchantTemp[_radioValue].unitMrp.toString()) ??
                         '0.0'),
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         decoration: TextDecoration.lineThrough,
@@ -789,14 +789,14 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                     indianRupeesFormat.format(
                         double.parse(model.defaultMrp.toString()) ?? '0.0'),
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         decoration: TextDecoration.lineThrough,
                         letterSpacing: 0.2,
                         fontSize: 22,
                         fontWeight: FontWeight.w700)),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             merchantTemp.isNotEmpty
@@ -804,7 +804,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                     merchantTemp[_radioValue].unitDiscountPerc.toString() +
                         "% Off",
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: 14,
@@ -813,7 +813,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                 : TextFieldUtils().dynamicText(
                     model.defaultDiscount.toString() + "% Off",
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: 14,
@@ -870,7 +870,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Product Description",
+            const Text("Product Description",
                 style: TextStyle(
                     fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
@@ -880,7 +880,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
               height: height * .01,
             ),
             Text(model.oneliner!,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Roboto',
                   color: ThemeApp.lightFontColor,
                   // fontWeight: FontWeight.w500,
@@ -931,12 +931,12 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                       MediaQuery.of(context).size.height * .05,
                                   width: width * .1,
                                   errorBuilder: ((context, error, stackTrace) {
-                                return Icon(Icons.image_outlined);
+                                return const Icon(Icons.image_outlined);
                               })) ??
-                              SizedBox(),
+                              const SizedBox(),
                         ),
                       ) ??
-                      SizedBox(),
+                      const SizedBox(),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * .01,
@@ -962,13 +962,13 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                       TextFieldUtils().dynamicText(
                           'Quantity : ',
                           context,
-                          TextStyle(
+                          const TextStyle(
                               fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
                               // fontWeight: FontWeight.w500,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
-                      SizedBox(
+                      const SizedBox(
                         width: 11,
                       ),
 
@@ -977,7 +977,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                         // width: width * .2,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(5),
                             ),
                             border: Border.all(
@@ -1007,9 +1007,9 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                     //     context, data);
                                   });
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0, right: 8),
-                                  child: const Icon(Icons.remove,
+                                child: const Padding(
+                                  padding: EdgeInsets.only(left: 8.0, right: 8),
+                                  child: Icon(Icons.remove,
                                       // size: 20,
                                       color: ThemeApp.lightFontColor),
                                 ),
@@ -1017,7 +1017,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                               Container(
                                 height:30,
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.fromLTRB(
+                                padding: const EdgeInsets.fromLTRB(
                                   20,
                                   0,
                                   20,
@@ -1043,9 +1043,9 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
 
                                   });
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0, right: 8),
-                                  child: const Icon(Icons.add,
+                                child: const Padding(
+                                  padding: EdgeInsets.only(left: 8.0, right: 8),
+                                  child: Icon(Icons.add,
                                       // size: 20,
                                       color: ThemeApp.lightFontColor),
                                 ),
@@ -1057,7 +1057,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 addToCart(model),
@@ -1125,14 +1125,14 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                 height:40,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
+                                  borderRadius: const BorderRadius.all(
                                     Radius.circular(100),
                                   ),
                                   border: Border.all(
                                       color: ThemeApp.tealButtonColor),
                                   color: ThemeApp.containerColor,
                                 ),
-                                child: Text(
+                                child: const Text(
                                   "Add to Cart",
                                   style: TextStyle(
                                     fontFamily: 'Roboto',
@@ -1345,14 +1345,14 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                             height:40,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                 Radius.circular(100),
                               ),
                               border: Border.all(
                                   color: ThemeApp.tealButtonColor),
                               color: ThemeApp.tealButtonColor,
                             ),
-                            child: Text(
+                            child: const Text(
                               "Buy now",
                               style: TextStyle(
                                 fontFamily: 'Roboto',
@@ -1462,7 +1462,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                             fit: BoxFit.scaleDown,
                                             errorBuilder:
                                                 ((context, error, stackTrace) {
-                                              return Icon(Icons.image_outlined);
+                                              return const Icon(Icons.image_outlined);
                                             }),
                                           )),
                                         ),
@@ -1536,14 +1536,14 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                   )
                                 ],
                               ) ??
-                              SizedBox();
+                              const SizedBox();
                         })
-                    : SizedBox(),
+                    : const SizedBox(),
               );
             default:
-              return Text("No Data found!");
+              return const Text("No Data found!");
           }
-          return Text("No Data found!");
+          return const Text("No Data found!");
         }));
 
 /*

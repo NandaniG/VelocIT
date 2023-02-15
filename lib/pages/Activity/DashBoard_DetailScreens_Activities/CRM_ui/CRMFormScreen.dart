@@ -40,19 +40,19 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
   double height = 0.0;
   double width = 0.0;
   String serviceName = '';
-  var selectedDate='';
-  var selectedTime='';
+  var selectedDate = '';
+  var selectedTime = '';
   TextEditingController serviceController = new TextEditingController();
   TextEditingController nameController = new TextEditingController();
   TextEditingController mobileNumberController = new TextEditingController();
   TextEditingController email = new TextEditingController();
   TextEditingController timeController = new TextEditingController();
   TextEditingController dateController = new TextEditingController();
-  TextEditingController f1_labelController= new TextEditingController();
-  TextEditingController f2_labelController= new TextEditingController();
-  TextEditingController f3_labelController= new TextEditingController();
-  TextEditingController f4_labelController= new TextEditingController();
-  TextEditingController f5_labelController= new TextEditingController();
+  TextEditingController f1_labelController = new TextEditingController();
+  TextEditingController f2_labelController = new TextEditingController();
+  TextEditingController f3_labelController = new TextEditingController();
+  TextEditingController f4_labelController = new TextEditingController();
+  TextEditingController f5_labelController = new TextEditingController();
 
   bool _validateName = false;
   bool _validateMobile = false;
@@ -81,15 +81,12 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
   void initState() {
     super.initState();
     serviceName = widget.shortName;
-   _bankChoose = bankDataList[0];
+    _bankChoose = bankDataList[0];
     getForm();
     serviceController = new TextEditingController(text: serviceName);
 
-
-
     timeController = new TextEditingController(text: selectedDate);
     dateController = new TextEditingController(text: selectedTime);
-
   }
 
   void _onDropDownItemSelected(BankListDataModel newSelectedBank) {
@@ -112,16 +109,19 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
       f4_label = prefs.getString('f4_label');
       f5_label = prefs.getString('f5_label');
 
-
-      StringConstant.userProfileName = prefs.getString('userProfileNamePrefs')??"";
-      StringConstant.userProfileEmail = prefs.getString('userProfileEmailPrefs')??"";
-      StringConstant.userProfileMobile = prefs.getString('userProfileMobilePrefs')??"";
-      nameController = TextEditingController(text: StringConstant.userProfileName);
-      mobileNumberController = TextEditingController(text: StringConstant.userProfileEmail);
-      email = TextEditingController(text: StringConstant.userProfileMobile);
-
+      StringConstant.userProfileName =
+          prefs.getString('userProfileNamePrefs') ?? "";
+      StringConstant.userProfileEmail =
+          prefs.getString('userProfileEmailPrefs') ?? "";
+      StringConstant.userProfileMobile =
+          prefs.getString('userProfileMobilePrefs') ?? "";
+      nameController =
+          TextEditingController(text: StringConstant.userProfileName);
+      mobileNumberController =
+          TextEditingController(text: StringConstant.userProfileMobile);
+      email = TextEditingController(text: StringConstant.userProfileEmail);
     });
-     StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
+    StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
     StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
     is_f5_enabled = prefs.getBool('is_f5_enabled');
     print(is_f5_enabled);
@@ -137,8 +137,9 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: AppBar_BackWidget(
-            context: context,titleWidget: appTitle(context,"CRM Appointment"), location: SizedBox()),
-
+            context: context,
+            titleWidget: appTitle(context, "CRM Appointment"),
+            location: SizedBox()),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -163,8 +164,8 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-             Text(
-                StringUtils.services,
+                  Text(
+                    StringUtils.services,
                     style: SafeGoogleFont(
                       'Roboto',
                       fontSize: 14,
@@ -249,14 +250,6 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                   SizedBox(
                     height: height * .02,
                   ),
-                  dateAndTimeWidget(),
-                  SizedBox(
-                    height: height * .02,
-                  ),
-                  mobileNumber(),
-                  SizedBox(
-                    height: height * .02,
-                  ),
                   TextFieldUtils()
                       .asteriskTextField(StringUtils.emailAddress, context),
                   EmailTextFormFieldsWidget(
@@ -291,23 +284,34 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                   SizedBox(
                     height: height * .02,
                   ),
-                  ///////dynamic fields
-                  if (is_f1_enabled == true)  Text(
-                    f1_label,
-                    style: SafeGoogleFont(
-                      'Roboto',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: ThemeApp.primaryNavyBlackColor,
-                    ),
+
+                  mobileNumber(),
+
+                  SizedBox(
+                    height: height * .02,
                   ),
+                  dateAndTimeWidget(),
+                  SizedBox(
+                    height: height * .02,
+                  ),
+                  ///////dynamic fields
+                  if (is_f1_enabled == true)
+                    Text(
+                      f1_label,
+                      style: SafeGoogleFont(
+                        'Roboto',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: ThemeApp.primaryNavyBlackColor,
+                      ),
+                    ),
                   if (is_f1_enabled == true)
                     TextFormFieldsWidget(
                         errorText: '',
                         textInputType: TextInputType.name,
                         controller: f1_labelController,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: 'F1 label',
+                        hintText: 'Enter $f1_label',
                         onChange: (val) {
                           // setState(() {
                           //   if (val.isEmpty && timeController.text.isEmpty) {
@@ -326,25 +330,27 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                           // }
                           return null;
                         }),
-                  if (is_f1_enabled == true)   SizedBox(
-                    height: height * .02,
-                  ),
-                  if (is_f2_enabled == true) Text(
-                    f2_label,
-                    style: SafeGoogleFont(
-                      'Roboto',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: ThemeApp.primaryNavyBlackColor,
+                  if (is_f1_enabled == true)
+                    SizedBox(
+                      height: height * .02,
                     ),
-                  ),
+                  if (is_f2_enabled == true)
+                    Text(
+                      f2_label,
+                      style: SafeGoogleFont(
+                        'Roboto',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: ThemeApp.primaryNavyBlackColor,
+                      ),
+                    ),
                   if (is_f2_enabled == true)
                     TextFormFieldsWidget(
                         errorText: '',
                         textInputType: TextInputType.name,
                         controller: f2_labelController,
                         autoValidation: AutovalidateMode.onUserInteraction,
-                        hintText: 'F1 label',
+                        hintText: 'Enter $f2_label',
                         onChange: (val) {
                           // setState(() {
                           //   if (val.isEmpty && timeController.text.isEmpty) {
@@ -363,18 +369,20 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                           // }
                           return null;
                         }),
-                  if (is_f1_enabled == true) SizedBox(
-                    height: height * .02,
-                  ),
-                  if (is_f3_enabled == true)Text(
-                    f3_label,
-                    style: SafeGoogleFont(
-                      'Roboto',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: ThemeApp.primaryNavyBlackColor,
+                  if (is_f1_enabled == true)
+                    SizedBox(
+                      height: height * .02,
                     ),
-                  ),
+                  if (is_f3_enabled == true)
+                    Text(
+                      f3_label,
+                      style: SafeGoogleFont(
+                        'Roboto',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: ThemeApp.primaryNavyBlackColor,
+                      ),
+                    ),
                   if (is_f3_enabled == true)
                     TextFormFieldsWidget(
                         errorText: '',
@@ -400,18 +408,20 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                           // }
                           return null;
                         }),
-                  if (is_f1_enabled == true)  SizedBox(
-                    height: height * .02,
-                  ),
-                  if (is_f4_enabled == true)Text(
-                    f4_label,
-                    style: SafeGoogleFont(
-                      'Roboto',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: ThemeApp.primaryNavyBlackColor,
+                  if (is_f1_enabled == true)
+                    SizedBox(
+                      height: height * .02,
                     ),
-                  ),
+                  if (is_f4_enabled == true)
+                    Text(
+                      f4_label,
+                      style: SafeGoogleFont(
+                        'Roboto',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: ThemeApp.primaryNavyBlackColor,
+                      ),
+                    ),
                   if (is_f4_enabled == true)
                     TextFormFieldsWidget(
                         errorText: '',
@@ -437,18 +447,20 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                           // }
                           return null;
                         }),
-                  if (is_f1_enabled == true)  SizedBox(
-                    height: height * .02,
-                  ),
-                  if (is_f5_enabled == true)Text(
-                    f5_label,
-                    style: SafeGoogleFont(
-                      'Roboto',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: ThemeApp.primaryNavyBlackColor,
+                  if (is_f1_enabled == true)
+                    SizedBox(
+                      height: height * .02,
                     ),
-                  ),
+                  if (is_f5_enabled == true)
+                    Text(
+                      f5_label,
+                      style: SafeGoogleFont(
+                        'Roboto',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: ThemeApp.primaryNavyBlackColor,
+                      ),
+                    ),
                   if (is_f5_enabled == true)
                     TextFormFieldsWidget(
                         errorText: '',
@@ -512,7 +524,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
             validator: (value) {
               if (value.isEmpty && nameController.text.isEmpty) {
                 _validateName = true;
-                return  'Please enter a Name';
+                return 'Please enter a Name';
               } else if (nameController.text.length < 4) {
                 _validateName = true;
                 return 'Please enter a Name';
@@ -541,7 +553,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: 'DD / MM / YYYY',
                   readOnly: true,
-                  onTap: ()=>_selectDate(context),
+                  onTap: () => _selectDate(context),
                   onChange: (val) {
                     setState(() {
                       if (val.isEmpty && dateController.text.isEmpty) {
@@ -565,7 +577,9 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
             ],
           ),
         ),
-        SizedBox(width: 10,),
+        SizedBox(
+          width: 10,
+        ),
         Expanded(
           flex: 1,
           child: Column(
@@ -579,7 +593,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                   autoValidation: AutovalidateMode.onUserInteraction,
                   hintText: '00:00 AM/PM',
                   readOnly: true,
-                  onTap: ()=>_selectTime(context),
+                  onTap: () => _selectTime(context),
                   onChange: (val) {
                     setState(() {
                       if (val.isEmpty && timeController.text.isEmpty) {
@@ -612,7 +626,8 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
         TextFieldUtils().asteriskTextField(StringUtils.mobileNumber, context),
         MobileNumberTextFormField(
             controller: mobileNumberController,
-            enable: true,errorText: 'Please enter a valid mobile.',
+            enable: true,
+            errorText: 'Please enter a valid mobile.',
             onChanged: (phone) {
               print(phone.completeNumber);
               if (phone.countryCode == "IN") {
@@ -622,7 +637,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                 print("india not selected");
               }
               setState(() {
-                if (phone=='' && mobileNumberController.text.isEmpty) {
+                if (phone == '' && mobileNumberController.text.isEmpty) {
                   _validateMobile = true;
                 } else {
                   _validateMobile = false;
@@ -630,7 +645,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
               });
             },
             validator: (value) {
-              if (value==''&& mobileNumberController.text.isEmpty) {
+              if (value == '' && mobileNumberController.text.isEmpty) {
                 _validateMobile = true;
                 return StringUtils.enterMobileNumber;
               } else if (mobileNumberController.text.length < 10) {
@@ -657,7 +672,8 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
         StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
         String result = DateTime.now().toUtc().toString().replaceAll(" ", "T");
         print("Current Date Time " + result.toString());
-        String tempDate = pickedDateForPass.toUtc().toString().replaceAll(" ", "T");
+        String tempDate =
+            pickedDateForPass.toUtc().toString().replaceAll(" ", "T");
         // String tempTime = pickedTimeForPass.toString().replaceAll(" ", "T");
 
         print(tempDate);
@@ -667,11 +683,11 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
           "appoint_time": result,
           "crm_form_id": widget.payload.crmFormId.toString(),
           "email": email.text,
-          "f1_value": f1_labelController.text??"",
-          "f2_value": f1_labelController.text??"",
-          "f3_value": f3_labelController.text??"",
-          "f4_value": f4_labelController.text??"",
-          "f5_value": f5_labelController.text??"",
+          "f1_value": f1_labelController.text ?? "",
+          "f2_value": f1_labelController.text ?? "",
+          "f3_value": f3_labelController.text ?? "",
+          "f4_value": f4_labelController.text ?? "",
+          "f5_value": f5_labelController.text ?? "",
           "mobile": mobileNumberController.text,
           "name": nameController.text,
           "note": "Be ready!",
@@ -692,7 +708,7 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
                       Navigator.pop(context);
                     });
               });*/
-      }else{
+      } else {
         // if(mobileNumberController.text.isEmpty||mobileNumberController.text.length<10){
         //
         //   _validateMobile = true;
@@ -700,8 +716,10 @@ class _CRMFormScreenState extends State<CRMFormScreen> {
       }
     });
   }
+
   DateTime currentDate = DateTime.now();
-var pickedDateForPass;
+  var pickedDateForPass;
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
         context: context,
@@ -713,15 +731,15 @@ var pickedDateForPass;
     String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate!);
     if (pickedDate != null && pickedDate != currentDate)
       setState(() {
-
-          dateController.text = formattedDate;
-
+        dateController.text = formattedDate;
       });
   }
+
   var pickedTimeForPass;
+
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? result =
-    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
     if (result != null) {
       setState(() {
         pickedTimeForPass = result;
@@ -729,6 +747,7 @@ var pickedDateForPass;
       });
     }
   }
+
   Future apiRequest(Map jsonMap) async {
     var url = ApiMapping.getURI(apiEndPoint.crm_form_data);
     print("CRM form " + url.toString());
