@@ -59,12 +59,12 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
 
     return WillPopScope(
       onWillPop: () {
-        // showDialog(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return NavBackConfirmationFromPayment();
-        //     });
-        return Future.value(false);
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return NavBackConfirmationFromPayment();
+            });
+        return Future.value(true);
       },
       child: Scaffold(
         backgroundColor: ThemeApp.appBackgroundColor,
@@ -72,26 +72,25 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
         appBar: AppBar(automaticallyImplyLeading: false,
           backgroundColor: ThemeApp.appBackgroundColor,
           elevation: 0,
-//           leading: InkWell(
-//             onTap: () {
-//               // showDialog(
-//               //     context: context,
-//               //     builder: (BuildContext context) {
-//               //       return NavBackConfirmationFromPayment();
-//               //     });
-//               Future.value(false);
-// // Navigator.of(context).pop(false);
-//               // Provider.of<ProductProvider>(context, listen: false);
-//             },
-//             child: Transform.scale(
-//               scale: 0.7,
-//               child: Image.asset(
-//                 'assets/appImages/backArrow.png',
-//                 color: ThemeApp.primaryNavyBlackColor,
-//                 // height: height*.001,
-//               ),
-//             ),
-//           ),
+          leading: InkWell(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return NavBackConfirmationFromPayment();
+                  });
+
+              // Provider.of<ProductProvider>(context, listen: false);
+            },
+            child: Transform.scale(
+              scale: 0.7,
+              child: Image.asset(
+                'assets/appImages/backArrow.png',
+                color: ThemeApp.primaryNavyBlackColor,
+                // height: height*.001,
+              ),
+            ),
+          ),
           title: TextFieldUtils().dynamicText(
               'Order Checkout',
               context,
@@ -337,7 +336,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
         ),
         proceedButton(
             "View my orders", ThemeApp.tealButtonColor, context, false, () {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => MyOrdersActivity(),
             ),

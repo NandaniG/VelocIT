@@ -67,7 +67,7 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
               children: [
                 Flexible(
                     child: TextFieldUtils().dynamicText(
-                        'Upload image by choosing...',
+                        'Upload image by choosing',
                         context,
                         TextStyle(fontSize: 20))),
                 SizedBox(
