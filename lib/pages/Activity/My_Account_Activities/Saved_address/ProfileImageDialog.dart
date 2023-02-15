@@ -110,6 +110,7 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                 proceedButton(
                     'Gallery', ThemeApp.tealButtonColor, context, false,
                     () async {
+                      final prefs = await SharedPreferences.getInstance();
 
                   FilePickerResult? pickedFile =
                       await FilePicker.platform.pickFiles();
@@ -117,6 +118,7 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                     String? filePath = pickedFile.files.single.path;
                     if (filePath != null) {
                       final file = File(filePath);
+                      await prefs.setString('profileImagePrefs', filePath);
 
                       widget.imageFile1 = file;
                       if(widget.isEditAccount ==true) {

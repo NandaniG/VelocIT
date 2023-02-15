@@ -31,7 +31,10 @@ import 'package:velocit/utils/StringUtils.dart';
 class EditAccountActivity extends StatefulWidget {
   // final Payload? payload;
 
-  EditAccountActivity({Key? key, /*this.payload*/}) : super(key: key);
+  EditAccountActivity({
+    Key? key,
+    /*this.payload*/
+  }) : super(key: key);
 
   @override
   State<EditAccountActivity> createState() => _EditAccountActivityState();
@@ -57,11 +60,10 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
     // TODO: implement initState
 
     getPrefValue();
-
-
+    getUserData();
     super.initState();
   }
-var userName,MobileNumber,Email;
+
   getPrefValue() async {
     final prefs = await SharedPreferences.getInstance();
     bool check = prefs.containsKey('profileImagePrefs');
@@ -69,22 +71,28 @@ var userName,MobileNumber,Email;
       setState(() {
         print("yes/./././.");
         StringConstant.ProfilePhoto = prefs.getString('profileImagePrefs')!;
-
-        userName=  prefs.getString('userProfileNamePrefs');
-        MobileNumber=  prefs.getString('userProfileEmailPrefs');
-        Email= prefs.getString('userProfileMobilePrefs');
-
-        userNameController =
-        new TextEditingController(text: userName?? "");
-        mobileController =
-        new TextEditingController(text: MobileNumber ?? "");
-        emailController =
-        new TextEditingController(text: Email?? "");
       });
       return;
     }
   }
+getUserData()async{
+  final prefs = await SharedPreferences.getInstance();
 
+  setState(() {
+    StringConstant.userProfileName =
+        prefs.getString('userProfileNamePrefs') ?? "";
+    StringConstant.userProfileEmail =
+        prefs.getString('userProfileEmailPrefs') ?? "";
+    StringConstant.userProfileMobile =
+        prefs.getString('userProfileMobilePrefs') ?? "";
+    userNameController =
+        TextEditingController(text: StringConstant.userProfileName);
+    mobileController =
+        TextEditingController(text: StringConstant.userProfileMobile);
+    emailController =
+        TextEditingController(text: StringConstant.userProfileEmail);
+  });
+}
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;

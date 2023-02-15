@@ -8,11 +8,13 @@ import '../../../../services/providers/Products_provider.dart';
 import '../../../../utils/StringUtils.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/routes/routes.dart';
+import '../../../../widgets/global/ConfirmationDialog.dart';
 import '../../../../widgets/global/appBar.dart';
 
 import '../../../../widgets/global/textFormFields.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../DashBoard_DetailScreens_Activities/CRM_ui/CRMFormScreen.dart';
 import '../../Product_Activities/Products_List.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -231,12 +233,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   InkWell(
 
                         onTap: (){
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>  ProductListByCategoryActivity(productList: value
-                                  .jsonData["shopByCategoryList"][index]["subShopByCategoryList"][index]),
-                            ),
-                          );
+
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>  ProductListByCategoryActivity(productList: value
+                          //         .jsonData["shopByCategoryList"][index]["subShopByCategoryList"][index]),
+                          //   ),
+                          // );
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 10),

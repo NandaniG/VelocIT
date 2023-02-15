@@ -2682,11 +2682,9 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
               const SizedBox(
                 height: 8,
               ),
-              Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: _titleViews(context),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: _titleViews(context),
               ),
             ],
           )),
@@ -2745,14 +2743,14 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
 
     return list;
   }
-
+//
   List<Widget> _titleViews(BuildContext context) {
     var list = <Widget>[];
     titles.asMap().forEach((i, text) {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
             ? SizedBox(
-                width: 61,
+                // width: 61,
                 child: TextFieldUtils().dynamicText(
                     text,
                     context,
@@ -2762,8 +2760,9 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                         fontSize: 12,
                         fontWeight: FontWeight.w400)),
               )
-            : SizedBox(
-                width: 61,
+            : Container(
+          // color: ThemeApp.whiteColor,
+                // width: 61,
                 child: TextFieldUtils().dynamicText(
                     text,
                     context,
