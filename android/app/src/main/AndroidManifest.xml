@@ -24,7 +24,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="velocit">
+        android:label="velociTt">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -42,7 +42,7 @@
                 android:resource="@style/NormalTheme" />
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
-                android:value="velocit" />
+                android:value="velociTt" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

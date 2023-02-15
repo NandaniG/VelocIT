@@ -365,7 +365,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                 data,
                                                 cartForPaymentPayload
                                                     .orderBasketId!);
-                                            Navigator.of(context).push(
+                                            Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     Payment_Creditcard_debitcardScreen(
@@ -380,7 +380,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                       data,
                                                       cartForPaymentPayload
                                                           .orderBasketId!);
-                                              Navigator.of(context).push(
+                                              Navigator.of(context).pushReplacement(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       Payment_Creditcard_debitcardScreen(
