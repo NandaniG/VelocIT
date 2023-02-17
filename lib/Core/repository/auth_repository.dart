@@ -145,19 +145,21 @@ class AuthRepository {
     StringConstant.prettyPrintJson(
         responseJson.toString(), 'Login Using Mobile OTP Response:');
     if (jsonData['status'].toString() == 'OK') {
-      prefs.setString(
-          StringConstant.setOtp, jsonData['payload']['otp'].toString());
-      String mobile = jsonMap['mobile'].toString();
+          prefs.setString(
+              StringConstant.setOtp, jsonData['payload']['otp'].toString());
+          prefs.setString('userIdFromOtp',jsonData['payload']['user_id'].toString());
+      prefs.setString('userNameFromOtp',jsonData['payload']['username'].toString());
+      String mobile = jsonMap['email'].toString();
       Utils.successToast(jsonData['payload']['otp'].toString());
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => OTPScreen(
-                mobileNumber: mobile.toString(),
-                OTP: jsonData['payload']['otp'].toString(),
-                Uname: jsonData['payload']['username'].toString(),
-                UID: jsonData['payload']['user_id'].toString(),
-                isForgotPass: isForgotPass,
-              )));
+      // Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //     builder: (context) => OTPScreen(
+      //           mobileNumber: mobile.toString(),
+      //           OTP: jsonData['payload']['otp'].toString(),
+      //           Uname: jsonData['payload']['username'].toString(),
+      //           UID: jsonData['payload']['user_id'].toString(),
+      //           isForgotPass: isForgotPass,
+      //         )));
     } else {
       Utils.errorToast("Please enter valid details.");
 
@@ -193,16 +195,18 @@ class AuthRepository {
     if (jsonData['status'].toString() == 'OK') {
       prefs.setString(
           StringConstant.setOtp, jsonData['payload']['otp'].toString());
+      prefs.setString('userIdFromOtp',jsonData['payload']['user_id'].toString());
+      prefs.setString('userNameFromOtp',jsonData['payload']['username'].toString());
       String mobile = jsonMap['email'].toString();
       Utils.successToast(jsonData['payload']['otp'].toString());
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => OTPScreen(
-                mobileNumber: mobile.toString(),
-                OTP: jsonData['payload']['otp'].toString(),
-                Uname: jsonData['payload']['username'].toString(),
-                UID: jsonData['payload']['user_id'].toString(),
-                isForgotPass: isForgotPass,
-              )));
+      // Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //     builder: (context) => OTPScreen(
+      //           mobileNumber: mobile.toString(),
+      //           OTP: jsonData['payload']['otp'].toString(),
+      //           Uname: jsonData['payload']['username'].toString(),
+      //           UID: jsonData['payload']['user_id'].toString(),
+      //           isForgotPass: isForgotPass,
+      //         )));
     } else {
       Utils.errorToast("Please enter valid details.");
 
@@ -372,10 +376,10 @@ class AuthRepository {
     if (jsonData['status'].toString() == 'OK') {
       String mobile = jsonMap['cred'].toString();
 
-      String result =jsonData['payload'].toString().replaceAll("'", "");
-      String result1 =result.toString().replaceAll("{", "");
-      String result2 =result1.toString().replaceAll("}", "");
-      String OTP =result2.toString().replaceAll("newOtp:", "");
+      String result = jsonData['payload'].toString().replaceAll("'", "");
+      String result1 = result.toString().replaceAll("{", "");
+      String result2 = result1.toString().replaceAll("}", "");
+      String OTP = result2.toString().replaceAll("newOtp:", "");
       print(mobile);
       print(OTP);
       // var jsonOtp = json.decode(result3);
@@ -383,9 +387,9 @@ class AuthRepository {
       Utils.successToast(OTP.toString());
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => ForgotPassOTP(
-            mobileNumber: mobile.toString(),
-            OTP: OTP.toString(),
-          )));
+                mobileNumber: mobile.toString(),
+                OTP: OTP.toString(),
+              )));
     } else {
       Utils.errorToast("Please enter valid details.");
       httpClient.close();
@@ -394,7 +398,8 @@ class AuthRepository {
   }
 
 //Reset Password
-  Future resetPassRequest(Map jsonMap,bool isFromForgotPass, BuildContext context) async {
+  Future resetPassRequest(
+      Map jsonMap, bool isFromForgotPass, BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     dynamic responseJson;
     var url = ApiMapping.BaseAPI + ApiMapping.resetPassword;
@@ -411,24 +416,19 @@ class AuthRepository {
 
     var jsonData = json.decode(responseJson);
 
-
     if (jsonData['status'].toString() == 'OK') {
-
       StringConstant.prettyPrintJson(
           responseJson.toString(), 'Reset Password Response:');
-      if(isFromForgotPass==true){
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => SignIn_Screen(
-
-            )));
-      }else{
+      if (isFromForgotPass == true) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => SignIn_Screen()));
+      } else {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  DashboardScreen(),
+              builder: (context) => DashboardScreen(),
             ),
-                (route) => false);
+            (route) => false);
       }
     } else {
       Utils.errorToast("Please enter valid details.");
@@ -442,14 +442,13 @@ class AuthRepository {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
     final prefs = await SharedPreferences.getInstance();
 
-      print("userId ID" + userId.toString());
-      print("userId ID" + data.toString());
+    print("userId ID" + userId.toString());
+    print("userId ID" + data.toString());
 
     var url = '/user/$userId/changeimage';
 
     var requestUrl = ApiMapping.BaseAPI + url;
-      print(requestUrl.toString());
-
+    print(requestUrl.toString());
 
     String body = json.encode(data);
     print("updateProfileImageApi jsonMap" + body.toString());
@@ -470,5 +469,4 @@ class AuthRepository {
       throw e;
     }
   }
-
 }

@@ -849,15 +849,16 @@ class _ForgotPassOTPState extends State<ForgotPassOTP> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (_start != 0) {
+    /*    if (_start != 0) {
           return Future.value(false);
         } else {
-          Navigator.of(context).pushNamed(RoutesName.signInRoute).then((value) {
-            setState(() {});
-          });
-          return Future.value(true);
-        }
-      },
+
+        }*/
+
+        Navigator.of(context).pushNamed(RoutesName.signInRoute).then((value) {
+          setState(() {});
+        });
+        return Future.value(true);},
       child: Scaffold(
           backgroundColor: ThemeApp.appBackgroundColor,
           appBar: PreferredSize(
@@ -884,9 +885,9 @@ class _ForgotPassOTPState extends State<ForgotPassOTP> {
                   ),
                 ),
                 titleSpacing: 0,
-                leading: _start != 0
+                leading:/* _start != 0
                     ? SizedBox()
-                    : InkWell(
+                    :*/ InkWell(
                         onTap: () {
                           Navigator.of(context)
                               .pushNamed(RoutesName.signInRoute)

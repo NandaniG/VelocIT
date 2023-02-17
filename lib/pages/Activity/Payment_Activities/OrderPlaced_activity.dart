@@ -216,13 +216,13 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
   List<Widget> _iconViews() {
     var list = <Widget>[];
     titles.asMap().forEach((i, icon) {
-      var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
+      var circleColor = (i == 0 || i == 1 || i == 2||_curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var lineColor = (i == 0 || i == 1 || _curStep > i + 1)
+      var lineColor = (i == 0 || i == 1 || i == 2|| _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
+      var iconColor = (i == 0 || i == 1 ||  i == 2||i==3)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
 
@@ -239,7 +239,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
           //     color: circleColor,
           //     width: 2.0,
           //   ),),
-          child: (i == 0 || _curStep > i + 1)
+          child: (i == 0 || i == 1 ||  i == 2||i==3|| _curStep > i + 1)
               ? Icon(
                   Icons.circle,
                   color: iconColor,

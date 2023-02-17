@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/pages/auth/Sign_Up.dart';
@@ -34,12 +36,56 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
   // int? _radioIndex = 2;
   // String _radioVal = "";
   bool isOtp = false;
+  bool isSwitch = false;
+
   FocusNode focusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   bool _validateEmail = false;
   bool _validateMobile = false;
   bool _validatePassword = false;
   final GlobalKey<TooltipState> tooltipkey = GlobalKey<TooltipState>();
+
+  /// otp fields
+  TextEditingController otpController = TextEditingController(text: "");
+  var OTP;
+  bool hasError = false;
+  String currentText = "";
+  String otpMsg = "";
+
+  late Timer _timer;
+  int _start = 90;
+  bool isLoading = false;
+
+  String formatHHMMSS(int seconds) {
+    // int hours = (seconds / 3600).truncate();
+    seconds = (seconds % 3600).truncate();
+    int minutes = (seconds / 60).truncate();
+
+    // String hoursStr = (hours).toString().padLeft(2, '0');
+    String minutesStr = (minutes).toString().padLeft(2, '0');
+    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+
+    return "$minutesStr:$secondsStr";
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -58,6 +104,17 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
     email.dispose();
     // emailUsingOtpController.dispose();
     password.dispose();
+  }
+
+  var isOtpValues;
+  var userId, userName;
+
+  getPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    isOtpValues = (prefs.getString(StringConstant.setOtp)) ?? '';
+    userId = (prefs.getString('userIdFromOtp')) ?? '';
+    userName = (prefs.getString('userNameFromOtp')) ?? '';
   }
 
   @override
@@ -452,7 +509,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 margin: const EdgeInsets.only(
                                     top: 30, left: 30, right: 30),
                                 triggerMode: TooltipTriggerMode.tap,
-                                showDuration: const Duration(seconds: 2),
+                                showDuration: const Duration(minutes: 3),
                                 decoration: BoxDecoration(
                                     color: ThemeApp.appColor,
                                     borderRadius: BorderRadius.circular(22)),
@@ -514,53 +571,329 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                             height: 0,
                           ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .008,
+                      height: MediaQuery.of(context).size.height * .02,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 20,
-                              child: Checkbox(
-                                value: isOtp,
-                                onChanged: (values) {
-                                  setState(() {
-                                    isOtp = values!;
-                                  });
-                                },
+
+                    isOtp == true
+                        ? TextFieldUtils()
+                            .asteriskTextField(StringUtils.otp, context)
+                        : SizedBox(),
+                    isOtp == true
+                        ? SizedBox(
+                            height: 10,
+                          )
+                        : SizedBox(),
+                    isOtp == true
+                        ? FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: PinCodeTextField(
+                              autofocus: false,
+                              controller: otpController,
+                              hideCharacter: true,
+                              highlight: false,
+                              defaultBorderColor: ThemeApp.whiteColor,
+                              hasTextBorderColor: otpController.text.length <= 5
+                                  ? Colors.red
+                                  : ThemeApp.innertextfieldbordercolor,
+
+                              // highlightPinBoxColor: Colors.orange,
+                              maxLength: 6,
+                              hasError: hasError,
+                              focusNode: focusNode,
+                              onTextChanged: (value) {
+                                setState(() {
+                                  if (value.length <= 5) {
+                                    otpMsg = StringUtils.verificationError;
+                                  } else {
+                                    otpMsg = '';
+                                  }
+                                  currentText = value;
+                                });
+                              },
+                              onDone: (text) {
+                                print("OTP :  $text");
+                                print("OTP CONTROLLER ${otpController.text}");
+                              },
+                              // pinBoxWidth: 40,
+                              // pinBoxHeight: 60,
+                              hasUnderline: false,
+                              wrapAlignment: WrapAlignment.spaceBetween,
+                              pinBoxDecoration: ProvidedPinBoxDecoration
+                                  .defaultPinBoxDecoration,
+                              pinTextStyle: TextStyle(
+                                  fontFamily: 'Roboto', fontSize: 22.0),
+                              pinTextAnimatedSwitcherTransition:
+                                  ProvidedPinBoxTextAnimation.scalingTransition,
+                              pinBoxRadius: 10,
+//                    pinBoxColor: Colors.green[100],
+                              pinTextAnimatedSwitcherDuration:
+                                  Duration(milliseconds: 300),
+//                    highlightAnimation: true,
+                              highlightAnimationBeginColor: Colors.black,
+                              highlightAnimationEndColor: Colors.white,
+                              keyboardType: TextInputType.number,
+                            ),
+                          )
+                        : SizedBox(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .01,
+                    ),
+                    !currentText.isEmpty
+                        ? TextFieldUtils().errorTextFields(otpMsg, context)
+                        : Container(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .01,
+                    ),
+                    isOtp == true
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              _start != 0
+                                  ? Center(
+                                      child: Text(
+                                        formatHHMMSS(_start),
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color:
+                                                ThemeApp.primaryNavyBlackColor,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14),
+                                      ),
+                                    )
+                                  : InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          Map emaildata = {
+                                            'email': email.text,
+                                          };
+                                          Map mobileData = {
+                                            'mobile': email.text,
+                                          };
+                                          if (StringConstant()
+                                              .isNumeric(email.text)) {
+                                            print(mobileData);
+
+                                            AuthRepository()
+                                                .postApiForMobileOTPRequest(
+                                                    mobileData, false, context)
+                                                .then((value) {
+                                              _start = 90;
+                                              isLoading = true;
+
+                                              otpController.clear();
+                                              startTimer();
+                                            });
+
+                                            print("Digit found");
+                                          } else {
+                                            print(emaildata);
+
+                                            AuthRepository()
+                                                .postApiForEmailOTPRequest(
+                                                    emaildata, false, context)
+                                                .then((value) {
+                                              _start = 90;
+                                              isLoading = true;
+
+                                              otpController.clear();
+                                              startTimer();
+                                            });
+                                            // Navigator.of(context).push(
+                                            //     MaterialPageRoute(builder: (context) => OTPScreen(mobileNumber:    mobileController.text))).then((value) => setState((){}));
+
+                                            print("Digit not found");
+                                            // email.clear();
+                                            // mobileController.clear();
+                                            // password.clear();
+                                          }
+                                        });
+                                      },
+                                      child: Text(
+                                        StringUtils.resendOTP,
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: ThemeApp.tealButtonColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                    ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.02,
                               ),
-                            ),
-                            SizedBox(
-                              width: 7,
-                            ),
-                            Text("Request OTP",
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.ellipsis,
-                                ))
-                          ],
-                        ),
-                        Container(
-                          alignment: Alignment.centerRight,
+                              /*      _start == 0? Center(
                           child: InkWell(
                             onTap: () {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ForgotPassword()),
-                              );
+                              setState(() {
+                                _start = 120;
+                                isLoading = true;
+                                startTimer();
+                              });
                             },
-                            child: TextFieldUtils().hyperLinkTextFields(
-                                StringUtils.forgotPassword, context),
+                            child: Text(
+                              'Re-generate OTP',
+                              style: TextStyle(fontFamily: 'Roboto',
+                                  color: ThemeApp.tealButtonColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize:
+                                  MediaQuery.of(context).size.height * .021),
+                            ),
+                          )): */
+
+                              /*     Center(
+                          child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _start = 120;
+                            isLoading = true;
+                            startTimer();
+
+                            Map emaildata = {
+                              'email': widget.mobileNumber,
+                            };
+                            Map mobileData = {
+                              'mobile': widget.mobileNumber,
+                            };
+                            if (StringConstant()
+                                .isNumeric(widget.mobileNumber)) {
+                              print(mobileData);
+
+                              AuthRepository()
+                                  .postApiForMobileOTPRequest(
+                                      mobileData, context)
+                                  .then((value) => setState(() {}));
+
+                              print("Digit found");
+                            } else {
+                              print(emaildata);
+
+                              AuthRepository()
+                                  .postApiForEmailOTPRequest(emaildata, context)
+                                  .then((value) => setState(() {}));
+                              // Navigator.of(context).push(
+                              //     MaterialPageRoute(builder: (context) => OTPScreen(mobileNumber:    mobileController.text))).then((value) => setState((){}));
+
+                              print("Digit not found");
+                              // email.clear();
+                              // mobileController.clear();
+                              // password.clear();
+                            }
+                          });
+                        },
+                        child: Text(
+                          StringUtils.resendOTP,
+                          style: TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.tealButtonColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                        ),
+                      )),*/
+                            ],
+                          )
+                        : SizedBox(),
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Request Password",
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                        SizedBox(
+                          width: 7,
+                        ),
+                        Transform.scale(
+                          scale: 1.1,
+                          child: Switch(
+                            // This bool value toggles the switch.
+                            value: isOtp,
+                            activeColor: ThemeApp.whiteColor,
+                            activeTrackColor: ThemeApp.appLightColor,
+                            inactiveTrackColor: ThemeApp.appLightColor,
+                            inactiveThumbColor: ThemeApp.whiteColor,
+                            onChanged: (bool val) {
+                              // This is called when the user toggles the switch.
+                              setState(() {
+                                print("Switch value " + isOtp.toString());
+                                if (isOtp == false) {
+                                  if (email.text.isNotEmpty) {
+                                    isOtp = val;
+                                    print(email.text);
+                                    sendOTPCallback();
+                                    startTimer();
+
+                                  } else {
+                                    Utils.errorToast(
+                                        "Please enter email or mobile");
+                                  }
+                                } else {
+                                  isOtp = val;
+                                  setState(() {
+                                   _start=90;
+
+                                  });
+                                }
+
+                                // if (isOtp == true) {
+                                //   print("isOtp == true " + isOtp.toString());
+                                // }
+                              });
+
+                              /*  if (isOtp == true) {
+                                // isOtp = !isOtp;
+                                print("isOtp == true" + isOtp.toString());
+                              } else {
+                                print(
+                                    "Switch value in else" + isOtp.toString());
+
+                                setState(() {
+                                  isOtp = val;
+                                });
+                                // Utils.errorToast(
+                                //     "Please enter email or mobile");
+                              }
+
+                              if (email.text.isNotEmpty) {
+                                isOtp = true;
+                                print(email.text);
+                                // sendOTPCallback();
+                              }*/
+                            },
                           ),
-                        )
+                        ),
+                        SizedBox(
+                          width: 7,
+                        ),
+                        Text("Request OTP",
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.blackColor,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              overflow: TextOverflow.ellipsis,
+                            ))
                       ],
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => const ForgotPassword()),
+                          );
+                        },
+                        child: TextFieldUtils().hyperLinkTextFields(
+                            StringUtils.forgotPassword, context),
+                      ),
                     ),
 
                     /* isOtp == false
@@ -627,7 +960,37 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                   "Please enter valid username or password");
                             }
                           })
-                        : proceedButton(StringUtils.sendOtp,
+                        : proceedButton(StringUtils.verifyOTP,
+                            ThemeApp.tealButtonColor, context, false, () async {
+                            // Navigator.of(context).pushReplacement(
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         DashboardScreen(),
+                            //   ),
+                            // );
+                            if (otpController.text.length >= 6) {
+                              StringConstant.isLogIn = true;
+
+                              Map passOtpData = {
+                                'username': userName,
+                                'otp': otpController.text,
+                                'user_id': userId,
+                              };
+                              AuthRepository().postApiForValidateOTP(
+                                  passOtpData, false, context);
+                              // if (authViewModel.getOTP == controller.text) {
+                              //   Map data = {'username': 'testuser@test.com'};
+                              //   authViewModel.loginApiWithPost(data, context);
+                              //   Utils.successToast("OTP is Correct!");
+                              //
+                              // } else {
+                              //   Utils.errorToast("Please enter valid OTP");
+                              // }
+                            } else {
+                              Utils.errorToast("Please enter 6 digit OTP");
+                            }
+                          }),
+                    /*     proceedButton(StringUtils.sendOtp,
                             ThemeApp.tealButtonColor, context, false, () {
                             if (_formKey.currentState!.validate() &&
                                 email.text.isNotEmpty) {
@@ -665,7 +1028,8 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                               Utils.errorToast(
                                   "Please enter valid mobile number");
                             }
-                          })
+                          }),*/
+/////////////////////
                     /*   proceedButton(
                         _radioIndex == 1
                             ? StringUtils.signin
@@ -834,5 +1198,43 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
         ),
       ),
     );
+  }
+
+  toggle() {}
+
+  sendOTPCallback() {
+    print("Insight API CALL");
+    Map emaildata = {
+      'email': email.text,
+    };
+    Map mobileData = {
+      'mobile': email.text,
+    };
+    if (StringConstant().isNumeric(email.text)) {
+      print(mobileData);
+
+      AuthRepository()
+          .postApiForMobileOTPRequest(mobileData, false, context)
+          .then((value) => setState(() {
+                getPref();
+              }));
+
+      print("Digit found");
+    } else {
+      print(emaildata);
+
+      AuthRepository()
+          .postApiForEmailOTPRequest(emaildata, false, context)
+          .then((value) => setState(() {
+                getPref();
+              }));
+      // Navigator.of(context).push(
+      //     MaterialPageRoute(builder: (context) => OTPScreen(mobileNumber:    mobileController.text))).then((value) => setState((){}));
+
+      print("Digit not found");
+      // email.clear();
+      // mobileController.clear();
+      // password.clear();
+    }
   }
 }

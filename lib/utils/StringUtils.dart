@@ -29,6 +29,7 @@ class StringUtils {
   static String validConfirmPasswordError = "Please enter a valid confirm password.";
   static String forgotPassword = "Forgot Password?";
   static String sendOtp = "Send OTP";
+  static String otp = "OTP";
   static String verification = "Verification";
   // static String verificationSubHeading = "We have sent the OTP verification to your Mobile Number";
   static String verificationSubHeading = "We've sent you an OTP, Please enter the OTP here to complete the verification";
@@ -124,7 +125,7 @@ class StringUtils {
   static String other = "Other";
   static String addDeliveryAddress = "Add Delivery Address";
   static String update = "Update";
-  static String otpSentTo = "OTP Sent to";
+  static String otpSentTo = "OTP Sent to your registered email or mobile number.";
   static String resend = "Resend";
   static String cancel = "Cancel";
   static String deliveryDetails = "Delivery Details";

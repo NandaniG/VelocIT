@@ -1450,7 +1450,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   fontFamily: 'Roboto',
                   color: ThemeApp.primaryNavyBlackColor,
                   fontSize: 20,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w700,
                 )),
             // SizedBox(
             //   height: 10,

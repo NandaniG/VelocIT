@@ -157,16 +157,8 @@ class _CRMActivityState extends State<CRMActivity> {
                                             SizedBox(
                                               height: height * .02,
                                             ),
-                                            TextFieldUtils().dynamicText(
-                                                'CRM',
-                                                context,
-                                                TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color: ThemeApp
-                                                      .primaryNavyBlackColor,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: height * .03,
-                                                )),
+                                            TextFieldUtils()
+                                                .headingTextField('Engage with us', context),
 
                                             SizedBox(
                                               height: height * .02,

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/utils/StringUtils.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
@@ -23,6 +26,7 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
+  File? imageFile;
 
   @override
   Widget build(BuildContext context) {
@@ -340,6 +344,7 @@ class _CustomerSupportActivityState extends State<CustomerSupportActivity> {
           ),
         )));
   }
+
 }
 
 class ReportAnIssue extends StatefulWidget {
@@ -510,13 +515,68 @@ class _ReportAnIssueState extends State<ReportAnIssue> {
                       ),
                       Row(
                         children: [
-                          Container(
-                              width: 100,
-                              child: Icon(
-                                Icons.image_outlined,
-                                size: 80,
-                                color: ThemeApp.lightFontColor,
-                              )),
+                          // Container(
+                          //     width: 100,
+                          //     child: Icon(
+                          //       Icons.image_outlined,
+                          //       size: 80,
+                          //       color: ThemeApp.lightFontColor,
+                          //     )),
+
+                          imageFile == null
+                              ? InkWell(
+                            onTap: () {
+                              _getFromCamera();
+                            },
+                            child: Container(  width: 50,
+                                height: 60,
+                                // width: width,
+                                alignment:
+                                Alignment.center,
+                                child: Container(
+                                    width: 50,
+                                    child: Icon(
+                                      Icons.image_outlined,
+                                      size: 80,
+                                      color: ThemeApp.lightFontColor,
+                                    ))),
+                          )
+                              : Stack(
+                            children: [
+                              Container(
+                                height:60,
+                                width: 60,
+                                // width: width,
+                                child: Image.file(
+                                  imageFile!,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      imageFile = null;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding:
+                                    const EdgeInsets
+                                        .all(0),
+                                    child: Container(
+                                      alignment: Alignment
+                                          .topLeft,
+                                      width: 50,
+
+                                      child: const Icon(
+                                        Icons.cancel,
+                                        color: ThemeApp
+                                            .whiteColor,
+                                      ),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                          SizedBox(width: 20,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -547,6 +607,8 @@ class _ReportAnIssueState extends State<ReportAnIssue> {
                             ],
                           )
                         ],
+                      ),SizedBox(
+                        height: 8,
                       ),
                     ]),
               ),
@@ -561,7 +623,21 @@ class _ReportAnIssueState extends State<ReportAnIssue> {
       ),
     );
   }
+  File? imageFile;
 
+  /// Get from camera
+  _getFromCamera() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
   List<ReasonListDataModel> changeDataList = [
     ReasonListDataModel("AC repair"),
     ReasonListDataModel("Sofa cleaning"),

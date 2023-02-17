@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -420,140 +422,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                   ),
                                                 ],
                                               ),
-                                        /*        Center(
-                                      child: Container(
-                                        width: 100.0,
-                                        height: 100.0,
-                                        decoration: new BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: ThemeApp.appBackgroundColor,
-                                                spreadRadius: 1,
-                                                blurRadius: 20)
-                                          ],
-                                          border: Border.all(
-                                              color: ThemeApp.whiteColor, width: 7),
-                                          shape: BoxShape.circle,
-                                          */ /*   image: new DecorationImage(
-                                                      fit: BoxFit.fill,
-                                                      image: new AssetImage(
-                                                        'assets/images/laptopImage.jpg',
-                                                      ))*/ /*
-                                        ),
-                                        child: ClipRRect(
-                                            borderRadius:
-                                            const BorderRadius.all(
-                                                Radius.circular(100)),
-                                            child: Image.file(
-                                              File(StringConstant
-                                                  .ProfilePhoto ??
-                                                  ""),
-                                              fit: BoxFit.fill,
-                                              width: 100.0,
-                                              height: 100.0,
-                                              errorBuilder: (context, error,
-                                                  stackTrace) {
-                                                return Icon(
-                                                  Icons.image,
-                                                  color:
-                                                  ThemeApp.whiteColor,
-                                                );
-                                              },
-                                            ) ??
-                                                Container()) ??
-                                            SizedBox(),
-                                      ),
-                                    ),*/
-                                        //with edit icon
-                                        /*      Stack(
-                                      // alignment: Alignment.center,
-                                      children: [
-                                        Center(
-                                          child: Container(
-                                            width: 100.0,
-                                            height: 100.0,
-                                            decoration: new BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: ThemeApp.appBackgroundColor,
-                                                    spreadRadius: 1,
-                                                    blurRadius: 20)
-                                              ],
-                                              border: Border.all(
-                                                  color: ThemeApp.whiteColor, width: 7),
-                                              shape: BoxShape.circle,
-                                              */ /*   image: new DecorationImage(
-                                                      fit: BoxFit.fill,
-                                                      image: new AssetImage(
-                                                        'assets/images/laptopImage.jpg',
-                                                      ))*/ /*
-                                            ),
-                                            child: ClipRRect(
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius.circular(100)),
-                                                    child: Image.file(
-                                                          File(StringConstant
-                                                                  .ProfilePhoto ??
-                                                              ""),
-                                                          fit: BoxFit.fill,
-                                                          width: 100.0,
-                                                          height: 100.0,
-                                                          errorBuilder: (context, error,
-                                                              stackTrace) {
-                                                            return Icon(
-                                                              Icons.image,
-                                                              color:
-                                                                  ThemeApp.whiteColor,
-                                                            );
-                                                          },
-                                                        ) ??
-                                                        Container()) ??
-                                                SizedBox(),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 0, right: 160,
-                                          // width: 130.0,
 
-                                          // height: 40.0,
-                                          child: InkWell(
-                                              onTap: () {
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const EditAccountActivity(),
-                                                  ),
-                                                );
-                                              },
-                                              child: Container(
-                                                height: 32,
-                                                width: 32,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(30),
-                                                    color: ThemeApp.appColor),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(7),
-                                                  child: SvgPicture.asset(
-                                                    'assets/appImages/editIcon.svg',
-                                                    color: ThemeApp.whiteColor,
-                                                    semanticsLabel: 'Acme Logo',
-
-                                                    // height: height * .03,
-                                                  ),
-                                                ),
-                                              ) */ /*; Container(
-                                              // alignment: Alignment.bottomCenter,
-                                              color: ThemeApp.primaryNavyBlackColor,
-                                              alignment: const Alignment(-2, -0.1),
-                                              child: iconsUtils(
-                                                  'assets/appImages/editIcon.svg'),
-                                            ),*/ /*
-                                              ),
-                                        ),
-                                      ],
-                                    ),*/
                                         SizedBox(
                                           height: 20,
                                         ),
@@ -891,10 +760,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                 '';
                                             final pref = await SharedPreferences
                                                 .getInstance();
-                                            Utils.successToast(
-                                                'You are signed out');
-                                            await pref.clear();
 
+                                            await pref.clear();
                                             late Random rnd;
                                             var min = 100000000;
                                             int max = 1000000000;
@@ -915,9 +782,18 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                             prefs.setString('RandomUserId',
                                                 finalId.toString());
 
-                                            Navigator.pushReplacementNamed(
-                                                context,
-                                                RoutesName.dashboardRoute);
+                                            _getCurrentPosition().then((value) {
+                                              setState(() {
+
+                                                StringConstant.CurrentPinCode =
+                                                    (prefs.getString('CurrentPinCodePrefs')) ?? '';
+                                              });
+
+
+
+
+                                            });
+
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.all(10),
@@ -947,6 +823,77 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
         ),
       ),
     );
+  }
+  Position? _currentPosition;
+
+  Future<Future<void>> _getCurrentPosition() async {
+    LocationPermission permission;
+
+    bool serviceEnabled;
+    // LocationPermission permission;
+
+// Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      // startTime();
+
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Utils.errorToast('Location Permission Denied');
+
+        // permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.deniedForever) {
+          // Permissions are denied forever, handle appropriately.
+          return Future.error(
+              'Location permissions are permanently denied, we cannot request permissions.');
+        }
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    return Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getLocation(_currentPosition!);
+    }).catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  _getLocation(Position position) async {
+    final coordinates = Coordinates(position.latitude, position.longitude);
+    var addresses =
+    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print("address.streetAddress" + first.postalCode.toString());
+    print("${first.featureName} : ${first.addressLine}");
+    final prefs = await SharedPreferences.getInstance();
+
+    var splitag = first.addressLine.split(",");
+    // var houseBuilding = splitag[0]+', '+splitag[1];
+    // var areaColony = splitag[2];
+    // var state = splitag[3];
+    // var city = splitag[4];
+    var pincode = first.postalCode;
+
+    setState(() {
+      prefs
+          .setString('CurrentPinCodePrefs', first.postalCode.toString())
+          .then((value) {
+        Navigator.pushReplacementNamed(
+            context,
+            RoutesName.dashboardRoute);
+        Utils.successToast(
+            'You are signed out');
+      });
+    });
   }
 
   Widget iconsUtils(String svgIcon, double height, double width) {

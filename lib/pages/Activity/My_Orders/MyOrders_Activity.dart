@@ -627,249 +627,278 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                             1 <
                         0
                     ? SizedBox()
-                    : Padding(
-                        padding: const EdgeInsets.only(right: 10, bottom: 20),
-                        child: Container(
-                            padding: EdgeInsets.only(
-                              right: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
+                    : InkWell(
+                  onTap: (){
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MyOrderDetails(
+                            values: value.jsonData['payload']
+                            ['consumer_baskets'][index]),
+                      ),
+                    );
+                  },
+                      child: Padding(
+                          padding: const EdgeInsets.only(right: 10, bottom: 20),
+                          child: Container(
+                              padding: EdgeInsets.only(
+                                right: 10,
                               ),
-                              color: colorsStatus,
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(15),
-
-                              // height: height * 0.12,
-                              // width: width * .8,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomLeft: Radius.circular(8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
                                 ),
-                                color: ThemeApp.whiteColor,
+                                color: colorsStatus,
                               ),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    //image grid
-                                    Container(
-                                      decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(8),
-                                          topRight: Radius.circular(8),
-                                        ),
-                                        color: ThemeApp.whiteColor,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            height: 44,
-                                            width: 45,
-                                            decoration: const BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(8),
-                                              ),
-                                            ),
-                                            child: GridView.builder(
-                                              gridDelegate:
-                                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisSpacing: 0,
-                                                mainAxisSpacing: 0,
-                                                crossAxisCount: 2,
-                                                // childAspectRatio: 4/7
-                                              ),
-                                              itemCount: order['orders'].length,
-                                              itemBuilder:
-                                                  (context, indexOrderList) {
-                                                subIndexOrderList =
-                                                    indexOrderList;
-                                                return order['orders']
-                                                                [indexOrderList]
-                                                            ['cancelled'] ==
-                                                        'true'
-                                                    ? SizedBox()
-                                                    : Container(
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                color: ThemeApp
-                                                                    .whiteColor)),
-                                                        child: FittedBox(
-                                                          child: Image.network(
-                                                                  // width: double.infinity,
-                                                                  order['orders']
-                                                                              [
-                                                                              indexOrderList]
-                                                                          [
-                                                                          "image_url"] ??
-                                                                      "",
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                  height: 22,
-                                                                  width: 21,
-                                                                  errorBuilder:
-                                                                      ((context,
-                                                                          error,
-                                                                          stackTrace) {
-                                                                return Icon(Icons
-                                                                    .image_outlined);
-                                                              })) ??
-                                                              SizedBox(),
-                                                        ),
-                                                      );
+                              child: Container(
+                                padding: const EdgeInsets.all(15),
 
-                                                // Item rendering
-                                              },
-                                            ),
+                                // height: height * 0.12,
+                                // width: width * .8,
+                                alignment: Alignment.center,
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(8),
+                                    bottomLeft: Radius.circular(8),
+                                  ),
+                                  color: ThemeApp.whiteColor,
+                                ),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      //image grid
+                                      Container(
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(8),
+                                            topRight: Radius.circular(8),
                                           ),
-                                          SizedBox(
-                                            width: width * .03,
-                                          ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextFieldUtils().dynamicText(
-                                                  order['id'].toString(),
-                                                  context,
-                                                  TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    color: ThemeApp
-                                                        .primaryNavyBlackColor,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 12,
-                                                  )),
-                                              SizedBox(
-                                                height: height * .01,
+                                          color: ThemeApp.whiteColor,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              height: 44,
+                                              width: 45,
+                                              decoration: const BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(8),
+                                                ),
                                               ),
-                                              TextFieldUtils().dynamicText(
-                                                  earliest_delivery_date,
-                                                  context,
-                                                  TextStyle(
+                                              child: GridView.builder(
+                                                gridDelegate:
+                                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisSpacing: 0,
+                                                  mainAxisSpacing: 0,
+                                                  crossAxisCount: 2,
+                                                  // childAspectRatio: 4/7
+                                                ),
+                                                itemCount: order['orders'].length,
+                                                itemBuilder:
+                                                    (context, indexOrderList) {
+                                                  subIndexOrderList =
+                                                      indexOrderList;
+                                                  return order['orders']
+                                                                  [indexOrderList]
+                                                              ['cancelled'] ==
+                                                          'true'
+                                                      ? SizedBox()
+                                                      : Container(
+                                                          decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: ThemeApp
+                                                                      .whiteColor)),
+                                                          child: FittedBox(
+                                                            child: Image.network(
+                                                                    // width: double.infinity,
+                                                                    order['orders']
+                                                                                [
+                                                                                indexOrderList]
+                                                                            [
+                                                                            "image_url"] ??
+                                                                        "",
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                    height: 22,
+                                                                    width: 21,
+                                                                    errorBuilder:
+                                                                        ((context,
+                                                                            error,
+                                                                            stackTrace) {
+                                                                  return Icon(Icons
+                                                                      .image_outlined);
+                                                                })) ??
+                                                                SizedBox(),
+                                                          ),
+                                                        );
+
+                                                  // Item rendering
+                                                },
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: width * .03,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextFieldUtils().dynamicText(
+                                                    order['id'].toString(),
+                                                    context,
+                                                    TextStyle(
                                                       fontFamily: 'Roboto',
                                                       color: ThemeApp
-                                                          .lightFontColor,
+                                                          .primaryNavyBlackColor,
+                                                      fontWeight: FontWeight.w700,
                                                       fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400)),
-                                            ],
-                                          ),
-                                        ],
+                                                    )),
+                                                SizedBox(
+                                                  height: height * .01,
+                                                ),
+                                                TextFieldUtils().dynamicText(
+                                                    earliest_delivery_date,
+                                                    context,
+                                                    TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        color: ThemeApp
+                                                            .lightFontColor,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w400)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
 /*  Padding(
-                                    padding:
-                                        const EdgeInsets.only(right: 10),
-                                    child: Container(
-                                      height: height * .1,
-                                      width: width * .75,
-                                      child: ListView.builder(
-                                        itemCount: value
-                                            .myOrdersList[index]
-                                                ["myOrderDetailList"]
-                                            .length,
-                                        itemBuilder:
-                                            (context, indexOrderDetails) {
-                                          indexForItems = indexOrderDetails;
-                                          return Container(
-                                              child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                    "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
-                                                    style: TextStyle(fontFamily: 'Roboto',
+                                      padding:
+                                          const EdgeInsets.only(right: 10),
+                                      child: Container(
+                                        height: height * .1,
+                                        width: width * .75,
+                                        child: ListView.builder(
+                                          itemCount: value
+                                              .myOrdersList[index]
+                                                  ["myOrderDetailList"]
+                                              .length,
+                                          itemBuilder:
+                                              (context, indexOrderDetails) {
+                                            indexForItems = indexOrderDetails;
+                                            return Container(
+                                                child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                      "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
+                                                      style: TextStyle(fontFamily: 'Roboto',
+                                                          color: ThemeApp
+                                                              .blackColor,
+                                                          fontSize:
+                                                              height * .024,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .ellipsis)),
+                                                ),
+                                                SizedBox(
+                                                  width: width * .005,
+                                                ),
+                                                TextFieldUtils().dynamicText(
+                                                    "* 3",
+                                                    context,
+                                                    TextStyle(fontFamily: 'Roboto',
                                                         color: ThemeApp
                                                             .blackColor,
                                                         fontSize:
-                                                            height * .024,
+                                                            height * .022,
                                                         fontWeight:
-                                                            FontWeight.w400,
-                                                        overflow:
-                                                            TextOverflow
-                                                                .ellipsis)),
-                                              ),
-                                              SizedBox(
-                                                width: width * .005,
-                                              ),
-                                              TextFieldUtils().dynamicText(
-                                                  "* 3",
-                                                  context,
-                                                  TextStyle(fontFamily: 'Roboto',
-                                                      color: ThemeApp
-                                                          .blackColor,
-                                                      fontSize:
-                                                          height * .022,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      overflow: TextOverflow
-                                                          .ellipsis)),
-                                            ],
-                                          ));
-                                        },
+                                                            FontWeight.bold,
+                                                        overflow: TextOverflow
+                                                            .ellipsis)),
+                                              ],
+                                            ));
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  ),*/
+                                    ),*/
 
-                                    Container(
-                                        height: order['orders'].length > 2
-                                            ? !viewMore
-                                                ? 50
-                                                : 80
-                                            : 30,
-                                        // width: width * .63,
-                                        child: ListView.builder(
-                                          physics: order['orders'].length > 2
-                                              ? ScrollPhysics()
-                                              : NeverScrollableScrollPhysics(),
-                                          itemCount: order['orders'].length > 2
+                                      Container(
+                                          height: order['orders'].length > 2
                                               ? !viewMore
-                                                  ? 2
-                                                  : order['orders'].length
-                                              : order['orders'].length,
-                                          itemBuilder:
-                                              (context, indexOrderDetails) {
-                                            indexOfOrders == 0
-                                                ? indexOfOrders - 1
-                                                : indexOfOrders =
-                                                    indexOrderDetails;
-                                            print("Order Id : " +
-                                                order['orders'][indexOfOrders]
-                                                        ['order_id']
-                                                    .toString());
-                                            return (order['orders'].length > 2)
+                                                  ? 50
+                                                  : 80
+                                              : 30,
+                                          // width: width * .63,
+                                          child: ListView.builder(
+                                            physics: order['orders'].length > 2
+                                                ? ScrollPhysics()
+                                                : NeverScrollableScrollPhysics(),
+                                            itemCount: order['orders'].length > 2
                                                 ? !viewMore
-                                                    ? order['orders'][
-                                                                    indexOrderDetails]
-                                                                ['cancelled'] ==
-                                                            'true'
-                                                        ? SizedBox()
-                                                        : Container(
-                                                            child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 8.0),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Flexible(
-                                                                  // width: 280,
-                                                                  child: Text(
-                                                                      "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                    ? 2
+                                                    : order['orders'].length
+                                                : order['orders'].length,
+                                            itemBuilder:
+                                                (context, indexOrderDetails) {
+                                              indexOfOrders == 0
+                                                  ? indexOfOrders - 1
+                                                  : indexOfOrders =
+                                                      indexOrderDetails;
+                                              print("Order Id : " +
+                                                  order['orders'][indexOfOrders]
+                                                          ['order_id']
+                                                      .toString());
+                                              return (order['orders'].length > 2)
+                                                  ? !viewMore
+                                                      ? order['orders'][
+                                                                      indexOrderDetails]
+                                                                  ['cancelled'] ==
+                                                              'true'
+                                                          ? SizedBox()
+                                                          : Container(
+                                                              child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 8.0),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Flexible(
+                                                                    // width: 280,
+                                                                    child: Text(
+                                                                        "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Roboto',
+                                                                            color: ThemeApp
+                                                                                .blackColor,
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight: FontWeight
+                                                                                .w400,
+                                                                            letterSpacing:
+                                                                                -0.25,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis)),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  Text(
+                                                                      "* ${order['orders'][indexOrderDetails]["item_qty"]}",
                                                                       style: TextStyle(
                                                                           fontFamily:
                                                                               'Roboto',
@@ -877,18 +906,91 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                                               .blackColor,
                                                                           fontSize:
                                                                               12,
-                                                                          fontWeight: FontWeight
-                                                                              .w400,
+                                                                          fontWeight:
+                                                                              FontWeight
+                                                                                  .w700,
                                                                           letterSpacing:
                                                                               -0.25,
                                                                           overflow:
                                                                               TextOverflow.ellipsis)),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                Text(
-                                                                    "* ${order['orders'][indexOrderDetails]["item_qty"]}",
+                                                                ],
+                                                              ),
+                                                            ))
+                                                      : order['orders'][
+                                                                      indexOrderDetails]
+                                                                  ['cancelled'] ==
+                                                              'true'
+                                                          ? SizedBox()
+                                                          : Container(
+                                                              child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 8.0),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Flexible(
+                                                                    // width: 280,
+                                                                    child: Text(
+                                                                        "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Roboto',
+                                                                            color: ThemeApp
+                                                                                .blackColor,
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight: FontWeight
+                                                                                .w400,
+                                                                            letterSpacing:
+                                                                                -0.25,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis)),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  Text(
+                                                                      "* ${order['orders'][indexOrderDetails]["item_qty"]}",
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              'Roboto',
+                                                                          color: ThemeApp
+                                                                              .blackColor,
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight:
+                                                                              FontWeight
+                                                                                  .w700,
+                                                                          letterSpacing:
+                                                                              -0.25,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis)),
+                                                                ],
+                                                              ),
+                                                            ))
+                                                  : order['orders'][
+                                                                  indexOrderDetails]
+                                                              ['cancelled'] ==
+                                                          'true'
+                                                      ? SizedBox()
+                                                      : Container(
+                                                          child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(top: 8.0),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Flexible(
+                                                                // width: 280,
+                                                                child: Text(
+                                                                    "${order['orders'][indexOrderDetails]["oneliner"]}",
                                                                     style: TextStyle(
                                                                         fontFamily:
                                                                             'Roboto',
@@ -898,89 +1000,17 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                                             12,
                                                                         fontWeight:
                                                                             FontWeight
-                                                                                .w700,
+                                                                                .w400,
                                                                         letterSpacing:
                                                                             -0.25,
                                                                         overflow:
-                                                                            TextOverflow.ellipsis)),
-                                                              ],
-                                                            ),
-                                                          ))
-                                                    : order['orders'][
-                                                                    indexOrderDetails]
-                                                                ['cancelled'] ==
-                                                            'true'
-                                                        ? SizedBox()
-                                                        : Container(
-                                                            child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 8.0),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Flexible(
-                                                                  // width: 280,
-                                                                  child: Text(
-                                                                      "${order['orders'][indexOrderDetails]["oneliner"]}",
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                              'Roboto',
-                                                                          color: ThemeApp
-                                                                              .blackColor,
-                                                                          fontSize:
-                                                                              12,
-                                                                          fontWeight: FontWeight
-                                                                              .w400,
-                                                                          letterSpacing:
-                                                                              -0.25,
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis)),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                Text(
-                                                                    "* ${order['orders'][indexOrderDetails]["item_qty"]}",
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Roboto',
-                                                                        color: ThemeApp
-                                                                            .blackColor,
-                                                                        fontSize:
-                                                                            12,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w700,
-                                                                        letterSpacing:
-                                                                            -0.25,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis)),
-                                                              ],
-                                                            ),
-                                                          ))
-                                                : order['orders'][
-                                                                indexOrderDetails]
-                                                            ['cancelled'] ==
-                                                        'true'
-                                                    ? SizedBox()
-                                                    : Container(
-                                                        child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(top: 8.0),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Flexible(
-                                                              // width: 280,
-                                                              child: Text(
-                                                                  "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                                            TextOverflow
+                                                                                .ellipsis)),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 10,
+                                                              ),
+                                                              Text("* ${order['orders'][indexOrderDetails]["item_qty"]}",
                                                                   style: TextStyle(
                                                                       fontFamily:
                                                                           'Roboto',
@@ -990,289 +1020,270 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                                           12,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .w400,
+                                                                              .w700,
                                                                       letterSpacing:
                                                                           -0.25,
                                                                       overflow:
                                                                           TextOverflow
                                                                               .ellipsis)),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Text("* ${order['orders'][indexOrderDetails]["item_qty"]}",
-                                                                style: TextStyle(
+                                                            ],
+                                                          ),
+                                                        ));
+                                            },
+                                          )),
+
+                                      order['orders'].length < 2
+                                          ? SizedBox()
+                                          : Row(
+                                              children: [
+                                                order['orders'].length > 2
+                                                    ? !viewMore
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                viewMore =
+                                                                    !viewMore;
+                                                              });
+                                                            },
+                                                            child: TextFieldUtils().dynamicText(
+                                                                '+ View More',
+                                                                context,
+                                                                TextStyle(
                                                                     fontFamily:
                                                                         'Roboto',
                                                                     color: ThemeApp
-                                                                        .blackColor,
-                                                                    fontSize:
-                                                                        12,
+                                                                        .tealButtonColor,
+                                                                    fontSize: 12,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w700,
-                                                                    letterSpacing:
-                                                                        -0.25,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis)),
-                                                          ],
-                                                        ),
-                                                      ));
-                                          },
-                                        )),
-
-                                    order['orders'].length < 2
-                                        ? SizedBox()
-                                        : Row(
-                                            children: [
-                                              order['orders'].length > 2
-                                                  ? !viewMore
-                                                      ? InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              viewMore =
-                                                                  !viewMore;
-                                                            });
-                                                          },
-                                                          child: TextFieldUtils().dynamicText(
-                                                              '+ View More',
-                                                              context,
-                                                              TextStyle(
-                                                                  fontFamily:
-                                                                      'Roboto',
-                                                                  color: ThemeApp
-                                                                      .tealButtonColor,
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                        )
-                                                      : InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              viewMore =
-                                                                  !viewMore;
-                                                            });
-                                                          },
-                                                          child: TextFieldUtils().dynamicText(
-                                                              '- View Less',
-                                                              context,
-                                                              TextStyle(
-                                                                  fontFamily:
-                                                                      'Roboto',
-                                                                  color: ThemeApp
-                                                                      .tealButtonColor,
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                        )
-                                                  : SizedBox(),
-                                            ],
-                                          ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          //tootal amount
-                                          TextFieldUtils().dynamicText(
-                                              indianRupeesFormat
-                                                  .format(double.parse(
-                                                      order['offer']
-                                                              .toString() ??
-                                                          ""))
-                                                  .toString(),
-                                              context,
-                                              TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color: ThemeApp.blackColor,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700,
-                                                  letterSpacing: 0.2)),
-                                          Row(
-                                            children: [
-                                              /* value.myOrdersList[index]
-                                                        ["myOrderStatus"] ==
-                                                    "Acceptance Pending"
-                                                ? SizedBox()
-                                                : Container(
-                                                    child: TextFieldUtils().dynamicText(
-                                                        "Change Status to:",
-                                                        context,
-                                                        TextStyle(fontFamily: 'Roboto',
-                                                            color: ThemeApp
-                                                                .blackColor,
-                                                            fontSize:
-                                                                height *
-                                                                    .018,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400)),
-                                                  ),*/
-                                              //order status whith dynamic color
-
-                                              /*  SizedBox(
-                                        width: width * .02,
+                                                                            .w400)),
+                                                          )
+                                                        : InkWell(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                viewMore =
+                                                                    !viewMore;
+                                                              });
+                                                            },
+                                                            child: TextFieldUtils().dynamicText(
+                                                                '- View Less',
+                                                                context,
+                                                                TextStyle(
+                                                                    fontFamily:
+                                                                        'Roboto',
+                                                                    color: ThemeApp
+                                                                        .tealButtonColor,
+                                                                    fontSize: 12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                          )
+                                                    : SizedBox(),
+                                              ],
+                                            ),
+                                      SizedBox(
+                                        height: 15,
                                       ),
                                       Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 8, 10, 8),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(30),
-                                          ),
-                                          border: Border.all(
-                                              color: colorsStatus),
-                                          color: ThemeApp.whiteColor,
-                                        ),
-                                        child: TextFieldUtils().dynamicText(
-                                            order['overall_status'],
-                                            context,
-                                            TextStyle(
-                                                fontFamily: 'Roboto',
-                                                color: colorsStatus,
-                                                fontSize: 10,
-                                                fontWeight:
-                                                    FontWeight.w500)),
-                                      ),*/
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 19,
-                                    ),
-                                    TextFieldUtils().lineHorizontal(),
-                                    // stepperWidget(),
-                                    /*         stepperWidget(*/ /*
-                                        order['orders'][subIndexOrderList]*/ /*subIndexOrderList, order),
-*/
-                                    stepperWidget(
-                                        value.jsonData['payload']
-                                                ['consumer_baskets'][index]
-                                            ['orders'][0],
-                                        value.jsonData['payload']
-                                            ['consumer_baskets'][index]),
-                                    TextFieldUtils().lineHorizontal(),
-                                    SizedBox(
-                                      height: 6,
-                                    ),
-                                    Container(
                                         alignment: Alignment.centerLeft,
                                         child: Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                              CrossAxisAlignment.start,
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            order['overall_status'] ==
-                                                    'Delivered'
-                                                ? InkWell(
-                                                    onTap: () {
-                                                      // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OrderRatingReviewActivity(values:  value.myOrderList[index])));
-                                                    },
-                                                    child: rattingBar())
-                                                : SizedBox(),
-                                            /*TextFieldUtils().dynamicText(
-                                              'Item Return Inprogress',
-                                                  context,
-                                                  TextStyle(fontFamily: 'Roboto',
-                                                      color: ThemeApp
-                                                          .blackColor,
-                                                      fontSize:
-                                                          12,
-                                                      fontWeight:
-                                                          FontWeight.w400)),*/
-
-                                            order['overall_status'] ==
-                                                    'Canceled'
-                                                ? Container(
-                                                    padding: const EdgeInsets
-                                                            .fromLTRB(
-                                                        15.0, 7.0, 15.0, 7.0),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .all(
-                                                        Radius.circular(20),
-                                                      ),
-                                                      color: ThemeApp.redColor,
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        TextFieldUtils().dynamicText(
-                                                            "Order Canceled",
-                                                            context,
-                                                            TextStyle(
-                                                                fontFamily:
-                                                                    'Roboto',
-                                                                color: ThemeApp
-                                                                    .whiteColor,
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : InkWell(
-                                                    onTap: () {
-                                                      Navigator.of(context).push(MaterialPageRoute(
-                                                          builder: (context) => CancelOrderActivity(
-                                                              values: value.jsonData[
-                                                                          'payload']
-                                                                      [
-                                                                      'consumer_baskets']
-                                                                  [index],
-                                                              orderList: order[
-                                                                      'orders'][
-                                                                  indexOfOrders])));
-                                                    },
-                                                    child: Container(
-                                                        padding: const EdgeInsets
-                                                                .fromLTRB(
-                                                            11, 5, 11, 5),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                            Radius.circular(
-                                                                100),
-                                                          ),
-                                                          border: Border.all(
+                                            //tootal amount
+                                            TextFieldUtils().dynamicText(
+                                                indianRupeesFormat
+                                                    .format(double.parse(
+                                                        order['offer']
+                                                                .toString() ??
+                                                            ""))
+                                                    .toString(),
+                                                context,
+                                                TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    color: ThemeApp.blackColor,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    letterSpacing: 0.2)),
+                                            Row(
+                                              children: [
+                                                /* value.myOrdersList[index]
+                                                          ["myOrderStatus"] ==
+                                                      "Acceptance Pending"
+                                                  ? SizedBox()
+                                                  : Container(
+                                                      child: TextFieldUtils().dynamicText(
+                                                          "Change Status to:",
+                                                          context,
+                                                          TextStyle(fontFamily: 'Roboto',
                                                               color: ThemeApp
-                                                                  .tealButtonColor),
-                                                          color: ThemeApp
-                                                              .tealButtonColor,
-                                                        ),
-                                                        child: TextFieldUtils().dynamicText(
-                                                            'Cancel Order',
-                                                            context,
-                                                            TextStyle(
-                                                                fontFamily:
-                                                                    'Roboto',
-                                                                color: ThemeApp
-                                                                    .whiteColor,
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                letterSpacing:
-                                                                    -0.08))),
-                                                  ),
+                                                                  .blackColor,
+                                                              fontSize:
+                                                                  height *
+                                                                      .018,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400)),
+                                                    ),*/
+                                                //order status whith dynamic color
+
+                                                /*  SizedBox(
+                                          width: width * .02,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 8, 10, 8),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(30),
+                                            ),
+                                            border: Border.all(
+                                                color: colorsStatus),
+                                            color: ThemeApp.whiteColor,
+                                          ),
+                                          child: TextFieldUtils().dynamicText(
+                                              order['overall_status'],
+                                              context,
+                                              TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color: colorsStatus,
+                                                  fontSize: 10,
+                                                  fontWeight:
+                                                      FontWeight.w500)),
+                                        ),*/
+                                              ],
+                                            ),
                                           ],
-                                        )),
-                                  ]),
-                            )));
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 19,
+                                      ),
+                                      TextFieldUtils().lineHorizontal(),
+                                      // stepperWidget(),
+                                      /*         stepperWidget(*/ /*
+                                          order['orders'][subIndexOrderList]*/ /*subIndexOrderList, order),
+*/
+                                      stepperWidget(
+                                          value.jsonData['payload']
+                                                  ['consumer_baskets'][index]
+                                              ['orders'][0],
+                                          value.jsonData['payload']
+                                              ['consumer_baskets'][index]),
+                                      TextFieldUtils().lineHorizontal(),
+                                      SizedBox(
+                                        height: 6,
+                                      ),
+                                      Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              order['overall_status'] ==
+                                                      'Delivered'
+                                                  ? InkWell(
+                                                      onTap: () {
+                                                        // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OrderRatingReviewActivity(values:  value.myOrderList[index])));
+                                                      },
+                                                      child: rattingBar())
+                                                  : SizedBox(),
+                                              /*TextFieldUtils().dynamicText(
+                                                'Item Return Inprogress',
+                                                    context,
+                                                    TextStyle(fontFamily: 'Roboto',
+                                                        color: ThemeApp
+                                                            .blackColor,
+                                                        fontSize:
+                                                            12,
+                                                        fontWeight:
+                                                            FontWeight.w400)),*/
+
+                                              order['overall_status'] ==
+                                                      'Canceled'
+                                                  ? Container(
+                                                      padding: const EdgeInsets
+                                                              .fromLTRB(
+                                                          15.0, 7.0, 15.0, 7.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                          Radius.circular(20),
+                                                        ),
+                                                        color: ThemeApp.redColor,
+                                                      ),
+                                                      child: Row(
+                                                        children: [
+                                                          TextFieldUtils().dynamicText(
+                                                              "Order Canceled",
+                                                              context,
+                                                              TextStyle(
+                                                                  fontFamily:
+                                                                      'Roboto',
+                                                                  color: ThemeApp
+                                                                      .whiteColor,
+                                                                  fontSize: 10,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700)),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : InkWell(
+                                                      onTap: () {
+                                                        Navigator.of(context).push(MaterialPageRoute(
+                                                            builder: (context) => CancelOrderActivity(
+                                                                values: value.jsonData[
+                                                                            'payload']
+                                                                        [
+                                                                        'consumer_baskets']
+                                                                    [index],
+                                                                orderList: order[
+                                                                        'orders'][
+                                                                    indexOfOrders])));
+                                                      },
+                                                      child: Container(
+                                                          padding: const EdgeInsets
+                                                                  .fromLTRB(
+                                                              11, 5, 11, 5),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                              Radius.circular(
+                                                                  100),
+                                                            ),
+                                                            border: Border.all(
+                                                                color: ThemeApp
+                                                                    .tealButtonColor),
+                                                            color: ThemeApp
+                                                                .tealButtonColor,
+                                                          ),
+                                                          child: TextFieldUtils().dynamicText(
+                                                              'Cancel Order',
+                                                              context,
+                                                              TextStyle(
+                                                                  fontFamily:
+                                                                      'Roboto',
+                                                                  color: ThemeApp
+                                                                      .whiteColor,
+                                                                  fontSize: 10,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  letterSpacing:
+                                                                      -0.08))),
+                                                    ),
+                                            ],
+                                          )),
+                                    ]),
+                              ))),
+                    );
               }),
     );
     /* : Center(
@@ -1333,274 +1344,371 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                 1 <
                             0
                         ? SizedBox()
-                        : Padding(
-                            padding:
-                                const EdgeInsets.only(right: 10, bottom: 20),
-                            child: Container(
-                                padding: EdgeInsets.only(
-                                  right: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8),
+                        : InkWell(
+                      onTap: (){
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => MyOrderDetails(
+                                values: value.jsonData['payload']
+                                ['consumer_baskets'][index]),
+                          ),
+                        );
+                      },
+                          child: Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 10, bottom: 20),
+                              child: Container(
+                                  padding: EdgeInsets.only(
+                                    right: 10,
                                   ),
-                                  color: colorsStatus,
-                                ),
-                                child: Container(
-                                  padding: const EdgeInsets.all(15),
-
-                                  // height: height * 0.12,
-                                  // width: width * .8,
-                                  alignment: Alignment.center,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(8),
-                                      bottomLeft: Radius.circular(8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
                                     ),
-                                    color: ThemeApp.whiteColor,
+                                    color: colorsStatus,
                                   ),
-                                  child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        //image grid
-                                        //image grid
-                                        Container(
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(8),
-                                              topRight: Radius.circular(8),
-                                            ),
-                                            color: ThemeApp.whiteColor,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                height: 44,
-                                                width: 45,
-                                                decoration: const BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(8),
-                                                  ),
-                                                ),
-                                                child: GridView.builder(
-                                                  gridDelegate:
-                                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisSpacing: 0,
-                                                    mainAxisSpacing: 0,
-                                                    crossAxisCount: 2,
-                                                    // childAspectRatio: 4/7
-                                                  ),
-                                                  itemCount:
-                                                      order['orders'].length,
-                                                  itemBuilder: (context,
-                                                      indexOrderList) {
-                                                    subIndexOrderList =
-                                                        indexOrderList;
-                                                    return order['orders'][
-                                                                    indexOrderList]
-                                                                ['cancelled'] ==
-                                                            'true'
-                                                        ? SizedBox()
-                                                        : Container(
-                                                            decoration: BoxDecoration(
-                                                                border: Border.all(
-                                                                    color: ThemeApp
-                                                                        .whiteColor)),
-                                                            child: FittedBox(
-                                                              child: Image
-                                                                      .network(
-                                                                          // width: double.infinity,
-                                                                          order['orders'][indexOrderList]["image_url"] ??
-                                                                              "",
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                          height:
-                                                                              22,
-                                                                          width:
-                                                                              21,
-                                                                          errorBuilder: ((context,
-                                                                              error,
-                                                                              stackTrace) {
-                                                                    return Icon(
-                                                                        Icons
-                                                                            .image_outlined);
-                                                                  })) ??
-                                                                  SizedBox(),
-                                                            ),
-                                                          );
+                                  child: Container(
+                                    padding: const EdgeInsets.all(15),
 
-                                                    // Item rendering
-                                                  },
-                                                ),
+                                    // height: height * 0.12,
+                                    // width: width * .8,
+                                    alignment: Alignment.center,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(8),
+                                        bottomLeft: Radius.circular(8),
+                                      ),
+                                      color: ThemeApp.whiteColor,
+                                    ),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          //image grid
+                                          //image grid
+                                          Container(
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(8),
+                                                topRight: Radius.circular(8),
                                               ),
-                                              SizedBox(
-                                                width: width * .03,
-                                              ),
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  TextFieldUtils().dynamicText(
-                                                      order['id'].toString(),
-                                                      context,
-                                                      TextStyle(
-                                                        fontFamily: 'Roboto',
-                                                        color: ThemeApp
-                                                            .primaryNavyBlackColor,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        fontSize: 12,
-                                                      )),
-                                                  SizedBox(
-                                                    height: height * .01,
+                                              color: ThemeApp.whiteColor,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  height: 44,
+                                                  width: 45,
+                                                  decoration: const BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(8),
+                                                    ),
                                                   ),
-                                                  TextFieldUtils().dynamicText(
-                                                      earliest_delivery_date,
-                                                      context,
-                                                      TextStyle(
+                                                  child: GridView.builder(
+                                                    gridDelegate:
+                                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisSpacing: 0,
+                                                      mainAxisSpacing: 0,
+                                                      crossAxisCount: 2,
+                                                      // childAspectRatio: 4/7
+                                                    ),
+                                                    itemCount:
+                                                        order['orders'].length,
+                                                    itemBuilder: (context,
+                                                        indexOrderList) {
+                                                      subIndexOrderList =
+                                                          indexOrderList;
+                                                      return order['orders'][
+                                                                      indexOrderList]
+                                                                  ['cancelled'] ==
+                                                              'true'
+                                                          ? SizedBox()
+                                                          : Container(
+                                                              decoration: BoxDecoration(
+                                                                  border: Border.all(
+                                                                      color: ThemeApp
+                                                                          .whiteColor)),
+                                                              child: FittedBox(
+                                                                child: Image
+                                                                        .network(
+                                                                            // width: double.infinity,
+                                                                            order['orders'][indexOrderList]["image_url"] ??
+                                                                                "",
+                                                                            fit: BoxFit
+                                                                                .fill,
+                                                                            height:
+                                                                                22,
+                                                                            width:
+                                                                                21,
+                                                                            errorBuilder: ((context,
+                                                                                error,
+                                                                                stackTrace) {
+                                                                      return Icon(
+                                                                          Icons
+                                                                              .image_outlined);
+                                                                    })) ??
+                                                                    SizedBox(),
+                                                              ),
+                                                            );
+
+                                                      // Item rendering
+                                                    },
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: width * .03,
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextFieldUtils().dynamicText(
+                                                        order['id'].toString(),
+                                                        context,
+                                                        TextStyle(
                                                           fontFamily: 'Roboto',
                                                           color: ThemeApp
-                                                              .lightFontColor,
-                                                          fontSize: 12,
+                                                              .primaryNavyBlackColor,
                                                           fontWeight:
-                                                              FontWeight.w400)),
-                                                ],
-                                              ),
-                                            ],
+                                                              FontWeight.w700,
+                                                          fontSize: 12,
+                                                        )),
+                                                    SizedBox(
+                                                      height: height * .01,
+                                                    ),
+                                                    TextFieldUtils().dynamicText(
+                                                        earliest_delivery_date,
+                                                        context,
+                                                        TextStyle(
+                                                            fontFamily: 'Roboto',
+                                                            color: ThemeApp
+                                                                .lightFontColor,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w400)),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
 /*  Padding(
-                                    padding:
-                                        const EdgeInsets.only(right: 10),
-                                    child: Container(
-                                      height: height * .1,
-                                      width: width * .75,
-                                      child: ListView.builder(
-                                        itemCount: value
-                                            .myOrdersList[index]
-                                                ["myOrderDetailList"]
-                                            .length,
-                                        itemBuilder:
-                                            (context, indexOrderDetails) {
-                                          indexForItems = indexOrderDetails;
-                                          return Container(
-                                              child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                    "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
-                                                    style: TextStyle(fontFamily: 'Roboto',
+                                      padding:
+                                          const EdgeInsets.only(right: 10),
+                                      child: Container(
+                                        height: height * .1,
+                                        width: width * .75,
+                                        child: ListView.builder(
+                                          itemCount: value
+                                              .myOrdersList[index]
+                                                  ["myOrderDetailList"]
+                                              .length,
+                                          itemBuilder:
+                                              (context, indexOrderDetails) {
+                                            indexForItems = indexOrderDetails;
+                                            return Container(
+                                                child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                      "${value.myOrdersList[index]["myOrderDetailList"][indexOrderDetails]["productDetails"]}",
+                                                      style: TextStyle(fontFamily: 'Roboto',
+                                                          color: ThemeApp
+                                                              .blackColor,
+                                                          fontSize:
+                                                              height * .024,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .ellipsis)),
+                                                ),
+                                                SizedBox(
+                                                  width: width * .005,
+                                                ),
+                                                TextFieldUtils().dynamicText(
+                                                    "* 3",
+                                                    context,
+                                                    TextStyle(fontFamily: 'Roboto',
                                                         color: ThemeApp
                                                             .blackColor,
                                                         fontSize:
-                                                            height * .024,
+                                                            height * .022,
                                                         fontWeight:
-                                                            FontWeight.w400,
-                                                        overflow:
-                                                            TextOverflow
-                                                                .ellipsis)),
-                                              ),
-                                              SizedBox(
-                                                width: width * .005,
-                                              ),
-                                              TextFieldUtils().dynamicText(
-                                                  "* 3",
-                                                  context,
-                                                  TextStyle(fontFamily: 'Roboto',
-                                                      color: ThemeApp
-                                                          .blackColor,
-                                                      fontSize:
-                                                          height * .022,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      overflow: TextOverflow
-                                                          .ellipsis)),
-                                            ],
-                                          ));
-                                        },
+                                                            FontWeight.bold,
+                                                        overflow: TextOverflow
+                                                            .ellipsis)),
+                                              ],
+                                            ));
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  ),*/
+                                    ),*/
 
-                                        Container(
-                                            height: order['orders'].length > 2
-                                                ? !viewMore
-                                                    ? 50
-                                                    : 80
-                                                : 30,
-                                            // width: width * .63,
-                                            child: ListView.builder(
-                                              physics: order['orders'].length >
-                                                      2
-                                                  ? ScrollPhysics()
-                                                  : NeverScrollableScrollPhysics(),
-                                              itemCount: order['orders']
-                                                          .length >
-                                                      2
+                                          Container(
+                                              height: order['orders'].length > 2
                                                   ? !viewMore
-                                                      ? 2
-                                                      : order['orders'].length
-                                                  : order['orders'].length,
-                                              itemBuilder:
-                                                  (context, indexOrderDetails) {
-                                                indexOfOrders == 0
-                                                    ? indexOfOrders - 1
-                                                    : indexOfOrders =
-                                                        indexOrderDetails;
-                                                print("Order Id : " +
-                                                    order['orders']
-                                                                [indexOfOrders]
-                                                            ['order_id']
-                                                        .toString());
-                                                return (order['orders'].length >
-                                                        2)
+                                                      ? 50
+                                                      : 80
+                                                  : 30,
+                                              // width: width * .63,
+                                              child: ListView.builder(
+                                                physics: order['orders'].length >
+                                                        2
+                                                    ? ScrollPhysics()
+                                                    : NeverScrollableScrollPhysics(),
+                                                itemCount: order['orders']
+                                                            .length >
+                                                        2
                                                     ? !viewMore
-                                                        ? order['orders'][
-                                                                        indexOrderDetails]
-                                                                    [
-                                                                    'cancelled'] ==
-                                                                'true'
-                                                            ? SizedBox()
-                                                            : Container(
-                                                                child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        top:
-                                                                            8.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Flexible(
-                                                                      // width: 280,
-                                                                      child: Text(
-                                                                          "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                        ? 2
+                                                        : order['orders'].length
+                                                    : order['orders'].length,
+                                                itemBuilder:
+                                                    (context, indexOrderDetails) {
+                                                  indexOfOrders == 0
+                                                      ? indexOfOrders - 1
+                                                      : indexOfOrders =
+                                                          indexOrderDetails;
+                                                  print("Order Id : " +
+                                                      order['orders']
+                                                                  [indexOfOrders]
+                                                              ['order_id']
+                                                          .toString());
+                                                  return (order['orders'].length >
+                                                          2)
+                                                      ? !viewMore
+                                                          ? order['orders'][
+                                                                          indexOrderDetails]
+                                                                      [
+                                                                      'cancelled'] ==
+                                                                  'true'
+                                                              ? SizedBox()
+                                                              : Container(
+                                                                  child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              8.0),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Flexible(
+                                                                        // width: 280,
+                                                                        child: Text(
+                                                                            "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Roboto',
+                                                                                color: ThemeApp.blackColor,
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                letterSpacing: -0.25,
+                                                                                overflow: TextOverflow.ellipsis)),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width: 10,
+                                                                      ),
+                                                                      Text(
+                                                                          "* ${order['orders'][indexOrderDetails]["item_qty"]}",
                                                                           style: TextStyle(
-                                                                              fontFamily: 'Roboto',
-                                                                              color: ThemeApp.blackColor,
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.w400,
-                                                                              letterSpacing: -0.25,
-                                                                              overflow: TextOverflow.ellipsis)),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width: 10,
-                                                                    ),
-                                                                    Text(
-                                                                        "* ${order['orders'][indexOrderDetails]["item_qty"]}",
+                                                                              fontFamily:
+                                                                                  'Roboto',
+                                                                              color: ThemeApp
+                                                                                  .blackColor,
+                                                                              fontSize:
+                                                                                  12,
+                                                                              fontWeight: FontWeight
+                                                                                  .w700,
+                                                                              letterSpacing:
+                                                                                  -0.25,
+                                                                              overflow:
+                                                                                  TextOverflow.ellipsis)),
+                                                                    ],
+                                                                  ),
+                                                                ))
+                                                          : order['orders'][
+                                                                          indexOrderDetails]
+                                                                      [
+                                                                      'cancelled'] ==
+                                                                  'true'
+                                                              ? SizedBox()
+                                                              : Container(
+                                                                  child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              8.0),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Flexible(
+                                                                        // width: 280,
+                                                                        child: Text(
+                                                                            "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Roboto',
+                                                                                color: ThemeApp.blackColor,
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                letterSpacing: -0.25,
+                                                                                overflow: TextOverflow.ellipsis)),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width: 10,
+                                                                      ),
+                                                                      Text(
+                                                                          "* ${order['orders'][indexOrderDetails]["item_qty"]}",
+                                                                          style: TextStyle(
+                                                                              fontFamily:
+                                                                                  'Roboto',
+                                                                              color: ThemeApp
+                                                                                  .blackColor,
+                                                                              fontSize:
+                                                                                  12,
+                                                                              fontWeight: FontWeight
+                                                                                  .w700,
+                                                                              letterSpacing:
+                                                                                  -0.25,
+                                                                              overflow:
+                                                                                  TextOverflow.ellipsis)),
+                                                                    ],
+                                                                  ),
+                                                                ))
+                                                      : order['orders'][
+                                                                      indexOrderDetails]
+                                                                  ['cancelled'] ==
+                                                              'true'
+                                                          ? SizedBox()
+                                                          : Container(
+                                                              child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 8.0),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Flexible(
+                                                                    // width: 280,
+                                                                    child: Text(
+                                                                        "${order['orders'][indexOrderDetails]["oneliner"]}",
                                                                         style: TextStyle(
                                                                             fontFamily:
                                                                                 'Roboto',
@@ -1609,85 +1717,17 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                                             fontSize:
                                                                                 12,
                                                                             fontWeight: FontWeight
-                                                                                .w700,
+                                                                                .w400,
                                                                             letterSpacing:
                                                                                 -0.25,
                                                                             overflow:
                                                                                 TextOverflow.ellipsis)),
-                                                                  ],
-                                                                ),
-                                                              ))
-                                                        : order['orders'][
-                                                                        indexOrderDetails]
-                                                                    [
-                                                                    'cancelled'] ==
-                                                                'true'
-                                                            ? SizedBox()
-                                                            : Container(
-                                                                child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        top:
-                                                                            8.0),
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Flexible(
-                                                                      // width: 280,
-                                                                      child: Text(
-                                                                          "${order['orders'][indexOrderDetails]["oneliner"]}",
-                                                                          style: TextStyle(
-                                                                              fontFamily: 'Roboto',
-                                                                              color: ThemeApp.blackColor,
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.w400,
-                                                                              letterSpacing: -0.25,
-                                                                              overflow: TextOverflow.ellipsis)),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width: 10,
-                                                                    ),
-                                                                    Text(
-                                                                        "* ${order['orders'][indexOrderDetails]["item_qty"]}",
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'Roboto',
-                                                                            color: ThemeApp
-                                                                                .blackColor,
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight: FontWeight
-                                                                                .w700,
-                                                                            letterSpacing:
-                                                                                -0.25,
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis)),
-                                                                  ],
-                                                                ),
-                                                              ))
-                                                    : order['orders'][
-                                                                    indexOrderDetails]
-                                                                ['cancelled'] ==
-                                                            'true'
-                                                        ? SizedBox()
-                                                        : Container(
-                                                            child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 8.0),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Flexible(
-                                                                  // width: 280,
-                                                                  child: Text(
-                                                                      "${order['orders'][indexOrderDetails]["oneliner"]}",
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  Text(
+                                                                      "* ${order['orders'][indexOrderDetails]["item_qty"]}",
                                                                       style: TextStyle(
                                                                           fontFamily:
                                                                               'Roboto',
@@ -1695,505 +1735,487 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                                               .blackColor,
                                                                           fontSize:
                                                                               12,
-                                                                          fontWeight: FontWeight
-                                                                              .w400,
+                                                                          fontWeight:
+                                                                              FontWeight
+                                                                                  .w700,
                                                                           letterSpacing:
                                                                               -0.25,
                                                                           overflow:
                                                                               TextOverflow.ellipsis)),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                Text(
-                                                                    "* ${order['orders'][indexOrderDetails]["item_qty"]}",
-                                                                    style: TextStyle(
+                                                                ],
+                                                              ),
+                                                            ));
+                                                },
+                                              )),
+
+                                          order['orders'].length < 2
+                                              ? SizedBox()
+                                              : Row(
+                                                  children: [
+                                                    order['orders'].length > 2
+                                                        ? !viewMore
+                                                            ? InkWell(
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    viewMore =
+                                                                        !viewMore;
+                                                                  });
+                                                                },
+                                                                child: TextFieldUtils().dynamicText(
+                                                                    '+ View More',
+                                                                    context,
+                                                                    TextStyle(
                                                                         fontFamily:
                                                                             'Roboto',
                                                                         color: ThemeApp
-                                                                            .blackColor,
+                                                                            .tealButtonColor,
                                                                         fontSize:
                                                                             12,
                                                                         fontWeight:
                                                                             FontWeight
-                                                                                .w700,
-                                                                        letterSpacing:
-                                                                            -0.25,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis)),
-                                                              ],
-                                                            ),
-                                                          ));
-                                              },
-                                            )),
+                                                                                .w400)),
+                                                              )
+                                                            : InkWell(
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    viewMore =
+                                                                        !viewMore;
+                                                                  });
+                                                                },
+                                                                child: TextFieldUtils().dynamicText(
+                                                                    '- View Less',
+                                                                    context,
+                                                                    TextStyle(
+                                                                        fontFamily:
+                                                                            'Roboto',
+                                                                        color: ThemeApp
+                                                                            .tealButtonColor,
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w400)),
+                                                              )
+                                                        : SizedBox(),
+                                                  ],
+                                                ),
 
-                                        order['orders'].length < 2
-                                            ? SizedBox()
-                                            : Row(
-                                                children: [
-                                                  order['orders'].length > 2
-                                                      ? !viewMore
-                                                          ? InkWell(
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  viewMore =
-                                                                      !viewMore;
-                                                                });
-                                                              },
-                                                              child: TextFieldUtils().dynamicText(
-                                                                  '+ View More',
-                                                                  context,
-                                                                  TextStyle(
-                                                                      fontFamily:
-                                                                          'Roboto',
-                                                                      color: ThemeApp
-                                                                          .tealButtonColor,
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400)),
-                                                            )
-                                                          : InkWell(
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  viewMore =
-                                                                      !viewMore;
-                                                                });
-                                                              },
-                                                              child: TextFieldUtils().dynamicText(
-                                                                  '- View Less',
-                                                                  context,
-                                                                  TextStyle(
-                                                                      fontFamily:
-                                                                          'Roboto',
-                                                                      color: ThemeApp
-                                                                          .tealButtonColor,
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400)),
-                                                            )
-                                                      : SizedBox(),
-                                                ],
-                                              ),
-
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Container(
-                                          alignment: Alignment.centerLeft,
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              //tootal amount
-                                              TextFieldUtils().dynamicText(
-                                                  indianRupeesFormat
-                                                      .format(double.parse(
-                                                          order['offer']
-                                                                  .toString() ??
-                                                              ""))
-                                                      .toString(),
-                                                  context,
-                                                  TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      color:
-                                                          ThemeApp.blackColor,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      letterSpacing: 0.2)),
-                                              Row(
-                                                children: [
-                                                  /* value.myOrdersList[index]
-                                                        ["myOrderStatus"] ==
-                                                    "Acceptance Pending"
-                                                ? SizedBox()
-                                                : Container(
-                                                    child: TextFieldUtils().dynamicText(
-                                                        "Change Status to:",
-                                                        context,
-                                                        TextStyle(fontFamily: 'Roboto',
-                                                            color: ThemeApp
-                                                                .blackColor,
-                                                            fontSize:
-                                                                height *
-                                                                    .018,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400)),
-                                                  ),*/
-                                                  //order status whith dynamic color
-
-                                                  /*  SizedBox(
-                                        width: width * .02,
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 8, 10, 8),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(30),
+                                          SizedBox(
+                                            height: 15,
                                           ),
-                                          border: Border.all(
-                                              color: colorsStatus),
-                                          color: ThemeApp.whiteColor,
-                                        ),
-                                        child: TextFieldUtils().dynamicText(
-                                            order['overall_status'],
-                                            context,
-                                            TextStyle(
-                                                fontFamily: 'Roboto',
-                                                color: colorsStatus,
-                                                fontSize: 10,
-                                                fontWeight:
-                                                    FontWeight.w500)),
-                                      ),*/
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 19,
-                                        ),
-                                        TextFieldUtils().lineHorizontal(),
-                                        // stepperWidget(),
-                                        // stepperWidget(
-                                        //     order['orders'][subIndexOrderList]),
-                                        // TextFieldUtils().lineHorizontal(),
-                                        SizedBox(
-                                          height: 6,
-                                        ),
-
-                                        Container(
+                                          Container(
                                             alignment: Alignment.centerLeft,
                                             child: Row(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                                  CrossAxisAlignment.start,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.spaceBetween,
                                               children: [
-                                                InkWell(
-                                                  onTap: () {
-                                                    // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OrderRatingReviewActivity(values:  value.myOrderList[index])));
-                                                  },
-                                                  child: Row(children: [
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Navigator.of(context).push(MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                OrderRatingReviewActivity(
-                                                                    values: value.jsonData['payload']
-                                                                            [
-                                                                            'consumer_baskets']
-                                                                        [
-                                                                        index])));
-                                                      },
-                                                      child: Container(
-                                                          padding: const EdgeInsets
-                                                                  .fromLTRB(
-                                                              11, 5, 11, 5),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  100),
-                                                            ),
-                                                          ),
-                                                          child: TextFieldUtils().dynamicText(
-                                                              'Review and Rating',
-                                                              context,
-                                                              TextStyle(
-                                                                  fontFamily:
-                                                                      'Roboto',
-                                                                  color: ThemeApp
-                                                                      .tealButtonColor,
-                                                                  fontSize: 10,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  decoration:
-                                                                      TextDecoration
-                                                                          .underline,
-                                                                  letterSpacing:
-                                                                      -0.08))),
-                                                    ),
-                                                  ]), /*rattingBar()*/
-                                                ),
-                                                /* order['overall_status'] == 'Delivered'
-                                        ? InkWell(
-                                        onTap: () {
-                                          // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OrderRatingReviewActivity(values:  value.myOrderList[index])));
-                                        },
-                                        child: rattingBar())
-                                        : SizedBox(),*/
-                                                /*TextFieldUtils().dynamicText(
-                                              'Item Return Inprogress',
-                                                  context,
-                                                  TextStyle(fontFamily: 'Roboto',
-                                                      color: ThemeApp
-                                                          .blackColor,
-                                                      fontSize:
-                                                          12,
-                                                      fontWeight:
-                                                          FontWeight.w400)),*/
-
+                                                //tootal amount
+                                                TextFieldUtils().dynamicText(
+                                                    indianRupeesFormat
+                                                        .format(double.parse(
+                                                            order['offer']
+                                                                    .toString() ??
+                                                                ""))
+                                                        .toString(),
+                                                    context,
+                                                    TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        color:
+                                                            ThemeApp.blackColor,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        letterSpacing: 0.2)),
                                                 Row(
                                                   children: [
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ReturnOrderActivity(
-                                                              values: value
-                                                                          .jsonData[
-                                                                      'payload']
-                                                                  [
-                                                                  'consumer_baskets'][index],
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        padding:
-                                                            const EdgeInsets
+                                                    /* value.myOrdersList[index]
+                                                          ["myOrderStatus"] ==
+                                                      "Acceptance Pending"
+                                                  ? SizedBox()
+                                                  : Container(
+                                                      child: TextFieldUtils().dynamicText(
+                                                          "Change Status to:",
+                                                          context,
+                                                          TextStyle(fontFamily: 'Roboto',
+                                                              color: ThemeApp
+                                                                  .blackColor,
+                                                              fontSize:
+                                                                  height *
+                                                                      .018,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400)),
+                                                    ),*/
+                                                    //order status whith dynamic color
+
+                                                    /*  SizedBox(
+                                          width: width * .02,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 8, 10, 8),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(30),
+                                            ),
+                                            border: Border.all(
+                                                color: colorsStatus),
+                                            color: ThemeApp.whiteColor,
+                                          ),
+                                          child: TextFieldUtils().dynamicText(
+                                              order['overall_status'],
+                                              context,
+                                              TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color: colorsStatus,
+                                                  fontSize: 10,
+                                                  fontWeight:
+                                                      FontWeight.w500)),
+                                        ),*/
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 19,
+                                          ),
+                                          TextFieldUtils().lineHorizontal(),
+                                          // stepperWidget(),
+                                          // stepperWidget(
+                                          //     order['orders'][subIndexOrderList]),
+                                          // TextFieldUtils().lineHorizontal(),
+                                          SizedBox(
+                                            height: 6,
+                                          ),
+
+                                          Container(
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OrderRatingReviewActivity(values:  value.myOrderList[index])));
+                                                    },
+                                                    child: Row(children: [
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Navigator.of(context).push(MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderRatingReviewActivity(
+                                                                      values: value.jsonData['payload']
+                                                                              [
+                                                                              'consumer_baskets']
+                                                                          [
+                                                                          index])));
+                                                        },
+                                                        child: Container(
+                                                            padding: const EdgeInsets
                                                                     .fromLTRB(
-                                                                15.0,
-                                                                7.0,
-                                                                15.0,
-                                                                7.0),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              const BorderRadius
-                                                                  .all(
-                                                            Radius.circular(20),
-                                                          ),
-                                                          border: Border.all(
-                                                            color: ThemeApp
-                                                                .tealButtonColor,
-                                                          ),
-                                                          color: ThemeApp
-                                                              .containerColor,
-                                                        ),
-                                                        child: Row(
-                                                          children: [
-                                                            /*    Icon(Icons.refresh_sharp,
-                                                    color:
-                                                    ThemeApp.whiteColor,
-                                                    size: height * .02),
-                                                SizedBox(
-                                                  width: width * .01,
-                                                ),*/
-                                                            TextFieldUtils().dynamicText(
-                                                                "Return",
+                                                                11, 5, 11, 5),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    100),
+                                                              ),
+                                                            ),
+                                                            child: TextFieldUtils().dynamicText(
+                                                                'Review and Rating',
                                                                 context,
                                                                 TextStyle(
                                                                     fontFamily:
                                                                         'Roboto',
                                                                     color: ThemeApp
                                                                         .tealButtonColor,
-                                                                    fontSize:
-                                                                        10,
+                                                                    fontSize: 10,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w700)),
-                                                          ],
+                                                                            .w700,
+                                                                    decoration:
+                                                                        TextDecoration
+                                                                            .underline,
+                                                                    letterSpacing:
+                                                                        -0.08))),
+                                                      ),
+                                                    ]), /*rattingBar()*/
+                                                  ),
+                                                  /* order['overall_status'] == 'Delivered'
+                                          ? InkWell(
+                                          onTap: () {
+                                            // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OrderRatingReviewActivity(values:  value.myOrderList[index])));
+                                          },
+                                          child: rattingBar())
+                                          : SizedBox(),*/
+                                                  /*TextFieldUtils().dynamicText(
+                                                'Item Return Inprogress',
+                                                    context,
+                                                    TextStyle(fontFamily: 'Roboto',
+                                                        color: ThemeApp
+                                                            .blackColor,
+                                                        fontSize:
+                                                            12,
+                                                        fontWeight:
+                                                            FontWeight.w400)),*/
+
+                                                  Row(
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Navigator.of(context)
+                                                              .push(
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ReturnOrderActivity(
+                                                                values: value
+                                                                            .jsonData[
+                                                                        'payload']
+                                                                    [
+                                                                    'consumer_baskets'][index],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  15.0,
+                                                                  7.0,
+                                                                  15.0,
+                                                                  7.0),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                const BorderRadius
+                                                                    .all(
+                                                              Radius.circular(20),
+                                                            ),
+                                                            border: Border.all(
+                                                              color: ThemeApp
+                                                                  .tealButtonColor,
+                                                            ),
+                                                            color: ThemeApp
+                                                                .containerColor,
+                                                          ),
+                                                          child: Row(
+                                                            children: [
+                                                              /*    Icon(Icons.refresh_sharp,
+                                                      color:
+                                                      ThemeApp.whiteColor,
+                                                      size: height * .02),
+                                                  SizedBox(
+                                                    width: width * .01,
+                                                  ),*/
+                                                              TextFieldUtils().dynamicText(
+                                                                  "Return",
+                                                                  context,
+                                                                  TextStyle(
+                                                                      fontFamily:
+                                                                          'Roboto',
+                                                                      color: ThemeApp
+                                                                          .tealButtonColor,
+                                                                      fontSize:
+                                                                          10,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700)),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        for (int i = 0;
-                                                            i <=
-                                                                value
-                                                                        .jsonData[
-                                                                            'payload']
-                                                                            [
-                                                                            'consumer_baskets']
-                                                                            [
-                                                                            index]
-                                                                            [
-                                                                            'orders']
-                                                                        .length -
-                                                                    1;
-                                                            i++) {
-                                                          print("Merchant id : " +
-                                                              value.jsonData[
-                                                                      'payload']
-                                                                      [
-                                                                      'consumer_baskets']
-                                                                      [index]
-                                                                      ['orders']
-                                                                      [i][
-                                                                      'merchant_id']
-                                                                  .toString());
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          for (int i = 0;
+                                                              i <=
+                                                                  value
+                                                                          .jsonData[
+                                                                              'payload']
+                                                                              [
+                                                                              'consumer_baskets']
+                                                                              [
+                                                                              index]
+                                                                              [
+                                                                              'orders']
+                                                                          .length -
+                                                                      1;
+                                                              i++) {
+                                                            print("Merchant id : " +
+                                                                value.jsonData[
+                                                                        'payload']
+                                                                        [
+                                                                        'consumer_baskets']
+                                                                        [index]
+                                                                        ['orders']
+                                                                        [i][
+                                                                        'merchant_id']
+                                                                    .toString());
 
-                                                          reOrderMoveCart(
-                                                              order['user_id']
-                                                                  .toString(),
-                                                              order['orders'][i]
-                                                                      [
-                                                                      'product_id']
-                                                                  .toString(),
-                                                              order['orders'][i]
-                                                                      [
-                                                                      'service_id']
-                                                                  .toString(),
-                                                              order['orders'][i]
-                                                                      [
-                                                                      'merchant_id']
-                                                                  .toString(),
-                                                              order['orders'][i]
-                                                                      [
-                                                                      'item_qty']
-                                                                  .toString());
-                                                        }
-                                                      },
-                                                      child: Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .fromLTRB(
-                                                                15.0,
-                                                                7.0,
-                                                                15.0,
-                                                                7.0),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              const BorderRadius
-                                                                  .all(
-                                                            Radius.circular(20),
-                                                          ),
-                                                          border: Border.all(
+                                                            reOrderMoveCart(
+                                                                order['user_id']
+                                                                    .toString(),
+                                                                order['orders'][i]
+                                                                        [
+                                                                        'product_id']
+                                                                    .toString(),
+                                                                order['orders'][i]
+                                                                        [
+                                                                        'service_id']
+                                                                    .toString(),
+                                                                order['orders'][i]
+                                                                        [
+                                                                        'merchant_id']
+                                                                    .toString(),
+                                                                order['orders'][i]
+                                                                        [
+                                                                        'item_qty']
+                                                                    .toString());
+                                                          }
+                                                        },
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  15.0,
+                                                                  7.0,
+                                                                  15.0,
+                                                                  7.0),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                const BorderRadius
+                                                                    .all(
+                                                              Radius.circular(20),
+                                                            ),
+                                                            border: Border.all(
+                                                              color: ThemeApp
+                                                                  .tealButtonColor,
+                                                            ),
                                                             color: ThemeApp
                                                                 .tealButtonColor,
                                                           ),
-                                                          color: ThemeApp
-                                                              .tealButtonColor,
-                                                        ),
-                                                        child: Row(
-                                                          children: [
-                                                            /*    Icon(Icons.refresh_sharp,
-                                              color:
-                                              ThemeApp.whiteColor,
-                                              size: height * .02),
-                                          SizedBox(
-                                            width: width * .01,
-                                          ),*/
-                                                            TextFieldUtils().dynamicText(
-                                                                "Reorder",
-                                                                context,
-                                                                TextStyle(
-                                                                    fontFamily:
-                                                                        'Roboto',
-                                                                    color: ThemeApp
-                                                                        .whiteColor,
-                                                                    fontSize:
-                                                                        10,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w700)),
-                                                          ],
+                                                          child: Row(
+                                                            children: [
+                                                              /*    Icon(Icons.refresh_sharp,
+                                                color:
+                                                ThemeApp.whiteColor,
+                                                size: height * .02),
+                                            SizedBox(
+                                              width: width * .01,
+                                            ),*/
+                                                              TextFieldUtils().dynamicText(
+                                                                  "Reorder",
+                                                                  context,
+                                                                  TextStyle(
+                                                                      fontFamily:
+                                                                          'Roboto',
+                                                                      color: ThemeApp
+                                                                          .whiteColor,
+                                                                      fontSize:
+                                                                          10,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700)),
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                    ],
+                                                  ),
 
-                                                /*  order['overall_status'] == 'Delivered'
-                                        ? Container(
-                                      padding:
-                                      const EdgeInsets.fromLTRB(
-                                          15.0, 7.0, 15.0, 7.0),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                        const BorderRadius.all(
-                                          Radius.circular(20),
+                                                  /*  order['overall_status'] == 'Delivered'
+                                          ? Container(
+                                        padding:
+                                        const EdgeInsets.fromLTRB(
+                                            15.0, 7.0, 15.0, 7.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                          const BorderRadius.all(
+                                            Radius.circular(20),
+                                          ),
+                                          color:
+                                          ThemeApp.tealButtonColor,
                                         ),
-                                        color:
-                                        ThemeApp.tealButtonColor,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.refresh_sharp,
-                                              color:
-                                              ThemeApp.whiteColor,
-                                              size: height * .02),
-                                          SizedBox(
-                                            width: width * .01,
-                                          ),
-                                          TextFieldUtils()
-                                              .dynamicText(
-                                              "Reorder",
-                                              context,
-                                              TextStyle(
-                                                  fontFamily:
-                                                  'Roboto',
-                                                  color: ThemeApp
-                                                      .whiteColor,
-                                                  fontSize: 10,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w700)),
-                                        ],
-                                      ),
-                                    )
-                                        : InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(MaterialPageRoute(
-                                            builder: (context) => CancelOrderActivity(
-                                                values: value.jsonData['payload']['consumer_baskets']
-                                                [index], orderList:  order['orders'][indexOfOrders])));
-                                      },
-                                      child: Container(
-                                          padding:
-                                          const EdgeInsets.fromLTRB(
-                                              11, 5, 11, 5),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.all(
-                                              Radius.circular(100),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.refresh_sharp,
+                                                color:
+                                                ThemeApp.whiteColor,
+                                                size: height * .02),
+                                            SizedBox(
+                                              width: width * .01,
                                             ),
-                                            border: Border.all(
-                                                color: ThemeApp
-                                                    .tealButtonColor),
-                                            color: ThemeApp
-                                                .tealButtonColor,
-                                          ),
-                                          child:
-                                          TextFieldUtils().dynamicText(
-                                              'Cancel Order',
-                                              context,
-                                              TextStyle(
-                                                  fontFamily:
-                                                  'Roboto',
+                                            TextFieldUtils()
+                                                .dynamicText(
+                                                "Reorder",
+                                                context,
+                                                TextStyle(
+                                                    fontFamily:
+                                                    'Roboto',
+                                                    color: ThemeApp
+                                                        .whiteColor,
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .w700)),
+                                          ],
+                                        ),
+                                      )
+                                          : InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (context) => CancelOrderActivity(
+                                                  values: value.jsonData['payload']['consumer_baskets']
+                                                  [index], orderList:  order['orders'][indexOfOrders])));
+                                        },
+                                        child: Container(
+                                            padding:
+                                            const EdgeInsets.fromLTRB(
+                                                11, 5, 11, 5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.all(
+                                                Radius.circular(100),
+                                              ),
+                                              border: Border.all(
                                                   color: ThemeApp
-                                                      .whiteColor,
-                                                  fontSize: 10,
-                                                  fontWeight:
-                                                  FontWeight
-                                                      .w700,
-                                                  letterSpacing:
-                                                  -0.08))),
-                                    ),*/
-                                              ],
-                                            )),
-                                      ]),
-                                )));
+                                                      .tealButtonColor),
+                                              color: ThemeApp
+                                                  .tealButtonColor,
+                                            ),
+                                            child:
+                                            TextFieldUtils().dynamicText(
+                                                'Cancel Order',
+                                                context,
+                                                TextStyle(
+                                                    fontFamily:
+                                                    'Roboto',
+                                                    color: ThemeApp
+                                                        .whiteColor,
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .w700,
+                                                    letterSpacing:
+                                                    -0.08))),
+                                      ),*/
+                                                ],
+                                              )),
+                                        ]),
+                                  ))),
+                        );
                   }),
     );
     /* : Center(

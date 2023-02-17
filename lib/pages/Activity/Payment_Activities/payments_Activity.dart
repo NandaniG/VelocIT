@@ -633,13 +633,13 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
   }
 
   Widget stepperWidget() {
-    return Container(
-        height: height * .1,
-        width: width,
-        alignment: Alignment.center,
-        color: ThemeApp.appBackgroundColor,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(19, 16, 19, 14),
+      child: Container(
+          height: 78,
+          width: width,
+          alignment: Alignment.center,
+          color: ThemeApp.appBackgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -650,27 +650,25 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
               const SizedBox(
                 height: 8,
               ),
-              Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: _titleViews(context),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: _titleViews(context),
               ),
             ],
-          ),
-        ));
+          )),
+    );
   }
 
   List<Widget> _iconViews() {
     var list = <Widget>[];
     titles.asMap().forEach((i, icon) {
-      var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
+      var circleColor = (i == 0 || i == 1||i == 2 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var lineColor = (i == 0 || i == 1 || _curStep > i + 1)
+      var lineColor = (i == 0 || i == 1 || i == 2||_curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
+      var iconColor = (i == 0 || i == 1 ||  i == 2||_curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
 
@@ -687,17 +685,17 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
           //     color: circleColor,
           //     width: 2.0,
           //   ),),
-          child: (i == 0 || _curStep > i + 1)
+          child: (i == 0 || i == 1 ||  i == 2|| _curStep > i + 1)
               ? Icon(
-                  Icons.circle,
-                  color: iconColor,
-                  size: 18.0,
-                )
+            Icons.circle,
+            color: iconColor,
+            size: 18.0,
+          )
               : Icon(
-                  Icons.radio_button_checked_outlined,
-                  color: iconColor,
-                  size: 18.0,
-                ),
+            Icons.radio_button_checked_outlined,
+            color: iconColor,
+            size: 18.0,
+          ),
         ),
       );
 
@@ -705,36 +703,43 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
       if (i != titles.length - 1) {
         list.add(Expanded(
             child: Container(
-          height: 3.0,
-          color: lineColor,
-        )));
+              height: 3.0,
+              color: lineColor,
+            )));
       }
     });
 
     return list;
   }
-
+//
   List<Widget> _titleViews(BuildContext context) {
     var list = <Widget>[];
     titles.asMap().forEach((i, text) {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
-            ? TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.w400))
-            : TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.w400)),
+            ? SizedBox(
+          // width: 61,
+          child: TextFieldUtils().dynamicText(
+              text,
+              context,
+              TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400)),
+        )
+            : Container(
+          // color: ThemeApp.whiteColor,
+          // width: 61,
+          child: TextFieldUtils().dynamicText(
+              text,
+              context,
+              TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400)),
+        ),
       );
     });
     return list;
@@ -742,9 +747,10 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
 }
 
 final List<String> titles = [
-  'Order Placed',
+  'Order review',
+  'Delivery detail',
   'Payment',
-  'Order Completed',
+  'Order Placed',
 ];
 int _curStep = 1;
 

@@ -149,15 +149,8 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                                         SizedBox(
                                           height: height * .02,
                                         ),
-                                        TextFieldUtils().dynamicText(
-                                            'Book our Services',
-                                            context,
-                                            TextStyle(
-                                              fontFamily: 'Roboto',
-                                              color: ThemeApp.primaryNavyBlackColor,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: height * .03,
-                                            )),
+                                        TextFieldUtils()
+                                            .headingTextField('Book our Services', context),
 
                                         SizedBox(
                                           height: height * .02,

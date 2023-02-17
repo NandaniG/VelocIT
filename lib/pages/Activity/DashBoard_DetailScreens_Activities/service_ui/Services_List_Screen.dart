@@ -91,7 +91,7 @@ class _ServiceListByCategoryActivityState
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(height * .12),
-          child: AppBarWidget(
+          child: AppBar_BackWidget(
             context: context,
             titleWidget: searchBar(context),
             location: const AddressWidgets(),
