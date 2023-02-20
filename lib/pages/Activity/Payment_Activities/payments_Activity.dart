@@ -750,7 +750,7 @@ final List<String> titles = [
   'Order review',
   'Delivery detail',
   'Payment',
-  'Order Placed',
+  'Order placed',
 ];
 int _curStep = 1;
 

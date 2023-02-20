@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:velocit/pages/Activity/Merchant_Near_Activities/Merchant_List_Screen.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
@@ -65,9 +66,23 @@ class _MerchantActvityState extends State<MerchantActvity> {
     super.initState();
     data = Provider.of<HomeProvider>(context, listen: false).loadJson();
     // getmarkers();
+    _request_permission(context);
     getGPSInfo();
   }
+  Future<void> _request_permission(context)async{
+    final Permission location_permission=Permission.location;
+    bool location_status=false;
+    bool ispermanetelydenied= await location_permission.isPermanentlyDenied;
+    if(ispermanetelydenied) {
+      print("denied");
+      await  openAppSettings();
+    }else{
+      var location_statu = await location_permission.request();
+      location_status=location_statu.isGranted;
+      print(location_status);
+    }
 
+  }
   getGPSInfo() async {
     bool servicestatus = await Geolocator.isLocationServiceEnabled();
     LocationPermission permission = await Geolocator.checkPermission();
@@ -92,6 +107,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
             print('Location permissions are denied');
             permission = await Geolocator.requestPermission();
             if (permission == LocationPermission.deniedForever) {
+              getGPSInfo();
               Utils.errorToast(
                   'You need to enable location for merchants near you');
 

@@ -2434,7 +2434,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              'Order Placed',
+              'Order placed',
               context,
               subOrders['is_order_placed'] == true
                   ? ThemeApp.blackColor

@@ -348,7 +348,7 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
 }
 
 final List<String> titles = [
-  'Order Placed',
+  'Order placed',
   'Payment',
   'Order Completed',
 ];
