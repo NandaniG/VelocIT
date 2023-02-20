@@ -424,13 +424,11 @@ class _HomePageState extends State<HomePage> {
               return Container(
                 height:        MediaQuery.of(context).size.height * .08,
                 alignment: Alignment.center,
-                child: TextFieldUtils().dynamicText(
-                    'No Match found!',
-                    context,
-                    TextStyle(fontFamily: 'Roboto',
-                        color: ThemeApp.blackColor,
-                        fontSize:       MediaQuery.of(context).size. height * .03,
-                        fontWeight: FontWeight.bold)),
+                child: Center(
+                    child: Text(
+                      "Match not found",
+                      style: TextStyle(fontSize: 20),
+                    )),
               );
             }),
       );

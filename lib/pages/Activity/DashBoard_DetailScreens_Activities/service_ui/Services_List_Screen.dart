@@ -90,10 +90,10 @@ class _ServiceListByCategoryActivityState
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .12),
-          child: AppBar_BackWidget(
+          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
+          child: AppBarWidget(
             context: context,
-            titleWidget: searchBar(context),
+            titleWidget: searchBarWidget(),
             location: const AddressWidgets(),
           ),
         ),
@@ -101,7 +101,7 @@ class _ServiceListByCategoryActivityState
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 0),
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.start,
               // crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,15 +311,12 @@ class _ServiceListByCategoryActivityState
   }
 
   Widget productListView() {
-    return Expanded(
-        // width: MediaQuery.of(context).size.width,
-        child: subServiceList.isEmpty
-            ? const Center(
-                child: Text(
-                "Match not found",
-                style: TextStyle(fontSize: 20),
-              ))
-            : GridView(
+    return isLoading==false? Expanded(
+        child:subServiceList.isEmpty?Center(
+            child: Text(
+              "Match not found",
+              style: TextStyle(fontSize: 20),
+            )):GridView(
                 controller: _sc,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -467,7 +464,7 @@ class _ServiceListByCategoryActivityState
                       }*/
                   }
                 }),
-              ));
+              )):CircularProgressIndicator();
   }
 
   void _getMoreData(int page, int size, int subCategoryId) async {

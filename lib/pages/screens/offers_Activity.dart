@@ -16,15 +16,18 @@ import '../../utils/constants.dart';
 import '../../utils/styles.dart';
 import '../../widgets/global/appBar.dart';
 import '../../widgets/global/textFormFields.dart';
+
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 import '../Activity/DashBoard_DetailScreens_Activities/Offer_List_Screen.dart';
 
 class OfferActivity extends StatefulWidget {
- // final OfferPayload payload;
+  // final OfferPayload payload;
 
-  const OfferActivity({Key? key/*,required this.payload*/}) : super(key: key);
+  const OfferActivity({Key? key /*,required this.payload*/
+      })
+      : super(key: key);
 
   @override
   State<OfferActivity> createState() => _OfferActivityState();
@@ -35,21 +38,17 @@ class _OfferActivityState extends State<OfferActivity> {
   double width = 0.0;
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   ProductSpecificListViewModel productSpecificListViewModel =
-  ProductSpecificListViewModel();
-
-
+      ProductSpecificListViewModel();
 
   DashboardViewModel productListView = DashboardViewModel();
 
   @override
   void initState() {
-
     productListView.getOfferWithGet();
 
     // TODO: implement initState
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,40 +59,33 @@ class _OfferActivityState extends State<OfferActivity> {
         backgroundColor: ThemeApp.appBackgroundColor,
         // resizeToAvoidBottomInset: false,
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(height * .12),
+            preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
             child: AppBarWidget(
-            context:     context,
-               titleWidget:  searchBar(context),
+              context: context,
+              titleWidget: searchBarWidget(),
               location: const AddressWidgets(),
-)),
-        bottomNavigationBar: bottomNavigationBarWidget(context,1),
+            )),
+        bottomNavigationBar: bottomNavigationBarWidget(context, 1),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-        body:
-
-
-
-
-        SafeArea(
+        body: SafeArea(
           child: SingleChildScrollView(
             child: Consumer<HomeProvider>(builder: (context, provider, child) {
-
-                return Container(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                       /* bannerOffer(provider.offerList["topBanner"]),
+              return Container(
+                padding: const EdgeInsets.only(left: 10, right: 10,),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /* bannerOffer(provider.offerList["topBanner"]),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
-                        ),*/TextFieldUtils().headingTextField(
-                            StringUtils.lowerPriceOfTheDay,
-                            context),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * .02,
-                        ),
-                        /*
+                        ),*/
+                      TextFieldUtils().headingTextField(
+                          StringUtils.lowerPriceOfTheDay, context),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .02,
+                      ),
+                      /*
                         // lowPriceOftTheDayList(),
                         // SizedBox(
                         //   height: MediaQuery.of(context).size.height * .02,
@@ -103,26 +95,26 @@ class _OfferActivityState extends State<OfferActivity> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
                         ),*/
-                        budgetBuyList(),
-                        // appliancesList(provider),
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height * .02,
-                        // ),
-                        // TextFieldUtils().listHeadingTextField(
-                        //     StringUtils.electronics, context),
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height * .02,
-                        // ),
-                        // appliancesList(),
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height * .02,
-                        // ),
-                        // TextFieldUtils().listHeadingTextField(
-                        //     StringUtils.fashion, context),
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height * .02,
-                        // ),
-                        // appliancesList(),
+                      budgetBuyList(),
+                      // appliancesList(provider),
+                      // SizedBox(
+                      //   height: MediaQuery.of(context).size.height * .02,
+                      // ),
+                      // TextFieldUtils().listHeadingTextField(
+                      //     StringUtils.electronics, context),
+                      // SizedBox(
+                      //   height: MediaQuery.of(context).size.height * .02,
+                      // ),
+                      // appliancesList(),
+                      // SizedBox(
+                      //   height: MediaQuery.of(context).size.height * .02,
+                      // ),
+                      // TextFieldUtils().listHeadingTextField(
+                      //     StringUtils.fashion, context),
+                      // SizedBox(
+                      //   height: MediaQuery.of(context).size.height * .02,
+                      // ),
+                      // appliancesList(),
                       /*  SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
                         ),
@@ -134,126 +126,116 @@ class _OfferActivityState extends State<OfferActivity> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .02,
                         ),*/
-                      ]),
-                );
-              }
-            ),
+                    ]),
+              );
+            }),
           ),
         ));
   }
+
   Widget budgetBuyList() {
     return ChangeNotifierProvider<DashboardViewModel>.value(
         value: productListView,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, offers, child) {
-              switch (offers.offerResponse.status) {
-                case Status.LOADING:
-                  if (kDebugMode) {
-                    print("Api load");
-                  }
-                  return ProgressIndicatorLoader(true);
+        child: Consumer<DashboardViewModel>(builder: (context, offers, child) {
+          switch (offers.offerResponse.status) {
+            case Status.LOADING:
+              if (kDebugMode) {
+                print("Api load");
+              }
+              return ProgressIndicatorLoader(true);
 
-                case Status.ERROR:
-                  if (kDebugMode) {
-                    print("Api error");
-                  }
-                  return Text(
-                      offers.offerResponse.message.toString());
+            case Status.ERROR:
+              if (kDebugMode) {
+                print("Api error");
+              }
+              return Text('');
+            case Status.COMPLETED:
+              if (kDebugMode) {
+                print("Api calll");
+              }
 
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
+              List<OfferPayload>? offerList =
+                  offers.offerResponse.data!.payload;
 
-                  List<OfferPayload>? offerList = offers.offerResponse.data!
-                      .payload;
-
-                  return Container(
-                    height: offerList!.length > 2 ? 420 : 240,
-                    child: GridView(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 12,
-                          // childAspectRatio: 1.0,
-                          childAspectRatio:
-                          MediaQuery
-                              .of(context)
-                              .size
-                              .height / 800,
-                        ),
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: List.generate(
-                            offerList.length >= 4 ? 4 : offerList.length,
-                                (index) {
-                              return Container(
-                                // height: 191,
-                                // width: 191,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            OfferListByCategoryActivity(
-                                              offerList: offerList[index],
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      Container(
+              return Container(
+                height: offerList!.length > 2 ? 420 : 240,
+                child: GridView(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 12,
+                      // childAspectRatio: 1.0,
+                      childAspectRatio:
+                          MediaQuery.of(context).size.height / 800,
+                    ),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: List.generate(
+                        offerList.length >= 4 ? 4 : offerList.length, (index) {
+                      return Container(
+                        // height: 191,
+                        // width: 191,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    OfferListByCategoryActivity(
+                                  offerList: offerList[index],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 141,
+                                width: 191,
+                                decoration: BoxDecoration(
+                                    color: ThemeApp.whiteColor,
+                                    border: Border.all(
+                                        color: ThemeApp.tealButtonColor)),
+                                child: Image.network(
+                                  // width: double.infinity,
+                                  offerList[index].offerImageUrl.toString() ??
+                                      "",
+                                  // fit: BoxFit.fill,
+                                  errorBuilder: ((context, error, stackTrace) {
+                                    return Container(
                                         height: 141,
                                         width: 191,
-                                        decoration:  BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                            border: Border.all(color: ThemeApp.tealButtonColor)
-
-                                        ),
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          offerList[index].offerImageUrl
-                                              .toString() ?? "",
-                                          // fit: BoxFit.fill,
-                                          errorBuilder: ((context, error,
-                                              stackTrace) {
-                                            return Container(
-                                                height: 141,
-                                                width: 191,
-                                                color: ThemeApp.whiteColor,
-                                                child: Icon(
-                                                  Icons.image_outlined,
-                                                ));
-                                          }),
-                                          // height: 163,
-                                          // width: 191,
-                                        ),
-                                      ),
-                                      SizedBox(),
-                                      Container(
-                                        color: ThemeApp.tealButtonColor,
-                                        width: 191,
-                                        // height: 65,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(
-                                                  21, 10, 21, 0),
-                                              child: TextFieldUtils()
-                                                  .listNameHeadingTextField(
+                                        color: ThemeApp.whiteColor,
+                                        child: Icon(
+                                          Icons.image_outlined,
+                                        ));
+                                  }),
+                                  // height: 163,
+                                  // width: 191,
+                                ),
+                              ),
+                              SizedBox(),
+                              Container(
+                                color: ThemeApp.tealButtonColor,
+                                width: 191,
+                                // height: 65,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          21, 10, 21, 0),
+                                      child: TextFieldUtils()
+                                              .listNameHeadingTextField(
                                                   offerList[index]
-                                                      .productSubCategoryName
-                                                      .toString() ?? "",
-                                                  context) ?? SizedBox() /*Text(
+                                                          .productSubCategoryName
+                                                          .toString() ??
+                                                      "",
+                                                  context) ??
+                                          SizedBox() /*Text(
                                                     serviceList[index].shortName!,
                                                     maxLines: 1,
                                                     style: TextStyle(fontFamily: 'Roboto',
@@ -264,42 +246,42 @@ class _OfferActivityState extends State<OfferActivity> {
                                                         fontSize: height * .022,
                                                         fontWeight:
                                                             FontWeight.bold))*/
-                                              ,
-                                            ),
-                                            offerList[index].isAmountBased==true?   Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(
-                                                  21, 4, 21, 9),
-                                              child: TextFieldUtils()
-                                                  .listPriceHeadingTextField(
-
-                                                  "Under "+  offerList[index]
-                                                      .belowAmountDisplay.toString(),
-                                                  context),
-
-                                            ):Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(
-                                                  21, 4, 21, 9),
-                                              child: TextFieldUtils()
-                                                  .listPriceHeadingTextField(
-
-                                                  "Under "+  offerList[index]
-                                                      .belowDiscountPercentDisplay.toString(),
-                                                  context),
-
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                      ,
+                                    ),
+                                    offerList[index].isAmountBased == true
+                                        ? Container(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                21, 4, 21, 9),
+                                            child: TextFieldUtils()
+                                                .listPriceHeadingTextField(
+                                                    "Under " +
+                                                        offerList[index]
+                                                            .belowAmountDisplay
+                                                            .toString(),
+                                                    context),
+                                          )
+                                        : Container(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                21, 4, 21, 9),
+                                            child: TextFieldUtils()
+                                                .listPriceHeadingTextField(
+                                                    "Under " +
+                                                        offerList[index]
+                                                            .belowDiscountPercentDisplay
+                                                            .toString(),
+                                                    context),
+                                          )
+                                  ],
                                 ),
-                              );
-                            })),
-                  );
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    })),
+              );
 
-              /*    Container(
+            /*    Container(
                       height: serviceList!.length > 2 ? 480 : 240,
                       // width: MediaQuery.of(context).size.width,
                       // padding: EdgeInsets.all(12.0),
@@ -494,11 +476,11 @@ class _OfferActivityState extends State<OfferActivity> {
                           );
                         },
                       ));*/
-                default:
-                  return Text("No Data found!");
-              }
+            default:
               return Text("No Data found!");
-            }));
+          }
+          return Text("No Data found!");
+        }));
 /*
     return ChangeNotifierProvider<DashboardViewModel>(
         value:  dashboardViewModel,
@@ -637,26 +619,28 @@ class _OfferActivityState extends State<OfferActivity> {
         }));
 */
   }
-Widget productList(List<OfferPayload>? offerList){
-    return  Container(
+
+  Widget productList(List<OfferPayload>? offerList) {
+    return Container(
       height: 900,
       child: ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: offerList!.length,
           itemBuilder: (BuildContext context, int index) {
-          return Column(
-            children: [
-              TextFieldUtils().headingTextField(
-                  offerList[index].productSubCategoryName.toString(), context),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .02,
-              ),
-              // appliancesList(offerList[index]),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .02,
-              ),
-              /*   TextFieldUtils().listHeadingTextField(
+            return Column(
+              children: [
+                TextFieldUtils().headingTextField(
+                    offerList[index].productSubCategoryName.toString(),
+                    context),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .02,
+                ),
+                // appliancesList(offerList[index]),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .02,
+                ),
+                /*   TextFieldUtils().listHeadingTextField(
                                   StringUtils.electronics, context),
                               SizedBox(
                                 height: MediaQuery.of(context).size.height * .02,
@@ -671,15 +655,15 @@ Widget productList(List<OfferPayload>? offerList){
                                 height: MediaQuery.of(context).size.height * .02,
                               ),
                               appliancesList(),*/
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .02,
-              ),
-            ],
-          );
-        }
-      ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .02,
+                ),
+              ],
+            );
+          }),
     );
-}
+  }
+
   Widget bannerOffer(String bannerImage) {
     return Container(
       height: height * 0.2,
@@ -694,8 +678,7 @@ Widget productList(List<OfferPayload>? offerList){
                 color: ThemeApp.whiteColor,
                 borderRadius: const BorderRadius.all(
                   Radius.circular(15),
-                )
-              ),
+                )),
             child: ClipRRect(
               // borderRadius: const BorderRadius.all(
               //   Radius.circular(10),
@@ -732,15 +715,15 @@ Widget productList(List<OfferPayload>? offerList){
         (MediaQuery.of(context).orientation == Orientation.landscape);
 
     return Consumer<HomeProvider>(builder: (context, provider, child) {
-    return  Container(
-          height:400,
+      return Container(
+          height: 400,
           // padding: EdgeInsets.all(12.0),
           child: GridView.builder(
-            itemCount: orientation?2:4,
+            itemCount: orientation ? 2 : 4,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                // childAspectRatio: 3 / 3.1,
-                /*childAspectRatio:
+              // childAspectRatio: 3 / 3.1,
+              /*childAspectRatio:
                     orientation ? 3 / 3.1 : width * 2 / height * 1,
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
@@ -760,63 +743,70 @@ Widget productList(List<OfferPayload>? offerList){
                   // decoration: BoxDecoration(
                   //     borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(flex: 2,
-                        child: Container(
-                          // height: orientation
-                          //     ? height * .35
-                          //     : MediaQuery.of(context).size.height * .16,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: ThemeApp.whiteColor,
-                            border: Border.all(color: ThemeApp.tealButtonColor,)
-                            /*  borderRadius: const BorderRadius.only(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      // height: orientation
+                      //     ? height * .35
+                      //     : MediaQuery.of(context).size.height * .16,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          color: ThemeApp.whiteColor,
+                          border: Border.all(
+                            color: ThemeApp.tealButtonColor,
+                          )
+                          /*  borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(10),
                                 topLeft: Radius.circular(10),
-                              )*/),
-                          child: ClipRRect(
-                          /*  borderRadius: const BorderRadius.only(
+                              )*/
+                          ),
+                      child: ClipRRect(
+                        /*  borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(10),
                               topLeft: Radius.circular(10),
                             ),*/
-                            child: Image.asset(
-                              // width: double.infinity,
-                              provider.offerListDetails[index]["offerImage"],
-                              // fit: BoxFit.fill,
-                              height: orientation
-                                  ? height * .35
-                                  : MediaQuery.of(context).size.height * .07,
-                            ),
-                          ),
+                        child: Image.asset(
+                          // width: double.infinity,
+                          provider.offerListDetails[index]["offerImage"],
+                          // fit: BoxFit.fill,
+                          height: orientation
+                              ? height * .35
+                              : MediaQuery.of(context).size.height * .07,
                         ),
                       ),
-                      Expanded(flex: 1,
-                        child: Container(
-                          width: width,
-                          decoration: BoxDecoration(
-                              color: ThemeApp.tealButtonColor,
-                             /* borderRadius: const BorderRadius.only(
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      width: width,
+                      decoration: BoxDecoration(
+                        color: ThemeApp.tealButtonColor,
+                        /* borderRadius: const BorderRadius.only(
                                 bottomRight: Radius.circular(10),
                                 bottomLeft: Radius.circular(10),
-                              )*/),
-                          padding: orientation
-                              ? EdgeInsets.only(top: 10, bottom: 10)
-                              : EdgeInsets.zero,
-                          child: Column(
-                            children: [
-                              TextFieldUtils().subHeadingTextFieldsWhite(
-                                  provider.offerListDetails[index]["offerName"], context),
-                              TextFieldUtils().homePageTitlesTextFieldsWHITE(
-                                  'Starting from ${provider.offerListDetails[index]
-                                    ["offerDiscountPrice"]}', context)
-                            ],
-                          ),
-                        ),
+                              )*/
                       ),
-                    ],
-                  ));
+                      padding: orientation
+                          ? EdgeInsets.only(top: 10, bottom: 10)
+                          : EdgeInsets.zero,
+                      child: Column(
+                        children: [
+                          TextFieldUtils().subHeadingTextFieldsWhite(
+                              provider.offerListDetails[index]["offerName"],
+                              context),
+                          TextFieldUtils().homePageTitlesTextFieldsWHITE(
+                              'Starting from ${provider.offerListDetails[index]["offerDiscountPrice"]}',
+                              context)
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ));
             },
           ));
     });
@@ -826,47 +816,48 @@ Widget productList(List<OfferPayload>? offerList){
     var orientation =
         (MediaQuery.of(context).orientation == Orientation.landscape);
     return Container(
-                  height: orientation
-                      ? MediaQuery.of(context).size.height * .32
-                      : height * .35,
-                  // padding: EdgeInsets.all(12.0),
-                  child: GridView.builder(
-                    itemCount: offerList.imageUrls!.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        // childAspectRatio: 3 / 2,
-                        childAspectRatio: orientation
-                            ? width * 3.2 / height * 0.5
-                            : width * 2 / height * 1.5,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10),
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {},
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * .26,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: ThemeApp.whiteColor,
-                           /*   borderRadius: const BorderRadius.all(
+        height: orientation
+            ? MediaQuery.of(context).size.height * .32
+            : height * .35,
+        // padding: EdgeInsets.all(12.0),
+        child: GridView.builder(
+          itemCount: offerList.imageUrls!.length,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              // childAspectRatio: 3 / 2,
+              childAspectRatio: orientation
+                  ? width * 3.2 / height * 0.5
+                  : width * 2 / height * 1.5,
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10),
+          itemBuilder: (BuildContext context, int index) {
+            return InkWell(
+              onTap: () {},
+              child: Container(
+                height: MediaQuery.of(context).size.height * .26,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    color: ThemeApp.whiteColor,
+                    /*   borderRadius: const BorderRadius.all(
                                 Radius.circular(10),
-                              ),*/border: Border.all(color: ThemeApp.tealButtonColor)),
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            child: Image.asset(
-                              // width: double.infinity,
-                              offerList.imageUrls![index].imageUrl.toString(),
-                              // fit: BoxFit.fill,
-                              height: MediaQuery.of(context).size.height * .07,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ));
+                              ),*/
+                    border: Border.all(color: ThemeApp.tealButtonColor)),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  child: Image.asset(
+                    // width: double.infinity,
+                    offerList.imageUrls![index].imageUrl.toString(),
+                    // fit: BoxFit.fill,
+                    height: MediaQuery.of(context).size.height * .07,
+                  ),
+                ),
+              ),
+            );
+          },
+        ));
   }
 }
 //

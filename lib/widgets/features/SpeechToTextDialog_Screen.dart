@@ -22,7 +22,7 @@ class SpeechToTextDialog extends StatefulWidget {
 }
 
 class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
-  speechToText.SpeechToText? speech;
+  speechToText.SpeechToText speech = speechToText.SpeechToText();
   String textString = "Tap to speak";
   bool isListen = false;
   double confidence = 1.0;
@@ -80,30 +80,31 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
   }
 
   void listen(DashboardViewModel dashboardViewModel) async {
-    if (!isListen) {
-      bool avail = await speech!.initialize();
-      if (avail) {
-        setState(() {
-          isListen = true;
-        });
-        speech!.listen(onResult: (value) {
-
+      if (!isListen) {
+        bool avail = await speech.initialize();
+        if (avail) {
           setState(() {
-            textString = value.recognizedWords;
-            if (value.hasConfidenceRating && value.confidence > 0) {
-              confidence = value.confidence;
-              StringConstant.controllerSpeechToText.text = textString;
-            }
+            isListen = true;
           });
-          startTimer(dashboardViewModel);
+          speech.listen(onResult: (value) {
+            setState(() {
+              textString = value.recognizedWords;
+              if (value.hasConfidenceRating && value.confidence > 0) {
+                confidence = value.confidence;
+                StringConstant.controllerSpeechToText.text = textString;
+              }
+            });
+            startTimer(dashboardViewModel);
+          },);
+        }
+      } else {
+        setState(() {
 
-        });
-      }
-    } else {
-      setState(() {
         isListen = false;
-      });
-    }
+        });speech.stop();
+      }
+
+
   }
 
   @override
@@ -119,7 +120,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
   @override
   void dispose() {
     _timer.cancel();
-    speech!.cancel();
+    speech.cancel();
     super.dispose();
   }
 

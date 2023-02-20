@@ -325,28 +325,22 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                         return Container(
                           height: height * .8,
                           alignment: Alignment.center,
-                          child: TextFieldUtils().dynamicText(
-                              'No Match found!',
-                              context,
-                              TextStyle(
-                                  fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .03,
-                                  fontWeight: FontWeight.bold)),
+                          child: Center(
+                              child: Text(
+                                "Match not found",
+                                style: TextStyle(fontSize: 20),
+                              )),
                         );
                       }
                   }
                   return Container(
                     height: height * .8,
                     alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
+                    child: Center(
+                        child: Text(
+                          "Match not found",
+                          style: TextStyle(fontSize: 20),
+                        )),
                   );
                 }))),
       ),

@@ -431,14 +431,11 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                     return Container(
                       height: 72,
                       alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
+                      child: Center(
+                          child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                     );
                   }))
               /*    Consumer<HomeProvider>(builder: (context, value, child) {
@@ -585,9 +582,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                               // crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 // StepperGlobalWidget(),
-                                isShowSteppers == true
+                           /*     isShowSteppers == true
                                     ? stepperWidget()
-                                    : SizedBox(),
+                                    : SizedBox(),*/
+                                stepperWidget(),
                                 Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Column(
@@ -1125,14 +1123,11 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                     return Container(
                       height: height * .8,
                       alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: height * .03,
-                              fontWeight: FontWeight.bold)),
+                      child: Center(
+                          child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                     );
                   })))),
     );
@@ -3292,14 +3287,11 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
           return Container(
             height: height * .8,
             alignment: Alignment.center,
-            child: TextFieldUtils().dynamicText(
-                'No Match found!',
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .03,
-                    fontWeight: FontWeight.bold)),
+            child:Center(
+                child: Text(
+                  "Match not found",
+                  style: TextStyle(fontSize: 20),
+                )),
           );
         }));
 

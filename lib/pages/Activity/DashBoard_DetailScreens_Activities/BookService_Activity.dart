@@ -83,10 +83,10 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
       key: scaffoldGlobalKey,
       backgroundColor: ThemeApp.appBackgroundColor,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .12),
+        preferredSize: Size.fromHeight(height * .135),
         child: AppBarWidget(
           context: context,
-          titleWidget: searchBar(context),
+          titleWidget: searchBarWidget(),
           location: const AddressWidgets(),
         ),
       ),
@@ -96,8 +96,7 @@ class _BookServiceActivityState extends State<BookServiceActivity> {
         child: SingleChildScrollView(
           child: Consumer<ProductProvider>(builder: (context, product, _) {
             return Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
+                padding: const EdgeInsets.only(left: 10, right: 10,),              child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

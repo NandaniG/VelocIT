@@ -620,14 +620,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     return Container(
                       height: height * .8,
                       alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: height * .03,
-                              fontWeight: FontWeight.bold)),
+                      child: Center(
+                          child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                     );
                   })),
             )),
@@ -696,14 +693,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   return Container(
                     height: height * .8,
                     alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
+                    child: Center(
+                        child: Text(
+                          "Match not found",
+                          style: TextStyle(fontSize: 20),
+                        ))
                   );
                 }))),
       ),
@@ -723,9 +717,10 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
               itemBuilder: (BuildContext context, int index) {
                 return orderPurchaseList.isEmpty
                     ? const Center(
-                        child: Text(
-                        "No Match",
-                      ))
+                    child: Text(
+                      "Match not found",
+                      style: TextStyle(fontSize: 20),
+                    ))
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,

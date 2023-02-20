@@ -127,17 +127,18 @@ class _OfferListByCategoryActivityState
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .12),
+          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
           child: AppBarWidget(
             context: context,
-            titleWidget: searchBar(context),
-            location: const AddressWidgets(), ),
+            titleWidget: searchBarWidget(),
+            location: AddressWidgets(),
+          ),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context,1),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10,),
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.start,
               // crossAxisAlignment: CrossAxisAlignment.start,
@@ -556,13 +557,11 @@ class _OfferListByCategoryActivityState
               return Container(
                 height: height * .08,
                 alignment: Alignment.center,
-                child: TextFieldUtils().dynamicText(
-                    'No Match found!',
-                    context,
-                    TextStyle(fontFamily: 'Roboto',
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .03,
-                        fontWeight: FontWeight.bold)),
+                child: Center(
+                    child: Text(
+                      "Match not found",
+                      style: TextStyle(fontSize: 20),
+                    )),
               );
             }));
     // });

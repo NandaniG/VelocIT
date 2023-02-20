@@ -58,23 +58,30 @@ class _ProductListByCategoryActivityState
   int size = 10;
 
 //// page for lazy scroll
-   int page = 0;
+  int page = 0;
   List<Content> subCategoryList = [];
 
   @override
   void initState() {
     // TODO: implement initState
+    subCategoryList;
     this._getMoreData(
       page,
       10,
       widget.productList!.id!,
-    );    super.initState();
+    );
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
+    super.initState();
 
     _sc.addListener(() {
       if (_sc.position.pixels == _sc.position.maxScrollExtent) {
-        print("page number sc1 "+page.toString());
+        print("page number sc1 " + page.toString());
         page++;
-        print("page number sc2 "+page.toString());
+        print("page number sc2 " + page.toString());
 
         _getMoreData(
           page,
@@ -95,8 +102,6 @@ class _ProductListByCategoryActivityState
     _sc.dispose();
   }
 
-
-
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
     locale: 'en_IN',
@@ -116,10 +121,11 @@ class _ProductListByCategoryActivityState
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .12),
+          preferredSize:
+              Size.fromHeight(MediaQuery.of(context).size.height * .135),
           child: AppBarWidget(
             context: context,
-            titleWidget: searchBar(context),
+            titleWidget: searchBarWidget(),
             location: const AddressWidgets(),
           ),
         ),
@@ -127,7 +133,10 @@ class _ProductListByCategoryActivityState
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.start,
               // crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,7 +261,7 @@ class _ProductListByCategoryActivityState
 
   Widget filterWidgets() {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       decoration: const BoxDecoration(
           // border: Border(
           //   top: BorderSide(color: Colors.grey, width: 1),
@@ -342,133 +351,129 @@ class _ProductListByCategoryActivityState
   }
 
   Widget productListView() {
-    return Expanded(
-        child: subCategoryList.isEmpty
-            ? Center(
-                child: Text(
-                "Match not found",
-                style: TextStyle(fontSize: 20),
-              ))
-            : GridView(
-                controller: _sc,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 30,
-                  // childAspectRatio: 1.0,
-                  childAspectRatio: MediaQuery.of(context).size.height / 900,
-                ),
-                shrinkWrap: true,
-                children: List.generate(subCategoryList.length + 1, (index) {
-                  if (index == subCategoryList.length) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        _buildProgressIndicator(),
-                      ],
-                    );
-                  } else {
-                    return InkWell(
-                      onTap: () {
-                        print("Id ........${subCategoryList[index].id}");
+    return isLoading==false? Expanded(
+        child:subCategoryList.isEmpty?Center(
+      child: Text(
+      "Match not found",
+      style: TextStyle(fontSize: 20),
+    )): GridView(
+      controller: _sc,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 30,
+        // childAspectRatio: 1.0,
+        childAspectRatio: MediaQuery.of(context).size.height / 900,
+      ),
+      shrinkWrap: true,
+      children: List.generate(subCategoryList.length + 1, (index) {
+        print(subCategoryList.length);
 
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetailsActivity(
-                              id: subCategoryList[index].id,
-                               ),
-                          ),
-                        );
-                      },
-                      child: Container(
+        // if (subCategoryList.length == 0 || subCategoryList == []) {
+        //   return Container(width: double.infinity,color: Colors.redAccent,
+        //     child: Center(
+        //         child: Text(
+        //           "Match not found",
+        //           style: TextStyle(fontSize: 20),
+        //         )),
+        //   );
+        // }
+        if (index == subCategoryList.length) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              _buildProgressIndicator(),
+            ],
+          );
+        } else {
+          return InkWell(
+            onTap: () {
+              print("Id ........${subCategoryList[index].id}");
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailsActivity(
+                    id: subCategoryList[index].id,
+                  ),
+                ),
+              );
+            },
+            child: Container(
 // height: 205,
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /*   Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /*   Expanded(
                                         flex: 2,
                                         child:*/
-                          Container(
-                            height: 143,
-                            width: 191,
-
-                            decoration:  BoxDecoration(
-                              color: ThemeApp.whiteColor,
-                                border: Border.all(color: ThemeApp.tealButtonColor)
-
-                            ),
-                            child: ClipRRect(
-                              child: subCategoryList[index]
-                                      .imageUrls![0]
-                                      .imageUrl!
-                                      .isNotEmpty
-                                  ? Image.network(
-                                      subCategoryList[index]
-                                          .imageUrls![0]
-                                          .imageUrl!,
-                                      // fit: BoxFit.fill,
-                                      height: (MediaQuery.of(context)
-                                                  .orientation ==
-                                              Orientation.landscape)
-                                          ? MediaQuery.of(context).size.height *
-                                              .26
-                                          : MediaQuery.of(context).size.height *
-                                              .1,
-                                    )
-                                  : SizedBox(
-                                      // height: height * .28,
-                                      width: width,
-                                      child: Icon(
-                                        Icons.image_outlined,
-                                        size: 50,
-                                      )),
-                            ),
-                          ),
-                          // ),
-                          Container(
-                            color: ThemeApp.tealButtonColor,
-                            width: 191,
-                            height: 66,
-                            padding: const EdgeInsets.only(
-                              left: 12,
-                              right: 12,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFieldUtils().listNameHeadingTextField(
-                                    subCategoryList[index].shortName!, context),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextFieldUtils().listPriceHeadingTextField(
-                                        indianRupeesFormat.format(
-                                            subCategoryList[index]
-                                                    .defaultSellPrice ??
-                                                0.0),
-                                        context),
-                                    TextFieldUtils()
-                                        .listScratchPriceHeadingTextField(
-                                            indianRupeesFormat.format(
-                                                subCategoryList[index]
-                                                        .defaultMrp ??
-                                                    0.0),
-                                            context)
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
+                Container(
+                  height: 143,
+                  width: 191,
+                  decoration: BoxDecoration(
+                      color: ThemeApp.whiteColor,
+                      border: Border.all(color: ThemeApp.tealButtonColor)),
+                  child: ClipRRect(
+                    child: subCategoryList[index]
+                            .imageUrls![0]
+                            .imageUrl!
+                            .isNotEmpty
+                        ? Image.network(
+                            subCategoryList[index].imageUrls![0].imageUrl!,
+                            // fit: BoxFit.fill,
+                            height: (MediaQuery.of(context).orientation ==
+                                    Orientation.landscape)
+                                ? MediaQuery.of(context).size.height * .26
+                                : MediaQuery.of(context).size.height * .1,
+                          )
+                        : SizedBox(
+                            // height: height * .28,
+                            width: width,
+                            child: Icon(
+                              Icons.image_outlined,
+                              size: 50,
+                            )),
+                  ),
+                ),
+                // ),
+                Container(
+                  color: ThemeApp.tealButtonColor,
+                  width: 191,
+                  height: 66,
+                  padding: const EdgeInsets.only(
+                    left: 12,
+                    right: 12,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFieldUtils().listNameHeadingTextField(
+                          subCategoryList[index].shortName!, context),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextFieldUtils().listPriceHeadingTextField(
+                              indianRupeesFormat.format(
+                                  subCategoryList[index].defaultSellPrice ??
+                                      0.0),
+                              context),
+                          TextFieldUtils().listScratchPriceHeadingTextField(
+                              indianRupeesFormat.format(
+                                  subCategoryList[index].defaultMrp ?? 0.0),
+                              context)
                         ],
-                      )),
-                    );
-                  }
-                }),
-              ));
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            )),
+          );
+        }
+      }),
+    )):CircularProgressIndicator();
   }
 
   void _getMoreData(int page, int size, int subCategoryId) async {
@@ -502,18 +507,16 @@ class _ProductListByCategoryActivityState
           FindProductBySubCategoryModel.fromJson(parsedJson);
       for (int i = 0; i < productBySubCategory.payload!.content!.length; i++) {
         tList.add(productBySubCategory.payload!.content![i]);
-
       }
 
       setState(() {
         isLoading = false;
         subCategoryList.addAll(tList);
         // page++;
-        print("page number "+page.toString());
+        print("page number " + page.toString());
       });
     }
   }
-
 
   Widget _buildProgressIndicator() {
     return Container(

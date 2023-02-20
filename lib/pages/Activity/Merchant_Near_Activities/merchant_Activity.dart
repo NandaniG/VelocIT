@@ -229,10 +229,10 @@ class _MerchantActvityState extends State<MerchantActvity> {
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .12),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
         child: AppBarWidget(
           context: context,
-          titleWidget: searchBar(context),
+          titleWidget: searchBarWidget(),
           location: const AddressWidgets(),
         ),
       ),
@@ -579,7 +579,12 @@ class _MerchantActvityState extends State<MerchantActvity> {
               ? Container(
                   height: height,
                   alignment: Alignment.center,
-                  child: Text("No merchant available near you"))
+                  child:    Center(
+                      child: Text(
+                        "No merchant available near you",
+                        style: TextStyle(fontSize: 20),
+                      )))
+
               : GestureDetector(
                   onVerticalDragStart: (start) {},
                   child: GoogleMap(

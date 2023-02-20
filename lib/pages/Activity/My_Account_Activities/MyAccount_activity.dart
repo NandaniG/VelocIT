@@ -284,8 +284,11 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                                   (BuildContext
                                                                       context) {
                                                                 return ProfileImageDialog(
-                                                                    imageFile1:
-                                                                        imageFile1,isEditAccount: true,);
+                                                                  imageFile1:
+                                                                      imageFile1,
+                                                                  isEditAccount:
+                                                                      true,
+                                                                );
                                                               });
                                                         },
                                                         child: Container(
@@ -379,10 +382,13 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                               context: context,
                                                               builder:
                                                                   (BuildContext
-                                                              context) {
+                                                                      context) {
                                                                 return ProfileImageDialog(
-                                                                    imageFile1:
-                                                                    imageFile1,isEditAccount: true,);
+                                                                  imageFile1:
+                                                                      imageFile1,
+                                                                  isEditAccount:
+                                                                      true,
+                                                                );
                                                               });
                                                         },
                                                         child: Container(
@@ -422,7 +428,6 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                   ),
                                                 ],
                                               ),
-
                                         SizedBox(
                                           height: 20,
                                         ),
@@ -633,9 +638,9 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     EditAccountActivity(
-                                                  // payload:
-                                                  //     snapshot.data!.payload,
-                                                ),
+                                                        // payload:
+                                                        //     snapshot.data!.payload,
+                                                        ),
                                               ),
                                             );
                                           },
@@ -781,19 +786,19 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                             finalId = ID.toString();
                                             prefs.setString('RandomUserId',
                                                 finalId.toString());
-
-                                            _getCurrentPosition().then((value) {
-                                              setState(() {
-
-                                                StringConstant.CurrentPinCode =
-                                                    (prefs.getString('CurrentPinCodePrefs')) ?? '';
-                                              });
-
-
-
-
-                                            });
-
+                                            Navigator.pushReplacementNamed(
+                                                context,
+                                                RoutesName.dashboardRoute);
+                                            Utils.successToast(
+                                                'You are signed out');
+                                            // _getCurrentPosition().then((value) {
+                                            //   setState(() {
+                                            //     StringConstant.CurrentPinCode =
+                                            //         (prefs.getString(
+                                            //                 'CurrentPinCodePrefs')) ??
+                                            //             '';
+                                            //   });
+                                            // });
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.all(10),
@@ -824,6 +829,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
       ),
     );
   }
+
   Position? _currentPosition;
 
   Future<Future<void>> _getCurrentPosition() async {
@@ -870,7 +876,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
   _getLocation(Position position) async {
     final coordinates = Coordinates(position.latitude, position.longitude);
     var addresses =
-    await Geocoder.local.findAddressesFromCoordinates(coordinates);
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     print("address.streetAddress" + first.postalCode.toString());
     print("${first.featureName} : ${first.addressLine}");
@@ -887,11 +893,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
       prefs
           .setString('CurrentPinCodePrefs', first.postalCode.toString())
           .then((value) {
-        Navigator.pushReplacementNamed(
-            context,
-            RoutesName.dashboardRoute);
-        Utils.successToast(
-            'You are signed out');
+        Navigator.pushReplacementNamed(context, RoutesName.dashboardRoute);
+        Utils.successToast('You are signed out');
       });
     });
   }

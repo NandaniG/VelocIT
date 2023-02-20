@@ -26,10 +26,10 @@ class _AllProductDetailScreenState extends State<AllProductDetailScreen> {
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .12),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .14),
         child: AppBarWidget(
           context:    context,
-          titleWidget:    searchBar(context),
+          titleWidget:    AddressWidgets(),
           location: const AddressWidgets(),     ),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context,0),

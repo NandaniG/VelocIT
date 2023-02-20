@@ -12,6 +12,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+// import 'package:geocoding/geocoding.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -118,7 +120,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               // elevation: 1,
               backgroundColor: ThemeApp.appBackgroundColor,
               flexibleSpace: Container(
-                height: height * .08,
+                height: MediaQuery.of(context).size.height * .08,
                 width: width,
                 decoration: const BoxDecoration(
                   color: ThemeApp.appBackgroundColor,
@@ -131,17 +133,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                   ? InkWell(
                       onTap: () {
                         (() {});
-                        Navigator.of(context)
-                            .pushNamedAndRemoveUntil(
-                                RoutesName.dashboardRoute, (route) => false)
-                            .then((value) {
+                        Navigator.pop(context, () {
                           setState(() {});
-                        });
-                        // Navigator.pushReplacementNamed(
-                        //         context, RoutesName.dashboardRoute)
-                        //     .then((value) => setState(() {}));
-                        Provider.of<ProductProvider>(context, listen: false);
-                      },
+                        });   },
                       child: Container(
                         margin: const EdgeInsets.only(left: 15),
                         child: Center(
@@ -500,172 +494,172 @@ Widget appTitle(BuildContext context, String text) {
   );
 }
 
-Widget searchBar(BuildContext context) {
-  double height = 0.0;
-  double width = 0.0;
-  height = MediaQuery.of(context).size.height;
-  width = MediaQuery.of(context).size.width;
-  DashboardViewModel productCategories = DashboardViewModel();
-  productCategories.productCategoryListingWithGet();
-
-  return ChangeNotifierProvider<DashboardViewModel>.value(
-    value: productCategories,
-    child: Consumer<DashboardViewModel>(
-        builder: (context, dashBoardProvider, child) {
-      return Consumer<HomeProvider>(builder: (context, provider, child) {
-        return Container(
-          width: width,
-          height: height * .1,
-          // color: ThemeApp.redColor,
-          padding: const EdgeInsets.only(top: 10, left: 0),
-          alignment: Alignment.center,
-          child: TextFormField(
-            textInputAction: TextInputAction.search,
-
-            controller: StringConstant.controllerSpeechToText,
-            onFieldSubmitted: (value) {
-              print("Getting Value" +
-                  productCategories
-                      .productCategoryList.data!.productList![0].name
-                      .toString());
-              switch (dashBoardProvider.productCategoryList.status) {
-                case Status.LOADING:
-                  return print("Getting Value");
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
-
-                  List<ProductList>? serviceList =
-                      productCategories.productCategoryList.data!.productList;
-                  /*  productCategories.getProductBySearchTermsWithGet(
-                    0,
-                    10,
-                    StringConstant.controllerSpeechToText.text.toString(),
-                  );
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SearchProductListScreen(
-                        searchText: StringConstant.controllerSpeechToText.text,
-                      ),
-                    ),
-                  );*/
-
-                  productCategories.getProductBySearchTermsWithGet(
-                    0,
-                    10,
-                    StringConstant.controllerSpeechToText.text.toString(),
-                  );
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SearchProductListScreen(
-                        searchText: StringConstant.controllerSpeechToText.text,
-                      ),
-                    ),
-                  );
-              }
-              /*  Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProductListByCategoryActivity(
-                      productList: productCategories.),
-                ),
-              );*/
-              if (kDebugMode) {
-                print("search.........");
-              } // showDialog(
-              //     context: context,
-              //     builder: (BuildContext context) {
-              //       return OkDialog(text: StringConstant.controllerSpeechToText.text);
-              //     });
-            },
-            onChanged: (val) {
-              // print("StringConstant.speechToText..." +
-              //     StringConstant.speechToText);
-              // (() {
-              //   if (val.isEmpty) {
-              //     val = StringConstant.speechToText;
-              //   } else {
-              //     StringConstant.speechToText = StringConstant.controllerSpeechToText.text;
-              //   }
-              // });
-            },
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: ThemeApp.whiteColor,
-              isDense: true,
-              // contentPadding:
-              //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              /* -- Text and Icon -- */
-              hintText: "Search",
-              hintStyle: const TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 14,
-                color: ThemeApp.darkGreyTab,
-              ),
-              prefixIconColor: ThemeApp.primaryNavyBlackColor,
-              prefixIcon: /*const Icon(
-                  Icons.search,
-                  size: 26,
-                  color: Colors.black54,
-                ),*/
-                  Padding(
-                padding: const EdgeInsets.all(10),
-                child: SvgPicture.asset(
-                  'assets/appImages/searchIcon.svg',
-                  color: ThemeApp.primaryNavyBlackColor,
-                  semanticsLabel: 'Acme Logo',
-                  theme: SvgTheme(
-                    currentColor: ThemeApp.primaryNavyBlackColor,
-                  ),
-                  height: height * .001,
-                ),
-              ),
-              suffixIcon: InkWell(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return SpeechToTextDialog();
-                      });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    'assets/appImages/miceIcon.svg',
-                    color: ThemeApp.primaryNavyBlackColor,
-                    semanticsLabel: 'Acme Logo',
-                    theme: SvgTheme(
-                      currentColor: ThemeApp.primaryNavyBlackColor,
-                    ),
-                    height: height * .001,
-                  ),
-                ), /*const Icon(
-                    Icons.mic,
-                    size: 26,
-                    color: Colors.black54,
-                  ),*/
-              ),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                      const BorderSide(color: ThemeApp.redColor, width: 1)),
-              // OutlineInputBorder
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                      color: ThemeApp.appBackgroundColor, width: 1)),
-              // OutlineInputBorder
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                      color: ThemeApp.appBackgroundColor, width: 1)),
-            ), // InputDecoration
-          ),
-        );
-      });
-    }),
-  );
-}
+// Widget searchBar(BuildContext context) {
+//   double height = 0.0;
+//   double width = 0.0;
+//   height = MediaQuery.of(context).size.height;
+//   width = MediaQuery.of(context).size.width;
+//   DashboardViewModel productCategories = DashboardViewModel();
+//   productCategories.productCategoryListingWithGet();
+//
+//   return ChangeNotifierProvider<DashboardViewModel>.value(
+//     value: productCategories,
+//     child: Consumer<DashboardViewModel>(
+//         builder: (context, dashBoardProvider, child) {
+//       return Consumer<HomeProvider>(builder: (context, provider, child) {
+//         return Container(
+//           width: width,
+//           height: height * .08,
+//           // color: ThemeApp.redColor,
+//           padding: const EdgeInsets.only(top: 10, left: 0),
+//           alignment: Alignment.center,
+//           child: TextFormField(
+//             textInputAction: TextInputAction.search,
+//
+//             controller: StringConstant.controllerSpeechToText,
+//             onFieldSubmitted: (value) {
+//               print("Getting Value" +
+//                   productCategories
+//                       .productCategoryList.data!.productList![0].name
+//                       .toString());
+//               switch (dashBoardProvider.productCategoryList.status) {
+//                 case Status.LOADING:
+//                   return print("Getting Value");
+//                 case Status.COMPLETED:
+//                   if (kDebugMode) {
+//                     print("Api calll");
+//                   }
+//
+//                   List<ProductList>? serviceList =
+//                       productCategories.productCategoryList.data!.productList;
+//                   /*  productCategories.getProductBySearchTermsWithGet(
+//                     0,
+//                     10,
+//                     StringConstant.controllerSpeechToText.text.toString(),
+//                   );
+//                   Navigator.of(context).push(
+//                     MaterialPageRoute(
+//                       builder: (context) => SearchProductListScreen(
+//                         searchText: StringConstant.controllerSpeechToText.text,
+//                       ),
+//                     ),
+//                   );*/
+//
+//                   productCategories.getProductBySearchTermsWithGet(
+//                     0,
+//                     10,
+//                     StringConstant.controllerSpeechToText.text.toString(),
+//                   );
+//                   Navigator.of(context).push(
+//                     MaterialPageRoute(
+//                       builder: (context) => SearchProductListScreen(
+//                         searchText: StringConstant.controllerSpeechToText.text,
+//                       ),
+//                     ),
+//                   );
+//               }
+//               /*  Navigator.of(context).push(
+//                 MaterialPageRoute(
+//                   builder: (context) => ProductListByCategoryActivity(
+//                       productList: productCategories.),
+//                 ),
+//               );*/
+//               if (kDebugMode) {
+//                 print("search.........");
+//               } // showDialog(
+//               //     context: context,
+//               //     builder: (BuildContext context) {
+//               //       return OkDialog(text: StringConstant.controllerSpeechToText.text);
+//               //     });
+//             },
+//             onChanged: (val) {
+//               // print("StringConstant.speechToText..." +
+//               //     StringConstant.speechToText);
+//               // (() {
+//               //   if (val.isEmpty) {
+//               //     val = StringConstant.speechToText;
+//               //   } else {
+//               //     StringConstant.speechToText = StringConstant.controllerSpeechToText.text;
+//               //   }
+//               // });
+//             },
+//             decoration: InputDecoration(
+//               filled: true,
+//               fillColor: ThemeApp.whiteColor,
+//               isDense: true,
+//               // contentPadding:
+//               //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+//               /* -- Text and Icon -- */
+//               hintText: "Search",
+//               hintStyle: const TextStyle(
+//                 fontFamily: 'Roboto',
+//                 fontSize: 14,
+//                 color: ThemeApp.darkGreyTab,
+//               ),
+//               prefixIconColor: ThemeApp.primaryNavyBlackColor,
+//               prefixIcon: /*const Icon(
+//                   Icons.search,
+//                   size: 26,
+//                   color: Colors.black54,
+//                 ),*/
+//                   Padding(
+//                 padding: const EdgeInsets.all(10),
+//                 child: SvgPicture.asset(
+//                   'assets/appImages/searchIcon.svg',
+//                   color: ThemeApp.primaryNavyBlackColor,
+//                   semanticsLabel: 'Acme Logo',
+//                   theme: SvgTheme(
+//                     currentColor: ThemeApp.primaryNavyBlackColor,
+//                   ),
+//                   height: height * .001,
+//                 ),
+//               ),
+//               suffixIcon: InkWell(
+//                 onTap: () {
+//                   showDialog(
+//                       context: context,
+//                       builder: (BuildContext context) {
+//                         return SpeechToTextDialog();
+//                       });
+//                 },
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(10),
+//                   child: SvgPicture.asset(
+//                     'assets/appImages/miceIcon.svg',
+//                     color: ThemeApp.primaryNavyBlackColor,
+//                     semanticsLabel: 'Acme Logo',
+//                     theme: SvgTheme(
+//                       currentColor: ThemeApp.primaryNavyBlackColor,
+//                     ),
+//                     height: height * .001,
+//                   ),
+//                 ), /*const Icon(
+//                     Icons.mic,
+//                     size: 26,
+//                     color: Colors.black54,
+//                   ),*/
+//               ),
+//               border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(10),
+//                   borderSide:
+//                       const BorderSide(color: ThemeApp.redColor, width: 1)),
+//               // OutlineInputBorder
+//               enabledBorder: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(10),
+//                   borderSide: const BorderSide(
+//                       color: ThemeApp.appBackgroundColor, width: 1)),
+//               // OutlineInputBorder
+//               focusedBorder: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(10),
+//                   borderSide: const BorderSide(
+//                       color: ThemeApp.appBackgroundColor, width: 1)),
+//             ), // InputDecoration
+//           ),
+//         );
+//       });
+//     }),
+//   );
+// }
 
 class AddressWidgets extends StatefulWidget {
   const AddressWidgets({Key? key}) : super(key: key);
@@ -676,14 +670,53 @@ class AddressWidgets extends StatefulWidget {
 
 class _AddressWidgetsState extends State<AddressWidgets> {
   var finalPicode = '';
-
+  // final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+  late Position _currentPosition;
+  String _currentAddress='';
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPref();
+    // getPref();
+    _getCurrentLocation();
+  }
+  _getCurrentLocation() {
+    Geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+
+      _getAddressFromLatLng();
+    }).catchError((e) {
+      print(e);
+    });
   }
 
+  _getAddressFromLatLng() async {
+    try {
+      List<Placemark> p = await placemarkFromCoordinates(
+          _currentPosition.latitude, _currentPosition.longitude);
+
+      Placemark place = p[0];
+      final prefs = await SharedPreferences.getInstance();
+
+      StringConstant.placesFromCurrentLocation =
+          (prefs.getString('SearchedPinCodePrefs')) ?? "";
+      setState(() {
+        finalPicode =
+        "${place.postalCode}";
+        if (StringConstant.placesFromCurrentLocation == ''||StringConstant.placesFromCurrentLocation == 'null') {
+          finalPicode = place.postalCode.toString();
+        } else {
+          finalPicode = StringConstant.placesFromCurrentLocation;
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
   getPref() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -780,7 +813,7 @@ class _AddressWidgetsState extends State<AddressWidgets> {
       },
       child: Center(
         child: Container(
-          height: height * .036,
+          height: height * .03,
           color: ThemeApp.appBackgroundColor,
           width: width,
           padding: const EdgeInsets.all(2),
@@ -808,6 +841,7 @@ class _AddressWidgetsState extends State<AddressWidgets> {
               finalPicode!='null'?     SizedBox(
                 child: TextFieldUtils().dynamicText(
                     "Deliver to - ${finalPicode} ",
+                    // "Deliver to - ${_currentAddress} ",
                     context,
                     TextStyle(
                         fontFamily: 'Roboto',
