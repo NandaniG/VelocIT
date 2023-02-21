@@ -18,7 +18,7 @@ if (flutterVersionCode == null) {
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '2.1.0'
 }
 
 apply plugin: 'com.android.application'
@@ -58,9 +58,10 @@ android {
         targetSdkVersion 33
 //        versionCode flutterVersionCode.toInteger()
 //        versionName flutterVersionName
-        //last build was on 22 jan 23
-        versionCode 2
-        versionName "2.0"
+        //last build was on 21 Feb 23 // versioncode 3, versionname 2.1.0
+
+        versionCode 3
+        versionName "2.1.0"
     }
     signingConfigs {
         release {

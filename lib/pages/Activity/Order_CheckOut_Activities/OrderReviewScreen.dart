@@ -347,8 +347,20 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                             14,
                                           ),
                                         ]),
-                                    InkWell(
-                                        onTap: () {
+                                    ElevatedButton(style:
+                                    ButtonStyle(
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(100),
+                                              side: BorderSide(color: ThemeApp.tealButtonColor)
+                                          )
+                                      ),
+                                      padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(left: 20, right: 20,top: 10,bottom: 10)),
+                                      foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+                                      backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.whiteColor),
+
+                                    ),
+                                        onPressed: () {
                                           Map data = {
                                             "order_basket_id":
                                                 cartForPaymentPayload
@@ -403,15 +415,15 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                           // );
                                         },
                                         child: Container(
-                                            height: 40,
-                                            width: 121,
-                                            alignment: Alignment.center,
-                                            decoration: const BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(100),
-                                              ),
-                                              color: ThemeApp.whiteColor,
-                                            ),
+                                            // height: 40,
+                                            // width: 121,
+                                            // alignment: Alignment.center,
+                                            // decoration: const BoxDecoration(
+                                            //   borderRadius: BorderRadius.all(
+                                            //     Radius.circular(100),
+                                            //   ),
+                                            //   color: ThemeApp.whiteColor,
+                                            // ),
                                             // padding: const EdgeInsets.only(
                                             //     left: 21, right: 21),
                                             child: TextFieldUtils().dynamicText(

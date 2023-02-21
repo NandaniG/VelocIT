@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import '../../../utils/StringUtils.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
 import '../../../utils/utils.dart';
+import '../../../widgets/global/ConfirmationDialog.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
@@ -66,71 +68,118 @@ class _MerchantActvityState extends State<MerchantActvity> {
     super.initState();
     data = Provider.of<HomeProvider>(context, listen: false).loadJson();
     // getmarkers();
-    _request_permission(context);
-    getGPSInfo();
+    // _request_permission(context);
+    askPermissions(Permission.location);
   }
-  Future<void> _request_permission(context)async{
-    final Permission location_permission=Permission.location;
-    bool location_status=false;
-    bool ispermanetelydenied= await location_permission.isPermanentlyDenied;
-    if(ispermanetelydenied) {
-      print("denied");
-      await  openAppSettings();
-    }else{
-      var location_statu = await location_permission.request();
-      location_status=location_statu.isGranted;
-      print(location_status);
-    }
 
-  }
+
+
+/*
   getGPSInfo() async {
     bool servicestatus = await Geolocator.isLocationServiceEnabled();
     LocationPermission permission = await Geolocator.checkPermission();
-    setState(() {
 
-    });
+    setState(() {});
     if (servicestatus) {
-      getLocation();
-
       print("GPS service is enabled");
     } else {
+      await Permission.locationAlways.request();
       print("GPS service is disabled.");
-
-
-      permission = await Geolocator.checkPermission();
-      if( servicestatus ==false){
-        permission = await Geolocator.requestPermission();
-        print('Location requestPermissiondenied');
-        if (permission == LocationPermission.denied) {
-          permission = await Geolocator.requestPermission();
-          if (permission == LocationPermission.denied) {
-            print('Location permissions are denied');
-            permission = await Geolocator.requestPermission();
-            if (permission == LocationPermission.deniedForever) {
-              getGPSInfo();
-              Utils.errorToast(
-                  'You need to enable location for merchants near you');
-
-              print("'Location permissions are permanently denied");
-            } else {
-              print("GPS Location service is granted");
-              getLocation();
-            }
-          } else {
-            print("GPS Location service is granted");
-            getLocation();
-          }
-        } else {
-
-          getLocation();
-          print("GPS Location permission granted.");
-        }
-      }
-
     }
+    permission = await Geolocator.checkPermission();
+    print("permission :  " + permission.toString());
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      await Permission.locationAlways.request();
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        await Permission.locationAlways.request();
+        print('Location permissions are denied');
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.deniedForever) {
+          AppSettings.openLocationSettings();
+
+          getGPSInfo();
+          Utils.errorToast(
+              'You need to enable location for merchants near you');
+
+          print("'Location permissions are permanently denied");
+        } else {
+          print("GPS Location service is granted");
+          getLocation();
+        }
+      } else {
+        print("GPS Location service is granted");
+        getLocation();
+      }
+    } else {
+      getLocation();
+      print("GPS Location permission granted.");
+    }
+
     //
+  }
+*/
+
+  Future<void> askPermissions(Permission requestedPermission,
+     ) async {
+    // Check permission status
+    PermissionStatus status = await requestedPermission.status;
+    // Request permission
+    if (status != PermissionStatus.granted &&
+        status != PermissionStatus.permanentlyDenied) {
+      status = await requestedPermission.request();
+      print("PermissionStatus.denied.....");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle: 'To use this feature, go to app setting and allow permission for Microphone.',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                AppSettings.openLocationSettings();
+
+              },
+            );
+          });
+    } else if (status == PermissionStatus.denied) {
 
 
+      print("PermissionStatus.denied");
+
+      // openAppSettings();
+      askPermissions(requestedPermission);
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      print("PermissionStatus.denied.....");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle: 'To use this feature, go to app setting and allow permission for Microphone.',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                AppSettings.openLocationSettings();
+
+              },
+            );
+          });
+      print("PermissionStatus.restricted");
+      // openAppSettings();
+      // askPermissions(requestedPermission);
+    } else {
+      getLocation();
+    }
   }
 
   getLocation() async {
@@ -141,7 +190,6 @@ class _MerchantActvityState extends State<MerchantActvity> {
 
     long = position.longitude.toString();
     lat = position.latitude.toString();
-
     Map data = {};
     if (double.parse(long) < 0) {
       data = {
@@ -245,7 +293,8 @@ class _MerchantActvityState extends State<MerchantActvity> {
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
+        preferredSize:
+            Size.fromHeight(MediaQuery.of(context).size.height * .135),
         child: AppBarWidget(
           context: context,
           titleWidget: searchBarWidget(),
@@ -431,25 +480,34 @@ class _MerchantActvityState extends State<MerchantActvity> {
 
                   return markersList.isEmpty
                       ? Container(
-                      height: height,
-                      alignment: Alignment.center,
-                      child: Text("No merchant available near you"))
-                      :Container(
+                          height: height,
+                          alignment: Alignment.center,
+                          child: Text("No merchant available near you"))
+                      : Container(
                           height: MediaQuery.of(context).size.height,
                           // padding: EdgeInsets.all(12.0),
                           child: GridView.builder(
                             itemCount: merchantList
                                 .merchantResponse.data?.payload!.length,
                             physics: const NeverScrollableScrollPhysics(),
+                            // gridDelegate:
+                            //     SliverGridDelegateWithFixedCrossAxisCount(
+                            //         // childAspectRatio: 3 / 3.1,
+                            //         childAspectRatio: orientation
+                            //             ? width * 3.2 / height * 0.5
+                            //             : width * 2 / height * 1,
+                            //         crossAxisCount: 2,
+                            //         crossAxisSpacing: 10,
+                            //         mainAxisSpacing: 10),
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                    // childAspectRatio: 3 / 3.1,
-                                    childAspectRatio: orientation
-                                        ? width * 3.2 / height * 0.5
-                                        : width * 2 / height * 1,
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10),
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 30,
+                              // childAspectRatio: 1.0,
+                              childAspectRatio:
+                                  MediaQuery.of(context).size.height / 900,
+                            ),
                             itemBuilder: (BuildContext context, int index) {
                               print(merchantList.merchantResponse.data!
                                   .payload![index].merchantStoreImage
@@ -466,114 +524,139 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                           )));
                                 },
                                 child: Container(
-                                    height: orientation
-                                        ? height * 36
-                                        : height * .30,
-                                    // MediaQuery.of(context).size.height * .26,
-                                    width:
-                                        MediaQuery.of(context).size.width * .45,
-                                    decoration: const BoxDecoration(
-                                        color: ThemeApp.tealButtonColor,
-
-                                        /*borderRadius: BorderRadius.all(
-                                            Radius.circular(10))*/),
+                                    // height: orientation
+                                    //     ? height * 36
+                                    //     : height * .30,
+                                    // // MediaQuery.of(context).size.height * .26,
+                                    // width:
+                                    //     MediaQuery.of(context).size.width * .45,
+                                    // decoration: const BoxDecoration(
+                                    //   color: ThemeApp.tealButtonColor,
+                                    //
+                                    //   /*borderRadius: BorderRadius.all(
+                                    //         Radius.circular(10))*/
+                                    // ),
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    /*Expanded(
                                           flex: 2,
-                                          child: Stack(
-                                            alignment: Alignment.topRight,
-                                            children: [
-                                              Container(
-                                                height: orientation
-                                                    ? height * .25
-                                                    : MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        .17,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                decoration:  BoxDecoration(
-                                                    color: ThemeApp.whiteColor,
-                                                    border: Border.all(color: ThemeApp.tealButtonColor)
-
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                    topRight:
-                                                        Radius.circular(10),
-                                                    topLeft:
-                                                        Radius.circular(0),
-                                                  ),
-                                                  child: Image.network(
-                                                        // width: double.infinity,
-                                                        merchantList
-                                                                .merchantResponse
-                                                                .data!
-                                                                .payload![index]
-                                                                .merchantStoreImage
-                                                                .toString() ??
-                                                            "",
-                                                        // fit: BoxFit.fill,
-                                                        // height:
-                                                        // MediaQuery.of(context).size.height *
-                                                        //     .07,
-                                                        errorBuilder: (context,
-                                                            error, stackTrace) {
-                                                          return Icon(
-                                                            Icons.image,
-                                                            color: ThemeApp
-                                                                .appColor,
-                                                          );
-                                                        },
-                                                      ) ??
-                                                      SizedBox(),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 7, right: 7),
-                                                child: kmAwayOnMerchantImage(
-                                                  double.parse(merchantList
-                                                                  .merchantResponse
-                                                                  .data!
-                                                                  .payload![
-                                                                      index]
-                                                                  .distanceInKm
-                                                                  .toString())
-                                                              .toString() +
-                                                          ' KM Away' ??
-                                                      "",
-                                                  context,
-                                                ),
-                                              )
-                                            ],
+                                          child:*/
+                                    Stack(
+                                      alignment: Alignment.topRight,
+                                      children: [
+                                        Container(
+                                          height: 143,
+                                          width: 191,
+                                          decoration: BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                              border: Border.all(
+                                                  color: ThemeApp
+                                                      .tealButtonColor)),
+                                          child: ClipRRect(
+                                            child: merchantList
+                                                    .merchantResponse
+                                                    .data!
+                                                    .payload![index]
+                                                    .merchantStoreImage
+                                                    .toString()
+                                                    .isNotEmpty
+                                                ? Image.network(
+                                                    merchantList
+                                                        .merchantResponse
+                                                        .data!
+                                                        .payload![index]
+                                                        .merchantStoreImage
+                                                        .toString(),
+                                                    // fit: BoxFit.fill,
+                                                    height: (MediaQuery.of(
+                                                                    context)
+                                                                .orientation ==
+                                                            Orientation
+                                                                .landscape)
+                                                        ? MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            .26
+                                                        : MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            .1,
+                                                  )
+                                                : SizedBox(
+                                                    // height: height * .28,
+                                                    width: width,
+                                                    child: Icon(
+                                                      Icons.image_outlined,
+                                                      size: 50,
+                                                    )),
                                           ),
                                         ),
                                         Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                18, 11, 18, 11),
-                                            child: Text(
-                                              merchantList.merchantResponse.data
-                                                      ?.payload![index].name
-                                                      .toString() ??
-                                                  "",
-                                              style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontSize: 12,
-                                                color: ThemeApp.whiteColor,
-                                                fontWeight: FontWeight.w700,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            )),
+                                          padding: const EdgeInsets.only(
+                                              top: 7, right: 7),
+                                          child: kmAwayOnMerchantImage(
+                                            double.parse(merchantList
+                                                            .merchantResponse
+                                                            .data!
+                                                            .payload![index]
+                                                            .distanceInKm
+                                                            .toString())
+                                                        .toString() +
+                                                    ' KM Away' ??
+                                                "",
+                                            context,
+                                          ),
+                                        )
                                       ],
-                                    )),
+                                      // ),
+                                    ),
+                                    Container(
+                                      color: ThemeApp.tealButtonColor,
+                                      width: 191,
+                                      height: 66,
+                                      padding: const EdgeInsets.only(
+                                        left: 12,
+                                        right: 12,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextFieldUtils()
+                                              .listNameHeadingTextField(
+                                                  merchantList
+                                                          .merchantResponse
+                                                          .data!
+                                                          .payload![index]
+                                                          .name
+                                                          .toString() ??
+                                                      "",
+                                                  context),
+                                        ],
+                                      ),
+                                    ),
+                                    // Padding(
+                                    //     padding: const EdgeInsets.fromLTRB(
+                                    //         18, 11, 18, 11),
+                                    //     child: Text(
+                                    //       merchantList.merchantResponse.data
+                                    //               ?.payload![index].name
+                                    //               .toString() ??
+                                    //           "",
+                                    //       style: TextStyle(
+                                    //         fontFamily: 'Roboto',
+                                    //         fontSize: 12,
+                                    //         color: ThemeApp.whiteColor,
+                                    //         fontWeight: FontWeight.w700,
+                                    //         overflow: TextOverflow.ellipsis,
+                                    //       ),
+                                    //     )),
+                                  ],
+                                )),
                               );
                             },
                           ));
@@ -595,12 +678,11 @@ class _MerchantActvityState extends State<MerchantActvity> {
               ? Container(
                   height: height,
                   alignment: Alignment.center,
-                  child:    Center(
+                  child: Center(
                       child: Text(
-                        "No merchant available near you",
-                        style: TextStyle(fontSize: 20),
-                      )))
-
+                    "No merchant available near you",
+                    style: TextStyle(fontSize: 20),
+                  )))
               : GestureDetector(
                   onVerticalDragStart: (start) {},
                   child: GoogleMap(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:barcode_finder/barcode_finder.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -15,6 +16,7 @@ import 'package:geolocator/geolocator.dart';
 // import 'package:geocoding/geocoding.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/ProductCategoryModel.dart';
@@ -48,6 +50,7 @@ import '../features/SpeechToTextDialog_Screen.dart';
 import '../features/addressScreen.dart';
 import '../features/switchLanguages.dart';
 import '../features/scannerWithGallery.dart';
+import 'ConfirmationDialog.dart';
 import 'autoSearchLocation_popup.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:highlight_text/highlight_text.dart';
@@ -254,6 +257,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                               )
                               .then((value) => setState(() {}));
                         } else {
+
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -679,7 +683,49 @@ class _AddressWidgetsState extends State<AddressWidgets> {
     super.initState();
     // getPref();
     _getCurrentLocation();
+    askPermissions(Permission.location);
   }
+
+  Future<void> askPermissions(Permission requestedPermission,
+      ) async {
+    // Check permission status
+    PermissionStatus status = await requestedPermission.status;
+    // Request permission
+    if (status != PermissionStatus.granted &&
+        status != PermissionStatus.permanentlyDenied) {
+      status = await requestedPermission.request();
+      print("PermissionStatus.denied.....");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle: 'To use this feature, go to app setting and allow permission for Microphone.',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                AppSettings.openLocationSettings();
+
+              },
+            );
+          });
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      // openAppSettings();
+
+      print("PermissionStatus.restricted");
+      // openAppSettings();
+      AppSettings.openLocationSettings();
+    } else {
+      _getCurrentLocation();
+    }
+  }
+
+
+
+
   _getCurrentLocation() {
     Geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)

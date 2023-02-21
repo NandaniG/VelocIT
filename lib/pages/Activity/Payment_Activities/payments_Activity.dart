@@ -178,8 +178,20 @@ class _Payment_Creditcard_debitcardScreenState
                                     fontSize: height * .018,
                                   ))
                             ]),
-                        InkWell(
-                            onTap: () async {
+                        ElevatedButton(style:
+                        ButtonStyle(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  side: BorderSide(color: ThemeApp.tealButtonColor)
+                              )
+                          ),
+                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(left: 20, right: 20,top: 10,bottom: 10)),
+                          foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+                          backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.whiteColor),
+
+                        ),
+                            onPressed: () async {
                               final prefs = await SharedPreferences.getInstance();
 
                               // Navigator.of(context).push(
@@ -258,15 +270,15 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
                               });
                             },
                             child: Container(
-                              height: 40,
-                              width: 141,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(100),
-                                ),
-                                color: ThemeApp.whiteColor,
-                              ),
+                              // height: 40,
+                              // width: 141,
+                              // alignment: Alignment.center,
+                              // decoration: const BoxDecoration(
+                              //   borderRadius: BorderRadius.all(
+                              //     Radius.circular(100),
+                              //   ),
+                              //   color: ThemeApp.whiteColor,
+                              // ),
                               child: TextFieldUtils().dynamicText(
                                   'Proceed to Payment',
                                   context,

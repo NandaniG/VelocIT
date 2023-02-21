@@ -4,6 +4,7 @@ import '../../../services/models/FilterModel_merchant.dart';
 import '../../../utils/AppTheme.dart';
 import '../../../utils/StringUtils.dart';
 import '../../../utils/styles.dart';
+import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -74,7 +75,8 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
               child: TextFieldUtils().dynamicText(
                   StringUtils.filter,
                   context,
-                  TextStyle(fontFamily: 'Roboto',
+                  TextStyle(
+                      fontFamily: 'Roboto',
                       color: ThemeApp.blackColor,
                       fontSize: height * .022,
                       fontWeight: FontWeight.bold)),
@@ -87,7 +89,8 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
               child: TextFieldUtils().dynamicText(
                   '145 products found',
                   context,
-                  TextStyle(fontFamily: 'Roboto',
+                  TextStyle(
+                      fontFamily: 'Roboto',
                       color: ThemeApp.darkGreyTab,
                       fontSize: height * .02,
                       fontWeight: FontWeight.w700)),
@@ -99,7 +102,8 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                 child: TextFieldUtils().dynamicText(
                     StringUtils.clearFilter,
                     context,
-                    TextStyle(fontFamily: 'Roboto',
+                    TextStyle(
+                        fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: height * .02,
                         fontWeight: FontWeight.w400)),
@@ -160,7 +164,8 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                                         MerchantFilterData
                                             .merchantFilterList[index].name,
                                         textDirection: TextDirection.rtl,
-                                        style: TextStyle(fontFamily: 'Roboto',
+                                        style: TextStyle(
+                                            fontFamily: 'Roboto',
                                             color: ThemeApp.whiteColor,
                                             fontSize: height * .018,
                                             fontWeight: FontWeight.w700)),
@@ -210,7 +215,8 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
                                         TextFieldUtils().dynamicText(
                                             model.filterDetailList[index1].name,
                                             context,
-                                            TextStyle(fontFamily: 'Roboto',
+                                            TextStyle(
+                                                fontFamily: 'Roboto',
                                                 color: tappedIndex == index1
                                                     ? ThemeApp.blackColor
                                                     : ThemeApp.blackColor,
@@ -269,67 +275,12 @@ class _Merchant_FilterScreenState extends State<Merchant_FilterScreen> {
   Widget _bottomBar() {
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20),
-      child: Row(children: [
-        Expanded(
-          flex: 1,
-          child: InkWell(
-            onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => Home(),
-              //   ),
-              // );
-              Navigator.pop(context);
-            },
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(30),
-                  ),
-                  color: ThemeApp.whiteColor,
-                  border: Border.all(color: ThemeApp.tealButtonColor)),
-              child: Text("Cancel",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: 'Roboto',
-                      color: ThemeApp.tealButtonColor,
-                      fontSize: height * .022,
-                      fontWeight: FontWeight.w700)),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: width * 0.03,
-        ),
-        Expanded(
-            flex: 1,
-            child: InkWell(
-              onTap: () {
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => Home(),
-                //   ),
-                // );
-
-                Navigator.pop(context);
-              },
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(30),
-                    ),
-                    color: ThemeApp.tealButtonColor,
-                    border: Border.all(color: ThemeApp.tealButtonColor)),
-                child: Text("Apply",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Roboto',
-                        color: ThemeApp.whiteColor,
-                        fontSize: height * .022,
-                        fontWeight: FontWeight.w700)),
-              ),
-            ))
-      ]),
+      child: Center(
+          child: twoProceedButton('Cancel', 'Apply', context, false, () {
+        Navigator.pop(context);
+      }, () {
+        Navigator.pop(context);
+      })),
     );
   }
 }

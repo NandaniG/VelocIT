@@ -64,7 +64,6 @@ class _ProductListByCategoryActivityState
   @override
   void initState() {
     // TODO: implement initState
-    subCategoryList;
     this._getMoreData(
       page,
       10,

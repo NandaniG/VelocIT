@@ -1969,8 +1969,22 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
 
                                                   Row(
                                                     children: [
-                                                      InkWell(
-                                                        onTap: () {
+                                                      ElevatedButton(style:
+                                                      ButtonStyle(
+                                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                            RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(20),
+                                                                side: BorderSide(color: ThemeApp.tealButtonColor)
+                                                            )
+                                                        ),
+                                                        padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(top: 7,bottom: 7)),
+                                                        foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+                                                        backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.containerColor),
+
+
+                                                        // overlayColor: MaterialStateProperty.all<Color>(ThemeApp.tealButtonColor)
+                                                      ),
+                                                        onPressed: () {
                                                           Navigator.of(context)
                                                               .push(
                                                             MaterialPageRoute(
@@ -1986,58 +2000,59 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                           );
                                                         },
                                                         child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  15.0,
-                                                                  7.0,
-                                                                  15.0,
-                                                                  7.0),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                const BorderRadius
-                                                                    .all(
-                                                              Radius.circular(20),
-                                                            ),
-                                                            border: Border.all(
-                                                              color: ThemeApp
-                                                                  .tealButtonColor,
-                                                            ),
-                                                            color: ThemeApp
-                                                                .containerColor,
-                                                          ),
-                                                          child: Row(
-                                                            children: [
-                                                              /*    Icon(Icons.refresh_sharp,
-                                                      color:
-                                                      ThemeApp.whiteColor,
-                                                      size: height * .02),
-                                                  SizedBox(
-                                                    width: width * .01,
-                                                  ),*/
-                                                              TextFieldUtils().dynamicText(
-                                                                  "Return",
-                                                                  context,
-                                                                  TextStyle(
-                                                                      fontFamily:
-                                                                          'Roboto',
-                                                                      color: ThemeApp
-                                                                          .tealButtonColor,
-                                                                      fontSize:
-                                                                          10,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700)),
-                                                            ],
-                                                          ),
+                                                          // padding:
+                                                          //     const EdgeInsets
+                                                          //             .fromLTRB(
+                                                          //         15.0,
+                                                          //         7.0,
+                                                          //         15.0,
+                                                          //         7.0),
+                                                          // decoration:
+                                                          //     BoxDecoration(
+                                                          //   borderRadius:
+                                                          //       const BorderRadius
+                                                          //           .all(
+                                                          //     Radius.circular(20),
+                                                          //   ),
+                                                          //   border: Border.all(
+                                                          //     color: ThemeApp
+                                                          //         .tealButtonColor,
+                                                          //   ),
+                                                          //   color: ThemeApp
+                                                          //       .containerColor,
+                                                          // ),
+                                                          child: TextFieldUtils().dynamicText(
+                                                              "Return",
+                                                              context,
+                                                              TextStyle(
+                                                                  fontFamily:
+                                                                  'Roboto',
+                                                                  color: ThemeApp
+                                                                      .tealButtonColor,
+                                                                  fontSize:
+                                                                  10,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w700)),
                                                         ),
                                                       ),
                                                       SizedBox(
                                                         width: 10,
                                                       ),
-                                                      InkWell(
-                                                        onTap: () {
+                                                      ElevatedButton(style:
+                                                      ButtonStyle(
+                                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                            RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadius.circular(20),
+                                                                    side: BorderSide(color: ThemeApp.tealButtonColor)
+                                                                )
+                                                            ),
+                                                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(top: 7,bottom: 7)),
+                                                          foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+                                                        backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.tealButtonColor),
+
+                                                      ),
+                                                        onPressed: () {
                                                           for (int i = 0;
                                                               i <=
                                                                   value
@@ -2085,51 +2100,21 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                           }
                                                         },
                                                         child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  15.0,
-                                                                  7.0,
-                                                                  15.0,
-                                                                  7.0),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                const BorderRadius
-                                                                    .all(
-                                                              Radius.circular(20),
-                                                            ),
-                                                            border: Border.all(
-                                                              color: ThemeApp
-                                                                  .tealButtonColor,
-                                                            ),
-                                                            color: ThemeApp
-                                                                .tealButtonColor,
-                                                          ),
-                                                          child: Row(
-                                                            children: [
-                                                              /*    Icon(Icons.refresh_sharp,
-                                                color:
-                                                ThemeApp.whiteColor,
-                                                size: height * .02),
-                                            SizedBox(
-                                              width: width * .01,
-                                            ),*/
-                                                              TextFieldUtils().dynamicText(
-                                                                  "Reorder",
-                                                                  context,
-                                                                  TextStyle(
-                                                                      fontFamily:
-                                                                          'Roboto',
-                                                                      color: ThemeApp
-                                                                          .whiteColor,
-                                                                      fontSize:
-                                                                          10,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700)),
-                                                            ],
-                                                          ),
+
+                                                          child:
+                                                          TextFieldUtils().dynamicText(
+                                                              "Reorder",
+                                                              context,
+                                                              TextStyle(
+                                                                  fontFamily:
+                                                                  'Roboto',
+                                                                  color: ThemeApp
+                                                                      .whiteColor,
+                                                                  fontSize:
+                                                                  10,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .w700)),
                                                         ),
                                                       ),
                                                     ],

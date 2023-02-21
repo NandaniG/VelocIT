@@ -372,7 +372,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                       margin: const EdgeInsets.only(
                                           left: 20,
                                           right: 15,
-                                          top: 15,
+                                          top: 10,
                                           bottom: 0),
                                       child: Row(
                                         mainAxisAlignment:
@@ -418,8 +418,20 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                   14,
                                                 ),
                                               ]),
-                                          InkWell(
-                                              onTap: () async {
+                                          ElevatedButton(style:
+                                          ButtonStyle(
+                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(100),
+                                                    side: BorderSide(color: ThemeApp.tealButtonColor)
+                                                )
+                                            ),
+                                            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(left: 15, right: 15,top: 10,bottom: 10)),
+                                            foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+                                            backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.whiteColor),
+
+                                          ),
+                                              onPressed: () async {
                                                 final prefs =
                                                     await SharedPreferences
                                                         .getInstance();
@@ -541,7 +553,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                               },
                                               child: Container(
                                                   // height: height * 0.05,
-                                                  height: 40,
+                                               /*   height: 40,
                                                   width: 121,
                                                   alignment: Alignment.center,
                                                   decoration:
@@ -551,7 +563,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                       Radius.circular(100),
                                                     ),
                                                     color: ThemeApp.whiteColor,
-                                                  ),
+                                                  ),*/
                                                   // padding: const EdgeInsets.only(
                                                   //     left: 15, right: 15),
                                                   child: TextFieldUtils()

@@ -13,6 +13,7 @@ import 'package:velocit/utils/constants.dart';
 import '../../pages/Activity/My_Account_Activities/Saved_address/saved_address_detailed_screen.dart';
 import '../../pages/Activity/Order_CheckOut_Activities/OrderReviewScreen.dart';
 import '../../pages/screens/cartDetail_Activity.dart';
+import '../../pages/screens/dashBoard.dart';
 import '../../services/providers/Products_provider.dart';
 import '../../utils/routes/routes.dart';
 import '../../utils/utils.dart';
@@ -260,10 +261,18 @@ class CartRepository {
         //     MaterialPageRoute(
         //       builder: (context) => CartDetailsActivity(),
         //     ));
-        await prefs.setString('isRandomUser', 'Yes').then((value) {
+        StringConstant.isUserNavigateFromDetailScreen =
+            (prefs.getString('isUserNavigateFromDetailScreen')) ?? "";
+
+        if (StringConstant.isUserNavigateFromDetailScreen == 'IsGuest') {
           Navigator.of(context)
-              .pushReplacementNamed(RoutesName.cartScreenRoute);
-        });
+              .pushReplacementNamed(RoutesName.dashboardRoute);
+        } else {
+          await prefs.setString('isRandomUser', 'Yes').then((value) {
+            Navigator.of(context)
+                .pushReplacementNamed(RoutesName.cartScreenRoute);
+          });
+        }
       }
       return response = MergeCartModel.fromJson(response);
     } catch (e) {
@@ -277,7 +286,7 @@ class CartRepository {
     final prefs = await SharedPreferences.getInstance();
     print(" SendCartForPaymentModel url: " + url + id.toString());
     print(" SendCartForPaymentModel id: " + id.toString());
- //   2191
+    //   2191
     try {
       dynamic response = await _apiServices.getGetApiResponse(url + id);
       print(" getSendCartForPaymentList : " + response.toString());
@@ -490,7 +499,8 @@ class CartRepository {
     }
   }
 
-  Future deleteAddressApi(int addressId, BuildContext context,bool isAddress) async {
+  Future deleteAddressApi(
+      int addressId, BuildContext context, bool isAddress) async {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
     final prefs = await SharedPreferences.getInstance();
 
@@ -507,47 +517,46 @@ class CartRepository {
     // String body = json.encode(data);
     // print("deleteAddressApi jsonMap" + body.toString());
 
-   /* try {*/
-      http.Response response = await http.delete(Uri.parse(requestUrl),
-          headers: {'content-type': 'application/json'});
+    /* try {*/
+    http.Response response = await http.delete(Uri.parse(requestUrl),
+        headers: {'content-type': 'application/json'});
 
-      if (response.statusCode == 200) {
-        // print("response delete jsonData" + jsonData['payload'].toString());
-        StringConstant.UserCartID =
-            (prefs.getString('CartIdPref')) ?? '';
-     var cartId  =   prefs.getString(
-            'directCartIdPref');
-   var isBuyNowCart =  prefs.getString('isBuyNow');
-      if( isAddress== true) {
+    if (response.statusCode == 200) {
+      // print("response delete jsonData" + jsonData['payload'].toString());
+      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+      var cartId = prefs.getString('directCartIdPref');
+      var isBuyNowCart = prefs.getString('isBuyNow');
+      if (isAddress == true) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => SavedAddressDetails(),
           ),
         );
-      }else{
-        if(isBuyNowCart=='true'){
+      } else {
+        if (isBuyNowCart == 'true') {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => OrderReviewActivity(cartId:int.parse( cartId.toString())),
+              builder: (context) =>
+                  OrderReviewActivity(cartId: int.parse(cartId.toString())),
             ),
-          );}else{
-
+          );
+        } else {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => OrderReviewActivity(cartId:int.parse(  StringConstant.UserCartID.toString())),
+              builder: (context) => OrderReviewActivity(
+                  cartId: int.parse(StringConstant.UserCartID.toString())),
             ),
           );
         }
       }
-        Utils.successToast('Address deleted successfully');
+      Utils.successToast('Address deleted successfully');
+    } else {
+      Utils.errorToast('Something went wrong');
+    }
+    // Utils.successToast(response.body.toString());
 
-      } else {
-        Utils.errorToast('Something went wrong');
-      }
-      // Utils.successToast(response.body.toString());
-
-      return response;
-  /*  }  catch (e) {
+    return response;
+    /*  }  catch (e) {
       print("Error on Delete address : " + e.toString());
     }*/
   }

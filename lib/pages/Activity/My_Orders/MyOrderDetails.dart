@@ -148,8 +148,19 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       SizedBox(
                         width: width * .03,
                       ),*/
-                      InkWell(
-                        onTap: () async {
+                      ElevatedButton(style:
+                      ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                                side: BorderSide(color: ThemeApp.appColor)
+                            )
+                        ),
+                        padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.fromLTRB(12.0, 7.0, 12.0, 7.0)),
+                        foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+                        backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.appColor),
+    ),
+    onPressed: () async {
                           try {
                             // Saved with this method.
                             var imageId = await ImageDownloader.downloadImage(
@@ -172,14 +183,14 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                           }
                         },
                         child: Container(
-                          padding:
-                              const EdgeInsets.fromLTRB(10.0, 7.0, 10.0, 7.0),
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(20),
-                            ),
-                            color: ThemeApp.appColor,
-                          ),
+                          // padding:
+                          //     const EdgeInsets.fromLTRB(10.0, 7.0, 10.0, 7.0),
+                          // decoration: BoxDecoration(
+                          //   borderRadius: const BorderRadius.all(
+                          //     Radius.circular(20),
+                          //   ),
+                          //   color: ThemeApp.appColor,
+                          // ),
                           child: Row(
                             children: [
                               SvgPicture.asset(
@@ -871,48 +882,53 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
             height: 5,
           ),
           TextFieldUtils().lineHorizontal(),
-          SizedBox(
-            height: 10,
-          ),
+
           ListView.builder(
               shrinkWrap: true,
               itemCount: widget.values["orders"].length,
               itemBuilder: (BuildContext context, int index) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(widget.values["orders"][index]['oneliner'],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
+                return Container(
+                  // color: ThemeApp.tealButtonColor,
+                  padding: const EdgeInsets.only(top: 5,),
+
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Center(
+                          child: Text(widget.values["orders"][index]['oneliner'],
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              height: 3,
-                              letterSpacing: -0.25)),
-                    ),
-                    SizedBox(
-                      width: width * .1,
-                    ),
-                    TextFieldUtils().dynamicText(
-                        indianRupeesFormat
-                                .format(double.parse(widget.values["orders"]
-                                        [index]['mrp']
-                                    .toString()))
-                                .toString() ??
-                            '',
-                        context,
-                        TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.lightFontColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis,
-                        )),
-                  ],
+                              style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.blackColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  overflow: TextOverflow.ellipsis,
+                                  height: 1,
+                                  letterSpacing: -0.25)),
+                        ),
+                      ),
+                      SizedBox(
+                        width: width * .1,
+                      ),
+                      TextFieldUtils().dynamicText(
+                          indianRupeesFormat
+                                  .format(double.parse(widget.values["orders"]
+                                          [index]['mrp']
+                                      .toString()))
+                                  .toString() ??
+                              '',
+                          context,
+                          TextStyle(
+                            fontFamily: 'Roboto',
+                            color: ThemeApp.lightFontColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                    ],
+                  ),
                 );
               }),
           SizedBox(height: 4),

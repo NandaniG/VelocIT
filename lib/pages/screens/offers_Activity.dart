@@ -163,10 +163,9 @@ class _OfferActivityState extends State<OfferActivity> {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
-                      mainAxisSpacing: 12,
+                      mainAxisSpacing: 30,
                       // childAspectRatio: 1.0,
-                      childAspectRatio:
-                          MediaQuery.of(context).size.height / 800,
+                      childAspectRatio: MediaQuery.of(context).size.height / 900,
                     ),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -191,32 +190,73 @@ class _OfferActivityState extends State<OfferActivity> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                height: 141,
+                                height: 143,
                                 width: 191,
                                 decoration: BoxDecoration(
                                     color: ThemeApp.whiteColor,
-                                    border: Border.all(
-                                        color: ThemeApp.tealButtonColor)),
-                                child: Image.network(
-                                  // width: double.infinity,
-                                  offerList[index].offerImageUrl.toString() ??
-                                      "",
-                                  // fit: BoxFit.fill,
-                                  errorBuilder: ((context, error, stackTrace) {
-                                    return Container(
-                                        height: 141,
-                                        width: 191,
-                                        color: ThemeApp.whiteColor,
-                                        child: Icon(
-                                          Icons.image_outlined,
-                                        ));
-                                  }),
-                                  // height: 163,
-                                  // width: 191,
+                                    border: Border.all(color: ThemeApp.tealButtonColor)),
+                                child: ClipRRect(
+                                  child: offerList[index].offerImageUrl.toString()
+                                      .isNotEmpty
+                                      ? Image.network(
+                                    offerList[index].offerImageUrl.toString(),
+                                    // fit: BoxFit.fill,
+                                    height: (MediaQuery.of(context).orientation ==
+                                        Orientation.landscape)
+                                        ? MediaQuery.of(context).size.height * .26
+                                        : MediaQuery.of(context).size.height * .1,
+                                  )
+                                      : SizedBox(
+                                    // height: height * .28,
+                                      width: width,
+                                      child: Icon(
+                                        Icons.image_outlined,
+                                        size: 50,
+                                      )),
                                 ),
                               ),
-                              SizedBox(),
                               Container(
+                                color: ThemeApp.tealButtonColor,
+                                width: 191,
+                                height: 66,
+                                padding: const EdgeInsets.only(
+                                  left: 12,
+                                  right: 12,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextFieldUtils().listNameHeadingTextField(
+                                        offerList[index]
+                                            .productSubCategoryName
+                                            .toString(), context),
+                                    SizedBox(height: 10),
+                                    offerList[index].isAmountBased == true
+                                        ? Container(
+
+                                      child: TextFieldUtils()
+                                          .listPriceHeadingTextField(
+                                          "Under " +
+                                              offerList[index]
+                                                  .belowAmountDisplay
+                                                  .toString(),
+                                          context),
+                                    )
+                                        : Container(
+
+                                      child: TextFieldUtils()
+                                          .listPriceHeadingTextField(
+                                          "Under " +
+                                              offerList[index]
+                                                  .belowDiscountPercentDisplay
+                                                  .toString(),
+                                          context),
+                                    )
+                                  ],
+                                ),
+                              ),
+         /*                     Container(
                                 color: ThemeApp.tealButtonColor,
                                 width: 191,
                                 // height: 65,
@@ -235,7 +275,7 @@ class _OfferActivityState extends State<OfferActivity> {
                                                           .toString() ??
                                                       "",
                                                   context) ??
-                                          SizedBox() /*Text(
+                                          SizedBox() *//*Text(
                                                     serviceList[index].shortName!,
                                                     maxLines: 1,
                                                     style: TextStyle(fontFamily: 'Roboto',
@@ -245,7 +285,7 @@ class _OfferActivityState extends State<OfferActivity> {
                                                             ThemeApp.whiteColor,
                                                         fontSize: height * .022,
                                                         fontWeight:
-                                                            FontWeight.bold))*/
+                                                            FontWeight.bold))*//*
                                       ,
                                     ),
                                     offerList[index].isAmountBased == true
@@ -273,7 +313,7 @@ class _OfferActivityState extends State<OfferActivity> {
                                           )
                                   ],
                                 ),
-                              ),
+                              ),*/
                             ],
                           ),
                         ),

@@ -69,8 +69,8 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       },
     );
-    startTime();
-    // _getCurrentPosition();
+    // startTime();
+    _getCurrentPosition();
   }
 
   // Step 1.  Get the device token

@@ -1860,7 +1860,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             SizedBox(
               height: height * .02,
             ),
-            proceedButton(StringUtils.addDeliveryAddress,
+            proceedButton('Edit Delivery Address',
                 ThemeApp.tealButtonColor, context, false, () async {
               // final prefs = await SharedPreferences.getInstance();
               //

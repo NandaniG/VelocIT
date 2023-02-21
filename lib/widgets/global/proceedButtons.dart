@@ -23,7 +23,7 @@ Widget proceedButton(String name, Color color, BuildContext context,
                   side: BorderSide(color: ThemeApp.tealButtonColor)
               )
           ),
-          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
+          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(10)),
           foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
           backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.tealButtonColor),
 
@@ -60,7 +60,89 @@ Widget proceedButton(String name, Color color, BuildContext context,
     ),
   );
 }
+Widget twoProceedButton(String name1,String name2, BuildContext context,
+    bool loading, VoidCallback onTap1,VoidCallback onTap2){
+  return  Row(
+    children: [
+      /*counterPrice == 0
+                        ?*/
+      Expanded(
+          flex: 1,
+          child: ElevatedButton(style:
+          ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    side: BorderSide(color: ThemeApp.tealButtonColor)
+                )
+            ),
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(top: 10,bottom: 10)),
+            foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+            backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.containerColor),
 
+
+            // overlayColor: MaterialStateProperty.all<Color>(ThemeApp.tealButtonColor)
+          ),
+            onPressed: onTap1,
+            child: Container(
+
+                child: loading
+                    ? Center(
+                  child: CircularProgressIndicator(color:ThemeApp.tealButtonColor),
+                )
+                    : Text(
+                  name1,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: 'Roboto',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      overflow: TextOverflow.ellipsis,
+                      color:  ThemeApp.tealButtonColor,
+                      letterSpacing: -0.25
+                  ),
+                )),
+          )),
+
+      SizedBox(
+        width: MediaQuery.of(context).size.width * .05,
+      ),
+      Expanded(
+          flex: 1,
+          child: ElevatedButton(style:
+          ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    side: BorderSide(color: ThemeApp.tealButtonColor)
+                )
+            ),
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(top: 10,bottom: 10)),
+            foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+            backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.tealButtonColor),
+
+          ),
+            onPressed: onTap2,
+            child: Container(
+
+                child: loading
+                    ? Center(
+                  child: CircularProgressIndicator(color:ThemeApp.tealButtonColor),
+                )
+                    : Text(
+                  name2,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: 'Roboto',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      overflow: TextOverflow.ellipsis,
+                      color:  ThemeApp.whiteColor,
+                      letterSpacing: -0.25
+                  ),
+                )),
+          )),
+    ],
+  );
+}
 Widget whiteProceedButton(
     String name,Color color,  BuildContext context, VoidCallback onTap) {
   return InkWell(
@@ -90,6 +172,9 @@ Widget whiteProceedButton(
         )),
   );
 }
+
+
+
 
 Widget viewMoreButton(String name, BuildContext context, VoidCallback onTap) {
   return InkWell(

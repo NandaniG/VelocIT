@@ -74,7 +74,7 @@ class AuthRepository {
       StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
       print("Cart Id From Login usinh Email " + StringConstant.UserCartID);
       print("StringConstant.isUserNavigateFromDetailScreen" +
-          StringConstant.isUserNavigateFromDetailScreen);
+          StringConstant.isUserNavigateFromDetailScreen.toString());
       var userId = preferences.getString('isUserId');
       if (StringConstant.isUserNavigateFromDetailScreen == 'Yes') {
         var cartUserId = prefs.getString('CartSpecificUserIdPref');
@@ -99,7 +99,32 @@ class AuthRepository {
 
         CartRepository().mergeCartList(
             StringConstant.RandomUserLoginId, userId.toString(), data, context);
-      } else if (StringConstant.isUserNavigateFromDetailScreen == 'BN') {
+      }else if (StringConstant.isUserNavigateFromDetailScreen == 'IsGuest') {
+        var cartUserId = prefs.getString('CartSpecificUserIdPref');
+        var itemCode = prefs.getString('CartSpecificItem_codePref');
+        var itemQuanity = prefs.getString('CartSpecificItemQuantityPref');
+        StringConstant.RandomUserLoginId =
+            (prefs.getString('RandomUserId')) ?? '';
+        Map data = {
+          'user_id': jsonData['payload']['body']['id'],
+          'item_code': itemCode,
+          'qty': itemQuanity
+        };
+
+        data = {'userId': jsonData['payload']['body']['id'].toString()};
+        print('login user is NOT GUEST');
+
+        print("create cart data pass : " + data.toString());
+        //create cart
+        CartRepository().cartPostRequest(data, context);
+        //merge cart
+        print("Random ID : " + StringConstant.RandomUserLoginId);
+
+        CartRepository().mergeCartList(
+            StringConstant.RandomUserLoginId, userId.toString(), data, context);
+      }
+      // 259745353
+      else if (StringConstant.isUserNavigateFromDetailScreen == 'BN') {
         /*       Map data = {'userId': jsonData['payload']['body']['id'].toString()};
         print("create cart data pass for Direct buy now: " + data.toString());
         CartRepository()

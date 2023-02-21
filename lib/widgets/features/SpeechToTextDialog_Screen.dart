@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:highlight_text/highlight_text.dart';
@@ -104,6 +105,12 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
             startTimer(dashboardViewModel);
           },
         );
+        if (await speech.hasPermission) {
+          print("Permission not denied");
+        } else {
+          openAppSettings();
+          print("Permission denied");
+        }
       }
     } else {
       setState(() {
@@ -113,49 +120,31 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
     }
   }
 
-/*
-  void initializeSpeechRecognition(
+
+  Future<void> askPermissions(Permission requestedPermission,
       DashboardViewModel dashboardViewModel) async {
-    var permission = await Permission.microphone.request();
-
-    try {askPermissions(Permission.microphone);
-*/
-/*
-      if (permission == PermissionStatus.denied) {
-        permission = await Permission.microphone.request();
-        initializeSpeechRecognition(dashboardViewModel);
-      if(permission == PermissionStatus.permanentlyDenied){
-          permission = await Permission.microphone.request();
-          initializeSpeechRecognition(dashboardViewModel);
-     }else {
-        listen(dashboardViewModel);
-      }
-      } else {
-        listen(dashboardViewModel);
-      }
-*//*
-
-
-    } catch (e) {
-      print('Error: $e');
-    }
-  } ////////////
-*/
-
-  Future<void> askPermissions(Permission requestedPermission,DashboardViewModel dashboardViewModel) async {
     // Check permission status
     PermissionStatus status = await requestedPermission.status;
     // Request permission
     if (status != PermissionStatus.granted &&
         status != PermissionStatus.permanentlyDenied) {
       status = await requestedPermission.request();
+      openAppSettings();
+      print("PermissionStatus.denied.....");
 
-    }else if(status == PermissionStatus.permanentlyDenied){
+    } else if (status == PermissionStatus.denied) {
+      print("PermissionStatus.denied");
+      // openAppSettings();
 
+      // openAppSettings();
       askPermissions(requestedPermission, dashboardViewModel);
-    }
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      // openAppSettings();
 
-    else{
+      print("PermissionStatus.restricted");
+      // openAppSettings();
+      askPermissions(requestedPermission, dashboardViewModel);
+    } else {
       listen(dashboardViewModel);
     }
   }
@@ -250,7 +239,8 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                           size: 50),
                       onPressed: () {
                         // listen(dashboardViewModel);
-                        askPermissions( Permission.microphone, dashboardViewModel);
+                        askPermissions(
+                            Permission.microphone, dashboardViewModel);
                       },
                     ),
                   ),
