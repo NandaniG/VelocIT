@@ -136,7 +136,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
           builder: (BuildContext context) {
             return ConfirmationDialog(
               heading: "Alert message",
-              subTitle: 'To use this feature, go to app setting and allow permission for Microphone.',
+              subTitle: 'To use this feature, go to app setting and allow permission for Location.',
               button1: 'Cancel',
               button2: 'Go to Setting',
               onTap1: () async {
@@ -162,7 +162,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
           builder: (BuildContext context) {
             return ConfirmationDialog(
               heading: "Alert message",
-              subTitle: 'To use this feature, go to app setting and allow permission for Microphone.',
+              subTitle: 'To use this feature, go to app setting and allow permission for Location.',
               button1: 'Cancel',
               button2: 'Go to Setting',
               onTap1: () async {

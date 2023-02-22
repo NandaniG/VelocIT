@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+
 // import 'package:geocoding/geocoding.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -138,7 +139,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                         (() {});
                         Navigator.pop(context, () {
                           setState(() {});
-                        });   },
+                        });
+                      },
                       child: Container(
                         margin: const EdgeInsets.only(left: 15),
                         child: Center(
@@ -257,7 +259,6 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                               )
                               .then((value) => setState(() {}));
                         } else {
-
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -674,9 +675,11 @@ class AddressWidgets extends StatefulWidget {
 
 class _AddressWidgetsState extends State<AddressWidgets> {
   var finalPicode = '';
+
   // final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   late Position _currentPosition;
-  String _currentAddress='';
+  String _currentAddress = '';
+
   @override
   void initState() {
     // TODO: implement initState
@@ -686,21 +689,28 @@ class _AddressWidgetsState extends State<AddressWidgets> {
     askPermissions(Permission.location);
   }
 
-  Future<void> askPermissions(Permission requestedPermission,
-      ) async {
+  Future<void> askPermissions(
+    Permission requestedPermission,
+  ) async {
     // Check permission status
     PermissionStatus status = await requestedPermission.status;
     // Request permission
     if (status != PermissionStatus.granted &&
         status != PermissionStatus.permanentlyDenied) {
-      status = await requestedPermission.request();
+     await requestedPermission.request();
       print("PermissionStatus.denied.....");
+      // openAppSettings();
+    } else if (status == PermissionStatus.denied) {
+await requestedPermission.request();
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      // openAppSettings();
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return ConfirmationDialog(
               heading: "Alert message",
-              subTitle: 'To use this feature, go to app setting and allow permission for Microphone.',
+              subTitle:
+                  'To use this feature, go to app setting and allow permission for Location.',
               button1: 'Cancel',
               button2: 'Go to Setting',
               onTap1: () async {
@@ -708,27 +718,19 @@ class _AddressWidgetsState extends State<AddressWidgets> {
               },
               onTap2: () async {
                 AppSettings.openLocationSettings();
-
               },
             );
           });
-    } else if (status == PermissionStatus.permanentlyDenied) {
-      // openAppSettings();
-
       print("PermissionStatus.restricted");
       // openAppSettings();
-      AppSettings.openLocationSettings();
+      // AppSettings.openLocationSettings();
     } else {
       _getCurrentLocation();
     }
   }
 
-
-
-
   _getCurrentLocation() {
-    Geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
       setState(() {
         _currentPosition = position;
@@ -751,9 +753,9 @@ class _AddressWidgetsState extends State<AddressWidgets> {
       StringConstant.placesFromCurrentLocation =
           (prefs.getString('SearchedPinCodePrefs')) ?? "";
       setState(() {
-        finalPicode =
-        "${place.postalCode}";
-        if (StringConstant.placesFromCurrentLocation == ''||StringConstant.placesFromCurrentLocation == 'null') {
+        finalPicode = "${place.postalCode}";
+        if (StringConstant.placesFromCurrentLocation == '' ||
+            StringConstant.placesFromCurrentLocation == 'null') {
           finalPicode = place.postalCode.toString();
         } else {
           finalPicode = StringConstant.placesFromCurrentLocation;
@@ -763,15 +765,16 @@ class _AddressWidgetsState extends State<AddressWidgets> {
       print(e);
     }
   }
+
   getPref() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       finalPicode =
           prefs.getString('CurrentPinCodePrefs') ?? "Please select location";
 
-    if(finalPicode=='null'){
-      finalPicode= "Please select location";
-    }
+      if (finalPicode == 'null') {
+        finalPicode = "Please select location";
+      }
       print(
           "placesFromCurrentLocation CurrentPinCode pref...${finalPicode.toString()}");
 
@@ -884,26 +887,28 @@ class _AddressWidgetsState extends State<AddressWidgets> {
               SizedBox(
                 width: width * .01,
               ),
-              finalPicode!='null'?     SizedBox(
-                child: TextFieldUtils().dynamicText(
-                    "Deliver to - ${finalPicode} ",
-                    // "Deliver to - ${_currentAddress} ",
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.tealButtonColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400)),
-              ):    SizedBox(
-                child: TextFieldUtils().dynamicText(
-                    "Deliver to - Please select location ",
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.tealButtonColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
-              ),
+              finalPicode != 'null'
+                  ? SizedBox(
+                      child: TextFieldUtils().dynamicText(
+                          "Deliver to - ${finalPicode} ",
+                          // "Deliver to - ${_currentAddress} ",
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.tealButtonColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400)),
+                    )
+                  : SizedBox(
+                      child: TextFieldUtils().dynamicText(
+                          "Deliver to - Please select location ",
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.tealButtonColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500)),
+                    ),
               /*   SizedBox(
               child: TextFieldUtils().dynamicText(
 
@@ -1053,8 +1058,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                   theme: SvgTheme(
                     currentColor: ThemeApp.appColor,
                   ),
-                  height: 25,
-                  width: 25,
+                  height: 30,
+                  width: 30,
                 ),
               )
             : Padding(
@@ -1068,8 +1073,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                   theme: SvgTheme(
                     currentColor: ThemeApp.unSelectedBottomBarItemColor,
                   ),
-                  height: 25,
-                  width: 25,
+                  height: 30,
+                  width: 30,
                 ),
               ),
         label: 'HOME',
@@ -1088,8 +1093,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                   theme: SvgTheme(
                     currentColor: ThemeApp.appColor,
                   ),
-                  height: 25,
-                  width: 25,
+                  height: 30,
+                  width: 30,
                 ),
               )
             : Padding(
@@ -1103,8 +1108,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                   theme: SvgTheme(
                     currentColor: ThemeApp.appColor,
                   ),
-                  height: 25,
-                  width: 25,
+                  height: 30,
+                  width: 30,
                 ),
               ),
         label: 'OFFER',
@@ -1135,8 +1140,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                     theme: SvgTheme(
                       currentColor: ThemeApp.appColor,
                     ),
-                    height: 25,
-                    width: 25,
+                    height: 30,
+                    width: 30,
                   ),
                 )
               : Padding(
@@ -1150,8 +1155,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                     theme: SvgTheme(
                       currentColor: ThemeApp.unSelectedBottomBarItemColor,
                     ),
-                    height: 25,
-                    width: 25,
+                    height: 30,
+                    width: 30,
                   ),
                 ),
           label: 'SHOP'),
@@ -1170,8 +1175,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                           theme: SvgTheme(
                             currentColor: ThemeApp.appColor,
                           ),
-                          height: 25,
-                          width: 25,
+                    height: 30,
+                    width: 30,
                         )
                       : badges.Badge(
                           position: badges.BadgePosition.topEnd(),
@@ -1194,8 +1199,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                             theme: SvgTheme(
                               currentColor: ThemeApp.appColor,
                             ),
-                            height: 25,
-                            width: 25,
+                            height: 30,
+                            width: 30,
                           ),
                         ),
                 )
@@ -1211,8 +1216,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                           theme: SvgTheme(
                             currentColor: ThemeApp.unSelectedBottomBarItemColor,
                           ),
-                          height: 25,
-                          width: 25,
+                    height: 30,
+                    width: 30,
                         )
                       : badges.Badge(
                           badgeContent: Text(
@@ -1235,8 +1240,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                               currentColor:
                                   ThemeApp.unSelectedBottomBarItemColor,
                             ),
-                            height: 25,
-                            width: 25,
+                            height: 30,
+                            width: 30,
                           ),
                         ),
                 ),
