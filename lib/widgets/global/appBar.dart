@@ -686,31 +686,22 @@ class _AddressWidgetsState extends State<AddressWidgets> {
     super.initState();
     // getPref();
     _getCurrentLocation();
-    askPermissions(Permission.location);
+    _handleLocationPermission();
   }
 
-  Future<void> askPermissions(
-    Permission requestedPermission,
-  ) async {
-    // Check permission status
-    PermissionStatus status = await requestedPermission.status;
-    // Request permission
-    if (status != PermissionStatus.granted &&
-        status != PermissionStatus.permanentlyDenied) {
-     await requestedPermission.request();
-      print("PermissionStatus.denied.....");
-      // openAppSettings();
-    } else if (status == PermissionStatus.denied) {
-await requestedPermission.request();
-    } else if (status == PermissionStatus.permanentlyDenied) {
-      // openAppSettings();
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return ConfirmationDialog(
               heading: "Alert message",
               subTitle:
-                  'To use this feature, go to app setting and allow permission for Location.',
+              'To use this feature,Please enable the Location services',
               button1: 'Cancel',
               button2: 'Go to Setting',
               onTap1: () async {
@@ -718,15 +709,71 @@ await requestedPermission.request();
               },
               onTap2: () async {
                 AppSettings.openLocationSettings();
+
+                // openAppSettings().then((value) {
+                //   Navigator.pop(context);
+                //
+                // });
+              },
+            );
+          });
+    }
+    PermissionStatus status = await Permission.location.status;
+
+    if (status == PermissionStatus.denied) {
+      permission = await Geolocator.requestPermission();
+
+      print("PermissionStatus.denied");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle:
+              'To use this feature, go to app setting and allow permission for Location.',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                // AppSettings.openLocationSettings();
+                openAppSettings().then((value) {
+                  Navigator.pop(context);
+                  setState(() {});
+                });
+              },
+            );
+          });
+      // openAppSettings();
+      // askPermissions(requestedPermission);
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      print("PermissionStatus.denied.....");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle:
+              'To use this feature, go to app setting and allow permission for Location.',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                // AppSettings.openLocationSettings();
+                openAppSettings().then((value) => Navigator.pop(context));
               },
             );
           });
       print("PermissionStatus.restricted");
       // openAppSettings();
-      // AppSettings.openLocationSettings();
+      // askPermissions(requestedPermission);
     } else {
       _getCurrentLocation();
     }
+    return true;
   }
 
   _getCurrentLocation() {
@@ -1175,8 +1222,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                           theme: SvgTheme(
                             currentColor: ThemeApp.appColor,
                           ),
-                    height: 30,
-                    width: 30,
+                          height: 30,
+                          width: 30,
                         )
                       : badges.Badge(
                           position: badges.BadgePosition.topEnd(),
@@ -1216,8 +1263,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                           theme: SvgTheme(
                             currentColor: ThemeApp.unSelectedBottomBarItemColor,
                           ),
-                    height: 30,
-                    width: 30,
+                          height: 30,
+                          width: 30,
                         )
                       : badges.Badge(
                           badgeContent: Text(

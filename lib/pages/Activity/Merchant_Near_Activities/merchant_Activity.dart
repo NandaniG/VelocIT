@@ -69,65 +69,107 @@ class _MerchantActvityState extends State<MerchantActvity> {
     data = Provider.of<HomeProvider>(context, listen: false).loadJson();
     // getmarkers();
     // _request_permission(context);
-    askPermissions(Permission.location);
+    // askPermissions(Permission.location);
+    _handleLocationPermission();
   }
 
 
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle:
+                  'To use this feature,Please enable the Location services',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                AppSettings.openLocationSettings();
 
-/*
-  getGPSInfo() async {
-    bool servicestatus = await Geolocator.isLocationServiceEnabled();
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    setState(() {});
-    if (servicestatus) {
-      print("GPS service is enabled");
-    } else {
-      await Permission.locationAlways.request();
-      print("GPS service is disabled.");
+                // openAppSettings().then((value) {
+                //   Navigator.pop(context);
+                //
+                // });
+              },
+            );
+          });
     }
-    permission = await Geolocator.checkPermission();
-    print("permission :  " + permission.toString());
+    PermissionStatus status = await Permission.location.status;
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      await Permission.locationAlways.request();
+    if (status == PermissionStatus.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        await Permission.locationAlways.request();
-        print('Location permissions are denied');
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.deniedForever) {
-          AppSettings.openLocationSettings();
 
-          getGPSInfo();
-          Utils.errorToast(
-              'You need to enable location for merchants near you');
-
-          print("'Location permissions are permanently denied");
-        } else {
-          print("GPS Location service is granted");
-          getLocation();
-        }
-      } else {
-        print("GPS Location service is granted");
-        getLocation();
-      }
+      print("PermissionStatus.denied");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle:
+                  'To use this feature, go to app setting and allow permission for Location.',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                // AppSettings.openLocationSettings();
+                openAppSettings().then((value) {
+                  Navigator.pop(context);
+                  setState(() {});
+                });
+              },
+            );
+          });
+      // openAppSettings();
+      // askPermissions(requestedPermission);
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      print("PermissionStatus.denied.....");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle:
+                  'To use this feature, go to app setting and allow permission for Location.',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                // AppSettings.openLocationSettings();
+                openAppSettings().then((value) => Navigator.pop(context));
+              },
+            );
+          });
+      print("PermissionStatus.restricted");
+      // openAppSettings();
+      // askPermissions(requestedPermission);
     } else {
       getLocation();
-      print("GPS Location permission granted.");
     }
-
-    //
+    return true;
   }
-*/
 
-  Future<void> askPermissions(Permission requestedPermission,
-     ) async {
+/*
+  Future<void> askPermissions(
+    Permission requestedPermission,
+  ) async {
     // Check permission status
     PermissionStatus status = await requestedPermission.status;
     // Request permission
-    if (status != PermissionStatus.granted &&
+*/
+/*    if (status != PermissionStatus.granted &&
         status != PermissionStatus.permanentlyDenied) {
       status = await requestedPermission.request();
       print("PermissionStatus.denied.....");
@@ -143,18 +185,21 @@ class _MerchantActvityState extends State<MerchantActvity> {
                 Navigator.pop(context);
               },
               onTap2: () async {
-                AppSettings.openLocationSettings();
+                // AppSettings.openLocationSettings();
+                openAppSettings().then((value) =>   Navigator.pop(context));
 
               },
             );
           });
-    } else if (status == PermissionStatus.denied) {
+    } else*//*
 
+    if (status == PermissionStatus.denied) {
+      permission = await Geolocator.requestPermission();
 
       print("PermissionStatus.denied");
 
       // openAppSettings();
-      askPermissions(requestedPermission);
+      // askPermissions(requestedPermission);
     } else if (status == PermissionStatus.permanentlyDenied) {
       print("PermissionStatus.denied.....");
       showDialog(
@@ -162,15 +207,16 @@ class _MerchantActvityState extends State<MerchantActvity> {
           builder: (BuildContext context) {
             return ConfirmationDialog(
               heading: "Alert message",
-              subTitle: 'To use this feature, go to app setting and allow permission for Location.',
+              subTitle:
+                  'To use this feature, go to app setting and allow permission for Location.',
               button1: 'Cancel',
               button2: 'Go to Setting',
               onTap1: () async {
                 Navigator.pop(context);
               },
               onTap2: () async {
-                AppSettings.openLocationSettings();
-
+                // AppSettings.openLocationSettings();
+                openAppSettings().then((value) => Navigator.pop(context));
               },
             );
           });
@@ -181,6 +227,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
       getLocation();
     }
   }
+*/
 
   getLocation() async {
     position = await Geolocator.getCurrentPosition(

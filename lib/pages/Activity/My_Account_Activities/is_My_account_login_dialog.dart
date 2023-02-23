@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/auth/Sign_Up.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
 
+import '../../../utils/routes/routes.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
@@ -99,10 +100,13 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                           ),
                           InkWell(
                             onTap: () async {
+                              Navigator.of(context)
+                                  .pushNamedAndRemoveUntil(
+                                  RoutesName.signUpRoute, (route) => false)
+                                  .then((value) {
+                                setState(() {});
+                              });
 
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => SignUp()));
                             },
                             child: Text(
                               "Sign Up",
@@ -140,9 +144,12 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                           ),
                           InkWell(
                             onTap: () async {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => SignIn_Screen()));
+                              Navigator.of(context)
+                                  .pushNamedAndRemoveUntil(
+                                  RoutesName.signInRoute, (route) => false)
+                                  .then((value) {
+                                setState(() {});
+                              });
                             },
                             child: Text(
                               "Sign In",

@@ -263,61 +263,85 @@ class AuthRepository {
 
     StringConstant.prettyPrintJson(
         responseJson.toString(), 'Validate OTP Response:');
-    if (response.statusCode == 200) {
-      if (jsonData['status'].toString() == 'OK') {
-        AuthRepository()
-            .getUserDetailsById(jsonData['payload']['id'].toString());
+    if (jsonData['status'].toString() == 'OK') {
+      AuthRepository()
+          .getUserDetailsById(jsonData['payload']['body']['id'].toString());
+      prefs.setString(
+          StringConstant.testId, jsonData['payload']['body']['id'].toString());
+      // Prefs.instance.setToken(StringConstant.userId, id.toString());
 
-        prefs.setString(
-            StringConstant.testId, jsonData['payload']['id'].toString());
-        // Prefs.instance.setToken(StringConstant.userId, id.toString());
+      var loginId = await Prefs.instance.getToken(StringConstant.userId);
+      final preferences = await SharedPreferences.getInstance();
+      preferences.setInt('isUserLoggedIn', 1);
+      preferences.setString(
+          'isUserId', jsonData['payload']['body']['id'].toString());
+      preferences.setString(
+          'usernameLogin', jsonData['payload']['body']['username'].toString());
+      preferences.setString(
+          'emailLogin', jsonData['payload']['body']['email'].toString());
 
-        var loginId = await Prefs.instance.getToken(StringConstant.userId);
-        final preferences = await SharedPreferences.getInstance();
-        preferences.setInt('isUserLoggedIn', 1);
-        preferences.setString('isUserId', jsonData['payload']['id'].toString());
-        preferences.setString(
-            'usernameLogin', jsonData['payload']['username'].toString());
-        preferences.setString(
-            'emailLogin', jsonData['payload']['email'].toString());
+      print("LoginId : .. " + loginId.toString());
 
-        print("LoginId : .. " + loginId.toString());
+      StringConstant.isLogIn = true;
+      Utils.successToast('User login successfully');
 
-        StringConstant.isLogIn = true;
-        Utils.successToast('User login successfully');
+      StringConstant.isUserNavigateFromDetailScreen =
+          (prefs.getString('isUserNavigateFromDetailScreen')) ?? "";
+      StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
+      print("Cart Id From Login usinh Email " + StringConstant.UserCartID);
+      print("StringConstant.isUserNavigateFromDetailScreen" +
+          StringConstant.isUserNavigateFromDetailScreen.toString());
+      var userId = preferences.getString('isUserId');
+      if (StringConstant.isUserNavigateFromDetailScreen == 'Yes') {
+        var cartUserId = prefs.getString('CartSpecificUserIdPref');
+        var itemCode = prefs.getString('CartSpecificItem_codePref');
+        var itemQuanity = prefs.getString('CartSpecificItemQuantityPref');
+        StringConstant.RandomUserLoginId =
+            (prefs.getString('RandomUserId')) ?? '';
+        Map data = {
+          'user_id': jsonData['payload']['body']['id'],
+          'item_code': itemCode,
+          'qty': itemQuanity
+        };
 
-        StringConstant.isUserNavigateFromDetailScreen =
-            (prefs.getString('isUserNavigateFromDetailScreen')) ?? "";
-        StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-        print("Cart Id From Login usinh Email " + StringConstant.UserCartID);
-        print("StringConstant.isUserNavigateFromDetailScreen" +
-            StringConstant.isUserNavigateFromDetailScreen);
-        var userId = preferences.getString('isUserId');
-        if (StringConstant.isUserNavigateFromDetailScreen == 'Yes') {
-          var cartUserId = prefs.getString('CartSpecificUserIdPref');
-          var itemCode = prefs.getString('CartSpecificItem_codePref');
-          var itemQuanity = prefs.getString('CartSpecificItemQuantityPref');
-          StringConstant.RandomUserLoginId =
-              (prefs.getString('RandomUserId')) ?? '';
-          Map data = {
-            'user_id': jsonData['payload']['id'],
-            'item_code': itemCode,
-            'qty': itemQuanity
-          };
+        data = {'userId': jsonData['payload']['body']['id'].toString()};
+        print('login user is NOT GUEST');
 
-          data = {'userId': jsonData['payload']['id'].toString()};
-          print('login user is NOT GUEST');
+        print("create cart data pass : " + data.toString());
+        //create cart
+        CartRepository().cartPostRequest(data, context);
+        //merge cart
+        print("Random ID : " + StringConstant.RandomUserLoginId);
 
-          print("create cart data pass : " + data.toString());
-          //create cart
-          CartRepository().cartPostRequest(data, context);
-          //merge cart
-          print("Random ID : " + StringConstant.RandomUserLoginId);
+        CartRepository().mergeCartList(
+            StringConstant.RandomUserLoginId, userId.toString(), data, context);
+      }else if (StringConstant.isUserNavigateFromDetailScreen == 'IsGuest') {
+        var cartUserId = prefs.getString('CartSpecificUserIdPref');
+        var itemCode = prefs.getString('CartSpecificItem_codePref');
+        var itemQuanity = prefs.getString('CartSpecificItemQuantityPref');
+        StringConstant.RandomUserLoginId =
+            (prefs.getString('RandomUserId')) ?? '';
+        Map data = {
+          'user_id': jsonData['payload']['body']['id'],
+          'item_code': itemCode,
+          'qty': itemQuanity
+        };
 
-          CartRepository().mergeCartList(StringConstant.RandomUserLoginId,
-              userId.toString(), data, context);
-        } else if (StringConstant.isUserNavigateFromDetailScreen == 'BN') {
-          /*       Map data = {'userId': jsonData['payload']['body']['id'].toString()};
+        data = {'userId': jsonData['payload']['body']['id'].toString()};
+        print('login user is NOT GUEST');
+
+        print("create cart data pass : " + data.toString());
+        //create cart
+        CartRepository().cartPostRequest(data, context);
+        //merge cart
+        print("Random ID : " + StringConstant.RandomUserLoginId);
+
+        CartRepository().mergeCartList(
+            StringConstant.RandomUserLoginId, userId.toString(), data, context);
+      }
+      // 259745353
+      else if (StringConstant.isUserNavigateFromDetailScreen == 'BN') {
+        /*       Map data = {'userId': jsonData['payload']['body']['id'].toString()};
         print("create cart data pass for Direct buy now: " + data.toString());
         CartRepository()
             .mergeCartList(StringConstant.RandomUserLoginId, userId.toString(),
@@ -325,23 +349,10 @@ class AuthRepository {
             .then((value) {
           CartRepository().buyNowGetRequest(userId.toString(), context);
         });*/
-          CartRepository().buyNowGetRequest(userId.toString(), context);
-        } else {
-          if (isForgotPass == true) {
-            Navigator.of(context)
-                .pushReplacementNamed(RoutesName.changeForgotPassRoute)
-                .then((value) {});
-          } else {
-            Navigator.of(context)
-                .pushReplacementNamed(RoutesName.dashboardRoute)
-                .then((value) {});
-          }
-        }
+        CartRepository().buyNowGetRequest(userId.toString(), context);
       } else {
-        Utils.errorToast("Please enter valid details.");
-
-        httpClient.close();
-        return responseJson;
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => DashboardScreen()));
       }
     } else {
       Utils.errorToast("Please enter valid details.");

@@ -265,8 +265,10 @@ class CartRepository {
             (prefs.getString('isUserNavigateFromDetailScreen')) ?? "";
 
         if (StringConstant.isUserNavigateFromDetailScreen == 'IsGuest') {
-          Navigator.of(context)
-              .pushReplacementNamed(RoutesName.dashboardRoute);
+          getCartSpecificIDList(response['payload']['id'].toString()).then((value)
+          { Navigator.of(context)
+              .pushNamedAndRemoveUntil(
+              RoutesName.dashboardRoute, (route) => false);});
         } else {
           await prefs.setString('isRandomUser', 'Yes').then((value) {
             Navigator.of(context)

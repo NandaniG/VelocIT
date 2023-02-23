@@ -786,9 +786,12 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                             finalId = ID.toString();
                                             prefs.setString('RandomUserId',
                                                 finalId.toString());
-                                            Navigator.pushReplacementNamed(
-                                                context,
-                                                RoutesName.dashboardRoute);
+                                            Navigator.of(context)
+                                                .pushNamedAndRemoveUntil(
+                                                RoutesName.dashboardRoute, (route) => false)
+                                                .then((value) {
+                                              setState(() {});
+                                            });
                                             Utils.successToast(
                                                 'You are signed out');
                                             // _getCurrentPosition().then((value) {
