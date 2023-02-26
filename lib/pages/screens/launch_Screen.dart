@@ -79,7 +79,10 @@ class _SplashScreenState extends State<SplashScreen> {
     final FirebaseMessaging _fcm = FirebaseMessaging.instance;
     final token = await _fcm.getToken();
     deviceTokenToSendPushNotification = token.toString();
+
     print("Token Value $deviceTokenToSendPushNotification");
+
+
   }
 
   //splash to home timer

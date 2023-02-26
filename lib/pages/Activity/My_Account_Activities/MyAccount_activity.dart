@@ -193,7 +193,6 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                     .getUserDetailsById(StringConstant.UserLoginId),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) print(snapshot.error);
-
                   return snapshot.hasData
                       ? Container(
                           color: ThemeApp.appBackgroundColor,
@@ -222,6 +221,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         imageFile1 != null
+                                        // snapshot.data!.payload!.imageUrl.toString() != null
                                             ? Stack(
                                                 // alignment: Alignment.center,
                                                 children: [
@@ -252,7 +252,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                                     100)),
                                                         child: Image.file(
                                                           imageFile1!,
-                                                          fit: BoxFit.fitWidth,
+                                                          // snapshot.data!.payload!.imageUrl,                                                          fit: BoxFit.fitWidth,
                                                           width: 90.0,
                                                           height: 90.0,
                                                           errorBuilder:
@@ -934,26 +934,4 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
             letterSpacing: -0.25));
   }
 
-  Future _getFromCamera() async {
-    var image = await picker.getImage(source: ImageSource.camera);
-    final prefs = await SharedPreferences.getInstance();
-    // StringConstant.CurrentPinCode = (prefs.getString('CurrentPinCodePref') ?? '');
-    String imagePath = image!.path;
-
-    await prefs.setString('profileImagePrefs', imagePath);
-    Map data = {
-      "imgUrl": image.path,
-    };
-
-    AuthRepository().updateProfileImageApi(data, StringConstant.UserLoginId);
-    setState(() {
-      imageFile1 = File(image.path);
-
-      // final   file = File(image!.path);
-      //    final bytes =
-      //    file!.readAsBytesSync();
-      //   final img64 = base64Encode(bytes);
-    });
-    // Navigator.pop(this.context);
-  }
 }

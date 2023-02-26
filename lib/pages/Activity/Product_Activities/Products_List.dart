@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -92,6 +93,8 @@ class _ProductListByCategoryActivityState
     print("subProduct.............${widget.productList!.id}");
     StringConstant.sortByRadio;
     StringConstant.sortedBy;
+
+
   }
 
   @override
@@ -350,129 +353,143 @@ class _ProductListByCategoryActivityState
   }
 
   Widget productListView() {
-    return isLoading==false? Expanded(
-        child:subCategoryList.isEmpty?Center(
-      child: Text(
-      "Match not found",
-      style: TextStyle(fontSize: 20),
-    )): GridView(
-      controller: _sc,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 30,
-        // childAspectRatio: 1.0,
-        childAspectRatio: MediaQuery.of(context).size.height / 900,
-      ),
-      shrinkWrap: true,
-      children: List.generate(subCategoryList.length + 1, (index) {
-        print(subCategoryList.length);
+    return isLoading == false
+        ? Expanded(
+            child: sortedMapData.isEmpty
+                ? Center(
+                    child: Text(
+                    "Match not found",
+                    style: TextStyle(fontSize: 20),
+                  ))
+                : GridView(
+                    controller: _sc,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 30,
+                      // childAspectRatio: 1.0,
+                      childAspectRatio:
+                          MediaQuery.of(context).size.height / 900,
+                    ),
+                    shrinkWrap: true,
+                    children:
+                        List.generate(sortedMapData.length + 1, (index) {
+                      print(sortedMapData.length);
 
-        // if (subCategoryList.length == 0 || subCategoryList == []) {
-        //   return Container(width: double.infinity,color: Colors.redAccent,
-        //     child: Center(
-        //         child: Text(
-        //           "Match not found",
-        //           style: TextStyle(fontSize: 20),
-        //         )),
-        //   );
-        // }
-        if (index == subCategoryList.length) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              _buildProgressIndicator(),
-            ],
-          );
-        } else {
-          return InkWell(
-            onTap: () {
-              print("Id ........${subCategoryList[index].id}");
+                      if (index == sortedMapData.length) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            _buildProgressIndicator(),
+                          ],
+                        );
+                      } else {
+                        return InkWell(
+                          onTap: () {
+                            print("Id ........${sortedMapData[index].id}");
 
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProductDetailsActivity(
-                    id: subCategoryList[index].id,
-                  ),
-                ),
-              );
-            },
-            child: Container(
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailsActivity(
+                                  id: sortedMapData[index].id,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
 // height: 205,
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /*   Expanded(
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              /*   Expanded(
                                         flex: 2,
                                         child:*/
-                Container(
-                  height: 143,
-                  width: 191,
-                  decoration: BoxDecoration(
-                      color: ThemeApp.whiteColor,
-                      border: Border.all(color: ThemeApp.tealButtonColor)),
-                  child: ClipRRect(
-                    child: subCategoryList[index]
-                            .imageUrls![0]
-                            .imageUrl!
-                            .isNotEmpty
-                        ? Image.network(
-                            subCategoryList[index].imageUrls![0].imageUrl!,
-                            // fit: BoxFit.fill,
-                            height: (MediaQuery.of(context).orientation ==
-                                    Orientation.landscape)
-                                ? MediaQuery.of(context).size.height * .26
-                                : MediaQuery.of(context).size.height * .1,
-                          )
-                        : SizedBox(
-                            // height: height * .28,
-                            width: width,
-                            child: Icon(
-                              Icons.image_outlined,
-                              size: 50,
-                            )),
-                  ),
-                ),
-                // ),
-                Container(
-                  color: ThemeApp.tealButtonColor,
-                  width: 191,
-                  height: 66,
-                  padding: const EdgeInsets.only(
-                    left: 12,
-                    right: 12,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFieldUtils().listNameHeadingTextField(
-                          subCategoryList[index].shortName!, context),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextFieldUtils().listPriceHeadingTextField(
-                              indianRupeesFormat.format(
-                                  subCategoryList[index].defaultSellPrice ??
-                                      0.0),
-                              context),
-                          TextFieldUtils().listScratchPriceHeadingTextField(
-                              indianRupeesFormat.format(
-                                  subCategoryList[index].defaultMrp ?? 0.0),
-                              context)
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            )),
-          );
-        }
-      }),
-    )):CircularProgressIndicator();
+                              Container(
+                                height: 143,
+                                width: 191,
+                                decoration: BoxDecoration(
+                                    color: ThemeApp.whiteColor,
+                                    border: Border.all(
+                                        color: ThemeApp.tealButtonColor)),
+                                child: ClipRRect(
+                                  child: sortedMapData[index]
+                                          .imageUrls![0]
+                                          .imageUrl!
+                                          .isNotEmpty
+                                      ? Image.network(
+                                    sortedMapData[index]
+                                              .imageUrls![0]
+                                              .imageUrl!,
+                                          // fit: BoxFit.fill,
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.landscape)
+                                              ? MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .26
+                                              : MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  .1,
+                                        )
+                                      : SizedBox(
+                                          // height: height * .28,
+                                          width: width,
+                                          child: Icon(
+                                            Icons.image_outlined,
+                                            size: 50,
+                                          )),
+                                ),
+                              ),
+                              // ),
+                              Container(
+                                color: ThemeApp.tealButtonColor,
+                                width: 191,
+                                height: 66,
+                                padding: const EdgeInsets.only(
+                                  left: 12,
+                                  right: 12,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextFieldUtils().listNameHeadingTextField(
+                                        sortedMapData[index].shortName!,
+                                        context),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextFieldUtils()
+                                            .listPriceHeadingTextField(
+                                                indianRupeesFormat.format(
+                                                    sortedMapData[index]
+                                                            .defaultSellPrice ??
+                                                        0.0),
+                                                context),
+                                        TextFieldUtils()
+                                            .listScratchPriceHeadingTextField(
+                                                indianRupeesFormat.format(
+                                                    sortedMapData[index]
+                                                            .defaultMrp ??
+                                                        0.0),
+                                                context)
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )),
+                        );
+                      }
+                    }),
+                  ))
+        : CircularProgressIndicator();
   }
 
   void _getMoreData(int page, int size, int subCategoryId) async {
@@ -506,15 +523,42 @@ class _ProductListByCategoryActivityState
           FindProductBySubCategoryModel.fromJson(parsedJson);
       for (int i = 0; i < productBySubCategory.payload!.content!.length; i++) {
         tList.add(productBySubCategory.payload!.content![i]);
+
+        // subCategoryList.sort((a,b)=>int.parse(a.defaultSellPrice.toString()).compareTo(int.parse(a.defaultSellPrice.toString())));
+        // final  List<Content> sortSubCategoryList = List<Content>.of(subCategoryList);
+        // print("sortSubCategoryList :"+sortSubCategoryList.length.toString());
       }
 
       setState(() {
         isLoading = false;
         subCategoryList.addAll(tList);
+        mainss();
+
         // page++;
         print("page number " + page.toString());
       });
     }
+  }
+  List<Content> sortedMapData=[];
+  void mainss() {
+    // sorting the map value in ascending order by it's value.
+
+    // convert the map data into list(array).
+
+    List<Content> listMappedEntries = subCategoryList.toList();
+
+    // Now will sort the list
+
+    listMappedEntries.sort((a, b) => a.defaultSellPrice!.toInt()
+        .compareTo(b.defaultSellPrice!.toInt()));
+
+    // print(listMappedEntries);
+
+    // now convert the list back to map after sorting.
+
+  sortedMapData = List<Content>.from(listMappedEntries);
+
+    print("sortedMapData"+sortedMapData.length.toString());
   }
 
   Widget _buildProgressIndicator() {
@@ -849,8 +893,13 @@ class _ProductListByCategoryActivityState
   void onChangeText(int sortByRadio) {
     setState(() {});
     if (StringConstant.sortByRadio == 1) {
+      // list is been sorted
+      sortedMapData.sort((a, b) =>b.defaultSellPrice!.toInt()
+          .compareTo(a.defaultSellPrice!.toInt()));
       StringConstant.sortedBy = "High to Low";
     } else {
+      sortedMapData.sort((a, b) =>a.defaultSellPrice!.toInt()
+          .compareTo(b.defaultSellPrice!.toInt()));
       StringConstant.sortedBy = "Low to High";
     }
   }

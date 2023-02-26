@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
@@ -12,6 +14,7 @@ import 'package:velocit/widgets/global/proceedButtons.dart';
 
 import '../../../../Core/AppConstant/apiMapping.dart';
 import '../../../../Core/Model/CRMModels/CRMSingleIDModel.dart';
+import '../../../../Core/repository/auth_repository.dart';
 import '../../../../utils/StringUtils.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/routes/routes.dart';
@@ -21,14 +24,14 @@ import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/dynamicPopUp.dart';
 import '../../../../widgets/global/textFormFields.dart';
 import '../MyAccountActivity/Edit_Account_activity.dart';
-
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspaths;
+import 'package:http/http.dart'as http;
 class ProfileImageDialog extends StatefulWidget {
   File? imageFile1;
   bool isEditAccount;
 
-  ProfileImageDialog({
-    required this.imageFile1,required this.isEditAccount
-  });
+  ProfileImageDialog({required this.imageFile1, required this.isEditAccount});
 
   @override
   State<ProfileImageDialog> createState() => _ProfileImageDialogState();
@@ -80,28 +83,37 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                   final prefs = await SharedPreferences.getInstance();
                   // StringConstant.CurrentPinCode = (prefs.getString('CurrentPinCodePref') ?? '');
                   String imagePath = image!.path;
-
                   await prefs.setString('profileImagePrefs', imagePath);
+
                   Map data = {
                     "imgUrl": image.path,
                   };
+                  StringConstant.UserLoginId =
+                      (prefs.getString('isUserId')) ?? '';
 
                   setState(() {
                     widget.imageFile1 = File(image.path);
-                    if(widget.isEditAccount ==true) {
+                    print("widget.imageFile1"+widget.imageFile1.toString());
+
+                    if (widget.isEditAccount == true) {
+                      AuthRepository().updateProfileImageApi(
+                          data, StringConstant.UserLoginId, context);
+
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => const MyAccountActivity(),
                         ),
                       );
-                    }else{
+                    } else {
+                      AuthRepository().updateProfileImageApi(
+                          data, StringConstant.UserLoginId,context);
+
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) =>  EditAccountActivity(),
+                          builder: (context) => EditAccountActivity(),
                         ),
                       );
                     }
-
                   });
                 }),
                 SizedBox(
@@ -110,32 +122,44 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                 proceedButton(
                     'Gallery', ThemeApp.tealButtonColor, context, false,
                     () async {
-                      final prefs = await SharedPreferences.getInstance();
+                  final prefs = await SharedPreferences.getInstance();
 
-                  FilePickerResult? pickedFile =
-                      await FilePicker.platform.pickFiles();
+                  final pickedFile = await picker.getImage(
+                    source: ImageSource.gallery,);
+                  print(pickedFile!.path.toString());
                   if (pickedFile != null) {
-                    String? filePath = pickedFile.files.single.path;
-                    if (filePath != null) {
-                      final file = File(filePath);
-                      await prefs.setString('profileImagePrefs', filePath);
 
+
+
+                    final file = File(pickedFile.path);
+                      await prefs.setString('profileImagePrefs', pickedFile.path);
+                      StringConstant.UserLoginId =
+                          (prefs.getString('isUserId')) ?? '';
+                      Map data = {
+                        "imgUrl": file.path,
+                      };
                       widget.imageFile1 = file;
-                      if(widget.isEditAccount ==true) {
+                      if (widget.isEditAccount == true) {
+                        AuthRepository().updateProfileImageApi(
+                            data, StringConstant.UserLoginId,context);
+
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => const MyAccountActivity(),
                           ),
                         );
-                      }else{
+                      } else {
+                        AuthRepository().updateProfileImageApi(
+                            data, StringConstant.UserLoginId,context);
+
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) =>  EditAccountActivity(),
+                            builder: (context) => EditAccountActivity(),
                           ),
                         );
                       }
                     }
-                  }
+
                 }),
               ],
             ),
@@ -144,7 +168,11 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
       );
     }
   }
-
+  Directory findRoot(FileSystemEntity entity) {
+    final Directory parent = entity.parent;
+    if (parent.path == entity.path) return parent;
+    return findRoot(parent);
+  }
   @override
   Widget build(BuildContext context) {
     return Dialog(

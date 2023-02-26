@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -17,6 +18,7 @@ import '../../utils/styles.dart';
 import '../../utils/utils.dart';
 import '../../widgets/global/proceedButtons.dart';
 import '../../widgets/global/textFormFields.dart';
+import '../screens/launch_Screen.dart';
 import 'forgot_password.dart';
 
 class SignIn_Screen extends StatefulWidget {
@@ -94,6 +96,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
     // _radioIndex = 1;
     isOtp = false;
     _usingPassVisible = false;
+    getDeviceTokenToSendNotification();
   }
 
   @override
@@ -115,10 +118,20 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
     isOtpValues = (prefs.getString(StringConstant.setOtp)) ?? '';
     userId = (prefs.getString('userIdFromOtp')) ?? '';
     userName = (prefs.getString('userNameFromOtp')) ?? '';
-  }
+  }  String deviceTokenToSendPushNotification = '';
 
+  Future<void> getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+    final token = await _fcm.getToken();
+    deviceTokenToSendPushNotification = token.toString();
+
+    print("Token Value $deviceTokenToSendPushNotification");
+
+
+  }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
       body: SafeArea(
@@ -937,17 +950,20 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 'mobile': email.text,
                                 'password': password.text
                               };
+
                               print(emaildata);
                               if (StringConstant().isNumeric(email.text)) {
                                 AuthRepository()
                                     .postApiUsingEmailPasswordRequest(
-                                        mobileData, context)
-                                    .then((value) => setState(() {}));
+                                        mobileData,deviceTokenToSendPushNotification, context)
+                                    .then((value) => setState(() {
+
+                                }));
                                 print("Digit found");
                               } else {
                                 AuthRepository()
                                     .postApiUsingEmailPasswordRequest(
-                                        emaildata, context)
+                                        emaildata,deviceTokenToSendPushNotification, context)
                                     .then((value) => setState(() {}));
 
                                 print("Digit not found");
@@ -977,7 +993,7 @@ class _SignIn_ScreenState extends State<SignIn_Screen> {
                                 'user_id': userId,
                               };
                               AuthRepository().postApiForValidateOTP(
-                                  passOtpData, false, context);
+                                  passOtpData, false, deviceTokenToSendPushNotification,context);
                               // if (authViewModel.getOTP == controller.text) {
                               //   Map data = {'username': 'testuser@test.com'};
                               //   authViewModel.loginApiWithPost(data, context);

@@ -79,6 +79,8 @@ getUserData()async{
   final prefs = await SharedPreferences.getInstance();
 
   setState(() {
+    StringConstant.UserLoginId =
+        (prefs.getString('isUserId')) ?? '';
     StringConstant.userProfileName =
         prefs.getString('userProfileNamePrefs') ?? "";
     StringConstant.userProfileEmail =
@@ -427,13 +429,22 @@ getUserData()async{
             SizedBox(
               height: 5,
             ),
-            Text(
-              "In order to prevent unauthorized access of personal information, request you to contact admin for changing the registered mobile number and email address.",
-              style: SafeGoogleFont(
-                'Roboto',
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: ThemeApp.lightFontColor,
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: ThemeApp.appColor),
+                  color: ThemeApp.appBackgroundColor),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  "In order to prevent unauthorized access of personal information, request you to contact admin for changing the registered mobile number and email address.",
+                  style: SafeGoogleFont(
+                    'Roboto',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: ThemeApp.appColor,
+                  ),
+                ),
               ),
             ),
             SizedBox(
@@ -587,7 +598,10 @@ getUserData()async{
     return proceedButton(
         StringUtils.update, ThemeApp.tealButtonColor, context, false, () {
       FocusManager.instance.primaryFocus?.unfocus();
-
+      Map data = {
+        "username": userNameController.text,
+      };
+AuthRepository().editUserInfoApi(data, StringConstant.UserLoginId);
       print("provider.creditCardList__________" +
           provider.userAccountDetailList.length.toString());
       initializeFilter(provider);

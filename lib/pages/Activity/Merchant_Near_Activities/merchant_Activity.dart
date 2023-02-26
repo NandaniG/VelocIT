@@ -662,10 +662,9 @@ class _MerchantActvityState extends State<MerchantActvity> {
                                     Container(
                                       color: ThemeApp.tealButtonColor,
                                       width: 191,
-                                      height: 66,
-                                      padding: const EdgeInsets.only(
-                                        left: 12,
-                                        right: 12,
+                                      // height: 66,
+                                      padding: const EdgeInsets.all(
+                                       12,
                                       ),
                                       child: Column(
                                         mainAxisAlignment:

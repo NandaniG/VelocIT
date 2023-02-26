@@ -28,7 +28,7 @@ class AuthRepository {
   /// FINAL API FOR LOGIN USING EMAIL AND PASSWORD
 
   Future postApiUsingEmailPasswordRequest(
-      Map jsonMap, BuildContext context) async {
+      Map jsonMap,String fcmToken, BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     dynamic responseJson;
@@ -50,6 +50,10 @@ class AuthRepository {
     if (jsonData['status'].toString() == 'OK') {
       AuthRepository()
           .getUserDetailsById(jsonData['payload']['body']['id'].toString());
+//api for passing fcm token
+      passFCMToken(jsonData['payload']['body']['id'].toString(), fcmToken);
+
+
       prefs.setString(
           StringConstant.testId, jsonData['payload']['body']['id'].toString());
       // Prefs.instance.setToken(StringConstant.userId, id.toString());
@@ -99,7 +103,7 @@ class AuthRepository {
 
         CartRepository().mergeCartList(
             StringConstant.RandomUserLoginId, userId.toString(), data, context);
-      }else if (StringConstant.isUserNavigateFromDetailScreen == 'IsGuest') {
+      } else if (StringConstant.isUserNavigateFromDetailScreen == 'IsGuest') {
         var cartUserId = prefs.getString('CartSpecificUserIdPref');
         var itemCode = prefs.getString('CartSpecificItem_codePref');
         var itemQuanity = prefs.getString('CartSpecificItemQuantityPref');
@@ -170,10 +174,12 @@ class AuthRepository {
     StringConstant.prettyPrintJson(
         responseJson.toString(), 'Login Using Mobile OTP Response:');
     if (jsonData['status'].toString() == 'OK') {
-          prefs.setString(
-              StringConstant.setOtp, jsonData['payload']['otp'].toString());
-          prefs.setString('userIdFromOtp',jsonData['payload']['user_id'].toString());
-      prefs.setString('userNameFromOtp',jsonData['payload']['username'].toString());
+      prefs.setString(
+          StringConstant.setOtp, jsonData['payload']['otp'].toString());
+      prefs.setString(
+          'userIdFromOtp', jsonData['payload']['user_id'].toString());
+      prefs.setString(
+          'userNameFromOtp', jsonData['payload']['username'].toString());
       String mobile = jsonMap['email'].toString();
       Utils.successToast(jsonData['payload']['otp'].toString());
 
@@ -220,8 +226,10 @@ class AuthRepository {
     if (jsonData['status'].toString() == 'OK') {
       prefs.setString(
           StringConstant.setOtp, jsonData['payload']['otp'].toString());
-      prefs.setString('userIdFromOtp',jsonData['payload']['user_id'].toString());
-      prefs.setString('userNameFromOtp',jsonData['payload']['username'].toString());
+      prefs.setString(
+          'userIdFromOtp', jsonData['payload']['user_id'].toString());
+      prefs.setString(
+          'userNameFromOtp', jsonData['payload']['username'].toString());
       String mobile = jsonMap['email'].toString();
       Utils.successToast(jsonData['payload']['otp'].toString());
       // Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -243,7 +251,7 @@ class AuthRepository {
   /// FINAL API FOR VALIDATING OTP
 
   Future postApiForValidateOTP(
-      Map jsonMap, bool isForgotPass, BuildContext context) async {
+      Map jsonMap, bool isForgotPass,String fcmToken, BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     dynamic responseJson;
@@ -264,21 +272,22 @@ class AuthRepository {
     StringConstant.prettyPrintJson(
         responseJson.toString(), 'Validate OTP Response:');
     if (jsonData['status'].toString() == 'OK') {
-      AuthRepository()
-          .getUserDetailsById(jsonData['payload']['body']['id'].toString());
+      AuthRepository().getUserDetailsById(jsonData['payload']['id'].toString());
+      //api for passing fcm token
+      passFCMToken(jsonData['payload']['body']['id'].toString(), fcmToken);
+
       prefs.setString(
-          StringConstant.testId, jsonData['payload']['body']['id'].toString());
+          StringConstant.testId, jsonData['payload']['id'].toString());
       // Prefs.instance.setToken(StringConstant.userId, id.toString());
 
       var loginId = await Prefs.instance.getToken(StringConstant.userId);
       final preferences = await SharedPreferences.getInstance();
       preferences.setInt('isUserLoggedIn', 1);
+      preferences.setString('isUserId', jsonData['payload']['id'].toString());
       preferences.setString(
-          'isUserId', jsonData['payload']['body']['id'].toString());
+          'usernameLogin', jsonData['payload']['username'].toString());
       preferences.setString(
-          'usernameLogin', jsonData['payload']['body']['username'].toString());
-      preferences.setString(
-          'emailLogin', jsonData['payload']['body']['email'].toString());
+          'emailLogin', jsonData['payload']['email'].toString());
 
       print("LoginId : .. " + loginId.toString());
 
@@ -299,12 +308,12 @@ class AuthRepository {
         StringConstant.RandomUserLoginId =
             (prefs.getString('RandomUserId')) ?? '';
         Map data = {
-          'user_id': jsonData['payload']['body']['id'],
+          'user_id': jsonData['payload']['id'],
           'item_code': itemCode,
           'qty': itemQuanity
         };
 
-        data = {'userId': jsonData['payload']['body']['id'].toString()};
+        data = {'userId': jsonData['payload']['id'].toString()};
         print('login user is NOT GUEST');
 
         print("create cart data pass : " + data.toString());
@@ -315,19 +324,19 @@ class AuthRepository {
 
         CartRepository().mergeCartList(
             StringConstant.RandomUserLoginId, userId.toString(), data, context);
-      }else if (StringConstant.isUserNavigateFromDetailScreen == 'IsGuest') {
+      } else if (StringConstant.isUserNavigateFromDetailScreen == 'IsGuest') {
         var cartUserId = prefs.getString('CartSpecificUserIdPref');
         var itemCode = prefs.getString('CartSpecificItem_codePref');
         var itemQuanity = prefs.getString('CartSpecificItemQuantityPref');
         StringConstant.RandomUserLoginId =
             (prefs.getString('RandomUserId')) ?? '';
         Map data = {
-          'user_id': jsonData['payload']['body']['id'],
+          'user_id': jsonData['payload']['id'],
           'item_code': itemCode,
           'qty': itemQuanity
         };
 
-        data = {'userId': jsonData['payload']['body']['id'].toString()};
+        data = {'userId': jsonData['payload']['id'].toString()};
         print('login user is NOT GUEST');
 
         print("create cart data pass : " + data.toString());
@@ -474,28 +483,127 @@ class AuthRepository {
   }
 
   //update profile image
-  Future updateProfileImageApi(dynamic data, String userId) async {
+  Future updateProfileImageApi(
+      Map jsonMap, String userId, BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    dynamic responseJson;
+    var url =
+        ApiMapping.BASEAPI + '/user/' + userId + ApiMapping.changeImageWithFile;
+    print(url);
+
+    print(jsonMap);
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(jsonMap)));
+    HttpClientResponse response = await request.close();
+    // todo - you should check the response.statusCode
+    responseJson = await response.transform(utf8.decoder).join();
+    print("response update ProfileImage  11" + responseJson.toString());
+
+    var jsonData = json.decode(responseJson);
+
+    if (jsonData['status'].toString() == 'OK') {
+      print("response update ProfileImage " + jsonData.toString());
+    } else {
+      Utils.errorToast("Please enter valid details.");
+
+      httpClient.close();
+      return responseJson;
+    }
+  }
+
+/*  Future updateProfileImageApi(
+      dynamic data, String userId, var ImageUrl) async {
     // var url = ApiMapping.getURI(apiEndPoint.put_carts);
     final prefs = await SharedPreferences.getInstance();
 
     print("userId ID" + userId.toString());
     print("userId ID" + data.toString());
 
-    var url = '/user/$userId/changeimage';
+    var url = '/user/$userId/changeimagewithfile';
 
-    var requestUrl = ApiMapping.BaseAPI + url;
+    Map<String, dynamic> imageMap = {
+      "imgUrl": ImageUrl,
+    };
+    String queryString = Uri(queryParameters: imageMap).query;
+
+    var requestUrl = ApiMapping.BaseAPI + url + '?' + queryString;
+    // var requestUrl = ApiMapping.BaseAPI + url;
     print(requestUrl.toString());
 
     String body = json.encode(data);
-    print("updateProfileImageApi jsonMap" + body.toString());
+    print("updateProfileImageApi Body" + body.toString());
 
     try {
       dynamic reply;
       http.Response response = await http.put(Uri.parse(requestUrl),
           body: body, headers: {'content-type': 'application/json'});
-      print("response Put Address" + response.body.toString());
+      print("response update ProfileImage " + response.body.toString());
       var jsonData = json.decode(response.body);
-      print("response post jsonData" + jsonData['status'].toString());
+      print("response  update ProfileImage" + jsonData['status'].toString());
+
+      // Utils.successToast(response.body.toString());
+      return reply;
+
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }*/
+
+  // update user profile
+  Future editUserInfoApi(dynamic data, String userId) async {
+    // var url = ApiMapping.getURI(apiEndPoint.put_carts);
+    final prefs = await SharedPreferences.getInstance();
+
+    print("userId ID" + userId.toString());
+
+    var url = '/user/$userId/updatebasicinfo';
+
+    var requestUrl = ApiMapping.BaseAPI + url;
+    print(requestUrl.toString());
+
+    String body = json.encode(data);
+    print("editUserInfoApi jsonMap" + body.toString());
+
+    try {
+      dynamic reply;
+      http.Response response = await http.put(Uri.parse(requestUrl),
+          body: body, headers: {'content-type': 'application/json'});
+      print("response update user info " + response.body.toString());
+      var jsonData = json.decode(response.body);
+      print("response  update user info" + jsonData['status'].toString());
+
+      // Utils.successToast(response.body.toString());
+      return reply;
+
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  ///firebase fcm token
+  Future passFCMToken(String userId, String fcmToken) async {
+    Map<String, String> queryParams = {
+      'fcm_token': fcmToken,
+    };
+    var url = ApiMapping.BaseAPI + '/user/$userId/setfcmtoken';
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    var requestUrl = '$url?$queryString';
+    print(requestUrl.toString());
+    print("response url : " + requestUrl.toString());
+
+    try {
+      dynamic reply;
+      http.Response response = await http.put(Uri.parse(requestUrl),
+          headers: {'content-type': 'application/json'});
+      print("response passFCMToken : " + response.body.toString());
+      var jsonData = json.decode(response.body);
+      print("response  passFCMToken status : " + jsonData['status'].toString());
 
       // Utils.successToast(response.body.toString());
       return reply;

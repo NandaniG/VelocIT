@@ -590,7 +590,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                 Map order =
                     value.jsonData['payload']['consumer_baskets'][index];
                 DateFormat format = DateFormat('dd MMM yyyy hh:mm aaa');
-                DateTime date = DateTime.parse(order['earliest_delivery_date']);
+                DateTime date = DateTime.parse(order['earliest_delivery_date'])??DateTime.now();
                 var earliest_delivery_date = format.format(date);
 
                 Color colorsStatus = ThemeApp.activeOrderColor;
