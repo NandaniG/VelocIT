@@ -94,6 +94,14 @@ dependencies:
   csc_picker: ^0.2.6
   image_downloader: ^0.31.0
   app_settings: ^4.2.0
+  flutter_file_downloader: ^1.1.0+1
+  open_filex: ^4.3.2
+
+
+  flutter_pdfview: ^1.2.5
+
+  ext_storage: ^1.0.3
+  dio: ^5.0.1
 
 dev_dependencies:
   flutter_test:

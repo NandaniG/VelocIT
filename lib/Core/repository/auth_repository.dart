@@ -21,7 +21,9 @@ import '../ViewModel/cart_view_model.dart';
 import '../data/network/baseApiServices.dart';
 import '../data/network/networkApiServices.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:async/async.dart';
+import 'package:path/path.dart';
+import 'dart:convert';
 class AuthRepository {
   BaseApiServices _apiServices = NetworkApiServices();
 
@@ -34,7 +36,7 @@ class AuthRepository {
     dynamic responseJson;
     var url = ApiMapping.BASEAPI + ApiMapping.loginViaEmailPassword;
 
-    HttpClient httpClient = new HttpClient();
+    HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json');
     request.add(utf8.encode(json.encode(jsonMap)));
@@ -160,7 +162,7 @@ class AuthRepository {
     var url = ApiMapping.BASEAPI + ApiMapping.loginViaMobileOTP;
     print(url);
     print(jsonMap['mobile']);
-    HttpClient httpClient = new HttpClient();
+    HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json');
     request.add(utf8.encode(json.encode(jsonMap)));
@@ -209,7 +211,7 @@ class AuthRepository {
     var url = ApiMapping.BASEAPI + ApiMapping.loginViaEmailOTP;
     print(url);
     print(jsonMap['email']);
-    HttpClient httpClient = new HttpClient();
+    HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json');
     request.add(utf8.encode(json.encode(jsonMap)));
@@ -258,7 +260,7 @@ class AuthRepository {
     var url = ApiMapping.BASEAPI + ApiMapping.validateOTP;
     print(url);
     print(jsonMap);
-    HttpClient httpClient = new HttpClient();
+    HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json');
     request.add(utf8.encode(json.encode(jsonMap)));
@@ -404,7 +406,7 @@ class AuthRepository {
     var url = ApiMapping.BaseAPI + ApiMapping.forgotPasswordGenOtp;
     print(url);
     print(jsonMap);
-    HttpClient httpClient = new HttpClient();
+    HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json');
     request.add(utf8.encode(json.encode(jsonMap)));
@@ -450,7 +452,7 @@ class AuthRepository {
     var url = ApiMapping.BaseAPI + ApiMapping.resetPassword;
     print(url);
     print(jsonMap);
-    HttpClient httpClient = new HttpClient();
+    HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json');
     request.add(utf8.encode(json.encode(jsonMap)));
@@ -483,35 +485,25 @@ class AuthRepository {
   }
 
   //update profile image
-  Future updateProfileImageApi(
-      Map jsonMap, String userId, BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    dynamic responseJson;
+  updateProfileImageApi(File imageFile,String userId, BuildContext context) async {
+    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
     var url =
         ApiMapping.BASEAPI + '/user/' + userId + ApiMapping.changeImageWithFile;
     print(url);
+    var uri = Uri.parse(url);
 
-    print(jsonMap);
-    HttpClient httpClient = new HttpClient();
-    HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
-    request.headers.set('content-type', 'application/json');
-    request.add(utf8.encode(json.encode(jsonMap)));
-    HttpClientResponse response = await request.close();
-    // todo - you should check the response.statusCode
-    responseJson = await response.transform(utf8.decoder).join();
-    print("response update ProfileImage  11" + responseJson.toString());
+    var request = http.MultipartRequest("POST", uri);
+    var multipartFile = http.MultipartFile('imageFile', stream, length,
+        filename: basename(imageFile.path));
+    //contentType: new MediaType('image', 'png'));
 
-    var jsonData = json.decode(responseJson);
-
-    if (jsonData['status'].toString() == 'OK') {
-      print("response update ProfileImage " + jsonData.toString());
-    } else {
-      Utils.errorToast("Please enter valid details.");
-
-      httpClient.close();
-      return responseJson;
-    }
+    request.files.add(multipartFile);
+    var response = await request.send();
+    print("response Image "+response.statusCode.toString());
+    response.stream.transform(utf8.decoder).listen((value) {
+      print("Image response "+value);
+    });
   }
 
 /*  Future updateProfileImageApi(
@@ -570,13 +562,13 @@ class AuthRepository {
 
     try {
       dynamic reply;
-      http.Response response = await http.put(Uri.parse(requestUrl),
+      http.Response response = await http.post(Uri.parse(requestUrl),
           body: body, headers: {'content-type': 'application/json'});
       print("response update user info " + response.body.toString());
       var jsonData = json.decode(response.body);
       print("response  update user info" + jsonData['status'].toString());
 
-      // Utils.successToast(response.body.toString());
+      Utils.successToast('Profile updated successfully');
       return reply;
 
       return response;

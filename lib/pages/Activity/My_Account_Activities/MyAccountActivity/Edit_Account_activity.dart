@@ -604,21 +604,23 @@ getUserData()async{
 AuthRepository().editUserInfoApi(data, StringConstant.UserLoginId);
       print("provider.creditCardList__________" +
           provider.userAccountDetailList.length.toString());
-      initializeFilter(provider);
 
-      setState(() {
-        // Prefs.instance.setToken(StringConstant.userAccountNamePref,
-        //     provider.userNameController.text);
-        // Prefs.instance.setToken(StringConstant.userAccountEmailPref,
-        //     provider.userEmailController.text);
-        // Prefs.instance.setToken(StringConstant.userAccountMobilePref,
-        //     provider.userMobileController.text);
-      });
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return OTPVerificationDialog();
-          });
+
+      // initializeFilter(provider);
+
+      // setState(() {
+      //   // Prefs.instance.setToken(StringConstant.userAccountNamePref,
+      //   //     provider.userNameController.text);
+      //   // Prefs.instance.setToken(StringConstant.userAccountEmailPref,
+      //   //     provider.userEmailController.text);
+      //   // Prefs.instance.setToken(StringConstant.userAccountMobilePref,
+      //   //     provider.userMobileController.text);
+      // });
+      // showDialog(
+      //     context: context,
+      //     builder: (BuildContext context) {
+      //       return OTPVerificationDialog();
+      //     });
     });
   }
 

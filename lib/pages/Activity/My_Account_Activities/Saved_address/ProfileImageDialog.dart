@@ -81,23 +81,16 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                     () async {
                   var image = await picker.getImage(source: ImageSource.camera);
                   final prefs = await SharedPreferences.getInstance();
-                  // StringConstant.CurrentPinCode = (prefs.getString('CurrentPinCodePref') ?? '');
                   String imagePath = image!.path;
                   await prefs.setString('profileImagePrefs', imagePath);
-
-                  Map data = {
-                    "imgUrl": image.path,
-                  };
                   StringConstant.UserLoginId =
                       (prefs.getString('isUserId')) ?? '';
 
                   setState(() {
-                    widget.imageFile1 = File(image.path);
-                    print("widget.imageFile1"+widget.imageFile1.toString());
-
                     if (widget.isEditAccount == true) {
+
                       AuthRepository().updateProfileImageApi(
-                          data, StringConstant.UserLoginId, context);
+                          File(image.path), StringConstant.UserLoginId, context);
 
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
@@ -106,7 +99,7 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                       );
                     } else {
                       AuthRepository().updateProfileImageApi(
-                          data, StringConstant.UserLoginId,context);
+                          File(image.path), StringConstant.UserLoginId,context);
 
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
@@ -129,19 +122,13 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                   print(pickedFile!.path.toString());
                   if (pickedFile != null) {
 
-
-
-                    final file = File(pickedFile.path);
                       await prefs.setString('profileImagePrefs', pickedFile.path);
                       StringConstant.UserLoginId =
                           (prefs.getString('isUserId')) ?? '';
-                      Map data = {
-                        "imgUrl": file.path,
-                      };
-                      widget.imageFile1 = file;
+
                       if (widget.isEditAccount == true) {
                         AuthRepository().updateProfileImageApi(
-                            data, StringConstant.UserLoginId,context);
+                            File(pickedFile.path), StringConstant.UserLoginId, context);
 
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
@@ -150,7 +137,7 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                         );
                       } else {
                         AuthRepository().updateProfileImageApi(
-                            data, StringConstant.UserLoginId,context);
+                            File(pickedFile.path), StringConstant.UserLoginId, context);
 
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(

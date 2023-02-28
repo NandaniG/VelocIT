@@ -136,6 +136,139 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                     location: SizedBox()),
                 Consumer<HomeProvider>(builder: (context, value, child) {
                   return Container(
+                    width: 350,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(100),
+                      ),
+                      border: Border.all(color: ThemeApp.appColor),
+                      color: ThemeApp.whiteColor,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: InkWell(
+                            onTap: () async {
+                              // data = Provider.of<HomeProvider>(context, listen: false).loadJson();
+                              value.IsActiveOrderList = true;
+                              if (value.IsActiveOrderList == true) {
+                                data = await Provider.of<HomeProvider>(context,
+                                    listen: false)
+                                    .loadJson();
+                              }
+                              // data = Provider.of<HomeProvider>(context,
+                              //         listen: false)
+                              //     .loadJson();
+                              // email.clear();
+                              // _usingPassVisible==true ? _validateEmail = true:_validateEmail=false;
+                              setState(() {
+                                print("Is Active Orders  " +
+                                    value.IsActiveOrderList.toString());
+
+                                isActiveOrders = true;
+                                isActiveOrders = !isActiveOrders;
+                                data;
+                              });
+                            },
+                            child: Container(
+                                padding:
+                                const EdgeInsets.fromLTRB(0, 9.0, 0, 9.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(100),
+                                  ),
+                                  color: isActiveOrders
+                                      ? ThemeApp.whiteColor
+                                      : ThemeApp.appColor,
+                                ),
+                                child: Center(
+                                  child: TextFieldUtils().usingPassTextFields(
+                                      'Active Orders',
+                                      isActiveOrders
+                                          ? ThemeApp.blackColor
+                                          : ThemeApp.whiteColor,
+                                      context),
+                                )),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: InkWell(
+                            onTap: () async {
+                              value.IsActiveOrderList = false;
+                              if (value.IsActiveOrderList == false) {
+                                data = await Provider.of<HomeProvider>(context,
+                                    listen: false)
+                                    .loadJson();
+                              }
+
+                              setState(() {
+                                print("Is Past Orders" +
+                                    value.IsActiveOrderList.toString());
+
+                                isActiveOrders = true;
+
+                                data;
+                              });
+                            },
+                            child: Container(
+                                padding:
+                                const EdgeInsets.fromLTRB(0, 9.0, 0, 9.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(100),
+                                  ),
+                                  color: isActiveOrders
+                                      ? ThemeApp.appColor
+                                      : ThemeApp.whiteColor,
+                                ),
+                                child: Center(
+                                  child: TextFieldUtils().usingPassTextFields(
+                                      'Past Orders',
+                                      isActiveOrders
+                                          ? ThemeApp.whiteColor
+                                          : ThemeApp.blackColor,
+                                      context),
+                                )),
+                          ),
+                        ),
+
+                        // Expanded(
+                        //   flex: 1,
+                        //   child: InkWell(
+                        //       onTap: () {
+                        //         setState(() {
+                        //           isActiveOrders = false;
+                        //         });
+                        //       },
+                        //       child: Container(
+                        //           padding:
+                        //               const EdgeInsets.fromLTRB(0, 9.0, 0, 9.0),
+                        //           decoration: BoxDecoration(
+                        //             borderRadius: const BorderRadius.all(
+                        //               Radius.circular(100),
+                        //             ),
+                        //             color: !isActiveOrders
+                        //                 ? ThemeApp.appColor
+                        //                 : ThemeApp.whiteColor,
+                        //           ),
+                        //           child: Center(
+                        //             child: TextFieldUtils().usingPassTextFields(
+                        //                 "Past Orders",
+                        //                 !isActiveOrders
+                        //                     ? ThemeApp.whiteColor
+                        //                     : ThemeApp.blackColor,
+                        //                 context),
+                        //           ))),
+                        // ),
+                      ],
+                    ),
+                  );
+                }),
+
+                /*    Consumer<HomeProvider>(builder: (context, value, child) {
+                  return Container(
                     height: height * .077,
                     decoration: BoxDecoration(
                         border: Border.all(color: ThemeApp.appColor, width: 1)),
@@ -232,7 +365,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                       ],
                     ),
                   );
-                })
+                })*/
               ],
             ),
           ),
@@ -593,32 +726,8 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                 DateTime date = DateTime.parse(order['earliest_delivery_date'])??DateTime.now();
                 var earliest_delivery_date = format.format(date);
 
-                Color colorsStatus = ThemeApp.activeOrderColor;
-                /*      for (var i = 0;
-                    i <
-                        value
-                            .jsonData['payload']['consumer_baskets'][index]
-                                ['orders']
-                            .length;
-                    i++) {
-                  print("order['orders'][i]['cancelled']" +
-                      order['orders'][i]['cancelled'].toString());
-                  if (order['orders'][i]['cancelled'] == true) {
-                    colorsStatus = ThemeApp.separatedLineColor;
-                  }
-                }*/
-                if (order["overall_status"] == "Acceptance Pending") {
-                  colorsStatus = ThemeApp.redColor;
-                }
-                if (order["overall_status"] == "Shipped") {
-                  colorsStatus = ThemeApp.shippedOrderColor;
-                }
-                if (order["overall_status"] == "Completed") {
-                  colorsStatus = ThemeApp.lightFontColor;
-                }
-                if (order["overall_status"] == "Canceled") {
-                  colorsStatus = ThemeApp.lightFontColor;
-                }
+                getColorCodeStatus(order);
+
 
                 return value
                                 .jsonData['payload']['consumer_baskets'][index]
@@ -680,15 +789,126 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            Container(
-                                              height: 44,
-                                              width: 45,
-                                              decoration: const BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(8),
+                                            // Container(
+                                            //   height: 44,
+                                            //   width: 45,
+                                            //   decoration: const BoxDecoration(
+                                            //     borderRadius: BorderRadius.all(
+                                            //       Radius.circular(8),
+                                            //     ),
+                                            //   ),
+                                            //   child: GridView.builder(
+                                            //     gridDelegate:
+                                            //         const SliverGridDelegateWithFixedCrossAxisCount(
+                                            //       crossAxisSpacing: 0,
+                                            //       mainAxisSpacing: 0,
+                                            //       crossAxisCount: 2,
+                                            //       // childAspectRatio: 4/7
+                                            //     ),
+                                            //     itemCount: order['orders'].length,
+                                            //     itemBuilder:
+                                            //         (context, indexOrderList) {
+                                            //       subIndexOrderList =
+                                            //           indexOrderList;
+                                            //       return order['orders']
+                                            //                       [indexOrderList]
+                                            //                   ['cancelled'] ==
+                                            //               'true'
+                                            //           ? SizedBox()
+                                            //           : Container(
+                                            //               decoration: BoxDecoration(
+                                            //                   border: Border.all(
+                                            //                       color: ThemeApp
+                                            //                           .whiteColor)),
+                                            //               child: FittedBox(
+                                            //                 child: Image.network(
+                                            //                         // width: double.infinity,
+                                            //                         order['orders']
+                                            //                                     [
+                                            //                                     indexOrderList]
+                                            //                                 [
+                                            //                                 "image_url"] ??
+                                            //                             "",
+                                            //                         fit: BoxFit
+                                            //                             .fill,
+                                            //                         height: 22,
+                                            //                         width: 21,
+                                            //                         errorBuilder:
+                                            //                             ((context,
+                                            //                                 error,
+                                            //                                 stackTrace) {
+                                            //                       return Icon(Icons
+                                            //                           .image_outlined);
+                                            //                     })) ??
+                                            //                     SizedBox(),
+                                            //               ),
+                                            //             );
+                                            //
+                                            //       // Item rendering
+                                            //     },
+                                            //   ),
+                                            // ),
+                                            // SizedBox(
+                                            //   width: width * .03,
+                                            // ),
+                                            // Column(
+                                            //   mainAxisAlignment:
+                                            //       MainAxisAlignment.center,
+                                            //   crossAxisAlignment:
+                                            //       CrossAxisAlignment.start,
+                                            //   children: [
+                                            //     TextFieldUtils().dynamicText(
+                                            //         order['id'].toString(),
+                                            //         context,
+                                            //         TextStyle(
+                                            //           fontFamily: 'Roboto',
+                                            //           color: ThemeApp
+                                            //               .primaryNavyBlackColor,
+                                            //           fontWeight: FontWeight.w700,
+                                            //           fontSize: 12,
+                                            //         )),
+                                            //     SizedBox(
+                                            //       height: height * .01,
+                                            //     ),
+                                            //     TextFieldUtils().dynamicText(
+                                            //         earliest_delivery_date,
+                                            //         context,
+                                            //         TextStyle(
+                                            //             fontFamily: 'Roboto',
+                                            //             color: ThemeApp
+                                            //                 .lightFontColor,
+                                            //             fontSize: 12,
+                                            //             fontWeight:
+                                            //                 FontWeight.w400)),
+                                            //   ],
+                                            // ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                height: 44,
+                                                width: 45,
+                                                decoration: const BoxDecoration(
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(8),
+                                                  ),
                                                 ),
-                                              ),
-                                              child: GridView.builder(
+                                                child: FittedBox(
+                                                  child: Image.network(
+                                                    // width: double.infinity,
+                                                      order['orders'][0]
+                                                      ["image_url"] ??
+                                                          "",
+                                                      fit: BoxFit.fill,
+                                                      height: 22,
+                                                      width: 21, errorBuilder:
+                                                  ((context, error,
+                                                      stackTrace) {
+                                                    return Icon(
+                                                        Icons.image_outlined);
+                                                  })) ??
+                                                      SizedBox(),
+                                                ),
+                                                /* GridView.builder(
                                                 gridDelegate:
                                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                                   crossAxisSpacing: 0,
@@ -737,41 +957,66 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
 
                                                   // Item rendering
                                                 },
+                                              ),*/
                                               ),
                                             ),
-                                            SizedBox(
-                                              width: width * .03,
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                TextFieldUtils().dynamicText(
-                                                    order['id'].toString(),
-                                                    context,
-                                                    TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      color: ThemeApp
-                                                          .primaryNavyBlackColor,
-                                                      fontWeight: FontWeight.w700,
-                                                      fontSize: 12,
-                                                    )),
-                                                SizedBox(
-                                                  height: height * .01,
-                                                ),
-                                                TextFieldUtils().dynamicText(
-                                                    earliest_delivery_date,
-                                                    context,
-                                                    TextStyle(
+                                            // SizedBox(
+                                            //   width: width * .03,
+                                            // ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  TextFieldUtils().dynamicText(
+                                                      "Order ID : " +
+                                                          order['id'].toString(),
+                                                      context,
+                                                      TextStyle(
                                                         fontFamily: 'Roboto',
+                                                        color: ThemeApp
+                                                            .primaryNavyBlackColor,
+                                                        fontWeight:
+                                                        FontWeight.w700,
+                                                        fontSize: 12,
+                                                      )),
+                                                  SizedBox(
+                                                    height: height * .01,
+                                                  ),
+                                                  TextFieldUtils().dynamicText(
+                                                      earliest_delivery_date,
+                                                      context,
+                                                      TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          color: ThemeApp
+                                                              .lightFontColor,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.w400)),
+                                                ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Container(
+                                                alignment: Alignment.bottomRight,
+                                                child: TextFieldUtils()
+                                                    .dynamicText(
+                                                    statusData,
+                                                    // "Acceptance Pending",
+                                                    // '${order['overall_status']}',
+                                                    // earliest_delivery_date,
+                                                    context,
+                                                    TextStyle(
                                                         color: ThemeApp
                                                             .lightFontColor,
                                                         fontSize: 12,
                                                         fontWeight:
-                                                            FontWeight.w400)),
-                                              ],
+                                                        FontWeight.bold)),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -1203,8 +1448,9 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                         fontWeight:
                                                             FontWeight.w400)),*/
 
-                                              order['overall_status'] ==
-                                                      'Canceled'
+                                              // order['overall_status'] ==
+                                              //         'Canceled'
+                                              order['overall_status_code'] == 2000
                                                   ? Container(
                                                       padding: const EdgeInsets
                                                               .fromLTRB(
@@ -1326,16 +1572,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                         DateTime.parse(order['earliest_delivery_date']);
                     var earliest_delivery_date = format.format(date);
 
-                    Color colorsStatus = ThemeApp.activeOrderColor;
-                    if (order["overall_status"] == "Acceptance Pending") {
-                      colorsStatus = ThemeApp.redColor;
-                    }
-                    if (order["overall_status"] == "Shipped") {
-                      colorsStatus = ThemeApp.shippedOrderColor;
-                    }
-                    if (order["overall_status"] == "Completed") {
-                      colorsStatus = ThemeApp.lightFontColor;
-                    }
+                    getColorCodeStatus(order);
 
                     return value
                                     .jsonData['payload']['consumer_baskets']
@@ -2214,7 +2451,38 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                     overflow: TextOverflow.ellipsis)),
           );*/
   }
+  Color colorsStatus = ThemeApp.appColor;
+  var statusData = '';
 
+  getColorCodeStatus(Map order) {
+    print('${order['id']}     '
+        ' ${order['overall_status_code']}');
+    if (order["overall_status_code"] == 1000) {
+      //
+      colorsStatus = ThemeApp.whiteColor;
+      statusData = 'Completed';
+    } else if (order["overall_status_code"] == 900) {
+      //canceled
+      colorsStatus = ThemeApp.redColor;
+      statusData = 'Canceled';
+    } else if (order["overall_status_code"] == 500) {
+      //Acceptance pending
+      colorsStatus = ThemeApp.megentaColor;
+      statusData = 'Acceptance Pending';
+    } else if (order["overall_status_code"] == 600) {
+      //Packing pending
+      colorsStatus = Colors.yellow;
+      statusData = 'Packing Pending';
+    } else if (order["overall_status_code"] == 700) {
+      //shipping pending
+      colorsStatus = ThemeApp.appColor;
+      statusData = 'Shipping Pending';
+    } else if (order["overall_status_code"] == 800) {
+      //delivery pending
+      colorsStatus = ThemeApp.activeOrderColor;
+      statusData = 'Delivery Pending';
+    }
+  }
   Widget rattingBar() {
     return Container(
       // width: width * .7,
@@ -2416,12 +2684,24 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        // Container(
+        //   width: 50,
+        //   child: TextFieldUtils().stepperTextFields(
+        //       'Order placed',
+        //       context,
+        //       subOrders['is_order_placed'] == true
+        //           ? ThemeApp.blackColor
+        //           : ThemeApp.lightFontColor),
+        // ),
         Container(
-          width: 50,
+          width: 60,
           child: TextFieldUtils().stepperTextFields(
-              'Order placed',
+              subOrders['is_accepted'] == true
+                  ? 'Order Accepted'
+                  : 'Order placed',
               context,
-              subOrders['is_order_placed'] == true
+              // subOrders['is_order_placed'] == true
+              subOrders['is_accepted'] == true
                   ? ThemeApp.blackColor
                   : ThemeApp.lightFontColor),
         ),
@@ -2512,11 +2792,12 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          width: 50,
+          width: 60,
           child: TextFieldUtils().stepperTextFields(
-              '',
+              '${jsonData['orders_packed_completed'].toString()}/${jsonData['orders_packed_total'].toString()}',
+
               context,
-              subOrders['is_order_placed'] == true
+              subOrders['is_accepted '] == true
                   ? ThemeApp.blackColor
                   : ThemeApp.lightFontColor),
         ),

@@ -107,7 +107,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     print("Cart Id From Order Review${StringConstant.UserCartID}");
 
     StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-    if (!mounted) return;
+    // if (!mounted) return;
     await cartListView.sendAddressWithGet(
         context, StringConstant.UserLoginId.toString());
     await cartListView.gerDefaultAddressWithGet(

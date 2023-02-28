@@ -357,8 +357,9 @@ class CartRepository {
   Future<GetDefaultAddressModel> getDefaultAddressList(String id) async {
     // var url = ApiMapping.getURI(apiEndPoint.address_list);
 
-    var requestUrl = ApiMapping.BaseAPI + '/user/' + id + '/defaultAddress';
-
+    // var requestUrl = ApiMapping.BaseAPI + '/user/' + id + '/defaultAddress';
+    var requestUrl = ApiMapping.BaseAPI + '/user/' + '346' + '/defaultAddress';
+print(requestUrl);
     try {
       dynamic response = await _apiServices.getGetApiResponse(requestUrl);
       if (kDebugMode) {
