@@ -63,41 +63,10 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
 
   getCartId() async {
     final prefs = await SharedPreferences.getInstance();
-    bool check = prefs.containsKey('profileImagePrefs');
-    if (check) {
-      setState(() {
-        print("yes/./././.");
-        StringConstant.ProfilePhoto = prefs.getString('profileImagePrefs')!;
-      });
-      return;
-    }
+    StringConstant.ProfilePhoto =
+       ( prefs.getString('userProfileImagePrefs'))?? "";
     StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
 
-    StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-    // StringConstant.loginUserName = (prefs.getString('usernameLogin')) ?? '';
-    // StringConstant.loginUserEmail = (prefs.getString('emailLogin')) ?? '';
-
-    cartListView.sendCartForPaymentWithGet(
-        this.context, StringConstant.UserCartID);
-  }
-
-  getPreference() async {
-    StringConstant.userAccountName =
-        (await Prefs.instance.getToken(StringConstant.userAccountNamePref))!;
-    StringConstant.userAccountEmail =
-        (await Prefs.instance.getToken(StringConstant.userAccountEmailPref))!;
-    StringConstant.userAccountMobile =
-        (await Prefs.instance.getToken(StringConstant.userAccountMobilePref))!;
-    StringConstant.userAccountPass =
-        (await Prefs.instance.getToken(StringConstant.userAccountPassPref))!;
-    print(StringConstant.userAccountName);
-
-    StringConstant.userAccountImagePicker = (await Prefs.instance
-        .getToken(StringConstant.userAccountImagePickerPref))!;
-
-    print("StringConstant.userAccountImagePicker");
-    print(StringConstant.userAccountImagePicker);
-    setState(() {});
   }
 
   @override
@@ -221,7 +190,9 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         // imageFile1 != null
-                                        snapshot.data!.payload!.imageUrl.toString() != null
+                                        snapshot.data!.payload!.imageUrl
+                                                    .toString() !=
+                                                null
                                             ? Stack(
                                                 // alignment: Alignment.center,
                                                 children: [
@@ -233,8 +204,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                           new BoxDecoration(
                                                         boxShadow: [
                                                           BoxShadow(
-                                                              color: Colors.grey
-                                                                  .shade600,
+                                                              color: ThemeApp
+                                                                  .appLightColor,
                                                               spreadRadius: 1,
                                                               blurRadius: 5)
                                                         ],
@@ -252,7 +223,11 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                                     100)),
                                                         child: Image.network(
                                                           // imageFile1!,
-                                                          snapshot.data!.payload!.imageUrl??"",
+                                                          snapshot
+                                                                  .data!
+                                                                  .payload!
+                                                                  .imageUrl ??
+                                                              "",
                                                           fit: BoxFit.fitWidth,
                                                           width: 90.0,
                                                           height: 90.0,
@@ -285,8 +260,6 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                                   (BuildContext
                                                                       context) {
                                                                 return ProfileImageDialog(
-                                                                  imageFile1:
-                                                                      imageFile1,
                                                                   isEditAccount:
                                                                       true,
                                                                 );
@@ -352,8 +325,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                                 Radius.circular(
                                                                     100)),
                                                         child: Image.file(
-                                                          File(StringConstant
-                                                              .ProfilePhoto),
+                                                          File(''),
                                                           fit: BoxFit.fitWidth,
                                                           width: 130.0,
                                                           height: 130.0,
@@ -385,8 +357,6 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                                   (BuildContext
                                                                       context) {
                                                                 return ProfileImageDialog(
-                                                                  imageFile1:
-                                                                      imageFile1,
                                                                   isEditAccount:
                                                                       true,
                                                                 );
@@ -789,7 +759,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                                 finalId.toString());
                                             Navigator.of(context)
                                                 .pushNamedAndRemoveUntil(
-                                                RoutesName.dashboardRoute, (route) => false)
+                                                    RoutesName.dashboardRoute,
+                                                    (route) => false)
                                                 .then((value) {
                                               setState(() {});
                                             });
@@ -827,357 +798,244 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                           ),
                         )
                       : Container(
-                    color: ThemeApp.appBackgroundColor,
-                    width: width,
-                    child: SingleChildScrollView(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 227,
-                              alignment: Alignment.center,
-                              padding:
-                              const EdgeInsets.fromLTRB(0, 25, 0, 25),
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                ),
-                                color: ThemeApp.whiteColor,
-                              ),
-                              child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.center,
+                          color: ThemeApp.appBackgroundColor,
+                          width: width,
+                          child: SingleChildScrollView(
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  // imageFile1 != null
-                                  snapshot.data!.payload!.imageUrl.toString() != null
-                                      ? Stack(
-                                    // alignment: Alignment.center,
-                                    children: [
-                                      Center(
-                                        child: Container(
-                                          width: 110.0,
-                                          height: 110.0,
-                                          decoration:
-                                          new BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.grey
-                                                      .shade600,
-                                                  spreadRadius: 1,
-                                                  blurRadius: 5)
-                                            ],
-                                            border: Border.all(
-                                                color: ThemeApp
-                                                    .whiteColor,
-                                                width: 4),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                            const BorderRadius
-                                                .all(
-                                                Radius.circular(
-                                                    100)),
-                                            child: Image.network(
-                                              // imageFile1!,
-                                              snapshot.data!.payload!.imageUrl,
-                                              fit: BoxFit.fitWidth,
-                                              width: 90.0,
-                                              height: 90.0,
-                                              errorBuilder:
-                                                  (context, error,
-                                                  stackTrace) {
-                                                return Icon(
-                                                  Icons.image,
-                                                  color: ThemeApp
-                                                      .whiteColor,
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
+                                  Container(
+                                    height: 227,
+                                    alignment: Alignment.center,
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 25, 0, 25),
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(20),
+                                        bottomRight: Radius.circular(20),
                                       ),
-                                      Positioned(
-                                        bottom: 0,
-                                        right: width / 2.5,
-                                        // width: 130.0,
-
-                                        // height: 40.0,
-                                        child: InkWell(
-                                            onTap: () {
-                                              // _getFromCamera();
-
-                                              showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext
-                                                  context) {
-                                                    return ProfileImageDialog(
-                                                      imageFile1:
-                                                      imageFile1,
-                                                      isEditAccount:
-                                                      true,
-                                                    );
-                                                  });
-                                            },
-                                            child: Container(
-                                              height: 32,
-                                              width: 32,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      30),
-                                                  color: ThemeApp
-                                                      .appColor),
-                                              child: Padding(
-                                                padding:
-                                                const EdgeInsets
-                                                    .all(7),
-                                                child: SvgPicture
-                                                    .asset(
-                                                  'assets/appImages/cameraIcon.svg',
-                                                  color: ThemeApp
-                                                      .whiteColor,
-                                                  semanticsLabel:
-                                                  'Acme Logo',
-
-                                                  // height: height * .03,
-                                                ),
-                                              ),
-                                            )),
-                                      ),
-                                    ],
-                                  )
-                                      : Stack(
-                                    // alignment: Alignment.center,
-                                    children: [
-                                      Center(
-                                        child: Container(
-                                          width: 110.0,
-                                          height: 110.0,
-                                          decoration:
-                                          new BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
+                                      color: ThemeApp.whiteColor,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        // imageFile1 != null
+                                        Stack(
+                                          // alignment: Alignment.center,
+                                          children: [
+                                            Center(
+                                              child: Container(
+                                                width: 110.0,
+                                                height: 110.0,
+                                                decoration: new BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: ThemeApp
+                                                            .appBackgroundColor,
+                                                        spreadRadius: 1,
+                                                        blurRadius: 15)
+                                                  ],
                                                   color: ThemeApp
                                                       .appBackgroundColor,
-                                                  spreadRadius: 1,
-                                                  blurRadius: 15)
-                                            ],
-                                            color: ThemeApp
-                                                .appBackgroundColor,
-                                            border: Border.all(
-                                                color: ThemeApp
-                                                    .whiteColor,
-                                                width: 7),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                            const BorderRadius
-                                                .all(
-                                                Radius.circular(
-                                                    100)),
-                                            child: Image.file(
-                                              File(StringConstant
-                                                  .ProfilePhoto),
-                                              fit: BoxFit.fitWidth,
-                                              width: 130.0,
-                                              height: 130.0,
-                                              errorBuilder:
-                                                  (context, error,
-                                                  stackTrace) {
-                                                return Icon(
-                                                  Icons.image,
-                                                  color: ThemeApp
-                                                      .whiteColor,
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 0,
-                                        right: width / 2.5,
-                                        // width: 130.0,
-
-                                        // height: 40.0,
-                                        child: InkWell(
-                                            onTap: () {
-                                              // _getFromCamera();
-                                              showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext
-                                                  context) {
-                                                    return ProfileImageDialog(
-                                                      imageFile1:
-                                                      imageFile1,
-                                                      isEditAccount:
-                                                      true,
-                                                    );
-                                                  });
-                                            },
-                                            child: Container(
-                                              height: 32,
-                                              width: 32,
-                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color:
+                                                          ThemeApp.whiteColor,
+                                                      width: 7),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: ClipRRect(
                                                   borderRadius:
-                                                  BorderRadius
-                                                      .circular(
-                                                      30),
-                                                  color: ThemeApp
-                                                      .appColor),
-                                              child: Padding(
-                                                padding:
-                                                const EdgeInsets
-                                                    .all(7),
-                                                child: SvgPicture
-                                                    .asset(
-                                                  'assets/appImages/cameraIcon.svg',
-                                                  color: ThemeApp
-                                                      .whiteColor,
-                                                  semanticsLabel:
-                                                  'Acme Logo',
-
-                                                  // height: height * .03,
+                                                      const BorderRadius.all(
+                                                          Radius.circular(100)),
+                                                  child: Image.file(
+                                                    File(''),
+                                                    fit: BoxFit.fitWidth,
+                                                    width: 130.0,
+                                                    height: 130.0,
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                      return Icon(
+                                                        Icons.image,
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                      );
+                                                    },
+                                                  ),
                                                 ),
                                               ),
-                                            )
-                                          /*; Container(
+                                            ),
+                                            Positioned(
+                                              bottom: 0,
+                                              right: width / 2.5,
+                                              // width: 130.0,
+
+                                              // height: 40.0,
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    // _getFromCamera();
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return ProfileImageDialog(
+                                                            isEditAccount: true,
+                                                          );
+                                                        });
+                                                  },
+                                                  child: Container(
+                                                    height: 32,
+                                                    width: 32,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(30),
+                                                        color:
+                                                            ThemeApp.appColor),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              7),
+                                                      child: SvgPicture.asset(
+                                                        'assets/appImages/cameraIcon.svg',
+                                                        color:
+                                                            ThemeApp.whiteColor,
+                                                        semanticsLabel:
+                                                            'Acme Logo',
+
+                                                        // height: height * .03,
+                                                      ),
+                                                    ),
+                                                  )
+                                                  /*; Container(
                                                   // alignment: Alignment.bottomCenter,
                                                   color: ThemeApp.primaryNavyBlackColor,
                                                   alignment: const Alignment(-2, -0.1),
                                                   child: iconsUtils(
                                                       'assets/appImages/editIcon.svg'),
                                                 ),*/
+                                                  ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextFieldUtils().dynamicText(
+                                            "",
+                                            // StringConstant.loginUserName,
+                                            context,
+                                            TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color: ThemeApp.blackColor,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 16,
+                                                letterSpacing: -0.25)),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        TextFieldUtils().dynamicText(
+                                            "",
+                                            // StringConstant.loginUserEmail,
+                                            context,
+                                            TextStyle(
+                                                fontFamily: 'Roboto',
+                                                color: ThemeApp.lightFontColor,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                letterSpacing: 0.5)),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 20,
                                   ),
-                                  TextFieldUtils().dynamicText(
-                                      snapshot.data!.payload!.username
-                                          .toString()??"",
-                                      // StringConstant.loginUserName,
-                                      context,
-                                      TextStyle(
-                                          fontFamily: 'Roboto',
-                                          color: ThemeApp.blackColor,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 16,
-                                          letterSpacing: -0.25)),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  TextFieldUtils().dynamicText(
-                                      snapshot.data!.payload!.email
-                                          .toString()??"",
-                                      // StringConstant.loginUserEmail,
-                                      context,
-                                      TextStyle(
-                                          fontFamily: 'Roboto',
-                                          color: ThemeApp.lightFontColor,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400,
-                                          letterSpacing: 0.5)),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              child: Column(
-                                children: [
-                                  //push notifications
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                          const NotificationScreen(),
-                                        ),
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              iconsUtils(
-                                                  'assets/appImages/notificationIcon.svg',
-                                                  17,
-                                                  15.41),
-                                              SizedBox(
-                                                width: 10,
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        //push notifications
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const NotificationScreen(),
                                               ),
-                                              accountTextList(
-                                                  'Notifications'),
-                                            ],
-                                          ),
-                                          Transform.scale(
-                                            scale: 1.1,
-                                            child: Switch(
-                                              // This bool value toggles the switch.
-                                              value: isNotification,
-                                              activeColor:
-                                              ThemeApp.appLightColor,
-                                              inactiveTrackColor:
-                                              ThemeApp.appLightColor,
-                                              inactiveThumbColor:
-                                              ThemeApp.whiteColor,
-                                              onChanged: (bool val) {
-                                                // This is called when the user toggles the switch.
-                                                setState(() {
-                                                  isNotification = val;
-                                                });
-                                              },
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    iconsUtils(
+                                                        'assets/appImages/notificationIcon.svg',
+                                                        17,
+                                                        15.41),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    accountTextList(
+                                                        'Notifications'),
+                                                  ],
+                                                ),
+                                                Transform.scale(
+                                                  scale: 1.1,
+                                                  child: Switch(
+                                                    // This bool value toggles the switch.
+                                                    value: isNotification,
+                                                    activeColor:
+                                                        ThemeApp.appLightColor,
+                                                    inactiveTrackColor:
+                                                        ThemeApp.appLightColor,
+                                                    inactiveThumbColor:
+                                                        ThemeApp.whiteColor,
+                                                    onChanged: (bool val) {
+                                                      // This is called when the user toggles the switch.
+                                                      setState(() {
+                                                        isNotification = val;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  //my orders
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                          const MyOrdersActivity(),
                                         ),
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        children: [
-                                          iconsUtils(
-                                              'assets/appImages/myOrderIcon.svg',
-                                              18.65,
-                                              18),
-                                          SizedBox(
-                                            width: 10,
+                                        //my orders
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MyOrdersActivity(),
+                                              ),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/myOrderIcon.svg',
+                                                    18.65,
+                                                    18),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList('My Orders'),
+                                              ],
+                                            ),
                                           ),
-                                          accountTextList('My Orders'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  /*  ChangeNotifierProvider<CartViewModel>.value(
+                                        ),
+                                        /*  ChangeNotifierProvider<CartViewModel>.value(
                                   value: cartListView,
                                   child: Consumer<CartViewModel>(
                                       builder: (context, cartProvider, child) {
@@ -1238,115 +1096,115 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                 ),*/
 //address
 
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SavedAddressDetails(),
-                                        ),
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        children: [
-                                          iconsUtils(
-                                              'assets/appImages/savedAddressIcon.svg',
-                                              20,
-                                              15.26),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          accountTextList(
-                                              'Saved Addresses'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  //edit profile
-                                  InkWell(
-                                    onTap: () async {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditAccountActivity(
-                                                // payload:
-                                                //     snapshot.data!.payload,
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SavedAddressDetails(),
                                               ),
-                                        ),
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        children: [
-                                          iconsUtils(
-                                              'assets/appImages/settingIcon.svg',
-                                              20,
-                                              18),
-                                          SizedBox(
-                                            width: 10,
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/savedAddressIcon.svg',
+                                                    20,
+                                                    15.26),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList(
+                                                    'Saved Addresses'),
+                                              ],
+                                            ),
                                           ),
-                                          accountTextList('Edit profile'),
-                                        ],
-                                      ),
-                                    ),
-                                  ), //change password
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                          const ChangePassword(),
                                         ),
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        children: [
-                                          iconsUtils(
-                                              'assets/appImages/changePassIcon.svg',
-                                              21.59,
-                                              19),
-                                          SizedBox(
-                                            width: 10,
+                                        //edit profile
+                                        InkWell(
+                                          onTap: () async {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditAccountActivity(
+                                                        // payload:
+                                                        //     snapshot.data!.payload,
+                                                        ),
+                                              ),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/settingIcon.svg',
+                                                    20,
+                                                    18),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList('Edit profile'),
+                                              ],
+                                            ),
                                           ),
-                                          accountTextList(
-                                              'Change Password'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  //customer support
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                          const CustomerSupportActivity(),
+                                        ), //change password
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const ChangePassword(),
+                                              ),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/changePassIcon.svg',
+                                                    21.59,
+                                                    19),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList(
+                                                    'Change Password'),
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        children: [
-                                          iconsUtils(
-                                              'assets/appImages/headPhoneIcon.svg',
-                                              18,
-                                              18),
-                                          SizedBox(
-                                            width: 10,
+                                        //customer support
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CustomerSupportActivity(),
+                                              ),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/headPhoneIcon.svg',
+                                                    18,
+                                                    18),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList(
+                                                    'Customer Support'),
+                                              ],
+                                            ),
                                           ),
-                                          accountTextList(
-                                              'Customer Support'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  /*    //account settings
+                                        ),
+                                        /*    //account settings
                                 InkWell(
                                   onTap: () {
                                     Navigator.of(context).push(
@@ -1357,7 +1215,7 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                     );
                                   },
                                   */
-                                  /*     onTap: () {
+                                        /*     onTap: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
@@ -1380,84 +1238,85 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
                                   ),
                                 ),*/
 
-                                  //sign out
-                                  InkWell(
-                                    onTap: () async {
-                                      final prefs =
-                                      await SharedPreferences
-                                          .getInstance();
-                                      prefs.setInt('isUserLoggedIn', 0);
-                                      prefs.setString('RandomUserId', '');
-                                      StringConstant.UserLoginId = '';
-                                      StringConstant.RandomUserLoginId =
-                                      '';
-                                      StringConstant.UserCartID = '';
-                                      StringConstant.BadgeCounterValue =
-                                      '';
-                                      StringConstant.ScannedProductId =
-                                      '';
-                                      final pref = await SharedPreferences
-                                          .getInstance();
+                                        //sign out
+                                        InkWell(
+                                          onTap: () async {
+                                            final prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            prefs.setInt('isUserLoggedIn', 0);
+                                            prefs.setString('RandomUserId', '');
+                                            StringConstant.UserLoginId = '';
+                                            StringConstant.RandomUserLoginId =
+                                                '';
+                                            StringConstant.UserCartID = '';
+                                            StringConstant.BadgeCounterValue =
+                                                '';
+                                            StringConstant.ScannedProductId =
+                                                '';
+                                            final pref = await SharedPreferences
+                                                .getInstance();
 
-                                      await pref.clear();
-                                      late Random rnd;
-                                      var min = 100000000;
-                                      int max = 1000000000;
+                                            await pref.clear();
+                                            late Random rnd;
+                                            var min = 100000000;
+                                            int max = 1000000000;
 
-                                      var ID;
-                                      String finalId = '';
-                                      rnd = new Random();
-                                      var r =
-                                          min + rnd.nextInt(max - min);
+                                            var ID;
+                                            String finalId = '';
+                                            rnd = new Random();
+                                            var r =
+                                                min + rnd.nextInt(max - min);
 
-                                      print(
-                                          "$r is in the range of $min and $max");
-                                      ID = r;
-                                      print("cartId empty UserID" +
-                                          ID.toString());
-                                      // 715223688
-                                      finalId = ID.toString();
-                                      prefs.setString('RandomUserId',
-                                          finalId.toString());
-                                      Navigator.of(context)
-                                          .pushNamedAndRemoveUntil(
-                                          RoutesName.dashboardRoute, (route) => false)
-                                          .then((value) {
-                                        setState(() {});
-                                      });
-                                      Utils.successToast(
-                                          'You are signed out');
-                                      // _getCurrentPosition().then((value) {
-                                      //   setState(() {
-                                      //     StringConstant.CurrentPinCode =
-                                      //         (prefs.getString(
-                                      //                 'CurrentPinCodePrefs')) ??
-                                      //             '';
-                                      //   });
-                                      // });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        children: [
-                                          iconsUtils(
-                                              'assets/appImages/signOutIcon.svg',
-                                              18,
-                                              18),
-                                          SizedBox(
-                                            width: 10,
+                                            print(
+                                                "$r is in the range of $min and $max");
+                                            ID = r;
+                                            print("cartId empty UserID" +
+                                                ID.toString());
+                                            // 715223688
+                                            finalId = ID.toString();
+                                            prefs.setString('RandomUserId',
+                                                finalId.toString());
+                                            Navigator.of(context)
+                                                .pushNamedAndRemoveUntil(
+                                                    RoutesName.dashboardRoute,
+                                                    (route) => false)
+                                                .then((value) {
+                                              setState(() {});
+                                            });
+                                            Utils.successToast(
+                                                'You are signed out');
+                                            // _getCurrentPosition().then((value) {
+                                            //   setState(() {
+                                            //     StringConstant.CurrentPinCode =
+                                            //         (prefs.getString(
+                                            //                 'CurrentPinCodePrefs')) ??
+                                            //             '';
+                                            //   });
+                                            // });
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Row(
+                                              children: [
+                                                iconsUtils(
+                                                    'assets/appImages/signOutIcon.svg',
+                                                    18,
+                                                    18),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                accountTextList('Sign Out'),
+                                              ],
+                                            ),
                                           ),
-                                          accountTextList('Sign Out'),
-                                        ],
-                                      ),
+                                        )
+                                      ],
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ]),
-                    ),
-                  );
+                                  ),
+                                ]),
+                          ),
+                        );
                 });
           }),
         ),
@@ -1565,5 +1424,4 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
             fontSize: 16,
             letterSpacing: -0.25));
   }
-
 }

@@ -539,6 +539,7 @@ class _ProductListByCategoryActivityState
       });
     }
   }
+
   List<Content> sortedMapData=[];
   void mainss() {
     // sorting the map value in ascending order by it's value.
@@ -578,7 +579,8 @@ class _ProductListByCategoryActivityState
   Widget productListView() {
     return*/
 /* LayoutBuilder(builder: (context, constrains) {
-      return*/ /*
+      return*/
+  /*
  ChangeNotifierProvider<ProductSpecificListViewModel>.value(
           value:  productSpecificListViewModel,
           child: Consumer<ProductSpecificListViewModel>(
@@ -674,7 +676,8 @@ class _ProductListByCategoryActivityState
                                                       .1,
                                               width: MediaQuery.of(context)
                                                   .size
-                                                  .width,*/ /*
+                                                  .width,*/
+  /*
 
                                               decoration: const BoxDecoration(
                                                   color: ThemeApp.whiteColor,

@@ -1,18 +1,15 @@
+import 'dart:io' as io;
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_downloader/image_downloader.dart';
 import 'package:intl/intl.dart';
-import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/demoPage.dart';
-import 'package:velocit/pages/Activity/My_Orders/QR_download_popup.dart';
 import 'package:velocit/utils/utils.dart';
 
 import '../../../Core/Model/CartModels/GetDefaultAddressModel.dart';
@@ -30,11 +27,9 @@ import 'package:path/path.dart' as path;
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
-import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 
-var dio = Dio();
+var pdfFile = 'https://static.fulgorithmapi.com/invoices/invoice.pdf';
 
 class MyOrderDetails extends StatefulWidget {
   final dynamic values;
@@ -100,33 +95,59 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
   Future<File> loadPdfFromNetwork(String url) async {
     final response = await http.get(Uri.parse(url));
     final bytes = response.bodyBytes;
-    return _storeFile(url, bytes);
+    if (io.Platform.isAndroid) {
+      return _storeFileInAndroid(url, bytes);
+    } else {
+      return _storeFileInIOS(url, bytes);
+    }
   }
 
-  Future<File> _storeFile(String url, List<int> bytes) async {
+  Future<File> _storeFileInAndroid(String url, List<int> bytes) async {
     final filename = path.basename(url);
-    final dir = await getApplicationDocumentsDirectory();
-    // final file = File('${dir.path}/$filename');
+    // final file = File(
+    //     '/storage/emulated/0/Download/VelocITt_${widget.values["id"].toString()}_$filename');
+    Future<Directory> dir = getApplicationDocumentsDirectory();
+    Directory newDir = Directory('$dir/testVelocit');
 
-    final file = File(
-        '/storage/emulated/0/Download/VelocITt_${widget.values["id"].toString()}_$filename');
+    var iosPath = await newDir.create();
+    print('Directory newDir path :' + iosPath.path);
+
+    //create file path
+    var directory = await Directory('/storage/emulated/0/VelocITt Invoice')
+        .create(recursive: true);
+    print('Directory path :' + directory.path);
+    //save pdf file
+    final file =
+        File('${directory.path}/${widget.values["id"].toString()}_$filename');
     Utils.successToast('Invoice Download Successfully');
     await file.writeAsBytes(bytes, flush: true);
     // await OpenFilex.open(url);
 
-    PdfViewerPage(url: url);
     if (kDebugMode) {
-      print('$file');
+      print('Downloaded invoice $file');
     }
     return file;
   }
+  Future<File> _storeFileInIOS(String url, List<int> bytes) async {
+    final filename = path.basename(url);
+    //create file path
+    Future<Directory> dir = getApplicationDocumentsDirectory();
+    Directory newDir = Directory('$dir/testVelocit');
 
-////
+    var iosPath = await newDir.create();
+    print('Directory IOS path :' + iosPath.path);
 
-  void showDownloadProgress(received, total) {
-    if (total != -1) {
-      print((received / total * 100).toStringAsFixed(0) + "%");
+    //save pdf file
+    final file =
+    File('${iosPath.path}/${widget.values["id"].toString()}_$filename');
+    Utils.successToast('Invoice Download Successfully');
+    await file.writeAsBytes(bytes, flush: true);
+    // await OpenFilex.open(url);
+
+    if (kDebugMode) {
+      print('Downloaded invoice $file');
     }
+    return file;
   }
 
   Widget mainUI() {
@@ -221,17 +242,6 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                           loadPdfFromNetwork(
                               'https://static.fulgorithmapi.com/invoices/invoice.pdf');
 
-                          // String path =
-                          // await ExtStorage.getExternalStoragePublicDirectory(
-                          //     ExtStorage.DIRECTORY_DOWNLOADS);
-                          // //String fullPath = tempDir.path + "/boo2.pdf'";
-                          // String fullPath = "$path/test.pdf";
-                          // print('full path ${fullPath}');
-                          //
-                          // download2(dio, 'https://static.fulgorithmapi.com/invoices/invoice.pdf', fullPath);
-                          ///data/user/0/com.codeelan.velocit/app_flutter/edit-pdf
-                          ///
-                          /// '/data/user/0/com.codeelan.velocit/app_flutter/invoice.pdf'
                         },
                         child: Container(
                           // padding:

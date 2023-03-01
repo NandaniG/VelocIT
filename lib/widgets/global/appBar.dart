@@ -89,10 +89,14 @@ class _AppBarWidgetState extends State<AppBarWidget> {
 
   getPref() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      StringConstant.ProfilePhoto =
-          (prefs.getString('profileImagePrefs')) ?? "";
-    });
+
+      setState(() {
+        print("yes/./././.");
+        StringConstant.ProfilePhoto =
+            prefs.getString('userProfileImagePrefs') ?? "";
+        print("StringConstant.ProfilePhoto"+StringConstant.ProfilePhoto);
+      });
+
   }
 
   @override
@@ -290,16 +294,16 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                   child: ClipRRect(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(100)),
-                                    child: Image.file(
-                                      File(StringConstant.ProfilePhoto),
-                                      fit: BoxFit.fill,
+                                    child: Image.network(
+                                      StringConstant
+                                          .ProfilePhoto,                                      fit: BoxFit.fill,
                                       height: 25,
                                       width: 25,
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return Icon(
-                                          Icons.image,
-                                          color: ThemeApp.whiteColor,
+                                          Icons.account_circle_rounded,
+                                          // color: ThemeApp.whiteColor,
                                         );
                                       },
                                     ),

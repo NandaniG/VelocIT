@@ -28,10 +28,10 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:http/http.dart'as http;
 class ProfileImageDialog extends StatefulWidget {
-  File? imageFile1;
+
   bool isEditAccount;
 
-  ProfileImageDialog({required this.imageFile1, required this.isEditAccount});
+  ProfileImageDialog({ required this.isEditAccount});
 
   @override
   State<ProfileImageDialog> createState() => _ProfileImageDialogState();
@@ -85,6 +85,7 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                   await prefs.setString('profileImagePrefs', imagePath);
                   StringConstant.UserLoginId =
                       (prefs.getString('isUserId')) ?? '';
+                  await  prefs.setString('userProfileImagePrefs',imagePath) ;
 
                   setState(() {
                     if (widget.isEditAccount == true) {
@@ -121,7 +122,7 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                     source: ImageSource.gallery,);
                   print(pickedFile!.path.toString());
                   if (pickedFile != null) {
-
+                    await  prefs.setString('userProfileImagePrefs', pickedFile.path) ;
                       await prefs.setString('profileImagePrefs', pickedFile.path);
                       StringConstant.UserLoginId =
                           (prefs.getString('isUserId')) ?? '';

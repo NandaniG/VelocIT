@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/OfferProductModel.dart';
 import 'package:velocit/Core/ViewModel/product_listing_view_model.dart';
+import '../../../Core/AppConstant/apiMapping.dart';
 import '../../../Core/Model/CategoriesModel.dart';
 import '../../../Core/Model/FindProductBySubCategoryModel.dart';
 import '../../../Core/Model/OfferProductListModel.dart';
@@ -19,6 +20,7 @@ import '../../../services/models/CartModel.dart';
 import '../../../services/models/ProductDetailModel.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../services/providers/cart_Provider.dart';
+import '../../../utils/ProgressIndicatorLoader.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
 import '../../../utils/utils.dart';
@@ -31,7 +33,7 @@ import 'package:velocit/utils/StringUtils.dart';
 
 import '../Product_Activities/FilterScreen_Products.dart';
 import '../Product_Activities/ProductDetails_activity.dart';
-
+import 'package:http/http.dart'as http;
 class OfferListByCategoryActivity extends StatefulWidget {
   OfferPayload? offerList;
 
@@ -45,7 +47,7 @@ class OfferListByCategoryActivity extends StatefulWidget {
 class _OfferListByCategoryActivityState
     extends State<OfferListByCategoryActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
-  late ScrollController scrollController = ScrollController();
+  ScrollController _sc = ScrollController();
   double height = 0.0;
   double width = 0.0;
 
@@ -56,57 +58,52 @@ class _OfferListByCategoryActivityState
   bool isLoading = false;
   int pageCount = 1;
   int size = 10;
+//// page for lazy scroll
+  int page = 0;
+  List<OfferListContent> subCategoryList = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    productSpecificListViewModel.OfferBySubCategoryWithGet(
-      0,
+    this._getMoreData(
+      page,
       10,
       widget.offerList!.id!,
     );
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
+    super.initState();
 
+    _sc.addListener(() {
+      if (_sc.position.pixels == _sc.position.maxScrollExtent) {
+        print("page number sc1 " + page.toString());
+        page++;
+        print("page number sc2 " + page.toString());
+
+        _getMoreData(
+          page,
+          10,
+          widget.offerList!.id!,
+        );
+      }
+    });
     print("subProduct.............${widget.offerList!.id}");
-/*    scrollController = new ScrollController(initialScrollOffset: 5.0)
-      ..addListener(_scrollListener);*/
+    StringConstant.sortByRadio=0;
+    StringConstant.sortedBy="Low to High";
+    print(StringConstant.sortedBy);
 
-
-
-
-
-    StringConstant.sortByRadio;
-    StringConstant.sortedBy;
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    scrollController.dispose();
+    _sc.dispose();
   }
-
-  _scrollListener() {
-    if (scrollController.offset >= scrollController.position.maxScrollExtent &&
-        !scrollController.position.outOfRange) {
-      setState(() {
-        print("comes to bottom $isLoading");
-        isLoading = true;
-
-        if (isLoading) {
-          print("RUNNING LOAD MORE");
-
-          pageCount = pageCount + 1;
-
-          //// CALL YOUR API HERE FOR THE NEXT FUNCTIONALITY
-          productSpecificListViewModel.OfferBySubCategoryWithGet(
-              pageCount, 10, widget.offerList!.id!);
-        }
-      });
-    }
-  }
-
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
     locale: 'en_IN',
@@ -348,224 +345,362 @@ class _OfferListByCategoryActivityState
       ),
     );
   }
-
   Widget productListView() {
-    return/* LayoutBuilder(builder: (context, constrains) {
-      return*/ ChangeNotifierProvider<ProductSpecificListViewModel>.value(
-        value:  productSpecificListViewModel,
-        child: Consumer<ProductSpecificListViewModel>(
-            builder: (context, productSubCategoryProvider, child) {
-              switch (productSubCategoryProvider.offerSubCategory.status) {
-                case Status.LOADING:
-                  print("Api load");
+    return isLoading == false
+        ? Expanded(
+        child: sortedMapData.isEmpty
+            ? Center(
+            child: Text(
+              "Match not found",
+              style: TextStyle(fontSize: 20),
+            ))
+            : GridView(
+          controller: _sc,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 30,
+            // childAspectRatio: 1.0,
+            childAspectRatio:
+            MediaQuery.of(context).size.height / 900,
+          ),
+          shrinkWrap: true,
+          children:
+          List.generate(sortedMapData.length + 1, (index) {
+            print(sortedMapData.length);
 
-                  return TextFieldUtils().circularBar(context);
-                case Status.ERROR:
-                  print("Api error");
+            if (index == sortedMapData.length) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _buildProgressIndicator(),
+                ],
+              );
+            } else {
+              return InkWell(
+                onTap: () {
+                  print("Id ........${sortedMapData[index].id}");
 
-                  return Text(productSubCategoryProvider
-                      .offerSubCategory.message
-                      .toString());
-                case Status.COMPLETED:
-                  print("Api calll");
-                  List<OfferListContent>? subProductList = productSubCategoryProvider
-                      .offerSubCategory.data!.payload!.content;
-                  print("subProductList length.......${subProductList!.length}");
-                  return Expanded(
-
-                    // width: MediaQuery.of(context).size.width,
-                    child: subProductList.length==[]?CircularProgressIndicator(): GridView(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 30,
-                          // childAspectRatio: 1.0,
-                          childAspectRatio: MediaQuery.of(context).size.height / 900,
-                        ),
-                        shrinkWrap: true,
-                        children: List.generate(subProductList.length,
-                              (index) {
-                            return Stack(
-                              children: [
-                                index == subProductList.length
-                                    ? Container(
-                                  // width: constrains.minWidth,
-                                  height: 20,
-                                  // height: MediaQuery.of(context).size.height * .08,
-                                  // alignment: Alignment.center,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: ThemeApp.blackColor,
-                                    ),
-                                  ),
-                                )
-                                    : InkWell(
-                                  onTap: () {
-                                    print(
-                                        "Id ........${subProductList[index].id}");
-
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProductDetailsActivity(
-                                              id: subProductList[index].id,
-                                              // productList: subProductList[index],
-                                              // productSpecificListViewModel:
-                                              //     productSpecificListViewModel,
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-// height: 205,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          /*   Expanded(
-                                            flex: 2,
-                                            child:*/ Container(
-                                            height: 143,
-                                            width: 191, /* height: SizeConfig.orientations !=
-                                                      Orientation.landscape
-                                                  ? MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      .25
-                                                  : MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      .1,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,*/
-                                            decoration: const BoxDecoration(
-                                              color: ThemeApp.whiteColor,
-                                            ),
-                                            child: ClipRRect(
-
-                                              child: subProductList[index]
-                                                  .imageUrls![0]
-                                                  .imageUrl!.isNotEmpty?Image.network(
-                                                subProductList[index]
-                                                    .imageUrls![0]
-                                                    .imageUrl!,
-                                                // fit: BoxFit.fill,
-                                                height: (MediaQuery.of(
-                                                    context)
-                                                    .orientation ==
-                                                    Orientation.landscape)
-                                                    ? MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                    .26
-                                                    : MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                    .1,
-                                              ) :SizedBox(
-                                                // height: height * .28,
-                                                  width: width,
-                                                  child: Icon(
-                                                    Icons.image_outlined,
-                                                    size: 50,
-                                                  )),
-                                            ),
-                                          ),
-                                          // ),
-                                          Container(      color: ThemeApp.tealButtonColor,
-                                            width: 191,
-                                            height: 66,
-                                            padding: const EdgeInsets.only(
-                                              left: 12, right: 12,),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .center,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                TextFieldUtils()
-                                                    .listNameHeadingTextField(
-                                                    subProductList[index]
-                                                        .shortName!,context),
-                                                SizedBox(height:10),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                                  children: [
-                                                    TextFieldUtils().listPriceHeadingTextField(
-                                                        indianRupeesFormat
-                                                            .format(subProductList[
-                                                        index]
-                                                            .defaultSellPrice ??
-                                                            0.0),
-                                                        context),
-                                                    TextFieldUtils().listScratchPriceHeadingTextField(
-                                                        indianRupeesFormat.format(
-                                                            subProductList[
-                                                            index]
-                                                                .defaultMrp ??
-                                                                0.0),
-                                                        context)
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ),
-
-                                        ],
-                                      )),
-                                ),
-                                index == subProductList.length
-                                    ? Container(
-                                  // width: constrains.minWidth,
-                                  height: 20,
-                                  // height: MediaQuery.of(context).size.height * .08,
-                                  // alignment: Alignment.center,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: ThemeApp.blackColor,
-                                    ),
-                                  ),
-                                )
-                                    : SizedBox()
-                              ],
-                            );
-                            /*else {
-                        return  Container(
-                          // width: constrains.minWidth,
-                          height: 80,
-                          // height: MediaQuery.of(context).size.height * .08,
-                          // alignment: Alignment.center,
-                          child: TextFieldUtils().dynamicText(
-                              'Nothing more to load',
-                              context,
-                              TextStyle(fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .03,
-                                  fontWeight: FontWeight.bold)),
-                        );
-                      }*/
-                          },)
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailsActivity(
+                        id: sortedMapData[index].id,
+                      ),
                     ),
                   );
-              }
-              return Container(
-                height: height * .08,
-                alignment: Alignment.center,
-                child: Center(
-                    child: Text(
-                      "Match not found",
-                      style: TextStyle(fontSize: 20),
+                },
+                child: Container(
+// height: 205,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        /*   Expanded(
+                                        flex: 2,
+                                        child:*/
+                        Container(
+                          height: 143,
+                          width: 191,
+                          decoration: BoxDecoration(
+                              color: ThemeApp.whiteColor,
+                              border: Border.all(
+                                  color: ThemeApp.tealButtonColor)),
+                          child: ClipRRect(
+                            child: sortedMapData[index]
+                                .imageUrls![0]
+                                .imageUrl!
+                                .isNotEmpty
+                                ? Image.network(
+                              sortedMapData[index]
+                                  .imageUrls![0]
+                                  .imageUrl!,
+                              // fit: BoxFit.fill,
+                              height: (MediaQuery.of(context)
+                                  .orientation ==
+                                  Orientation.landscape)
+                                  ? MediaQuery.of(context)
+                                  .size
+                                  .height *
+                                  .26
+                                  : MediaQuery.of(context)
+                                  .size
+                                  .height *
+                                  .1,
+                            )
+                                : SizedBox(
+                              // height: height * .28,
+                                width: width,
+                                child: Icon(
+                                  Icons.image_outlined,
+                                  size: 50,
+                                )),
+                          ),
+                        ),
+                        // ),
+                        Container(
+                          color: ThemeApp.tealButtonColor,
+                          width: 191,
+                          height: 66,
+                          padding: const EdgeInsets.only(
+                            left: 12,
+                            right: 12,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextFieldUtils().listNameHeadingTextField(
+                                  sortedMapData[index].shortName!,
+                                  context),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextFieldUtils()
+                                      .listPriceHeadingTextField(
+                                      indianRupeesFormat.format(
+                                          sortedMapData[index]
+                                              .defaultSellPrice ??
+                                              0.0),
+                                      context),
+                                  TextFieldUtils()
+                                      .listScratchPriceHeadingTextField(
+                                      indianRupeesFormat.format(
+                                          sortedMapData[index]
+                                              .defaultMrp ??
+                                              0.0),
+                                      context)
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     )),
               );
-            }));
-    // });
+            }
+          }),
+        ))
+        : CircularProgressIndicator();
   }
+//   Widget productListView() {
+//     return/* LayoutBuilder(builder: (context, constrains) {
+//       return*/ ChangeNotifierProvider<ProductSpecificListViewModel>.value(
+//         value:  productSpecificListViewModel,
+//         child: Consumer<ProductSpecificListViewModel>(
+//             builder: (context, productSubCategoryProvider, child) {
+//               switch (productSubCategoryProvider.offerSubCategory.status) {
+//                 case Status.LOADING:
+//                   print("Api load");
+//
+//                   return TextFieldUtils().circularBar(context);
+//                 case Status.ERROR:
+//                   print("Api error");
+//
+//                   return Text(productSubCategoryProvider
+//                       .offerSubCategory.message
+//                       .toString());
+//                 case Status.COMPLETED:
+//                   print("Api calll");
+//                   List<OfferListContent>? subProductList = productSubCategoryProvider
+//                       .offerSubCategory.data!.payload!.content;
+//                   print("subProductList length.......${subProductList!.length}");
+//                   return Expanded(
+//
+//                     // width: MediaQuery.of(context).size.width,
+//                     child: subProductList.length==[]?CircularProgressIndicator(): GridView(
+//                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                           crossAxisCount: 2,
+//                           crossAxisSpacing: 16,
+//                           mainAxisSpacing: 30,
+//                           // childAspectRatio: 1.0,
+//                           childAspectRatio: MediaQuery.of(context).size.height / 900,
+//                         ),
+//                         shrinkWrap: true,
+//                         children: List.generate(subProductList.length,
+//                               (index) {
+//                             return Stack(
+//                               children: [
+//                                 index == subProductList.length
+//                                     ? Container(
+//                                   // width: constrains.minWidth,
+//                                   height: 20,
+//                                   // height: MediaQuery.of(context).size.height * .08,
+//                                   // alignment: Alignment.center,
+//                                   child: Center(
+//                                     child: CircularProgressIndicator(
+//                                       color: ThemeApp.blackColor,
+//                                     ),
+//                                   ),
+//                                 )
+//                                     : InkWell(
+//                                   onTap: () {
+//                                     print(
+//                                         "Id ........${subProductList[index].id}");
+//
+//                                     Navigator.of(context).push(
+//                                       MaterialPageRoute(
+//                                         builder: (context) =>
+//                                             ProductDetailsActivity(
+//                                               id: subProductList[index].id,
+//                                               // productList: subProductList[index],
+//                                               // productSpecificListViewModel:
+//                                               //     productSpecificListViewModel,
+//                                             ),
+//                                       ),
+//                                     );
+//                                   },
+//                                   child: Container(
+// // height: 205,
+//                                       child: Column(
+//                                         mainAxisAlignment:
+//                                         MainAxisAlignment.start,
+//                                         crossAxisAlignment:
+//                                         CrossAxisAlignment.start,
+//                                         children: [
+//                                           /*   Expanded(
+//                                             flex: 2,
+//                                             child:*/ Container(
+//                                             height: 143,
+//                                             width: 191, /* height: SizeConfig.orientations !=
+//                                                       Orientation.landscape
+//                                                   ? MediaQuery.of(context)
+//                                                           .size
+//                                                           .height *
+//                                                       .25
+//                                                   : MediaQuery.of(context)
+//                                                           .size
+//                                                           .height *
+//                                                       .1,
+//                                               width: MediaQuery.of(context)
+//                                                   .size
+//                                                   .width,*/
+//                                             decoration: const BoxDecoration(
+//                                               color: ThemeApp.whiteColor,
+//                                             ),
+//                                             child: ClipRRect(
+//
+//                                               child: subProductList[index]
+//                                                   .imageUrls![0]
+//                                                   .imageUrl!.isNotEmpty?Image.network(
+//                                                 subProductList[index]
+//                                                     .imageUrls![0]
+//                                                     .imageUrl!,
+//                                                 // fit: BoxFit.fill,
+//                                                 height: (MediaQuery.of(
+//                                                     context)
+//                                                     .orientation ==
+//                                                     Orientation.landscape)
+//                                                     ? MediaQuery.of(context)
+//                                                     .size
+//                                                     .height *
+//                                                     .26
+//                                                     : MediaQuery.of(context)
+//                                                     .size
+//                                                     .height *
+//                                                     .1,
+//                                               ) :SizedBox(
+//                                                 // height: height * .28,
+//                                                   width: width,
+//                                                   child: Icon(
+//                                                     Icons.image_outlined,
+//                                                     size: 50,
+//                                                   )),
+//                                             ),
+//                                           ),
+//                                           // ),
+//                                           Container(      color: ThemeApp.tealButtonColor,
+//                                             width: 191,
+//                                             height: 66,
+//                                             padding: const EdgeInsets.only(
+//                                               left: 12, right: 12,),
+//                                             child: Column(
+//                                               mainAxisAlignment:
+//                                               MainAxisAlignment
+//                                                   .center,
+//                                               crossAxisAlignment:
+//                                               CrossAxisAlignment.start,
+//                                               children: [
+//                                                 TextFieldUtils()
+//                                                     .listNameHeadingTextField(
+//                                                     subProductList[index]
+//                                                         .shortName!,context),
+//                                                 SizedBox(height:10),
+//                                                 Row(
+//                                                   mainAxisAlignment:
+//                                                   MainAxisAlignment
+//                                                       .spaceBetween,
+//                                                   children: [
+//                                                     TextFieldUtils().listPriceHeadingTextField(
+//                                                         indianRupeesFormat
+//                                                             .format(subProductList[
+//                                                         index]
+//                                                             .defaultSellPrice ??
+//                                                             0.0),
+//                                                         context),
+//                                                     TextFieldUtils().listScratchPriceHeadingTextField(
+//                                                         indianRupeesFormat.format(
+//                                                             subProductList[
+//                                                             index]
+//                                                                 .defaultMrp ??
+//                                                                 0.0),
+//                                                         context)
+//                                                   ],
+//                                                 )
+//                                               ],
+//                                             ),
+//                                           ),
+//
+//                                         ],
+//                                       )),
+//                                 ),
+//                                 index == subProductList.length
+//                                     ? Container(
+//                                   // width: constrains.minWidth,
+//                                   height: 20,
+//                                   // height: MediaQuery.of(context).size.height * .08,
+//                                   // alignment: Alignment.center,
+//                                   child: Center(
+//                                     child: CircularProgressIndicator(
+//                                       color: ThemeApp.blackColor,
+//                                     ),
+//                                   ),
+//                                 )
+//                                     : SizedBox()
+//                               ],
+//                             );
+//                             /*else {
+//                         return  Container(
+//                           // width: constrains.minWidth,
+//                           height: 80,
+//                           // height: MediaQuery.of(context).size.height * .08,
+//                           // alignment: Alignment.center,
+//                           child: TextFieldUtils().dynamicText(
+//                               'Nothing more to load',
+//                               context,
+//                               TextStyle(fontFamily: 'Roboto',
+//                                   color: ThemeApp.blackColor,
+//                                   fontSize: height * .03,
+//                                   fontWeight: FontWeight.bold)),
+//                         );
+//                       }*/
+//                           },)
+//                     ),
+//                   );
+//               }
+//               return Container(
+//                 height: height * .08,
+//                 alignment: Alignment.center,
+//                 child: Center(
+//                     child: Text(
+//                       "Match not found",
+//                       style: TextStyle(fontSize: 20),
+//                     )),
+//               );
+//             }));
+//     // });
+//   }
 
 /*
   Widget productListView() {
@@ -798,6 +933,89 @@ class _OfferListByCategoryActivityState
     // });
   }
 */
+  void _getMoreData(int page, int size, int subCategoryId) async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+
+      Map<String, String> productData = {
+        'page': page.toString(),
+        'size': size.toString(),
+        'offer_id': subCategoryId.toString(),
+      };
+      print("Product Query$productData");
+      print("CRM Query$productData");
+      var url = '/product/offerproducts';
+      String queryString = Uri(queryParameters: productData).query;
+
+      var requestUrl = '${ApiMapping.BaseAPI}$url?$queryString';
+
+      print(requestUrl);
+
+      final client = http.Client();
+      final response = await client
+          .get(Uri.parse(requestUrl))
+          .timeout(Duration(seconds: 30));
+      List<OfferListContent> tList = [];
+
+      final parsedJson = jsonDecode(response.body);
+// type: Restaurant
+      final productBySubCategory =
+      OfferProductsListModel.fromJson(parsedJson);
+      for (int i = 0; i < productBySubCategory.payload!.content!.length; i++) {
+        tList.add(productBySubCategory.payload!.content![i]);
+
+        // subCategoryList.sort((a,b)=>int.parse(a.defaultSellPrice.toString()).compareTo(int.parse(a.defaultSellPrice.toString())));
+        // final  List<Content> sortSubCategoryList = List<Content>.of(subCategoryList);
+        // print("sortSubCategoryList :"+sortSubCategoryList.length.toString());
+      }
+
+      setState(() {
+        isLoading = false;
+        subCategoryList.addAll(tList);
+        mainss();
+
+        // page++;
+        print("page number " + page.toString());
+      });
+    }
+  }
+
+  List<OfferListContent> sortedMapData=[];
+  void mainss() {
+    // sorting the map value in ascending order by it's value.
+
+    // convert the map data into list(array).
+
+    List<OfferListContent> listMappedEntries = subCategoryList.toList();
+
+    // Now will sort the list
+
+    // listMappedEntries.sort((a, b) => a.defaultSellPrice!.toInt()
+    //     .compareTo(b.defaultSellPrice!.toInt()));
+
+    // print(listMappedEntries);
+
+    // now convert the list back to map after sorting.
+
+    sortedMapData = List<OfferListContent>.from(listMappedEntries);
+
+    print("sortedMapData"+sortedMapData.length.toString());
+  }
+
+  Widget _buildProgressIndicator() {
+    return Container(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: ProgressIndicatorLoader(isLoading),
+        ),
+      ),
+    );
+  }
 
   int? _radioValue = 0;
 
@@ -882,8 +1100,13 @@ class _OfferListByCategoryActivityState
   void onChangeText(int sortByRadio) {
     setState(() {});
     if (StringConstant.sortByRadio == 1) {
+      // list is been sorted
+      sortedMapData.sort((a, b) =>b.defaultSellPrice!.toInt()
+          .compareTo(a.defaultSellPrice!.toInt()));
       StringConstant.sortedBy = "High to Low";
     } else {
+      sortedMapData.sort((a, b) =>a.defaultSellPrice!.toInt()
+          .compareTo(b.defaultSellPrice!.toInt()));
       StringConstant.sortedBy = "Low to High";
     }
   }

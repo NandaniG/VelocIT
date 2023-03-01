@@ -392,6 +392,8 @@ class AuthRepository {
           'userProfileEmailPrefs', response['payload']['email'].toString());
       await prefs.setString(
           'userProfileMobilePrefs', response['payload']['mobile'].toString());
+      await prefs.setString(
+          'userProfileImagePrefs', response['payload']['image_url'].toString());
 
       return response = UserModel.fromJson(response);
     } catch (e) {

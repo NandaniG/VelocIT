@@ -59,18 +59,19 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
   void initState() {
     // TODO: implement initState
 
-    getPrefValue();
+    // getPrefValue();
     getUserData();
     super.initState();
   }
 
   getPrefValue() async {
     final prefs = await SharedPreferences.getInstance();
-    bool check = prefs.containsKey('profileImagePrefs');
+    bool check = prefs.containsKey('userProfileImagePrefs');
     if (check) {
       setState(() {
         print("yes/./././.");
-        StringConstant.ProfilePhoto = prefs.getString('profileImagePrefs')!;
+        StringConstant.ProfilePhoto =
+            prefs.getString('userProfileImagePrefs') ?? "";
       });
       return;
     }
@@ -87,6 +88,8 @@ getUserData()async{
         prefs.getString('userProfileEmailPrefs') ?? "";
     StringConstant.userProfileMobile =
         prefs.getString('userProfileMobilePrefs') ?? "";
+    StringConstant.ProfilePhoto =
+        prefs.getString('userProfileImagePrefs') ?? "";
     userNameController =
         TextEditingController(text: StringConstant.userProfileName);
     mobileController =
@@ -150,7 +153,7 @@ getUserData()async{
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            imageFile1 != null
+            StringConstant.ProfilePhoto != null
                 ? Stack(
                     // alignment: Alignment.center,
                     children: [
@@ -158,25 +161,29 @@ getUserData()async{
                         child: Container(
                           width: 110.0,
                           height: 110.0,
-                          decoration: new BoxDecoration(
+                          decoration:
+                          new BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.grey.shade600,
+                                  color: ThemeApp
+                                      .appLightColor,
                                   spreadRadius: 1,
                                   blurRadius: 5)
                             ],
                             border: Border.all(
-                                color: ThemeApp.whiteColor, width: 4),
+                                color: ThemeApp
+                                    .whiteColor,
+                                width: 4),
                             shape: BoxShape.circle,
                           ),
                           child: ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(100)),
-                            child: Image.file(
-                              imageFile1!,
-                              fit: BoxFit.fill,
-                              width: 110.0,
-                              height: 110.0,
+                            child: Image.network(
+                              StringConstant.ProfilePhoto.toString()!,
+                              fit: BoxFit.fitWidth,
+                              width: 90.0,
+                              height: 90.0,
                               errorBuilder: (context, error, stackTrace) {
                                 return Icon(
                                   Icons.image,
@@ -199,7 +206,6 @@ getUserData()async{
                                   context: context,
                                   builder: (BuildContext context) {
                                     return ProfileImageDialog(
-                                        imageFile1: imageFile1,
                                         isEditAccount: false);
                                   });
                             },
@@ -272,7 +278,6 @@ getUserData()async{
                                   context: context,
                                   builder: (BuildContext context) {
                                     return ProfileImageDialog(
-                                        imageFile1: imageFile1,
                                         isEditAccount: false);
                                   });
                             },
@@ -460,139 +465,7 @@ getUserData()async{
     );
   }
 
-  File? imageFile1;
 
-  // _getFromCamera() async {
-  //
-  //   final picker = ImagePicker();
-  //   final pickedImage = await picker.pickImage(
-  //     source: ImageSource.camera,
-  //     maxWidth: 1800,
-  //     maxHeight: 1800,
-  //   );
-  //   if (pickedImage != null) {
-  //     setState(() {
-  //       imageFile1 = File(pickedImage.path);
-  //       // isEnable = true;
-  //
-  //     });
-  //   }
-  // }
-
-  Future _getFromCamera() async {
-    var image = await picker.pickImage(source: ImageSource.camera);
-    final prefs = await SharedPreferences.getInstance();
-    // StringConstant.CurrentPinCode = (prefs.getString('CurrentPinCodePref') ?? '');
-    String imagePath = image!.path;
-
-    await prefs.setString('profileImagePrefs', imagePath);
-
-    setState(() {
-      imageFile1 = File(image.path);
-
-      // final   file = File(image!.path);
-      //    final bytes =
-      //    file!.readAsBytesSync();
-      //   final img64 = base64Encode(bytes);
-    });
-    // Navigator.pop(this.context);
-  }
-
-  bool isEnable = false;
-
-/*  Widget fullName(ProductProvider provider) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFieldUtils().dynamicText(
-            StringUtils.fullName,
-            context,
-            TextStyle(
-                fontFamily: 'Roboto',
-                color: ThemeApp.blackColor,
-                fontSize: height * .02,
-                fontWeight: FontWeight.w600)),
-        CharacterTextFormFieldsWidget(
-            isEnable: true,
-            errorText: StringUtils.enterFullName,
-            textInputType: TextInputType.name,
-            controller: provider.userNameController,
-            autoValidation: AutovalidateMode.onUserInteraction,
-            hintText: 'Type your name',
-            onChange: (val) {},
-            validator: (value) {
-              return null;
-            }),
-      ],
-    );
-  }
-
-  Widget mobileNumber(ProductProvider provider) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFieldUtils().dynamicText(
-            StringUtils.mobileNumber,
-            context,
-            TextStyle(
-                fontFamily: 'Roboto',
-                color: ThemeApp.blackColor,
-                fontSize: height * .02,
-                fontWeight: FontWeight.w600)),
-        MobileNumberTextFormField(
-            controller: provider.userMobileController,
-            enable: false,
-            validator: (value) {
-              if (value.isEmpty && provider.userMobileController.text.isEmpty) {
-                _validateMobile = true;
-                return StringUtils.enterMobileNumber;
-              } else if (provider.userMobileController.text.length < 10) {
-                _validateMobile = true;
-                return StringUtils.enterMobileNumber;
-              } else {
-                _validateMobile = false;
-              }
-              return null;
-            }),
-      ],
-    );
-  }
-
-  Widget emailId(ProductProvider provider) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFieldUtils().dynamicText(
-            StringUtils.emailAddress,
-            context,
-            TextStyle(
-                fontFamily: 'Roboto',
-                color: ThemeApp.blackColor,
-                fontSize: height * .02,
-                fontWeight: FontWeight.w600)),
-        EmailTextFormFieldsWidget(
-            errorText: StringUtils.validEmailError,
-            textInputType: TextInputType.emailAddress,
-            controller: provider.userEmailController,
-            autoValidation: AutovalidateMode.onUserInteraction,
-            hintText: 'test@gmail.com',
-
-            onChange: (val) {},
-            validator: (val) {
-              if (val.isEmpty && provider.userEmailController.text.isEmpty) {
-                _validateEmail = true;
-                return StringUtils.validEmailError;
-              } else if (!StringConstant().isEmail(val)) {
-                _validateEmail = true;
-                return StringUtils.validEmailError;
-              } else {
-                _validateEmail = false;
-              }
-              return null;
-            }),
-      ],
-    );
-  }*/
 
   Widget updateButton(ProductProvider provider) {
     return proceedButton(
@@ -605,43 +478,7 @@ AuthRepository().editUserInfoApi(data, StringConstant.UserLoginId);
       print("provider.creditCardList__________" +
           provider.userAccountDetailList.length.toString());
 
-
-      // initializeFilter(provider);
-
-      // setState(() {
-      //   // Prefs.instance.setToken(StringConstant.userAccountNamePref,
-      //   //     provider.userNameController.text);
-      //   // Prefs.instance.setToken(StringConstant.userAccountEmailPref,
-      //   //     provider.userEmailController.text);
-      //   // Prefs.instance.setToken(StringConstant.userAccountMobilePref,
-      //   //     provider.userMobileController.text);
-      // });
-      // showDialog(
-      //     context: context,
-      //     builder: (BuildContext context) {
-      //       return OTPVerificationDialog();
-      //     });
     });
   }
 
-  void initializeFilter(ProductProvider provider) {
-    provider.userAccountDetailList = <UserAccountList>[];
-
-    provider.userAccountDetailList.add(UserAccountList(
-        userId: 1,
-        userImage: provider.images.toString(),
-        userName: provider.userNameController.text,
-        userEmail: provider.userEmailController.text,
-        userMobile: provider.userMobileController.text,
-        userPassword: 'userPassword'));
-  }
-
-  // String images='';
-  Future<String> getBase64Image(PickedFile img) async {
-    List<int> imageBytes = File(img.path).readAsBytesSync();
-    String img64 = base64Encode(imageBytes);
-    // print(img.path);
-    // print(img64);
-    return img64;
-  }
 }
