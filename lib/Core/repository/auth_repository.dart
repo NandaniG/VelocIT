@@ -276,7 +276,7 @@ class AuthRepository {
     if (jsonData['status'].toString() == 'OK') {
       AuthRepository().getUserDetailsById(jsonData['payload']['id'].toString());
       //api for passing fcm token
-      passFCMToken(jsonData['payload']['body']['id'].toString(), fcmToken);
+      passFCMToken(jsonData['payload']['id'].toString(), fcmToken);
 
       prefs.setString(
           StringConstant.testId, jsonData['payload']['id'].toString());

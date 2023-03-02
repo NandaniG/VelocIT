@@ -96,7 +96,7 @@ dependencies:
   app_settings: ^4.2.0
   flutter_file_downloader: ^1.1.0+1
   open_filex: ^4.3.2
-
+  share_plus: ^6.3.1
 
 
 

@@ -1,17 +1,22 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:another_flushbar/flushbar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:another_flushbar/flushbar_route.dart';
 import 'package:velocit/utils/styles.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:io' as io;
+import 'dart:io';
+import 'package:path/path.dart' as path;
 class Utils {
-
-
 
   static void fieldFocusChange(
       BuildContext context, FocusNode current, FocusNode nextFocus) {
@@ -82,6 +87,83 @@ class Utils {
         backgroundColor: ThemeApp.redColor,
         content: Text(message)));
   }
+
+  Future<File> loadPdfFromNetwork(String url,String orderId,String productName) async {
+    final response = await http.get(Uri.parse(url));
+    final bytes = response.bodyBytes;
+    if (io.Platform.isAndroid) {
+      return _storeFileInAndroid(url, bytes, orderId,productName);
+    } else {
+      return _storeFileInIOS(url, bytes,orderId);
+    }
+  }
+
+  Future<File> _storeFileInAndroid(String url, List<int> bytes,String orderId,String productName) async {
+    final filename = path.basename(url);
+    // final file = File(
+    //     '/storage/emulated/0/Download/VelocITt_${widget.values["id"].toString()}_$filename');
+
+
+    //create file path
+    var directory = await Directory('/storage/emulated/0/VelocITt Invoice')
+        .create(recursive: true);
+    print('Directory path :' + directory.path);
+    //save pdf file
+    final file =
+    File('${directory.path}/${orderId}_$productName.jpg');
+    await file.writeAsBytes(bytes, flush: true);
+    // await OpenFilex.open(url);
+
+    if (kDebugMode) {
+      print('Downloaded invoice $file');
+    }
+    return file;
+  }
+  Future<File> shareFile(String url,String orderId,String productShortName) async {
+    final filename = path.basename(url);
+    final response = await http.get(Uri.parse(url));
+    final bytes = response.bodyBytes;
+    //create file path
+    var directory = await Directory('/storage/emulated/0/VelocITt Invoice')
+        .create(recursive: true);
+    print('Directory path :' + directory.path);
+    //save pdf file
+    final file =
+    File('${directory.path}/${orderId}_$filename');
+    file.writeAsBytesSync(bytes, flush: true);
+  ///  final url = Uri.parse("myLink");
+  //   await file.writeAsBytes(bytes);
+
+    await Share.shareFiles(['${directory.path}/${orderId}_$filename'],text: 'VelocITt Use this QR Code to get the Delivery of *$productShortName*');
+
+    if (kDebugMode) {
+      print('Downloaded invoice $file');
+    }
+    return file;
+  }
+
+  Future<File> _storeFileInIOS(String url, List<int> bytes,String orderId) async {
+    final filename = path.basename(url);
+    //create file path
+    Future<Directory> dir = getApplicationDocumentsDirectory();
+    Directory newDir = Directory('$dir/testVelocit');
+
+    var iosPath = await newDir.create();
+    print('Directory IOS path :' + iosPath.path);
+
+    //save pdf file
+    final file =
+    File('${iosPath.path}/${orderId}_$filename');
+    Utils.successToast('Invoice Download Successfully');
+    await file.writeAsBytes(bytes, flush: true);
+    // await OpenFilex.open(url);
+
+    if (kDebugMode) {
+      print('Downloaded invoice $file');
+    }
+    return file;
+  }
+
 }
 class SessionManager {
   final String auth_token = "auth_token";

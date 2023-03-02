@@ -376,30 +376,32 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                             CartRepository().putCartForPayment(
                                                 data,
                                                 cartForPaymentPayload
-                                                    .orderBasketId!);
-                                            Navigator.of(context).pushReplacement(
+                                                    .orderBasketId!).then((value) { Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     Payment_Creditcard_debitcardScreen(
                                                         cartForPaymentPayload:
-                                                            cartForPaymentPayload),
+                                                        cartForPaymentPayload),
                                               ),
-                                            );
+                                            );});
+
                                           } else {
                                             if (addressStatus == 'OK') {
                                               CartRepository()
                                                   .putCartForPayment(
                                                       data,
                                                       cartForPaymentPayload
-                                                          .orderBasketId!);
-                                              Navigator.of(context).pushReplacement(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Payment_Creditcard_debitcardScreen(
-                                                          cartForPaymentPayload:
-                                                              cartForPaymentPayload),
-                                                ),
-                                              );
+                                                          .orderBasketId!).then((value) {
+                                                Navigator.of(context).pushReplacement(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Payment_Creditcard_debitcardScreen(
+                                                            cartForPaymentPayload:
+                                                            cartForPaymentPayload),
+                                                  ),
+                                                );
+                                              });
+
                                             } else {
                                               isSelfPickUp == false
                                                   ? Utils.errorToast(
