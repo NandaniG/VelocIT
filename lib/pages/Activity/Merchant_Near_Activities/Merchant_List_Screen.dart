@@ -115,18 +115,17 @@ class _MerchantListByIdActivityState extends State<MerchantListByIdActivity> {
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .12),
+          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
           child: AppBarWidget(
             context: context,
-            titleWidget: searchBar(context),
+            titleWidget: searchBarWidget(),
             location: const AddressWidgets(),   ),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context,3),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: SafeArea(
           child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-            child: Column(
+            padding: const EdgeInsets.only(left: 10, right: 10,),               child: Column(
               // mainAxisAlignment: MainAxisAlignment.start,
               // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -365,7 +364,11 @@ class _MerchantListByIdActivityState extends State<MerchantListByIdActivity> {
                   return Expanded(
                     // width: MediaQuery.of(context).size.width,
                     child: merchantList.length == 0
-                        ? Center(child: Text('No match found'))
+                        ? Center(
+                        child: Text(
+                          "Match not found",
+                          style: TextStyle(fontSize: 20),
+                        ))
                         : GridView(
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
@@ -575,14 +578,11 @@ class _MerchantListByIdActivityState extends State<MerchantListByIdActivity> {
               return Container(
                 height: height * .08,
                 alignment: Alignment.center,
-                child: TextFieldUtils().dynamicText(
-                    'No Match found!',
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.blackColor,
-                        fontSize: height * .03,
-                        fontWeight: FontWeight.bold)),
+                child: Center(
+                    child: Text(
+                      "Match not found",
+                      style: TextStyle(fontSize: 20),
+                    )),
               );
             }));
     // });

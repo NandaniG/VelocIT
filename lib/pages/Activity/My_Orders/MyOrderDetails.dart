@@ -1,12 +1,15 @@
+import 'dart:io' as io;
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_downloader/image_downloader.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:velocit/pages/Activity/My_Orders/QR_download_popup.dart';
+import 'package:velocit/demoPage.dart';
 import 'package:velocit/utils/utils.dart';
 
 import '../../../Core/Model/CartModels/GetDefaultAddressModel.dart';
@@ -19,9 +22,16 @@ import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
+import 'package:path/path.dart' as path;
+import 'package:dio/dio.dart';
+import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
+import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
+
+var pdfFile = 'https://static.fulgorithmapi.com/invoices/invoice.pdf';
 
 class MyOrderDetails extends StatefulWidget {
   final dynamic values;
@@ -44,8 +54,18 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
     totalAmount;
     super.initState();
     getPref();
+    getPermission();
   }
 
+  void getPermission() async {
+    print("getPermission");
+    // Map<PermissionGroup, PermissionStatus> permissions =
+    PermissionStatus permission = await Permission.contacts.status;
+
+    await Permission.storage.request().isGranted;
+  }
+
+  ///
   getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -72,6 +92,98 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
       ),
       body: SafeArea(child: mainUI()),
     );
+  }
+
+  Future<void> loadPdfFromNetwork(String url) async {
+    if (io.Platform.isAndroid) {
+      final response = await http.get(Uri.parse(url));
+      final bytes = response.bodyBytes;
+      _storeFileInAndroid(url, bytes);
+    } else {
+
+      final filename = path.basename(url);
+    //create file path
+    Directory dir = await getApplicationDocumentsDirectory();
+    String savePath = dir.path + "/${widget.values["id"].toString()}_$filename";
+    print(savePath);
+    // Directory newDir = Directory('${dir.path}/testVelocit');
+
+    // var iosPath = await newDir.create();
+    // print('Directory IOS path :' + iosPath.path);
+
+
+
+    //save pdf file
+     try {
+                                          await Dio().download(
+                                              url, 
+                                              savePath,
+                                              // '${iosPath.path}/${widget.values["id"].toString()}_$filename',
+                                              onReceiveProgress: (received, total) {
+                                                  if (total != -1) {
+                                                      print((received / total * 100).toStringAsFixed(0) + "%");
+                                                      //you can build progressbar feature too
+                                                  }
+                                                });
+                                           print("File is saved to download folder.");  
+                                            Utils.successToast('Invoice Download Successfully');
+                                     } on DioError catch (e) {
+                                       print(e.message);
+                                     }
+
+    // final file =
+    // File('${iosPath.path}/${widget.values["id"].toString()}_$filename');
+      // return _storeFileInIOS(url, bytes);
+      
+    }
+  }
+
+  Future<File> _storeFileInAndroid(String url, List<int> bytes) async {
+    final filename = path.basename(url);
+    // final file = File(
+    //     '/storage/emulated/0/Download/VelocITt_${widget.values["id"].toString()}_$filename');
+    Future<Directory> dir = getApplicationDocumentsDirectory();
+    Directory newDir = Directory('$dir/testVelocit');
+
+    var iosPath = await newDir.create();
+    print('Directory newDir path :' + iosPath.path);
+
+    //create file path
+    var directory = await Directory('/storage/emulated/0/VelocITt Invoice')
+        .create(recursive: true);
+    print('Directory path :' + directory.path);
+    //save pdf file
+    final file =
+        File('${directory.path}/${widget.values["id"].toString()}_$filename');
+    Utils.successToast('Invoice Download Successfully');
+    await file.writeAsBytes(bytes, flush: true);
+    // await OpenFilex.open(url);
+
+    if (kDebugMode) {
+      print('Downloaded invoice $file');
+    }
+    return file;
+  }
+  Future<File> _storeFileInIOS(String url, List<int> bytes) async {
+    final filename = path.basename(url);
+    //create file path
+    Future<Directory> dir = getApplicationDocumentsDirectory();
+    Directory newDir = Directory('$dir/testVelocit');
+
+    var iosPath = await newDir.create();
+    print('Directory IOS path :' + iosPath.path);
+
+    //save pdf file
+    final file =
+    File('${iosPath.path}/${widget.values["id"].toString()}_$filename');
+    Utils.successToast('Invoice Download Successfully');
+    await file.writeAsBytes(bytes, flush: true);
+    // await OpenFilex.open(url);
+
+    if (kDebugMode) {
+      print('Downloaded invoice $file');
+    }
+    return file;
   }
 
   Widget mainUI() {
@@ -148,38 +260,34 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       SizedBox(
                         width: width * .03,
                       ),*/
-                      InkWell(
-                        onTap: () async {
-                          try {
-                            // Saved with this method.
-                            var imageId = await ImageDownloader.downloadImage(
-                                "http://static.fulgorithmapi.com/invoices/invoice.jpg");
-                            if (imageId == null) {
-                              return;
-                            }
-                            // Below is a method of obtaining saved image information.
-                            var fileName =
-                                await ImageDownloader.findName(imageId);
-                            var path = await ImageDownloader.findPath(imageId);
-                            var size =
-                                await ImageDownloader.findByteSize(imageId);
-                            var mimeType =
-                                await ImageDownloader.findMimeType(imageId);
-                            Navigator.pop(context);
-                            Utils.successToast('Image downloaded.');
-                          } on PlatformException catch (error) {
-                            print(error);
-                          }
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  side: BorderSide(color: ThemeApp.appColor))),
+                          padding: MaterialStateProperty.all<EdgeInsets>(
+                              EdgeInsets.fromLTRB(12.0, 7.0, 12.0, 7.0)),
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              ThemeApp.appLightColor),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              ThemeApp.appColor),
+                        ),
+                        onPressed: () async {
+                          loadPdfFromNetwork(
+                              'https://static.fulgorithmapi.com/invoices/invoice.pdf');
+
                         },
                         child: Container(
-                          padding:
-                              const EdgeInsets.fromLTRB(10.0, 7.0, 10.0, 7.0),
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(20),
-                            ),
-                            color: ThemeApp.appColor,
-                          ),
+                          // padding:
+                          //     const EdgeInsets.fromLTRB(10.0, 7.0, 10.0, 7.0),
+                          // decoration: BoxDecoration(
+                          //   borderRadius: const BorderRadius.all(
+                          //     Radius.circular(20),
+                          //   ),
+                          //   color: ThemeApp.appColor,
+                          // ),
                           child: Row(
                             children: [
                               SvgPicture.asset(
@@ -239,7 +347,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
   Widget stepperOfDelivery() {
     return Container(
       // height: height * .3,
-      height: 195,
+      height: 205,
 
       child: ListView.builder(
           shrinkWrap: true,
@@ -486,9 +594,12 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
         Container(
           width: 50,
           child: TextFieldUtils().stepperTextFields(
-              'Order Placed',
+              subOrders['is_accepted'] != true
+                  ? 'Order Accepted'
+                  : 'Order placed',
               context,
-              subOrders['is_order_placed'] == true
+              // subOrders['is_order_placed'] == true
+              subOrders['is_accepted'] == true
                   ? ThemeApp.blackColor
                   : ThemeApp.lightFontColor),
         ),
@@ -871,48 +982,55 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
             height: 5,
           ),
           TextFieldUtils().lineHorizontal(),
-          SizedBox(
-            height: 10,
-          ),
           ListView.builder(
               shrinkWrap: true,
               itemCount: widget.values["orders"].length,
               itemBuilder: (BuildContext context, int index) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(widget.values["orders"][index]['oneliner'],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
+                return Container(
+                  // color: ThemeApp.tealButtonColor,
+                  padding: const EdgeInsets.only(
+                    top: 5,
+                  ),
+
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Center(
+                          child: Text(
+                              widget.values["orders"][index]['oneliner'],
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              height: 3,
-                              letterSpacing: -0.25)),
-                    ),
-                    SizedBox(
-                      width: width * .1,
-                    ),
-                    TextFieldUtils().dynamicText(
-                        indianRupeesFormat
-                                .format(double.parse(widget.values["orders"]
-                                        [index]['mrp']
-                                    .toString()))
-                                .toString() ??
-                            '',
-                        context,
-                        TextStyle(
-                          fontFamily: 'Roboto',
-                          color: ThemeApp.lightFontColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis,
-                        )),
-                  ],
+                              style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  color: ThemeApp.blackColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  overflow: TextOverflow.ellipsis,
+                                  height: 1,
+                                  letterSpacing: -0.25)),
+                        ),
+                      ),
+                      SizedBox(
+                        width: width * .1,
+                      ),
+                      TextFieldUtils().dynamicText(
+                          indianRupeesFormat
+                                  .format(double.parse(widget.values["orders"]
+                                          [index]['mrp']
+                                      .toString()))
+                                  .toString() ??
+                              '',
+                          context,
+                          TextStyle(
+                            fontFamily: 'Roboto',
+                            color: ThemeApp.lightFontColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                    ],
+                  ),
                 );
               }),
           SizedBox(height: 4),

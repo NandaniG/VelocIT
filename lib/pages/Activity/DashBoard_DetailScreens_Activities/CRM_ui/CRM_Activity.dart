@@ -87,21 +87,17 @@ class _CRMActivityState extends State<CRMActivity> {
     return WillPopScope(
       onWillPop: () {
         Navigator.of(context)
-            .pushNamedAndRemoveUntil(
-                RoutesName.dashboardRoute, (route) => false)
-            .then((value) {
-          setState(() {});
-        });
+            .pop();
         return Future.value(true);
       },
       child: Scaffold(
           key: scaffoldGlobalKey,
           backgroundColor: ThemeApp.appBackgroundColor,
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(height * .12),
+            preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
             child: AppBarWidget(
               context: context,
-              titleWidget: searchBar(context),
+              titleWidget: searchBarWidget(),
               location: const AddressWidgets(),
             ),
           ),
@@ -141,8 +137,7 @@ class _CRMActivityState extends State<CRMActivity> {
                               return crmPayload.length == []
                                   ? CircularProgressIndicator()
                                   : Container(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Column(
+                                padding: const EdgeInsets.only(left: 10, right: 10,),                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           crossAxisAlignment:
@@ -157,16 +152,8 @@ class _CRMActivityState extends State<CRMActivity> {
                                             SizedBox(
                                               height: height * .02,
                                             ),
-                                            TextFieldUtils().dynamicText(
-                                                'CRM',
-                                                context,
-                                                TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color: ThemeApp
-                                                      .primaryNavyBlackColor,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: height * .03,
-                                                )),
+                                            TextFieldUtils()
+                                                .headingTextField('Engage with us', context),
 
                                             SizedBox(
                                               height: height * .02,
@@ -774,9 +761,9 @@ class _CRMActivityState extends State<CRMActivity> {
       // padding: const EdgeInsets.only(right: 8.0, bottom: 8),
       child: Container(
           // width: width * .25,
-          width: 97,
+          // width: 97,
           height: 59,
-          padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+          padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               border: Border.all(color: ThemeApp.containerColor, width: 1.5),
@@ -837,7 +824,7 @@ class _CRMActivityState extends State<CRMActivity> {
       child: Container(
         width: 97,
         height: 59,
-        padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+        padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             border: Border.all(color: ThemeApp.containerColor, width: 1.5),
@@ -961,10 +948,10 @@ class _AllCRMSubCategoryScreenState extends State<AllCRMSubCategoryScreen> {
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .12),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .14),
         child: AppBarWidget(
           context:    context,
-          titleWidget:    searchBar(context),
+          titleWidget:    AddressWidgets(),
           location: const AddressWidgets(),     ),
       ),
       bottomNavigationBar: bottomNavigationBarWidget(context,0),

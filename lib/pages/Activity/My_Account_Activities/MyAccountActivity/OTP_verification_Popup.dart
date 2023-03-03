@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pin_code_text_field/pin_code_text_field.dart';
 
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/MyAccountActivity/Edit_Account_activity.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/models/userAccountDetailModel.dart';
@@ -22,11 +24,12 @@ class OTPVerificationDialog extends StatefulWidget {
 }
 
 class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
-  TextEditingController emailOTPController = new TextEditingController();
-  TextEditingController mobileOTPController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
-  bool _validatePassword = false;
-
+  bool hasError = false;
+  String currentText = "";
+  String otpMsg = "";
+  TextEditingController controller = TextEditingController(text: "");
+  FocusNode focusNode = FocusNode();
+  var OTP;
   @override
   void initState() {
     // TODO: implement initState
@@ -74,8 +77,8 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
     {
       return ConstrainedBox(
         constraints: BoxConstraints(
-          minHeight: 440,
-          maxHeight: 444,
+          minHeight:200,
+          maxHeight: 300,
           // maxWidth: MediaQuery.of(context).size.width,
           minWidth: MediaQuery.of(context).size.width,
         ),
@@ -95,10 +98,10 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
             ],
           ),
           child: Consumer<ProductProvider>(builder: (context, value, child) {
-            return Container(
+            return Container(width: double.infinity,
               padding: EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 30),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -126,14 +129,70 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                   ),
                   SizedBox(height: 15),
                   TextFieldUtils().dynamicText(
-                      "${StringUtils.otpSentTo} ${StringConstant.loginUserEmail}",
+                      StringUtils.otpSentTo,
                       context,
                       TextStyle(
                           fontFamily: 'Roboto',
                           color: ThemeApp.primaryNavyBlackColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w400)),
-                  TextFormFieldsWidget(
+                  SizedBox(height: 15),   FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: PinCodeTextField(
+                      autofocus: false,
+                      controller: controller,
+                      hideCharacter: true,
+                      highlight: false,
+                      defaultBorderColor: ThemeApp.lightFontColor,
+                      hasTextBorderColor: controller.text.length <= 5
+                          ? Colors.red
+                          : ThemeApp.innertextfieldbordercolor,
+
+                      // highlightPinBoxColor: Colors.orange,
+                      maxLength: 6,
+                      hasError: hasError,
+                      focusNode: focusNode,
+                      onTextChanged: (value) {
+                        setState(() {
+                          if (value.length <= 5) {
+                            otpMsg = StringUtils.verificationError;
+                          } else {
+                            otpMsg = '';
+                          }
+                          currentText = value;
+                        });
+                      },
+                      onDone: (text) {
+                        print("OTP :  $text");
+                        print("OTP CONTROLLER ${controller.text}");
+                      },
+                      // pinBoxWidth: 40,
+                      // pinBoxHeight: 60,
+                      hasUnderline: false,
+                      wrapAlignment: WrapAlignment.spaceBetween,
+                      pinBoxDecoration:
+                      ProvidedPinBoxDecoration.defaultPinBoxDecoration,
+                      pinTextStyle:
+                      TextStyle(fontFamily: 'Roboto', fontSize: 22.0),
+                      pinTextAnimatedSwitcherTransition:
+                      ProvidedPinBoxTextAnimation.scalingTransition,
+                      pinBoxRadius: 10,
+//                    pinBoxColor: Colors.green[100],
+                      pinTextAnimatedSwitcherDuration:
+                      Duration(milliseconds: 300),
+//                    highlightAnimation: true,
+                      highlightAnimationBeginColor: Colors.black,
+                      highlightAnimationEndColor: Colors.white,
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .01,
+                  ),
+                  !currentText.isEmpty
+                      ? TextFieldUtils().errorTextFields(otpMsg, context)
+                      : Container(),
+                 /* TextFormFieldsWidget(
                       errorText: StringUtils.otpSentTo,
                       textInputType: TextInputType.text,
                       controller: emailOTPController,
@@ -227,60 +286,23 @@ class _OTPVerificationDialogState extends State<OTPVerificationDialog> {
                           _validatePassword = false;
                         }
                         return null;
-                      }),
+                      }),*/
                   SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: whiteProceedButton(
-                            StringUtils.cancel, ThemeApp.whiteColor, context, () {
-                          FocusManager.instance.primaryFocus?.unfocus();
+             controller.text.length>=6?     proceedButton('Submit OTP',
+                      ThemeApp.tealButtonColor, context, false, () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+Utils.successToast("Profile updated successfully");
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>  EditAccountActivity(),
+                          ),
+                        );
+                      }):   proceedButton(StringUtils.update,
+                 ThemeApp.lightFontColor, context, false, () {
 
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) => AddNewCardActivity(),
-                          //   ),
-                          // );
-                          Navigator.pop(context);
-                        }),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: proceedButton(StringUtils.update,
-                            ThemeApp.tealButtonColor, context, false, () {
-                          FocusManager.instance.primaryFocus?.unfocus();
-
-                          setState(() {
-                            value.userAccountDetailList.add(UserAccountList(
-                                userId: 1,
-                                userImage: value.images.toString(),
-                                userName: value.userNameController.text,
-                                userEmail: value.userEmailController.text,
-                                userMobile: value.userMobileController.text,
-                                userPassword: passwordController.text));
-
-                            Prefs.instance.setToken(
-                                StringConstant.userAccountPassPref,
-                                passwordController.text);
-                            getPreference();
-                          });
-                          print("value.creditCardList__________" +
-                              value.userNameController.text.toString());
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const MyAccountActivity(),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
-                  )
+                 }),
                 ],
               ),
             );

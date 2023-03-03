@@ -26,7 +26,7 @@ class ThemeApp {
   static const shippedOrderColor =  Color(0xffF59B40);
   static const blueColor =  Color(0xff3372F2);
   static const containerColor =  Color(0xff95EAF1);
-
+  static const megentaColor = Color(0xffff33cc);
 
  static const textFieldBorderColor = const Color.fromRGBO(199, 195, 195, 1);
  // static const backgroundColor = const Color.fromRGBO(240, 237, 237, 1);

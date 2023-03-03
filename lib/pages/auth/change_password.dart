@@ -131,7 +131,6 @@ class _ChangePasswordState extends State<ChangePassword> {
                     TextFieldUtils().asteriskTextField(
                         StringUtils.currentPassword, context),
 
-
                     PasswordTextFormFieldsWidget(
                         errorText: StringUtils.passwordError,
                         textInputType: TextInputType.text,
@@ -142,6 +141,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                           setState(() {
                             if (val.isEmpty && _currentPass.text.isEmpty) {
                               _validateCurrentPassword = true;
+                            } else if (!StringConstant()
+                                .isPass(_currentPass.text)) {
+                              _validateCurrentPassword = true;
                             } else {
                               _validateCurrentPassword = false;
                             }
@@ -151,6 +153,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                           if (value.isEmpty && _currentPass.text.isEmpty) {
                             _validateCurrentPassword = true;
                             return 'please enter password';
+                          } else if (!StringConstant().isPass(value)) {
+                            _validateCurrentPassword = true;
+                            return StringUtils.validPasswordError;
                           } else {
                             _validateCurrentPassword = false;
                           }
@@ -161,14 +166,15 @@ class _ChangePasswordState extends State<ChangePassword> {
                     ),
                     Row(
                       children: [
-                        TextFieldUtils().asteriskTextField('New Password', context),
+                        TextFieldUtils()
+                            .asteriskTextField('New Password', context),
                         SizedBox(
                           width: 5,
                         ),
                         Tooltip(
                           key: tooltipkey,
                           message:
-                          'Enter Password that must be\n\u2022 8-16 characters long\n\u2022 Must contain a number\n\u2022 Must contain a capital and small letter\n\u2022 Must contain a special character',
+                              'Enter Password that must be\n\u2022 8-16 characters long\n\u2022 Must contain a number\n\u2022 Must contain a capital and small letter\n\u2022 Must contain a special character',
                           padding: const EdgeInsets.all(15),
                           margin: const EdgeInsets.only(
                               top: 30, left: 30, right: 30),
@@ -183,7 +189,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                               letterSpacing: 1.2,
                               fontWeight: FontWeight.w400,
                               color: Colors.white),
-                          child: Icon(Icons.info_outline,color: ThemeApp.appColor),
+                          child: Icon(Icons.info_outline,
+                              color: ThemeApp.appColor),
                         )
                       ],
                     ),
@@ -307,10 +314,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                             print(mobileData);
 
                             AuthRepository()
-                                .resetPassRequest(mobileData,true, context)
+                                .resetPassRequest(mobileData, true, context)
                                 .then((value) => setState(() {
-                              Utils.successToast('Password Change successfully');
-
+                                      Utils.successToast(
+                                          'Password Change successfully');
                                     }));
 
                             print("Digit found");
@@ -318,10 +325,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                             print(emaildata);
 
                             AuthRepository()
-                                .resetPassRequest(emaildata,false, context)
+                                .resetPassRequest(emaildata, false, context)
                                 .then((value) => setState(() {
-                              Utils.successToast('Password Change successfully');
-
+                                      Utils.successToast(
+                                          'Password Change successfully');
                                     }));
                           }
                         } else {

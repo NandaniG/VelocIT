@@ -140,12 +140,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ["isOffersOnlyNotification"]==true? InkWell(
 
                         onTap: (){
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>  ProductListByCategoryActivity(productList: value
-                                  .jsonData["shopByCategoryList"][index]["subShopByCategoryList"][index]),
-                            ),
-                          );
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>  ProductListByCategoryActivity(productList: value
+                          //         .jsonData["shopByCategoryList"][index]["subShopByCategoryList"][index]),
+                          //   ),
+                          // );
                           },
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 10),

@@ -15,6 +15,7 @@ import 'package:velocit/Core/Model/CRMModel.dart';
 import 'package:velocit/Core/repository/productlisting_repository.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/utils.dart';
+import 'package:velocit/widgets/global/proceedButtons.dart';
 
 import '../../../../Core/AppConstant/apiMapping.dart';
 import '../../../../Core/Model/CRMModels/CRMSingleIDModel.dart';
@@ -39,7 +40,8 @@ import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/textFormFields.dart';
 import '../CRM_ui/CRM_Activity.dart';
 import 'CRMFormScreen.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
+
 class CRMDetailsActivity extends StatefulWidget {
   // List<ProductList>? productList;
   // Content? productList;
@@ -204,9 +206,11 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
         child: AppBar_BackWidget(
-           context: context,titleWidget: appTitle(context, "CRM"), location: const SizedBox()),
+            context: context,
+            titleWidget: appTitle(context, "CRM"),
+            location: const SizedBox()),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context,0),
+      bottomNavigationBar: bottomNavigationBarWidget(context, 0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(
@@ -231,7 +235,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                       print("Api calll");
                       CRMDetailsPayload? model = crmSubCategoryProvider
                           .singleCRMSpecificList.data!.payload;
-             if (widget.id == model!.id) {
+                      if (widget.id == model!.id) {
                         return ListView(
                               // mainAxisAlignment: MainAxisAlignment.start,
                               // crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,20 +267,41 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                             top: 5,
                                             bottom: 5),
                                         child: Center(
-                                            child: TextFieldUtils()
-                                                .dynamicText(
-                                                    "SERVICE NOT AVAILABLE",
-                                                    context,
-                                                    TextStyle(
-                                                      fontFamily: 'Roboto',
-                                                      color:
-                                                          ThemeApp.redColor,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize:
-                                                          height * .035,
-                                                    ))))
-                                    : InkWell(
+                                            child: TextFieldUtils().dynamicText(
+                                                "SERVICE NOT AVAILABLE",
+                                                context,
+                                                TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color: ThemeApp.redColor,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: height * .035,
+                                                ))))
+                                    : Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 20),
+                                        child: proceedButton(
+                                            'Enquiry',
+                                            ThemeApp.tealButtonColor,
+                                            context,
+                                            false, () {
+                                          getCRMForm(model.crmFormId!)
+                                              .then((value) {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CRMFormScreen(
+                                                  shortName: model
+                                                      .crm!.shortName
+                                                      .toString(),
+                                                  payload: model,
+                                                ),
+                                              ),
+                                            );
+                                          });
+                                        }),
+                                      )
+
+                                /*         InkWell(
                                   onTap: () {
                                   getCRMForm(model.crmFormId!).then((value){
                                     Navigator.of(context).push(
@@ -317,7 +342,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                                                 ),
                                               )),
                                         ),
-                                    ),
+                                    ),*/
                               ],
                             ) ??
                             const SizedBox();
@@ -325,28 +350,22 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                         return Container(
                           height: height * .8,
                           alignment: Alignment.center,
-                          child: TextFieldUtils().dynamicText(
-                              'No Match found!',
-                              context,
-                              TextStyle(
-                                  fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .03,
-                                  fontWeight: FontWeight.bold)),
+                          child: Center(
+                              child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                         );
                       }
                   }
                   return Container(
                     height: height * .8,
                     alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
+                    child: Center(
+                        child: Text(
+                      "Match not found",
+                      style: TextStyle(fontSize: 20),
+                    )),
                   );
                 }))),
       ),
@@ -357,36 +376,35 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
     dynamic responseJson;
     try {
       var url = ApiMapping.getURI(apiEndPoint.crm_form);
-      print(url+formId.toString());
+      print(url + formId.toString());
       final client = http.Client();
       final response =
-      await client.get(Uri.parse(url)).timeout(const Duration(seconds: 30));
+          await client.get(Uri.parse(url)).timeout(const Duration(seconds: 30));
 
       var responseJson = json.decode(response.body.toString());
       final prefs = await SharedPreferences.getInstance();
 
+      print('responseJson' + responseJson['status'].toString());
+      print('responseJson' + responseJson['payload'].toString());
+      print('responseJson' + responseJson['payload'][0]['f1_label'].toString());
+      print('responseJson' + responseJson.toString());
 
-      print('responseJson'+responseJson['status'].toString());
-      print('responseJson'+responseJson['payload'].toString());
-      print('responseJson'+responseJson['payload'][0]['f1_label'].toString());
-      print('responseJson'+responseJson.toString());
-
-
-
-
-      prefs.setBool('is_f1_enabled', responseJson['payload'][0]['is_f1_enabled']);
-      prefs.setBool('is_f2_enabled', responseJson['payload'][0]['is_f2_enabled']);
-      prefs.setBool('is_f3_enabled', responseJson['payload'][0]['is_f3_enabled']);
-      prefs.setBool('is_f4_enabled', responseJson['payload'][0]['is_f4_enabled']);
-      prefs.setBool('is_f5_enabled', responseJson['payload'][0]['is_f5_enabled']);
+      prefs.setBool(
+          'is_f1_enabled', responseJson['payload'][0]['is_f1_enabled']);
+      prefs.setBool(
+          'is_f2_enabled', responseJson['payload'][0]['is_f2_enabled']);
+      prefs.setBool(
+          'is_f3_enabled', responseJson['payload'][0]['is_f3_enabled']);
+      prefs.setBool(
+          'is_f4_enabled', responseJson['payload'][0]['is_f4_enabled']);
+      prefs.setBool(
+          'is_f5_enabled', responseJson['payload'][0]['is_f5_enabled']);
 
       prefs.setString('f1_label', responseJson['payload'][0]['f1_label']);
       prefs.setString('f2_label', responseJson['payload'][0]['f2_label']);
       prefs.setString('f3_label', responseJson['payload'][0]['f3_label']);
       prefs.setString('f4_label', responseJson['payload'][0]['f4_label']);
       prefs.setString('f5_label', responseJson['payload'][0]['f5_label']);
-
-
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } catch (e) {
@@ -453,7 +471,7 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
                         // _currentIndex = index;
                         setState(() {});
                       },
-                      autoPlay:model.crm!.imageUrls!.length >1? true:false,
+                      autoPlay: model.crm!.imageUrls!.length > 1 ? true : false,
                       viewportFraction: 1,
                       height: height * .3),
                 ) ??
@@ -852,12 +870,6 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
     );
   }
 
-  List<Widget> listSubImages = [];
-
-  Widget subImages(CRMDetailsPayload model) {
-    return Container();
-  }
-
   Widget variantImages(CRMDetailsPayload model) {
     return Container(
       height: height * .08,
@@ -906,984 +918,4 @@ class _CRMDetailsActivityState extends State<CRMDetailsActivity> {
           }),
     );
   }
-
-  Widget counterWidget(SingleProductPayload model) {
-    return model.merchants.isNotEmpty
-        ? Container(
-            color: ThemeApp.whiteColor,
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                  ),
-                  child: Row(
-                    children: [
-                      TextFieldUtils().dynamicText(
-                          'Quantity : ',
-                          context,
-                          const TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              // fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400)),
-                      const SizedBox(
-                        width: 11,
-                      ),
-                      Container(
-                        height: 30,
-                        // width: width * .2,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(5),
-                            ),
-                            border: Border.all(
-                                color: ThemeApp.separatedLineColor,
-                                width: 1.5)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    counterPrice--;
-                                    remainingCounters();
-
-                                    var data = {
-                                      "user_id": userId.toString(),
-                                      "item_code": model.productCode.toString(),
-                                      "qty": counterPrice.toString()
-                                    };
-                                    print("data maping " + data.toString());
-                                    // productSpecificListViewModel.cartListWithPut(
-                                    //     context, data);
-                                  });
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 8.0, right: 8),
-                                  child: Icon(Icons.remove,
-                                      // size: 20,
-                                      color: ThemeApp.lightFontColor),
-                                ),
-                              ),
-                              Container(
-                                height: 30,
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.fromLTRB(
-                                  20,
-                                  0,
-                                  20,
-                                  0,
-                                ),
-                                color: ThemeApp.separatedLineColor,
-                                child: Text(
-                                  counterPrice.toString().padLeft(2, '0'),
-                                  style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize:
-                                          MediaQuery.of(context).size.height *
-                                              .016,
-                                      fontWeight: FontWeight.bold,
-                                      overflow: TextOverflow.ellipsis,
-                                      color: ThemeApp.blackColor),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    counterPrice++;
-                                    remainingCounters();
-                                  });
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 8.0, right: 8),
-                                  child: Icon(Icons.add,
-                                      // size: 20,
-                                      color: ThemeApp.lightFontColor),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                addToCart(model),
-              ],
-            ),
-          )
-        : Container(
-            width: width,
-            height: 72,
-            color: ThemeApp.whiteColor,
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-            child: Center(
-              child: TextFieldUtils().dynamicText(
-                  "SERVICE NOT AVAILABLE",
-                  context,
-                  TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.redColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: height * .035,
-                  )),
-            ),
-          );
-  }
-
-  Widget addToCart(SingleProductPayload model) {
-    return Consumer<ProductProvider>(
-        builder: (context, productProvider, child) {
-      return Consumer<ProductSpecificListViewModel>(
-          builder: (context, productListProvider, child) {
-        print(
-            "model.merchants lengthghgfjgfj " + merchantTemp.length.toString());
-        return model.merchants.isNotEmpty
-            ? Padding(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 5, bottom: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /*counterPrice == 0
-                        ?*/
-                    Expanded(
-                        flex: 1,
-                        child: InkWell(
-                            onTap: () async {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-
-                              setState(() {
-                                updateCart(
-                                    model.selectedMerchantId,
-                                    counterPrice,
-                                    productProvider,
-                                    model.productsubCategory);
-
-                                StringConstant.BadgeCounterValue =
-                                    (prefs.getString('setBadgeCountPrefs')) ??
-                                        '';
-                                print("Badge,........" +
-                                    StringConstant.BadgeCounterValue);
-                              });
-                            },
-                            child: Container(
-                                height: 40,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(100),
-                                  ),
-                                  border: Border.all(
-                                      color: ThemeApp.tealButtonColor),
-                                  color: ThemeApp.containerColor,
-                                ),
-                                child: const Text(
-                                  "Add to Cart",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis,
-                                    color: ThemeApp.tealButtonColor,
-                                  ),
-                                )))),
-                    /* : Expanded(
-                            flex: 1,
-                            child: Container(
-                              height: height * 0.06,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                color: ThemeApp.whiteColor,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          counterPrice--;
-                                          remainingCounters();
-
-                                          var data = {
-                                            "user_id": userId.toString(),
-                                            "item_code": subProductList
-                                                .productCode
-                                                .toString(),
-                                            "qty": counterPrice.toString()
-                                          };
-                                          print(
-                                              "data maping " + data.toString());
-                                          productSpecificListViewModel
-                                              .cartListWithPut(context, data);
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                        ),
-                                        child: const Icon(
-                                          Icons.remove,
-                                          // size: 20,
-                                          color: ThemeApp.tealButtonColor,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8.0,
-                                          right: 8,
-                                          top: 0,
-                                          bottom: 0),
-                                      child: Text(
-                                        counterPrice.toString().padLeft(2, '0'),
-                                        style: TextStyle(fontFamily: 'Roboto',
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                .016,
-                                            fontWeight: FontWeight.w400,
-                                            overflow: TextOverflow.ellipsis,
-                                            color: ThemeApp.tealButtonColor),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          counterPrice++;
-                                          remainingCounters();
-
-                                          //badge counting
-                                          badgeData = 0;
-
-                                          ///counting will manage after api
-                                          */
-                    /*   for (int i = 0;
-                                    i < cartProvider.cartList.length;
-                                    i++) {
-                                      if (widget.productList.shortName==
-                                          cartProvider.cartList[i]
-                                              .cartProductsDescription) {
-                                        widget.productList[
-                                        "productCartMaxCounter"] =
-                                            counterPrice;
-                                        widget.value.cartList[i]
-                                            .cartProductsTempCounter =
-                                        widget.productList[
-                                        "productCartMaxCounter"];
-                                      }
-                                      //badge counting
-                                      print("Badge counting before" +
-                                          badgeData.toString());
-                                      print("Badge cTemp Counting" +
-                                          widget.value.cartList[i]
-                                              .cartProductsTempCounter
-                                              .toString());
-                                      print("Badge Product name" +
-                                          widget.value.cartList[i]
-                                              .cartProductsDescription
-                                              .toString());
-
-                                      badgeData = badgeData +
-                                          widget.value.cartList[i]
-                                              .cartProductsTempCounter!;
-                                      widget.value.badgeFinalCount =
-                                          badgeData;
-                                    }
-                                    print("Badge counting" +
-                                        badgeData.toString());
-                                    //setting value of count to the badge
-*/
-                    /*
-
-                                          ///api for counting
-
-                                          var data = {
-                                            "user_id": userId.toString(),
-                                            // "item_code": widget
-                                            //     .productList.categoryCode
-                                            //     .toString(),
-                                            "item_code": '1',
-                                            "qty": counterPrice.toString()
-                                          };
-                                          print(
-                                              "data maping " + data.toString());
-                                          productSpecificListViewModel
-                                              .cartListWithPut(context, data);
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                        ),
-                                        child: const Icon(
-                                          Icons.add,
-                                          // size: 20,
-                                          color: ThemeApp.tealButtonColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),*/
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .05,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: InkWell(
-                        onTap: () async {
-                          setState(() {
-                            productListProvider.isHome = false;
-                            productListProvider.isBottomAppCart = false;
-                          });
-
-                          final prefs = await SharedPreferences.getInstance();
-                          prefs.setString('isBuyNow', 'true');
-                          prefs.setString('isBuyNowFrom', 'Services');
-                          StringConstant.isUserLoggedIn =
-                              (prefs.getInt('isUserLoggedIn')) ?? 0;
-
-                          final navigator =
-                              Navigator.of(context); // <- Add this
-                          model.productsubCategory;
-
-                          //send data to login user for direct purchase api
-                          prefs.setString('selectedMerchantId',
-                              model.selectedMerchantId.toString());
-                          prefs.setString(
-                              'selectedProductId', model.id.toString());
-                          prefs.setString(
-                              'selectedCounterPrice', counterPrice.toString());
-
-                          //get cartID from DirectUser for purchase
-
-                          var directCartId =
-                              prefs.getString('directCartIdPref');
-                          var loginUserId = (prefs.getString('isUserId')) ?? '';
-                          if (StringConstant.isUserLoggedIn == 1) {
-                            //if user logged in
-
-                            CartRepository()
-                                .buyNowGetRequest(loginUserId, context);
-                          } else {
-                            //if user not login
-                            prefs.setString(
-                                'isUserNavigateFromDetailScreen', 'BN');
-                            Navigator.pushReplacementNamed(
-                                context, RoutesName.signInRoute);
-
-                            print("Not Logged in");
-                            // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
-                          }
-                        },
-                        child: Container(
-                            height: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(100),
-                              ),
-                              border:
-                                  Border.all(color: ThemeApp.tealButtonColor),
-                              color: ThemeApp.tealButtonColor,
-                            ),
-                            child: const Text(
-                              "Buy now",
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                overflow: TextOverflow.ellipsis,
-                                color: ThemeApp.whiteColor,
-                              ),
-                            )),
-                      ),
-                    )
-                  ],
-                ))
-            : Container(
-                width: width,
-                height: 72,
-                color: ThemeApp.whiteColor,
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 5, bottom: 5),
-                child: Center(
-                  child: TextFieldUtils().dynamicText(
-                      "OUT OF STOCK",
-                      context,
-                      TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.redColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: height * .035,
-                      )),
-                ),
-              );
-      });
-    });
-  }
-
-  Widget similarProductList() {
-    return ChangeNotifierProvider<DashboardViewModel>.value(
-        value: productListView,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, productCategories, child) {
-          switch (productCategories.similarList.status) {
-            case Status.LOADING:
-              if (kDebugMode) {
-                print("Api load");
-              }
-              return ProgressIndicatorLoader(true);
-
-            case Status.ERROR:
-              if (kDebugMode) {
-                print("Api error : " +
-                    productCategories.similarList.message.toString());
-              }
-              return Text(productCategories.similarList.message.toString());
-
-            case Status.COMPLETED:
-              if (kDebugMode) {
-                print("Api calll");
-              }
-
-              List<SimilarContent>? similarList =
-                  productCategories.similarList.data!.payload!.content;
-
-              return Container(
-                height: 228,
-                child: similarList!.isNotEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: similarList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              CRMDetailsActivity(
-                                            id: similarList[index].id,
-                                            // productList: subProductList[index],
-                                            // productSpecificListViewModel:
-                                            //     productSpecificListViewModel,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 163,
-                                          width: 191,
-                                          decoration: const BoxDecoration(
-                                            color: ThemeApp.whiteColor,
-                                          ),
-                                          child: ClipRRect(
-                                              child: Image.network(
-                                            // width: double.infinity,
-                                            similarList[index]
-                                                    .imageUrls![0]
-                                                    .imageUrl
-                                                    .toString() ??
-                                                "",
-                                            fit: BoxFit.scaleDown,
-                                            errorBuilder:
-                                                ((context, error, stackTrace) {
-                                              return const Icon(Icons.image_outlined);
-                                            }),
-                                          )),
-                                        ),
-                                        Container(
-                                          color: ThemeApp.tealButtonColor,
-                                          width: 191,
-                                          height: 65,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        21, 9, 21, 4),
-                                                child: Text(
-                                                    similarList[index]
-                                                        .shortName!,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Roboto',
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        color:
-                                                            ThemeApp.whiteColor,
-                                                        fontSize: height * .022,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                              ),
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        21, 0, 21, 9),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    //discount
-                                                    TextFieldUtils()
-                                                        .listPriceHeadingTextField(
-                                                            indianRupeesFormat
-                                                                .format(similarList[
-                                                                            index]
-                                                                        .defaultSellPrice ??
-                                                                    0.0),
-                                                            context),
-
-                                                    TextFieldUtils()
-                                                        .listScratchPriceHeadingTextField(
-                                                            indianRupeesFormat
-                                                                .format(similarList[
-                                                                            index]
-                                                                        .defaultMrp ??
-                                                                    0.0),
-                                                            context),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * .03,
-                                  )
-                                ],
-                              ) ??
-                              const SizedBox();
-                        })
-                    : const SizedBox(),
-              );
-            default:
-              return const Text("No Data found!");
-          }
-          return const Text("No Data found!");
-        }));
-
-/*
-    return ChangeNotifierProvider<DashboardViewModel>(
-        value:  dashboardViewModel,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, dashboardProvider, child) {
-          return Consumer<DashboardViewModel>(
-              builder: (context, dashboardProvider, child) {
-            switch (dashboardViewModel.productListingList.status) {
-              case Status.LOADING:
-                if (kDebugMode) {
-                  print("Api load");
-                }
-                return ProgressIndicatorLoader(true);
-
-              case Status.ERROR:
-                if (kDebugMode) {
-                  print("Api error");
-                }
-                return Text(
-                    dashboardViewModel.productListingList.message.toString());
-
-              case Status.COMPLETED:
-                if (kDebugMode) {
-                  print("Api calll");
-                }
-
-                List<ProductListing>? productListing = dashboardViewModel
-                    .productListingList.data!.response!.body!.productListing;
-
-                return Container(
-                  height: MediaQuery.of(context).size.height * .35,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: productListing!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Row(
-                          children: [
-                            Container(
-                                // height: MediaQuery.of(context).size.height * .3,
-
-                                // width: 200,
-                                width: MediaQuery.of(context).size.width * .45,
-                                decoration: const BoxDecoration(
-                                    color: ThemeApp.whiteColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .26,
-                                      width: MediaQuery.of(context).size.width *
-                                          .45,
-                                      decoration: const BoxDecoration(
-                                          color: ThemeApp.textFieldBorderColor,
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            topLeft: Radius.circular(10),
-                                          )),
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                        ),
-                                        child: Image.network(
-                                          // width: double.infinity,
-                                          productListing[index].image1Url!,
-                                          fit: BoxFit.fill,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .07,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 10, right: 10),
-                                      child: TextFieldUtils()
-                                          .homePageTitlesTextFields(
-                                              productListing[index].shortName!,
-                                              context),
-                                    ),
-                                    SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .01,
-                                    ),
-                                    Flexible(
-                                      child: Container(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, right: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            TextFieldUtils().dynamicText(
-                                                indianRupeesFormat.format(
-                                                    productListing[index]
-                                                            .scrappedPrice ??
-                                                        0.0),
-                                                context,
-                                                TextStyle(fontFamily: 'Roboto',
-                                                    color: ThemeApp.primaryNavyBlackColor
-                                                    fontSize: height * .022,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            TextFieldUtils().dynamicText(
-                                                indianRupeesFormat.format(
-                                                    productListing[index]
-                                                            .currentPrice ??
-                                                        0.0),
-                                                context,
-                                                TextStyle(fontFamily: 'Roboto',
-                                                    color: ThemeApp.darkGreyTab,
-                                                    fontSize: height * .02,
-                                                    fontWeight: FontWeight.w500,
-                                                    decoration: TextDecoration
-                                                        .lineThrough,
-                                                    decorationThickness: 1.5)),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                )),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * .03,
-                            )
-                          ],
-                        );
-                      }),
-                );
-              default:
-                return Text("No Data found!");
-            }
-            return Text("No Data found!");
-          });
-        }));
-*/
-  }
-
-  Widget similarProductListss() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 20,
-        right: 20,
-      ),
-      child: FutureBuilder<List<BookServiceModel>>(
-          future: getSimmilarProductLists(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) print(snapshot.error);
-            return snapshot.hasData
-                ? Container(
-                    height: MediaQuery.of(context).size.height * .35,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Row(
-                            children: [
-                              Container(
-                                  // height: MediaQuery.of(context).size.height * .3,
-
-                                  // width: 200,
-                                  width:
-                                      MediaQuery.of(context).size.width * .42,
-                                  decoration: const BoxDecoration(
-                                      color: ThemeApp.whiteColor,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .26,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .45,
-                                        decoration: const BoxDecoration(
-                                            color:
-                                                ThemeApp.textFieldBorderColor,
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10),
-                                            )),
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            topLeft: Radius.circular(10),
-                                          ),
-                                          child: Image.asset(
-                                            // width: double.infinity,
-                                            snapshot.data![index].serviceImage,
-                                            fit: BoxFit.fill,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                .07,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .01,
-                                      ),
-                                      Container(
-                                        padding:
-                                            const EdgeInsets.only(left: 18),
-                                        child: TextFieldUtils()
-                                            .homePageTitlesTextFields(
-                                                snapshot.data![index]
-                                                    .serviceDescription,
-                                                context),
-                                      ),
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .01,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 18),
-                                        child: Row(
-                                          children: [
-                                            TextFieldUtils()
-                                                .homePageheadingTextField(
-                                                    "${indianRupeesFormat.format(9030)}",
-                                                    context),
-                                            // SizedBox(
-                                            //   width: MediaQuery.of(context)
-                                            //           .size
-                                            //           .width *
-                                            //       .02,
-                                            // ),
-                                            TextFieldUtils()
-                                                .homePageheadingTextFieldLineThrough(
-                                                    "${indianRupeesFormat.format(9030)}",
-                                                    context),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  )),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * .03,
-                              )
-                            ],
-                          );
-                        }),
-                  )
-                : new Center(child: new CircularProgressIndicator());
-          }),
-    );
-  }
-
-  Future<void> addProductInCartBadge(
-      ProductProvider productProvider, HomeProvider homeProvider) async {
-/*    if (counterPrice > 0) {
-      widget.productList["productTempCounter"] = counterPrice;
-
-      var contain = productProvider.cartList.where((element) =>
-          element.cartProductsDescription ==
-          widget.productList["productsListDescription"]);
-
-      if (productProvider.cartList.length >= 0) {
-        if (contain.isNotEmpty) {
-          widget.productList["productTempCounter"] = counterPrice;
-        } else {
-          productProvider.add(
-            widget.productList["productsListImage"],
-            widget.productList["productsListName"],
-            widget.productList["productSellerName"],
-            double.parse(widget.productList["productRatting"].toString()),
-            widget.productList["productDiscountPrice"],
-            widget.productList["productOriginalPrice"],
-            widget.productList["productOfferPercent"],
-            widget.productList["productAvailableVariants"],
-            widget.productList["productCartProductsLength"],
-            widget.productList["productsListDescription"],
-            widget.productList["productCartMaxCounter"],
-            widget.productList["productDeliveredBy"],
-            widget.productList["productTempCounter"] == 0
-                ? widget.productList["productTempCounter"] = 1
-                : widget.productList["productTempCounter"],
-          );
-        }
-      } else {
-        productProvider.add(
-          widget.productList["productsListImage"],
-          widget.productList["productsListName"],
-          widget.productList["productSellerName"],
-          double.parse(widget.productList["productRatting"].toString()),
-          widget.productList["productDiscountPrice"],
-          widget.productList["productOriginalPrice"],
-          widget.productList["productOfferPercent"],
-          widget.productList["productAvailableVariants"],
-          widget.productList["productCartProductsLength"],
-          widget.productList["productsListDescription"],
-          widget.productList["productCartMaxCounter"],
-          widget.productList["productDeliveredBy"],
-          widget.productList["productTempCounter"] == 0
-              ? widget.productList["productTempCounter"] = 1
-              : widget.productList["productTempCounter"],
-        );
-      }
-    } else {
-
-    }*/
-  }
-
-  Future<List<BookServiceModel>> getSimmilarProductLists() async {
-    String response = '['
-        '{"serviceImage":"assets/images/laptopImage.jpg","serviceName":"Appliances","serviceDescription":"Motorola ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"},'
-        '{"serviceImage":"assets/images/iphones_Image.jpg","serviceName":"Electronics","serviceDescription":"Samsang ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"},'
-        '{"serviceImage":"assets/images/laptopImage2.jpg","serviceName":"Fashion","serviceDescription":"One Plus ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"},'
-        '{"serviceImage":"assets/images/laptopImage.jpg","serviceName":"Home","serviceDescription":"IPhone ZX3 108CM (43 inch) ultra HD(4k) LED Smart Android TV"}]';
-    var serviceList = bookServiceFromJson(response);
-    return serviceList;
-  }
-
-  Future<List<Payloads>> getImageSlide() async {
-    //final response = await http.get("getdata.php");
-    //return json.decode(response.body);
-    String response = '['
-        '{"sponsorlogo":"assets/images/laptopImage2.jpg"},'
-        '{"sponsorlogo":"assets/images/laptopImage2.jpg"},'
-        '{"sponsorlogo":"assets/images/laptopImage2.jpg"},'
-        '{"sponsorlogo":"assets/images/laptopImage2.jpg"}]';
-    var payloadList = payloadFromJson(response);
-    return payloadList;
-  }
-}
-
-List<BookServiceModel> bookServiceFromJson(String str) =>
-    List<BookServiceModel>.from(
-        json.decode(str).map((x) => BookServiceModel.fromJson(x)));
-
-String bookServiceToJson(List<BookServiceModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
-class BookServiceModel {
-  String serviceImage;
-  String serviceName;
-  String serviceDescription;
-
-  BookServiceModel({
-    required this.serviceImage,
-    required this.serviceName,
-    required this.serviceDescription,
-  });
-
-  factory BookServiceModel.fromJson(Map<String, dynamic> json) =>
-      BookServiceModel(
-        serviceImage: json["serviceImage"],
-        serviceName: json["serviceName"],
-        serviceDescription: json["serviceDescription"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "serviceImage": serviceImage,
-        "serviceName": serviceName,
-        "serviceDescription": serviceDescription,
-      };
 }

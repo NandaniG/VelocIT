@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:highlight_text/highlight_text.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as speechToText;
 import 'package:velocit/Core/ViewModel/dashboard_view_model.dart';
@@ -22,7 +24,7 @@ class SpeechToTextDialog extends StatefulWidget {
 }
 
 class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
-  speechToText.SpeechToText? speech;
+  speechToText.SpeechToText speech = speechToText.SpeechToText();
   String textString = "Tap to speak";
   bool isListen = false;
   double confidence = 1.0;
@@ -33,15 +35,19 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
 
   final Map<String, HighlightedWord> highlightWords = {
     "flutter": HighlightedWord(
-        textStyle:
-            TextStyle(fontFamily: 'Roboto',color: Colors.redAccent, fontWeight: FontWeight.bold)),
+        textStyle: TextStyle(
+            fontFamily: 'Roboto',
+            color: Colors.redAccent,
+            fontWeight: FontWeight.bold)),
     "developer": HighlightedWord(
-        textStyle:
-            TextStyle(fontFamily: 'Roboto',color: Colors.redAccent, fontWeight: FontWeight.bold)),
+        textStyle: TextStyle(
+            fontFamily: 'Roboto',
+            color: Colors.redAccent,
+            fontWeight: FontWeight.bold)),
   };
 
   void startTimer(DashboardViewModel dashboardViewModel) {
-    const oneSec = Duration(seconds:2);
+    const oneSec = Duration(seconds: 2);
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -52,12 +58,13 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
             10,
             StringConstant.controllerSpeechToText.text.toString(),
           );
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SearchProductListScreen( searchText: StringConstant.controllerSpeechToText.text, ),
-                ),
-              );
-
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => SearchProductListScreen(
+                searchText: StringConstant.controllerSpeechToText.text,
+              ),
+            ),
+          );
 
           // showDialog(
           //     context: context,
@@ -81,30 +88,71 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
 
   void listen(DashboardViewModel dashboardViewModel) async {
     if (!isListen) {
-      bool avail = await speech!.initialize();
+      bool avail = await speech.initialize();
       if (avail) {
         setState(() {
           isListen = true;
         });
-        speech!.listen(onResult: (value) {
-
-          setState(() {
-            textString = value.recognizedWords;
-            if (value.hasConfidenceRating && value.confidence > 0) {
-              confidence = value.confidence;
-              StringConstant.controllerSpeechToText.text = textString;
-            }
-          });
-          startTimer(dashboardViewModel);
-
-        });
+        speech.listen(
+          onResult: (value) {
+            setState(() {
+              textString = value.recognizedWords;
+              if (value.hasConfidenceRating && value.confidence > 0) {
+                confidence = value.confidence;
+                StringConstant.controllerSpeechToText.text = textString;
+              }
+            });
+            startTimer(dashboardViewModel);
+          },
+        );
+        if (await speech.hasPermission) {
+          print("Permission not denied");
+        } else {
+          openAppSettings();
+          print("Permission denied");
+        }
       }
     } else {
       setState(() {
         isListen = false;
       });
+      speech.stop();
     }
   }
+
+
+  Future<void> askPermissions(Permission requestedPermission,
+      DashboardViewModel dashboardViewModel) async {
+    // Check permission status
+    PermissionStatus status = await requestedPermission.status;
+    // Request permission
+    if (status != PermissionStatus.granted &&
+        status != PermissionStatus.permanentlyDenied) {
+      status = await requestedPermission.request();
+      openAppSettings();
+      print("PermissionStatus.denied.....");
+
+    } else if (status == PermissionStatus.denied) {
+      print("PermissionStatus.denied");
+      // openAppSettings();
+
+      // openAppSettings();
+      askPermissions(requestedPermission, dashboardViewModel);
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      // openAppSettings();
+
+      print("PermissionStatus.restricted");
+      // openAppSettings();
+      askPermissions(requestedPermission, dashboardViewModel);
+    } else {
+      listen(dashboardViewModel);
+    }
+  }
+
+  // Future<void> ensurePermissionAndMakeCall(
+  //     BuildContext context, String phoneNumber) async {
+  //   await askPermissions(Permission.microphone);
+  // }
 
   @override
   void initState() {
@@ -113,17 +161,19 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
     speech = speechToText.SpeechToText();
     isListen = false;
     productCategories.productCategoryListingWithGet();
-
   }
 
   @override
   void dispose() {
     _timer.cancel();
-    speech!.cancel();
+    speech.cancel();
     super.dispose();
   }
 
-  dialogContent(BuildContext context, DashboardViewModel dashboardViewModel, ) {
+  dialogContent(
+    BuildContext context,
+    DashboardViewModel dashboardViewModel,
+  ) {
     {
       return ConstrainedBox(
         constraints: BoxConstraints(
@@ -166,7 +216,8 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                   child: TextHighlight(
                     text: textString,
                     words: highlightWords,
-                    textStyle: TextStyle(fontFamily: 'Roboto',
+                    textStyle: TextStyle(
+                        fontFamily: 'Roboto',
                         fontSize: 25.0,
                         color: Colors.grey,
                         fontWeight: FontWeight.bold),
@@ -187,7 +238,9 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                           color: isListen ? Colors.redAccent : Colors.white,
                           size: 50),
                       onPressed: () {
-                        listen(dashboardViewModel);
+                        // listen(dashboardViewModel);
+                        askPermissions(
+                            Permission.microphone, dashboardViewModel);
                       },
                     ),
                   ),
@@ -210,7 +263,10 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context,dashboardViewModel,),
+      child: dialogContent(
+        context,
+        dashboardViewModel,
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:barcode_finder/barcode_finder.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -12,7 +13,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+
+// import 'package:geocoding/geocoding.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/ProductCategoryModel.dart';
@@ -46,6 +51,7 @@ import '../features/SpeechToTextDialog_Screen.dart';
 import '../features/addressScreen.dart';
 import '../features/switchLanguages.dart';
 import '../features/scannerWithGallery.dart';
+import 'ConfirmationDialog.dart';
 import 'autoSearchLocation_popup.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:highlight_text/highlight_text.dart';
@@ -83,10 +89,14 @@ class _AppBarWidgetState extends State<AppBarWidget> {
 
   getPref() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      StringConstant.ProfilePhoto =
-          (prefs.getString('profileImagePrefs')) ?? "";
-    });
+
+      setState(() {
+        print("yes/./././.");
+        StringConstant.ProfilePhoto =
+            prefs.getString('userProfileImagePrefs') ?? "";
+        print("StringConstant.ProfilePhoto"+StringConstant.ProfilePhoto);
+      });
+
   }
 
   @override
@@ -118,7 +128,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               // elevation: 1,
               backgroundColor: ThemeApp.appBackgroundColor,
               flexibleSpace: Container(
-                height: height * .08,
+                height: MediaQuery.of(context).size.height * .08,
                 width: width,
                 decoration: const BoxDecoration(
                   color: ThemeApp.appBackgroundColor,
@@ -131,16 +141,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                   ? InkWell(
                       onTap: () {
                         (() {});
-                        Navigator.of(context)
-                            .pushNamedAndRemoveUntil(
-                                RoutesName.dashboardRoute, (route) => false)
-                            .then((value) {
+                        Navigator.pop(context, () {
                           setState(() {});
                         });
-                        // Navigator.pushReplacementNamed(
-                        //         context, RoutesName.dashboardRoute)
-                        //     .then((value) => setState(() {}));
-                        Provider.of<ProductProvider>(context, listen: false);
                       },
                       child: Container(
                         margin: const EdgeInsets.only(left: 15),
@@ -291,16 +294,16 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                   child: ClipRRect(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(100)),
-                                    child: Image.file(
-                                      File(StringConstant.ProfilePhoto),
-                                      fit: BoxFit.fill,
+                                    child: Image.network(
+                                      StringConstant
+                                          .ProfilePhoto,                                      fit: BoxFit.fill,
                                       height: 25,
                                       width: 25,
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return Icon(
-                                          Icons.image,
-                                          color: ThemeApp.whiteColor,
+                                          Icons.account_circle_rounded,
+                                          // color: ThemeApp.whiteColor,
                                         );
                                       },
                                     ),
@@ -500,172 +503,172 @@ Widget appTitle(BuildContext context, String text) {
   );
 }
 
-Widget searchBar(BuildContext context) {
-  double height = 0.0;
-  double width = 0.0;
-  height = MediaQuery.of(context).size.height;
-  width = MediaQuery.of(context).size.width;
-  DashboardViewModel productCategories = DashboardViewModel();
-  productCategories.productCategoryListingWithGet();
-
-  return ChangeNotifierProvider<DashboardViewModel>.value(
-    value: productCategories,
-    child: Consumer<DashboardViewModel>(
-        builder: (context, dashBoardProvider, child) {
-      return Consumer<HomeProvider>(builder: (context, provider, child) {
-        return Container(
-          width: width,
-          height: height * .1,
-          // color: ThemeApp.redColor,
-          padding: const EdgeInsets.only(top: 10, left: 0),
-          alignment: Alignment.center,
-          child: TextFormField(
-            textInputAction: TextInputAction.search,
-
-            controller: StringConstant.controllerSpeechToText,
-            onFieldSubmitted: (value) {
-              print("Getting Value" +
-                  productCategories
-                      .productCategoryList.data!.productList![0].name
-                      .toString());
-              switch (dashBoardProvider.productCategoryList.status) {
-                case Status.LOADING:
-                  return print("Getting Value");
-                case Status.COMPLETED:
-                  if (kDebugMode) {
-                    print("Api calll");
-                  }
-
-                  List<ProductList>? serviceList =
-                      productCategories.productCategoryList.data!.productList;
-                  /*  productCategories.getProductBySearchTermsWithGet(
-                    0,
-                    10,
-                    StringConstant.controllerSpeechToText.text.toString(),
-                  );
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SearchProductListScreen(
-                        searchText: StringConstant.controllerSpeechToText.text,
-                      ),
-                    ),
-                  );*/
-
-                  productCategories.getProductBySearchTermsWithGet(
-                    0,
-                    10,
-                    StringConstant.controllerSpeechToText.text.toString(),
-                  );
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SearchProductListScreen(
-                        searchText: StringConstant.controllerSpeechToText.text,
-                      ),
-                    ),
-                  );
-              }
-              /*  Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProductListByCategoryActivity(
-                      productList: productCategories.),
-                ),
-              );*/
-              if (kDebugMode) {
-                print("search.........");
-              } // showDialog(
-              //     context: context,
-              //     builder: (BuildContext context) {
-              //       return OkDialog(text: StringConstant.controllerSpeechToText.text);
-              //     });
-            },
-            onChanged: (val) {
-              // print("StringConstant.speechToText..." +
-              //     StringConstant.speechToText);
-              // (() {
-              //   if (val.isEmpty) {
-              //     val = StringConstant.speechToText;
-              //   } else {
-              //     StringConstant.speechToText = StringConstant.controllerSpeechToText.text;
-              //   }
-              // });
-            },
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: ThemeApp.whiteColor,
-              isDense: true,
-              // contentPadding:
-              //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              /* -- Text and Icon -- */
-              hintText: "Search",
-              hintStyle: const TextStyle(
-                fontFamily: 'Roboto',
-                fontSize: 14,
-                color: ThemeApp.darkGreyTab,
-              ),
-              prefixIconColor: ThemeApp.primaryNavyBlackColor,
-              prefixIcon: /*const Icon(
-                  Icons.search,
-                  size: 26,
-                  color: Colors.black54,
-                ),*/
-                  Padding(
-                padding: const EdgeInsets.all(10),
-                child: SvgPicture.asset(
-                  'assets/appImages/searchIcon.svg',
-                  color: ThemeApp.primaryNavyBlackColor,
-                  semanticsLabel: 'Acme Logo',
-                  theme: SvgTheme(
-                    currentColor: ThemeApp.primaryNavyBlackColor,
-                  ),
-                  height: height * .001,
-                ),
-              ),
-              suffixIcon: InkWell(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return SpeechToTextDialog();
-                      });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset(
-                    'assets/appImages/miceIcon.svg',
-                    color: ThemeApp.primaryNavyBlackColor,
-                    semanticsLabel: 'Acme Logo',
-                    theme: SvgTheme(
-                      currentColor: ThemeApp.primaryNavyBlackColor,
-                    ),
-                    height: height * .001,
-                  ),
-                ), /*const Icon(
-                    Icons.mic,
-                    size: 26,
-                    color: Colors.black54,
-                  ),*/
-              ),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                      const BorderSide(color: ThemeApp.redColor, width: 1)),
-              // OutlineInputBorder
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                      color: ThemeApp.appBackgroundColor, width: 1)),
-              // OutlineInputBorder
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                      color: ThemeApp.appBackgroundColor, width: 1)),
-            ), // InputDecoration
-          ),
-        );
-      });
-    }),
-  );
-}
+// Widget searchBar(BuildContext context) {
+//   double height = 0.0;
+//   double width = 0.0;
+//   height = MediaQuery.of(context).size.height;
+//   width = MediaQuery.of(context).size.width;
+//   DashboardViewModel productCategories = DashboardViewModel();
+//   productCategories.productCategoryListingWithGet();
+//
+//   return ChangeNotifierProvider<DashboardViewModel>.value(
+//     value: productCategories,
+//     child: Consumer<DashboardViewModel>(
+//         builder: (context, dashBoardProvider, child) {
+//       return Consumer<HomeProvider>(builder: (context, provider, child) {
+//         return Container(
+//           width: width,
+//           height: height * .08,
+//           // color: ThemeApp.redColor,
+//           padding: const EdgeInsets.only(top: 10, left: 0),
+//           alignment: Alignment.center,
+//           child: TextFormField(
+//             textInputAction: TextInputAction.search,
+//
+//             controller: StringConstant.controllerSpeechToText,
+//             onFieldSubmitted: (value) {
+//               print("Getting Value" +
+//                   productCategories
+//                       .productCategoryList.data!.productList![0].name
+//                       .toString());
+//               switch (dashBoardProvider.productCategoryList.status) {
+//                 case Status.LOADING:
+//                   return print("Getting Value");
+//                 case Status.COMPLETED:
+//                   if (kDebugMode) {
+//                     print("Api calll");
+//                   }
+//
+//                   List<ProductList>? serviceList =
+//                       productCategories.productCategoryList.data!.productList;
+//                   /*  productCategories.getProductBySearchTermsWithGet(
+//                     0,
+//                     10,
+//                     StringConstant.controllerSpeechToText.text.toString(),
+//                   );
+//                   Navigator.of(context).push(
+//                     MaterialPageRoute(
+//                       builder: (context) => SearchProductListScreen(
+//                         searchText: StringConstant.controllerSpeechToText.text,
+//                       ),
+//                     ),
+//                   );*/
+//
+//                   productCategories.getProductBySearchTermsWithGet(
+//                     0,
+//                     10,
+//                     StringConstant.controllerSpeechToText.text.toString(),
+//                   );
+//                   Navigator.of(context).push(
+//                     MaterialPageRoute(
+//                       builder: (context) => SearchProductListScreen(
+//                         searchText: StringConstant.controllerSpeechToText.text,
+//                       ),
+//                     ),
+//                   );
+//               }
+//               /*  Navigator.of(context).push(
+//                 MaterialPageRoute(
+//                   builder: (context) => ProductListByCategoryActivity(
+//                       productList: productCategories.),
+//                 ),
+//               );*/
+//               if (kDebugMode) {
+//                 print("search.........");
+//               } // showDialog(
+//               //     context: context,
+//               //     builder: (BuildContext context) {
+//               //       return OkDialog(text: StringConstant.controllerSpeechToText.text);
+//               //     });
+//             },
+//             onChanged: (val) {
+//               // print("StringConstant.speechToText..." +
+//               //     StringConstant.speechToText);
+//               // (() {
+//               //   if (val.isEmpty) {
+//               //     val = StringConstant.speechToText;
+//               //   } else {
+//               //     StringConstant.speechToText = StringConstant.controllerSpeechToText.text;
+//               //   }
+//               // });
+//             },
+//             decoration: InputDecoration(
+//               filled: true,
+//               fillColor: ThemeApp.whiteColor,
+//               isDense: true,
+//               // contentPadding:
+//               //     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+//               /* -- Text and Icon -- */
+//               hintText: "Search",
+//               hintStyle: const TextStyle(
+//                 fontFamily: 'Roboto',
+//                 fontSize: 14,
+//                 color: ThemeApp.darkGreyTab,
+//               ),
+//               prefixIconColor: ThemeApp.primaryNavyBlackColor,
+//               prefixIcon: /*const Icon(
+//                   Icons.search,
+//                   size: 26,
+//                   color: Colors.black54,
+//                 ),*/
+//                   Padding(
+//                 padding: const EdgeInsets.all(10),
+//                 child: SvgPicture.asset(
+//                   'assets/appImages/searchIcon.svg',
+//                   color: ThemeApp.primaryNavyBlackColor,
+//                   semanticsLabel: 'Acme Logo',
+//                   theme: SvgTheme(
+//                     currentColor: ThemeApp.primaryNavyBlackColor,
+//                   ),
+//                   height: height * .001,
+//                 ),
+//               ),
+//               suffixIcon: InkWell(
+//                 onTap: () {
+//                   showDialog(
+//                       context: context,
+//                       builder: (BuildContext context) {
+//                         return SpeechToTextDialog();
+//                       });
+//                 },
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(10),
+//                   child: SvgPicture.asset(
+//                     'assets/appImages/miceIcon.svg',
+//                     color: ThemeApp.primaryNavyBlackColor,
+//                     semanticsLabel: 'Acme Logo',
+//                     theme: SvgTheme(
+//                       currentColor: ThemeApp.primaryNavyBlackColor,
+//                     ),
+//                     height: height * .001,
+//                   ),
+//                 ), /*const Icon(
+//                     Icons.mic,
+//                     size: 26,
+//                     color: Colors.black54,
+//                   ),*/
+//               ),
+//               border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(10),
+//                   borderSide:
+//                       const BorderSide(color: ThemeApp.redColor, width: 1)),
+//               // OutlineInputBorder
+//               enabledBorder: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(10),
+//                   borderSide: const BorderSide(
+//                       color: ThemeApp.appBackgroundColor, width: 1)),
+//               // OutlineInputBorder
+//               focusedBorder: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(10),
+//                   borderSide: const BorderSide(
+//                       color: ThemeApp.appBackgroundColor, width: 1)),
+//             ), // InputDecoration
+//           ),
+//         );
+//       });
+//     }),
+//   );
+// }
 
 class AddressWidgets extends StatefulWidget {
   const AddressWidgets({Key? key}) : super(key: key);
@@ -677,11 +680,143 @@ class AddressWidgets extends StatefulWidget {
 class _AddressWidgetsState extends State<AddressWidgets> {
   var finalPicode = '';
 
+  // final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+  late Position _currentPosition;
+  String _currentAddress = '';
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPref();
+    // getPref();
+    _getCurrentLocation();
+    _handleLocationPermission();
+  }
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle:
+              'To use this feature,Please enable the Location services',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                AppSettings.openLocationSettings();
+
+                // openAppSettings().then((value) {
+                //   Navigator.pop(context);
+                //
+                // });
+              },
+            );
+          });
+    }
+    PermissionStatus status = await Permission.location.status;
+
+    if (status == PermissionStatus.denied) {
+      permission = await Geolocator.requestPermission();
+
+      print("PermissionStatus.denied");
+      if ((await Permission.locationWhenInUse.serviceStatus.isDisabled) ||(await Permission.locationAlways.serviceStatus.isDisabled) ) {
+  showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle:
+              'To use this feature, go to app setting and allow permission for Location.',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                // AppSettings.openLocationSettings();
+                openAppSettings().then((value) {
+                  Navigator.pop(context);
+                  setState(() {});
+                });
+              },
+            );
+          });
+}
+      // openAppSettings();
+      // askPermissions(requestedPermission);
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      print("PermissionStatus.denied.....");
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ConfirmationDialog(
+              heading: "Alert message",
+              subTitle:
+              'To use this feature, go to app setting and allow permission for Location.',
+              button1: 'Cancel',
+              button2: 'Go to Setting',
+              onTap1: () async {
+                Navigator.pop(context);
+              },
+              onTap2: () async {
+                // AppSettings.openLocationSettings();
+                openAppSettings().then((value) => Navigator.pop(context));
+              },
+            );
+          });
+      print("PermissionStatus.restricted");
+      // openAppSettings();
+      // askPermissions(requestedPermission);
+    } else {
+      _getCurrentLocation();
+    }
+    return true;
+  }
+
+  _getCurrentLocation() {
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+
+      _getAddressFromLatLng();
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  _getAddressFromLatLng() async {
+    try {
+      List<Placemark> p = await placemarkFromCoordinates(
+          _currentPosition.latitude, _currentPosition.longitude);
+
+      Placemark place = p[0];
+      final prefs = await SharedPreferences.getInstance();
+
+      StringConstant.placesFromCurrentLocation =
+          (prefs.getString('SearchedPinCodePrefs')) ?? "";
+      setState(() {
+        finalPicode = "${place.postalCode}";
+        if (StringConstant.placesFromCurrentLocation == '' ||
+            StringConstant.placesFromCurrentLocation == 'null') {
+          finalPicode = place.postalCode.toString();
+        } else {
+          finalPicode = StringConstant.placesFromCurrentLocation;
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   getPref() async {
@@ -690,9 +825,9 @@ class _AddressWidgetsState extends State<AddressWidgets> {
       finalPicode =
           prefs.getString('CurrentPinCodePrefs') ?? "Please select location";
 
-    if(finalPicode=='null'){
-      finalPicode= "Please select location";
-    }
+      if (finalPicode == 'null') {
+        finalPicode = "Please select location";
+      }
       print(
           "placesFromCurrentLocation CurrentPinCode pref...${finalPicode.toString()}");
 
@@ -780,7 +915,7 @@ class _AddressWidgetsState extends State<AddressWidgets> {
       },
       child: Center(
         child: Container(
-          height: height * .036,
+          height: height * .03,
           color: ThemeApp.appBackgroundColor,
           width: width,
           padding: const EdgeInsets.all(2),
@@ -805,25 +940,28 @@ class _AddressWidgetsState extends State<AddressWidgets> {
               SizedBox(
                 width: width * .01,
               ),
-              finalPicode!='null'?     SizedBox(
-                child: TextFieldUtils().dynamicText(
-                    "Deliver to - ${finalPicode} ",
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.tealButtonColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400)),
-              ):    SizedBox(
-                child: TextFieldUtils().dynamicText(
-                    "Deliver to - Please select location ",
-                    context,
-                    TextStyle(
-                        fontFamily: 'Roboto',
-                        color: ThemeApp.tealButtonColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500)),
-              ),
+              finalPicode != 'null'
+                  ? SizedBox(
+                      child: TextFieldUtils().dynamicText(
+                          "Deliver to - ${finalPicode} ",
+                          // "Deliver to - ${_currentAddress} ",
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.tealButtonColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400)),
+                    )
+                  : SizedBox(
+                      child: TextFieldUtils().dynamicText(
+                          "Deliver to - Please select location ",
+                          context,
+                          TextStyle(
+                              fontFamily: 'Roboto',
+                              color: ThemeApp.tealButtonColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500)),
+                    ),
               /*   SizedBox(
               child: TextFieldUtils().dynamicText(
 
@@ -973,8 +1111,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                   theme: SvgTheme(
                     currentColor: ThemeApp.appColor,
                   ),
-                  height: 25,
-                  width: 25,
+                  height: 30,
+                  width: 30,
                 ),
               )
             : Padding(
@@ -988,8 +1126,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                   theme: SvgTheme(
                     currentColor: ThemeApp.unSelectedBottomBarItemColor,
                   ),
-                  height: 25,
-                  width: 25,
+                  height: 30,
+                  width: 30,
                 ),
               ),
         label: 'HOME',
@@ -1008,8 +1146,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                   theme: SvgTheme(
                     currentColor: ThemeApp.appColor,
                   ),
-                  height: 25,
-                  width: 25,
+                  height: 30,
+                  width: 30,
                 ),
               )
             : Padding(
@@ -1023,8 +1161,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                   theme: SvgTheme(
                     currentColor: ThemeApp.appColor,
                   ),
-                  height: 25,
-                  width: 25,
+                  height: 30,
+                  width: 30,
                 ),
               ),
         label: 'OFFER',
@@ -1055,8 +1193,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                     theme: SvgTheme(
                       currentColor: ThemeApp.appColor,
                     ),
-                    height: 25,
-                    width: 25,
+                    height: 30,
+                    width: 30,
                   ),
                 )
               : Padding(
@@ -1070,8 +1208,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                     theme: SvgTheme(
                       currentColor: ThemeApp.unSelectedBottomBarItemColor,
                     ),
-                    height: 25,
-                    width: 25,
+                    height: 30,
+                    width: 30,
                   ),
                 ),
           label: 'SHOP'),
@@ -1090,8 +1228,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                           theme: SvgTheme(
                             currentColor: ThemeApp.appColor,
                           ),
-                          height: 25,
-                          width: 25,
+                          height: 30,
+                          width: 30,
                         )
                       : badges.Badge(
                           position: badges.BadgePosition.topEnd(),
@@ -1114,8 +1252,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                             theme: SvgTheme(
                               currentColor: ThemeApp.appColor,
                             ),
-                            height: 25,
-                            width: 25,
+                            height: 30,
+                            width: 30,
                           ),
                         ),
                 )
@@ -1131,8 +1269,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                           theme: SvgTheme(
                             currentColor: ThemeApp.unSelectedBottomBarItemColor,
                           ),
-                          height: 25,
-                          width: 25,
+                          height: 30,
+                          width: 30,
                         )
                       : badges.Badge(
                           badgeContent: Text(
@@ -1155,8 +1293,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                               currentColor:
                                   ThemeApp.unSelectedBottomBarItemColor,
                             ),
-                            height: 25,
-                            width: 25,
+                            height: 30,
+                            width: 30,
                           ),
                         ),
                 ),

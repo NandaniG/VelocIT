@@ -4,6 +4,7 @@ import 'package:velocit/main.dart';
 import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import 'package:velocit/pages/Activity/My_Orders/MyOrders_Activity.dart';
 import 'package:velocit/pages/auth/OTP_Screen.dart';
+import 'package:velocit/pages/auth/change_password.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/routes/routes.dart';
@@ -29,7 +30,7 @@ class Routes {
       case RoutesName.dashboardRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => DashboardScreen());
-      case RoutesName.orderRoute:
+         case RoutesName.orderRoute:
         return MaterialPageRoute(
             builder: (BuildContext context) => MyOrdersActivity());
       case RoutesName.myAccountRoute:

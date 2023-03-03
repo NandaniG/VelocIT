@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/utils/utils.dart';
+import 'package:velocit/widgets/global/proceedButtons.dart';
 import '../../../Core/Model/SimmilarProductModel.dart';
 import '../../../Core/Model/scannerModel/SingleProductModel.dart';
 import '../../../Core/ViewModel/cart_view_model.dart';
@@ -121,6 +122,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     if (StringConstant.UserLoginId.toString() == '' ||
         StringConstant.UserLoginId.toString() == null) {
       userId = StringConstant.RandomUserLoginId;
+
       print('login user is GUEST');
     } else {
       userId = StringConstant.UserLoginId;
@@ -348,28 +350,22 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         return Container(
                           height: height * .8,
                           alignment: Alignment.center,
-                          child: TextFieldUtils().dynamicText(
-                              'No Match found!',
-                              context,
-                              TextStyle(
-                                  fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .03,
-                                  fontWeight: FontWeight.bold)),
+                          child: Center(
+                              child: Text(
+                                "Match not found",
+                                style: TextStyle(fontSize: 20),
+                              )),
                         );
                       }
                   }
                   return Container(
                     height: height * .8,
                     alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
+                    child: Center(
+                        child: Text(
+                          "Match not found",
+                          style: TextStyle(fontSize: 20),
+                        )),
                   );
                 }))),
       ),
@@ -1101,279 +1097,74 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             ? Padding(
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 5, bottom: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /*counterPrice == 0
-                        ?*/
-                    Expanded(
-                        flex: 1,
-                        child: InkWell(
-                            onTap: () async {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                             await prefs.setString(
-                                  'isRandomUser',
-                                  'No');
-                              setState(() {
-                                updateCart(
-                                    model.selectedMerchantId,
-                                    counterPrice,
-                                    productProvider,
-                                    model.productsubCategory);
+                child: twoProceedButton('Add to cart', 'Buy now', context, false, () async {
+                  final prefs =
+                  await SharedPreferences.getInstance();
+                  await prefs.setString(
+                  'isRandomUser',
+                  'No');
+                  await  prefs.setString("isUserNavigateFromDetailScreen","IsGuest");
 
-                                StringConstant.BadgeCounterValue =
-                                    (prefs.getString('setBadgeCountPrefs')) ??
-                                        '';
-                                print("Badge,........" +
-                                    StringConstant.BadgeCounterValue);
-                              });
-                            },
-                            child: Container(
-                                height: 40,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(100),
-                                  ),
-                                  border: Border.all(
-                                      color: ThemeApp.tealButtonColor),
-                                  color: ThemeApp.containerColor,
-                                ),
-                                child: Text(
-                                  "Add to Cart",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis,
-                                    color: ThemeApp.tealButtonColor,
-                                  ),
-                                )))),
-                    /* : Expanded(
-                            flex: 1,
-                            child: Container(
-                              height: height * 0.06,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                color: ThemeApp.whiteColor,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          counterPrice--;
-                                          remainingCounters();
+                  setState(() {
 
-                                          var data = {
-                                            "user_id": userId.toString(),
-                                            "item_code": subProductList
-                                                .productCode
-                                                .toString(),
-                                            "qty": counterPrice.toString()
-                                          };
-                                          print(
-                                              "data maping " + data.toString());
-                                          productSpecificListViewModel
-                                              .cartListWithPut(context, data);
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                        ),
-                                        child: const Icon(
-                                          Icons.remove,
-                                          // size: 20,
-                                          color: ThemeApp.tealButtonColor,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8.0,
-                                          right: 8,
-                                          top: 0,
-                                          bottom: 0),
-                                      child: Text(
-                                        counterPrice.toString().padLeft(2, '0'),
-                                        style: TextStyle(fontFamily: 'Roboto',
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                .016,
-                                            fontWeight: FontWeight.w400,
-                                            overflow: TextOverflow.ellipsis,
-                                            color: ThemeApp.tealButtonColor),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          counterPrice++;
-                                          remainingCounters();
+                    updateCart(
+                    model.selectedMerchantId,
+                    counterPrice,
+                    productProvider,
+                    model.productsubCategory);
 
-                                          //badge counting
-                                          badgeData = 0;
+                StringConstant.BadgeCounterValue =
+                    (prefs.getString('setBadgeCountPrefs')) ??
+                        '';
+                print("Badge,........" +
+                    StringConstant.BadgeCounterValue);
+                  });
+                }, () async {
+                  setState(() {
+                    productListProvider.isHome = false;
+                    productListProvider.isBottomAppCart = false;
+                  });
 
-                                          ///counting will manage after api
-                                          */
-                    /*   for (int i = 0;
-                                    i < cartProvider.cartList.length;
-                                    i++) {
-                                      if (widget.productList.shortName==
-                                          cartProvider.cartList[i]
-                                              .cartProductsDescription) {
-                                        widget.productList[
-                                        "productCartMaxCounter"] =
-                                            counterPrice;
-                                        widget.value.cartList[i]
-                                            .cartProductsTempCounter =
-                                        widget.productList[
-                                        "productCartMaxCounter"];
-                                      }
-                                      //badge counting
-                                      print("Badge counting before" +
-                                          badgeData.toString());
-                                      print("Badge cTemp Counting" +
-                                          widget.value.cartList[i]
-                                              .cartProductsTempCounter
-                                              .toString());
-                                      print("Badge Product name" +
-                                          widget.value.cartList[i]
-                                              .cartProductsDescription
-                                              .toString());
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.setString('isBuyNow', 'true');
+                  prefs.setString(
+                      'isBuyNowFrom', 'Product');
+                  StringConstant.isUserLoggedIn =
+                      (prefs.getInt('isUserLoggedIn')) ?? 0;
 
-                                      badgeData = badgeData +
-                                          widget.value.cartList[i]
-                                              .cartProductsTempCounter!;
-                                      widget.value.badgeFinalCount =
-                                          badgeData;
-                                    }
-                                    print("Badge counting" +
-                                        badgeData.toString());
-                                    //setting value of count to the badge
-*/
-                    /*
+                  final navigator =
+                  Navigator.of(context); // <- Add this
+                  model.productsubCategory;
 
-                                          ///api for counting
+                  //send data to login user for direct purchase api
+                  prefs.setString('selectedMerchantId',
+                      model.selectedMerchantId.toString());
+                  prefs.setString(
+                      'selectedProductId', model.id.toString());
+                  prefs.setString(
+                      'selectedCounterPrice', counterPrice.toString());
 
-                                          var data = {
-                                            "user_id": userId.toString(),
-                                            // "item_code": widget
-                                            //     .productList.categoryCode
-                                            //     .toString(),
-                                            "item_code": '1',
-                                            "qty": counterPrice.toString()
-                                          };
-                                          print(
-                                              "data maping " + data.toString());
-                                          productSpecificListViewModel
-                                              .cartListWithPut(context, data);
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                        ),
-                                        child: const Icon(
-                                          Icons.add,
-                                          // size: 20,
-                                          color: ThemeApp.tealButtonColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),*/
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .05,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: InkWell(
-                        onTap: () async {
-                          setState(() {
-                            productListProvider.isHome = false;
-                            productListProvider.isBottomAppCart = false;
-                          });
+                  //get cartID from DirectUser for purchase
 
-                          final prefs = await SharedPreferences.getInstance();
-                          prefs.setString('isBuyNow', 'true');
-                          prefs.setString(
-                              'isBuyNowFrom', 'Product');
-                          StringConstant.isUserLoggedIn =
-                              (prefs.getInt('isUserLoggedIn')) ?? 0;
+                  var directCartId =
+                  prefs.getString('directCartIdPref');
+                  var loginUserId = (prefs.getString('isUserId')) ?? '';
+                  if (StringConstant.isUserLoggedIn == 1) {
+                    //if user logged in
 
-                          final navigator =
-                              Navigator.of(context); // <- Add this
-                          model.productsubCategory;
+                    CartRepository()
+                        .buyNowGetRequest(loginUserId, context);
+                  } else {
+                    //if user not login
+                    prefs.setString(
+                        'isUserNavigateFromDetailScreen', 'BN');
+                    Navigator.pushReplacementNamed(
+                        context, RoutesName.signInRoute);
 
-                          //send data to login user for direct purchase api
-                          prefs.setString('selectedMerchantId',
-                              model.selectedMerchantId.toString());
-                          prefs.setString(
-                              'selectedProductId', model.id.toString());
-                          prefs.setString(
-                              'selectedCounterPrice', counterPrice.toString());
-
-                          //get cartID from DirectUser for purchase
-
-                          var directCartId =
-                              prefs.getString('directCartIdPref');
-                          var loginUserId = (prefs.getString('isUserId')) ?? '';
-                          if (StringConstant.isUserLoggedIn == 1) {
-                            //if user logged in
-
-                            CartRepository()
-                                .buyNowGetRequest(loginUserId, context);
-                          } else {
-                            //if user not login
-                            prefs.setString(
-                                'isUserNavigateFromDetailScreen', 'BN');
-                            Navigator.pushReplacementNamed(
-                                context, RoutesName.signInRoute);
-
-                            print("Not Logged in");
-                            // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
-                          }
-                        },
-                        child: Container(
-                            height: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(100),
-                              ),
-                              border:
-                                  Border.all(color: ThemeApp.tealButtonColor),
-                              color: ThemeApp.tealButtonColor,
-                            ),
-                            child: Text(
-                              "Buy now",
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                overflow: TextOverflow.ellipsis,
-                                color: ThemeApp.whiteColor,
-                              ),
-                            )),
-                      ),
-                    )
-                  ],
-                ))
+                    print("Not Logged in");
+                    // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
+                  }
+                },))
             : Container(
                 width: width,
                 height: 72,

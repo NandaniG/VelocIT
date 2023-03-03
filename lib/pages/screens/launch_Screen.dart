@@ -69,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       },
     );
-
+    // startTime();
     _getCurrentPosition();
   }
 
@@ -79,7 +79,10 @@ class _SplashScreenState extends State<SplashScreen> {
     final FirebaseMessaging _fcm = FirebaseMessaging.instance;
     final token = await _fcm.getToken();
     deviceTokenToSendPushNotification = token.toString();
+
     print("Token Value $deviceTokenToSendPushNotification");
+
+
   }
 
   //splash to home timer
@@ -352,6 +355,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Text('Build No. 1\n01-03-2023'),
               Center(
                 child: Image.asset(
                   'assets/appImages/splashScreen.png',

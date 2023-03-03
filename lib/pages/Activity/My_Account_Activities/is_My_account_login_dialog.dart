@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/pages/auth/Sign_Up.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
 
+import '../../../utils/routes/routes.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/proceedButtons.dart';
 import '../../../widgets/global/textFormFields.dart';
@@ -53,8 +55,7 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
             ),
             child: Center(
               child: Container(
-                padding:
-                    EdgeInsets.all(20),
+                padding: EdgeInsets.all(20),
                 child: ListView(
                   // mainAxisAlignment: MainAxisAlignment.start,
                   // crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,10 +99,14 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                                 fontWeight: FontWeight.w400),
                           ),
                           InkWell(
-                            onTap: () {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => SignUp()));
+                            onTap: () async {
+                              Navigator.of(context)
+                                  .pushNamedAndRemoveUntil(
+                                  RoutesName.signUpRoute, (route) => false)
+                                  .then((value) {
+                                setState(() {});
+                              });
+
                             },
                             child: Text(
                               "Sign Up",
@@ -109,7 +114,8 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                                   fontFamily: 'Roboto',
                                   color: ThemeApp.tealButtonColor,
                                   fontSize: 15,
-                                  fontWeight: FontWeight.w400,decoration: TextDecoration.underline),
+                                  fontWeight: FontWeight.w400,
+                                  decoration: TextDecoration.underline),
                             ),
                           ),
                         ],
@@ -137,11 +143,13 @@ class _AccountVerificationDialogState extends State<AccountVerificationDialog> {
                                 fontWeight: FontWeight.w400),
                           ),
                           InkWell(
-                            onTap: ()async {
-
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => SignIn_Screen()));
+                            onTap: () async {
+                              Navigator.of(context)
+                                  .pushNamedAndRemoveUntil(
+                                  RoutesName.signInRoute, (route) => false)
+                                  .then((value) {
+                                setState(() {});
+                              });
                             },
                             child: Text(
                               "Sign In",

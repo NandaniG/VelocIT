@@ -178,8 +178,20 @@ class _Payment_Creditcard_debitcardScreenState
                                     fontSize: height * .018,
                                   ))
                             ]),
-                        InkWell(
-                            onTap: () async {
+                        ElevatedButton(style:
+                        ButtonStyle(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  side: BorderSide(color: ThemeApp.tealButtonColor)
+                              )
+                          ),
+                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(left: 20, right: 20,top: 10,bottom: 10)),
+                          foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+                          backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.whiteColor),
+
+                        ),
+                            onPressed: () async {
                               final prefs = await SharedPreferences.getInstance();
 
                               // Navigator.of(context).push(
@@ -258,15 +270,15 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
                               });
                             },
                             child: Container(
-                              height: 40,
-                              width: 141,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(100),
-                                ),
-                                color: ThemeApp.whiteColor,
-                              ),
+                              // height: 40,
+                              // width: 141,
+                              // alignment: Alignment.center,
+                              // decoration: const BoxDecoration(
+                              //   borderRadius: BorderRadius.all(
+                              //     Radius.circular(100),
+                              //   ),
+                              //   color: ThemeApp.whiteColor,
+                              // ),
                               child: TextFieldUtils().dynamicText(
                                   'Proceed to Payment',
                                   context,
@@ -633,13 +645,13 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
   }
 
   Widget stepperWidget() {
-    return Container(
-        height: height * .1,
-        width: width,
-        alignment: Alignment.center,
-        color: ThemeApp.appBackgroundColor,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(19, 16, 19, 14),
+      child: Container(
+          height: 78,
+          width: width,
+          alignment: Alignment.center,
+          color: ThemeApp.appBackgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -650,27 +662,25 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
               const SizedBox(
                 height: 8,
               ),
-              Flexible(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: _titleViews(context),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: _titleViews(context),
               ),
             ],
-          ),
-        ));
+          )),
+    );
   }
 
   List<Widget> _iconViews() {
     var list = <Widget>[];
     titles.asMap().forEach((i, icon) {
-      var circleColor = (i == 0 || i == 1 || _curStep > i + 1)
+      var circleColor = (i == 0 || i == 1||i == 2 || _curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var lineColor = (i == 0 || i == 1 || _curStep > i + 1)
+      var lineColor = (i == 0 || i == 1 || i == 2||_curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
-      var iconColor = (i == 0 || i == 1 || _curStep > i + 1)
+      var iconColor = (i == 0 || i == 1 ||  i == 2||_curStep > i + 1)
           ? ThemeApp.tealButtonColor
           : ThemeApp.appColor;
 
@@ -687,17 +697,17 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
           //     color: circleColor,
           //     width: 2.0,
           //   ),),
-          child: (i == 0 || _curStep > i + 1)
+          child: (i == 0 || i == 1 ||  i == 2|| _curStep > i + 1)
               ? Icon(
-                  Icons.circle,
-                  color: iconColor,
-                  size: 18.0,
-                )
+            Icons.circle,
+            color: iconColor,
+            size: 18.0,
+          )
               : Icon(
-                  Icons.radio_button_checked_outlined,
-                  color: iconColor,
-                  size: 18.0,
-                ),
+            Icons.radio_button_checked_outlined,
+            color: iconColor,
+            size: 18.0,
+          ),
         ),
       );
 
@@ -705,36 +715,43 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
       if (i != titles.length - 1) {
         list.add(Expanded(
             child: Container(
-          height: 3.0,
-          color: lineColor,
-        )));
+              height: 3.0,
+              color: lineColor,
+            )));
       }
     });
 
     return list;
   }
-
+//
   List<Widget> _titleViews(BuildContext context) {
     var list = <Widget>[];
     titles.asMap().forEach((i, text) {
       list.add(
         (i == 0 || i == 1 || _curStep > i + 1)
-            ? TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.w400))
-            : TextFieldUtils().dynamicText(
-                text,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .018,
-                    fontWeight: FontWeight.w400)),
+            ? SizedBox(
+          // width: 61,
+          child: TextFieldUtils().dynamicText(
+              text,
+              context,
+              TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400)),
+        )
+            : Container(
+          // color: ThemeApp.whiteColor,
+          // width: 61,
+          child: TextFieldUtils().dynamicText(
+              text,
+              context,
+              TextStyle(
+                  fontFamily: 'Roboto',
+                  color: ThemeApp.blackColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400)),
+        ),
       );
     });
     return list;
@@ -742,9 +759,10 @@ print("Current Date Time"+DateTime.now().toUtc().toString());
 }
 
 final List<String> titles = [
-  'Order Placed',
+  'Order review',
+  'Delivery detail',
   'Payment',
-  'Order Completed',
+  'Order placed',
 ];
 int _curStep = 1;
 

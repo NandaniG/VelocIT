@@ -534,7 +534,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                       SizedBox(
                                         height: 20,
                                       ),
-                                      orders['cancelled'] == false
+                                      orders['current_status_code'] != 2000
                                           ? proceedButton(
                                               "Submit",
                                               ThemeApp.tealButtonColor,
@@ -567,7 +567,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                         "cancellation_date":
                                                             date,
                                                         "reason":
-                                                            _radioVal.toString()
+                                                            _radioVal.toString()+' Comment : ' +vendorReviewController.text
                                                       },
                                                       widget
                                                           .orderList['order_id']
@@ -575,7 +575,8 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                             })
                                           : Center(
                                               child: Text(
-                                                "Your order is already cancelled",
+                                                "Your order is already cancelled\n",
+                                                    // +orders["cancellation_reason"].toString(),
                                                 style: TextStyle(
                                                     color: ThemeApp.redColor,
                                                     fontSize: 15,

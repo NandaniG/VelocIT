@@ -374,8 +374,8 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                       margin: const EdgeInsets.only(
                                           left: 20,
                                           right: 15,
-                                          top: 15,
-                                          bottom: 5),
+                                          top: 10,
+                                          bottom: 0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -420,8 +420,20 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                   14,
                                                 ),
                                               ]),
-                                          InkWell(
-                                              onTap: () async {
+                                          ElevatedButton(style:
+                                          ButtonStyle(
+                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(100),
+                                                    side: BorderSide(color: ThemeApp.tealButtonColor)
+                                                )
+                                            ),
+                                            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(left: 15, right: 15,top: 10,bottom: 10)),
+                                            foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+                                            backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.whiteColor),
+
+                                          ),
+                                              onPressed: () async {
                                                 final prefs =
                                                     await SharedPreferences
                                                         .getInstance();
@@ -543,7 +555,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                               },
                                               child: Container(
                                                   // height: height * 0.05,
-                                                  height: 40,
+                                               /*   height: 40,
                                                   width: 121,
                                                   alignment: Alignment.center,
                                                   decoration:
@@ -553,7 +565,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                                                       Radius.circular(100),
                                                     ),
                                                     color: ThemeApp.whiteColor,
-                                                  ),
+                                                  ),*/
                                                   // padding: const EdgeInsets.only(
                                                   //     left: 15, right: 15),
                                                   child: TextFieldUtils()
@@ -620,14 +632,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                     return Container(
                       height: height * .8,
                       alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: height * .03,
-                              fontWeight: FontWeight.bold)),
+                      child: Center(
+                          child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                     );
                   })),
             ),
@@ -698,14 +707,11 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   return Container(
                     height: height * .8,
                     alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
+                    child: Center(
+                        child: Text(
+                          "Match not found",
+                          style: TextStyle(fontSize: 20),
+                        ))
                   );
                 }))),
       ),
@@ -715,154 +721,159 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
   Widget cartProductList(List<OrdersForPurchase>? orderPurchaseList) {
      double ContainerHeight = MediaQuery.of(context).size.height * 0.46;
     return Container(
-        height: ContainerHeight,
-        child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            physics: ScrollPhysics(),
-            // physics: NeverScrollableScrollPhysics(),
-            itemCount: orderPurchaseList!.length,
-            itemBuilder: (BuildContext context, int index) {
-              return orderPurchaseList.isEmpty
-                  ? const Center(
-                      child: Text(
-                      "No Match",
+        height: 360,
+        child: SingleChildScrollView(
+          child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: ScrollPhysics(),
+              // physics: NeverScrollableScrollPhysics(),
+              itemCount: orderPurchaseList!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return orderPurchaseList.isEmpty
+                    ? const Center(
+                    child: Text(
+                      "Match not found",
+                      style: TextStyle(fontSize: 20),
                     ))
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: ContainerHeight * 0.33,
-                          width: width,
-                          decoration: const BoxDecoration(
-                            color: ThemeApp.whiteColor,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(
-                              5,
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            // height: height * 0.2,
+                            width: width,
+                            decoration: const BoxDecoration(
+                              color: ThemeApp.whiteColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10)),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  child: Image.network(
-                                      // width: double.infinity,
-                                      // snapshot.data![index].serviceImage,
-                                      orderPurchaseList[index]
-                                          .imageUrl
-                                          .toString(),
-                                      // fit: BoxFit.fill,
-                                      // width: width*.18,
-                                      height: 85,
-                                      width: 85, errorBuilder:
-                                          ((context, error, stackTrace) {
-                                    return Icon(Icons.image_outlined);
-                                  })),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 15,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextFieldUtils().dynamicText(
-                                            orderPurchaseList[index]
-                                                .oneliner
-                                                .toString(),
-                                            context,
-                                            TextStyle(
-                                                fontFamily: 'Roboto',
-                                                color: ThemeApp
-                                                    .primaryNavyBlackColor,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w700)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(
+                                15,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    child: Image.network(
+                                        // width: double.infinity,
+                                        // snapshot.data![index].serviceImage,
+                                        orderPurchaseList[index]
+                                            .imageUrl
+                                            .toString(),
+                                        // fit: BoxFit.fill,
+                                        // width: width*.18,
+                                        height: 85,
+                                        width: 85, errorBuilder:
+                                            ((context, error, stackTrace) {
+                                      return Icon(Icons.image_outlined);
+                                    })),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 15,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextFieldUtils().dynamicText(
+                                              orderPurchaseList[index]
+                                                  .oneliner
+                                                  .toString(),
+                                              context,
+                                              TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color: ThemeApp
+                                                      .primaryNavyBlackColor,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w700)),
 
-                                        // SizedBox(
-                                        //   height: height * .005,
-                                        // ),
-                                        /*  rattingBar(
-                                            orderPurchaseList[index], index),*/
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        prices(orderPurchaseList[index], index),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
+                                          // SizedBox(
+                                          //   height: height * .005,
+                                          // ),
+                                          /*  rattingBar(
+                                              orderPurchaseList[index], index),*/
+                                          SizedBox(
+                                            height: height * .01,
+                                          ),
+                                          prices(
+                                              orderPurchaseList[index], index),
+                                          SizedBox(
+                                            height: height * .01,
+                                          ),
 
-                                        Text(
-                                            'Merchant Name : ${orderPurchaseList[index].merchantName}' ??
-                                                "",
-                                            style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                color: ThemeApp.lightFontColor,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500)),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text('Delivery by ',
-                                                style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    color:
-                                                        ThemeApp.lightFontColor,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                            Text(
-                                                convertDateTimeDisplay(
-                                                    orderPurchaseList[index]
-                                                        .deliveryDate
-                                                        .toString()),
-                                                style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    color:
-                                                        ThemeApp.lightFontColor,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ],
-                                        ),
-                                      ],
+                                          Text(
+                                              'Merchant Name : ${orderPurchaseList[index].merchantName}' ??
+                                                  "",
+                                              style: TextStyle(
+                                                  fontFamily: 'Roboto',
+                                                  color:
+                                                      ThemeApp.lightFontColor,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500)),
+                                          SizedBox(
+                                            height: height * .01,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text('Delivery by ',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      color: ThemeApp
+                                                          .lightFontColor,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                              Text(
+                                                  convertDateTimeDisplay(
+                                                      orderPurchaseList[index]
+                                                          .deliveryDate
+                                                          .toString()),
+                                                  style: TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      color: ThemeApp
+                                                          .lightFontColor,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          decoration: const BoxDecoration(
-                            color: ThemeApp.whiteColor,
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(10)),
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: ThemeApp.whiteColor,
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10)),
+                            ),
+                            padding: const EdgeInsets.only(
+                                top: 5, left: 15, right: 20, bottom: 20),
+                            child: aadToCartCounter(orderPurchaseList, index),
                           ),
-                          padding: const EdgeInsets.only(
-                              top: 5, left: 15, right: 20, bottom: 20),
-                          child: aadToCartCounter(orderPurchaseList, index),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        )
-                      ],
-                    );
-            }));
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      );
+              }),
+        ));
   }
 
 /*
@@ -1449,7 +1460,7 @@ class _CartDetailsActivityState extends State<CartDetailsActivity> {
                   fontFamily: 'Roboto',
                   color: ThemeApp.primaryNavyBlackColor,
                   fontSize: 20,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w700,
                 )),
             // SizedBox(
             //   height: 10,

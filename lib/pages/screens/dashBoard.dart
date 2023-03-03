@@ -202,11 +202,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: ThemeApp.appBackgroundColor,
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(height * .12),
-          child: AppBarWidget(
-            context: context,
-            titleWidget: searchBarWidget(),
-            location: AddressWidgets(),
+          preferredSize:
+              Size.fromHeight(MediaQuery.of(context).size.height * .135),
+          child: Container(
+            color: ThemeApp.appBackgroundColor,
+            child: AppBarWidget(
+              context: context,
+              titleWidget: searchBarWidget(),
+              location: AddressWidgets(),
+            ),
           ),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context, 0),
@@ -230,7 +234,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 //   right: 20,
                                 // ),
                                 padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 child: SingleChildScrollView(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -611,7 +615,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 print("Api error");
               }
               return Text(
-                  productCategories.productCategoryList.message.toString());
+                  '');
+
             case Status.COMPLETED:
               if (kDebugMode) {
                 print("Api calll");
@@ -973,8 +978,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Container(
           // width: width * .25,
           width: 97,
-          height: 40,
-          // padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+          height: 59,
+          padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               border: Border.all(color: ThemeApp.containerColor, width: 1.5),
@@ -1035,7 +1040,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Container(
         width: 97,
         height: 59,
-        padding: EdgeInsets.fromLTRB(14, 10, 16, 10),
+        padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             border: Border.all(color: ThemeApp.containerColor, width: 1.5),
@@ -1234,7 +1239,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 print("Api error");
               }
               return Text(
-                  productCategories.productCategoryList.message.toString());
+                '');
 
             case Status.COMPLETED:
               if (kDebugMode) {
@@ -2045,7 +2050,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               if (kDebugMode) {
                 print("Api error");
               }
-              return Text(productCategories.recommendedList.message.toString());
+              return Text('');
 
             case Status.COMPLETED:
               if (kDebugMode) {
@@ -2083,8 +2088,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       height: 230,
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: ThemeApp.tealButtonColor,
-                                          )),
+                                        color: ThemeApp.tealButtonColor,
+                                      )),
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -2106,9 +2111,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                       .toString() ??
                                                   "",
                                               fit: BoxFit.scaleDown,
-                                              errorBuilder:
-                                                  ((context, error, stackTrace) {
-                                                return Icon(Icons.image_outlined);
+                                              errorBuilder: ((context, error,
+                                                  stackTrace) {
+                                                return Icon(
+                                                    Icons.image_outlined);
                                               }),
                                             )),
                                           ),
@@ -2118,7 +2124,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             height: 63,
                                             child: Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
@@ -2153,23 +2160,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                             .spaceBetween,
                                                     children: [
                                                       //discount
-                                                      TextFieldUtils()
-                                                          .listPriceHeadingTextField(
-                                                              indianRupeesFormat.format(
-                                                                  recommendedList[
-                                                                              index]
-                                                                          .defaultSellPrice ??
-                                                                      0.0),
-                                                              context),
+                                                      TextFieldUtils().listPriceHeadingTextField(
+                                                          indianRupeesFormat.format(
+                                                              recommendedList[
+                                                                          index]
+                                                                      .defaultSellPrice ??
+                                                                  0.0),
+                                                          context),
 
-                                                      TextFieldUtils()
-                                                          .listScratchPriceHeadingTextField(
-                                                              indianRupeesFormat.format(
-                                                                  recommendedList[
-                                                                              index]
-                                                                          .defaultMrp ??
-                                                                      0.0),
-                                                              context),
+                                                      TextFieldUtils().listScratchPriceHeadingTextField(
+                                                          indianRupeesFormat.format(
+                                                              recommendedList[
+                                                                          index]
+                                                                      .defaultMrp ??
+                                                                  0.0),
+                                                          context),
                                                     ],
                                                   ),
                                                 )
@@ -2364,7 +2369,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 print("Api error");
               }
               return Text(
-                  productCategories.productListingResponse.message.toString());
+                  '');
 
             case Status.COMPLETED:
               if (kDebugMode) {
@@ -2771,7 +2776,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               if (kDebugMode) {
                 print("Api error");
               }
-              return Text(productCategories.bestDealList.message.toString());
+              return Text('');
 
             case Status.COMPLETED:
               if (kDebugMode) {
@@ -2937,7 +2942,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               if (kDebugMode) {
                 print("Api error");
               }
-              return Text(offers.offerResponse.message.toString());
+              return Text('');
 
             case Status.COMPLETED:
               if (kDebugMode) {
@@ -2946,7 +2951,138 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               List<OfferPayload>? offerList =
                   offers.offerResponse.data!.payload;
+              return Container(
+                height: 228,
+                child: offerList!.isNotEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: offerList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => OfferActivity(),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 230,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                        color: ThemeApp.tealButtonColor,
+                                      )),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 162,
+                                            width: 191,
+                                            decoration: const BoxDecoration(
+                                              color: ThemeApp.whiteColor,
+                                            ),
+                                            child: ClipRRect(
+                                                child: Image.network(
+                                              // width: double.infinity,
+                                              offerList[index]
+                                                  .offerImageUrl
+                                                  .toString(),
+                                              errorBuilder: ((context, error,
+                                                  stackTrace) {
+                                                return Icon(
+                                                    Icons.image_outlined);
+                                              }),
+                                              // fit: BoxFit.fill,
+                                            )),
+                                          ),
+                                          Container(
+                                            color: ThemeApp.tealButtonColor,
+                                            width: 191,
+                                            height: 64,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          21, 9, 21, 4),
+                                                  child: TextFieldUtils()
+                                                      .listNameHeadingTextField(
+                                                          offerList[index]
+                                                              .productSubCategoryName!,
+                                                          context) /*Text(
+                                                      serviceList[index].shortName!,
+                                                      maxLines: 1,
+                                                      style: TextStyle(fontFamily: 'Roboto',
+                                                          overflow:
+                                                              TextOverflow.ellipsis,
+                                                          color:
+                                                              ThemeApp.whiteColor,
+                                                          fontSize: height * .022,
+                                                          fontWeight:
+                                                              FontWeight.bold))*/
+                                                  ,
+                                                ),
+                                                offerList[index]
+                                                            .isAmountBased ==
+                                                        true
+                                                    ? Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                21, 4, 21, 9),
+                                                        child: TextFieldUtils()
+                                                            .listPriceHeadingTextField(
+                                                                "Under " +
+                                                                    offerList[
+                                                                            index]
+                                                                        .belowAmountDisplay
+                                                                        .toString(),
+                                                                context),
+                                                      )
+                                                    : Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                21, 4, 21, 9),
+                                                        child: TextFieldUtils()
+                                                            .listPriceHeadingTextField(
+                                                                "Under " +
+                                                                    offerList[
+                                                                            index]
+                                                                        .belowDiscountPercentDisplay
+                                                                        .toString(),
+                                                                context),
+                                                      )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .03,
+                                  )
+                                ],
+                              ) ??
+                              SizedBox();
+                        })
+                    : SizedBox(),
+              );
 
+/*
               return Container(
                 height: offerList!.length > 2 ? 420 : 240,
                 child: GridView(
@@ -3028,7 +3164,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                           .toString() ??
                                                       "",
                                                   context) ??
-                                          SizedBox() /*Text(
+                                          SizedBox() */
+/*Text(
                                                     serviceList[index].shortName!,
                                                     maxLines: 1,
                                                     style: TextStyle(fontFamily: 'Roboto',
@@ -3038,7 +3175,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                             ThemeApp.whiteColor,
                                                         fontSize: height * .022,
                                                         fontWeight:
-                                                            FontWeight.bold))*/
+                                                            FontWeight.bold))*/ /*
+
                                       ,
                                     ),
                                     offerList[index].isAmountBased == true
@@ -3073,6 +3211,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       );
                     })),
               );
+*/
 
             default:
               return Text("No Data found!");

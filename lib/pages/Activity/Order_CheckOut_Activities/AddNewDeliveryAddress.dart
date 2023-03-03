@@ -231,14 +231,11 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                       return Container(
                         height: height * .8,
                         alignment: Alignment.center,
-                        child: TextFieldUtils().dynamicText(
-                            'No Match found!',
-                            context,
-                            TextStyle(
-                                fontFamily: 'Roboto',
-                                color: ThemeApp.blackColor,
-                                fontSize: height * .03,
-                                fontWeight: FontWeight.bold)),
+                        child: Center(
+                            child: Text(
+                              "Match not found",
+                              style: TextStyle(fontSize: 20),
+                            )),
                       );
                     }))),
           ),
@@ -759,14 +756,11 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     return Container(
                       height: height * .8,
                       alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: height * .03,
-                              fontWeight: FontWeight.bold)),
+                      child: Center(
+                          child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                     );
                   })),
 
@@ -1404,14 +1398,11 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     return Container(
                       height: height * .8,
                       alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: height * .03,
-                              fontWeight: FontWeight.bold)),
+                      child: Center(
+                          child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                     );
                   }))),
         ),
@@ -1822,14 +1813,11 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   return Container(
                     height: height * .8,
                     alignment: Alignment.center,
-                    child: TextFieldUtils().dynamicText(
-                        'No Match found!',
-                        context,
-                        TextStyle(
-                            fontFamily: 'Roboto',
-                            color: ThemeApp.blackColor,
-                            fontSize: height * .03,
-                            fontWeight: FontWeight.bold)),
+                    child: Center(
+                        child: Text(
+                          "Match not found",
+                          style: TextStyle(fontSize: 20),
+                        )),
                   );
                 })),
 
@@ -1872,7 +1860,7 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             SizedBox(
               height: height * .02,
             ),
-            proceedButton(StringUtils.addDeliveryAddress,
+            proceedButton('Edit Delivery Address',
                 ThemeApp.tealButtonColor, context, false, () async {
               // final prefs = await SharedPreferences.getInstance();
               //

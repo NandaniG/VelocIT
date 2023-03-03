@@ -66,6 +66,8 @@ dependencies:
   flutter_google_places: ^0.3.0
   dotted_border: ^2.0.0+3
   badges: ^3.0.2
+  downloads_path_provider_28: ^0.1.2
+  dio: ^4.0.4
 
   # map
   google_maps_flutter: ^2.2.3
@@ -95,6 +97,12 @@ dependencies:
   country_state_city_picker: ^1.2.8
   csc_picker: ^0.2.6
   image_downloader: ^0.31.0
+  app_settings: ^4.2.0
+  flutter_file_downloader: ^1.1.0+1
+  open_filex: ^4.3.2
+
+
+
 
 dev_dependencies:
   flutter_test:

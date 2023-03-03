@@ -154,13 +154,13 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
             preferredSize: Size.fromHeight(height * .12),
             child: AppBarWidget(
              context:context,
-              titleWidget:  searchBar(context),
+              titleWidget:  AddressWidgets(),
               location:   addressWidget(context, StringConstant.placesFromCurrentLocation),
    ),
           ),*/
 
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(height * .12),
+            preferredSize: Size.fromHeight(height * .14),
             child: Container(
               width: MediaQuery.of(context).size.width,
               color: ThemeApp.appBackgroundColor,
@@ -214,7 +214,7 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                     ),
 
                     // leadingWidth: width * .06,
-                    title: searchBar(context),
+                    title: searchBarWidget(),
                     actions: [
                       InkWell(
                         onTap: () {
@@ -415,14 +415,11 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
                   ? Container(
                       height: height * .8,
                       alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: height * .03,
-                              fontWeight: FontWeight.bold)),
+                      child:Center(
+                          child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                     )
                   : Container(
                       height: height * .15,
@@ -504,14 +501,11 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
           return Container(
             height: height * .8,
             alignment: Alignment.center,
-            child: TextFieldUtils().dynamicText(
-                'No Match found!',
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .03,
-                    fontWeight: FontWeight.bold)),
+            child: Center(
+                child: Text(
+                  "Match not found",
+                  style: TextStyle(fontSize: 20),
+                )),
           );
         }));
   }
@@ -834,14 +828,11 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
           return Container(
             height: height * .8,
             alignment: Alignment.center,
-            child: TextFieldUtils().dynamicText(
-                'No Match found!',
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .03,
-                    fontWeight: FontWeight.bold)),
+            child:Center(
+                child: Text(
+                  "Match not found",
+                  style: TextStyle(fontSize: 20),
+                )),
           );
         }));
   }

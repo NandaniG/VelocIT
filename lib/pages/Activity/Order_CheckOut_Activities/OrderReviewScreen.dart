@@ -107,7 +107,7 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
     print("Cart Id From Order Review${StringConstant.UserCartID}");
 
     StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-    if (!mounted) return;
+    // if (!mounted) return;
     await cartListView.sendAddressWithGet(
         context, StringConstant.UserLoginId.toString());
     await cartListView.gerDefaultAddressWithGet(
@@ -347,8 +347,20 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                             14,
                                           ),
                                         ]),
-                                    InkWell(
-                                        onTap: () {
+                                    ElevatedButton(style:
+                                    ButtonStyle(
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(100),
+                                              side: BorderSide(color: ThemeApp.tealButtonColor)
+                                          )
+                                      ),
+                                      padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.only(left: 20, right: 20,top: 10,bottom: 10)),
+                                      foregroundColor: MaterialStateProperty.all<Color>(ThemeApp.appLightColor),
+                                      backgroundColor: MaterialStateProperty.all<Color>(ThemeApp.whiteColor),
+
+                                    ),
+                                        onPressed: () {
                                           Map data = {
                                             "order_basket_id":
                                                 cartForPaymentPayload
@@ -403,15 +415,15 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                           // );
                                         },
                                         child: Container(
-                                            height: 40,
-                                            width: 121,
-                                            alignment: Alignment.center,
-                                            decoration: const BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(100),
-                                              ),
-                                              color: ThemeApp.whiteColor,
-                                            ),
+                                            // height: 40,
+                                            // width: 121,
+                                            // alignment: Alignment.center,
+                                            // decoration: const BoxDecoration(
+                                            //   borderRadius: BorderRadius.all(
+                                            //     Radius.circular(100),
+                                            //   ),
+                                            //   color: ThemeApp.whiteColor,
+                                            // ),
                                             // padding: const EdgeInsets.only(
                                             //     left: 21, right: 21),
                                             child: TextFieldUtils().dynamicText(
@@ -431,14 +443,11 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                     return Container(
                       height: 72,
                       alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
+                      child: Center(
+                          child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                     );
                   }))
               /*    Consumer<HomeProvider>(builder: (context, value, child) {
@@ -585,9 +594,10 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                               // crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 // StepperGlobalWidget(),
-                                isShowSteppers == true
+                           /*     isShowSteppers == true
                                     ? stepperWidget()
-                                    : SizedBox(),
+                                    : SizedBox(),*/
+                                stepperWidget(),
                                 Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Column(
@@ -1125,14 +1135,11 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                     return Container(
                       height: height * .8,
                       alignment: Alignment.center,
-                      child: TextFieldUtils().dynamicText(
-                          'No Match found!',
-                          context,
-                          TextStyle(
-                              fontFamily: 'Roboto',
-                              color: ThemeApp.blackColor,
-                              fontSize: height * .03,
-                              fontWeight: FontWeight.bold)),
+                      child: Center(
+                          child: Text(
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                     );
                   })))),
     );
@@ -2782,7 +2789,7 @@ final List<String> titles = [
   'Order review',
   'Delivery detail',
   'Payment',
-  'Order Placed',
+  'Order placed',
 ];
 int _curStep = 1;
 
@@ -3292,14 +3299,11 @@ class _ChangeAddressBottomSheetState extends State<ChangeAddressBottomSheet> {
           return Container(
             height: height * .8,
             alignment: Alignment.center,
-            child: TextFieldUtils().dynamicText(
-                'No Match found!',
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .03,
-                    fontWeight: FontWeight.bold)),
+            child:Center(
+                child: Text(
+                  "Match not found",
+                  style: TextStyle(fontSize: 20),
+                )),
           );
         }));
 

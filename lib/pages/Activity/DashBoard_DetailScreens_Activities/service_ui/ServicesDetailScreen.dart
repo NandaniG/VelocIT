@@ -29,16 +29,15 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(height * .12),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
         child: AppBarWidget(
           context: context,
-          titleWidget: searchBar(context),
+          titleWidget: searchBarWidget(),
           location: const AddressWidgets(),  ),
       ),
       body: SafeArea(
           child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-        child: Container(
+            padding: const EdgeInsets.only(left: 10, right: 10,),           child: Container(
           height: 356,
           width: width,
           decoration: BoxDecoration(

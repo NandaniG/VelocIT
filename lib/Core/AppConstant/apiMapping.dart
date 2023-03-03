@@ -48,6 +48,7 @@ static String BaseAPI = 'https://velocitapiqa.fulgorithmapi.com:443/api/v1';
  static String merchantNearMe = '/merchant/near_me';
  static String forgotPasswordGenOtp = '/user/forgotpasswordgenotp';
  static String resetPassword = '/user/resetpassword';
+ static String changeImageWithFile = '/changeimagewithfile';
 
   static String getURI(apiEndPoint ep) {
     String retVal = "";

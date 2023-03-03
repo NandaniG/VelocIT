@@ -824,7 +824,7 @@ class _ForgotPassOTPState extends State<ForgotPassOTP> {
   String otpMsg = "";
 
   late Timer _timer;
-  int _start = 120;
+  int _start = 90;
   bool isLoading = false;
   TextEditingController controller = TextEditingController(text: "");
   FocusNode focusNode = FocusNode();
@@ -849,15 +849,16 @@ class _ForgotPassOTPState extends State<ForgotPassOTP> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (_start != 0) {
+    /*    if (_start != 0) {
           return Future.value(false);
         } else {
-          Navigator.of(context).pushNamed(RoutesName.signInRoute).then((value) {
-            setState(() {});
-          });
-          return Future.value(true);
-        }
-      },
+
+        }*/
+
+        Navigator.of(context).pushNamed(RoutesName.signInRoute).then((value) {
+          setState(() {});
+        });
+        return Future.value(true);},
       child: Scaffold(
           backgroundColor: ThemeApp.appBackgroundColor,
           appBar: PreferredSize(
@@ -884,9 +885,9 @@ class _ForgotPassOTPState extends State<ForgotPassOTP> {
                   ),
                 ),
                 titleSpacing: 0,
-                leading: _start != 0
+                leading:/* _start != 0
                     ? SizedBox()
-                    : InkWell(
+                    :*/ InkWell(
                         onTap: () {
                           Navigator.of(context)
                               .pushNamed(RoutesName.signInRoute)
@@ -1068,7 +1069,7 @@ class _ForgotPassOTPState extends State<ForgotPassOTP> {
                           : InkWell(
                               onTap: () {
                                 setState(() {
-                                  _start = 120;
+                                  _start = 90;
                                   isLoading = true;
 
                                   Map emaildata = {

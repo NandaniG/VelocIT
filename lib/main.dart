@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
             create: (_) => DashboardViewModel(),
           ),
           ChangeNotifierProvider(
-            create: (_) => ProductSpecificListViewModel(),
+            create:(_) => ProductSpecificListViewModel(),
           ),
           ChangeNotifierProvider(
             create: (_) => LocaleProvider(),
@@ -69,7 +69,6 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (_) => HomeProvider(),
           ),
-
           ChangeNotifierProvider(
             create: (_) => ProductProvider(),
           ),

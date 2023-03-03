@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.12.29"
+  app_settings:
+    dependency: "direct main"
+    description:
+      name: app_settings
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.0"
   archive:
     dependency: transitive
     description:
@@ -239,6 +246,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.8"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.6"
   dotted_border:
     dependency: "direct main"
     description:
@@ -246,6 +260,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0+3"
+  downloads_path_provider_28:
+    dependency: "direct main"
+    description:
+      name: downloads_path_provider_28
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   email_validator:
     dependency: "direct main"
     description:
@@ -342,6 +363,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  flutter_file_downloader:
+    dependency: "direct main"
+    description:
+      name: flutter_file_downloader
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0+1"
   flutter_google_places:
     dependency: "direct main"
     description:
@@ -821,6 +849,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  open_filex:
+    dependency: "direct main"
+    description:
+      name: open_filex
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.3.2"
   package_config:
     dependency: transitive
     description:
@@ -1325,4 +1360,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.18.5 <3.0.0"
-  flutter: ">=3.0.0"
+  flutter: ">=3.0.1"
