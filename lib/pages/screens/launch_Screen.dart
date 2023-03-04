@@ -50,6 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
           (message) {
         print("FirebaseMessaging.onMessage.listen");
         if (message.notification != null) {
+          print("message  ${message}");
+
           print(message.notification!.title);
           print(message.notification!.body);
           print("message.data11 ${message.data}");

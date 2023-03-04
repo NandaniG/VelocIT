@@ -24,8 +24,14 @@ import 'notificationservices/local_notification_service.dart';
 import 'services/providers/Products_provider.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
+  try{
+
+  print('Firebase Messaging : ' + message.toString());
   print('FirebaseMessaging : ' + message.data.toString());
-  print('FirebaseMessaging : ' + message.notification!.title.toString());
+  print('FirebaseMessaging : ' + message.notification!.title.toString());}
+      catch(e){
+        print('FirebaseMessaging error : '+e.toString());
+      }
 }
 
 void main() async {
