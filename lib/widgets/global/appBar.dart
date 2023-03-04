@@ -726,9 +726,11 @@ class _AddressWidgetsState extends State<AddressWidgets> {
 
     if (status == PermissionStatus.denied) {
       permission = await Geolocator.requestPermission();
+      // final status = await Permission.location.request();
 
       print("PermissionStatus.denied");
-      if ((await Permission.locationWhenInUse.serviceStatus.isDisabled) ||(await Permission.locationAlways.serviceStatus.isDisabled) ) {
+      if (permission.name == 'always' || permission.name == 'whileInUse') {
+      }else {
   showDialog(
           context: context,
           builder: (BuildContext context) {

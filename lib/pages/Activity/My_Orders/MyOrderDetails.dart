@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/demoPage.dart';
+import 'package:velocit/pages/Activity/My_Orders/QR_download_popup.dart';
 import 'package:velocit/utils/utils.dart';
 
 import '../../../Core/Model/CartModels/GetDefaultAddressModel.dart';
@@ -60,7 +61,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
   void getPermission() async {
     print("getPermission");
     // Map<PermissionGroup, PermissionStatus> permissions =
-    PermissionStatus permission = await Permission.contacts.status;
+    PermissionStatus permission = await Permission.storage.status;
 
     await Permission.storage.request().isGranted;
   }
@@ -142,11 +143,6 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
     final filename = path.basename(url);
     // final file = File(
     //     '/storage/emulated/0/Download/VelocITt_${widget.values["id"].toString()}_$filename');
-    Future<Directory> dir = getApplicationDocumentsDirectory();
-    Directory newDir = Directory('$dir/testVelocit');
-
-    var iosPath = await newDir.create();
-    print('Directory newDir path :' + iosPath.path);
 
     //create file path
     var directory = await Directory('/storage/emulated/0/VelocITt Invoice')
@@ -164,6 +160,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
     }
     return file;
   }
+
   Future<File> _storeFileInIOS(String url, List<int> bytes) async {
     final filename = path.basename(url);
     //create file path
@@ -175,7 +172,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
 
     //save pdf file
     final file =
-    File('${iosPath.path}/${widget.values["id"].toString()}_$filename');
+        File('${iosPath.path}/${widget.values["id"].toString()}_$filename');
     Utils.successToast('Invoice Download Successfully');
     await file.writeAsBytes(bytes, flush: true);
     // await OpenFilex.open(url);
@@ -238,28 +235,25 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                   ),
                   Row(
                     children: [
-                      /* InkWell(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return QRDialog();
-                              });
-                        },
-                        child: Container(
-                            width: 20.0,
-                            height: 20.0,
-                            decoration: new BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                image: new DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: new AssetImage(
-                                      'assets/images/qr_test_image.png',
-                                    )))),
-                      ),
-                      SizedBox(
-                        width: width * .03,
-                      ),*/
+                      // InkWell(
+                      //   onTap: () {
+                      //     showDialog(
+                      //         context: context,
+                      //         builder: (BuildContext context) {
+                      //           return QRDialog(Order: widget.values['orders']);
+                      //         });
+                      //   },
+                      //   child: SvgPicture.asset(
+                      //     'assets/appImages/QRIcon.svg',
+                      //     // color: ThemeApp.whiteColor,
+                      //     semanticsLabel: 'Acme Logo',
+                      //     // height: 16.29,
+                      //     // width: 8.77,
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   width: width * .03,
+                      // ),
                       ElevatedButton(
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all<
@@ -275,9 +269,12 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                               ThemeApp.appColor),
                         ),
                         onPressed: () async {
-                          loadPdfFromNetwork(
-                              'https://static.fulgorithmapi.com/invoices/invoice.pdf');
-
+                          if (await Permission.storage.request().isGranted) {
+                            loadPdfFromNetwork(
+                                'https://static.fulgorithmapi.com/invoices/invoice.pdf');
+                          } else {
+                            await Permission.storage.request();
+                          }
                         },
                         child: Container(
                           // padding:
@@ -359,7 +356,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
               children: [
                 Container(
                     // width: 300,
-                    width: width * 0.85,
+                    width: MediaQuery.of(context).size.width * 0.9,
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
                         color: ThemeApp.whiteColor,
@@ -369,8 +366,9 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
                               width: 62.0,
@@ -390,18 +388,42 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                               })),
                             ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * .03,
+                              width: 0,
+                              // width: MediaQuery.of(context).size.width * .03,
                             ),
-                            Flexible(
-                              child: TextFieldUtils().dynamicText(
-                                  orders["oneliner"],
-                                  context,
-                                  TextStyle(
-                                      fontFamily: 'Roboto',
-                                      color: ThemeApp.blackColor,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
-                                      overflow: TextOverflow.ellipsis)),
+                            Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return QRDialog(Order:orders);
+                                        });
+                                  },
+                                  child: Container(width: 240,alignment: Alignment.topRight,
+                                    child: SvgPicture.asset(
+                                      'assets/appImages/QRIcon.svg',
+                                      // color: ThemeApp.whiteColor,
+                                      semanticsLabel: 'Acme Logo',
+                                      // height: 16.29,
+                                      // width: 8.77,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: 200,
+                                  child: TextFieldUtils().dynamicText(
+                                      orders["oneliner"],
+                                      context,
+                                      TextStyle(
+                                          fontFamily: 'Roboto',
+                                          color: ThemeApp.blackColor,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                          overflow: TextOverflow.ellipsis)),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -809,6 +831,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                   color: ThemeApp.blackColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w400)),
+          // widget.values['is_self_pickup']==false? Text("Pick-up from store"):  deliveryAddress()
           deliveryAddress()
         ],
       ),

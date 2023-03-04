@@ -360,7 +360,7 @@ class _ServiceListByCategoryActivityState
                                             flex: 2,
                                             child:*/
                           Container(
-                            height: 143,
+                            height: 123,
                             width: 191,
                             /* height: SizeConfig.orientations !=
                                                       Orientation.landscape

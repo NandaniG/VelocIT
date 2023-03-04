@@ -190,7 +190,7 @@ class _OfferActivityState extends State<OfferActivity> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                height: 143,
+                                height: 123,
                                 width: 191,
                                 decoration: BoxDecoration(
                                     color: ThemeApp.whiteColor,

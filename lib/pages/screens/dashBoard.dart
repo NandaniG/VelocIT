@@ -1700,6 +1700,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return /*(value.jsonData.length > 0 && value.jsonData['status'] == 'OK' ||
             value.jsonData.isNotEmpty)*/
+
         value.jsonData['status'] == "EXCEPTION"
             ? Text("")
             : Padding(

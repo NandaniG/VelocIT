@@ -760,7 +760,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
         // width: width * .25,
           width: 97,
           height: 59,
-          padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               border: Border.all(color: ThemeApp.containerColor, width: 1.5),

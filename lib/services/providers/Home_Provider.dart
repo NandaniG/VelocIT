@@ -51,8 +51,13 @@ class HomeProvider with ChangeNotifier {
       });
 
     // DashBoardRepository().getServiceCategoryListing();
-
       jsonData = json.decode(jsonContents);
+
+      List<dynamic> consumerBasket= jsonData['payload']['consumer_baskets'];
+
+      consumerBasket.sort((a, b) =>b['id']
+          .compareTo(a['id'].toInt()));
+      // jsonData = json.decode(jsonContents);
 
       print("____________loadJson______________________");
 

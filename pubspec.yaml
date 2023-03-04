@@ -68,6 +68,7 @@ dependencies:
   badges: ^3.0.2
   downloads_path_provider_28: ^0.1.2
   dio: ^4.0.4
+  flutter_share: ^2.0.0
 
   # map
   google_maps_flutter: ^2.2.3
@@ -100,7 +101,7 @@ dependencies:
   app_settings: ^4.2.0
   flutter_file_downloader: ^1.1.0+1
   open_filex: ^4.3.2
-
+  share_plus: ^6.3.1
 
 
 
