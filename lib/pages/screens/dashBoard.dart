@@ -97,6 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // addCartList();
     getCartDetailsFromPref();
 
+    Provider.of<HomeProvider>(context, listen: false).IsActiveOrderList =true;
     data = Provider.of<HomeProvider>(context, listen: false).loadJson();
 
     print(url.toString());
