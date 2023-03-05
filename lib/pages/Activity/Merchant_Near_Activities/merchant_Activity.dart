@@ -242,6 +242,7 @@ class _MerchantActvityState extends State<MerchantActvity> {
       data = {
         "base_latitude": 26.26774119270947,
         "base_longitude": 73.03210171571942,
+
         "distance_in_hundred_mtrs": 100
       };
     } else {
@@ -255,8 +256,10 @@ class _MerchantActvityState extends State<MerchantActvity> {
         "distance_in_hundred_mtrs": 100
       };*/
       data = {
-        "base_latitude": 26.26774119270947,
-        "base_longitude": 73.03210171571942,
+        // "base_latitude": 26.26774119270947,
+        // "base_longitude": 73.03210171571942,
+        "base_latitude": lat,
+        "base_longitude": long,
         "distance_in_hundred_mtrs": 100
       };
     }
@@ -527,9 +530,12 @@ class _MerchantActvityState extends State<MerchantActvity> {
 
                   return markersList.isEmpty
                       ? Container(
-                          height: height,
-                          alignment: Alignment.center,
-                          child: Text("No merchant available near you"))
+                      height: height*.6,                      alignment: Alignment.center,
+                      child: Center(
+                          child: Text(
+                            "No merchants available near you",
+                            style: TextStyle(fontSize: 20),
+                          )))
                       : Container(
                           height: MediaQuery.of(context).size.height,
                           // padding: EdgeInsets.all(12.0),
@@ -722,11 +728,11 @@ class _MerchantActvityState extends State<MerchantActvity> {
           padding: const EdgeInsets.only(top: 8.0),
           child: markersList.isEmpty
               ? Container(
-                  height: height,
-                  alignment: Alignment.center,
-                  child: Center(
-                      child: Text(
-                    "No merchant available near you",
+              height: height,
+              alignment: Alignment.center,
+              child: Center(
+                  child: Text(
+                    "No merchants available near you",
                     style: TextStyle(fontSize: 20),
                   )))
               : GestureDetector(

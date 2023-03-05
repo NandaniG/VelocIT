@@ -86,29 +86,30 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                   StringConstant.UserLoginId =
                       (prefs.getString('isUserId')) ?? '';
                   await  prefs.setString('userProfileImagePrefs',imagePath) ;
-
-                  setState(() {
-                    if (widget.isEditAccount == true) {
-
-                      AuthRepository().updateProfileImageApi(
-                          File(image.path), StringConstant.UserLoginId, context);
-
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const MyAccountActivity(),
-                        ),
-                      );
-                    } else {
-                      AuthRepository().updateProfileImageApi(
-                          File(image.path), StringConstant.UserLoginId,context);
-
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => EditAccountActivity(),
-                        ),
-                      );
-                    }
-                  });
+                  AuthRepository().updateProfileImageApi(
+                      File(imagePath), StringConstant.UserLoginId, context, widget.isEditAccount);
+                  // setState(() {
+                  //   if (widget.isEditAccount == true) {
+                  //
+                  //     AuthRepository().updateProfileImageApi(
+                  //         File(image.path), StringConstant.UserLoginId, context,widget.isEditAccount);
+                  //
+                  //     Navigator.of(context).pushReplacement(
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const MyAccountActivity(),
+                  //       ),
+                  //     );
+                  //   } else {
+                  //     AuthRepository().updateProfileImageApi(
+                  //         File(image.path), StringConstant.UserLoginId,context);
+                  //
+                  //     Navigator.of(context).pushReplacement(
+                  //       MaterialPageRoute(
+                  //         builder: (context) => EditAccountActivity(),
+                  //       ),
+                  //     );
+                  //   }
+                  // });
                 }),
                 SizedBox(
                   height: 20,
@@ -126,26 +127,27 @@ class _ProfileImageDialogState extends State<ProfileImageDialog> {
                       await prefs.setString('profileImagePrefs', pickedFile.path);
                       StringConstant.UserLoginId =
                           (prefs.getString('isUserId')) ?? '';
-
-                      if (widget.isEditAccount == true) {
-                        AuthRepository().updateProfileImageApi(
-                            File(pickedFile.path), StringConstant.UserLoginId, context);
-
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => const MyAccountActivity(),
-                          ),
-                        );
-                      } else {
-                        AuthRepository().updateProfileImageApi(
-                            File(pickedFile.path), StringConstant.UserLoginId, context);
-
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => EditAccountActivity(),
-                          ),
-                        );
-                      }
+                    AuthRepository().updateProfileImageApi(
+                        File(pickedFile.path), StringConstant.UserLoginId, context, widget.isEditAccount);
+                    //   if (widget.isEditAccount == true) {
+                    //     AuthRepository().updateProfileImageApi(
+                    //         File(pickedFile.path), StringConstant.UserLoginId, context);
+                    //
+                    //     Navigator.of(context).pushReplacement(
+                    //       MaterialPageRoute(
+                    //         builder: (context) => const MyAccountActivity(),
+                    //       ),
+                    //     );
+                    //   } else {
+                    //     AuthRepository().updateProfileImageApi(
+                    //         File(pickedFile.path), StringConstant.UserLoginId, context);
+                    //
+                    //     Navigator.of(context).pushReplacement(
+                    //       MaterialPageRoute(
+                    //         builder: (context) => EditAccountActivity(),
+                    //       ),
+                    //     );
+                    //   }
                     }
 
                 }),

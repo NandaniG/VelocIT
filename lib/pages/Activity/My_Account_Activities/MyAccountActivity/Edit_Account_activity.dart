@@ -64,40 +64,41 @@ class _EditAccountActivityState extends State<EditAccountActivity> {
     super.initState();
   }
 
-  getPrefValue() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool check = prefs.containsKey('userProfileImagePrefs');
-    if (check) {
-      setState(() {
-        print("yes/./././.");
-        StringConstant.ProfilePhoto =
-            prefs.getString('userProfileImagePrefs') ?? "";
-      });
-      return;
-    }
-  }
-getUserData()async{
-  final prefs = await SharedPreferences.getInstance();
+  // getPrefValue() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   bool check = prefs.containsKey('userProfileImagePrefs');
+  //   if (check) {
+  //     setState(() {
+  //       print("yes/./././.");
+  //       StringConstant.ProfilePhoto =
+  //           prefs.getString('userProfileImagePrefs') ?? "";
+  //     });
+  //     return;
+  //   }
+  // }
 
-  setState(() {
-    StringConstant.UserLoginId =
-        (prefs.getString('isUserId')) ?? '';
-    StringConstant.userProfileName =
-        prefs.getString('userProfileNamePrefs') ?? "";
-    StringConstant.userProfileEmail =
-        prefs.getString('userProfileEmailPrefs') ?? "";
-    StringConstant.userProfileMobile =
-        prefs.getString('userProfileMobilePrefs') ?? "";
-    StringConstant.ProfilePhoto =
-        prefs.getString('userProfileImagePrefs') ?? "";
-    userNameController =
-        TextEditingController(text: StringConstant.userProfileName);
-    mobileController =
-        TextEditingController(text: StringConstant.userProfileMobile);
-    emailController =
-        TextEditingController(text: StringConstant.userProfileEmail);
-  });
-}
+  getUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
+      StringConstant.userProfileName =
+          prefs.getString('userProfileNamePrefs') ?? "";
+      StringConstant.userProfileEmail =
+          prefs.getString('userProfileEmailPrefs') ?? "";
+      StringConstant.userProfileMobile =
+          prefs.getString('userProfileMobilePrefs') ?? "";
+      StringConstant.ProfilePhoto =
+          prefs.getString('userProfileImagePrefs') ?? "";
+      userNameController =
+          TextEditingController(text: StringConstant.userProfileName);
+      mobileController =
+          TextEditingController(text: StringConstant.userProfileMobile);
+      emailController =
+          TextEditingController(text: StringConstant.userProfileEmail);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -131,16 +132,13 @@ getUserData()async{
                 fontWeight: FontWeight.w500)),
       ),
       body: SafeArea(
-        child: Consumer<ProductProvider>(builder: (context, provider, child) {
-          return ListView(
-            children: [mainUI(provider)],
-          );
-        }),
-      ),
+          child: ListView(
+        children: [mainUI()],
+      )),
     );
   }
 
-  Widget mainUI(ProductProvider provider) {
+  Widget mainUI() {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -153,7 +151,7 @@ getUserData()async{
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StringConstant.ProfilePhoto != null
+            StringConstant.ProfilePhoto.isNotEmpty
                 ? Stack(
                     // alignment: Alignment.center,
                     children: [
@@ -161,19 +159,15 @@ getUserData()async{
                         child: Container(
                           width: 110.0,
                           height: 110.0,
-                          decoration:
-                          new BoxDecoration(
+                          decoration: new BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                  color: ThemeApp
-                                      .appLightColor,
+                                  color: ThemeApp.appLightColor,
                                   spreadRadius: 1,
                                   blurRadius: 5)
                             ],
                             border: Border.all(
-                                color: ThemeApp
-                                    .whiteColor,
-                                width: 4),
+                                color: ThemeApp.whiteColor, width: 4),
                             shape: BoxShape.circle,
                           ),
                           child: ClipRRect(
@@ -202,11 +196,12 @@ getUserData()async{
                         child: InkWell(
                             onTap: () {
                               // _getFromCamera();
+
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return ProfileImageDialog(
-                                        isEditAccount: false);
+                                        isEditAccount: true);
                                   });
                             },
                             child: Container(
@@ -274,11 +269,12 @@ getUserData()async{
                         child: InkWell(
                             onTap: () {
                               // _getFromCamera();
+
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return ProfileImageDialog(
-                                        isEditAccount: false);
+                                        isEditAccount: true);
                                   });
                             },
                             child: Container(
@@ -455,7 +451,7 @@ getUserData()async{
             SizedBox(
               height: height * .03,
             ),
-            updateButton(provider),
+            updateButton(),
             SizedBox(
               height: height * .02,
             ),
@@ -465,20 +461,180 @@ getUserData()async{
     );
   }
 
-
-
-  Widget updateButton(ProductProvider provider) {
+  Widget updateButton() {
     return proceedButton(
         StringUtils.update, ThemeApp.tealButtonColor, context, false, () {
       FocusManager.instance.primaryFocus?.unfocus();
       Map data = {
         "username": userNameController.text,
       };
-AuthRepository().editUserInfoApi(data, StringConstant.UserLoginId);
-      print("provider.creditCardList__________" +
-          provider.userAccountDetailList.length.toString());
-
+      AuthRepository().editUserInfoApi(data, StringConstant.UserLoginId);
     });
   }
 
+  Widget accountTextList(String text) {
+    return TextFieldUtils().dynamicText(
+        text,
+        context,
+        TextStyle(
+            fontFamily: 'Roboto',
+            color: ThemeApp.blackColor,
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+            letterSpacing: -0.25));
+  }
+
+  // Widget bottomSheetForImagePicker() {
+  //   return SingleChildScrollView(
+  //     child: Container(
+  //       padding: const EdgeInsets.fromLTRB(16, 20, 24, 20),
+  //       decoration: const BoxDecoration(
+  //           color: ThemeApp.whiteColor,
+  //           borderRadius: BorderRadius.only(
+  //               topLeft: Radius.circular(20.0),
+  //               topRight: Radius.circular(20.0))),
+  //       // padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           accountTextList('Change Profile Photo'),
+  //           SizedBox(
+  //             height: 10,
+  //           ),
+  //           Row(
+  //             children: [
+  //               InkWell(
+  //                 onTap: () async {
+  //                   // final prefs = await SharedPreferences.getInstance();
+  //                   //
+  //                   // FilePickerResult? pickedFile =
+  //                   // await FilePicker.platform.pickFiles();
+  //                   // if (pickedFile != null) {
+  //                   //   String? filePath = pickedFile.files.single.path;
+  //                   //   if (filePath != null) {
+  //                   //     final file = File(filePath);
+  //                   //     await prefs.setString('profileImagePrefs', filePath);
+  //                   //
+  //                   //     imageFile1 = file;
+  //                   //     Navigator.of(context).pushReplacement(
+  //                   //       MaterialPageRoute(
+  //                   //         builder: (context) =>  EditAccountActivity(),
+  //                   //       ),
+  //                   //     );
+  //                   //   }
+  //                   // }
+  //
+  //                   final prefs = await SharedPreferences.getInstance();
+  //
+  //                   final pickedFile = await picker.getImage(
+  //                     source: ImageSource.gallery,
+  //                   );
+  //                   print(pickedFile!.path.toString());
+  //                   if (pickedFile != null) {
+  //                     await prefs.setString(
+  //                         'userProfileImagePrefs', pickedFile.path);
+  //                     await prefs.setString(
+  //                         'profileImagePrefs', pickedFile.path);
+  //                     StringConstant.UserLoginId =
+  //                         (prefs.getString('isUserId')) ?? '';
+  //
+  //                     AuthRepository().updateProfileImageApi(
+  //                         File(pickedFile.path),
+  //                         StringConstant.UserLoginId,
+  //                         context);
+  //
+  //                     Navigator.of(context).pushReplacement(
+  //                       MaterialPageRoute(
+  //                         builder: (context) => EditAccountActivity(),
+  //                       ),
+  //                     );
+  //                   }
+  //                 },
+  //                 child: Container(
+  //                   decoration: BoxDecoration(
+  //                     color: ThemeApp.lightBorderColor,
+  //                     borderRadius: BorderRadius.all(Radius.circular(8)),
+  //                     // border: Border.all(color: ThemeApp.lightBorderColor)
+  //                   ),
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.all(20),
+  //                     child: SvgPicture.asset(
+  //                       'assets/appImages/imageIcon.svg',
+  //                       color: ThemeApp.subIconColor,
+  //                       semanticsLabel: 'Acme Logo',
+  //                       height: 37,
+  //                       // height: height * .03,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //               SizedBox(
+  //                 width: 10,
+  //               ),
+  //               InkWell(
+  //                 onTap: () async {
+  //                   // var image =
+  //                   // await picker.getImage(source: ImageSource.camera);
+  //                   // final prefs = await SharedPreferences.getInstance();
+  //                   // // StringConstant.CurrentPinCode = (prefs.getString('CurrentPinCodePref') ?? '');
+  //                   // String imagePath = image!.path;
+  //                   //
+  //                   // await prefs.setString('profileImagePrefs', imagePath);
+  //                   // Map data = {
+  //                   //   "imgUrl": image.path,
+  //                   // };
+  //                   //
+  //                   // setState(() {
+  //                   //   imageFile1 = File(image.path);
+  //                   //   Navigator.of(context).pushReplacement(
+  //                   //     MaterialPageRoute(
+  //                   //       builder: (context) =>  EditAccountActivity(),
+  //                   //     ),
+  //                   //   );
+  //                   // });
+  //
+  //                   var image =
+  //                       await picker.getImage(source: ImageSource.camera);
+  //                   final prefs = await SharedPreferences.getInstance();
+  //                   String imagePath = image!.path;
+  //                   await prefs.setString('profileImagePrefs', imagePath);
+  //                   StringConstant.UserLoginId =
+  //                       (prefs.getString('isUserId')) ?? '';
+  //                   await prefs.setString('userProfileImagePrefs', imagePath);
+  //
+  //                   AuthRepository().updateProfileImageApi(
+  //                       File(image.path), StringConstant.UserLoginId, context);
+  //
+  //                   Navigator.of(context).pushReplacement(
+  //                     MaterialPageRoute(
+  //                       builder: (context) => EditAccountActivity(),
+  //                     ),
+  //                   );
+  //                 },
+  //                 child: Container(
+  //                   decoration: BoxDecoration(
+  //                     color: ThemeApp.lightBorderColor,
+  //                     borderRadius: BorderRadius.all(Radius.circular(8)),
+  //                     // border: Border.all(color: ThemeApp.lightBorderColor)
+  //                   ),
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.all(20),
+  //                     child: SvgPicture.asset(
+  //                       'assets/appImages/cameraIconGrey.svg',
+  //                       color: ThemeApp.subIconColor,
+  //                       semanticsLabel: 'Acme Logo',
+  //                       height: 37,
+  //                       // height: height * .03,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }

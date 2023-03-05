@@ -9,15 +9,11 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:velocit/demoPage.dart';
 import 'package:velocit/pages/Activity/My_Orders/QR_download_popup.dart';
 import 'package:velocit/utils/utils.dart';
-
 import '../../../Core/Model/CartModels/GetDefaultAddressModel.dart';
-import '../../../Core/ViewModel/auth_viewmodel.dart';
 import '../../../Core/ViewModel/cart_view_model.dart';
 import '../../../Core/data/responses/status.dart';
-import '../../../services/models/MyOrdersModel.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/styles.dart';
 import '../../../widgets/global/appBar.dart';
@@ -69,9 +65,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
   ///
   getPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-
     cartListView.gerDefaultAddressWithGet(
         context, StringConstant.UserLoginId.toString());
   }
@@ -352,64 +346,45 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
           itemCount: widget.values["orders"].length,
           itemBuilder: (BuildContext context, int index) {
             Map orders = widget.values["orders"][index];
-            return Row(
+            return Stack(
               children: [
-                Container(
-                    // width: 300,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: ThemeApp.whiteColor,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                        Row(
+                Row(
+                  children: [
+                    Container(
+                        // width: 300,
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10))),
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: 62.0,
-                              height: 62.0,
-                              decoration: new BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(2)),
-                                shape: BoxShape.rectangle,
-                              ),
-                              child: Image.network(
-                                  // width: double.infinity,
-                                  orders["image_url"] ?? "",
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
                                   width: 62.0,
                                   height: 62.0,
-                                  errorBuilder: ((context, error, stackTrace) {
-                                return Icon(Icons.image_outlined);
-                              })),
-                            ),
-                            SizedBox(
-                              width: 0,
-                              // width: MediaQuery.of(context).size.width * .03,
-                            ),
-                            Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return QRDialog(Order:orders);
-                                        });
-                                  },
-                                  child: Container(width: 240,alignment: Alignment.topRight,
-                                    child: SvgPicture.asset(
-                                      'assets/appImages/QRIcon.svg',
-                                      // color: ThemeApp.whiteColor,
-                                      semanticsLabel: 'Acme Logo',
-                                      // height: 16.29,
-                                      // width: 8.77,
-                                    ),
+                                  decoration: new BoxDecoration(
+                                    borderRadius:
+                                        const BorderRadius.all(Radius.circular(2)),
+                                    shape: BoxShape.rectangle,
                                   ),
+                                  child: Image.network(
+                                      // width: double.infinity,
+                                      orders["image_url"] ?? "",
+                                      width: 62.0,
+                                      height: 62.0,
+                                      errorBuilder: ((context, error, stackTrace) {
+                                    return Icon(Icons.image_outlined);
+                                  })),
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width * .03,
                                 ),
                                 Container(
                                   width: 200,
@@ -425,27 +400,49 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                                 ),
                               ],
                             ),
+                            SizedBox(
+                              height: 6,
+                            ),
+                            TextFieldUtils().dynamicText(
+                                orders["merchant_name"].toString() ?? "",
+                                context,
+                                TextStyle(
+                                    fontFamily: 'Roboto',
+                                    color: ThemeApp.darkGreyTab,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    overflow: TextOverflow.ellipsis)),
+                            stepperWidget(orders)
+                            // stepperWidget(),
                           ],
-                        ),
-                        SizedBox(
-                          height: 6,
-                        ),
-                        TextFieldUtils().dynamicText(
-                            orders["merchant_name"].toString() ?? "",
-                            context,
-                            TextStyle(
-                                fontFamily: 'Roboto',
-                                color: ThemeApp.darkGreyTab,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                overflow: TextOverflow.ellipsis)),
-                        stepperWidget(orders)
-                        // stepperWidget(),
-                      ],
-                    )),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * .03,
-                )
+                        )),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * .03,
+                    )
+                  ],
+                ),
+                Positioned(
+                 width: width * 0.85,
+                  top: 10, right: 20,
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return QRDialog(Order:orders);
+                          });
+                    },
+                    child: Container(width: 240,alignment: Alignment.topRight,
+                      child: SvgPicture.asset(
+                        'assets/appImages/QRIcon.svg',
+                        // color: ThemeApp.whiteColor,
+                        semanticsLabel: 'Acme Logo',
+                        // height: 16.29,
+                        // width: 8.77,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             );
           }),

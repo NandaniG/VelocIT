@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Enum/apiEndPointEnums.dart';
 import 'package:velocit/Core/repository/cart_repository.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/MyAccountActivity/Edit_Account_activity.dart';
+import 'package:velocit/pages/Activity/My_Account_Activities/MyAccount_activity.dart';
 import 'package:velocit/pages/auth/sign_in.dart';
 import 'package:velocit/pages/screens/cartDetail_Activity.dart';
 
@@ -487,7 +489,7 @@ class AuthRepository {
   }
 
   //update profile image
-  updateProfileImageApi(File imageFile,String userId, BuildContext context) async {
+  updateProfileImageApi(File imageFile,String userId, BuildContext context, bool isEditProfile) async {
     var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
     var url =
@@ -503,8 +505,26 @@ class AuthRepository {
     request.files.add(multipartFile);
     var response = await request.send();
     print("response Image "+response.statusCode.toString());
+
     response.stream.transform(utf8.decoder).listen((value) {
       print("Image response "+value);
+      getUserDetailsById(userId).then((value){if (isEditProfile == true) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) =>  EditAccountActivity(),
+          ),
+        );
+      } else {
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => MyAccountActivity(),
+          ),
+        );
+      }});
+
+
+
     });
   }
 
