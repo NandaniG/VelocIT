@@ -1078,7 +1078,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                     ),*/
 
                                       Container(
-                                          height: order['orders'].length > 2
+                                          height: order['orders'].length >= 2
                                               ? !viewMore
                                                   ? 50
                                                   : 80
@@ -1341,7 +1341,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                             TextFieldUtils().dynamicText(
                                                 indianRupeesFormat
                                                     .format(double.parse(
-                                                        order['offer']
+                                                        order['mrp']
                                                                 .toString() ??
                                                             ""))
                                                     .toString(),
