@@ -375,9 +375,9 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   hintText: '305, Lokseva Apartments',
                   onChange: (val) {
                     setState(() {
-                      if (val.isEmpty && houseBuildingController.text.isEmpty) {
+                      if (val.isEmpty && houseBuildingController.text.trim().isEmpty) {
                         _ishouseBuildingValidate = true;
-                      } else if (houseBuildingController.text.length < 5) {
+                      } else if (houseBuildingController.text.trim().length < 5) {
                         _ishouseBuildingValidate = true;
                       } else {
                         _ishouseBuildingValidate = false;
@@ -385,10 +385,10 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     });
                   },
                   validator: (value) {
-                    if (value.isEmpty && houseBuildingController.text.isEmpty) {
+                    if (value.isEmpty && houseBuildingController.text.trim().isEmpty) {
                       _ishouseBuildingValidate = true;
                       return StringUtils.enterhouseBuildingNo;
-                    } else if (houseBuildingController.text.length < 5) {
+                    } else if (houseBuildingController.text.trim().length < 5) {
                       _ishouseBuildingValidate = true;
                       return StringUtils.enterhouseBuildingNo;
                     } else {
@@ -406,9 +406,9 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   hintText: 'Telecom Housing Society',
                   onChange: (val) {
                     setState(() {
-                      if (val.isEmpty && areaColonyController.text.isEmpty) {
+                      if (val.isEmpty && areaColonyController.text.trim().isEmpty) {
                         _isareaColonyValidate = true;
-                      } else if (areaColonyController.text.length < 5) {
+                      } else if (areaColonyController.text.trim().length < 5) {
                         _isareaColonyValidate = true;
                       } else {
                         _isareaColonyValidate = false;
@@ -416,10 +416,10 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     });
                   },
                   validator: (value) {
-                    if (value.isEmpty && areaColonyController.text.isEmpty) {
+                    if (value.isEmpty && areaColonyController.text.trim().isEmpty) {
                       _isareaColonyValidate = true;
                       return StringUtils.enterAreaName;
-                    } else if (areaColonyController.text.length < 5) {
+                    } else if (areaColonyController.text.trim().length < 5) {
                       _isareaColonyValidate = true;
                       return StringUtils.enterAreaName;
                     } else {
@@ -774,9 +774,9 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                   hintText: '365214',
                   onChange: (val) {
                     setState(() {
-                      if (val.isEmpty && pincodeController.text.isEmpty) {
+                      if (val.isEmpty && pincodeController.text.trim().isEmpty) {
                         _ispincodeValidate = true;
-                      } else if (pincodeController.text.length < 6) {
+                      } else if (pincodeController.text.trim().length < 6) {
                         _ispincodeValidate = true;
                       } else {
                         _ispincodeValidate = false;
@@ -784,10 +784,10 @@ class _AddNewDeliveryAddressState extends State<AddNewDeliveryAddress> {
                     });
                   },
                   validator: (value) {
-                    if (value.isEmpty && pincodeController.text.isEmpty) {
+                    if (value.isEmpty && pincodeController.text.trim().isEmpty) {
                       _ispincodeValidate = true;
                       return StringUtils.enterPincode;
-                    } else if (pincodeController.text.length < 6) {
+                    } else if (pincodeController.text.trim().length < 6) {
                       _ispincodeValidate = true;
                       return StringUtils.enterPincode;
                     } else {
@@ -1420,14 +1420,9 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Full Name
-            TextFieldUtils().dynamicText(
-                StringUtils.fullName,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
+            TextFieldUtils()
+                .asteriskTextField(
+                StringUtils.fullName,context),
 
             CharacterTextFormFieldsWidget(
                 errorText: StringUtils.enterFullName,
@@ -1437,9 +1432,9 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                 hintText: 'Type your name',
                 onChange: (val) {
                   setState(() {
-                    if (val.isEmpty && fullNameController.text.isEmpty) {
+                    if (val.isEmpty && fullNameController.text.trim().isEmpty) {
                       _isfullNameValidate = true;
-                    } else if (fullNameController.text.length <= 4) {
+                    } else if (fullNameController.text.trim().length <= 4) {
                       _isfullNameValidate = true;
                     } else {
                       _isfullNameValidate = false;
@@ -1447,10 +1442,10 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   });
                 },
                 validator: (value) {
-                  if (value.isEmpty && fullNameController.text.isEmpty) {
+                  if (value.isEmpty && fullNameController.text.trim().isEmpty) {
                     _isfullNameValidate = true;
                     return StringUtils.enterFullName;
-                  } else if (fullNameController.text.length < 4) {
+                  } else if (fullNameController.text.trim().length < 4) {
                     _isfullNameValidate = true;
                     return StringUtils.enterFullName;
                   } else {
@@ -1459,14 +1454,10 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   return null;
                 }),
             //Mobile Number
-            TextFieldUtils().dynamicText(
+            TextFieldUtils()
+                .asteriskTextField(
                 StringUtils.mobileNumber,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
+                context),
             MobileNumberTextFormField(
                 controller: mobileController,
                 enable: true,
@@ -1480,10 +1471,10 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                   }
                 },
                 validator: (value) {
-                  if (value == '' && mobileController.text.isEmpty) {
+                  if (value == '' && mobileController.text.trim().isEmpty) {
                     _ismobileValidate = true;
                     return StringUtils.enterMobileNumber;
-                  } else if (mobileController.text.length < 10) {
+                  } else if (mobileController.text.trim().length < 10) {
                     _ismobileValidate = true;
                     return StringUtils.enterMobileNumber;
                   } else {
@@ -1540,50 +1531,76 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             SizedBox(
               height: height * .02,
             ),
-            TextFieldUtils().dynamicText(
+            TextFieldUtils()
+                .asteriskTextField(
                 StringUtils.houseBuildingNo,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
+                context),
             TextFormFieldsWidget(
                 errorText: StringUtils.houseBuildingNo,
                 textInputType: TextInputType.text,
                 controller: houseBuildingController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 hintText: '305, Lokseva Apartments',
-                onChange: (val) {},
+                onChange: (val) {
+                  setState(() {
+                    if (val.isEmpty && houseBuildingController.text.trim().isEmpty) {
+                      _ishouseBuildingValidate = true;
+                    } else if (houseBuildingController.text.trim().length < 5) {
+                      _ishouseBuildingValidate = true;
+                    } else {
+                      _ishouseBuildingValidate = false;
+                    }
+                  });
+                },
                 validator: (value) {
+                  if (value.isEmpty && houseBuildingController.text.trim().isEmpty) {
+                    _ishouseBuildingValidate = true;
+                    return StringUtils.enterhouseBuildingNo;
+                  } else if (houseBuildingController.text.trim().length < 5) {
+                    _ishouseBuildingValidate = true;
+                    return StringUtils.enterhouseBuildingNo;
+                  } else {
+                    _ishouseBuildingValidate = false;
+                  }
                   return null;
                 }),
-            TextFieldUtils().dynamicText(
+            TextFieldUtils()
+                .asteriskTextField(
                 StringUtils.areaColonyName,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
+                context),
             TextFormFieldsWidget(
                 errorText: StringUtils.areaColonyName,
                 textInputType: TextInputType.text,
                 controller: areaColonyController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 hintText: 'Telecom Housing Society',
-                onChange: (val) {},
+                onChange: (val) {
+                  setState(() {
+                    if (val.isEmpty && areaColonyController.text.trim().isEmpty) {
+                      _isareaColonyValidate = true;
+                    } else if (areaColonyController.text.trim().length < 5) {
+                      _isareaColonyValidate = true;
+                    } else {
+                      _isareaColonyValidate = false;
+                    }
+                  });
+                },
                 validator: (value) {
+                  if (value.isEmpty && areaColonyController.text.trim().isEmpty) {
+                    _isareaColonyValidate = true;
+                    return StringUtils.enterAreaName;
+                  } else if (areaColonyController.text.trim().length < 5) {
+                    _isareaColonyValidate = true;
+                    return StringUtils.enterAreaName;
+                  } else {
+                    _isareaColonyValidate = false;
+                  }
                   return null;
                 }),
-            TextFieldUtils().dynamicText(
+            TextFieldUtils()
+                .asteriskTextField(
                 StringUtils.state,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
+                context),
             /*       TextFormFieldsWidget(
                     errorText: StringUtils.state,
                     textInputType: TextInputType.text,
@@ -1678,14 +1695,10 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                 }).toList(),
               )),
             ),
-            TextFieldUtils().dynamicText(
+            TextFieldUtils()
+                .asteriskTextField(
                 StringUtils.city,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
+                context),
             /*      TextFormFieldsWidget(
                     errorText: StringUtils.city,
                     textInputType: TextInputType.text,
@@ -1824,22 +1837,37 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             SizedBox(
               height: height * .02,
             ),
-            TextFieldUtils().dynamicText(
+            TextFieldUtils()
+                .asteriskTextField(
                 StringUtils.pincode,
-                context,
-                TextStyle(
-                    fontFamily: 'Roboto',
-                    color: ThemeApp.blackColor,
-                    fontSize: height * .02,
-                    fontWeight: FontWeight.w500)),
+                context,),
             TextFormFieldsWidget(
                 errorText: StringUtils.pincode,
                 textInputType: TextInputType.text,
                 controller: pincodeController,
                 autoValidation: AutovalidateMode.onUserInteraction,
                 hintText: '365214',
-                onChange: (val) {},
+                onChange: (val) {
+                  setState(() {
+                    if (val.isEmpty && pincodeController.text.trim().isEmpty) {
+                      _ispincodeValidate = true;
+                    } else if (pincodeController.text.trim().length < 6) {
+                      _ispincodeValidate = true;
+                    } else {
+                      _ispincodeValidate = false;
+                    }
+                  });
+                },
                 validator: (value) {
+                  if (value.isEmpty && pincodeController.text.trim().isEmpty) {
+                    _ispincodeValidate = true;
+                    return StringUtils.enterPincode;
+                  } else if (pincodeController.text.trim().length < 6) {
+                    _ispincodeValidate = true;
+                    return StringUtils.enterPincode;
+                  } else {
+                    _ispincodeValidate = false;
+                  }
                   return null;
                 }),
             SizedBox(
@@ -1862,196 +1890,6 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
             ),
             proceedButton('Edit Delivery Address',
                 ThemeApp.tealButtonColor, context, false, () async {
-              // final prefs = await SharedPreferences.getInstance();
-              //
-              // StringConstant.UserLoginId = (prefs.getString('isUserId')) ?? '';
-              // StringConstant.UserCartID = (prefs.getString('CartIdPref')) ?? '';
-              // if (_formKey.currentState!.validate() &&
-              //     fullNameController.text.isNotEmpty &&
-              //     mobileController.text.isNotEmpty &&
-              //     houseBuildingController.text.isNotEmpty &&
-              //     areaColonyController.text.isNotEmpty &&
-              //     stateController.text.isNotEmpty &&
-              //     cityController.text.isNotEmpty &&
-              //     pincodeController.text.isNotEmpty) {
-              //   var userId;
-              //   if (StringConstant.UserLoginId.toString() == '' ||
-              //       StringConstant.UserLoginId.toString() == null) {
-              //     userId = StringConstant.RandomUserLoginId;
-              //   } else {
-              //     userId = StringConstant.UserLoginId;
-              //   }
-              //
-              //   FocusManager.instance.primaryFocus?.unfocus();
-              //
-              //   widget.addressList.name = fullNameController.text.toString();
-              //   widget.addressList.contactNumber =
-              //       mobileController.text.toString();
-              //   widget.addressList.addressLine1 =
-              //       houseBuildingController.text.toString();
-              //   widget.addressList.addressLine2 =
-              //       areaColonyController.text.toString();
-              //   widget.addressList.stateName = stateController.text.toString();
-              //   widget.addressList.cityName = cityController.text.toString();
-              //   widget.addressList.pincode = pincodeController.text.toString();
-              //   widget.addressList.addressType = selectedAddressIs;
-              //   print(fullNameController.text);
-              //   print(widget.addressList.name);
-              //   //
-              //   // print("value.addressList" + value.addressList.length.toString());
-              //   //
-              //   // var copyOfAddressList = value.addressList.map((v) => v).toList();
-              //   // String encodedMap = json.encode(copyOfAddressList);
-              //   // StringConstant.prettyPrintJson(encodedMap.toString());
-              //
-              //   if (widget.isSavedAddress == true) {
-              //     Map data = {
-              //       "name": fullNameController.text,
-              //       "address_line_1": houseBuildingController.text,
-              //       "address_line_2": areaColonyController.text,
-              //       "city_name": cityController.text,
-              //       "state_name": stateController.text,
-              //       "address_type": selectedAddressIs,
-              //       "pincode": pincodeController.text,
-              //       "contact_number": mobileController.text,
-              //       "latitude": 24.2342525,
-              //       "longitude": 52.2342523
-              //     };
-              //     print("map address" + data.toString());
-              //
-              //     CartRepository()
-              //         .putAddressApi(data, widget.addressList.id!)
-              //         .then((value) {
-              //       Navigator.of(context).pushReplacement(
-              //         MaterialPageRoute(
-              //           builder: (context) => SavedAddressDetails(
-              //               /*   cartForPaymentPayload: widget.cartForPaymentPayload!*/),
-              //         ),
-              //       );
-              //       Utils.successToast('Address update successfully!');
-              //     });
-              //
-              //     // Utils.successToast("New Address added successfully");
-              //
-              //   } else {
-              //     Map data = {
-              //       "name": fullNameController.text,
-              //       "address_line_1": houseBuildingController.text,
-              //       "address_line_2": areaColonyController.text,
-              //       "city_name": cityController.text,
-              //       "state_name": stateController.text,
-              //       "address_type": selectedAddressIs,
-              //       "pincode": pincodeController.text,
-              //       "contact_number": "+91 " + mobileController.text,
-              //       "latitude": 24.2342525,
-              //       "longitude": 52.2342523
-              //     };
-              //     print("map address" + data.toString());
-              //
-              //     CartRepository()
-              //         .putAddressApi(data, widget.addressList.id!)
-              //         .then((value) {
-              //       Navigator.of(context).pushReplacement(
-              //         MaterialPageRoute(
-              //           builder: (context) => SavedAddressDetails(
-              //               /*   cartForPaymentPayload: widget.cartForPaymentPayload!*/),
-              //         ),
-              //       );
-              //       Utils.successToast('Address update successfully!');
-              //     });
-              //   }
-              //
-              //   var userId;
-              //   if (StringConstant.UserLoginId.toString() == '' ||
-              //       StringConstant.UserLoginId.toString() == null) {
-              //     userId = StringConstant.RandomUserLoginId;
-              //   } else {
-              //     userId = StringConstant.UserLoginId;
-              //   }
-              //
-              //   print("USER LOGIN ID..............." +
-              //       StringConstant.UserLoginId.toString());
-              //   if (_formKey.currentState!.validate() &&
-              //       fullNameController.text.isNotEmpty &&
-              //       mobileController.text.isNotEmpty &&
-              //       houseBuildingController.text.isNotEmpty &&
-              //       areaColonyController.text.isNotEmpty &&
-              //       stateController.text.isNotEmpty &&
-              //       cityController.text.isNotEmpty &&
-              //       pincodeController.text.isNotEmpty) {
-              //     if (widget.isSavedAddress == true) {
-              //       Map data = {
-              //         "name": fullNameController.text,
-              //         "address_line_1": houseBuildingController.text,
-              //         "address_line_2": areaColonyController.text,
-              //         "city_name": cityController.text,
-              //         "state_name": stateController.text,
-              //         "address_type": selectedAddressIs,
-              //         "pincode": pincodeController.text,
-              //         "contact_number": "+91 " + mobileController.text,
-              //         "latitude": 24.2342525,
-              //         "longitude": 52.2342523
-              //       };
-              //       print("map address" + data.toString());
-              //
-              //       CartRepository()
-              //           .createAddressPostAPI(data, userId.toString())
-              //           .then((value) {
-              //         setState(() {});
-              //         // fullNameController.clear();
-              //         // mobileController.clear();
-              //         // houseBuildingController.clear();
-              //         // areaColonyController.clear();
-              //         // stateController.clear();
-              //         // cityController.clear();
-              //         // pincodeController.clear();
-              //         Utils.successToast("New Address added successfully");
-              //         Navigator.of(context)
-              //             .pushNamed(RoutesName.saveAddressRoute)
-              //             .then((value) => setState(() {}));
-              //
-              //         // Navigator.of(context).pushReplacement(
-              //         //   MaterialPageRoute(
-              //         //     builder: (context) =>
-              //         //         SavedAddressDetails(
-              //         //           /* cartForPaymentPayload:
-              //         //       widget.cartForPaymentPayload*/
-              //         //         ),
-              //         //   ),
-              //         // );
-              //       }).then((value) {});
-              //     } else {
-              //       Map data = {
-              //         "name": fullNameController.text,
-              //         "address_line_1": houseBuildingController.text,
-              //         "address_line_2": areaColonyController.text,
-              //         "city_name": cityController.text,
-              //         "state_name": stateController.text,
-              //         "address_type": selectedAddressIs,
-              //         "pincode": pincodeController.text,
-              //         "contact_number": "+91 " + mobileController.text,
-              //         "latitude": 24.2342525,
-              //         "longitude": 52.2342523
-              //       };
-              //       print("map address" + data.toString());
-              //       print("widget.cartForPaymentPayload.userId!" +
-              //           userId.toString());
-              //
-              //       CartRepository()
-              //           .createAddressPostAPI(data, userId.toString())
-              //           .then((value) {
-              //         Utils.successToast("New Address added successfully");
-              //       });
-              //     }
-              //   }
-              //   //comment because need to manage apis
-              //
-              //   /*       Navigator.of(context).push(
-              //     MaterialPageRoute(
-              //       builder: (context) => OrderReviewSubActivity(cartPayLoad: value),
-              //     ),
-              //   );*/
-              // }
 
               FocusManager.instance.primaryFocus?.unfocus();
               final prefs = await SharedPreferences.getInstance();
@@ -2072,23 +1910,23 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                 print("USER LOGIN ID..............." +
                     StringConstant.UserLoginId.toString());
                 if (_formKey.currentState!.validate() &&
-                    fullNameController.text.isNotEmpty &&
-                    mobileController.text.isNotEmpty &&
-                    houseBuildingController.text.isNotEmpty &&
-                    areaColonyController.text.isNotEmpty &&
-                    stateController.text.isNotEmpty &&
-                    cityController.text.isNotEmpty &&
-                    pincodeController.text.isNotEmpty) {
+                    fullNameController.text.trim().isNotEmpty &&
+                    mobileController.text.trim().isNotEmpty &&
+                    houseBuildingController.text.trim().isNotEmpty &&
+                    areaColonyController.text.trim().isNotEmpty &&
+                    stateController.text.trim().isNotEmpty &&
+                    cityController.text.trim().isNotEmpty &&
+                    pincodeController.text.trim().isNotEmpty) {
                   if (widget.isSavedAddress == true) {
                     Map data = {
-                      "name": fullNameController.text,
-                      "address_line_1": houseBuildingController.text,
-                      "address_line_2": areaColonyController.text,
-                      "city_name": cityController.text,
-                      "state_name": stateController.text,
+                      "name": fullNameController.text.trim(),
+                      "address_line_1": houseBuildingController.text.trim(),
+                      "address_line_2": areaColonyController.text.trim(),
+                      "city_name": cityController.text.trim(),
+                      "state_name": stateController.text.trim(),
                       "address_type": selectedAddressIs,
-                      "pincode": pincodeController.text,
-                      "contact_number": mobileController.text,
+                      "pincode": pincodeController.text.trim(),
+                      "contact_number": mobileController.text.trim(),
                       "latitude": 24.2342525,
                       "longitude": 52.2342523
                     };
@@ -2122,14 +1960,14 @@ class _EditDeliveryAddressState extends State<EditDeliveryAddress> {
                     }).then((value) {});
                   } else {
                     Map data = {
-                      "name": fullNameController.text,
-                      "address_line_1": houseBuildingController.text,
-                      "address_line_2": areaColonyController.text,
-                      "city_name": cityController.text,
-                      "state_name": stateController.text,
+                      "name": fullNameController.text.trim(),
+                      "address_line_1": houseBuildingController.text.trim(),
+                      "address_line_2": areaColonyController.text.trim(),
+                      "city_name": cityController.text.trim(),
+                      "state_name": stateController.text.trim(),
                       "address_type": selectedAddressIs,
-                      "pincode": pincodeController.text,
-                      "contact_number": mobileController.text,
+                      "pincode": pincodeController.text.trim(),
+                      "contact_number": mobileController.text.trim(),
                       "latitude": 24.2342525,
                       "longitude": 52.2342523
                     };

@@ -9,6 +9,7 @@ import '../../Core/Model/OfferProductModel.dart';
 import '../../Core/ViewModel/dashboard_view_model.dart';
 import '../../Core/ViewModel/product_listing_view_model.dart';
 import '../../Core/data/responses/status.dart';
+import '../../Core/datapass/productDataPass.dart';
 import '../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../services/providers/Home_Provider.dart';
 import '../../utils/ProgressIndicatorLoader.dart';
@@ -39,13 +40,21 @@ class _OfferActivityState extends State<OfferActivity> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   ProductSpecificListViewModel productSpecificListViewModel =
       ProductSpecificListViewModel();
+  ProductDataPass? productDataPass;
 
   DashboardViewModel productListView = DashboardViewModel();
 
   @override
   void initState() {
     productListView.getOfferWithGet();
-
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        productDataPass =
+        ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print("productDataPass"+productDataPass!.productCategoryId.toString());
+      }
+    });
     // TODO: implement initState
     super.initState();
   }
@@ -176,14 +185,21 @@ class _OfferActivityState extends State<OfferActivity> {
                         // width: 191,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    OfferListByCategoryActivity(
-                                  offerList: offerList[index],
-                                ),
-                              ),
-                            );
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         OfferListByCategoryActivity(
+                            //       offerList: offerList[index],
+                            //     ),
+                            //   ),
+                            // );
+
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  OfferListByCategoryActivity(),
+                              settings:
+                              RouteSettings(arguments: ProductDataPass(NavigationScreen.fromDashboardRoute, offerList[index].id??0,0,'',0,0)),
+                            ));
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,

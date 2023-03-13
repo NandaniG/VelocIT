@@ -147,7 +147,8 @@ print(url+productId);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => ProductDetailsActivity(
-              id: response['payload']['id'],
+              specificProductId: response['payload']['id'],
+              // fromScreen: ,
             ),
           ),
         );

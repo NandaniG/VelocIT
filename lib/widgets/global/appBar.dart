@@ -31,6 +31,7 @@ import '../../Core/ViewModel/cart_view_model.dart';
 import '../../Core/ViewModel/dashboard_view_model.dart';
 import '../../Core/ViewModel/product_listing_view_model.dart';
 import '../../Core/data/responses/status.dart';
+import '../../Core/datapass/productDataPass.dart';
 import '../../Core/repository/cart_repository.dart';
 import '../../pages/Activity/Merchant_Near_Activities/merchant_Activity.dart';
 import '../../pages/Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
@@ -67,6 +68,7 @@ class AppBarWidget extends StatefulWidget {
   final BuildContext context;
   final Widget titleWidget;
   final Widget location;
+
 
   AppBarWidget(
       {Key? key,
@@ -988,68 +990,144 @@ class _AddressWidgetsState extends State<AddressWidgets> {
   }
 }
 
-Widget bottomNavBarItems(BuildContext context, int indexSelected) {
-  (() {
-    final dashBoardData =
-        Provider.of<DashboardViewModel>(context, listen: false);
-    dashBoardData.productCategoryListingWithGet();
-  });
+class BottomNavBarWidget extends StatefulWidget {
+ final BuildContext context;
+ final  int indexSelected;
+   BottomNavBarWidget({Key? key, required this.context, required this.indexSelected}) : super(key: key);
 
-  int _currentIndex = indexSelected;
-  final dashBoardData = Provider.of<DashboardViewModel>(context);
+  @override
+  State<BottomNavBarWidget> createState() => _BottomNavBarWidgetState();
+}
 
-  // return Consumer<HomeProvider>(builder: (context, provider, child) {
-  //   return Consumer<ProductProvider>(builder: (context, product, child) {
-  //     return Consumer<DashboardViewModel>(
-  //         builder: (context, productCategories, child) {
+class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return bottomNavigationBarWidget(context, widget.indexSelected);
+  }
+  Widget bottomNavigationBarWidget(BuildContext context, int indexSelected) {
+    final controller = BarcodeFinderController();
+    return Container(
+      // height: MediaQuery.of(context).size.height,
 
-  //     });
-  //   });
-  // });
+      // color: Colors.red,
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
 
-  return BottomNavigationBar(
-    backgroundColor: ThemeApp.whiteColor,
-    type: BottomNavigationBarType.fixed,
-    selectedItemColor: ThemeApp.appColor,
-    unselectedItemColor: ThemeApp.unSelectedBottomBarItemColor,
-    currentIndex: _currentIndex,
-    onTap: (int index) async {
-      final preference = await SharedPreferences.getInstance();
-      _currentIndex = index;
+        // alignment: const FractionalOffset(.5, 1.0),
+        // alignment: const FractionalOffset(.5, - 4.5),
+        children: [
+          bottomNavBarItems(context, indexSelected),
+          Positioned(
+            // right: 0,
+            // left: 0,
+            // top: -26,
+            // alignment: Alignment(0, -2),
+            // child: Padding(
+            // padding: const EdgeInsets.only(bottom: 20),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 30),
+              height: 70,
+              width: 70,
+              // color: Colors.yellow,
+              child: FloatingActionButton(
+                backgroundColor: ThemeApp.appColor,
+                onPressed: () {
+                  StringConstant().scanQR(context);
+                  // scanQRCode();
+                  // scanFile();
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) => StepperScreen(),
+                  //   ),
+                  // );
 
-      if (_currentIndex == 0) {
-        // Navigator.pushNamed(context, '/dashBoardScreen');
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const DashboardScreen(),
+                  // showModalBottomSheet(
+                  //     isDismissible: true,
+                  //     context: context,
+                  //     builder: (context) {
+                  //       return ScannerWidget(state: controller.state);
+                  //     });
+                },
+                child: SvgPicture.asset(
+                  'assets/appImages/bottomApp/scanIcon.svg',
+                  color: ThemeApp.whiteColor,
+                  semanticsLabel: 'Acme Logo',
+                  width: 29,
+                  height: 29,
+
+                  // height: height * .03,
+                ), /*   child: const Icon(Icons.document_scanner_outlined,
+                color: ThemeApp.whiteColor),*/
+              ),
             ),
-            (route) => false);
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
+            // ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget bottomNavBarItems(BuildContext context, int indexSelected) {
+    (() {
+      final dashBoardData =
+      Provider.of<DashboardViewModel>(context, listen: false);
+      dashBoardData.productCategoryListingWithGet();
+    });
 
-      }
-      if (_currentIndex == 1) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const OfferActivity(),
-            ),
-            (route) => false);
-      }
-      if (_currentIndex == 3) {
-        // final dashBoardData = Provider.of<DashboardViewModel>(context, listen: false).productCategoryList;
-        // List<ProductList>? serviceListss;
-        // colors = ThemeApp.blackColor;
-        // List<ProductList>? serviceList =
-        //     productCategories.productCategoryList.data!.productList;
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MerchantActvity(),
-            ),
-            (route) => false);
+    int _currentIndex = indexSelected;
+    final dashBoardData = Provider.of<DashboardViewModel>(context);
 
-        /*    Navigator.pushAndRemoveUntil(
+    // return Consumer<HomeProvider>(builder: (context, provider, child) {
+    //   return Consumer<ProductProvider>(builder: (context, product, child) {
+    //     return Consumer<DashboardViewModel>(
+    //         builder: (context, productCategories, child) {
+
+    //     });
+    //   });
+    // });
+
+    return BottomNavigationBar(
+      backgroundColor: ThemeApp.whiteColor,
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: ThemeApp.appColor,
+      unselectedItemColor: ThemeApp.unSelectedBottomBarItemColor,
+      currentIndex: _currentIndex,
+      onTap: (int index) async {
+        final preference = await SharedPreferences.getInstance();
+        _currentIndex = index;
+
+        if (_currentIndex == 0) {
+          // Navigator.pushNamed(context, '/dashBoardScreen');
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DashboardScreen(),
+              ),
+                  (route) => false);
+          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
+
+        }
+        if (_currentIndex == 1) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OfferActivity(),
+              ),
+                  (route) => false);
+        }
+        if (_currentIndex == 3) {
+          // final dashBoardData = Provider.of<DashboardViewModel>(context, listen: false).productCategoryList;
+          // List<ProductList>? serviceListss;
+          // colors = ThemeApp.blackColor;
+          // List<ProductList>? serviceList =
+          //     productCategories.productCategoryList.data!.productList;
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MerchantActvity(),
+              ),
+                  (route) => false);
+
+          /*    Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                     builder: (context) => ShopByCategoryActivity(
@@ -1059,8 +1137,8 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                         shopByCategorySelected: 0),
                   ),
                   (route) => false);*/
-      }
-      /*      if (_currentIndex == 4) {
+        }
+        /*      if (_currentIndex == 4) {
               if (StringConstant.isLogIn == true) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -1070,75 +1148,181 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
               }
             }*/
 
-      if (_currentIndex == 4) {
-        // colors = ThemeApp.blackColor;
+        if (_currentIndex == 4) {
+          // colors = ThemeApp.blackColor;
 
-        StringConstant.BadgeCounterValue =
-            (preference.getString('setBadgeCountPrefs')) ?? '';
-        print("Badge,........" + StringConstant.BadgeCounterValue);
-        if (kDebugMode) {}
-        // product.badgeFinalCount;
+          StringConstant.BadgeCounterValue =
+              (preference.getString('setBadgeCountPrefs')) ?? '';
+          print("Badge,........" + StringConstant.BadgeCounterValue);
+          if (kDebugMode) {}
+          // product.badgeFinalCount;
 
-        // provider.isBottomAppCart = true;
-        // provider.isHome = true;
+          // provider.isBottomAppCart = true;
+          // provider.isHome = true;
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CartDetailsActivity(
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CartDetailsActivity(
                   /* value: product,
                           productList: provider.cartProductList*/
-                  )),
-        );
-      }
-    },
-    items: [
-      BottomNavigationBarItem(
-        backgroundColor: Colors.white,
-        icon: _currentIndex == 0
-            ? Padding(
-                padding: const EdgeInsets.only(
-                  top: 8.0,
-                ),
-                child: SvgPicture.asset(
-                  'assets/appImages/bottomApp/homeIcon.svg',
-                  color: _currentIndex == 0
-                      ? ThemeApp.appColor
-                      : ThemeApp.unSelectedBottomBarItemColor,
-                  semanticsLabel: 'Acme Logo',
-                  theme: SvgTheme(
-                    currentColor: ThemeApp.appColor,
-                  ),
-                  height: 30,
-                  width: 30,
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.only(
-                  top: 8.0,
-                ),
-                child: SvgPicture.asset(
-                  'assets/appImages/bottomApp/homeIcon.svg',
-                  color: ThemeApp.unSelectedBottomBarItemColor,
-                  semanticsLabel: 'Acme Logo',
-                  theme: SvgTheme(
-                    currentColor: ThemeApp.unSelectedBottomBarItemColor,
-                  ),
-                  height: 30,
-                  width: 30,
-                ),
+                )),
+          );
+        }
+      },
+      items: [
+        BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          icon: _currentIndex == 0
+              ? Padding(
+            padding: const EdgeInsets.only(
+              top: 8.0,
+            ),
+            child: SvgPicture.asset(
+              'assets/appImages/bottomApp/homeIcon.svg',
+              color: _currentIndex == 0
+                  ? ThemeApp.appColor
+                  : ThemeApp.unSelectedBottomBarItemColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.appColor,
               ),
-        label: 'HOME',
-      ),
-      BottomNavigationBarItem(
-        backgroundColor: Colors.white,
-        icon: _currentIndex == 1
-            ? Padding(
-                padding: const EdgeInsets.only(
-                  top: 8.0,
+              height: 30,
+              width: 30,
+            ),
+          )
+              : Padding(
+            padding: const EdgeInsets.only(
+              top: 8.0,
+            ),
+            child: SvgPicture.asset(
+              'assets/appImages/bottomApp/homeIcon.svg',
+              color: ThemeApp.unSelectedBottomBarItemColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.unSelectedBottomBarItemColor,
+              ),
+              height: 30,
+              width: 30,
+            ),
+          ),
+          label: 'HOME',
+        ),
+        BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          icon: _currentIndex == 1
+              ? Padding(
+            padding: const EdgeInsets.only(
+              top: 8.0,
+            ),
+            child: SvgPicture.asset(
+              'assets/appImages/bottomApp/offerIcon.svg',
+              color: ThemeApp.appColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.appColor,
+              ),
+              height: 30,
+              width: 30,
+            ),
+          )
+              : Padding(
+            padding: const EdgeInsets.only(
+              top: 8.0,
+            ),
+            child: SvgPicture.asset(
+              'assets/appImages/bottomApp/offerIcon.svg',
+              color: ThemeApp.unSelectedBottomBarItemColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.appColor,
+              ),
+              height: 30,
+              width: 30,
+            ),
+          ),
+          label: 'OFFER',
+        ),
+        BottomNavigationBarItem(
+            backgroundColor: Colors.white,
+            icon: _currentIndex == 2
+                ? Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Icon(Icons.add, color: Colors.transparent),
+            )
+                : Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Icon(Icons.add, color: Colors.transparent),
+            ),
+            label: ''),
+        BottomNavigationBarItem(
+            backgroundColor: Colors.white,
+            icon: _currentIndex == 3
+                ? Padding(
+              padding: const EdgeInsets.only(
+                top: 8.0,
+              ),
+              child: SvgPicture.asset(
+                'assets/appImages/bottomApp/shopIcon.svg',
+                color: ThemeApp.appColor,
+                semanticsLabel: 'Acme Logo',
+                theme: SvgTheme(
+                  currentColor: ThemeApp.appColor,
+                ),
+                height: 30,
+                width: 30,
+              ),
+            )
+                : Padding(
+              padding: const EdgeInsets.only(
+                top: 8.0,
+              ),
+              child: SvgPicture.asset(
+                'assets/appImages/bottomApp/shopIcon.svg',
+                color: ThemeApp.unSelectedBottomBarItemColor,
+                semanticsLabel: 'Acme Logo',
+                theme: SvgTheme(
+                  currentColor: ThemeApp.unSelectedBottomBarItemColor,
+                ),
+                height: 30,
+                width: 30,
+              ),
+            ),
+            label: 'SHOP'),
+        BottomNavigationBarItem(
+            backgroundColor: Colors.white,
+            icon: _currentIndex == 4
+                ? Padding(
+              padding: const EdgeInsets.only(top: 8.0, right: 8),
+              child: StringConstant.BadgeCounterValue == '0' ||
+                  StringConstant.BadgeCounterValue == '' ||
+                  StringConstant.BadgeCounterValue == 0
+                  ? SvgPicture.asset(
+                'assets/appImages/bottomApp/cartIcons.svg',
+                color: ThemeApp.appColor,
+                semanticsLabel: 'Acme Logo',
+                theme: SvgTheme(
+                  currentColor: ThemeApp.appColor,
+                ),
+                height: 30,
+                width: 30,
+              )
+                  : badges.Badge(
+                position: badges.BadgePosition.topEnd(),
+                badgeContent: Text(
+                  StringConstant.BadgeCounterValue.toString(),
+                  style: const TextStyle(
+                    fontFamily: 'Roboto',
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+                badgeStyle: badges.BadgeStyle(
+                  badgeColor: ThemeApp.redColor,
+                  padding: EdgeInsets.all(7),
                 ),
                 child: SvgPicture.asset(
-                  'assets/appImages/bottomApp/offerIcon.svg',
+                  'assets/appImages/bottomApp/cartIcons.svg',
                   color: ThemeApp.appColor,
                   semanticsLabel: 'Acme Logo',
                   theme: SvgTheme(
@@ -1147,159 +1331,56 @@ Widget bottomNavBarItems(BuildContext context, int indexSelected) {
                   height: 30,
                   width: 30,
                 ),
+              ),
+            )
+                : Padding(
+              padding: const EdgeInsets.only(top: 8.0, right: 8),
+              child: StringConstant.BadgeCounterValue == '0' ||
+                  StringConstant.BadgeCounterValue == '' ||
+                  StringConstant.BadgeCounterValue == 0
+                  ? SvgPicture.asset(
+                'assets/appImages/bottomApp/cartIcons.svg',
+                color: ThemeApp.unSelectedBottomBarItemColor,
+                semanticsLabel: 'Acme Logo',
+                theme: SvgTheme(
+                  currentColor: ThemeApp.unSelectedBottomBarItemColor,
+                ),
+                height: 30,
+                width: 30,
               )
-            : Padding(
-                padding: const EdgeInsets.only(
-                  top: 8.0,
+                  : badges.Badge(
+                badgeContent: Text(
+                  StringConstant.BadgeCounterValue.toString(),
+                  style: const TextStyle(
+                    fontFamily: 'Roboto',
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+                badgeStyle: badges.BadgeStyle(
+                  badgeColor: ThemeApp.redColor,
+                  padding: EdgeInsets.all(7),
                 ),
                 child: SvgPicture.asset(
-                  'assets/appImages/bottomApp/offerIcon.svg',
+                  'assets/appImages/bottomApp/cartIcons.svg',
                   color: ThemeApp.unSelectedBottomBarItemColor,
                   semanticsLabel: 'Acme Logo',
                   theme: SvgTheme(
-                    currentColor: ThemeApp.appColor,
+                    currentColor:
+                    ThemeApp.unSelectedBottomBarItemColor,
                   ),
                   height: 30,
                   width: 30,
                 ),
               ),
-        label: 'OFFER',
-      ),
-      BottomNavigationBarItem(
-          backgroundColor: Colors.white,
-          icon: _currentIndex == 2
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Icon(Icons.add, color: Colors.transparent),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Icon(Icons.add, color: Colors.transparent),
-                ),
-          label: ''),
-      BottomNavigationBarItem(
-          backgroundColor: Colors.white,
-          icon: _currentIndex == 3
-              ? Padding(
-                  padding: const EdgeInsets.only(
-                    top: 8.0,
-                  ),
-                  child: SvgPicture.asset(
-                    'assets/appImages/bottomApp/shopIcon.svg',
-                    color: ThemeApp.appColor,
-                    semanticsLabel: 'Acme Logo',
-                    theme: SvgTheme(
-                      currentColor: ThemeApp.appColor,
-                    ),
-                    height: 30,
-                    width: 30,
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(
-                    top: 8.0,
-                  ),
-                  child: SvgPicture.asset(
-                    'assets/appImages/bottomApp/shopIcon.svg',
-                    color: ThemeApp.unSelectedBottomBarItemColor,
-                    semanticsLabel: 'Acme Logo',
-                    theme: SvgTheme(
-                      currentColor: ThemeApp.unSelectedBottomBarItemColor,
-                    ),
-                    height: 30,
-                    width: 30,
-                  ),
-                ),
-          label: 'SHOP'),
-      BottomNavigationBarItem(
-          backgroundColor: Colors.white,
-          icon: _currentIndex == 4
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 8.0, right: 8),
-                  child: StringConstant.BadgeCounterValue == '0' ||
-                          StringConstant.BadgeCounterValue == '' ||
-                          StringConstant.BadgeCounterValue == 0
-                      ? SvgPicture.asset(
-                          'assets/appImages/bottomApp/cartIcons.svg',
-                          color: ThemeApp.appColor,
-                          semanticsLabel: 'Acme Logo',
-                          theme: SvgTheme(
-                            currentColor: ThemeApp.appColor,
-                          ),
-                          height: 30,
-                          width: 30,
-                        )
-                      : badges.Badge(
-                          position: badges.BadgePosition.topEnd(),
-                          badgeContent: Text(
-                            StringConstant.BadgeCounterValue.toString(),
-                            style: const TextStyle(
-                              fontFamily: 'Roboto',
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                          badgeStyle: badges.BadgeStyle(
-                            badgeColor: ThemeApp.redColor,
-                            padding: EdgeInsets.all(7),
-                          ),
-                          child: SvgPicture.asset(
-                            'assets/appImages/bottomApp/cartIcons.svg',
-                            color: ThemeApp.appColor,
-                            semanticsLabel: 'Acme Logo',
-                            theme: SvgTheme(
-                              currentColor: ThemeApp.appColor,
-                            ),
-                            height: 30,
-                            width: 30,
-                          ),
-                        ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(top: 8.0, right: 8),
-                  child: StringConstant.BadgeCounterValue == '0' ||
-                          StringConstant.BadgeCounterValue == '' ||
-                          StringConstant.BadgeCounterValue == 0
-                      ? SvgPicture.asset(
-                          'assets/appImages/bottomApp/cartIcons.svg',
-                          color: ThemeApp.unSelectedBottomBarItemColor,
-                          semanticsLabel: 'Acme Logo',
-                          theme: SvgTheme(
-                            currentColor: ThemeApp.unSelectedBottomBarItemColor,
-                          ),
-                          height: 30,
-                          width: 30,
-                        )
-                      : badges.Badge(
-                          badgeContent: Text(
-                            StringConstant.BadgeCounterValue.toString(),
-                            style: const TextStyle(
-                              fontFamily: 'Roboto',
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                          badgeStyle: badges.BadgeStyle(
-                            badgeColor: ThemeApp.redColor,
-                            padding: EdgeInsets.all(7),
-                          ),
-                          child: SvgPicture.asset(
-                            'assets/appImages/bottomApp/cartIcons.svg',
-                            color: ThemeApp.unSelectedBottomBarItemColor,
-                            semanticsLabel: 'Acme Logo',
-                            theme: SvgTheme(
-                              currentColor:
-                                  ThemeApp.unSelectedBottomBarItemColor,
-                            ),
-                            height: 30,
-                            width: 30,
-                          ),
-                        ),
-                ),
-          label: 'CART'),
-    ],
-  );
+            ),
+            label: 'CART'),
+      ],
+    );
+  }
+
 }
+
 
 Widget bottomNavigationBarWidget(BuildContext context, int indexSelected) {
   final controller = BarcodeFinderController();
@@ -1363,6 +1444,319 @@ Widget bottomNavigationBarWidget(BuildContext context, int indexSelected) {
     ),
   );
 }
+Widget bottomNavBarItems(BuildContext context, int indexSelected) {
+  (() {
+    final dashBoardData =
+    Provider.of<DashboardViewModel>(context, listen: false);
+    dashBoardData.productCategoryListingWithGet();
+  });
+
+  int _currentIndex = indexSelected;
+  final dashBoardData = Provider.of<DashboardViewModel>(context);
+
+  // return Consumer<HomeProvider>(builder: (context, provider, child) {
+  //   return Consumer<ProductProvider>(builder: (context, product, child) {
+  //     return Consumer<DashboardViewModel>(
+  //         builder: (context, productCategories, child) {
+
+  //     });
+  //   });
+  // });
+
+  return BottomNavigationBar(
+    backgroundColor: ThemeApp.whiteColor,
+    type: BottomNavigationBarType.fixed,
+    selectedItemColor: ThemeApp.appColor,
+    unselectedItemColor: ThemeApp.unSelectedBottomBarItemColor,
+    currentIndex: _currentIndex,
+    onTap: (int index) async {
+      final preference = await SharedPreferences.getInstance();
+      _currentIndex = index;
+
+      if (_currentIndex == 0) {
+        // Navigator.pushNamed(context, '/dashBoardScreen');
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const DashboardScreen(),
+            ),
+                (route) => false);
+        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),));
+
+      }
+      if (_currentIndex == 1) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const OfferActivity(),
+            ),
+                (route) => false);
+      }
+      if (_currentIndex == 3) {
+        // final dashBoardData = Provider.of<DashboardViewModel>(context, listen: false).productCategoryList;
+        // List<ProductList>? serviceListss;
+        // colors = ThemeApp.blackColor;
+        // List<ProductList>? serviceList =
+        //     productCategories.productCategoryList.data!.productList;
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MerchantActvity(),
+            ),
+                (route) => false);
+
+        /*    Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopByCategoryActivity(
+                        shopByCategoryList: serviceListss,
+
+                        // provider.jsonData["shopByCategoryList"],
+                        shopByCategorySelected: 0),
+                  ),
+                  (route) => false);*/
+      }
+      /*      if (_currentIndex == 4) {
+              if (StringConstant.isLogIn == true) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const MyAccountActivity(),
+                  ),
+                );
+              }
+            }*/
+
+      if (_currentIndex == 4) {
+        // colors = ThemeApp.blackColor;
+
+        StringConstant.BadgeCounterValue =
+            (preference.getString('setBadgeCountPrefs')) ?? '';
+        print("Badge,........" + StringConstant.BadgeCounterValue);
+        if (kDebugMode) {}
+        // product.badgeFinalCount;
+
+        // provider.isBottomAppCart = true;
+        // provider.isHome = true;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CartDetailsActivity(
+                /* value: product,
+                          productList: provider.cartProductList*/
+              )),
+        );
+      }
+    },
+    items: [
+      BottomNavigationBarItem(
+        backgroundColor: Colors.white,
+        icon: _currentIndex == 0
+            ? Padding(
+          padding: const EdgeInsets.only(
+            top: 8.0,
+          ),
+          child: SvgPicture.asset(
+            'assets/appImages/bottomApp/homeIcon.svg',
+            color: _currentIndex == 0
+                ? ThemeApp.appColor
+                : ThemeApp.unSelectedBottomBarItemColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+              currentColor: ThemeApp.appColor,
+            ),
+            height: 30,
+            width: 30,
+          ),
+        )
+            : Padding(
+          padding: const EdgeInsets.only(
+            top: 8.0,
+          ),
+          child: SvgPicture.asset(
+            'assets/appImages/bottomApp/homeIcon.svg',
+            color: ThemeApp.unSelectedBottomBarItemColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+              currentColor: ThemeApp.unSelectedBottomBarItemColor,
+            ),
+            height: 30,
+            width: 30,
+          ),
+        ),
+        label: 'HOME',
+      ),
+      BottomNavigationBarItem(
+        backgroundColor: Colors.white,
+        icon: _currentIndex == 1
+            ? Padding(
+          padding: const EdgeInsets.only(
+            top: 8.0,
+          ),
+          child: SvgPicture.asset(
+            'assets/appImages/bottomApp/offerIcon.svg',
+            color: ThemeApp.appColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+              currentColor: ThemeApp.appColor,
+            ),
+            height: 30,
+            width: 30,
+          ),
+        )
+            : Padding(
+          padding: const EdgeInsets.only(
+            top: 8.0,
+          ),
+          child: SvgPicture.asset(
+            'assets/appImages/bottomApp/offerIcon.svg',
+            color: ThemeApp.unSelectedBottomBarItemColor,
+            semanticsLabel: 'Acme Logo',
+            theme: SvgTheme(
+              currentColor: ThemeApp.appColor,
+            ),
+            height: 30,
+            width: 30,
+          ),
+        ),
+        label: 'OFFER',
+      ),
+      BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          icon: _currentIndex == 2
+              ? Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Icon(Icons.add, color: Colors.transparent),
+          )
+              : Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Icon(Icons.add, color: Colors.transparent),
+          ),
+          label: ''),
+      BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          icon: _currentIndex == 3
+              ? Padding(
+            padding: const EdgeInsets.only(
+              top: 8.0,
+            ),
+            child: SvgPicture.asset(
+              'assets/appImages/bottomApp/shopIcon.svg',
+              color: ThemeApp.appColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.appColor,
+              ),
+              height: 30,
+              width: 30,
+            ),
+          )
+              : Padding(
+            padding: const EdgeInsets.only(
+              top: 8.0,
+            ),
+            child: SvgPicture.asset(
+              'assets/appImages/bottomApp/shopIcon.svg',
+              color: ThemeApp.unSelectedBottomBarItemColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.unSelectedBottomBarItemColor,
+              ),
+              height: 30,
+              width: 30,
+            ),
+          ),
+          label: 'SHOP'),
+      BottomNavigationBarItem(
+          backgroundColor: Colors.white,
+          icon: _currentIndex == 4
+              ? Padding(
+            padding: const EdgeInsets.only(top: 8.0, right: 8),
+            child: StringConstant.BadgeCounterValue == '0' ||
+                StringConstant.BadgeCounterValue == '' ||
+                StringConstant.BadgeCounterValue == 0
+                ? SvgPicture.asset(
+              'assets/appImages/bottomApp/cartIcons.svg',
+              color: ThemeApp.appColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.appColor,
+              ),
+              height: 30,
+              width: 30,
+            )
+                : badges.Badge(
+              position: badges.BadgePosition.topEnd(),
+              badgeContent: Text(
+                StringConstant.BadgeCounterValue.toString(),
+                style: const TextStyle(
+                  fontFamily: 'Roboto',
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              ),
+              badgeStyle: badges.BadgeStyle(
+                badgeColor: ThemeApp.redColor,
+                padding: EdgeInsets.all(7),
+              ),
+              child: SvgPicture.asset(
+                'assets/appImages/bottomApp/cartIcons.svg',
+                color: ThemeApp.appColor,
+                semanticsLabel: 'Acme Logo',
+                theme: SvgTheme(
+                  currentColor: ThemeApp.appColor,
+                ),
+                height: 30,
+                width: 30,
+              ),
+            ),
+          )
+              : Padding(
+            padding: const EdgeInsets.only(top: 8.0, right: 8),
+            child: StringConstant.BadgeCounterValue == '0' ||
+                StringConstant.BadgeCounterValue == '' ||
+                StringConstant.BadgeCounterValue == 0
+                ? SvgPicture.asset(
+              'assets/appImages/bottomApp/cartIcons.svg',
+              color: ThemeApp.unSelectedBottomBarItemColor,
+              semanticsLabel: 'Acme Logo',
+              theme: SvgTheme(
+                currentColor: ThemeApp.unSelectedBottomBarItemColor,
+              ),
+              height: 30,
+              width: 30,
+            )
+                : badges.Badge(
+              badgeContent: Text(
+                StringConstant.BadgeCounterValue.toString(),
+                style: const TextStyle(
+                  fontFamily: 'Roboto',
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              ),
+              badgeStyle: badges.BadgeStyle(
+                badgeColor: ThemeApp.redColor,
+                padding: EdgeInsets.all(7),
+              ),
+              child: SvgPicture.asset(
+                'assets/appImages/bottomApp/cartIcons.svg',
+                color: ThemeApp.unSelectedBottomBarItemColor,
+                semanticsLabel: 'Acme Logo',
+                theme: SvgTheme(
+                  currentColor:
+                  ThemeApp.unSelectedBottomBarItemColor,
+                ),
+                height: 30,
+                width: 30,
+              ),
+            ),
+          ),
+          label: 'CART'),
+    ],
+  );
+}
+
 /*Widget bottomNavBarItems(BuildContext context) {
   (() {
     final dashBoardData =
@@ -1901,7 +2295,15 @@ class _searchBarWidgetState extends State<searchBarWidget> {
     width = MediaQuery.of(context).size.width;
     DashboardViewModel productCategories = DashboardViewModel();
     productCategories.productCategoryListingWithGet();
-
+    ProductDataPass? productDataPass;
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        productDataPass =
+        ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print("productDataPass"+productDataPass!.toString());
+      }
+    });
     return ChangeNotifierProvider<DashboardViewModel>.value(
       value: productCategories,
       child: Consumer<DashboardViewModel>(
@@ -1955,14 +2357,18 @@ class _searchBarWidgetState extends State<searchBarWidget> {
                               StringConstant.controllerSpeechToText.text[0]
                                   .toUpperCase()),
                     );
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => SearchProductListScreen(
-                          searchText:
-                              StringConstant.controllerSpeechToText.text,
+                          // searchText:
+                          //     StringConstant.controllerSpeechToText.text,
                         ),
+                          settings:
+                      RouteSettings(arguments: ProductDataPass(NavigationScreen.fromDashboardRoute,0,0,StringConstant.controllerSpeechToText.text,0,0))
+
                       ),
                     );
+
                 }
                 /*  Navigator.of(context).push(
                 MaterialPageRoute(

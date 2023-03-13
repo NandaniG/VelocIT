@@ -10,6 +10,7 @@ import 'package:speech_to_text/speech_to_text.dart' as speechToText;
 import 'package:velocit/Core/ViewModel/dashboard_view_model.dart';
 import 'package:velocit/services/providers/Home_Provider.dart';
 
+import '../../Core/datapass/productDataPass.dart';
 import '../../pages/Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Categories_Activity.dart';
 import '../../pages/Activity/Product_Activities/Products_List.dart';
 import '../../pages/SearchContent/searchProductListScreen.dart';
@@ -35,12 +36,12 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
 
   final Map<String, HighlightedWord> highlightWords = {
     "flutter": HighlightedWord(
-        textStyle: TextStyle(
+        textStyle: const TextStyle(
             fontFamily: 'Roboto',
             color: Colors.redAccent,
             fontWeight: FontWeight.bold)),
     "developer": HighlightedWord(
-        textStyle: TextStyle(
+        textStyle: const TextStyle(
             fontFamily: 'Roboto',
             color: Colors.redAccent,
             fontWeight: FontWeight.bold)),
@@ -60,9 +61,10 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
           );
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => SearchProductListScreen(
-                searchText: StringConstant.controllerSpeechToText.text,
-              ),
+              builder: (context) => const SearchProductListScreen(
+                // searchText: StringConstant.controllerSpeechToText.text,
+              ),            settings:          RouteSettings(arguments: ProductDataPass(NavigationScreen.fromDashboardRoute,0,0,StringConstant.controllerSpeechToText.text.toString(),0,0))
+
             ),
           );
 
@@ -176,22 +178,22 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
   ) {
     {
       return ConstrainedBox(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           minHeight: 70.0,
           maxHeight: 300.0,
           maxWidth: 100.0,
         ),
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: new BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
-              BoxShadow(
+              const BoxShadow(
                 color: Colors.black26,
                 blurRadius: 10.0,
-                offset: const Offset(0.0, 5.0),
+                offset: Offset(0.0, 5.0),
               ),
             ],
           ),
@@ -199,7 +201,7 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
             //  padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 // Container(
@@ -212,11 +214,11 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                 //   ),
                 // ),
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: TextHighlight(
                     text: textString,
                     words: highlightWords,
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 25.0,
                         color: Colors.grey,
@@ -227,8 +229,8 @@ class _SpeechToTextDialogState extends State<SpeechToTextDialog> {
                   animate: isListen,
                   glowColor: Colors.red,
                   endRadius: 65.0,
-                  duration: Duration(milliseconds: 2000),
-                  repeatPauseDuration: Duration(milliseconds: 100),
+                  duration: const Duration(milliseconds: 2000),
+                  repeatPauseDuration: const Duration(milliseconds: 100),
                   repeat: true,
                   child: Container(
                     height: 70,

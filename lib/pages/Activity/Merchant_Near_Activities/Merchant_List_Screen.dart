@@ -406,7 +406,7 @@ class _MerchantListByIdActivityState extends State<MerchantListByIdActivity> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       ProductDetailsActivity(
-                                                    id: merchantList[index].id,
+                                                        specificProductId: merchantList[index].id,
                                                     // productList: subProductList[index],
                                                     // productSpecificListViewModel:
                                                     //     productSpecificListViewModel,

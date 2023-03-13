@@ -395,7 +395,8 @@ class _OrderReviewActivityState extends State<OrderReviewActivity> {
                                                 Navigator.of(context).pushReplacement(
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        Payment_Creditcard_debitcardScreen(
+                                                        Payment_Creditcard_debitcardScreen
+                                                          (
                                                             cartForPaymentPayload:
                                                             cartForPaymentPayload),
                                                   ),

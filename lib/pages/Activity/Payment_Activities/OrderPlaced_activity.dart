@@ -346,10 +346,10 @@ class _OrderPlaceActivityState extends State<OrderPlaceActivity> {
     );
   }
 }
-
 final List<String> titles = [
-  'Order placed',
+  'Order review',
+  'Delivery detail',
   'Payment',
-  'Order Completed',
+  'Order placed',
 ];
 int _curStep = 1;

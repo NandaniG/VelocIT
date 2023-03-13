@@ -44,7 +44,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
     super.initState();
   }
 
-  int? _radioIndex = 5;
+  int? _radioIndex = 1;
   String _radioVal = "";
 
   @override
@@ -248,7 +248,7 @@ class _CancelOrderActivityState extends State<CancelOrderActivity> {
                                                 color:
                                                     ThemeApp.lightBorderColor)),
                                         padding:
-                                            EdgeInsets.fromLTRB(10, 20, 10, 20),
+                                            EdgeInsets.fromLTRB(10, 10, 10, 10),
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,

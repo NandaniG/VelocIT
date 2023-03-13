@@ -10,5 +10,9 @@ class RoutesName{
   static const String saveAddressRoute = 'saveAddressRoute';
   static const String cartScreenRoute = 'cartScreenRoute';
   static const String changeForgotPassRoute = 'changeForgotPass';
+  static const String productListingRoute = 'productListingRoute';
+  static const String offerScreenRoute = 'offerScreenRoute';
+
+
 
 }

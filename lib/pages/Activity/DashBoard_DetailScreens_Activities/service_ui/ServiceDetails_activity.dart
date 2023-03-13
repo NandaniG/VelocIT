@@ -9,6 +9,7 @@ import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/service_ui/Services_List_Screen.dart';
 import 'package:velocit/pages/screens/dashBoard.dart';
 import 'package:velocit/utils/utils.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
@@ -20,6 +21,8 @@ import '../../../../Core/ViewModel/cart_view_model.dart';
 import '../../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../../Core/ViewModel/product_listing_view_model.dart';
 import '../../../../Core/data/responses/status.dart';
+import '../../../../Core/datapass/productDataPass.dart';
+import '../../../../Core/datapass/serviceDataPass.dart';
 import '../../../../Core/repository/cart_repository.dart';
 import '../../../../services/models/JsonModelForApp/HomeModel.dart';
 import '../../../../services/models/demoModel.dart';
@@ -32,7 +35,6 @@ import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/textFormFields.dart';
 import '../CRM_ui/CRM_Activity.dart';
-
 
 class ServiceDetailsActivity extends StatefulWidget {
   // List<ProductList>? productList;
@@ -57,6 +59,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
   late List<CartProductList> cartList;
   int counterPrice = 1;
   DashboardViewModel productListView = DashboardViewModel();
+  ProductDataPass? serviceDataPass;
 
   int badgeData = 0;
   String sellerAvailable = "";
@@ -76,6 +79,16 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
     imageVariantIndex;
     // TODO: implement initState
     super.initState();
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        serviceDataPass =
+            ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print(
+            "serviceDataPass" + serviceDataPass!.serviceSpecificId.toString());
+      }
+    });
+
     randomNumber = random.nextInt(100);
     productSpecificListViewModel.serviceSingleIDListWithGet(
         context, widget.id.toString());
@@ -197,11 +210,23 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child:  AppBar_BackWidget(
-            context: context,titleWidget: appTitle(context,"My Service"), location: const SizedBox()),
-
+        child: AppBar_Back_RouteWidget(
+            context: context,
+            titleWidget: appTitle(context, "My Service"),
+            location: const SizedBox(),
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => ServiceListByCategoryActivity(),
+                settings: RouteSettings(
+                    arguments: ProductDataPass(
+                  '',
+              0,0,'',    serviceDataPass!.serviceCategoryId ?? 0,
+                        serviceDataPass!.serviceSpecificId ?? 0
+                )),
+              ));
+            }),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context,0),
+      bottomNavigationBar: bottomNavigationBarWidget(context, 0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(
@@ -221,7 +246,8 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                       print("Api error");
 
                       return Text(productSubCategoryProvider
-                          .singleServiceSpecificList.message.toString());
+                          .singleServiceSpecificList.message
+                          .toString());
                     case Status.COMPLETED:
                       print("Api calll");
                       SingleProductPayload? model = productSubCategoryProvider
@@ -263,7 +289,6 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                               // mainAxisAlignment: MainAxisAlignment.start,
                               // crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-
                                 productImage(model),
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -323,7 +348,6 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                 ),
                                 counterWidget(model),
 
-
                                 //similar product
 
                                 // SizedBox(
@@ -351,9 +375,9 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                           alignment: Alignment.center,
                           child: Center(
                               child: Text(
-                                "Match not found",
-                                style: TextStyle(fontSize: 20),
-                              )),
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                         );
                       }
                   }
@@ -362,14 +386,15 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                     alignment: Alignment.center,
                     child: Center(
                         child: Text(
-                          "Match not found",
-                          style: TextStyle(fontSize: 20),
-                        )),
+                      "Match not found",
+                      style: TextStyle(fontSize: 20),
+                    )),
                   );
                 }))),
       ),
     );
   }
+
   final CarouselController _carouselController = CarouselController();
   int _currentIndex = 0;
   int _radioValue = 0;
@@ -429,7 +454,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                         // _currentIndex = index;
                         setState(() {});
                       },
-                      autoPlay:model.imageUrls!.length>1? true:false,
+                      autoPlay: model.imageUrls!.length > 1 ? true : false,
                       viewportFraction: 1,
                       height: height * .3),
                 ) ??
@@ -855,10 +880,10 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
     return Container(
       width: width,
       decoration: const BoxDecoration(
-        // border: Border(
-        //   bottom: BorderSide(color: Colors.grey, width: 1),
-        // ),
-      ),
+          // border: Border(
+          //   bottom: BorderSide(color: Colors.grey, width: 1),
+          // ),
+          ),
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
         child: Column(
@@ -944,14 +969,17 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
 
   Widget counterWidget(SingleProductPayload model) {
     return model.merchants.isNotEmpty
-        ? Container(color: ThemeApp.whiteColor,
+        ? Container(
+            color: ThemeApp.whiteColor,
             padding:
-                const EdgeInsets.only(left: 20, right: 20, top:20, bottom: 20),
+                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20,),
+                    left: 20,
+                    right: 20,
+                  ),
                   child: Row(
                     children: [
                       TextFieldUtils().dynamicText(
@@ -966,9 +994,8 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                       const SizedBox(
                         width: 11,
                       ),
-
                       Container(
-                        height:30,
+                        height: 30,
                         // width: width * .2,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -976,7 +1003,8 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                               Radius.circular(5),
                             ),
                             border: Border.all(
-                                color: ThemeApp.separatedLineColor, width: 1.5)),
+                                color: ThemeApp.separatedLineColor,
+                                width: 1.5)),
                         child: Padding(
                           padding: const EdgeInsets.all(0),
                           child: Row(
@@ -1010,7 +1038,7 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                 ),
                               ),
                               Container(
-                                height:30,
+                                height: 30,
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.fromLTRB(
                                   20,
@@ -1023,7 +1051,9 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                   counterPrice.toString().padLeft(2, '0'),
                                   style: TextStyle(
                                       fontFamily: 'Roboto',
-                                      fontSize: MediaQuery.of(context).size.height * .016,
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              .016,
                                       fontWeight: FontWeight.bold,
                                       overflow: TextOverflow.ellipsis,
                                       color: ThemeApp.blackColor),
@@ -1034,8 +1064,6 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                   setState(() {
                                     counterPrice++;
                                     remainingCounters();
-
-
                                   });
                                 },
                                 child: const Padding(
@@ -1060,23 +1088,23 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
             ),
           )
         : Container(
-      width: width,
-      height: 72,
-      color: ThemeApp.whiteColor,
-      padding: const EdgeInsets.only(
-          left: 20, right: 20, top: 5, bottom: 5),
-      child: Center(
-        child: TextFieldUtils().dynamicText(
-            "SERVICE NOT AVAILABLE",
-            context,
-            TextStyle(
-              fontFamily: 'Roboto',
-              color: ThemeApp.redColor,
-              fontWeight: FontWeight.w500,
-              fontSize: height * .035,
-            )),
-      ),
-    );
+            width: width,
+            height: 72,
+            color: ThemeApp.whiteColor,
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+            child: Center(
+              child: TextFieldUtils().dynamicText(
+                  "SERVICE NOT AVAILABLE",
+                  context,
+                  TextStyle(
+                    fontFamily: 'Roboto',
+                    color: ThemeApp.redColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: height * .035,
+                  )),
+            ),
+          );
   }
 
   Widget addToCart(SingleProductPayload model) {
@@ -1084,70 +1112,60 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
         builder: (context, productProvider, child) {
       return Consumer<ProductSpecificListViewModel>(
           builder: (context, productListProvider, child) {
-            print("model.merchants lengthghgfjgfj "+merchantTemp.length.toString());
+        print(
+            "model.merchants lengthghgfjgfj " + merchantTemp.length.toString());
         return model.merchants.isNotEmpty
             ? Padding(
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 5, bottom: 5),
                 child: Column(
                   children: [
-                    twoProceedButton("Add to Cart", "Buy now", context, false, ()async {
-                  final prefs =
-                  await SharedPreferences.getInstance();
+                    twoProceedButton("Add to Cart", "Buy now", context, false,
+                        () async {
+                      final prefs = await SharedPreferences.getInstance();
 
-                  setState(() {
-                    updateCart(
-                        model.selectedMerchantId,
-                        counterPrice,
-                        productProvider,
-                        model.productsubCategory);
+                      setState(() {
+                        updateCart(model.selectedMerchantId, counterPrice,
+                            productProvider, model.productsubCategory);
 
-                    StringConstant.BadgeCounterValue =
-                        (prefs.getString('setBadgeCountPrefs')) ??
-                            '';
-                    print("Badge,........" +
-                        StringConstant.BadgeCounterValue);
-                  });
-                }, () async {
+                        StringConstant.BadgeCounterValue =
+                            (prefs.getString('setBadgeCountPrefs')) ?? '';
+                        print("Badge,........" +
+                            StringConstant.BadgeCounterValue);
+                      });
+                    }, () async {
                       setState(() {
                         productListProvider.isHome = false;
                         productListProvider.isBottomAppCart = false;
                       });
 
                       final prefs = await SharedPreferences.getInstance();
-                      prefs.setString(
-                          'isBuyNow', 'true');
-                      prefs.setString(
-                          'isBuyNowFrom', 'Services');
+                      prefs.setString('isBuyNow', 'true');
+                      prefs.setString('isBuyNowFrom', 'Services');
                       StringConstant.isUserLoggedIn =
                           (prefs.getInt('isUserLoggedIn')) ?? 0;
 
-                      final navigator =
-                      Navigator.of(context); // <- Add this
+                      final navigator = Navigator.of(context); // <- Add this
                       model.productsubCategory;
 
                       //send data to login user for direct purchase api
                       prefs.setString('selectedMerchantId',
                           model.selectedMerchantId.toString());
-                      prefs.setString(
-                          'selectedProductId', model.id.toString());
+                      prefs.setString('selectedProductId', model.id.toString());
                       prefs.setString(
                           'selectedCounterPrice', counterPrice.toString());
 
                       //get cartID from DirectUser for purchase
 
-                      var directCartId =
-                      prefs.getString('directCartIdPref');
+                      var directCartId = prefs.getString('directCartIdPref');
                       var loginUserId = (prefs.getString('isUserId')) ?? '';
                       if (StringConstant.isUserLoggedIn == 1) {
                         //if user logged in
 
-                        CartRepository()
-                            .buyNowGetRequest(loginUserId, context);
+                        CartRepository().buyNowGetRequest(loginUserId, context);
                       } else {
                         //if user not login
-                        prefs.setString(
-                            'isUserNavigateFromDetailScreen', 'BN');
+                        prefs.setString('isUserNavigateFromDetailScreen', 'BN');
                         Navigator.pushReplacementNamed(
                             context, RoutesName.signInRoute);
 
@@ -1155,12 +1173,12 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                         // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
                       }
                     }),
-                /*    Row(
+                    /*    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        *//*counterPrice == 0
-                            ?*//*
+                        */ /*counterPrice == 0
+                            ?*/ /*
                         Expanded(
                             flex: 1,
                             child: InkWell(
@@ -1380,7 +1398,8 @@ class _ServiceDetailsActivityState extends State<ServiceDetailsActivity> {
                                             fit: BoxFit.scaleDown,
                                             errorBuilder:
                                                 ((context, error, stackTrace) {
-                                              return const Icon(Icons.image_outlined);
+                                              return const Icon(
+                                                  Icons.image_outlined);
                                             }),
                                           )),
                                         ),

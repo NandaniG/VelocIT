@@ -76,6 +76,8 @@ class _MyAccountActivityState extends State<MyAccountActivity> {
 
     return WillPopScope(
       onWillPop: () {
+
+
         Navigator.of(context)
             .pushNamedAndRemoveUntil(
                 RoutesName.dashboardRoute, (route) => false)
