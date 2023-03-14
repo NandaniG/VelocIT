@@ -1407,7 +1407,7 @@ Widget bottomNavigationBarWidget(BuildContext context, int indexSelected) {
           // child: Padding(
           // padding: const EdgeInsets.only(bottom: 20),
           child: Container(
-            margin: EdgeInsets.only(bottom: 30),
+            margin: EdgeInsets.only(bottom: 50),
             height: 70,
             width: 70,
             // color: Colors.yellow,
