@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:velocit/Core/Model/ProductCategoryModel.dart';
 
+import '../../../../Core/datapass/productDataPass.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
 import '../../../../widgets/global/textFormFields.dart';
@@ -9,7 +10,8 @@ import '../../Product_Activities/Products_List.dart';
 class AllProductDetailScreen extends StatefulWidget {
   final ProductList productList;
 
-  AllProductDetailScreen({Key? key, required this.productList}) : super(key: key);
+  AllProductDetailScreen({Key? key, required this.productList})
+      : super(key: key);
 
   @override
   State<AllProductDetailScreen> createState() => _AllProductDetailScreenState();
@@ -19,32 +21,34 @@ class _AllProductDetailScreenState extends State<AllProductDetailScreen> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
   double height = 0.0;
   double width = 0.0;
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
-    width = MediaQuery.of(context).size.width;  return Scaffold(
+    width = MediaQuery.of(context).size.width;
+    return Scaffold(
       backgroundColor: ThemeApp.appBackgroundColor,
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .14),
+        preferredSize:
+            Size.fromHeight(MediaQuery.of(context).size.height * .14),
         child: AppBarWidget(
-          context:    context,
-          titleWidget:    AddressWidgets(),
-          location: const AddressWidgets(),     ),
+          context: context,
+          titleWidget: AddressWidgets(),
+          location: const AddressWidgets(),
+        ),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context,0),
+      bottomNavigationBar: bottomNavigationBarWidget(context, 0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
       body: SafeArea(
         child: Padding(
-          padding:  EdgeInsets.fromLTRB(10,20,10,10),
+          padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFieldUtils()
-                  .headingTextField(widget.productList.name.toString(), context),
-
+              TextFieldUtils().headingTextField(
+                  widget.productList.name.toString(), context),
               SizedBox(
                 height: 10,
               ),
@@ -57,7 +61,7 @@ class _AllProductDetailScreenState extends State<AllProductDetailScreen> {
   }
 
   Widget subListOfCategories() {
-   return Expanded(
+    return Expanded(
       // width: MediaQuery.of(context).size.width,
       child: widget.productList.simpleSubCats!.isEmpty
           ? Center(
@@ -100,13 +104,12 @@ class _AllProductDetailScreenState extends State<AllProductDetailScreen> {
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         ProductListByCategoryActivity(
-                                      productList: widget
-                                          .productList.simpleSubCats![index],
 
-                                      // productList: subProductList[index],
-                                      // productSpecificListViewModel:
-                                      //     productSpecificListViewModel,
-                                    ),
+                                            ),
+                                    settings:
+                                  RouteSettings(arguments: ProductDataPass(NavigationScreen.fromDashboardRoute, widget.productList.simpleSubCats![index].id??0,0,'',0,0)),
+
+
                                   ),
                                 );
                               },
@@ -148,7 +151,6 @@ class _AllProductDetailScreenState extends State<AllProductDetailScreen> {
                                               widget
                                                   .productList
                                                   .simpleSubCats![index]
-
                                                   .imageUrl!,
                                               // fit: BoxFit.fill,
                                               height: (MediaQuery.of(context)
@@ -165,7 +167,9 @@ class _AllProductDetailScreenState extends State<AllProductDetailScreen> {
                                             )
                                           : SizedBox(
                                               // height: height * .28,
-                                              width: MediaQuery.of(context).size.width,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
                                               child: Icon(
                                                 Icons.image_outlined,
                                                 size: 50,
@@ -189,22 +193,19 @@ class _AllProductDetailScreenState extends State<AllProductDetailScreen> {
                                       children: [
                                         TextFieldUtils()
                                             .listNameHeadingTextField(
-                                            widget
-                                                .productList
-                                                .simpleSubCats![index]
+                                                widget
+                                                    .productList
+                                                    .simpleSubCats![index]
                                                     .name!,
                                                 context),
                                         SizedBox(height: 10),
-
                                       ],
                                     ),
                                   ),
                                 ],
                               )),
                             ),
-                      index == widget
-                          .productList
-                          .simpleSubCats!.length
+                      index == widget.productList.simpleSubCats!.length
                           ? Container(
                               // width: constrains.minWidth,
                               height: 20,
@@ -238,5 +239,4 @@ class _AllProductDetailScreenState extends State<AllProductDetailScreen> {
               )),
     );
   }
-
 }

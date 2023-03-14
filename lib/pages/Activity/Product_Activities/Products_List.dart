@@ -17,11 +17,13 @@ import '../../../Core/Model/FindProductBySubCategoryModel.dart';
 import '../../../Core/Model/ProductCategoryModel.dart';
 import '../../../Core/Model/productSpecificListModel.dart';
 import '../../../Core/data/responses/status.dart';
+import '../../../Core/datapass/productDataPass.dart';
 import '../../../services/models/CartModel.dart';
 import '../../../services/models/ProductDetailModel.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../services/providers/cart_Provider.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/routes/routes.dart';
 import '../../../utils/styles.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
@@ -34,9 +36,10 @@ import 'ProductDetails_activity.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
 class ProductListByCategoryActivity extends StatefulWidget {
-  SimpleSubCats? productList;
+  // final int productId;
 
-  ProductListByCategoryActivity({Key? key, this.productList}) : super(key: key);
+  ProductListByCategoryActivity({Key? key, /*required this.productId*/})
+      : super(key: key);
 
   @override
   State<ProductListByCategoryActivity> createState() =>
@@ -49,7 +52,7 @@ class _ProductListByCategoryActivityState
   ScrollController _sc = ScrollController();
   double height = 0.0;
   double width = 0.0;
-
+  ProductDataPass? productDataPass;
   var categoryCode;
   ProductSpecificListViewModel productSpecificListViewModel =
       ProductSpecificListViewModel();
@@ -66,37 +69,51 @@ class _ProductListByCategoryActivityState
   void initState() {
     // TODO: implement initState
     // mainss();
-
-  _getMoreData(
-      page,
-      10,
-      widget.productList!.id!,
-    );
+    isLoading = true;
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        productDataPass =
+        ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print("productDataPass"+productDataPass!.productCategoryId.toString());
+      }
+    });
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         isLoading = false;
       });
     });
-    super.initState();
 
-    _sc.addListener(() {
-      if (_sc.position.pixels == _sc.position.maxScrollExtent) {
-        print("page number sc1 " + page.toString());
-        page++;
-        print("page number sc2 " + page.toString());
-
+    Future.delayed(Duration(seconds: 2), () {
+      if(productDataPass!.productCategoryId!=0) {
         _getMoreData(
           page,
           10,
-          widget.productList!.id!,
+          productDataPass!.productCategoryId ?? 0,
         );
+
+
+        _sc.addListener(() {
+          if (_sc.position.pixels == _sc.position.maxScrollExtent) {
+            print("page number sc1 " + page.toString());
+            page++;
+            print("page number sc2 " + page.toString());
+
+            _getMoreData(
+              page,
+              10,
+              productDataPass!.productCategoryId,
+            );
+          }
+        });
+        print("subProduct.............${ productDataPass!.productCategoryId}");
+
+        StringConstant.sortByRadio = 0;
+        StringConstant.sortedBy = "Low to High";
       }
     });
-    print("subProduct.............${widget.productList!.id}");
-    StringConstant.sortByRadio=0;
-    StringConstant.sortedBy = "Low to High";
 
-
+    super.initState();
   }
 
   @override
@@ -115,51 +132,74 @@ class _ProductListByCategoryActivityState
 
   @override
   Widget build(BuildContext context) {
+    productDataPass =
+        ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     // final availableProducts = Provider.of<ProductProvider>(context);
 
     // final productsList = availableProducts.getProductsLists();
 
-    return Scaffold(
-        backgroundColor: ThemeApp.appBackgroundColor,
-        key: scaffoldGlobalKey,
-        appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * .135),
-          child: AppBarWidget(
-            context: context,
-            titleWidget: searchBarWidget(),
-            location: const AddressWidgets(),
-          ),
-        ),
-        bottomNavigationBar: bottomNavigationBarWidget(context, 0),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: 10,
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(
+            RoutesName.dashboardRoute, (route) => false)
+            .then((value) {
+          setState(() {});
+        });
+        return Future.value(true);
+      },
+      child: Scaffold(
+          backgroundColor: ThemeApp.appBackgroundColor,
+          key: scaffoldGlobalKey,
+          appBar: PreferredSize(
+            preferredSize:
+                Size.fromHeight(MediaQuery.of(context).size.height * .135),
+            child: AppBar_Back_RouteWidget(
+              context: context,
+              titleWidget: searchBarWidget(),
+              location: const AddressWidgets(),
+              onTap:(){
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil(
+                  RoutesName.dashboardRoute, (route) => false)
+                  .then((value) {
+                setState(() {});
+              });
+            } ,
             ),
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //
+          ),
+          bottomNavigationBar:
+              BottomNavBarWidget(context: context, indexSelected: 0),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          body: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+              ),
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //
 
-                /* listOfMobileDevices(),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .02,
-            ),*/
-                filterWidgets(),
-                SizedBox(
-                  height: 10,
-                ),
-                productListView()
-              ],
+                  /* listOfMobileDevices(),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .02,
+              ),*/
+                  filterWidgets(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  productListView()
+                ],
+              ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   ///top header list of product
@@ -353,6 +393,7 @@ class _ProductListByCategoryActivityState
       ),
     );
   }
+
 //
 //   Widget productListView() {
 //     return isLoading == false
@@ -543,119 +584,130 @@ class _ProductListByCategoryActivityState
 //   }
 
   Widget productListView() {
-    return  isLoading ==true?
-    CircularProgressIndicator():
-    Expanded(
-        child: GridView(
-      controller: _sc,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 30,
-        // childAspectRatio: 1.0,
-        childAspectRatio: MediaQuery.of(context).size.height / 900,
-      ),
-      shrinkWrap: true,
-      children: List.generate(subCategoryList.length + 1, (index) {
-        print(subCategoryList.length);
+    return/* isLoading == true
+        ? CircularProgressIndicator()
+        : */Expanded(
+            child: GridView(
+            controller: _sc,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 30,
+              // childAspectRatio: 1.0,
+              childAspectRatio: MediaQuery.of(context).size.height / 900,
+            ),
+            shrinkWrap: true,
+            children: List.generate(subCategoryList.length + 1, (index) {
+              print(subCategoryList.length);
 
+              if (index == subCategoryList.length) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _buildProgressIndicator(),
+                  ],
+                );
+              } else {
+                return InkWell(
+                  onTap: () {
+                    print("Id ........${subCategoryList[index].id}");
 
-        if (index == subCategoryList.length) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              _buildProgressIndicator(),
-            ],
-          );
-        } else {
-          return InkWell(
-            onTap: () {
-              print("Id ........${subCategoryList[index].id}");
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailsActivity(
+                          specificProductId: subCategoryList[index].id,
+                        ),
+                        settings:
+                      RouteSettings(arguments: ProductDataPass(
+                          NavigationScreen.fromProductListingRoute,
+                          productDataPass!.productCategoryId??0,
+                          subCategoryList[index].id??0,'',0,0)),
+                      ),
 
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProductDetailsActivity(
-                    id: subCategoryList[index].id,
-                  ),
-                ),
-              );
-            },
-            child: Container(
+                    );
+                  },
+                  child: Container(
 // height: 205,
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /*   Expanded(
-                                        flex: 2,
-                                        child:*/
-                Container(
-                  height: 123,
-                  width: 191,
-                  decoration: BoxDecoration(
-                      color: ThemeApp.whiteColor,
-                      border: Border.all(color: ThemeApp.tealButtonColor)),
-                  child: ClipRRect(
-                    child: subCategoryList[index]
-                            .imageUrls![0]
-                            .imageUrl!
-                            .isNotEmpty
-                        ? Image.network(
-                            subCategoryList[index].imageUrls![0].imageUrl!,
-                            // fit: BoxFit.fill,
-                            height: (MediaQuery.of(context).orientation ==
-                                    Orientation.landscape)
-                                ? MediaQuery.of(context).size.height * .26
-                                : MediaQuery.of(context).size.height * .1,
-                          )
-                        : SizedBox(
-                            // height: height * .28,
-                            width: width,
-                            child: Icon(
-                              Icons.image_outlined,
-                              size: 50,
-                            )),
-                  ),
-                ),
-                // ),
-                Container(
-                  color: ThemeApp.tealButtonColor,
-                  width: 191,
-                  height: 66,
-                  padding: const EdgeInsets.only(
-                    left: 12,
-                    right: 12,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextFieldUtils().listNameHeadingTextField(
-                          subCategoryList[index].shortName!, context),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextFieldUtils().listPriceHeadingTextField(
-                              indianRupeesFormat.format(
-                                  subCategoryList[index].defaultSellPrice ??
-                                      0.0),
-                              context),
-                          TextFieldUtils().listScratchPriceHeadingTextField(
-                              indianRupeesFormat.format(
-                                  subCategoryList[index].defaultMrp ?? 0.0),
-                              context)
-                        ],
-                      )
+                      /*   Expanded(
+                                        flex: 2,
+                                        child:*/
+                      Container(
+                        height: 143,
+                        width: 191,
+                        decoration: BoxDecoration(
+                            color: ThemeApp.whiteColor,
+                            border:
+                                Border.all(color: ThemeApp.tealButtonColor)),
+                        child: ClipRRect(
+                          child: subCategoryList[index]
+                                  .imageUrls![0]
+                                  .imageUrl!
+                                  .isNotEmpty
+                              ? Image.network(
+                                  subCategoryList[index]
+                                      .imageUrls![0]
+                                      .imageUrl!,
+                                  // fit: BoxFit.fill,
+                                  height: (MediaQuery.of(context).orientation ==
+                                          Orientation.landscape)
+                                      ? MediaQuery.of(context).size.height * .26
+                                      : MediaQuery.of(context).size.height * .1,
+                                )
+                              : SizedBox(
+                                  // height: height * .28,
+                                  width: width,
+                                  child: Icon(
+                                    Icons.image_outlined,
+                                    size: 50,
+                                  )),
+                        ),
+                      ),
+                      // ),
+                      Container(
+                        color: ThemeApp.tealButtonColor,
+                        width: 191,
+                        height: 66,
+                        padding: const EdgeInsets.only(
+                          left: 12,
+                          right: 12,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFieldUtils().listNameHeadingTextField(
+                                subCategoryList[index].shortName!, context),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextFieldUtils().listPriceHeadingTextField(
+                                    indianRupeesFormat.format(
+                                        subCategoryList[index]
+                                                .defaultSellPrice ??
+                                            0.0),
+                                    context),
+                                TextFieldUtils()
+                                    .listScratchPriceHeadingTextField(
+                                        indianRupeesFormat.format(
+                                            subCategoryList[index].defaultMrp ??
+                                                0.0),
+                                        context)
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-              ],
-            )),
-          );
-        }
-      }),
-    ));
+                  )),
+                );
+              }
+            }),
+          ));
   }
 
   void _getMoreData(int page, int size, int subCategoryId) async {
@@ -684,25 +736,57 @@ class _ProductListByCategoryActivityState
       List<Content> tList = [];
 
       final parsedJson = jsonDecode(response.body);
-// type: Restaurant
       final productBySubCategory =
-      FindProductBySubCategoryModel.fromJson(parsedJson);
+          FindProductBySubCategoryModel.fromJson(parsedJson);
+      print("productBySubCategory.payload!.content!.length  " + productBySubCategory.payload!.content!.length.toString());
+
       for (int i = 0; i < productBySubCategory.payload!.content!.length; i++) {
         tList.add(productBySubCategory.payload!.content![i]);
       }
-
       setState(() {
+
         isLoading = false;
         subCategoryList.addAll(tList);
-        subCategoryList.sort((a, b) =>a.defaultSellPrice!.toInt()
-            .compareTo(b.defaultSellPrice!.toInt()));
+        // mainss();
+        if ( StringConstant.sortedBy =="High to Low") {
+          // list is been sorted
+
+          subCategoryList.sort((a, b) =>
+              b.defaultSellPrice!.toInt().compareTo(a.defaultSellPrice!.toInt()));
+          // StringConstant.sortedBy = "High to Low";
+          for (int i = 0; i < subCategoryList.length; i++) {
+            print("tList number " + subCategoryList.length.toString());
+            print("tList price " +
+                subCategoryList[i].defaultSellPrice
+                    .toString());
+          }
+          // _sc.jumpTo(0.0);
+        } else {
+          subCategoryList.sort((a, b) =>
+              a.defaultSellPrice!.toInt().compareTo(b.defaultSellPrice!.toInt()));
+          // StringConstant.sortedBy = "Low to High";
+          // _sc.jumpTo(0.0);
+        }
         // page++;
         print("page number " + page.toString());
       });
     }
   }
 
-  List<Content> sortedMapData=[];
+  // List<Content> sortedMapData = [];
+  Widget _buildProgressIndicator() {
+    return Container(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: ProgressIndicatorLoader(isLoading),
+        ),
+      ),
+    );
+  }
+
   // void mainss() {
   //   // sorting the map value in ascending order by it's value.
   //
@@ -722,18 +806,6 @@ class _ProductListByCategoryActivityState
   //   print("sortedMapData"+subCategoryList.length.toString());
   // }
 
-  Widget _buildProgressIndicator() {
-    return Container(
-      alignment: Alignment.bottomRight,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Opacity(
-          opacity: isLoading ? 1.0 : 00,
-          child: ProgressIndicatorLoader(isLoading),
-        ),
-      ),
-    );
-  }
 
   int? _radioValue = 0;
 
@@ -823,14 +895,14 @@ class _ProductListByCategoryActivityState
     setState(() {});
     if (StringConstant.sortByRadio == 1) {
       // list is been sorted
-      subCategoryList.sort((a, b) =>b.defaultSellPrice!.toInt()
-          .compareTo(a.defaultSellPrice!.toInt()));
+      subCategoryList.sort((a, b) =>
+          b.defaultSellPrice!.toInt().compareTo(a.defaultSellPrice!.toInt()));
       StringConstant.sortedBy = "High to Low";
 
       _sc.jumpTo(0.0);
     } else {
-      subCategoryList.sort((a, b) =>a.defaultSellPrice!.toInt()
-          .compareTo(b.defaultSellPrice!.toInt()));
+      subCategoryList.sort((a, b) =>
+          a.defaultSellPrice!.toInt().compareTo(b.defaultSellPrice!.toInt()));
       StringConstant.sortedBy = "Low to High";
       _sc.jumpTo(0.0);
     }

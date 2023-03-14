@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/repository/dashboard_repository.dart';
 import 'package:velocit/utils/ProgressIndicatorLoader.dart';
+import 'package:velocit/utils/routes/routes.dart';
 import '../../Core/AppConstant/apiMapping.dart';
 import '../../Core/Model/BestDealModel.dart';
 import '../../Core/Model/OfferProductModel.dart';
@@ -25,6 +26,7 @@ import '../../Core/ViewModel/cart_view_model.dart';
 import '../../Core/ViewModel/dashboard_view_model.dart';
 import '../../Core/ViewModel/product_listing_view_model.dart';
 import '../../Core/data/responses/status.dart';
+import '../../Core/datapass/productDataPass.dart';
 import '../../Core/repository/OrderBasket_repository.dart';
 import '../../Core/repository/cart_repository.dart';
 import '../../services/models/JsonModelForApp/HomeModel.dart';
@@ -43,7 +45,7 @@ import '../../widgets/global/textFormFields.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/CRM_ui/CRMFormScreen.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/BookService_Activity.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/CRM_ui/CRM_Activity.dart';
-import '../Activity/DashBoard_DetailScreens_Activities/Product_ui/Product_detail_screen.dart';
+import '../Activity/DashBoard_DetailScreens_Activities/Product_ui/ALL_Product_detail_screen.dart';
 import '../Activity/Merchant_Near_Activities/merchant_Activity.dart';
 import '../Activity/DashBoard_DetailScreens_Activities/service_ui/Service_Categories_Activity.dart';
 import '../Activity/My_Orders/MyOrderDetails.dart';
@@ -87,17 +89,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
   CartViewModel cartViewModel = CartViewModel();
   var ID;
   var url = ApiMapping.BASEAPI + ApiMapping.consumerBasket;
-
+  ProductDataPass? productDataPass;
   var data;
 
   @override
   void initState() {
     // TODO: implement initState
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        productDataPass =
+        ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print("productDataPass"+productDataPass!.toString());
+      }
+    });
     super.initState();
     // addCartList();
     getCartDetailsFromPref();
 
-    Provider.of<HomeProvider>(context, listen: false).IsActiveOrderList =true;
+    Provider.of<HomeProvider>(context, listen: false).IsActiveOrderList = true;
     data = Provider.of<HomeProvider>(context, listen: false).loadJson();
 
     print(url.toString());
@@ -412,7 +422,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     print(
                         "_isProductListChip 2" + _isServiceListChip.toString());
                     Navigator.of(context)
-                        .push(
+                        .pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => ShopByCategoryActivity(),
                           ),
@@ -464,7 +474,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     prefs.setString("FromType", 'FromCRM');
                     print("_isProductListChip 3" + _isCRMListChip.toString());
                     Navigator.of(context)
-                        .push(
+                        .pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => CRMActivity(),
                           ),
@@ -507,95 +517,95 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget productList() {
-    return ChangeNotifierProvider<DashboardViewModel>.value(
-        value: productCategories,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, productCategories, child) {
-          switch (productCategories.productCategoryList.status) {
-            case Status.LOADING:
-              if (kDebugMode) {
-                print("Api load");
-              }
-              return ProgressIndicatorLoader(true);
-
-            case Status.ERROR:
-              if (kDebugMode) {
-                print("Api error");
-              }
-              return Text('');
-
-            case Status.COMPLETED:
-              if (kDebugMode) {
-                print("Api calll");
-              }
-
-              List<ProductList>? serviceList =
-                  productCategories.productCategoryList.data!.productList;
-
-              return _isProductListChip
-                  ? Container(
-                      height: 40,
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: serviceList!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => BookServiceActivity(
-                                        shopByCategoryList: serviceList!,
-                                        shopByCategorySelected: index),
-                                  ),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Container(
-                                  // height: 40,
-
-                                  padding: const EdgeInsets.fromLTRB(
-                                      15.0, 5, 15.0, 5),
-                                  decoration: BoxDecoration(
-                                    color: ThemeApp.containerColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Center(
-                                    child: TextFieldUtils().dynamicText(
-                                        serviceList[index].name!,
-                                        context,
-                                        TextStyle(
-                                          fontFamily: 'Roboto',
-                                          color: ThemeApp.blackColor,
-                                          // fontWeight: FontWeight.w500,
-                                          fontSize: 13,
-                                        )),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                    )
-                  : SizedBox();
-            default:
-              return Text("No Data found!");
-          }
-          return Text("No Data found!");
-        }));
-
-    return Container(
-      // height: 40,
-
-      padding: const EdgeInsets.fromLTRB(15.0, 10, 15.0, 10),
-      decoration: BoxDecoration(
-        color: ThemeApp.containerColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text("sakdjsak"),
-    );
-  }
+  // Widget productList() {
+  //   return ChangeNotifierProvider<DashboardViewModel>.value(
+  //       value: productCategories,
+  //       child: Consumer<DashboardViewModel>(
+  //           builder: (context, productCategories, child) {
+  //         switch (productCategories.productCategoryList.status) {
+  //           case Status.LOADING:
+  //             if (kDebugMode) {
+  //               print("Api load");
+  //             }
+  //             return ProgressIndicatorLoader(true);
+  //
+  //           case Status.ERROR:
+  //             if (kDebugMode) {
+  //               print("Api error");
+  //             }
+  //             return Text('');
+  //
+  //           case Status.COMPLETED:
+  //             if (kDebugMode) {
+  //               print("Api calll");
+  //             }
+  //
+  //             List<ProductList>? serviceList =
+  //                 productCategories.productCategoryList.data!.productList;
+  //
+  //             return _isProductListChip
+  //                 ? Container(
+  //                     height: 40,
+  //                     child: ListView.builder(
+  //                         shrinkWrap: true,
+  //                         scrollDirection: Axis.horizontal,
+  //                         itemCount: serviceList!.length,
+  //                         itemBuilder: (BuildContext context, int index) {
+  //                           return InkWell(
+  //                             onTap: () {
+  //                               Navigator.of(context).push(
+  //                                 MaterialPageRoute(
+  //                                   builder: (context) => BookServiceActivity(
+  //                                       shopByCategoryList: serviceList!,
+  //                                       shopByCategorySelected: index),
+  //                                 ),
+  //                               );
+  //                             },
+  //                             child: Padding(
+  //                               padding: const EdgeInsets.only(right: 10),
+  //                               child: Container(
+  //                                 // height: 40,
+  //
+  //                                 padding: const EdgeInsets.fromLTRB(
+  //                                     15.0, 5, 15.0, 5),
+  //                                 decoration: BoxDecoration(
+  //                                   color: ThemeApp.containerColor,
+  //                                   borderRadius: BorderRadius.circular(20),
+  //                                 ),
+  //                                 child: Center(
+  //                                   child: TextFieldUtils().dynamicText(
+  //                                       serviceList[index].name!,
+  //                                       context,
+  //                                       TextStyle(
+  //                                         fontFamily: 'Roboto',
+  //                                         color: ThemeApp.blackColor,
+  //                                         // fontWeight: FontWeight.w500,
+  //                                         fontSize: 13,
+  //                                       )),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           );
+  //                         }),
+  //                   )
+  //                 : SizedBox();
+  //           default:
+  //             return Text("No Data found!");
+  //         }
+  //         return Text("No Data found!");
+  //       }));
+  //
+  //   return Container(
+  //     // height: 40,
+  //
+  //     padding: const EdgeInsets.fromLTRB(15.0, 10, 15.0, 10),
+  //     decoration: BoxDecoration(
+  //       color: ThemeApp.containerColor,
+  //       borderRadius: BorderRadius.circular(20),
+  //     ),
+  //     child: Text("sakdjsak"),
+  //   );
+  // }
 
   int selected = 0;
   bool isOpen = false;
@@ -615,8 +625,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               if (kDebugMode) {
                 print("Api error");
               }
-              return Text(
-                  '');
+              return Text('');
 
             case Status.COMPLETED:
               if (kDebugMode) {
@@ -970,8 +979,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              ProductListByCategoryActivity(productList: simpleSubCats),
+            builder: (context) =>
+                ProductListByCategoryActivity(),
+            settings:
+                RouteSettings(arguments: ProductDataPass(NavigationScreen.fromDashboardRoute, simpleSubCats.id??0,0,'',0,0)),
         ));
       },
       // child: Padding(
@@ -1239,8 +1250,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               if (kDebugMode) {
                 print("Api error");
               }
-              return Text(
-                '');
+              return Text('');
 
             case Status.COMPLETED:
               if (kDebugMode) {
@@ -2074,16 +2084,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      Navigator.of(context).push(
+
+                                      Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProductDetailsActivity(
-                                            id: recommendedList[index].id,
-                                            // productList: subProductList[index],
-                                            // productSpecificListViewModel:
-                                            //     productSpecificListViewModel,
+                                          builder: (context) => ProductDetailsActivity(
+                                            specificProductId: recommendedList[index].id,
                                           ),
+                                          settings:
+                                          RouteSettings(arguments: ProductDataPass(
+                                              NavigationScreen.fromDashboardRoute,
+                                              0,
+                                              recommendedList[index].id??0,'',0,0)),
                                         ),
+
                                       );
                                     },
                                     child: Container(
@@ -2370,8 +2383,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               if (kDebugMode) {
                 print("Api error");
               }
-              return Text(
-                  '');
+              return Text('');
 
             case Status.COMPLETED:
               if (kDebugMode) {
@@ -2800,16 +2812,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      Navigator.of(context).push(
+                                        Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProductDetailsActivity(
-                                            id: serviceList[index].id,
-                                            // productList: subProductList[index],
-                                            // productSpecificListViewModel:
-                                            //     productSpecificListViewModel,
+                                          builder: (context) => ProductDetailsActivity(
+                                            specificProductId: serviceList[index].id,
                                           ),
+                                          settings:
+                                          RouteSettings(arguments: ProductDataPass(
+                                              NavigationScreen.fromDashboardRoute,
+                                              0,
+                                              serviceList[index].id??0,'',0,0)),
                                         ),
+
                                       );
                                     },
                                     child: Container(

@@ -9,6 +9,8 @@ import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/Offer_List_Screen.dart';
+import 'package:velocit/pages/Activity/Product_Activities/Products_List.dart';
 import 'package:velocit/utils/utils.dart';
 import 'package:velocit/widgets/global/proceedButtons.dart';
 import '../../../Core/Model/SimmilarProductModel.dart';
@@ -17,6 +19,7 @@ import '../../../Core/ViewModel/cart_view_model.dart';
 import '../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../Core/ViewModel/product_listing_view_model.dart';
 import '../../../Core/data/responses/status.dart';
+import '../../../Core/datapass/productDataPass.dart';
 import '../../../Core/repository/cart_repository.dart';
 import '../../../services/models/CartModel.dart';
 import '../../../services/models/JsonModelForApp/HomeModel.dart';
@@ -40,13 +43,16 @@ import 'ImageZoomWidget.dart';
 class ProductDetailsActivity extends StatefulWidget {
   // List<ProductList>? productList;
   // Content? productList;
-  final int? id;
+  final int? specificProductId;
 
-  ProductDetailsActivity(
-      {Key? key,
-      // required this.productList,
-      required this.id})
-      : super(key: key);
+  // final String fromScreen;
+
+  ProductDetailsActivity({
+    Key? key,
+    // required this.productList,
+    required this.specificProductId,
+    /* required this.fromScreen*/
+  }) : super(key: key);
 
   @override
   State<ProductDetailsActivity> createState() => _ProductDetailsActivityState();
@@ -73,20 +79,30 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
   late Map<String, dynamic> data = new Map<String, dynamic>();
 
   List<SingleModelMerchants> merchantTemp = [];
+  ProductDataPass? productDataPass;
 
   @override
   void initState() {
     imageVariantIndex;
     // TODO: implement initState
     super.initState();
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        productDataPass =
+            ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print(
+            "productDataPass" + productDataPass!.productCategoryId.toString());
+      }
+    });
     randomNumber = random.nextInt(100);
     productSpecificListViewModel.productSingleIDListWithGet(
-        context, widget.id.toString());
+        context, widget.specificProductId.toString());
     print("Random number : " + data.toString());
-    print("widget.id! number : " + widget.id!.toString());
+    print("widget.id! number : " + widget.specificProductId!.toString());
     print("Badge,........" + StringConstant.BadgeCounterValue);
     getBadgePref();
-    productListView.similarProductWithGet(0, 10, widget.id!);
+    productListView.similarProductWithGet(0, 10, widget.specificProductId!);
   }
 
   CartViewModel cartListView = CartViewModel();
@@ -132,7 +148,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       // "cartId": StringConstant.UserCartID.toString(),
       "cartId": StringConstant.UserCartID.toString(),
       "userId": userId,
-      "productId": widget.id.toString(),
+      "productId": widget.specificProductId.toString(),
       "merchantId": merchantId.toString(),
       "qty": quantity.toString(),
       "is_new_order": 'true'
@@ -191,6 +207,63 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
     symbol: '₹',
   );
 
+  _navigationBack() {
+    print(productDataPass!.fromScreen + "    productDataPass!.fromScreen");
+    switch (productDataPass!.fromScreen) {
+      case NavigationScreen.fromProductListingRoute:
+        return Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => ProductListByCategoryActivity(),
+          settings: RouteSettings(
+              arguments: ProductDataPass(
+                  '',
+                  productDataPass!.productCategoryId ?? 0,
+                  productDataPass!.productSpecificId ?? 0,
+                  '',0,0)),
+        ));
+      case NavigationScreen.fromSearchListingRoute:
+        return Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const DashboardScreen(),
+          settings: RouteSettings(
+              arguments: ProductDataPass(
+                  productDataPass!.fromScreen,
+                  productDataPass!.productCategoryId ?? 0,
+                  productDataPass!.productSpecificId ?? 0,
+                  "",0,0)),
+        ));
+      case NavigationScreen.fromDashboardRoute:
+        return Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const DashboardScreen(),
+          settings: RouteSettings(
+              arguments: ProductDataPass(
+                  productDataPass!.fromScreen,
+                  productDataPass!.productCategoryId ?? 0,
+                  productDataPass!.productSpecificId ?? 0,
+                  '',0,0)),
+        ));
+
+      case NavigationScreen.fromOfferPageListingRoute:
+        return Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => OfferListByCategoryActivity(),
+          settings: RouteSettings(
+              arguments: ProductDataPass(
+                  productDataPass!.fromScreen,
+                  productDataPass!.productCategoryId ?? 0,
+                  productDataPass!.productSpecificId ?? 0,
+                  '',0,0)),
+        ));
+      default:
+        return Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const DashboardScreen(),
+          settings: RouteSettings(
+              arguments: ProductDataPass(
+                  productDataPass!.fromScreen,
+                  productDataPass!.productCategoryId ?? 0,
+                  productDataPass!.productSpecificId ?? 0,
+                  '',0,0)),
+        ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -201,11 +274,24 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       key: scaffoldGlobalKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(height * .09),
-        child:
-        AppBar_BackWidget(
-            context: context,titleWidget: appTitle(context,"My Product"), location: SizedBox()),
+        child: AppBar_Back_RouteWidget(
+          context: context,
+          titleWidget: appTitle(context, "My Product"),
+          location: const SizedBox(),
+          onTap: () async {
+            // final preference = await SharedPreferences.getInstance();
+            // await cartListView.cartSpecificIDWithGet(
+            //     context, StringConstant.UserCartID);
+
+            setState(() {});
+            _navigationBack();
+
+            // Navigator.pop(context);
+          },
+        ),
       ),
-      bottomNavigationBar: bottomNavigationBarWidget(context,0),
+      bottomNavigationBar:
+          BottomNavBarWidget(context: context, indexSelected: 0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Container(
@@ -224,7 +310,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     case Status.ERROR:
                       print("Api error");
 
-                      return Text('Service is not available');
+                      return const Text('Service is not available');
                     case Status.COMPLETED:
                       print("Api calll");
                       SingleProductPayload? model = productSubCategoryProvider
@@ -261,7 +347,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
 // print("merchants selected index"+productSubCategoryProvider
 //         .singleproductSpecificList.data!.payload!.selectedMerchantId.toString());
 
-                      if (widget.id == model!.id) {
+                      if (widget.specificProductId == model!.id) {
                         return ListView(
                               // mainAxisAlignment: MainAxisAlignment.start,
                               // crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,11 +361,11 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   child: TextFieldUtils().headingTextField(
                                       model!.shortName!, context),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 rattingBar(model),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 prices(model),
@@ -313,12 +399,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 ),*/
                                 model.productVariants!.isNotEmpty
                                     ? availableVariant(model)
-                                    : SizedBox(),
+                                    : const SizedBox(),
                                 model.productVariants!.isNotEmpty
                                     ? SizedBox(
                                         height: height * .01,
                                       )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                                 productDescription(model),
                                 SizedBox(
                                   height: height * .01,
@@ -345,27 +431,27 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 similarProductList()
                               ],
                             ) ??
-                            SizedBox();
+                            const SizedBox();
                       } else {
                         return Container(
                           height: height * .8,
                           alignment: Alignment.center,
-                          child: Center(
+                          child: const Center(
                               child: Text(
-                                "Match not found",
-                                style: TextStyle(fontSize: 20),
-                              )),
+                            "Match not found",
+                            style: TextStyle(fontSize: 20),
+                          )),
                         );
                       }
                   }
                   return Container(
                     height: height * .8,
                     alignment: Alignment.center,
-                    child: Center(
+                    child: const Center(
                         child: Text(
-                          "Match not found",
-                          style: TextStyle(fontSize: 20),
-                        )),
+                      "Match not found",
+                      style: TextStyle(fontSize: 20),
+                    )),
                   );
                 }))),
       ),
@@ -410,15 +496,15 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                                         // fit: BoxFit.fill,
                                                         errorBuilder: ((context,
                                                             error, stackTrace) {
-                                                      return Icon(
+                                                      return const Icon(
                                                           Icons.image_outlined);
                                                     })) ??
-                                                    SizedBox(),
+                                                    const SizedBox(),
                                               ),
                                             ) ??
-                                            SizedBox()),
+                                            const SizedBox()),
                                   ) ??
-                                  SizedBox(),
+                                  const SizedBox(),
                             ),
                           ],
                         );
@@ -431,11 +517,11 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         // _currentIndex = index;
                         setState(() {});
                       },
-                      autoPlay:model.imageUrls!.length>1? true:false,
+                      autoPlay: model.imageUrls!.length > 1 ? true : false,
                       viewportFraction: 1,
                       height: height * .3),
                 ) ??
-                SizedBox(),
+                const SizedBox(),
           ),
 
           // Card(
@@ -519,7 +605,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
       children: [
         ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             itemCount: isMerchantfive == false && merchantTemp.length < 5
                 ? merchantTemp.length
@@ -569,12 +655,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               padding: const EdgeInsets.only(left: 0),
                               child: Text(
                                       merchantTemp[index].merchantName ?? "",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontFamily: 'Roboto',
                                           color: ThemeApp.blackColor,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500)) ??
-                                  SizedBox(),
+                                  const SizedBox(),
                             ),
                           ],
                         ),
@@ -588,7 +674,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                             Text(
                                 merchantTemp[index].deliveryDays.toString() +
                                     " Day(s)",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
@@ -605,12 +691,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                                 .unitOfferPrice
                                                 .toString()) ??
                                         0.0),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400))
-                                : Text('0.0',
+                                : const Text('0.0',
                                     style: TextStyle(
                                         fontFamily: 'Roboto',
                                         color: ThemeApp.darkGreyColor,
@@ -650,7 +736,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                         .unitDiscountPerc
                                         .toString() +
                                     "% Off",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Roboto',
                                     color: ThemeApp.darkGreyColor,
                                     fontSize: 12,
@@ -673,12 +759,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       ],
                     ),
                   ) ??
-                  SizedBox();
+                  const SizedBox();
             }),
         Container(
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
-          decoration: BoxDecoration(),
+          decoration: const BoxDecoration(),
           child: merchantTemp.length > 5 && isMerchantfive == false
               ? InkWell(
                   onTap: () {
@@ -689,7 +775,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   child: TextFieldUtils().dynamicText(
                       'View more',
                       context,
-                      TextStyle(
+                      const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.tealButtonColor,
                         fontSize: 12,
@@ -713,7 +799,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                   child: TextFieldUtils().dynamicText(
                       'View less',
                       context,
-                      TextStyle(
+                      const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.tealButtonColor,
                         fontSize: 12,
@@ -749,7 +835,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                 .toString()) ??
                         '0.0'),
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: 34,
@@ -760,7 +846,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         double.parse(model.defaultSellPrice.toString()) ??
                             '0.0'),
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: 34,
@@ -775,7 +861,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                             merchantTemp[_radioValue].unitMrp.toString()) ??
                         '0.0'),
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         decoration: TextDecoration.lineThrough,
@@ -786,7 +872,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     indianRupeesFormat.format(
                         double.parse(model.defaultMrp.toString()) ?? '0.0'),
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.lightFontColor,
                         decoration: TextDecoration.lineThrough,
@@ -801,7 +887,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     merchantTemp[_radioValue].unitDiscountPerc.toString() +
                         "% Off",
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: 14,
@@ -810,7 +896,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                 : TextFieldUtils().dynamicText(
                     model.defaultDiscount.toString() + "% Off",
                     context,
-                    TextStyle(
+                    const TextStyle(
                         fontFamily: 'Roboto',
                         color: ThemeApp.blackColor,
                         fontSize: 14,
@@ -867,7 +953,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Product Description",
+            const Text("Product Description",
                 style: TextStyle(
                     fontFamily: 'Roboto',
                     color: ThemeApp.blackColor,
@@ -877,7 +963,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
               height: height * .01,
             ),
             Text(model.oneliner!,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Roboto',
                   color: ThemeApp.lightFontColor,
                   // fontWeight: FontWeight.w500,
@@ -928,12 +1014,12 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                       MediaQuery.of(context).size.height * .05,
                                   width: width * .1,
                                   errorBuilder: ((context, error, stackTrace) {
-                                return Icon(Icons.image_outlined);
+                                return const Icon(Icons.image_outlined);
                               })) ??
-                              SizedBox(),
+                              const SizedBox(),
                         ),
                       ) ??
-                      SizedBox(),
+                      const SizedBox(),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * .01,
@@ -962,13 +1048,13 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                       TextFieldUtils().dynamicText(
                           'Quantity : ',
                           context,
-                          TextStyle(
+                          const TextStyle(
                               fontFamily: 'Roboto',
                               color: ThemeApp.blackColor,
                               // fontWeight: FontWeight.w500,
                               fontSize: 14,
                               fontWeight: FontWeight.w400)),
-                      SizedBox(
+                      const SizedBox(
                         width: 11,
                       ),
                       Container(
@@ -976,7 +1062,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                         // width: width * .2,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(5),
                             ),
                             border: Border.all(
@@ -1007,10 +1093,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     //     context, data);
                                   });
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, right: 8),
-                                  child: const Icon(Icons.remove,
+                                child: const Padding(
+                                  padding: EdgeInsets.only(left: 8.0, right: 8),
+                                  child: Icon(Icons.remove,
                                       // size: 20,
                                       color: ThemeApp.lightFontColor),
                                 ),
@@ -1018,7 +1103,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                               Container(
                                 height: 30,
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.fromLTRB(
+                                padding: const EdgeInsets.fromLTRB(
                                   20,
                                   0,
                                   20,
@@ -1044,10 +1129,9 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                     remainingCounters();
                                   });
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, right: 8),
-                                  child: const Icon(Icons.add,
+                                child: const Padding(
+                                  padding: EdgeInsets.only(left: 8.0, right: 8),
+                                  child: Icon(Icons.add,
                                       // size: 20,
                                       color: ThemeApp.lightFontColor),
                                 ),
@@ -1059,7 +1143,7 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 addToCart(model),
@@ -1097,74 +1181,68 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
             ? Padding(
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 5, bottom: 5),
-                child: twoProceedButton('Add to cart', 'Buy now', context, false, () async {
-                  final prefs =
-                  await SharedPreferences.getInstance();
-                  await prefs.setString(
-                  'isRandomUser',
-                  'No');
-                  await  prefs.setString("isUserNavigateFromDetailScreen","IsGuest");
+                child: twoProceedButton(
+                  'Add to cart',
+                  'Buy now',
+                  context,
+                  false,
+                  () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setString('isRandomUser', 'No');
+                    await prefs.setString(
+                        "isUserNavigateFromDetailScreen", "IsGuest");
 
-                  setState(() {
+                    setState(() {
+                      updateCart(model.selectedMerchantId, counterPrice,
+                          productProvider, model.productsubCategory);
 
-                    updateCart(
-                    model.selectedMerchantId,
-                    counterPrice,
-                    productProvider,
-                    model.productsubCategory);
+                      StringConstant.BadgeCounterValue =
+                          (prefs.getString('setBadgeCountPrefs')) ?? '';
+                      print(
+                          "Badge,........" + StringConstant.BadgeCounterValue);
+                    });
+                  },
+                  () async {
+                    setState(() {
+                      productListProvider.isHome = false;
+                      productListProvider.isBottomAppCart = false;
+                    });
 
-                StringConstant.BadgeCounterValue =
-                    (prefs.getString('setBadgeCountPrefs')) ??
-                        '';
-                print("Badge,........" +
-                    StringConstant.BadgeCounterValue);
-                  });
-                }, () async {
-                  setState(() {
-                    productListProvider.isHome = false;
-                    productListProvider.isBottomAppCart = false;
-                  });
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setString('isBuyNow', 'true');
+                    prefs.setString('isBuyNowFrom', 'Product');
+                    StringConstant.isUserLoggedIn =
+                        (prefs.getInt('isUserLoggedIn')) ?? 0;
 
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.setString('isBuyNow', 'true');
-                  prefs.setString(
-                      'isBuyNowFrom', 'Product');
-                  StringConstant.isUserLoggedIn =
-                      (prefs.getInt('isUserLoggedIn')) ?? 0;
+                    final navigator = Navigator.of(context); // <- Add this
+                    model.productsubCategory;
 
-                  final navigator =
-                  Navigator.of(context); // <- Add this
-                  model.productsubCategory;
-
-                  //send data to login user for direct purchase api
-                  prefs.setString('selectedMerchantId',
-                      model.selectedMerchantId.toString());
-                  prefs.setString(
-                      'selectedProductId', model.id.toString());
-                  prefs.setString(
-                      'selectedCounterPrice', counterPrice.toString());
-
-                  //get cartID from DirectUser for purchase
-
-                  var directCartId =
-                  prefs.getString('directCartIdPref');
-                  var loginUserId = (prefs.getString('isUserId')) ?? '';
-                  if (StringConstant.isUserLoggedIn == 1) {
-                    //if user logged in
-
-                    CartRepository()
-                        .buyNowGetRequest(loginUserId, context);
-                  } else {
-                    //if user not login
+                    //send data to login user for direct purchase api
+                    prefs.setString('selectedMerchantId',
+                        model.selectedMerchantId.toString());
+                    prefs.setString('selectedProductId', model.id.toString());
                     prefs.setString(
-                        'isUserNavigateFromDetailScreen', 'BN');
-                    Navigator.pushReplacementNamed(
-                        context, RoutesName.signInRoute);
+                        'selectedCounterPrice', counterPrice.toString());
 
-                    print("Not Logged in");
-                    // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
-                  }
-                },))
+                    //get cartID from DirectUser for purchase
+
+                    var directCartId = prefs.getString('directCartIdPref');
+                    var loginUserId = (prefs.getString('isUserId')) ?? '';
+                    if (StringConstant.isUserLoggedIn == 1) {
+                      //if user logged in
+
+                      CartRepository().buyNowGetRequest(loginUserId, context);
+                    } else {
+                      //if user not login
+                      prefs.setString('isUserNavigateFromDetailScreen', 'BN');
+                      Navigator.pushReplacementNamed(
+                          context, RoutesName.signInRoute);
+
+                      print("Not Logged in");
+                      // Navigator.pushReplacementNamed(context, RoutesName.signInRoute);
+                    }
+                  },
+                ))
             : Container(
                 width: width,
                 height: 72,
@@ -1230,7 +1308,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               ProductDetailsActivity(
-                                            id: similarList[index].id,
+                                            specificProductId:
+                                                similarList[index].id,
                                             // productList: subProductList[index],
                                             // productSpecificListViewModel:
                                             //     productSpecificListViewModel,
@@ -1261,7 +1340,8 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                             fit: BoxFit.scaleDown,
                                             errorBuilder:
                                                 ((context, error, stackTrace) {
-                                              return Icon(Icons.image_outlined);
+                                              return const Icon(
+                                                  Icons.image_outlined);
                                             }),
                                           )),
                                         ),
@@ -1335,14 +1415,14 @@ class _ProductDetailsActivityState extends State<ProductDetailsActivity> {
                                   )
                                 ],
                               ) ??
-                              SizedBox();
+                              const SizedBox();
                         })
-                    : SizedBox(),
+                    : const SizedBox(),
               );
             default:
-              return Text("No Data found!");
+              return const Text("No Data found!");
           }
-          return Text("No Data found!");
+          return const Text("No Data found!");
         }));
 
 /*

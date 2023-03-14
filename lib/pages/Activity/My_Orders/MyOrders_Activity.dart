@@ -972,7 +972,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                 CrossAxisAlignment.start,
                                                 children: [
                                                   TextFieldUtils().dynamicText(
-                                                      "Order ID : " +
+                                                      "Basket ID : " +
                                                           order['id'].toString(),
                                                       context,
                                                       TextStyle(
@@ -1466,7 +1466,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                                       child: Row(
                                                         children: [
                                                           TextFieldUtils().dynamicText(
-                                                              "Order Canceled",
+                                                              "Order Cancelled",
                                                               context,
                                                               TextStyle(
                                                                   fontFamily:
@@ -1633,104 +1633,238 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                               children: [
-                                                Container(
-                                                  height: 44,
-                                                  width: 45,
-                                                  decoration: const BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(8),
+                                                // Container(
+                                                //   height: 44,
+                                                //   width: 45,
+                                                //   decoration: const BoxDecoration(
+                                                //     borderRadius: BorderRadius.all(
+                                                //       Radius.circular(8),
+                                                //     ),
+                                                //   ),
+                                                //   child: GridView.builder(
+                                                //     gridDelegate:
+                                                //         const SliverGridDelegateWithFixedCrossAxisCount(
+                                                //       crossAxisSpacing: 0,
+                                                //       mainAxisSpacing: 0,
+                                                //       crossAxisCount: 2,
+                                                //       // childAspectRatio: 4/7
+                                                //     ),
+                                                //     itemCount: order['orders'].length,
+                                                //     itemBuilder:
+                                                //         (context, indexOrderList) {
+                                                //       subIndexOrderList =
+                                                //           indexOrderList;
+                                                //       return order['orders']
+                                                //                       [indexOrderList]
+                                                //                   ['cancelled'] ==
+                                                //               'true'
+                                                //           ? SizedBox()
+                                                //           : Container(
+                                                //               decoration: BoxDecoration(
+                                                //                   border: Border.all(
+                                                //                       color: ThemeApp
+                                                //                           .whiteColor)),
+                                                //               child: FittedBox(
+                                                //                 child: Image.network(
+                                                //                         // width: double.infinity,
+                                                //                         order['orders']
+                                                //                                     [
+                                                //                                     indexOrderList]
+                                                //                                 [
+                                                //                                 "image_url"] ??
+                                                //                             "",
+                                                //                         fit: BoxFit
+                                                //                             .fill,
+                                                //                         height: 22,
+                                                //                         width: 21,
+                                                //                         errorBuilder:
+                                                //                             ((context,
+                                                //                                 error,
+                                                //                                 stackTrace) {
+                                                //                       return Icon(Icons
+                                                //                           .image_outlined);
+                                                //                     })) ??
+                                                //                     SizedBox(),
+                                                //               ),
+                                                //             );
+                                                //
+                                                //       // Item rendering
+                                                //     },
+                                                //   ),
+                                                // ),
+                                                // SizedBox(
+                                                //   width: width * .03,
+                                                // ),
+                                                // Column(
+                                                //   mainAxisAlignment:
+                                                //       MainAxisAlignment.center,
+                                                //   crossAxisAlignment:
+                                                //       CrossAxisAlignment.start,
+                                                //   children: [
+                                                //     TextFieldUtils().dynamicText(
+                                                //         order['id'].toString(),
+                                                //         context,
+                                                //         TextStyle(
+                                                //           fontFamily: 'Roboto',
+                                                //           color: ThemeApp
+                                                //               .primaryNavyBlackColor,
+                                                //           fontWeight: FontWeight.w700,
+                                                //           fontSize: 12,
+                                                //         )),
+                                                //     SizedBox(
+                                                //       height: height * .01,
+                                                //     ),
+                                                //     TextFieldUtils().dynamicText(
+                                                //         earliest_delivery_date,
+                                                //         context,
+                                                //         TextStyle(
+                                                //             fontFamily: 'Roboto',
+                                                //             color: ThemeApp
+                                                //                 .lightFontColor,
+                                                //             fontSize: 12,
+                                                //             fontWeight:
+                                                //                 FontWeight.w400)),
+                                                //   ],
+                                                // ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    height: 44,
+                                                    width: 45,
+                                                    decoration: const BoxDecoration(
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(8),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  child: GridView.builder(
-                                                    gridDelegate:
-                                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisSpacing: 0,
-                                                      mainAxisSpacing: 0,
-                                                      crossAxisCount: 2,
-                                                      // childAspectRatio: 4/7
+                                                    child: FittedBox(
+                                                      child: Image.network(
+                                                        // width: double.infinity,
+                                                          order['orders'][0]
+                                                          ["image_url"] ??
+                                                              "",
+                                                          fit: BoxFit.fill,
+                                                          height: 22,
+                                                          width: 21, errorBuilder:
+                                                      ((context, error,
+                                                          stackTrace) {
+                                                        return Icon(
+                                                            Icons.image_outlined);
+                                                      })) ??
+                                                          SizedBox(),
                                                     ),
-                                                    itemCount:
-                                                        order['orders'].length,
-                                                    itemBuilder: (context,
-                                                        indexOrderList) {
-                                                      subIndexOrderList =
-                                                          indexOrderList;
-                                                      return order['orders'][
-                                                                      indexOrderList]
-                                                                  ['cancelled'] ==
-                                                              'true'
-                                                          ? SizedBox()
-                                                          : Container(
-                                                              decoration: BoxDecoration(
-                                                                  border: Border.all(
-                                                                      color: ThemeApp
-                                                                          .whiteColor)),
-                                                              child: FittedBox(
-                                                                child: Image
-                                                                        .network(
-                                                                            // width: double.infinity,
-                                                                            order['orders'][indexOrderList]["image_url"] ??
-                                                                                "",
-                                                                            fit: BoxFit
-                                                                                .fill,
-                                                                            height:
-                                                                                22,
-                                                                            width:
-                                                                                21,
-                                                                            errorBuilder: ((context,
-                                                                                error,
-                                                                                stackTrace) {
-                                                                      return Icon(
-                                                                          Icons
-                                                                              .image_outlined);
-                                                                    })) ??
-                                                                    SizedBox(),
-                                                              ),
-                                                            );
+                                                    /* GridView.builder(
+                                                gridDelegate:
+                                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisSpacing: 0,
+                                                  mainAxisSpacing: 0,
+                                                  crossAxisCount: 2,
+                                                  // childAspectRatio: 4/7
+                                                ),
+                                                itemCount: order['orders'].length,
+                                                itemBuilder:
+                                                    (context, indexOrderList) {
+                                                  subIndexOrderList =
+                                                      indexOrderList;
+                                                  return order['orders']
+                                                                  [indexOrderList]
+                                                              ['cancelled'] ==
+                                                          'true'
+                                                      ? SizedBox()
+                                                      : Container(
+                                                          decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: ThemeApp
+                                                                      .whiteColor)),
+                                                          child: FittedBox(
+                                                            child: Image.network(
+                                                                    // width: double.infinity,
+                                                                    order['orders']
+                                                                                [
+                                                                                indexOrderList]
+                                                                            [
+                                                                            "image_url"] ??
+                                                                        "",
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                    height: 22,
+                                                                    width: 21,
+                                                                    errorBuilder:
+                                                                        ((context,
+                                                                            error,
+                                                                            stackTrace) {
+                                                                  return Icon(Icons
+                                                                      .image_outlined);
+                                                                })) ??
+                                                                SizedBox(),
+                                                          ),
+                                                        );
 
-                                                      // Item rendering
-                                                    },
+                                                  // Item rendering
+                                                },
+                                              ),*/
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: width * .03,
-                                                ),
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    TextFieldUtils().dynamicText(
-                                                        order['id'].toString(),
-                                                        context,
-                                                        TextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          color: ThemeApp
-                                                              .primaryNavyBlackColor,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: 12,
-                                                        )),
-                                                    SizedBox(
-                                                      height: height * .01,
-                                                    ),
-                                                    TextFieldUtils().dynamicText(
-                                                        earliest_delivery_date,
-                                                        context,
-                                                        TextStyle(
+                                                // SizedBox(
+                                                //   width: width * .03,
+                                                // ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: [
+                                                      TextFieldUtils().dynamicText(
+                                                          "Basket ID : " +
+                                                              order['id'].toString(),
+                                                          context,
+                                                          TextStyle(
                                                             fontFamily: 'Roboto',
+                                                            color: ThemeApp
+                                                                .primaryNavyBlackColor,
+                                                            fontWeight:
+                                                            FontWeight.w700,
+                                                            fontSize: 12,
+                                                          )),
+                                                      SizedBox(
+                                                        height: height * .01,
+                                                      ),
+                                                      TextFieldUtils().dynamicText(
+                                                          earliest_delivery_date,
+                                                          context,
+                                                          TextStyle(
+                                                              fontFamily: 'Roboto',
+                                                              color: ThemeApp
+                                                                  .lightFontColor,
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                              FontWeight.w400)),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Container(
+                                                    alignment: Alignment.bottomRight,
+                                                    child: TextFieldUtils()
+                                                        .dynamicText(
+                                                        statusData,
+                                                        // "Acceptance Pending",
+                                                        // '${order['overall_status']}',
+                                                        // earliest_delivery_date,
+                                                        context,
+                                                        TextStyle(
                                                             color: ThemeApp
                                                                 .lightFontColor,
                                                             fontSize: 12,
                                                             fontWeight:
-                                                                FontWeight.w400)),
-                                                  ],
+                                                            FontWeight.bold)),
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -2464,7 +2598,7 @@ class _MyOrdersActivityState extends State<MyOrdersActivity> {
     } else if (order["overall_status_code"] == 900) {
       //canceled
       colorsStatus = ThemeApp.redColor;
-      statusData = 'Canceled';
+      statusData = 'Contains Cancelled';
     } else if (order["overall_status_code"] == 500) {
       //Acceptance pending
       colorsStatus = ThemeApp.megentaColor;

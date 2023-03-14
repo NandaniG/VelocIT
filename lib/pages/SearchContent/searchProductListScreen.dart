@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/ViewModel/product_listing_view_model.dart';
+import 'package:velocit/utils/ProgressIndicatorLoader.dart';
 import '../../../Core/Model/CategoriesModel.dart';
 import '../../../Core/Model/FindProductBySubCategoryModel.dart';
 import '../../../Core/Model/ProductCategoryModel.dart';
@@ -29,8 +31,10 @@ import '../../../widgets/global/textFormFields.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
+import '../../Core/AppConstant/apiMapping.dart';
 import '../../Core/Model/ProductsModel/Product_by_search_term_model.dart';
 import '../../Core/ViewModel/dashboard_view_model.dart';
+import '../../Core/datapass/productDataPass.dart';
 import '../../services/providers/Home_Provider.dart';
 import '../../utils/routes/routes.dart';
 import '../Activity/My_Account_Activities/AccountSetting/NotificationScreen.dart';
@@ -40,11 +44,11 @@ import '../Activity/Product_Activities/FilterScreen_Products.dart';
 import '../Activity/Product_Activities/ProductDetails_activity.dart';
 
 class SearchProductListScreen extends StatefulWidget {
-  final String searchText;
+  // final String searchText;
 
   const SearchProductListScreen({
     Key? key,
-    required this.searchText,
+    // required this.searchText,
     /* this.productList*/
   }) : super(key: key);
 
@@ -55,48 +59,68 @@ class SearchProductListScreen extends StatefulWidget {
 
 class _SearchProductListScreenState extends State<SearchProductListScreen> {
   GlobalKey<ScaffoldState> scaffoldGlobalKey = GlobalKey<ScaffoldState>();
-  final ScrollController _scrollController = ScrollController();
   double height = 0.0;
   double width = 0.0;
+  ScrollController _sc = ScrollController();
 
   var categoryCode;
   DashboardViewModel dashboardViewModel = DashboardViewModel();
   late Map<String, dynamic> data = new Map<String, dynamic>();
+  ProductDataPass? productDataPass;
+  bool isLoading = false;
+  List<SearchProduct> subCategoryList = [];
+//// page for lazy scroll
+  int page = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // dashboardViewModel.getProductBySearchTermsWithGet(0, 10, 'Apple');
-    dashboardViewModel.getProductBySearchTermsWithGet(0, 10, widget.searchText);
-
-    _scrollController.addListener(() {
-      // if(_scrollController.position.pixels >=_scrollController.position.maxScrollExtent ){
-      //   productSpecificListViewModel.productBySubCategoryWithGet(
-      //     0,
-      //     10,
-      //     widget.productList!.id!,
-      //   );
-      // }
+    isLoading = true;
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        productDataPass =
+        ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print("productDataPass"+productDataPass!.searchText.toString());
+      }
     });
-    data = {
-      "category_code": 'EOLP',
-      "recommended_for_you": "1",
-      "Merchants Near You": "1",
-      "best_deal": "",
-      'budget_buys': ""
-    };
-    // data = {"category_code": widget.productList!.categoryCode,"recommended_for_you":"1","Merchants Near You":"1","best_deal":"",'budget_buys':""};
-    print(data.toString());
-    // productSpecificListViewModel.productBySubCategoryWithGet(
-    //   0,
-    //   10,
-    //   widget.productList!.id!,
-    // );
-    // categoryCode =widget.productList!.categoryCode;
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
 
-    // print("productList"+widget.productList!.categoryCode!);
-    // productSpecificListViewModel.productSpecificListWithGet(context, data);
+    Future.delayed(Duration(seconds: 2), () {
+      if(productDataPass!.searchText!='') {
+        _getMoreData(
+          page,
+          10,
+          productDataPass!.searchText ??'',
+        );
+
+        // dashboardViewModel.getProductBySearchTermsWithGet(0, 10,productDataPass!.searchText);
+
+        _sc.addListener(() {
+          if (_sc.position.pixels == _sc.position.maxScrollExtent) {
+            print("page number sc1 " + page.toString());
+            page++;
+            print("page number sc2 " + page.toString());
+
+            _getMoreData(
+              page,
+              10,
+              productDataPass!.searchText ??'',
+            );
+          }
+        });
+        print("subProduct.............${ productDataPass!.productCategoryId}");
+        StringConstant.sortByRadio = 0;
+        StringConstant.sortedBy = "Low to High";
+      }
+    });
+
     StringConstant.sortByRadio;
     StringConstant.sortedBy;
     // getListFromPref();
@@ -107,8 +131,9 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _scrollController.dispose();
+    _sc.dispose();
   }
+
 
   final indianRupeesFormat = NumberFormat.currency(
     name: "INR",
@@ -391,124 +416,124 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
     );
   }
 
-  Widget listOfMobileDevices() {
-    return ChangeNotifierProvider<DashboardViewModel>.value(
-        value: dashboardViewModel,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, productSearchProvider, child) {
-          switch (productSearchProvider.productByTermResponse.status) {
-            case Status.LOADING:
-              print("Api load");
-
-              return TextFieldUtils().circularBar(context);
-            case Status.ERROR:
-              print("Api error");
-
-              return Text(productSearchProvider.productByTermResponse.message
-                  .toString());
-            case Status.COMPLETED:
-              print("Api calll");
-              List<SearchProduct>? searchProductList = productSearchProvider
-                  .productByTermResponse.data!.payload!.content;
-              print("searchProductList" + searchProductList!.length.toString());
-              return searchProductList!.length == ''
-                  ? Container(
-                      height: height * .8,
-                      alignment: Alignment.center,
-                      child:Center(
-                          child: Text(
-                            "Match not found",
-                            style: TextStyle(fontSize: 20),
-                          )),
-                    )
-                  : Container(
-                      height: height * .15,
-                      child: ListView.builder(
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: searchProductList!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            print("widget.productList.length");
-                            return InkWell(
-                              onTap: () {},
-                              child: Row(
-                                children: [
-                                  Container(
-                                      width: width * .27,
-                                      decoration: const BoxDecoration(
-                                          color: ThemeApp.whiteColor,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(50)),
-                                            child: Image.network(
-                                              // width: double.infinity,
-                                              searchProductList[index]
-                                                  .imageUrls![0]
-                                                  .imageUrl!,
-                                              errorBuilder: ((context, error,
-                                                  stackTrace) {
-                                                return Icon(
-                                                    Icons.image_outlined);
-                                              }),
-                                              fit: BoxFit.fill,
-
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  .07,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                .01,
-                                          ),
-                                          Center(
-                                            child: TextFieldUtils().dynamicText(
-                                                searchProductList[index]
-                                                    .shortName!,
-                                                context,
-                                                TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color: ThemeApp.darkGreyColor,
-                                                  // fontWeight: FontWeight.w500,
-                                                  fontSize: height * .02,
-                                                )),
-                                          ),
-                                        ],
-                                      )),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * .03,
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                    );
-          }
-          return Container(
-            height: height * .8,
-            alignment: Alignment.center,
-            child: Center(
-                child: Text(
-                  "Match not found",
-                  style: TextStyle(fontSize: 20),
-                )),
-          );
-        }));
-  }
+  // Widget listOfMobileDevices() {
+  //   return ChangeNotifierProvider<DashboardViewModel>.value(
+  //       value: dashboardViewModel,
+  //       child: Consumer<DashboardViewModel>(
+  //           builder: (context, productSearchProvider, child) {
+  //         switch (productSearchProvider.productByTermResponse.status) {
+  //           case Status.LOADING:
+  //             print("Api load");
+  //
+  //             return TextFieldUtils().circularBar(context);
+  //           case Status.ERROR:
+  //             print("Api error");
+  //
+  //             return Text(productSearchProvider.productByTermResponse.message
+  //                 .toString());
+  //           case Status.COMPLETED:
+  //             print("Api calll");
+  //             List<SearchProduct>? searchProductList = productSearchProvider
+  //                 .productByTermResponse.data!.payload!.content;
+  //             print("searchProductList" + searchProductList!.length.toString());
+  //             return searchProductList!.length == ''
+  //                 ? Container(
+  //                     height: height * .8,
+  //                     alignment: Alignment.center,
+  //                     child:Center(
+  //                         child: Text(
+  //                           "Match not found",
+  //                           style: TextStyle(fontSize: 20),
+  //                         )),
+  //                   )
+  //                 : Container(
+  //                     height: height * .15,
+  //                     child: ListView.builder(
+  //                         controller: _sc,
+  //                         shrinkWrap: true,
+  //                         scrollDirection: Axis.horizontal,
+  //                         itemCount: searchProductList!.length,
+  //                         itemBuilder: (BuildContext context, int index) {
+  //                           print("widget.productList.length");
+  //                           return InkWell(
+  //                             onTap: () {},
+  //                             child: Row(
+  //                               children: [
+  //                                 Container(
+  //                                     width: width * .27,
+  //                                     decoration: const BoxDecoration(
+  //                                         color: ThemeApp.whiteColor,
+  //                                         borderRadius: BorderRadius.all(
+  //                                             Radius.circular(10))),
+  //                                     child: Column(
+  //                                       mainAxisAlignment:
+  //                                           MainAxisAlignment.center,
+  //                                       crossAxisAlignment:
+  //                                           CrossAxisAlignment.center,
+  //                                       children: [
+  //                                         ClipRRect(
+  //                                           borderRadius:
+  //                                               const BorderRadius.all(
+  //                                                   Radius.circular(50)),
+  //                                           child: Image.network(
+  //                                             // width: double.infinity,
+  //                                             searchProductList[index]
+  //                                                 .imageUrls![0]
+  //                                                 .imageUrl!,
+  //                                             errorBuilder: ((context, error,
+  //                                                 stackTrace) {
+  //                                               return Icon(
+  //                                                   Icons.image_outlined);
+  //                                             }),
+  //                                             fit: BoxFit.fill,
+  //
+  //                                             height: MediaQuery.of(context)
+  //                                                     .size
+  //                                                     .height *
+  //                                                 .07,
+  //                                           ),
+  //                                         ),
+  //                                         SizedBox(
+  //                                           height: MediaQuery.of(context)
+  //                                                   .size
+  //                                                   .height *
+  //                                               .01,
+  //                                         ),
+  //                                         Center(
+  //                                           child: TextFieldUtils().dynamicText(
+  //                                               searchProductList[index]
+  //                                                   .shortName!,
+  //                                               context,
+  //                                               TextStyle(
+  //                                                 fontFamily: 'Roboto',
+  //                                                 color: ThemeApp.darkGreyColor,
+  //                                                 // fontWeight: FontWeight.w500,
+  //                                                 fontSize: height * .02,
+  //                                               )),
+  //                                         ),
+  //                                       ],
+  //                                     )),
+  //                                 SizedBox(
+  //                                   width:
+  //                                       MediaQuery.of(context).size.width * .03,
+  //                                 )
+  //                               ],
+  //                             ),
+  //                           );
+  //                         }),
+  //                   );
+  //         }
+  //         return Container(
+  //           height: height * .8,
+  //           alignment: Alignment.center,
+  //           child: Center(
+  //               child: Text(
+  //                 "Match not found",
+  //                 style: TextStyle(fontSize: 20),
+  //               )),
+  //         );
+  //       }));
+  // }
 
   Widget filterWidgets() {
     return Container(
@@ -601,240 +626,439 @@ class _SearchProductListScreenState extends State<SearchProductListScreen> {
     );
   }
 
+//   Widget productListView() {
+//     return ChangeNotifierProvider<DashboardViewModel>.value(
+//         value: dashboardViewModel,
+//         child: Consumer<DashboardViewModel>(
+//             builder: (context, productSearchProvider, child) {
+//           switch (productSearchProvider.productByTermResponse.status) {
+//             case Status.LOADING:
+//               print("Api load");
+//
+//               return TextFieldUtils().circularBar(context);
+//             case Status.ERROR:
+//               print("Api error");
+//
+//               return Text(productSearchProvider.productByTermResponse.message
+//                   .toString());
+//             case Status.COMPLETED:
+//               print("Api calll");
+//               List<SearchProduct>? searchProductList = productSearchProvider
+//                   .productByTermResponse.data!.payload!.content;
+//
+//               /*   if (searchProductList!.length == 0) {
+//                 print("productSearchProvider length" +
+//                     searchProductList!.length.toString());
+//               } else {
+//                 print("productSearchProvider length........" +
+//                     searchProductList!.length.toString());
+//               }*/
+//
+//               print("searchProductList ,.,.," +
+//                   searchProductList!.length.toString());
+//               return Expanded(
+//                 child: searchProductList.isEmpty
+//                     ? Center(
+//                         child: Text(
+//                         "Match not found",
+//                         style: TextStyle(fontSize: 20),
+//                       ))
+//                     : GridView(
+//                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                           crossAxisCount: 2,
+//                           crossAxisSpacing: 16,
+//                           mainAxisSpacing: 30,
+//                           // childAspectRatio: 1.0,
+//                           childAspectRatio:
+//                               MediaQuery.of(context).size.height / 900,
+//                         ),
+//                         shrinkWrap: true,
+//                         children: List.generate(
+//                           searchProductList.length,
+//                           (index) {
+//                             return Stack(
+//                               children: [
+//                                 index == searchProductList.length
+//                                     ? Container(
+//                                         // width: constrains.minWidth,
+//                                         height: 20,
+//                                         // height: MediaQuery.of(context).size.height * .08,
+//                                         // alignment: Alignment.center,
+//                                         child: Center(
+//                                           child: CircularProgressIndicator(
+//                                             color: ThemeApp.blackColor,
+//                                           ),
+//                                         ),
+//                                       )
+//                                     : InkWell(
+//                                         onTap: () {
+//                                           print(
+//                                               "Id ........${searchProductList[index].id}");
+//
+//                                           Navigator.of(context).push(
+//                                             MaterialPageRoute(
+//                                               builder: (context) =>
+//                                                   ProductDetailsActivity(
+//                                                     specificProductId: searchProductList[index].id,
+//                                                 // productList: subProductList[index],
+//                                                 // productSpecificListViewModel:
+//                                                 //     productSpecificListViewModel,
+//                                               ),
+//                                             ),
+//                                           );
+//                                           Navigator.of(context).pushReplacement(
+//                                             MaterialPageRoute(
+//                                               builder: (context) => ProductDetailsActivity(
+//                                                 specificProductId: searchProductList[index].id,
+//                                               ),
+//                                               settings:
+//                                               RouteSettings(arguments: ProductDataPass(
+//                                                   NavigationScreen.fromSearchListingRoute,
+//                                                   productDataPass!.productCategoryId??0,
+//                                                   searchProductList[index].id??0)),
+//                                             ),
+//
+//                                           );
+//                                         },
+//                                         child: Container(
+// // height: 205,
+//                                             child: Column(
+//                                           mainAxisAlignment:
+//                                               MainAxisAlignment.start,
+//                                           crossAxisAlignment:
+//                                               CrossAxisAlignment.start,
+//                                           children: [
+//                                             /*   Expanded(
+//                                               flex: 2,
+//                                               child:*/
+//                                             Container(
+//                                               height: 143,
+//                                               width: 191,
+//                                               /* height: SizeConfig.orientations !=
+//                                                         Orientation.landscape
+//                                                     ? MediaQuery.of(context)
+//                                                             .size
+//                                                             .height *
+//                                                         .25
+//                                                     : MediaQuery.of(context)
+//                                                             .size
+//                                                             .height *
+//                                                         .1,
+//                                                 width: MediaQuery.of(context)
+//                                                     .size
+//                                                     .width,*/
+//                                               decoration: const BoxDecoration(
+//                                                 color: ThemeApp.whiteColor,
+//                                               ),
+//                                               child: ClipRRect(
+//                                                   child: Image.network(
+//                                                       searchProductList[index]
+//                                                               .imageUrls![0]
+//                                                               .imageUrl
+//                                                               .toString() ??
+//                                                           "",
+//                                                       // fit: BoxFit.fill,
+//                                                       height: (MediaQuery.of(
+//                                                                       context)
+//                                                                   .orientation ==
+//                                                               Orientation
+//                                                                   .landscape)
+//                                                           ? MediaQuery.of(context)
+//                                                                   .size
+//                                                                   .height *
+//                                                               .26
+//                                                           : MediaQuery.of(context)
+//                                                                   .size
+//                                                                   .height *
+//                                                               .1, errorBuilder:
+//                                                           ((context, error,
+//                                                               stackTrace) {
+//                                                 return Container(
+//                                                     height: 79,
+//                                                     width: 79,
+//                                                     child: Icon(
+//                                                         Icons.image_outlined));
+//                                               }))),
+//                                             ),
+//                                             // ),
+//                                             Container(
+//                                               color: ThemeApp.tealButtonColor,
+//                                               width: 191,
+//                                               height: 66,
+//                                               padding: const EdgeInsets.only(
+//                                                 left: 12,
+//                                                 right: 12,
+//                                               ),
+//                                               child: Column(
+//                                                 mainAxisAlignment:
+//                                                     MainAxisAlignment.center,
+//                                                 crossAxisAlignment:
+//                                                     CrossAxisAlignment.start,
+//                                                 children: [
+//                                                   TextFieldUtils()
+//                                                       .listNameHeadingTextField(
+//                                                           searchProductList[
+//                                                                   index]
+//                                                               .shortName!,
+//                                                           context),
+//                                                   SizedBox(height: 10),
+//                                                   Row(
+//                                                     mainAxisAlignment:
+//                                                         MainAxisAlignment
+//                                                             .spaceBetween,
+//                                                     children: [
+//                                                       TextFieldUtils().listPriceHeadingTextField(
+//                                                           indianRupeesFormat.format(
+//                                                               searchProductList[
+//                                                                           index]
+//                                                                       .defaultSellPrice ??
+//                                                                   0.0),
+//                                                           context),
+//                                                       TextFieldUtils().listScratchPriceHeadingTextField(
+//                                                           indianRupeesFormat.format(
+//                                                               searchProductList[
+//                                                                           index]
+//                                                                       .defaultMrp ??
+//                                                                   0.0),
+//                                                           context)
+//                                                     ],
+//                                                   )
+//                                                 ],
+//                                               ),
+//                                             ),
+//                                           ],
+//                                         )),
+//                                       ),
+//                                 index == searchProductList!.length
+//                                     ? Container(
+//                                         // width: constrains.minWidth,
+//                                         height: 20,
+//                                         // height: MediaQuery.of(context).size.height * .08,
+//                                         // alignment: Alignment.center,
+//                                         child: Center(
+//                                           child: CircularProgressIndicator(
+//                                             color: ThemeApp.blackColor,
+//                                           ),
+//                                         ),
+//                                       )
+//                                     : SizedBox()
+//                               ],
+//                             );
+//                             /*else {
+//                           return  Container(
+//                             // width: constrains.minWidth,
+//                             height: 80,
+//                             // height: MediaQuery.of(context).size.height * .08,
+//                             // alignment: Alignment.center,
+//                             child: TextFieldUtils().dynamicText(
+//                                 'Nothing more to load',
+//                                 context,
+//                                 TextStyle(fontFamily: 'Roboto',
+//                                     color: ThemeApp.blackColor,
+//                                     fontSize: height * .03,
+//                                     fontWeight: FontWeight.bold)),
+//                           );
+//                         }*/
+//                           },
+//                         )),
+//               );
+//           }
+//           return Container(
+//             height: height * .8,
+//             alignment: Alignment.center,
+//             child:Center(
+//                 child: Text(
+//                   "Match not found",
+//                   style: TextStyle(fontSize: 20),
+//                 )),
+//           );
+//         }));
+//   }
   Widget productListView() {
-    return ChangeNotifierProvider<DashboardViewModel>.value(
-        value: dashboardViewModel,
-        child: Consumer<DashboardViewModel>(
-            builder: (context, productSearchProvider, child) {
-          switch (productSearchProvider.productByTermResponse.status) {
-            case Status.LOADING:
-              print("Api load");
+    return isLoading == true
+        ? CircularProgressIndicator()
+        : Expanded(
+        child: GridView(
+          controller: _sc,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 30,
+            // childAspectRatio: 1.0,
+            childAspectRatio: MediaQuery.of(context).size.height / 900,
+          ),
+          shrinkWrap: true,
+          children: List.generate(subCategoryList.length + 1, (index) {
+            print(subCategoryList.length);
 
-              return TextFieldUtils().circularBar(context);
-            case Status.ERROR:
-              print("Api error");
-
-              return Text(productSearchProvider.productByTermResponse.message
-                  .toString());
-            case Status.COMPLETED:
-              print("Api calll");
-              List<SearchProduct>? searchProductList = productSearchProvider
-                  .productByTermResponse.data!.payload!.content;
-
-              /*   if (searchProductList!.length == 0) {
-                print("productSearchProvider length" +
-                    searchProductList!.length.toString());
-              } else {
-                print("productSearchProvider length........" +
-                    searchProductList!.length.toString());
-              }*/
-
-              print("searchProductList ,.,.," +
-                  searchProductList!.length.toString());
-              return Expanded(
-                child: searchProductList.isEmpty
-                    ? Center(
-                        child: Text(
-                        "Match not found",
-                        style: TextStyle(fontSize: 20),
-                      ))
-                    : GridView(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 30,
-                          // childAspectRatio: 1.0,
-                          childAspectRatio:
-                              MediaQuery.of(context).size.height / 900,
-                        ),
-                        shrinkWrap: true,
-                        children: List.generate(
-                          searchProductList.length,
-                          (index) {
-                            return Stack(
-                              children: [
-                                index == searchProductList.length
-                                    ? Container(
-                                        // width: constrains.minWidth,
-                                        height: 20,
-                                        // height: MediaQuery.of(context).size.height * .08,
-                                        // alignment: Alignment.center,
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: ThemeApp.blackColor,
-                                          ),
-                                        ),
-                                      )
-                                    : InkWell(
-                                        onTap: () {
-                                          print(
-                                              "Id ........${searchProductList[index].id}");
-
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProductDetailsActivity(
-                                                id: searchProductList[index].id,
-                                                // productList: subProductList[index],
-                                                // productSpecificListViewModel:
-                                                //     productSpecificListViewModel,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: Container(
-// height: 205,
-                                            child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            /*   Expanded(
-                                              flex: 2,
-                                              child:*/
-                                            Container(
-                                              height: 143,
-                                              width: 191,
-                                              /* height: SizeConfig.orientations !=
-                                                        Orientation.landscape
-                                                    ? MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        .25
-                                                    : MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        .1,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,*/
-                                              decoration: const BoxDecoration(
-                                                color: ThemeApp.whiteColor,
-                                              ),
-                                              child: ClipRRect(
-                                                  child: Image.network(
-                                                      searchProductList[index]
-                                                              .imageUrls![0]
-                                                              .imageUrl
-                                                              .toString() ??
-                                                          "",
-                                                      // fit: BoxFit.fill,
-                                                      height: (MediaQuery.of(
-                                                                      context)
-                                                                  .orientation ==
-                                                              Orientation
-                                                                  .landscape)
-                                                          ? MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              .26
-                                                          : MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              .1, errorBuilder:
-                                                          ((context, error,
-                                                              stackTrace) {
-                                                return Container(
-                                                    height: 79,
-                                                    width: 79,
-                                                    child: Icon(
-                                                        Icons.image_outlined));
-                                              }))),
-                                            ),
-                                            // ),
-                                            Container(
-                                              color: ThemeApp.tealButtonColor,
-                                              width: 191,
-                                              height: 66,
-                                              padding: const EdgeInsets.only(
-                                                left: 12,
-                                                right: 12,
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  TextFieldUtils()
-                                                      .listNameHeadingTextField(
-                                                          searchProductList[
-                                                                  index]
-                                                              .shortName!,
-                                                          context),
-                                                  SizedBox(height: 10),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      TextFieldUtils().listPriceHeadingTextField(
-                                                          indianRupeesFormat.format(
-                                                              searchProductList[
-                                                                          index]
-                                                                      .defaultSellPrice ??
-                                                                  0.0),
-                                                          context),
-                                                      TextFieldUtils().listScratchPriceHeadingTextField(
-                                                          indianRupeesFormat.format(
-                                                              searchProductList[
-                                                                          index]
-                                                                      .defaultMrp ??
-                                                                  0.0),
-                                                          context)
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        )),
-                                      ),
-                                index == searchProductList!.length
-                                    ? Container(
-                                        // width: constrains.minWidth,
-                                        height: 20,
-                                        // height: MediaQuery.of(context).size.height * .08,
-                                        // alignment: Alignment.center,
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: ThemeApp.blackColor,
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox()
-                              ],
-                            );
-                            /*else {
-                          return  Container(
-                            // width: constrains.minWidth,
-                            height: 80,
-                            // height: MediaQuery.of(context).size.height * .08,
-                            // alignment: Alignment.center,
-                            child: TextFieldUtils().dynamicText(
-                                'Nothing more to load',
-                                context,
-                                TextStyle(fontFamily: 'Roboto',
-                                    color: ThemeApp.blackColor,
-                                    fontSize: height * .03,
-                                    fontWeight: FontWeight.bold)),
-                          );
-                        }*/
-                          },
-                        )),
+            if (index == subCategoryList.length) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _buildProgressIndicator(),
+                ],
               );
-          }
-          return Container(
-            height: height * .8,
-            alignment: Alignment.center,
-            child:Center(
-                child: Text(
-                  "Match not found",
-                  style: TextStyle(fontSize: 20),
-                )),
-          );
-        }));
+            } else {
+              return InkWell(
+                onTap: () {
+                  print("Id ........${subCategoryList[index].id}");
+
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailsActivity(
+                        specificProductId: subCategoryList[index].id,
+                      ),
+                      settings:
+                      RouteSettings(arguments: ProductDataPass(
+                          NavigationScreen.fromSearchListingRoute,
+                          productDataPass!.productCategoryId??0,
+                          subCategoryList[index].id??0,productDataPass!.searchText,0,0)),
+                    ),
+
+                  );
+                },
+                child: Container(
+// height: 205,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        /*   Expanded(
+                                        flex: 2,
+                                        child:*/
+                        Container(
+                          height: 143,
+                          width: 191,
+                          decoration: BoxDecoration(
+                              color: ThemeApp.whiteColor,
+                              border:
+                              Border.all(color: ThemeApp.tealButtonColor)),
+                          child: ClipRRect(
+                            child: subCategoryList[index]
+                                .imageUrls![0]
+                                .imageUrl!
+                                .isNotEmpty
+                                ? Image.network(
+                              subCategoryList[index]
+                                  .imageUrls![0]
+                                  .imageUrl!,
+                              // fit: BoxFit.fill,
+                              height: (MediaQuery.of(context).orientation ==
+                                  Orientation.landscape)
+                                  ? MediaQuery.of(context).size.height * .26
+                                  : MediaQuery.of(context).size.height * .1,
+                            )
+                                : SizedBox(
+                              // height: height * .28,
+                                width: width,
+                                child: Icon(
+                                  Icons.image_outlined,
+                                  size: 50,
+                                )),
+                          ),
+                        ),
+                        // ),
+                        Container(
+                          color: ThemeApp.tealButtonColor,
+                          width: 191,
+                          height: 66,
+                          padding: const EdgeInsets.only(
+                            left: 12,
+                            right: 12,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextFieldUtils().listNameHeadingTextField(
+                                  subCategoryList[index].shortName!, context),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextFieldUtils().listPriceHeadingTextField(
+                                      indianRupeesFormat.format(
+                                          subCategoryList[index]
+                                              .defaultSellPrice ??
+                                              0.0),
+                                      context),
+                                  TextFieldUtils()
+                                      .listScratchPriceHeadingTextField(
+                                      indianRupeesFormat.format(
+                                          subCategoryList[index].defaultMrp ??
+                                              0.0),
+                                      context)
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    )),
+              );
+            }
+          }),
+        ));
+  }
+
+  void _getMoreData(int page, int size, String searchText) async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
+
+      Map<String, String> productListingData = {
+        // 'search_term': searchString.toString(),
+        'search_term':productDataPass!.searchText.toString().replaceFirst(productDataPass!.searchText[0],productDataPass!.searchText[0].toUpperCase()),
+        'page': page.toString(),
+        'size': size.toString(),
+        // 'searchString':searchString.toString(),
+      };
+      print("Product Query$productListingData");
+      var url = '/product/findBySearchTerm';
+      String queryString = Uri(queryParameters: productListingData).query;
+
+      var requestUrl = '${ApiMapping.BaseAPI}$url?${queryString}';
+
+      print(requestUrl);
+
+      final client = http.Client();
+      final response = await client
+          .get(Uri.parse(requestUrl))
+          .timeout(Duration(seconds: 30));
+      List<SearchProduct> tList = [];
+
+      final parsedJson = jsonDecode(response.body);
+// type: Restaurant
+      final productBySubCategory =
+      ProductFindBySearchTermModel.fromJson(parsedJson);
+      for (int i = 0; i < productBySubCategory.payload!.content!.length; i++) {
+        tList.add(productBySubCategory.payload!.content![i]);
+      }
+
+      setState(() {
+        isLoading = false;
+        subCategoryList.addAll(tList);
+        subCategoryList.sort((a, b) =>
+            a.defaultSellPrice!.toInt().compareTo(b.defaultSellPrice!.toInt()));
+        // page++;
+        print("page number " + page.toString());
+      });
+    }
+  }
+
+  List<Content> sortedMapData = [];
+  Widget _buildProgressIndicator() {
+    return Container(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Opacity(
+          opacity: isLoading ? 1.0 : 00,
+          child: ProgressIndicatorLoader(isLoading),
+        ),
+      ),
+    );
   }
 
   int? _radioValue = 0;

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocit/Core/Model/OfferProductModel.dart';
 import 'package:velocit/Core/ViewModel/product_listing_view_model.dart';
+import 'package:velocit/pages/screens/offers_Activity.dart';
 import '../../../Core/AppConstant/apiMapping.dart';
 import '../../../Core/Model/CategoriesModel.dart';
 import '../../../Core/Model/FindProductBySubCategoryModel.dart';
@@ -16,12 +17,14 @@ import '../../../Core/Model/OfferProductListModel.dart';
 import '../../../Core/Model/ProductCategoryModel.dart';
 import '../../../Core/Model/productSpecificListModel.dart';
 import '../../../Core/data/responses/status.dart';
+import '../../../Core/datapass/productDataPass.dart';
 import '../../../services/models/CartModel.dart';
 import '../../../services/models/ProductDetailModel.dart';
 import '../../../services/providers/Products_provider.dart';
 import '../../../services/providers/cart_Provider.dart';
 import '../../../utils/ProgressIndicatorLoader.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/routes/routes.dart';
 import '../../../utils/styles.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/global/appBar.dart';
@@ -35,9 +38,9 @@ import '../Product_Activities/FilterScreen_Products.dart';
 import '../Product_Activities/ProductDetails_activity.dart';
 import 'package:http/http.dart'as http;
 class OfferListByCategoryActivity extends StatefulWidget {
-  OfferPayload? offerList;
+  // OfferPayload? offerList;
 
-  OfferListByCategoryActivity({Key? key, this.offerList}) : super(key: key);
+  OfferListByCategoryActivity({Key? key, /*this.offerList*/}) : super(key: key);
 
   @override
   State<OfferListByCategoryActivity> createState() =>
@@ -50,6 +53,7 @@ class _OfferListByCategoryActivityState
   ScrollController _sc = ScrollController();
   double height = 0.0;
   double width = 0.0;
+  ProductDataPass? productDataPass;
 
   var categoryCode;
   ProductSpecificListViewModel productSpecificListViewModel =
@@ -65,37 +69,49 @@ class _OfferListByCategoryActivityState
   @override
   void initState() {
     // TODO: implement initState
+    isLoading=true;
     super.initState();
-    this._getMoreData(
-      page,
-      10,
-      widget.offerList!.id!,
-    );
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        productDataPass =
+        ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print("productDataPass"+productDataPass!.productCategoryId.toString());
+      }
+    });
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         isLoading = false;
       });
     });
     super.initState();
+    Future.delayed(Duration(seconds: 2), ()
+    {
+      this._getMoreData(
+        page,
+        10,
+        productDataPass!.productCategoryId,
+      );
 
-    _sc.addListener(() {
-      if (_sc.position.pixels == _sc.position.maxScrollExtent) {
-        print("page number sc1 " + page.toString());
-        page++;
-        print("page number sc2 " + page.toString());
 
-        _getMoreData(
-          page,
-          10,
-          widget.offerList!.id!,
-        );
-      }
+      _sc.addListener(() {
+        if (_sc.position.pixels == _sc.position.maxScrollExtent) {
+          print("page number sc1 " + page.toString());
+          page++;
+          print("page number sc2 " + page.toString());
+
+          _getMoreData(
+            page,
+            10,
+            productDataPass!.productCategoryId,
+          );
+        }
+      });
+      print("subProduct.............${  productDataPass!.productCategoryId}");
+      StringConstant.sortByRadio = 0;
+      StringConstant.sortedBy = "Low to High";
+      print(StringConstant.sortedBy);
     });
-    print("subProduct.............${widget.offerList!.id}");
-    StringConstant.sortByRadio=0;
-    StringConstant.sortedBy="Low to High";
-    print(StringConstant.sortedBy);
-
   }
 
   @override
@@ -120,41 +136,60 @@ class _OfferListByCategoryActivityState
 
     // final productsList = availableProducts.getProductsLists();
 
-    return Scaffold(
-        backgroundColor: ThemeApp.appBackgroundColor,
-        key: scaffoldGlobalKey,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
-          child: AppBarWidget(
-            context: context,
-            titleWidget: searchBarWidget(),
-            location: AddressWidgets(),
-          ),
-        ),
-        bottomNavigationBar: bottomNavigationBarWidget(context,2),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10,),
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //
-
-                /* listOfMobileDevices(),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .02,
-            ),*/
-                filterWidgets(),
-                SizedBox(
-                  height: 10,
-                ),
-                productListView()
-              ],
+    return  WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) =>
+              OfferActivity(),
+          settings:
+          RouteSettings(arguments: ProductDataPass(NavigationScreen.fromDashboardRoute, productDataPass!.productCategoryId,productDataPass!.productSpecificId,productDataPass!.searchText,0,0)),
+        ),(Route<dynamic> route) => false);
+        return Future.value(true);
+      },
+      child: Scaffold(
+          backgroundColor: ThemeApp.appBackgroundColor,
+          key: scaffoldGlobalKey,
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
+            child: AppBar_Back_RouteWidget(
+              context: context,
+              titleWidget: searchBarWidget(),
+              location: AddressWidgets(),
+              onTap: (){
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                builder: (context) =>
+                    OfferActivity(),
+                settings:
+                RouteSettings(arguments: ProductDataPass(NavigationScreen.fromDashboardRoute, productDataPass!.productCategoryId,productDataPass!.productSpecificId,productDataPass!.searchText,0,0)),
+              ),(Route<dynamic> route) => false);
+            },
             ),
           ),
-        ));
+          bottomNavigationBar: bottomNavigationBarWidget(context,1),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          body: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.only(left: 10, right: 10,),
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //
+
+                  /* listOfMobileDevices(),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .02,
+              ),*/
+                  filterWidgets(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  productListView()
+                ],
+              ),
+            ),
+          )),
+    );
   }
 
   ///top header list of product
@@ -346,30 +381,23 @@ class _OfferListByCategoryActivityState
     );
   }
   Widget productListView() {
-    return isLoading == false
-        ? Expanded(
-        child: sortedMapData.isEmpty
-            ? Center(
-            child: Text(
-              "Match not found",
-              style: TextStyle(fontSize: 20),
-            ))
-            : GridView(
+    return/* isLoading == true
+        ? CircularProgressIndicator()
+        : */Expanded(
+        child: GridView(
           controller: _sc,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 16,
             mainAxisSpacing: 30,
             // childAspectRatio: 1.0,
-            childAspectRatio:
-            MediaQuery.of(context).size.height / 900,
+            childAspectRatio: MediaQuery.of(context).size.height / 900,
           ),
           shrinkWrap: true,
-          children:
-          List.generate(sortedMapData.length + 1, (index) {
-            print(sortedMapData.length);
+          children: List.generate(subCategoryList.length + 1, (index) {
+            print(subCategoryList.length);
 
-            if (index == sortedMapData.length) {
+            if (index == subCategoryList.length) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -379,14 +407,20 @@ class _OfferListByCategoryActivityState
             } else {
               return InkWell(
                 onTap: () {
-                  print("Id ........${sortedMapData[index].id}");
+                  print("Id ........${subCategoryList[index].id}");
 
-                  Navigator.of(context).push(
+                  Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) => ProductDetailsActivity(
-                        id: sortedMapData[index].id,
+                        specificProductId: subCategoryList[index].id,
                       ),
+                      settings:
+                      RouteSettings(arguments: ProductDataPass(
+                          NavigationScreen.fromProductListingRoute,
+                          productDataPass!.productCategoryId??0,
+                          subCategoryList[index].id??0,'',0,0)),
                     ),
+
                   );
                 },
                 child: Container(
@@ -403,29 +437,22 @@ class _OfferListByCategoryActivityState
                           width: 191,
                           decoration: BoxDecoration(
                               color: ThemeApp.whiteColor,
-                              border: Border.all(
-                                  color: ThemeApp.tealButtonColor)),
+                              border:
+                              Border.all(color: ThemeApp.tealButtonColor)),
                           child: ClipRRect(
-                            child: sortedMapData[index]
+                            child: subCategoryList[index]
                                 .imageUrls![0]
                                 .imageUrl!
                                 .isNotEmpty
                                 ? Image.network(
-                              sortedMapData[index]
+                              subCategoryList[index]
                                   .imageUrls![0]
                                   .imageUrl!,
                               // fit: BoxFit.fill,
-                              height: (MediaQuery.of(context)
-                                  .orientation ==
+                              height: (MediaQuery.of(context).orientation ==
                                   Orientation.landscape)
-                                  ? MediaQuery.of(context)
-                                  .size
-                                  .height *
-                                  .26
-                                  : MediaQuery.of(context)
-                                  .size
-                                  .height *
-                                  .1,
+                                  ? MediaQuery.of(context).size.height * .26
+                                  : MediaQuery.of(context).size.height * .1,
                             )
                                 : SizedBox(
                               // height: height * .28,
@@ -450,25 +477,21 @@ class _OfferListByCategoryActivityState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextFieldUtils().listNameHeadingTextField(
-                                  sortedMapData[index].shortName!,
-                                  context),
+                                  subCategoryList[index].shortName!, context),
                               SizedBox(height: 10),
                               Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  TextFieldUtils()
-                                      .listPriceHeadingTextField(
+                                  TextFieldUtils().listPriceHeadingTextField(
                                       indianRupeesFormat.format(
-                                          sortedMapData[index]
+                                          subCategoryList[index]
                                               .defaultSellPrice ??
                                               0.0),
                                       context),
                                   TextFieldUtils()
                                       .listScratchPriceHeadingTextField(
                                       indianRupeesFormat.format(
-                                          sortedMapData[index]
-                                              .defaultMrp ??
+                                          subCategoryList[index].defaultMrp ??
                                               0.0),
                                       context)
                                 ],
@@ -481,8 +504,7 @@ class _OfferListByCategoryActivityState
               );
             }
           }),
-        ))
-        : CircularProgressIndicator();
+        ));
   }
 //   Widget productListView() {
 //     return/* LayoutBuilder(builder: (context, constrains) {
@@ -945,7 +967,6 @@ class _OfferListByCategoryActivityState
         'offer_id': subCategoryId.toString(),
       };
       print("Product Query$productData");
-      print("CRM Query$productData");
       var url = '/product/offerproducts';
       String queryString = Uri(queryParameters: productData).query;
 
@@ -964,6 +985,7 @@ class _OfferListByCategoryActivityState
       final productBySubCategory =
       OfferProductsListModel.fromJson(parsedJson);
       for (int i = 0; i < productBySubCategory.payload!.content!.length; i++) {
+
         tList.add(productBySubCategory.payload!.content![i]);
 
         // subCategoryList.sort((a,b)=>int.parse(a.defaultSellPrice.toString()).compareTo(int.parse(a.defaultSellPrice.toString())));
@@ -971,38 +993,57 @@ class _OfferListByCategoryActivityState
         // print("sortSubCategoryList :"+sortSubCategoryList.length.toString());
       }
 
+
       setState(() {
+
         isLoading = false;
         subCategoryList.addAll(tList);
-        mainss();
+        // mainss();
+        if ( StringConstant.sortedBy =="High to Low") {
+          // list is been sorted
 
+          subCategoryList.sort((a, b) =>
+              b.defaultSellPrice!.toInt().compareTo(a.defaultSellPrice!.toInt()));
+          // StringConstant.sortedBy = "High to Low";
+          for (int i = 0; i < subCategoryList.length; i++) {
+            print("tList number " + subCategoryList.length.toString());
+            print("tList price " +
+                subCategoryList[i].defaultSellPrice
+                    .toString());
+          }
+          // _sc.jumpTo(0.0);
+        } else {
+          subCategoryList.sort((a, b) =>
+              a.defaultSellPrice!.toInt().compareTo(b.defaultSellPrice!.toInt()));
+          // StringConstant.sortedBy = "Low to High";
+          // _sc.jumpTo(0.0);
+        }
         // page++;
-        print("page number " + page.toString());
       });
     }
   }
 
-  List<OfferListContent> sortedMapData=[];
-  void mainss() {
-    // sorting the map value in ascending order by it's value.
-
-    // convert the map data into list(array).
-
-    List<OfferListContent> listMappedEntries = subCategoryList.toList();
-
-    // Now will sort the list
-
-    // listMappedEntries.sort((a, b) => a.defaultSellPrice!.toInt()
-    //     .compareTo(b.defaultSellPrice!.toInt()));
-
-    // print(listMappedEntries);
-
-    // now convert the list back to map after sorting.
-
-    sortedMapData = List<OfferListContent>.from(listMappedEntries);
-
-    print("sortedMapData"+sortedMapData.length.toString());
-  }
+  // List<OfferListContent> sortedMapData=[];
+  // void mainss() {
+  //   // sorting the map value in ascending order by it's value.
+  //
+  //   // convert the map data into list(array).
+  //
+  //   List<OfferListContent> listMappedEntries = subCategoryList.toList();
+  //
+  //   // Now will sort the list
+  //
+  //   // listMappedEntries.sort((a, b) => a.defaultSellPrice!.toInt()
+  //   //     .compareTo(b.defaultSellPrice!.toInt()));
+  //
+  //   // print(listMappedEntries);
+  //
+  //   // now convert the list back to map after sorting.
+  //
+  //   sortedMapData = List<OfferListContent>.from(listMappedEntries);
+  //
+  //   print("sortedMapData"+sortedMapData.length.toString());
+  // }
 
   Widget _buildProgressIndicator() {
     return Container(
@@ -1101,12 +1142,14 @@ class _OfferListByCategoryActivityState
     setState(() {});
     if (StringConstant.sortByRadio == 1) {
       // list is been sorted
-      sortedMapData.sort((a, b) =>b.defaultSellPrice!.toInt()
+      subCategoryList.sort((a, b) =>b.defaultSellPrice!.toInt()
           .compareTo(a.defaultSellPrice!.toInt()));
       StringConstant.sortedBy = "High to Low";
+      _sc.jumpTo(0.0);
     } else {
-      sortedMapData.sort((a, b) =>a.defaultSellPrice!.toInt()
+      subCategoryList.sort((a, b) =>a.defaultSellPrice!.toInt()
           .compareTo(b.defaultSellPrice!.toInt()));
+      _sc.jumpTo(0.0);
       StringConstant.sortedBy = "Low to High";
     }
   }

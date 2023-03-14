@@ -86,8 +86,11 @@ class _CRMActivityState extends State<CRMActivity> {
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context)
-            .pop();
+        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
+          setState(() {
+
+          });
+        });
         return Future.value(true);
       },
       child: Scaffold(
@@ -492,7 +495,7 @@ class _CRMActivityState extends State<CRMActivity> {
                     print(
                         "_isProductListChip 2" + _isServiceListChip.toString());
                     Navigator.of(context)
-                        .push(
+                        .pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => ShopByCategoryActivity(),
                           ),
@@ -544,7 +547,7 @@ class _CRMActivityState extends State<CRMActivity> {
                     _isProductListChip = false;
                     print("_isProductListChip 3" + _isCRMListChip.toString());
                     Navigator.of(context)
-                        .push(
+                        .pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => CRMActivity(),
                           ),

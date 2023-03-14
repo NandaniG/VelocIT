@@ -137,7 +137,10 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
     final filename = path.basename(url);
     // final file = File(
     //     '/storage/emulated/0/Download/VelocITt_${widget.values["id"].toString()}_$filename');
-
+    var dir = await getExternalStorageDirectory();
+    var knockDir =
+    await new Directory('${dir!.path}/iLearn').create(recursive: true);
+    print('Directory path knockDir:' + knockDir.path);
     //create file path
     var directory = await Directory('/storage/emulated/0/VelocITt Invoice')
         .create(recursive: true);
@@ -194,7 +197,7 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFieldUtils().dynamicText(
-                          "Order Id : " + widget.values["id"].toString(),
+                          "Basket Id : " + widget.values["id"].toString(),
                           context,
                           TextStyle(
                               fontFamily: 'Roboto',
@@ -388,15 +391,31 @@ class _MyOrderDetailsState extends State<MyOrderDetails> {
                                 ),
                                 Container(
                                   width: 200,
-                                  child: TextFieldUtils().dynamicText(
-                                      orders["oneliner"],
-                                      context,
-                                      TextStyle(
-                                          fontFamily: 'Roboto',
-                                          color: ThemeApp.blackColor,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400,
-                                          overflow: TextOverflow.ellipsis)),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldUtils().dynamicText(
+                                        "Order Id : " + orders["order_id"].toString(),
+                                        context,
+                                        TextStyle(
+                                            fontFamily: 'Roboto',
+                                            color: ThemeApp.blackColor,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700)),  SizedBox(
+                                        height: 5,
+                                      ),
+                                      TextFieldUtils().dynamicText(
+                                          orders["oneliner"],
+                                          context,
+                                          TextStyle(
+                                              fontFamily: 'Roboto',
+                                              color: ThemeApp.blackColor,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              overflow: TextOverflow.ellipsis)),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

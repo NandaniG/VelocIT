@@ -5,10 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:velocit/Core/Model/ServiceModels/FindServicesBySubCategory.dart';
+import 'package:velocit/Core/datapass/serviceDataPass.dart';
 import 'package:velocit/pages/Activity/DashBoard_DetailScreens_Activities/service_ui/ServiceDetails_activity.dart';
 import 'package:velocit/utils/constants.dart';
 import '../../../../Core/AppConstant/apiMapping.dart';
 import '../../../../Core/Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
+import '../../../../Core/datapass/productDataPass.dart';
 import '../../../../utils/ProgressIndicatorLoader.dart';
 import '../../../../utils/styles.dart';
 import '../../../../widgets/global/appBar.dart';
@@ -19,10 +21,12 @@ import '../../Product_Activities/FilterScreen_Products.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:velocit/utils/StringUtils.dart';
 
-class ServiceListByCategoryActivity extends StatefulWidget {
-  ServiceSimpleSubCats? serviceList;
+import 'Service_Categories_Activity.dart';
 
-  ServiceListByCategoryActivity({Key? key, this.serviceList}) : super(key: key);
+class ServiceListByCategoryActivity extends StatefulWidget {
+  // ServiceSimpleSubCats? serviceList;
+
+  ServiceListByCategoryActivity({Key? key,/* this.serviceList*/}) : super(key: key);
 
   @override
   State<ServiceListByCategoryActivity> createState() =>
@@ -35,7 +39,7 @@ class _ServiceListByCategoryActivityState
   final ScrollController _sc = ScrollController();
   double height = 0.0;
   double width = 0.0;
-
+  ProductDataPass? serviceDataPass;
   //// page for lazy scroll
  int page = 0;
   List<ServiceContent> subServiceList = [];
@@ -45,27 +49,49 @@ class _ServiceListByCategoryActivityState
   void initState() {
     // TODO: implement initState
     super.initState();
-    this._getMoreData(
-      page,
-      10,
-      widget.serviceList!.id!,
-    );
-    _sc.addListener(() {
-      if (_sc.position.pixels == _sc.position.maxScrollExtent) {
-        print("page number sc1 " + page.toString());
-        page++;
-        print("page number sc2 " + page.toString());
+    isLoading = true;
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        serviceDataPass =
+        ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print("productDataPass"+serviceDataPass!.serviceCategoryId.toString());
+      }
+    });
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
+
+    Future.delayed(Duration(seconds: 2), () {
+      if(serviceDataPass!.serviceCategoryId!=0) {
         _getMoreData(
           page,
           10,
-          widget.serviceList!.id!,
+          serviceDataPass!.serviceCategoryId ?? 0,
         );
+
+
+        _sc.addListener(() {
+          if (_sc.position.pixels == _sc.position.maxScrollExtent) {
+            print("page number sc1 " + page.toString());
+            page++;
+            print("page number sc2 " + page.toString());
+
+            _getMoreData(
+              page,
+              10,
+              serviceDataPass!.serviceCategoryId,
+            );
+          }
+        });
+        print("subProduct.............${ serviceDataPass!.serviceCategoryId}");
+        StringConstant.sortByRadio = 0;
+        StringConstant.sortedBy = "Low to High";
       }
     });
-    print("subProduct.............${widget.serviceList!.id}");
 
-    StringConstant.sortByRadio;
-    StringConstant.sortedBy;
   }
 
   @override
@@ -91,10 +117,19 @@ class _ServiceListByCategoryActivityState
         key: scaffoldGlobalKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
-          child: AppBarWidget(
+          child: AppBar_Back_RouteWidget(
             context: context,
             titleWidget: searchBarWidget(),
             location: const AddressWidgets(),
+            onTap: (){
+               Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    ShopByCategoryActivity(),
+                settings:
+                RouteSettings(arguments: ProductDataPass(NavigationScreen.fromServiceListingRoute, 0,0,'',serviceDataPass!.serviceCategoryId,serviceDataPass!.serviceSpecificId)),
+              ));
+
+            },
           ),
         ),
         bottomNavigationBar: bottomNavigationBarWidget(context, 0),
@@ -311,160 +346,161 @@ class _ServiceListByCategoryActivityState
   }
 
   Widget productListView() {
-    return isLoading==false? Expanded(
-        child:subServiceList.isEmpty?Center(
-            child: Text(
-              "Match not found",
-              style: TextStyle(fontSize: 20),
-            )):GridView(
-                controller: _sc,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 30,
-                  // childAspectRatio: 1.0,
-                  childAspectRatio: MediaQuery.of(context).size.height / 900,
-                ),
-                shrinkWrap: true,
-                children: List.generate(subServiceList.length + 1, (index) {
-                  if (index == subServiceList.length) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        _buildProgressIndicator(),
-                      ],
-                    );
-                  } else {
-                    return InkWell(
-                      onTap: () {
-                        print("Id ........${subServiceList[index].id}");
-
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ServiceDetailsActivity(
-                              id: subServiceList[index].id,
-                              // productList: subServiceList[index],
-                              // productSpecificListViewModel:
-                              //     productSpecificListViewModel,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-// height: 205,
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+    return
+        Expanded(
+          child: GridView(
+                  controller: _sc,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 30,
+                    // childAspectRatio: 1.0,
+                    childAspectRatio: MediaQuery.of(context).size.height / 900,
+                  ),
+                  shrinkWrap: true,
+                  children: List.generate(subServiceList.length + 1, (index) {
+                    if (index == subServiceList.length) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          /*   Expanded(
-                                            flex: 2,
-                                            child:*/
-                          Container(
-                            height: 123,
-                            width: 191,
-                            /* height: SizeConfig.orientations !=
-                                                      Orientation.landscape
-                                                  ? MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      .25
-                                                  : MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      .1,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,*/
-                            decoration:  BoxDecoration(
-                              color: ThemeApp.whiteColor,                                border: Border.all(color: ThemeApp.tealButtonColor)
-
-                            ),
-                            child: ClipRRect(
-                              child: subServiceList[index]
-                                      .imageUrls![0]
-                                      .imageUrl!
-                                      .isNotEmpty
-                                  ? Image.network(
-                                      subServiceList[index]
-                                          .imageUrls![0]
-                                          .imageUrl!,
-                                      // fit: BoxFit.fill,
-                                      height: (MediaQuery.of(context)
-                                                  .orientation ==
-                                              Orientation.landscape)
-                                          ? MediaQuery.of(context).size.height *
-                                              .26
-                                          : MediaQuery.of(context).size.height *
-                                              .1,
-                                    )
-                                  : SizedBox(
-                                      // height: height * .28,
-                                      width: width,
-                                      child: const Icon(
-                                        Icons.image_outlined,
-                                        size: 50,
-                                      )),
-                            ),
-                          ),
-                          // ),
-                          Container(
-                            color: ThemeApp.tealButtonColor,
-                            width: 191,
-                            height: 66,
-                            padding: const EdgeInsets.only(
-                              left: 12,
-                              right: 12,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFieldUtils().listNameHeadingTextField(
-                                    subServiceList[index].shortName!, context),
-                                const SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextFieldUtils().listPriceHeadingTextField(
-                                        indianRupeesFormat.format(
-                                            subServiceList[index]
-                                                    .defaultSellPrice ??
-                                                0.0),
-                                        context),
-                                    TextFieldUtils()
-                                        .listScratchPriceHeadingTextField(
-                                            indianRupeesFormat.format(
-                                                subServiceList[index]
-                                                        .defaultMrp ??
-                                                    0.0),
-                                            context)
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
+                          _buildProgressIndicator(),
                         ],
-                      )),
-                    );
-                    /*else {
-                        return  Container(
-                          // width: constrains.minWidth,
-                          height: 80,
-                          // height: MediaQuery.of(context).size.height * .08,
-                          // alignment: Alignment.center,
-                          child: TextFieldUtils().dynamicText(
-                              'Nothing more to load',
-                              context,
-                              TextStyle(fontFamily: 'Roboto',
-                                  color: ThemeApp.blackColor,
-                                  fontSize: height * .03,
-                                  fontWeight: FontWeight.bold)),
-                        );
-                      }*/
-                  }
-                }),
-              )):CircularProgressIndicator();
+                      );
+                    } else {
+                      return InkWell(
+                        onTap: () {
+                          print("Id ........${subServiceList[index].id}");
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => ServiceDetailsActivity(
+                                id: subServiceList[index].id,
+                              ),
+                              settings:
+                              RouteSettings(arguments: ProductDataPass(
+                                  NavigationScreen.fromServiceListingRoute,
+                                 0,0,'', serviceDataPass!.serviceCategoryId??0,
+                                  subServiceList[index].id??0)),
+                            ),
+
+                          );
+
+                        },
+                        child: Container(
+// height: 205,
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /*   Expanded(
+                                              flex: 2,
+                                              child:*/
+                            Container(
+                              height: 143,
+                              width: 191,
+                              /* height: SizeConfig.orientations !=
+                                                        Orientation.landscape
+                                                    ? MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        .25
+                                                    : MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        .1,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,*/
+                              decoration:  BoxDecoration(
+                                color: ThemeApp.whiteColor,                                border: Border.all(color: ThemeApp.tealButtonColor)
+
+                              ),
+                              child: ClipRRect(
+                                child: subServiceList[index]
+                                        .imageUrls![0]
+                                        .imageUrl!
+                                        .isNotEmpty
+                                    ? Image.network(
+                                        subServiceList[index]
+                                            .imageUrls![0]
+                                            .imageUrl!,
+                                        // fit: BoxFit.fill,
+                                        height: (MediaQuery.of(context)
+                                                    .orientation ==
+                                                Orientation.landscape)
+                                            ? MediaQuery.of(context).size.height *
+                                                .26
+                                            : MediaQuery.of(context).size.height *
+                                                .1,
+                                      )
+                                    : SizedBox(
+                                        // height: height * .28,
+                                        width: width,
+                                        child: const Icon(
+                                          Icons.image_outlined,
+                                          size: 50,
+                                        )),
+                              ),
+                            ),
+                            // ),
+                            Container(
+                              color: ThemeApp.tealButtonColor,
+                              width: 191,
+                              height: 66,
+                              padding: const EdgeInsets.only(
+                                left: 12,
+                                right: 12,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextFieldUtils().listNameHeadingTextField(
+                                      subServiceList[index].shortName!, context),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TextFieldUtils().listPriceHeadingTextField(
+                                          indianRupeesFormat.format(
+                                              subServiceList[index]
+                                                      .defaultSellPrice ??
+                                                  0.0),
+                                          context),
+                                      TextFieldUtils()
+                                          .listScratchPriceHeadingTextField(
+                                              indianRupeesFormat.format(
+                                                  subServiceList[index]
+                                                          .defaultMrp ??
+                                                      0.0),
+                                              context)
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        )),
+                      );
+                      /*else {
+                          return  Container(
+                            // width: constrains.minWidth,
+                            height: 80,
+                            // height: MediaQuery.of(context).size.height * .08,
+                            // alignment: Alignment.center,
+                            child: TextFieldUtils().dynamicText(
+                                'Nothing more to load',
+                                context,
+                                TextStyle(fontFamily: 'Roboto',
+                                    color: ThemeApp.blackColor,
+                                    fontSize: height * .03,
+                                    fontWeight: FontWeight.bold)),
+                          );
+                        }*/
+                    }
+                  }),
+                ),
+        );
   }
 
   void _getMoreData(int page, int size, int subCategoryId) async {

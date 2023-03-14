@@ -10,6 +10,8 @@ import '../../../../Core/Model/ProductCategoryModel.dart';
 import '../../../../Core/Model/ServiceModels/ServiceCategoryAndSubCategoriesModel.dart';
 import '../../../../Core/ViewModel/dashboard_view_model.dart';
 import '../../../../Core/data/responses/status.dart';
+import '../../../../Core/datapass/productDataPass.dart';
+import '../../../../Core/datapass/serviceDataPass.dart';
 import '../../../../services/models/demoModel.dart';
 import '../../../../services/providers/Home_Provider.dart';
 import '../../../../services/providers/Products_provider.dart';
@@ -57,11 +59,19 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
     'budget_buys': ""
   };
   var dataJson;
+  ProductDataPass? productDataPass;
 
   @override
   void initState() {
     // TODO: implement initState
-
+    final widgetsBinding = WidgetsBinding.instance;
+    widgetsBinding.addPostFrameCallback((callback) {
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        productDataPass =
+        ModalRoute.of(context)!.settings.arguments as ProductDataPass;
+        print("productDataPass"+productDataPass!.toString());
+      }
+    });
     _isServiceListChip = true;
     dataJson = productViewModel.serviceCategoryListingWithGet();
     super.initState();
@@ -85,11 +95,12 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(RoutesName.dashboardRoute, (route) => false).then((value) {
-          setState(() {
-
-          });
-        });
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) =>
+              DashboardScreen(),
+          settings:
+          RouteSettings(arguments: ProductDataPass(NavigationScreen.fromDashboardRoute, productDataPass!.productCategoryId,productDataPass!.productSpecificId,productDataPass!.searchText,productDataPass!.serviceCategoryId,productDataPass!.serviceSpecificId)),
+        ),(Route<dynamic> route) => false);
         return Future.value(true);
       },
       child: Scaffold(
@@ -97,10 +108,18 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
           backgroundColor: ThemeApp.appBackgroundColor,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * .135),
-            child: AppBarWidget(
+            child: AppBar_Back_RouteWidget(
               context: context,
               titleWidget: searchBarWidget(),
               location: const AddressWidgets(),
+              onTap: (){
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                  builder: (context) =>
+                      DashboardScreen(),
+                  settings:
+                  RouteSettings(arguments: ProductDataPass(NavigationScreen.fromDashboardRoute, productDataPass!.productCategoryId,productDataPass!.productSpecificId,productDataPass!.searchText,productDataPass!.serviceCategoryId,productDataPass!.serviceSpecificId)),
+                ),(Route<dynamic> route) => false);
+              },
             ),
           ),
           bottomNavigationBar: bottomNavigationBarWidget(context,0),
@@ -438,7 +457,7 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
                     _isServiceListChip = false;
                     _isProductListChip = false;
                     print("_isProductListChip 3" + _isCRMListChip.toString());
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => CRMActivity(),
                       ),
@@ -751,7 +770,9 @@ class _ShopByCategoryActivityState extends State<ShopByCategoryActivity> {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
-              ServiceListByCategoryActivity(serviceList: simpleSubCats),
+              ServiceListByCategoryActivity(),
+          settings:
+          RouteSettings(arguments: ProductDataPass(NavigationScreen.fromServiceListingRoute, 0,0,'',simpleSubCats.id??0,0)),
         ));
       },
       // child: Padding(
@@ -935,13 +956,13 @@ class _AllServiceSubCategoryScreenState extends State<AllServiceSubCategoryScree
                         MaterialPageRoute(
                           builder: (context) =>
                               ServiceListByCategoryActivity(
-                                serviceList: widget
-                                    .serviceList.simpleSubCats![index],
-
-                                // serviceList: subProductList[index],
-                                // productSpecificListViewModel:
-                                //     productSpecificListViewModel,
+                                // serviceList: widget
+                                //     .serviceList.simpleSubCats![index],
                               ),
+                          settings:
+                          RouteSettings(arguments: ProductDataPass(NavigationScreen.fromServiceListingRoute, widget
+                              .serviceList.simpleSubCats![index].id??0,0,'',0,0)),
+
                         ),
                       );
                     },

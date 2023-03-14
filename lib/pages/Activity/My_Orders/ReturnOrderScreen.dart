@@ -40,7 +40,7 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
     super.initState();
   }
 
-  int? _radioIndex = 5;
+  int? _radioIndex = 1;
   String _radioVal = "";
 
   @override
@@ -72,9 +72,10 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
                           children: [
                             Padding(
                               padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
+                              const EdgeInsets.only(left: 20, right: 20),
                               child: TextFieldUtils().dynamicText(
-                                  'Return Order',
+                                  "Basket ID : " +
+                                      widget.values['id'].toString(),
                                   context,
                                   TextStyle(
                                     fontFamily: 'Roboto',
@@ -86,6 +87,7 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
                             SizedBox(
                               height: 5,
                             ),
+
                             Padding(
                               padding:
                                   const EdgeInsets.only(left: 20, right: 20),
@@ -147,6 +149,21 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      Text(
+                                          "Order ID : " +
+                                              orders["order_id"].toString(),
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              overflow: TextOverflow.ellipsis,
+                                              color: ThemeApp
+                                                  .primaryNavyBlackColor,
+                                              fontSize: 15,
+                                              letterSpacing: -0.25,
+                                              fontWeight: FontWeight.w700)),
+                                      SizedBox(
+                                        height: 17,
+                                      ),
                                       Row(
                                         children: [
                                           Container(
@@ -200,7 +217,7 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
                                                 color:
                                                     ThemeApp.lightBorderColor)),
                                         padding:
-                                            EdgeInsets.fromLTRB(10, 20, 10, 20),
+                                            EdgeInsets.fromLTRB(10, 10, 10, 10),
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -499,32 +516,25 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
                                                   width: 1)),
                                         ),
                                       ),
-                                    ]),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                proceedButton(
-                    "Submit", ThemeApp.tealButtonColor, context, false,
-                    () async {
-                  FocusManager.instance.primaryFocus?.unfocus();
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      proceedButton(
+                                          "Submit", ThemeApp.tealButtonColor, context, false,
+                                              () async {
+                                            FocusManager.instance.primaryFocus?.unfocus();
 
-                  final prefs = await SharedPreferences.getInstance();
+                                            final prefs = await SharedPreferences.getInstance();
 
-                  StringConstant.UserLoginId =
-                      (prefs.getString('isUserId')) ?? '';
+                                            StringConstant.UserLoginId =
+                                                (prefs.getString('isUserId')) ?? '';
 
-                  print("USER LOGIN ID..............." +
-                      StringConstant.UserLoginId.toString());
-                  Utils.successToast(
-                      'Return order request submitted successfully');
+                                            print("USER LOGIN ID..............." +
+                                                StringConstant.UserLoginId.toString());
+                                            Utils.successToast(
+                                                'Return order request submitted successfully');
 
-                  /*           Map jsonMap = {
+                                            /*           Map jsonMap = {
                     "user_id": StringConstant.UserLoginId,
                     "order_id": 45,
                     "product_item_id": 31,
@@ -543,7 +553,15 @@ class _ReturnOrderActivityState extends State<ReturnOrderActivity> {
                       ),
                     );
                   }*/
-                })
+                                          })
+                                    ]),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                ),
+
               ],
             ),
           ),
