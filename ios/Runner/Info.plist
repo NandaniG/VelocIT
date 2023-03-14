@@ -26,8 +26,16 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>camera required for app</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>App wants to access your documents folder</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>App wants to access your downloads folder</string>
+	<key>NSFileProviderPresenceUsageDescription</key>
+	<string>File uses required</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>location required for app</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -40,17 +48,9 @@
 	<string>Photo library required for app</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Speech Recognition required for app</string>
-	<key>NSFileProviderPresenceUsageDescription</key>
-	<string>File uses required</string>
-	<key>NSDocumentsFolderUsageDescription</key>
-    <string>App wants to access your documents folder</string>
-    <key>NSDownloadsFolderUsageDescription</key>
-    <string>App wants to access your downloads folder</string>
-    <key>LSSupportsOpeningDocumentsInPlace</key>
-    <true/>
-    <key>UIFileSharingEnabled</key>
-    <true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
